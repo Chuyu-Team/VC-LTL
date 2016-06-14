@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{904985D5-4C7C-4AB1-A0AF-2049C93E60AD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>VCLTL</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="VC140\agents.h" />
+    <ClInclude Include="VC140\agile.h" />
+    <ClInclude Include="VC140\ammintrin.h" />
+    <ClInclude Include="VC140\amp.h" />
+    <ClInclude Include="VC140\amprt.h" />
+    <ClInclude Include="VC140\amprt_exceptions.h" />
+    <ClInclude Include="VC140\amp_graphics.h" />
+    <ClInclude Include="VC140\amp_math.h" />
+    <ClInclude Include="VC140\amp_short_vectors.h" />
+    <ClInclude Include="VC140\armintr.h" />
+    <ClInclude Include="VC140\arm_neon.h" />
+    <ClInclude Include="VC140\assert.h" />
+    <ClInclude Include="VC140\collection.h" />
+    <ClInclude Include="VC140\comdef.h" />
+    <ClInclude Include="VC140\comdefsp.h" />
+    <ClInclude Include="VC140\comip.h" />
+    <ClInclude Include="VC140\complex.h" />
+    <ClInclude Include="VC140\comutil.h" />
+    <ClInclude Include="VC140\concrt.h" />
+    <ClInclude Include="VC140\concrtrm.h" />
+    <ClInclude Include="VC140\ConcurrencySal.h" />
+    <ClInclude Include="VC140\concurrent_priority_queue.h" />
+    <ClInclude Include="VC140\concurrent_queue.h" />
+    <ClInclude Include="VC140\concurrent_unordered_map.h" />
+    <ClInclude Include="VC140\concurrent_unordered_set.h" />
+    <ClInclude Include="VC140\concurrent_vector.h" />
+    <ClInclude Include="VC140\conio.h" />
+    <ClInclude Include="VC140\corecrt.h" />
+    <ClInclude Include="VC140\corecrt_io.h" />
+    <ClInclude Include="VC140\corecrt_malloc.h" />
+    <ClInclude Include="VC140\corecrt_memcpy_s.h" />
+    <ClInclude Include="VC140\corecrt_memory.h" />
+    <ClInclude Include="VC140\corecrt_search.h" />
+    <ClInclude Include="VC140\corecrt_share.h" />
+    <ClInclude Include="VC140\corecrt_startup.h" />
+    <ClInclude Include="VC140\corecrt_stdio_config.h" />
+    <ClInclude Include="VC140\corecrt_terminate.h" />
+    <ClInclude Include="VC140\corecrt_wconio.h" />
+    <ClInclude Include="VC140\corecrt_wctype.h" />
+    <ClInclude Include="VC140\corecrt_wdirect.h" />
+    <ClInclude Include="VC140\corecrt_wio.h" />
+    <ClInclude Include="VC140\corecrt_wprocess.h" />
+    <ClInclude Include="VC140\corecrt_wstdio.h" />
+    <ClInclude Include="VC140\corecrt_wstdlib.h" />
+    <ClInclude Include="VC140\corecrt_wstring.h" />
+    <ClInclude Include="VC140\corecrt_wtime.h" />
+    <ClInclude Include="VC140\crtdbg.h" />
+    <ClInclude Include="VC140\crtdefs.h" />
+    <ClInclude Include="VC140\crtversion.h" />
+    <ClInclude Include="VC140\ctype.h" />
+    <ClInclude Include="VC140\delayimp.h" />
+    <ClInclude Include="VC140\direct.h" />
+    <ClInclude Include="VC140\dos.h" />
+    <ClInclude Include="VC140\dvec.h" />
+    <ClInclude Include="VC140\eh.h" />
+    <ClInclude Include="VC140\emmintrin.h" />
+    <ClInclude Include="VC140\errno.h" />
+    <ClInclude Include="VC140\excpt.h" />
+    <ClInclude Include="VC140\fcntl.h" />
+    <ClInclude Include="VC140\fenv.h" />
+    <ClInclude Include="VC140\float.h" />
+    <ClInclude Include="VC140\fpieee.h" />
+    <ClInclude Include="VC140\fvec.h" />
+    <ClInclude Include="VC140\gcroot.h" />
+    <ClInclude Include="VC140\immintrin.h" />
+    <ClInclude Include="VC140\internal_concurrent_hash.h" />
+    <ClInclude Include="VC140\internal_split_ordered_list.h" />
+    <ClInclude Include="VC140\intrin.h" />
+    <ClInclude Include="VC140\inttypes.h" />
+    <ClInclude Include="VC140\invkprxy.h" />
+    <ClInclude Include="VC140\io.h" />
+    <ClInclude Include="VC140\iso646.h" />
+    <ClInclude Include="VC140\ivec.h" />
+    <ClInclude Include="VC140\limits.h" />
+    <ClInclude Include="VC140\locale.h" />
+    <ClInclude Include="VC140\malloc.h" />
+    <ClInclude Include="VC140\math.h" />
+    <ClInclude Include="VC140\mbctype.h" />
+    <ClInclude Include="VC140\mbstring.h" />
+    <ClInclude Include="VC140\memory.h" />
+    <ClInclude Include="VC140\minmax.h" />
+    <ClInclude Include="VC140\mm3dnow.h" />
+    <ClInclude Include="VC140\mmintrin.h" />
+    <ClInclude Include="VC140\new.h" />
+    <ClInclude Include="VC140\nmmintrin.h" />
+    <ClInclude Include="VC140\omp.h" />
+    <ClInclude Include="VC140\pgobootrun.h" />
+    <ClInclude Include="VC140\pmmintrin.h" />
+    <ClInclude Include="VC140\ppl.h" />
+    <ClInclude Include="VC140\pplawait.h" />
+    <ClInclude Include="VC140\pplcancellation_token.h" />
+    <ClInclude Include="VC140\pplinterface.h" />
+    <ClInclude Include="VC140\ppltasks.h" />
+    <ClInclude Include="VC140\ppltaskscheduler.h" />
+    <ClInclude Include="VC140\pplwin.h" />
+    <ClInclude Include="VC140\process.h" />
+    <ClInclude Include="VC140\rtcapi.h" />
+    <ClInclude Include="VC140\safeint.h" />
+    <ClInclude Include="VC140\safeint_internal.h" />
+    <ClInclude Include="VC140\sal.h" />
+    <ClInclude Include="VC140\search.h" />
+    <ClInclude Include="VC140\setjmp.h" />
+    <ClInclude Include="VC140\setjmpex.h" />
+    <ClInclude Include="VC140\share.h" />
+    <ClInclude Include="VC140\signal.h" />
+    <ClInclude Include="VC140\smmintrin.h" />
+    <ClInclude Include="VC140\srv.h" />
+    <ClInclude Include="VC140\stdarg.h" />
+    <ClInclude Include="VC140\stdbool.h" />
+    <ClInclude Include="VC140\stddef.h" />
+    <ClInclude Include="VC140\stdexcpt.h" />
+    <ClInclude Include="VC140\stdint.h" />
+    <ClInclude Include="VC140\stdio.h" />
+    <ClInclude Include="VC140\stdlib.h" />
+    <ClInclude Include="VC140\string.h" />
+    <ClInclude Include="VC140\tchar.h" />
+    <ClInclude Include="VC140\time.h" />
+    <ClInclude Include="VC140\tmmintrin.h" />
+    <ClInclude Include="VC140\typeinfo.h" />
+    <ClInclude Include="VC140\uchar.h" />
+    <ClInclude Include="VC140\use_ansi.h" />
+    <ClInclude Include="VC140\vadefs.h" />
+    <ClInclude Include="VC140\varargs.h" />
+    <ClInclude Include="VC140\vcclr.h" />
+    <ClInclude Include="VC140\vccorlib.h" />
+    <ClInclude Include="VC140\vcruntime.h" />
+    <ClInclude Include="VC140\vcruntime_exception.h" />
+    <ClInclude Include="VC140\vcruntime_new.h" />
+    <ClInclude Include="VC140\vcruntime_new_debug.h" />
+    <ClInclude Include="VC140\vcruntime_startup.h" />
+    <ClInclude Include="VC140\vcruntime_string.h" />
+    <ClInclude Include="VC140\vcruntime_typeinfo.h" />
+    <ClInclude Include="VC140\vsgcapture.h" />
+    <ClInclude Include="VC140\wchar.h" />
+    <ClInclude Include="VC140\wctype.h" />
+    <ClInclude Include="VC140\wmmintrin.h" />
+    <ClInclude Include="VC140\xatomic.h" />
+    <ClInclude Include="VC140\xatomic0.h" />
+    <ClInclude Include="VC140\xkeycheck.h" />
+    <ClInclude Include="VC140\xlocinfo.h" />
+    <ClInclude Include="VC140\xmmintrin.h" />
+    <ClInclude Include="VC140\xtgmath.h" />
+    <ClInclude Include="VC140\xxamp.h" />
+    <ClInclude Include="VC140\xxamp_inl.h" />
+    <ClInclude Include="VC140\ymath.h" />
+    <ClInclude Include="VC140\yvals.h" />
+    <ClInclude Include="_msvcrt.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VC140\algorithm" />
+    <None Include="VC140\allocators" />
+    <None Include="VC140\array" />
+    <None Include="VC140\atomic" />
+    <None Include="VC140\bitset" />
+    <None Include="VC140\cassert" />
+    <None Include="VC140\ccomplex" />
+    <None Include="VC140\cctype" />
+    <None Include="VC140\cerrno" />
+    <None Include="VC140\cfenv" />
+    <None Include="VC140\cfloat" />
+    <None Include="VC140\chrono" />
+    <None Include="VC140\cinttypes" />
+    <None Include="VC140\ciso646" />
+    <None Include="VC140\climits" />
+    <None Include="VC140\clocale" />
+    <None Include="VC140\cmath" />
+    <None Include="VC140\codecvt" />
+    <None Include="VC140\complex" />
+    <None Include="VC140\condition_variable" />
+    <None Include="VC140\csetjmp" />
+    <None Include="VC140\csignal" />
+    <None Include="VC140\cstdarg" />
+    <None Include="VC140\cstdbool" />
+    <None Include="VC140\cstddef" />
+    <None Include="VC140\cstdint" />
+    <None Include="VC140\cstdio" />
+    <None Include="VC140\cstdlib" />
+    <None Include="VC140\cstring" />
+    <None Include="VC140\ctgmath" />
+    <None Include="VC140\ctime" />
+    <None Include="VC140\cuchar" />
+    <None Include="VC140\cwchar" />
+    <None Include="VC140\cwctype" />
+    <None Include="VC140\deque" />
+    <None Include="VC140\exception" />
+    <None Include="VC140\filesystem" />
+    <None Include="VC140\forward_list" />
+    <None Include="VC140\fstream" />
+    <None Include="VC140\functional" />
+    <None Include="VC140\future" />
+    <None Include="VC140\hash_map" />
+    <None Include="VC140\hash_set" />
+    <None Include="VC140\initializer_list" />
+    <None Include="VC140\iomanip" />
+    <None Include="VC140\ios" />
+    <None Include="VC140\iosfwd" />
+    <None Include="VC140\iostream" />
+    <None Include="VC140\istream" />
+    <None Include="VC140\iterator" />
+    <None Include="VC140\limits" />
+    <None Include="VC140\list" />
+    <None Include="VC140\listing.inc" />
+    <None Include="VC140\locale" />
+    <None Include="VC140\map" />
+    <None Include="VC140\memory" />
+    <None Include="VC140\mutex" />
+    <None Include="VC140\new" />
+    <None Include="VC140\numeric" />
+    <None Include="VC140\ostream" />
+    <None Include="VC140\queue" />
+    <None Include="VC140\random" />
+    <None Include="VC140\ratio" />
+    <None Include="VC140\regex" />
+    <None Include="VC140\scoped_allocator" />
+    <None Include="VC140\set" />
+    <None Include="VC140\shared_mutex" />
+    <None Include="VC140\sstream" />
+    <None Include="VC140\stack" />
+    <None Include="VC140\stdexcept" />
+    <None Include="VC140\streambuf" />
+    <None Include="VC140\string" />
+    <None Include="VC140\strstream" />
+    <None Include="VC140\system_error" />
+    <None Include="VC140\thread" />
+    <None Include="VC140\tuple" />
+    <None Include="VC140\typeindex" />
+    <None Include="VC140\typeinfo" />
+    <None Include="VC140\type_traits" />
+    <None Include="VC140\unordered_map" />
+    <None Include="VC140\unordered_set" />
+    <None Include="VC140\utility" />
+    <None Include="VC140\valarray" />
+    <None Include="VC140\vector" />
+    <None Include="VC140\xcomplex" />
+    <None Include="VC140\xfacet" />
+    <None Include="VC140\xfunctional" />
+    <None Include="VC140\xhash" />
+    <None Include="VC140\xiosbase" />
+    <None Include="VC140\xlocale" />
+    <None Include="VC140\xlocbuf" />
+    <None Include="VC140\xlocinfo" />
+    <None Include="VC140\xlocmes" />
+    <None Include="VC140\xlocmon" />
+    <None Include="VC140\xlocnum" />
+    <None Include="VC140\xloctime" />
+    <None Include="VC140\xmemory" />
+    <None Include="VC140\xmemory0" />
+    <None Include="VC140\xstddef" />
+    <None Include="VC140\xstring" />
+    <None Include="VC140\xtr1common" />
+    <None Include="VC140\xtree" />
+    <None Include="VC140\xutility" />
+    <None Include="VC140\xxatomic" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="VC140\delayhlp.cpp" />
+    <ClCompile Include="_msvcrt.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
