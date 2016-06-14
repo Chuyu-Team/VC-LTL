@@ -22,6 +22,33 @@
     <Filter Include="资源文件\libx86">
       <UniqueIdentifier>{378df901-3173-4220-8bd5-f07dac56197f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\VC140\cliext">
+      <UniqueIdentifier>{78949ebc-eed0-4013-a8c3-6a267536db9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\CodeAnalysis">
+      <UniqueIdentifier>{c431ac85-ce6f-43b0-9578-f0e03bbc0233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\cvt">
+      <UniqueIdentifier>{a5fc7acc-dc45-4a5c-8929-f2dbd8aba0ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\experimental">
+      <UniqueIdentifier>{9576cf4f-7431-432a-8675-68e53a9c6954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\Manifest">
+      <UniqueIdentifier>{9ddd3a66-a9c1-47a6-88b9-9dc6677560b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\msclr">
+      <UniqueIdentifier>{3d562362-b478-4882-9973-1f9d7831b72d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\msclr\com">
+      <UniqueIdentifier>{b422d88a-1a91-4ae2-9527-feae58f48490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\sys">
+      <UniqueIdentifier>{9fb99d40-a970-487f-b6ef-2ed0b4aea32e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\VC140\thr">
+      <UniqueIdentifier>{5679acb3-7123-4dbd-96b7-08f05d6b2924}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -468,6 +495,78 @@
     <ClInclude Include="VC140\yvals.h">
       <Filter>头文件\VC140</Filter>
     </ClInclude>
+    <ClInclude Include="VC140\CodeAnalysis\sourceannotations.h">
+      <Filter>头文件\VC140\CodeAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\CodeAnalysis\Warnings.h">
+      <Filter>头文件\VC140\CodeAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\all.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\appdomain.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\auto_gcroot.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\auto_handle.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\event.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\gcroot.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\lock.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\marshal.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\marshal_atl.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\marshal_cppstd.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\marshal_windows.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\safebool.h">
+      <Filter>头文件\VC140\msclr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\msclr\com\ptr.h">
+      <Filter>头文件\VC140\msclr\com</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\sys\locking.h">
+      <Filter>头文件\VC140\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\sys\stat.h">
+      <Filter>头文件\VC140\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\sys\timeb.h">
+      <Filter>头文件\VC140\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\sys\types.h">
+      <Filter>头文件\VC140\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\sys\utime.h">
+      <Filter>头文件\VC140\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\thr\threads.h">
+      <Filter>头文件\VC140\thr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\thr\xthrcommon.h">
+      <Filter>头文件\VC140\thr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\thr\xthreads.h">
+      <Filter>头文件\VC140\thr</Filter>
+    </ClInclude>
+    <ClInclude Include="VC140\thr\xtimec.h">
+      <Filter>头文件\VC140\thr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="VC140\algorithm">
@@ -782,6 +881,345 @@
     <None Include="VC140\xxatomic">
       <Filter>头文件\VC140</Filter>
     </None>
+    <None Include="VC140\cliext\adapter">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\algorithm">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\deque">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\functional">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\hash_map">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\hash_set">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\iterator">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\list">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\map">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\memory">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\numeric">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\queue">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\set">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\stack">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\utility">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\vector">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\xhash">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\xtree">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cliext\xutility">
+      <Filter>头文件\VC140\cliext</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_1">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_2">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_3">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_4">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_5">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_6">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_7">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_8">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_9">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_10">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_13">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_14">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_15">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\8859_16">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\baltic">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\big5">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp037">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp424">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp437">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp500">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp737">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp775">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp850">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp852">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp855">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp856">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp857">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp860">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp861">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp862">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp863">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp864">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp865">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp866">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp869">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp874">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp875">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp932">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp936">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp949">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp950">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1006">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1026">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1250">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1251">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1252">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1253">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1254">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1255">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1256">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1257">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cp1258">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\cyrillic">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\ebcdic">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\euc">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\euc_0208">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\gb2312">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\gb12345">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\greek">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\iceland">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\jis">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\jis_0208">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\jis0201">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\ksc5601">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\latin2">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\one_one">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\roman">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\sjis">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\sjis_0208">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\turkish">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\utf8">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\utf8_utf16">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\utf16">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\wbuffer">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\wstring">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\xjis">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\xone_byte">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\xtest">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\cvt\xtwo_byte">
+      <Filter>头文件\VC140\cvt</Filter>
+    </None>
+    <None Include="VC140\experimental\deque">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\filesystem">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\forward_list">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\generator">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\list">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\map">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\resumable">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\set">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\string">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\unordered_map">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\unordered_set">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\vector">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\experimental\xutility">
+      <Filter>头文件\VC140\experimental</Filter>
+    </None>
+    <None Include="VC140\thr\xthread">
+      <Filter>头文件\VC140\thr</Filter>
+    </None>
+    <None Include="VC140\thr\xtime">
+      <Filter>头文件\VC140\thr</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VC140\delayhlp.cpp">
@@ -804,5 +1242,13 @@
     <Library Include="x86\msvcrt_vista.lib">
       <Filter>资源文件\libx86</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="VC140\Manifest\dpiaware.manifest">
+      <Filter>头文件\VC140\Manifest</Filter>
+    </Manifest>
+    <Manifest Include="VC140\Manifest\PerMonitorHighDPIAware.manifest">
+      <Filter>头文件\VC140\Manifest</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>
