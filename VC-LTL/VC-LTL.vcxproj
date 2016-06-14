@@ -127,9 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="VC140\agents.h" />
     <ClInclude Include="VC140\agile.h" />
     <ClInclude Include="VC140\ammintrin.h" />
@@ -534,6 +531,9 @@
   <ItemGroup>
     <Manifest Include="VC140\Manifest\dpiaware.manifest" />
     <Manifest Include="VC140\Manifest\PerMonitorHighDPIAware.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

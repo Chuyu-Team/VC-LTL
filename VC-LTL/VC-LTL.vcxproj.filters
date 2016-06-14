@@ -51,9 +51,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="_msvcrt.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -1233,14 +1230,14 @@
     <Library Include="x64\msvcrt_140.lib">
       <Filter>资源文件\libx64</Filter>
     </Library>
-    <Library Include="x64\msvcrt_vista.lib">
-      <Filter>资源文件\libx64</Filter>
-    </Library>
     <Library Include="x86\msvcrt_140.lib">
       <Filter>资源文件\libx86</Filter>
     </Library>
     <Library Include="x86\msvcrt_vista.lib">
       <Filter>资源文件\libx86</Filter>
+    </Library>
+    <Library Include="x64\msvcrt_vista.lib">
+      <Filter>资源文件\libx64</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -1250,5 +1247,10 @@
     <Manifest Include="VC140\Manifest\PerMonitorHighDPIAware.manifest">
       <Filter>头文件\VC140\Manifest</Filter>
     </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\ReadMe.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>
