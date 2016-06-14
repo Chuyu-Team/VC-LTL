@@ -16,6 +16,12 @@
     <Filter Include="头文件\VC140">
       <UniqueIdentifier>{817b867d-a116-48c5-a4cd-3e55956d838c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\libx64">
+      <UniqueIdentifier>{ce6de632-b609-4666-904c-8a93ae7a019e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\libx86">
+      <UniqueIdentifier>{378df901-3173-4220-8bd5-f07dac56197f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -784,5 +790,19 @@
     <ClCompile Include="_msvcrt.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="x64\msvcrt_140.lib">
+      <Filter>资源文件\libx64</Filter>
+    </Library>
+    <Library Include="x64\msvcrt_vista.lib">
+      <Filter>资源文件\libx64</Filter>
+    </Library>
+    <Library Include="x86\msvcrt_140.lib">
+      <Filter>资源文件\libx86</Filter>
+    </Library>
+    <Library Include="x86\msvcrt_vista.lib">
+      <Filter>资源文件\libx86</Filter>
+    </Library>
   </ItemGroup>
 </Project>

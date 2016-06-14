@@ -388,6 +388,12 @@
     <ClCompile Include="VC140\delayhlp.cpp" />
     <ClCompile Include="_msvcrt.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="x64\msvcrt_140.lib" />
+    <Library Include="x64\msvcrt_vista.lib" />
+    <Library Include="x86\msvcrt_140.lib" />
+    <Library Include="x86\msvcrt_vista.lib" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

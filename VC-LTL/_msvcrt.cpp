@@ -6,10 +6,14 @@
 #include <vcruntime_new.h>
 #include <Windows.h>
 
+#ifndef __cplusplus
+
 namespace std
 {
 	const nothrow_t nothrow;
 }
+#endif
+
 
 extern "C" void __fastcall _guard_check_icall(void*)
 {
