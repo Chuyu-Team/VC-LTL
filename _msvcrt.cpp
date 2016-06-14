@@ -6,7 +6,7 @@
 #include <vcruntime_new.h>
 #include <Windows.h>
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 
 namespace std
 {
