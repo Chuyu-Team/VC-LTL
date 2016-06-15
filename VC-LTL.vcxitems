@@ -416,4 +416,10 @@
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
+  </ItemGroup>
 </Project>
