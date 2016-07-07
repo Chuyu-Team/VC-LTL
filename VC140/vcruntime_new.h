@@ -70,15 +70,21 @@ void __CRTDECL operator delete[](
     std::nothrow_t const&
     ) throw();
 
-void __CRTDECL operator delete(
-    void*  _Block,
-    size_t _Size
-    ) throw();
+	inline void __CRTDECL operator delete(
+		void*  _Block,
+		size_t _Size
+		) throw()
+	{
+		operator delete(_Block);
+	}
 
-void __CRTDECL operator delete[](
-    void* _Block,
-    size_t _Size
-    ) throw();
+	inline void __CRTDECL operator delete[](
+		void* _Block,
+		size_t _Size
+		) throw()
+	{
+		operator delete[](_Block);
+	}
 
 #ifndef __PLACEMENT_NEW_INLINE
     #define __PLACEMENT_NEW_INLINE

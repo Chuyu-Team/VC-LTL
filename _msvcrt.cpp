@@ -1,19 +1,15 @@
 #pragma once
 
-//#include "stdafx.h"
-
 #if NDEBUG&&_DLL
 #include <vcruntime_new.h>
-#include <Windows.h>
+#include <corecrt_terminate.h>
 
-#ifdef __cplusplus
-
+#ifdef __NOTHROW_T_DEFINED
 namespace std
 {
 	const nothrow_t nothrow;
 }
 #endif
-
 
 extern "C" void __fastcall _guard_check_icall(void*)
 {

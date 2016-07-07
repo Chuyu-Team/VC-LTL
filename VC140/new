@@ -5,12 +5,12 @@
 #ifndef RC_INVOKED
 #include <exception>
 #include <vcruntime_new.h>
-#include <basetsd.h>
-#pragma pack(push,_CRT_PACKING)
-#pragma warning(push,3)
-#pragma push_macro("new")
 
- #undef new
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,3)
+ #pragma push_macro("new")
+
+  #undef new
 
 
 
@@ -30,34 +30,9 @@ _CRTIMP2 new_handler __cdecl get_new_handler()
 	_THROW0();	// get current new handler
 _STD_END
 
-
-void __CRTDECL operator delete(void *)_THROW0();
-#pragma warning (suppress: 4985)
-_Ret_notnull_ _Post_writable_byte_size_(_Size) void *__CRTDECL operator new(size_t _Size);
-
-void __CRTDECL operator delete[](void *) _THROW0();	// delete allocated array
-_Ret_notnull_ _Post_writable_byte_size_(_Size) void *__CRTDECL operator new[](size_t _Size);	// allocate array or throw exception
-
-_Ret_maybenull_ _Post_writable_byte_size_(_Size) void *__CRTDECL operator new(size_t _Size, const _STD nothrow_t&)
-_THROW0();
-
-_Ret_maybenull_ _Post_writable_byte_size_(_Size) void *__CRTDECL operator new[](size_t _Size, const _STD nothrow_t&)
-_THROW0();	// allocate array or return null pointer
-
-inline void __cdecl operator delete(void * pData, UINT_PTR cbData)
-{
-	operator delete(pData);
-}
-
-inline void __cdecl operator delete[](void * pData, UINT_PTR cbData)
-{
-	operator delete(pData);
-}
-
  #pragma pop_macro("new")
  #pragma warning(pop)
  #pragma pack(pop)
-
 
 #endif /* RC_INVOKED */
 #endif /* _NEW_ */
