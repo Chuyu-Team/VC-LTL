@@ -1595,9 +1595,9 @@ public:
 				{	// count nodes and check for knot
 				const_iterator _Next = _First;
 
-				for (; _Next != _Last; ++_Next, (void)++_Count)
-					if (_Next == _Right.end())
-						_Xlength_error("list<T> bad splice");
+				for (; _Next != _Last; ++_Next, (void)++_Count);
+					//if (_Next == _Right.end())
+					//	_Xlength_error("list<T> bad splice");
 				}
 			_Splice(_Where, _Right, _First, _Last, _Count);
 			}
@@ -1905,8 +1905,8 @@ public:
 
 	void _Incsize(size_type _Count)
 		{	// alter element count, with checking
-		if (max_size() - this->_Mysize() - 1 < _Count)
-			_Xlength_error("list<T> too long");
+		//if (max_size() - this->_Mysize() - 1 < _Count)
+		//	_Xlength_error("list<T> too long");
 		this->_Mysize() += _Count;
 		}
 
