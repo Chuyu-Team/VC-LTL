@@ -16,6 +16,7 @@ extern "C++" {
 
 #pragma warning(push)
 #pragma warning(disable: 4985) // attributes not present on previous declaration
+#pragma warning(disable: 4100) // unreferenced formal parameter
 
 #pragma push_macro("new")
 #undef new
@@ -70,21 +71,15 @@ void __CRTDECL operator delete[](
     std::nothrow_t const&
     ) throw();
 
-	inline void __CRTDECL operator delete(
-		void*  _Block,
-		size_t _Size
-		) throw()
-	{
-		operator delete(_Block);
-	}
+void __CRTDECL operator delete(
+    void*  _Block,
+    size_t _Size
+    ) throw();
 
-	inline void __CRTDECL operator delete[](
-		void* _Block,
-		size_t _Size
-		) throw()
-	{
-		operator delete[](_Block);
-	}
+void __CRTDECL operator delete[](
+    void* _Block,
+    size_t _Size
+    ) throw();
 
 #ifndef __PLACEMENT_NEW_INLINE
     #define __PLACEMENT_NEW_INLINE

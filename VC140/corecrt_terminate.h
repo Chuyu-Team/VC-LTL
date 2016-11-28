@@ -11,7 +11,7 @@
 
 #ifndef RC_INVOKED
 
-//_CRT_BEGIN_C_HEADER
+_CRT_BEGIN_C_HEADER
 
 // terminate_handler is the standard name; terminate_function is defined for
 // source compatibility.
@@ -23,10 +23,11 @@ typedef void (__CRTDECL* terminate_function)();
     typedef void (__clrcall* __terminate_handler_m )();
 #endif
 
+_ACRTIMP __declspec(noreturn) void __cdecl abort();
+
 #ifdef __cplusplus
 
-    _ACRTIMP __declspec(noreturn) void __cdecl abort();
-    _ACRTIMP __declspec(noreturn) void __cdecl terminate() throw();
+	extern "C++" _ACRTIMP __declspec(noreturn) void __cdecl terminate() throw();
 
     #ifndef _M_CEE_PURE
 
@@ -40,6 +41,6 @@ typedef void (__CRTDECL* terminate_function)();
 
 #endif // __cplusplus
 
-//_CRT_END_C_HEADER
+_CRT_END_C_HEADER
 
 #endif // RC_INVOKED

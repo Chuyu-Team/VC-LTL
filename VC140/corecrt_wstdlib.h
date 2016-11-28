@@ -170,7 +170,7 @@ _ACRTIMP unsigned long __cdecl _wcstoul_l(
     );
 
 _Check_return_
-_ACRTIMP unsigned long long __cdecl wcstoull(
+unsigned long long __cdecl wcstoull(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
     _In_                     int            _Radix
