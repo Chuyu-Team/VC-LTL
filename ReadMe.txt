@@ -17,8 +17,8 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 2：修改含目录，设置为以下内容，并且取消  从父级或者默认设置中继承
         $(VSInstallDir)VC\atlmfc\include
         $(WindowsSDK_IncludePath)
-        $(SolutionDir)\VC-LTL\VC\$(CrtSDKReferenceVersion)
-		$(SolutionDir)\VC-LTL\ucrt\$(WindowsTargetPlatformVersion)
+        $(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)
+		$(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
         $(SolutionDir)\VC-LTL
 
 3：在库目录增加：$(SolutionDir)VC-LTL\$(PlatformShortName)
