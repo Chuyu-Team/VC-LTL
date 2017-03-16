@@ -11,15 +11,26 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 ## 原理：
 使用 VC LTL后可以将程序动态链接到系统自带的msvcrt.dll中，来减少程序体积。一般来说一些C/C++的Win32应用程序都可以使用。但是MFC工程不能使用，因为MFC类库太复杂了。
 
+## 支持平台：
+支持VS 2015以及2017
+
 
 ## 使用方法：
 1：将内容解压到工程目录VC-LTL
 2：修改含目录，设置为以下内容，并且取消  从父级或者默认设置中继承
-        $(VSInstallDir)VC\atlmfc\include
-        $(WindowsSDK_IncludePath)
-        $(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)
+	### VS 2015使用以下包含目录:
+		$(VSInstallDir)VC\atlmfc\include
+		$(WindowsSDK_IncludePath)
+		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)
 		$(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
-        $(SolutionDir)\VC-LTL
+		$(SolutionDir)\VC-LTL
+
+	### VS 2017使用以下包含目录:
+		$(VCToolsInstallDir)atlmfc\include
+		$(WindowsSDK_IncludePath)
+		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)
+		$(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
+		$(SolutionDir)\VC-LTL
 
 3：在库目录增加：$(SolutionDir)VC-LTL\$(PlatformShortName)
 
@@ -35,6 +46,8 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 
 
 ## Changes：
+1.0.0.4 2016-3-16
+1：新增VC 2017支持
 
 1.0.0.3 2016-11-28 12:54
 1：改进对C工程的兼容性

@@ -47,12 +47,13 @@ extern "C"
 	}
 }
 
-
-//如果你需要禁用重载，请先定义 VCLTL_Not_Overload_New
-#ifndef VCLTL_Not_Overload_New
 #ifdef __cplusplus
 extern "C++"
 {
+//如果你需要禁用重载，请先定义 VCLTL_Not_Overload_New
+#ifndef VCLTL_Not_Overload_New
+
+
 	extern void* __CRTDECL operator new(
 		size_t _Size
 		)
@@ -96,10 +97,42 @@ extern "C++"
 	{
 		free(_Block);
 	}
-}
 
-#endif // !__cplusplus
 #endif // !VCLTL_Not_Overload_New
 
+	namespace std
+	{
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xbad_alloc()
+		{
+			DebugBreak();
+		}
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *)
+		{
+			DebugBreak();
+		}
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *)
+		{
+			DebugBreak();
+		}
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *)
+		{
+			DebugBreak();
+		}
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *)
+		{
+			DebugBreak();
+		}
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *)
+		{
+			DebugBreak();
+		}
+
+		[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xbad_function_call()
+		{
+			DebugBreak();
+		}
+	}
+}
+#endif // !__cplusplus
 
 #endif
