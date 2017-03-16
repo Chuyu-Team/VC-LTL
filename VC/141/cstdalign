@@ -1,0 +1,11 @@
+// cstdalign standard header
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+#pragma once
+#ifndef _CSTDALIGN_
+#define _CSTDALIGN_
+
+#define __alignas_is_defined 1
+#define __alignof_is_defined 1
+
+#endif /* _CSTDALIGN_ */
