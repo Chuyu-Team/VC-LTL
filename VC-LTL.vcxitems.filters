@@ -1420,4 +1420,7 @@
       <Filter>源代码\VC\141</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)ReadMe.txt" />
+  </ItemGroup>
 </Project>

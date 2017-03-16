@@ -483,4 +483,7 @@
     <None Include="$(MSBuildThisFileDirectory)VC\141\xutility" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\xxatomic" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)ReadMe.txt" />
+  </ItemGroup>
 </Project>
