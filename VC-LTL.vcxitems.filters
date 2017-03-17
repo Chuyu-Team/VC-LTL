@@ -30,727 +30,727 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h">
       <Filter>源代码</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\agents.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\agents.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\agile.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\agile.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ammintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ammintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\amp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\amp.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\amp_graphics.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\amp_graphics.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\amp_math.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\amp_math.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\amp_short_vectors.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\amp_short_vectors.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\amprt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\amprt.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\amprt_exceptions.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\amprt_exceptions.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\arm_neon.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\arm_neon.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\armintr.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\armintr.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\collection.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\collection.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\comdef.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\comdef.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\comdefsp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\comdefsp.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\comip.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\comip.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\comutil.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\comutil.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concrt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concrt.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concrtrm.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concrtrm.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ConcurrencySal.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ConcurrencySal.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concurrent_priority_queue.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concurrent_priority_queue.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concurrent_queue.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concurrent_queue.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concurrent_unordered_map.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concurrent_unordered_map.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concurrent_unordered_set.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concurrent_unordered_set.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\concurrent_vector.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\concurrent_vector.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\crtdefs.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\crtdefs.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\crtversion.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\crtversion.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\delayimp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\delayimp.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\dvec.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\dvec.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\eh.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\eh.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\emmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\emmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\excpt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\excpt.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\fvec.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\fvec.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\gcroot.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\gcroot.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\immintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\immintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\internal_concurrent_hash.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\internal_concurrent_hash.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\internal_split_ordered_list.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\internal_split_ordered_list.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\intrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\intrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\invkprxy.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\invkprxy.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\iso646.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\iso646.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ivec.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ivec.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\limits.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\limits.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\mm3dnow.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\mm3dnow.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\mmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\mmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\nmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\nmmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\omp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\omp.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\pgobootrun.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\pgobootrun.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\pmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\pmmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ppl.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ppl.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\pplawait.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\pplawait.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\pplcancellation_token.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\pplcancellation_token.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\pplinterface.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\pplinterface.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ppltasks.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ppltasks.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ppltaskscheduler.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ppltaskscheduler.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\pplwin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\pplwin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\rtcapi.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\rtcapi.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\sal.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\sal.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\setjmp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\setjmp.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\setjmpex.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\setjmpex.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\smmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\smmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\srv.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\srv.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\stdarg.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\stdarg.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\stdbool.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\stdbool.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\stdexcpt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\stdexcpt.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\stdint.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\stdint.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\tmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\tmmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\typeinfo.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\typeinfo.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\use_ansi.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\use_ansi.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vadefs.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vadefs.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\varargs.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\varargs.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcclr.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcclr.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vccorlib.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vccorlib.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime_exception.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime_exception.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime_new.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime_new.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime_new_debug.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime_new_debug.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime_startup.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime_startup.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime_string.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime_string.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vcruntime_typeinfo.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vcruntime_typeinfo.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vsgcapture.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\vsgcapture.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\wmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\wmmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xatomic.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xatomic.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xatomic0.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xatomic0.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xkeycheck.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xkeycheck.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocinfo.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xlocinfo.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xmmintrin.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xtgmath.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xtgmath.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xxamp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xxamp.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xxamp_inl.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\xxamp_inl.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ymath.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\ymath.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\yvals.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\140\yvals.h">
       <Filter>源代码\VC\140</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\assert.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\assert.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\complex.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\complex.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\conio.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\conio.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_io.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_io.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_malloc.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_malloc.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_memcpy_s.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_memcpy_s.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_memory.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_memory.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_search.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_search.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_share.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_share.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_startup.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_startup.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_stdio_config.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_stdio_config.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_terminate.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_terminate.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wconio.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wconio.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wctype.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wctype.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wdirect.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wdirect.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wio.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wio.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wprocess.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wprocess.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wstdio.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wstdio.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wstdlib.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wstdlib.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wstring.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wstring.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\corecrt_wtime.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\corecrt_wtime.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\crtdbg.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\crtdbg.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\ctype.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\ctype.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\direct.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\direct.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\dos.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\dos.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\errno.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\errno.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\fcntl.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\fcntl.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\fenv.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\fenv.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\float.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\float.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\fpieee.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\fpieee.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\inttypes.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\inttypes.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\io.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\io.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\locale.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\locale.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\malloc.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\malloc.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\math.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\math.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\mbctype.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\mbctype.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\mbstring.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\mbstring.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\memory.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\memory.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\minmax.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\minmax.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\new.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\new.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\process.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\process.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\safeint.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\safeint.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\safeint_internal.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\safeint_internal.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\search.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\search.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\share.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\share.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\signal.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\signal.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\stddef.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\stddef.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\stdio.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\stdio.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\stdlib.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\stdlib.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\string.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\string.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\tchar.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\tchar.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\time.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\time.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\uchar.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\uchar.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\wchar.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\wchar.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\ucrt\10.0.14393.0\wctype.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\wctype.h">
       <Filter>源代码\ucrt\10.0.14393.0</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\agents.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\agents.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\agile.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\agile.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ammintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ammintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\amp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\amp.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\amp_graphics.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\amp_graphics.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\amp_math.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\amp_math.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\amp_short_vectors.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\amp_short_vectors.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\amprt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\amprt.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\amprt_exceptions.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\amprt_exceptions.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\arm_neon.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\arm_neon.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\armintr.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\armintr.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cfguard.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\cfguard.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\collection.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\collection.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\comdef.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\comdef.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\comdefsp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\comdefsp.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\comip.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\comip.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\comutil.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\comutil.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concrt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concrt.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concrtrm.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concrtrm.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ConcurrencySal.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ConcurrencySal.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concurrent_priority_queue.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concurrent_priority_queue.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concurrent_queue.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concurrent_queue.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concurrent_unordered_map.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concurrent_unordered_map.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concurrent_unordered_set.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concurrent_unordered_set.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\concurrent_vector.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\concurrent_vector.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\crtdefs.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\crtdefs.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\crtversion.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\crtversion.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\delayimp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\delayimp.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\dloadsup.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\dloadsup.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\dvec.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\dvec.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\eh.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\eh.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\emmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\emmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\excpt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\excpt.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\fvec.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\fvec.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\gcroot.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\gcroot.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\immintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\immintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\internal_concurrent_hash.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\internal_concurrent_hash.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\internal_split_ordered_list.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\internal_split_ordered_list.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\intrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\intrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\intrin0.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\intrin0.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\invkprxy.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\invkprxy.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\iso646.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\iso646.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ivec.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ivec.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\limits.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\limits.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\mm3dnow.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\mm3dnow.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\mmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\mmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\nmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\nmmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\omp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\omp.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\pgobootrun.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\pgobootrun.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\pmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\pmmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ppl.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ppl.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\pplawait.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\pplawait.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\pplcancellation_token.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\pplcancellation_token.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\pplinterface.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\pplinterface.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ppltasks.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ppltasks.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ppltaskscheduler.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ppltaskscheduler.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\pplwin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\pplwin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\rtcapi.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\rtcapi.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\sal.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\sal.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\setjmp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\setjmp.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\setjmpex.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\setjmpex.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\smmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\smmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\srv.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\srv.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\stdarg.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\stdarg.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\stdbool.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\stdbool.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\stdexcpt.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\stdexcpt.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\stdint.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\stdint.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\tmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\tmmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\typeinfo.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\typeinfo.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\use_ansi.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\use_ansi.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vadefs.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vadefs.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\varargs.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\varargs.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcclr.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcclr.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vccorlib.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vccorlib.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime_exception.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime_exception.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime_new.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime_new.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime_new_debug.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime_new_debug.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime_startup.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime_startup.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime_string.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime_string.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vcruntime_typeinfo.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\vcruntime_typeinfo.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\wmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\wmmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xatomic.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xatomic.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xatomic0.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xatomic0.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xkeycheck.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xkeycheck.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocinfo.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xlocinfo.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xmmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xsmf_control.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xsmf_control.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xstring_insert.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xstring_insert.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xtgmath.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xtgmath.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xxamp.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xxamp.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xxamp_inl.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\xxamp_inl.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ymath.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\ymath.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\yvals.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\yvals.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
-    <ClInclude Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\zmmintrin.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\zmmintrin.h">
       <Filter>源代码\VC\141</Filter>
     </ClInclude>
   </ItemGroup>
@@ -758,10 +758,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)_msvcrt.cpp">
       <Filter>源代码</Filter>
     </ClCompile>
-    <ClCompile Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\delayhlp.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)VC\140\delayhlp.cpp">
       <Filter>源代码\VC\140</Filter>
     </ClCompile>
-    <ClCompile Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\delayhlp.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)VC\141\delayhlp.cpp">
       <Filter>源代码\VC\141</Filter>
     </ClCompile>
   </ItemGroup>
@@ -780,643 +780,643 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\algorithm">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\algorithm">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\allocators">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\allocators">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\array">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\array">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\atomic">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\atomic">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\bitset">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\bitset">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cassert">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cassert">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ccomplex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ccomplex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cctype">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cctype">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cerrno">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cerrno">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cfenv">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cfenv">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cfloat">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cfloat">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\chrono">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\chrono">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cinttypes">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cinttypes">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ciso646">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ciso646">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\climits">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\climits">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\clocale">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\clocale">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cmath">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cmath">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\codecvt">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\codecvt">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\complex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\complex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\condition_variable">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\condition_variable">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\csetjmp">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\csetjmp">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\csignal">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\csignal">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstdarg">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstdarg">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstdbool">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstdbool">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstddef">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstddef">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstdint">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstdint">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstdio">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstdio">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstdlib">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstdlib">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cstring">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cstring">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ctgmath">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ctgmath">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ctime">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ctime">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cuchar">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cuchar">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cwchar">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cwchar">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\cwctype">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\cwctype">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\deque">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\deque">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\exception">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\exception">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\filesystem">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\filesystem">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\forward_list">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\forward_list">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\fstream">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\fstream">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\functional">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\functional">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\future">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\future">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\hash_map">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\hash_map">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\hash_set">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\hash_set">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\initializer_list">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\initializer_list">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\iomanip">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\iomanip">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ios">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ios">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\iosfwd">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\iosfwd">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\iostream">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\iostream">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\istream">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\istream">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\iterator">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\iterator">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\limits">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\limits">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\list">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\list">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\listing.inc">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\listing.inc">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\locale">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\locale">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\map">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\map">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\memory">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\memory">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\mutex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\mutex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\new">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\new">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\numeric">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\numeric">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ostream">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ostream">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\queue">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\queue">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\random">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\random">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\ratio">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\ratio">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\regex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\regex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\scoped_allocator">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\scoped_allocator">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\set">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\set">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\shared_mutex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\shared_mutex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\sstream">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\sstream">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\stack">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\stack">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\stdexcept">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\stdexcept">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\streambuf">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\streambuf">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\string">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\string">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\strstream">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\strstream">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\system_error">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\system_error">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\thread">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\thread">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\tuple">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\tuple">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\type_traits">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\type_traits">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\typeindex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\typeindex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\typeinfo">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\typeinfo">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\unordered_map">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\unordered_map">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\unordered_set">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\unordered_set">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\utility">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\utility">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\valarray">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\valarray">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\vector">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\vector">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xcomplex">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xcomplex">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xfacet">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xfacet">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xfunctional">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xfunctional">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xhash">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xhash">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xiosbase">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xiosbase">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocale">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xlocale">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocbuf">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xlocbuf">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocinfo">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xlocinfo">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocmes">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xlocmes">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocmon">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xlocmon">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xlocnum">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xlocnum">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xloctime">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xloctime">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xmemory">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xmemory">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xmemory0">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xmemory0">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xstddef">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xstddef">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xstring">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xstring">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xtr1common">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xtr1common">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xtree">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xtree">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xutility">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xutility">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\140\xxatomic">
+    <None Include="$(MSBuildThisFileDirectory)VC\140\xxatomic">
       <Filter>源代码\VC\140</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\algorithm">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\algorithm">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\allocators">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\allocators">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\any">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\any">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\array">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\array">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\atomic">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atomic">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\bitset">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\bitset">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cassert">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cassert">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ccomplex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ccomplex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cctype">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cctype">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cerrno">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cerrno">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cfenv">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cfenv">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cfloat">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cfloat">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\chrono">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\chrono">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cinttypes">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cinttypes">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ciso646">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ciso646">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\climits">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\climits">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\clocale">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\clocale">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cmath">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cmath">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\codecvt">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\codecvt">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\complex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\complex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\condition_variable">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\condition_variable">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\csetjmp">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\csetjmp">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\csignal">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\csignal">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstdalign">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstdalign">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstdarg">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstdarg">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstdbool">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstdbool">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstddef">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstddef">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstdint">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstdint">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstdio">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstdio">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstdlib">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstdlib">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cstring">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cstring">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ctgmath">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ctgmath">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ctime">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ctime">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cuchar">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cuchar">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cwchar">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cwchar">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\cwctype">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\cwctype">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\deque">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\deque">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\exception">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\exception">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\filesystem">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\filesystem">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\forward_list">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\forward_list">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\fstream">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\fstream">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\functional">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\functional">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\future">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\future">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\hash_map">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\hash_map">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\hash_set">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\hash_set">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\initializer_list">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\initializer_list">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\iomanip">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\iomanip">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ios">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ios">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\iosfwd">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\iosfwd">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\iostream">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\iostream">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\istream">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\istream">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\iterator">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\iterator">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\limits">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\limits">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\list">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\list">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\listing.inc">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\listing.inc">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\locale">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\locale">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\map">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\map">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\memory">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\memory">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\mutex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\mutex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\new">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\new">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\numeric">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\numeric">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\optional">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\optional">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ostream">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ostream">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\queue">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\queue">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\random">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\random">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\ratio">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\ratio">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\regex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\regex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\scoped_allocator">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\scoped_allocator">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\set">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\set">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\shared_mutex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\shared_mutex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\sstream">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\sstream">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\stack">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\stack">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\stdexcept">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\stdexcept">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\streambuf">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\streambuf">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\string">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\string">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\string_view">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\string_view">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\strstream">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\strstream">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\system_error">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\system_error">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\thread">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\thread">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\tuple">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\tuple">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\type_traits">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\type_traits">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\typeindex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\typeindex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\typeinfo">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\typeinfo">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\unordered_map">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\unordered_map">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\unordered_set">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\unordered_set">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\utility">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\utility">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\valarray">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\valarray">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\variant">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\variant">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\vector">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\vector">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xcomplex">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xcomplex">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xfacet">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xfacet">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xfunctional">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xfunctional">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xhash">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xhash">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xiosbase">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xiosbase">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocale">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xlocale">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocbuf">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xlocbuf">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocinfo">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xlocinfo">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocmes">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xlocmes">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocmon">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xlocmon">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xlocnum">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xlocnum">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xloctime">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xloctime">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xmemory">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xmemory">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xmemory0">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xmemory0">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xstddef">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xstddef">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xstring">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xstring">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xtr1common">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xtr1common">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xtree">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xtree">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xutility">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xutility">
       <Filter>源代码\VC\141</Filter>
     </None>
-    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\VC\141\xxatomic">
+    <None Include="$(MSBuildThisFileDirectory)VC\141\xxatomic">
       <Filter>源代码\VC\141</Filter>
     </None>
   </ItemGroup>
