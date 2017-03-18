@@ -1,0 +1,36 @@
+// This is a part of the Active Template Library.
+// Copyright (C) Microsoft Corporation
+// All rights reserved.
+//
+// This source code is only intended as a supplement to the
+// Active Template Library Reference and related
+// electronic documentation provided with the library.
+// See these sources for detailed information regarding the
+// Active Template Library product.
+
+#include <winresrc.h>
+#include "atlrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+#ifndef _ATL_NO_DATETIME_RESOURCES_
+
+	ATL_IDS_DATETIME_INVALID		"잘못된 DateTime입니다."
+	ATL_IDS_DATETIMESPAN_INVALID	"잘못된 DateTimeSpan입니다."
+	
+#endif
+
+#ifndef _ATL_NO_MODULE_RESOURCES_
+	ATL_SERVICE_MANAGER_OPEN_ERROR	"서버 관리자를 열 수 없습니다."
+	ATL_SERVICE_START_ERROR			"서비스를 시작할 수 없습니다."
+	ATL_SERVICE_OPEN_ERROR			"서비스를 열 수 없습니다."
+	ATL_SERVICE_STOP_ERROR			"서비스를 중지할 수 없습니다."
+	ATL_SERVICE_DELETE_ERROR		"서비스를 삭제할 수 없습니다."
+#endif
+
+END

@@ -1,0 +1,36 @@
+// This is a part of the Active Template Library.
+// Copyright (C) Microsoft Corporation
+// All rights reserved.
+//
+// This source code is only intended as a supplement to the
+// Active Template Library Reference and related
+// electronic documentation provided with the library.
+// See these sources for detailed information regarding the
+// Active Template Library product.
+
+#include <winresrc.h>
+#include "atlrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+#ifndef _ATL_NO_DATETIME_RESOURCES_
+
+	ATL_IDS_DATETIME_INVALID		"DateTime ungültig"
+	ATL_IDS_DATETIMESPAN_INVALID	"DateTimeSpan ungültig"
+	
+#endif
+
+#ifndef _ATL_NO_MODULE_RESOURCES_
+	ATL_SERVICE_MANAGER_OPEN_ERROR	"Service Manager konnte nicht geöffnet werden"
+	ATL_SERVICE_START_ERROR			"Der Dienst konnte nicht gestartet werden"
+	ATL_SERVICE_OPEN_ERROR			"Der Dienst konnte nicht geöffnet werden"
+	ATL_SERVICE_STOP_ERROR			"Der Dienst konnte nicht beendet werden"
+	ATL_SERVICE_DELETE_ERROR		"Der Dienst konnte nicht gelöscht werden"
+#endif
+
+END

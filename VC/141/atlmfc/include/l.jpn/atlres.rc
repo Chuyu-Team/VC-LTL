@@ -1,0 +1,36 @@
+// This is a part of the Active Template Library.
+// Copyright (C) Microsoft Corporation
+// All rights reserved.
+//
+// This source code is only intended as a supplement to the
+// Active Template Library Reference and related
+// electronic documentation provided with the library.
+// See these sources for detailed information regarding the
+// Active Template Library product.
+
+#include <winresrc.h>
+#include "atlrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+#ifndef _ATL_NO_DATETIME_RESOURCES_
+
+	ATL_IDS_DATETIME_INVALID		"DateTime が無効です。"
+	ATL_IDS_DATETIMESPAN_INVALID	"DateTimeSpan が無効です。"
+	
+#endif
+
+#ifndef _ATL_NO_MODULE_RESOURCES_
+	ATL_SERVICE_MANAGER_OPEN_ERROR	"サービス マネージャーを開けませんでした。"
+	ATL_SERVICE_START_ERROR			"サービスを開始できませんでした。"
+	ATL_SERVICE_OPEN_ERROR			"サービスを開けませんでした。"
+	ATL_SERVICE_STOP_ERROR			"サービスを中止できませんでした。"
+	ATL_SERVICE_DELETE_ERROR		"サービスを削除できませんでした。"
+#endif
+
+END

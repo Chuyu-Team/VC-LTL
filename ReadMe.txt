@@ -18,17 +18,9 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 ## 使用方法：
 1：将内容解压到工程目录VC-LTL
 2：修改含目录，设置为以下内容，并且取消  从父级或者默认设置中继承
-	### VS 2015使用以下包含目录:
-		$(VSInstallDir)VC\atlmfc\include
 		$(WindowsSDK_IncludePath)
-		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)
-		$(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
-		$(SolutionDir)\VC-LTL
-
-	### VS 2017使用以下包含目录:
-		$(VCToolsInstallDir)atlmfc\include
-		$(WindowsSDK_IncludePath)
-		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)
+		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\include
+		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include
 		$(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
 		$(SolutionDir)\VC-LTL
 
@@ -46,6 +38,9 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 
 
 ## Changes：
+1.0.0.6 2016-3-18 13:46
+1：优化文件引用
+
 1.0.0.5 2016-3-16 20:53
 1：新增VC 2017支持
 
