@@ -201,6 +201,29 @@ extern "C"
 		data->_What = nullptr;
 	}
 
+//	int __cdecl __stdio_common_vswprintf(
+//		_In_                                    unsigned __int64 _Options,
+//		_Out_writes_z_(_BufferCount)            wchar_t*         _Buffer,
+//		_In_                                    size_t           _BufferCount,
+//		_In_z_ _Printf_format_string_params_(2) wchar_t const*   _Format,
+//		_In_opt_                                _locale_t        _Locale,
+//		va_list          _ArgList
+//	)
+//	{
+//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
+//	}
+//
+//	int __cdecl __stdio_common_vswprintf_s(
+//		_In_                                    unsigned __int64 _Options,
+//		_Out_writes_z_(_BufferCount)            wchar_t*         _Buffer,
+//		_In_                                    size_t           _BufferCount,
+//		_In_z_ _Printf_format_string_params_(2) wchar_t const*   _Format,
+//		_In_opt_                                _locale_t        _Locale,
+//		va_list          _ArgList
+//	)
+//	{
+//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_s_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
+//	}
 }
 
 #ifdef __cplusplus

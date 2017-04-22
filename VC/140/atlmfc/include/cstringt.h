@@ -676,21 +676,7 @@ public:
 	static int __cdecl GetFormattedLength(
 		_In_z_ _Printf_format_string_ LPCWSTR pszFormat, va_list args) throw()
 	{
-#if _MSC_VER < 1900
 		return _vscwprintf(pszFormat, args);
-#else
-		// Explicitly request the legacy wide format specifiers mode from the CRT,
-		// for compatibility with previous versions.  While the CRT supports two
-		// modes, the ATL and MFC functions that accept format strings only support
-		// legacy mode format strings.
-		int const result = __stdio_common_vswprintf(
-			_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS |
-			_CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR |
-			_CRT_INTERNAL_PRINTF_LEGACY_WIDE_SPECIFIERS,
-			NULL, 0, pszFormat, NULL, args);
-
-		return result < 0 ? -1 : result;
-#endif
 	}
 
 	_ATL_INSECURE_DEPRECATE("You must pass an output size to ChTraitsCRT::Format")
@@ -702,40 +688,14 @@ public:
 #pragma warning(suppress : 4996)
 #pragma warning(suppress : 6386)
 #pragma warning(suppress : 28719)
-#if _MSC_VER < 1900
-		return vswprintf(pszBuffer, pszFormat, args);
-#else
-		// Explicitly request the legacy wide format specifiers mode from the CRT,
-		// for compatibility with previous versions.  While the CRT supports two
-		// modes, the ATL and MFC functions that accept format strings only support
-		// legacy mode format strings.
-		int const result = __stdio_common_vswprintf(
-			_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS |
-			_CRT_INTERNAL_PRINTF_LEGACY_WIDE_SPECIFIERS,
-			pszBuffer, INT_MAX, pszFormat, NULL, args);
-
-		return result < 0 ? -1 : result;
-#endif
+		return _vscwprintf(pszBuffer, pszFormat, args);
 	}
 	static int __cdecl Format(
 		_Out_writes_(nLength) LPWSTR pszBuffer,
 		_In_ size_t nLength,
 		_In_ _Printf_format_string_ LPCWSTR pszFormat, va_list args) throw()
 	{
-#if _MSC_VER < 1900
 		return vswprintf_s(pszBuffer, nLength, pszFormat, args);
-#else
-		// Explicitly request the legacy wide format specifiers mode from the CRT,
-		// for compatibility with previous versions.  While the CRT supports two
-		// modes, the ATL and MFC functions that accept format strings only support
-		// legacy mode format strings.
-		int const result = __stdio_common_vswprintf_s(
-			_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS |
-			_CRT_INTERNAL_PRINTF_LEGACY_WIDE_SPECIFIERS,
-			pszBuffer, nLength, pszFormat, NULL, args);
-
-		return result < 0 ? -1 : result;
-#endif
 	}
 
 	static int __cdecl GetBaseTypeLength(_In_z_ LPCSTR pszSrc) throw()

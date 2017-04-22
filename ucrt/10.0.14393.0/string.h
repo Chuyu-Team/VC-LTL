@@ -354,7 +354,7 @@ _When_(
     _MaxCount <= _String_length_(_String),
     _Post_satisfies_(return == _MaxCount)
 )
-_ACRTIMP size_t __cdecl strnlen(
+_ACRTXPIMP size_t __cdecl strnlen(
     _In_reads_or_z_(_MaxCount) char const* _String,
     _In_                       size_t      _MaxCount
     );

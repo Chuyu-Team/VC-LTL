@@ -43,6 +43,9 @@
     <Filter Include="源代码\VC\141\atlmfc\include">
       <UniqueIdentifier>{0fd8f988-06a8-4f98-838f-55f53b649ba4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源代码\ucrt\10.0.14393.0\sys">
+      <UniqueIdentifier>{d0178783-00d9-450c-8b6c-7f3172dd0c81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h">
@@ -1823,6 +1826,21 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\statreg.h">
       <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\locking.h">
+      <Filter>源代码\ucrt\10.0.14393.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\stat.h">
+      <Filter>源代码\ucrt\10.0.14393.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\timeb.h">
+      <Filter>源代码\ucrt\10.0.14393.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\types.h">
+      <Filter>源代码\ucrt\10.0.14393.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\utime.h">
+      <Filter>源代码\ucrt\10.0.14393.0\sys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

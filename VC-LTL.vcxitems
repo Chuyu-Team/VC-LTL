@@ -70,6 +70,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\stdio.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\stdlib.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\string.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\locking.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\stat.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\timeb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\types.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\sys\utime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\tchar.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\time.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.14393.0\uchar.h" />

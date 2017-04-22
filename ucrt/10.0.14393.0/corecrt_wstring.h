@@ -140,7 +140,7 @@ _When_(
     _MaxCount <= _String_length_(_Source),
     _Post_satisfies_(return == _MaxCount)
 )
-_ACRTIMP size_t __cdecl wcsnlen(
+_ACRTXPIMP size_t __cdecl wcsnlen(
     _In_reads_or_z_(_MaxCount) wchar_t const* _Source,
     _In_                       size_t         _MaxCount
     );
