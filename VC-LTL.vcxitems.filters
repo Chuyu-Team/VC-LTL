@@ -1837,17 +1837,41 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_140.lib">
-      <Filter>Libx86</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib">
       <Filter>Libx86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_140.lib">
-      <Filter>Libx64</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib">
       <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc140xp.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib">
+      <Filter>Libx86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib">
+      <Filter>Libx86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc140xp.lib">
+      <Filter>Libx86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc141xp.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib">
+      <Filter>Libx86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc141xp.lib">
+      <Filter>Libx86</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -2564,6 +2588,12 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xxatomic">
       <Filter>源代码\VC\141\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)x64\helper.asm">
+      <Filter>Libx64</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)x86\helper.asm">
+      <Filter>Libx86</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

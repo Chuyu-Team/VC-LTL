@@ -2,13 +2,34 @@
 
 #if NDEBUG&&_DLL
 
+#define _NO_CRT_STDIO_INLINE
+
+#include <corecrt.h>
 #pragma comment(linker, "/nodefaultlib:msvcrt.lib")
 #pragma comment(linker, "/nodefaultlib:msvcprt.lib")
 
-#pragma comment(lib,"msvcrt_vista.lib")
-#pragma comment(lib,"msvcrt_140.lib")
 
-#define _NO_CRT_STDIO_INLINE
-//extern "C" void __fastcall _guard_check_icall(void*);
+
+#ifdef _ATL_XP_TARGETING
+//XP模式，此模式很多编译器特性采用事件实现，并将XP不支持的一些函数静态导入
+#if _MSC_VER == 1900
+#pragma comment(lib,"vc140xp.lib")
+#elif _MSC_VER == 1910
+#pragma comment(lib,"vc141xp.lib")
+#endif
+#define _ACRTXPIMP extern
+#else
+//默认模式，此模式编译器新特性将使用Vista新API实现，性能更佳
+#if _MSC_VER == 1900
+#pragma comment(lib,"vc140.lib")
+#elif _MSC_VER == 1910
+#pragma comment(lib,"vc141.lib")
+#endif
+#define _ACRTXPIMP _ACRTIMP
+#endif
+
+
+//导入Windows Vista 动态库 msvcrt.dll
+#pragma comment(lib,"msvcrt_base.lib")
 
 #endif

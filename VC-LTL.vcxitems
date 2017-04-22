@@ -614,10 +614,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc140xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\vc141xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc140xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\vc141xp.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.txt" />
@@ -860,6 +868,8 @@
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xtree" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xutility" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xxatomic" />
+    <None Include="$(MSBuildThisFileDirectory)x64\helper.asm" />
+    <None Include="$(MSBuildThisFileDirectory)x86\helper.asm" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc" />

@@ -23,11 +23,10 @@ typedef void (__CRTDECL* terminate_function)();
     typedef void (__clrcall* __terminate_handler_m )();
 #endif
 
-_ACRTIMP __declspec(noreturn) void __cdecl abort();
-
 #ifdef __cplusplus
 
-	extern "C++" _ACRTIMP __declspec(noreturn) void __cdecl terminate() throw();
+	_ACRTIMP __declspec(noreturn) void __cdecl abort();
+	extern "C++" __declspec(noreturn) void __cdecl terminate() throw();
 
     #ifndef _M_CEE_PURE
 
