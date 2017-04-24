@@ -19,21 +19,22 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 ## 使用方法：
 1：将内容解压到工程目录VC-LTL
 2：修改含目录，设置为以下内容，并且取消  从父级或者默认设置中继承
-		$(WindowsSDK_IncludePath)
-		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\include
-		$(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include
-		$(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
-		$(SolutionDir)\VC-LTL
+* $(WindowsSDK_IncludePath)
+* $(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\include
+* $(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include
+* $(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
+* $(SolutionDir)\VC-LTL
 
-3：在库目录增加：$(SolutionDir)VC-LTL\$(PlatformShortName)
+3：在库目录增加：
+* $(SolutionDir)VC-LTL\$(PlatformShortName)
 
 
 4：stdafx.h的开头增加  #include <_msvcrt.h>   ，stdafx.cpp中增加  #include <_msvcrt.cpp>
 
 
-5：在工程属性 C++ - 所有选项 ，【安全检查】 调整为【禁用安全检查】
-                               【运行库】调整为 【多线程DLL/MD】
-							   【目标平台】调整为【Windows 10 14393】
+5：在工程属性 C++ - 所有选项：
+* 运行库】调整为 【多线程DLL/MD
+* 目标平台】调整为【Windows 10 14393】
 
 6：重新编译你的应用程序（Release），是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC LTL。
 

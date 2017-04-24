@@ -633,7 +633,7 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\vc141xp.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$(MSBuildThisFileDirectory)ReadMe.txt" />
+    <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afx.inl" />

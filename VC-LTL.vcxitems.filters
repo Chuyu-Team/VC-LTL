@@ -1893,9 +1893,6 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$(MSBuildThisFileDirectory)ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)VC\140\include\algorithm">
       <Filter>源代码\VC\140\include</Filter>
     </None>
@@ -2656,5 +2653,8 @@
     <Midl Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\atliface.idl">
       <Filter>源代码\VC\141\atlmfc\include</Filter>
     </Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
   </ItemGroup>
 </Project>
