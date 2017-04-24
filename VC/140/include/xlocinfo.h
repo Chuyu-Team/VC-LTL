@@ -130,19 +130,35 @@ _END_C_LIB_DECL
 _C_STD_END
 
 _C_LIB_DECL
-_CRTIMP char *__cdecl _Getdays(void);
-_CRTIMP char *__cdecl _Getmonths(void);
-_CRTIMP void *__cdecl _Gettnames(void);
-_CRTIMP size_t __cdecl _Strftime(_Out_writes_(_Maxsize) char *,
-	_In_ size_t _Maxsize, _In_z_ _Printf_format_string_ const char *,
-	_In_ const struct tm *, void *);
+_Success_(return != 0)
+_Ret_z_
+_ACRTIMP char *__cdecl _Getdays(void);
 
-_CRTIMP wchar_t *__cdecl _W_Getdays(void);
-_CRTIMP wchar_t *__cdecl _W_Getmonths(void);
-_CRTIMP void *__cdecl _W_Gettnames(void);
-_CRTIMP size_t __cdecl _Wcsftime(_Out_writes_(_Maxsize) wchar_t *,
-	_In_ size_t _Maxsize, _In_z_ _Printf_format_string_ const wchar_t *,
-	_In_ const struct tm *, void *);
+_Success_(return != 0)
+_Ret_z_
+_ACRTIMP char *__cdecl _Getmonths(void);
+
+_ACRTIMP void *__cdecl _Gettnames(void);
+
+_Success_(return > 0)
+_ACRTIMP size_t __cdecl _Strftime(_Out_writes_z_(_Maxsize) char *,
+	_In_ size_t _Maxsize, _In_z_ const char *, _In_ const struct tm *,
+	_In_opt_ void *);
+
+_Success_(return != 0)
+_Ret_z_
+_ACRTIMP wchar_t *__cdecl _W_Getdays(void);
+
+_Success_(return != 0)
+_Ret_z_
+_ACRTIMP wchar_t *__cdecl _W_Getmonths(void);
+
+_ACRTIMP void *__cdecl _W_Gettnames(void);
+
+_Success_(return > 0)
+_ACRTIMP size_t __cdecl _Wcsftime(_Out_writes_z_(_Maxsize) wchar_t *,
+	_In_ size_t _Maxsize, _In_z_ const wchar_t *, _In_ const struct tm *,
+	_In_opt_ void *);
 _END_C_LIB_DECL
 
  #ifdef _M_CEE_PURE

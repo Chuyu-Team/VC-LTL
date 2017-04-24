@@ -5,7 +5,7 @@
 *
 *Purpose:
 *       This file contains macros for Concurrency SAL annotations. Definitions
-*       starting with _Internal are low level macros that are subject to change. 
+*       starting with _Internal are low level macros that are subject to change.
 *       Users should not use those low level macros directly.
 *       [ANSI]
 *
@@ -22,7 +22,7 @@
 extern "C" {
 #endif  // ]
 
-#if !defined(__midl) && defined(_PREFAST_) && _MSC_VER >= 1000 && !defined(_SDV_)
+#if !defined(__midl) && defined(_PREFAST_) && !defined(_SDV_)
 
 __ANNOTATION(SAL_guarded_by(__deferTypecheck void *));
 __ANNOTATION(SAL_write_guarded_by(__deferTypecheck void *));
@@ -340,7 +340,7 @@ extern __function_ignore_lock_checking(*plock) void __internal_suppress_lock_che
 #define __analysis_assume_lock_acquired(lock)
 #define __analysis_assume_lock_released(lock)
 #define __function_ignore_lock_checking(lock)
-#define __analysis_suppress_lock_checking(lock) 
+#define __analysis_suppress_lock_checking(lock)
 
 #define BENIGN_RACE_BEGIN __pragma(warning(push))
 #define BENIGN_RACE_END __pragma(warning(pop))

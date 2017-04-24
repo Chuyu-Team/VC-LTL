@@ -29,6 +29,10 @@ _STD_BEGIN
 	using ::set_terminate; using ::terminate_handler; using ::terminate; \
 	using ::set_unexpected; using ::unexpected_handler; using ::unexpected;
   #endif /* _M_CEE_PURE */
+
+_CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL uncaught_exception() _NOEXCEPT;
+_CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL uncaught_exceptions() _NOEXCEPT;
+
 _STD_END
 
  #if _HAS_EXCEPTIONS
@@ -42,16 +46,13 @@ _USE_EX
 
 typedef void (__cdecl *_Prhand)(const exception&);
 
-_CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL uncaught_exception() _NOEXCEPT;
-_CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL uncaught_exceptions() _NOEXCEPT;
-
 #ifndef _M_CEE_PURE
-inline terminate_handler __CRTDECL get_terminate()
+inline terminate_handler __CRTDECL get_terminate() _NOEXCEPT
 	{	// get current terminate handler
 	return (_get_terminate());
 	}
 
-inline unexpected_handler __CRTDECL get_unexpected()
+inline unexpected_handler __CRTDECL get_unexpected() _NOEXCEPT
 	{	// get current unexpected handler
 	return (_get_unexpected());
 	}
@@ -204,7 +205,7 @@ inline unexpected_handler __CRTDECL set_unexpected(unexpected_handler)
 	return 0;
 	}
 
-inline void __CRTDECL terminate()
+inline void __CRTDECL terminate() _NOEXCEPT
 	{	// handle exception termination
 	}
 
@@ -212,14 +213,12 @@ inline void __CRTDECL unexpected()
 	{	// handle unexpected exception
 	}
 
-_CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL uncaught_exception();	// handle uncaught exception
-
-inline terminate_handler __CRTDECL get_terminate()
+inline terminate_handler __CRTDECL get_terminate() _NOEXCEPT
 	{	// get current terminate handler
 	return (0);
 	}
 
-inline unexpected_handler __CRTDECL get_unexpected()
+inline unexpected_handler __CRTDECL get_unexpected() _NOEXCEPT
 	{	// get current unexpected handler
 	return (0);
 	}
@@ -246,8 +245,9 @@ _CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL __ExceptionPtrCompare(_In_ const void
 _CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL __ExceptionPtrToBool(_In_ const void*);
 _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrSwap(_Inout_ void*, _Inout_ void*);
 _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCurrentException(_Out_ void*);
-_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrRethrow(_In_ const void*);
-_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCopyException(_Inout_ void*, _In_ const void*, _In_ const void*);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrRethrow(_In_ const void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCopyException(
+	_Inout_ void*, _In_ const void*, _In_ const void*);
 
 _STD_BEGIN
 
@@ -287,14 +287,12 @@ public:
 		return *this;
 		}
 
-	typedef exception_ptr _Myt;
-
 	explicit operator bool() const throw ()
 		{
 		return __ExceptionPtrToBool(this);
 		}
 
-	void _RethrowException() const
+	[[noreturn]] void _RethrowException() const
 		{
 		__ExceptionPtrRethrow(this);
 		}
@@ -363,14 +361,14 @@ inline exception_ptr current_exception() _NOEXCEPT
 	return exception_ptr::_Current_exception();
 	}
 
-inline void rethrow_exception(_In_ exception_ptr _Ptr)
+[[noreturn]] inline void rethrow_exception(_In_ exception_ptr _Ptr)
 	{
 	_Ptr._RethrowException();
 	}
 
 template<class _Ex> void *__GetExceptionInfo(_Ex);
 
-template<class _Ex> exception_ptr make_exception_ptr(_Ex _Except)
+template<class _Ex> exception_ptr make_exception_ptr(_Ex _Except) _NOEXCEPT
 	{
 	return exception_ptr::_Copy_exception(_STD addressof(_Except), __GetExceptionInfo(_Except));
 	}
@@ -388,7 +386,7 @@ public:
 	nested_exception& operator=(const nested_exception&) _NOEXCEPT = default;
 	virtual ~nested_exception() _NOEXCEPT = default;
 
-	_NO_RETURN(rethrow_nested() const)
+	[[noreturn]] void rethrow_nested() const
 		{	// throw wrapped exception_ptr
 		if (_Exc)
 			_XSTD rethrow_exception(_Exc);
@@ -417,8 +415,8 @@ template<class _Ty,
 		}
 	};
 
-template<class _Ty> inline
-	_NO_RETURN(_Throw_with_nested(_Ty&& _Arg, true_type))
+template<class _Ty>
+	[[noreturn]] inline void _Throw_with_nested(_Ty&& _Arg, true_type)
 	{	// throw user exception glued to nested_exception
 	typedef typename remove_reference<_Ty>::type _Uty;
 	typedef _With_nested<_Ty, _Uty> _Glued;
@@ -426,16 +424,16 @@ template<class _Ty> inline
 	_THROW_NCEE(_Glued, _STD forward<_Ty>(_Arg));
 	}
 
-template<class _Ty> inline
-	_NO_RETURN(_Throw_with_nested(_Ty&& _Arg, false_type))
+template<class _Ty>
+	[[noreturn]] inline void _Throw_with_nested(_Ty&& _Arg, false_type)
 	{	// throw user exception by itself
 	typedef typename decay<_Ty>::type _Decayed;
 
 	_THROW_NCEE(_Decayed, _STD forward<_Ty>(_Arg));
 	}
 
-template<class _Ty> inline
-	_NO_RETURN(throw_with_nested(_Ty&& _Arg))
+template<class _Ty>
+	[[noreturn]] inline void throw_with_nested(_Ty&& _Arg)
 	{	// throw user exception, glued to nested_exception if possible
 	typedef typename remove_reference<_Ty>::type _Uty;
 

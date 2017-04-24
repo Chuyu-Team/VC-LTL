@@ -477,6 +477,12 @@ extern __m256 __cdecl _mm256_cmp_ps(__m256, __m256, const int);
  */
 extern __m128d __cdecl _mm_cmp_sd(__m128d, __m128d, const int);
 
+/* Compare Scalar Double-Precision Floating-Point Values with Integer Result
+ * This is similar to _mm_cmp_sd, except it returns the result as an integer
+ * and it supports all predicate values even when AVX support is not available.
+ */
+extern int __cdecl _mm_comi_sd(__m128d, __m128d, const int);
+
 /*
  * Compare Scalar Single-Precision Floating-Point Values
  * **** VCMPSS xmm1, xmm2, xmm3/m64, imm8
@@ -489,6 +495,12 @@ extern __m128d __cdecl _mm_cmp_sd(__m128d, __m128d, const int);
  * instructions if it is warranted for performance reasons.
  */
 extern __m128 __cdecl _mm_cmp_ss(__m128, __m128, const int);
+
+/* Compare Scalar Single-Precision Floating-Point Values with Integer Result
+ * This is similar to _mm_cmp_ss, except it returns the result as an integer
+ * and it supports all predicate values even when AVX support is not available.
+ */
+extern int __cdecl _mm_comi_ss(__m128, __m128, const int);
 
 /*
  * Convert Packed Doubleword Integers to
@@ -1465,7 +1477,9 @@ extern __m256i __cdecl _mm256_mpsadbw_epu8(__m256i, __m256i, const int);
  * Integer 256-bit vector arithmetic/logical shift operations.
  */
 extern __m256i __cdecl _mm256_slli_si256(__m256i, const int);
+#define _mm256_bslli_epi128 _mm256_slli_si256
 extern __m256i __cdecl _mm256_srli_si256(__m256i, const int);
+#define _mm256_bsrli_epi128 _mm256_srli_si256
 
 extern __m256i __cdecl _mm256_sll_epi16(__m256i, __m128i);
 extern __m256i __cdecl _mm256_sll_epi32(__m256i, __m128i);
@@ -1785,6 +1799,8 @@ extern __m128i __cdecl _mm_i64gather_epi64(__int64 const * /* ptr */,
 
 /*
  * A collection of operations to manipulate integer data at bit-granularity.
+ * The names of these functions are formed from the instruction mnemonic and
+ * the operand data type used to implement them.
  */
 extern unsigned int     _bextr_u32(unsigned int /* src */,
                                    unsigned int /* start_bit */,
@@ -1943,7 +1959,9 @@ extern unsigned char    __cdecl _xtest(void);
  */
 extern int __cdecl _rdseed16_step(unsigned short *);
 extern int __cdecl _rdseed32_step(unsigned int *);
+#if defined(_M_X64)
 extern int __cdecl _rdseed64_step(unsigned __int64 *);
+#endif  /* defined (_M_X64) */
 
 /*
  * The _addcarryx... functions generate ADCX and ADOX instructions which
@@ -1959,16 +1977,6 @@ extern unsigned char __cdecl _addcarryx_u32(unsigned char /*c_in*/,
                                                    unsigned int /*src2*/,
                                                    unsigned int * /*out*/);
 
-/*
- * The Secure Hash Algorithm (SHA) New Instructions.
-*/
-extern __m128i _mm_sha1rnds4_epu32(__m128i, __m128i, const int);
-extern __m128i _mm_sha1nexte_epu32(__m128i, __m128i);
-extern __m128i _mm_sha1msg1_epu32(__m128i, __m128i);
-extern __m128i _mm_sha1msg2_epu32(__m128i, __m128i);
-extern __m128i _mm_sha256rnds2_epu32(__m128i, __m128i, __m128i);
-extern __m128i _mm_sha256msg1_epu32(__m128i, __m128i);
-extern __m128i _mm_sha256msg2_epu32(__m128i, __m128i);
 
 #if defined(_M_X64)
 extern unsigned char __cdecl _addcarryx_u64(unsigned char /*c_in*/,
@@ -1977,20 +1985,53 @@ extern unsigned char __cdecl _addcarryx_u64(unsigned char /*c_in*/,
                                                    unsigned __int64 * /*out*/);
 #endif  /* defined (_M_X64) */
 
+
+/*
+ * Perform load a big-endian value from memory.
+ */
+extern unsigned short   __cdecl _load_be_u16(void const*);
+extern unsigned int     __cdecl _load_be_u32(void const*);
+extern unsigned __int64 __cdecl _load_be_u64(void const*);
+#define _loadbe_i16(be_ptr) ((short)  _load_be_u16(be_ptr))
+#define _loadbe_i32(be_ptr) ((int)    _load_be_u32(be_ptr))
+#define _loadbe_i64(be_ptr) ((__int64)_load_be_u64(be_ptr))
+
+/*
+ * Perform store a value to memory as big-endian.
+ */
+extern void __cdecl _store_be_u16(void *, unsigned short);
+extern void __cdecl _store_be_u32(void *, unsigned int);
+extern void __cdecl _store_be_u64(void *, unsigned __int64);
+#define _storebe_i16(be_ptr, val) _store_be_u16(be_ptr, (unsigned short)(val))
+#define _storebe_i32(be_ptr, val) _store_be_u32(be_ptr, (unsigned int)(val))
+#define _storebe_i64(be_ptr, val) _store_be_u64(be_ptr, (unsigned __int64)(__int64)(val))
+
+/*
+ * The Secure Hash Algorithm (SHA) New Instructions.
+*/
+extern __m128i __cdecl _mm_sha1msg1_epu32(__m128i, __m128i);
+extern __m128i __cdecl _mm_sha1msg2_epu32(__m128i, __m128i);
+extern __m128i __cdecl _mm_sha1nexte_epu32(__m128i, __m128i);
+extern __m128i __cdecl _mm_sha1rnds4_epu32(__m128i, __m128i, const int);
+
+extern __m128i __cdecl _mm_sha256msg1_epu32(__m128i, __m128i);
+extern __m128i __cdecl _mm_sha256msg2_epu32(__m128i, __m128i);
+extern __m128i __cdecl _mm_sha256rnds2_epu32(__m128i, __m128i, __m128i);
+
 /*
  * Intel(R) Memory Protection Extensions (Intel(R) MPX) intrinsic functions
 */
-extern void * _bnd_set_ptr_bounds(const void *, size_t);
-extern void * _bnd_init_ptr_bounds(const void *);
-extern void * _bnd_copy_ptr_bounds(const void *, const void *);
-extern void _bnd_chk_ptr_bounds(const void *, size_t);
-extern void _bnd_chk_ptr_lbounds(const void *);
-extern void _bnd_chk_ptr_ubounds(const void *);
-extern void _bnd_store_ptr_bounds(const void **, const void *);
-extern void * _bnd_load_ptr_bounds(const void **, const void *);
-extern const void * _bnd_get_ptr_lbound(const void *);
-extern const void * _bnd_get_ptr_ubound(const void *);
-extern void * _bnd_narrow_ptr_bounds(const void *, const void *, size_t);
+extern void * __cdecl _bnd_set_ptr_bounds(const void *, size_t);
+extern void * __cdecl _bnd_narrow_ptr_bounds(const void *, const void *, size_t);
+extern void * __cdecl _bnd_copy_ptr_bounds(const void *, const void *);
+extern void * __cdecl _bnd_init_ptr_bounds(const void *);
+extern void __cdecl _bnd_store_ptr_bounds(const void **, const void *);
+extern void __cdecl _bnd_chk_ptr_lbounds(const void *);
+extern void __cdecl _bnd_chk_ptr_ubounds(const void *);
+extern void __cdecl _bnd_chk_ptr_bounds(const void *, size_t);
+extern void * __cdecl _bnd_load_ptr_bounds(const void **, const void *);
+extern const void * __cdecl _bnd_get_ptr_lbound(const void *);
+extern const void * __cdecl _bnd_get_ptr_ubound(const void *);
 
 #if defined __cplusplus
 }; /* End "C" */

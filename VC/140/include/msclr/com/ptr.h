@@ -19,7 +19,7 @@
 
 #include <vcclr.h>
 
-#include <msclr\safebool.h>
+#include <msclr/safebool.h>
 
 namespace msclr
 {

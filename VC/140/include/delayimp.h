@@ -122,9 +122,20 @@ __HrLoadAllImportsForDll(LPCSTR szDll);
 //  dliNoteEndProcessing}
 //  on this call.
 //
+// Prior to Visual Studio 2015 Update 3, these hooks were non-const.  They were
+// made const to improve security (global, writable function pointers are bad).
+// If for backwards compatibility you require the hooks to be writable, define
+// the macro DELAYIMP_INSECURE_WRITABLE_HOOKS prior to including this header and
+// provide your own non-const definition of the hooks.
 ExternC
+#ifndef DELAYIMP_INSECURE_WRITABLE_HOOKS
+const
+#endif
 PfnDliHook   __pfnDliNotifyHook2;
 
 // This is the failure hook, dliNotify = {dliFailLoadLib|dliFailGetProc}
 ExternC
+#ifndef DELAYIMP_INSECURE_WRITABLE_HOOKS
+const
+#endif
 PfnDliHook   __pfnDliFailureHook2;

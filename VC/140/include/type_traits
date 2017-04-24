@@ -11,93 +11,7 @@
  #undef new
  #pragma warning(disable: 4180 4296)
 
-	// COMPILER SUPPORT MACROS
-
-		// VC++ V14 SUPPORT
-  #define _IS_BASE_OF(_Base, _Der)	\
-	: _Cat_base<__is_base_of(_Base, _Der)>
-  #define _IS_CONVERTIBLE(_From, _To)	\
-	: _Cat_base<__is_convertible_to(_From, _To)>
-  #define _IS_UNION(_Ty)	\
-	: _Cat_base<__is_union(_Ty)>
-  #define _IS_CLASS(_Ty)	\
-	: _Cat_base<__is_class(_Ty)>
-  #define _IS_POD(_Ty)	\
-	: _Cat_base<__is_pod(_Ty)>
-  #define _IS_EMPTY(_Ty)	\
-	: _Cat_base<__is_empty(_Ty)>
-  #define _IS_POLYMORPHIC(_Ty)	\
-	: _Cat_base<__is_polymorphic(_Ty)>
-  #define _IS_ABSTRACT(_Ty)	\
-	: _Cat_base<__is_abstract(_Ty)>
-  #define _IS_FINAL(_Ty)	\
-	: _Cat_base<__is_final(_Ty)>
-  #define _IS_STANDARD_LAYOUT(_Ty)	\
-	: _Cat_base<__is_standard_layout(_Ty)>
-  #define _IS_TRIVIAL(_Ty)	\
-	: _Cat_base<__is_trivial(_Ty)>
-  #define _IS_TRIVIALLY_COPYABLE(_Ty)	\
-	: _Cat_base<__is_trivially_copyable(_Ty)>
-  #define _HAS_TRIVIAL_DESTRUCTOR(_Ty)	\
-	: _Cat_base<__has_trivial_destructor(_Ty)>
-  #define _HAS_VIRTUAL_DESTRUCTOR(_Ty)	\
-	: _Cat_base<__has_virtual_destructor(_Ty)>
-  #define _UNDERLYING_TYPE(_Ty)	\
-	__underlying_type(_Ty)
-  #define _IS_LITERAL_TYPE(_Ty)	\
-	: _Cat_base<__is_literal_type(_Ty)>
-  #define _IS_ENUM(_Ty)	\
-	: _Cat_base<__is_enum(_Ty)>
-  #define _IS_DESTRUCTIBLE(_Ty) \
-	: _Cat_base<__is_destructible(_Ty)>
-  #define _IS_NOTHROW_ASSIGNABLE(_To, _From) \
-	: _Cat_base<__is_nothrow_assignable(_To, _From)>
-  #define _IS_NOTHROW_DESTRUCTIBLE(_Ty) \
-	: _Cat_base<__is_nothrow_destructible(_Ty)>
-  #define _IS_TRIVIALLY_ASSIGNABLE(_To, _From) \
-	: _Cat_base<__is_trivially_assignable(_To, _From)>
-  #define _IS_CONSTRUCTIBLE \
-	__is_constructible
-  #define _IS_NOTHROW_CONSTRUCTIBLE \
-	__is_nothrow_constructible
-  #define _IS_TRIVIALLY_CONSTRUCTIBLE \
-	__is_trivially_constructible
-
 _STD_BEGIN
-	// TEMPLATE CLASS _Ptr_traits
-template<class _Ty>
-	struct _Ptr_traits
-	{	// basic definition
-	};
-
-template<class _Ty>
-	struct _Ptr_traits<_Ty *>
-	{	// pointer properties
-	static const bool _Is_const = false;
-	static const bool _Is_volatile = false;
-	};
-
-template<class _Ty>
-	struct _Ptr_traits<const _Ty *>
-	{	// pointer to const properties
-	static const bool _Is_const = true;
-	static const bool _Is_volatile = false;
-	};
-
-template<class _Ty>
-	struct _Ptr_traits<volatile _Ty *>
-	{	// pointer to volatile properties
-	static const bool _Is_const = false;
-	static const bool _Is_volatile = true;
-	};
-
-template<class _Ty>
-	struct _Ptr_traits<const volatile _Ty *>
-	{	// pointer to const volatile properties
-	static const bool _Is_const = true;
-	static const bool _Is_volatile = true;
-	};
-
 template<class _Ty>
 	struct _Is_memfunptr
 	{	// base class for member function pointer predicates
@@ -119,11 +33,11 @@ template<class _Ret, \
 _MEMBER_CALL_CV_REF(_IS_MEMFUNPTR)
 #undef _IS_MEMFUNPTR
 
-#define _IS_MEMFUNPTR_ELLIPSIS(CV_OPT, REF_OPT) \
+#define _IS_MEMFUNPTR_ELLIPSIS(CV_REF_OPT, X1) \
 template<class _Ret, \
 	class _Arg0, \
 	class... _Types> \
-	struct _Is_memfunptr<_Ret (_Arg0::*)(_Types..., ...) CV_OPT REF_OPT> \
+	struct _Is_memfunptr<_Ret (_Arg0::*)(_Types..., ...) CV_REF_OPT> \
 	{	/* no calling conventions for ellipsis */ \
 	typedef true_type _Bool_type; \
 	typedef _Ret result_type; \
@@ -132,6 +46,23 @@ template<class _Ret, \
 
 _CLASS_DEFINE_CV_REF(_IS_MEMFUNPTR_ELLIPSIS)
 #undef _IS_MEMFUNPTR_ELLIPSIS
+
+	// TEMPLATE CLASS is_void
+template<class _Ty>
+	struct is_void
+		: false_type
+	{	// determine whether _Ty is void
+	};
+
+#define _IS_VOID(CV_OPT) \
+template<> \
+	struct is_void<CV_OPT void> \
+		: true_type \
+	{	/* determine whether _Ty is void */ \
+	};
+
+_CLASS_DEFINE_CV(_IS_VOID)
+#undef _IS_VOID
 
 	// Type modifiers
 	// TEMPLATE CLASS add_const
@@ -155,39 +86,35 @@ template<class _Ty>
 	typedef const volatile _Ty type;
 	};
 
+	// TEMPLATE CLASS _Add_reference
+template<class _Ty,
+	bool = _Is_function<_Ty>::_Weird || is_void<_Ty>::value>
+	struct _Add_reference
+	{	// add reference
+	typedef _Ty _Lvalue;
+	typedef _Ty _Rvalue;
+	};
+
+template<class _Ty>
+	struct _Add_reference<_Ty, false>
+	{	// add reference
+	typedef _Ty& _Lvalue;
+	typedef _Ty&& _Rvalue;
+	};
+
 	// TEMPLATE CLASS add_lvalue_reference
 template<class _Ty>
 	struct add_lvalue_reference
 	{	// add lvalue reference
-	typedef _Ty& type;
+	typedef typename _Add_reference<_Ty>::_Lvalue type;
 	};
-
-#define _ADD_LVALUE_REFERENCE_VOID(CV_OPT) \
-template<> \
-	struct add_lvalue_reference<CV_OPT void> \
-	{	/* add lvalue reference */ \
-	typedef CV_OPT void type; \
-	};
-
-_CLASS_DEFINE_CV(_ADD_LVALUE_REFERENCE_VOID)
-#undef _ADD_LVALUE_REFERENCE_VOID
 
 	// TEMPLATE CLASS add_rvalue_reference
 template<class _Ty>
 	struct add_rvalue_reference
 	{	// add rvalue reference
-	typedef _Ty&& type;
+	typedef typename _Add_reference<_Ty>::_Rvalue type;
 	};
-
-#define _ADD_RVALUE_REFERENCE_VOID(CV_OPT) \
-template<> \
-	struct add_rvalue_reference<CV_OPT void> \
-	{	/* add rvalue reference */ \
-	typedef CV_OPT void type; \
-	};
-
-_CLASS_DEFINE_CV(_ADD_RVALUE_REFERENCE_VOID)
-#undef _ADD_RVALUE_REFERENCE_VOID
 
 	// TEMPLATE FUNCTION declval
 template<class _Ty>
@@ -250,32 +177,26 @@ _CLASS_DEFINE_CV(_REMOVE_POINTER)
 #undef _REMOVE_POINTER
 
 	// TEMPLATE CLASS add_pointer
+template<class _Ty,
+	bool = _Is_function<_Ty>::_Weird>
+	struct _Add_pointer
+	{	// add pointer
+	typedef _Ty type;
+	};
+
 template<class _Ty>
-	struct add_pointer
+	struct _Add_pointer<_Ty, false>
 	{	// add pointer
 	typedef typename remove_reference<_Ty>::type *type;
 	};
 
+template<class _Ty>
+	struct add_pointer
+	{	// add pointer
+	typedef typename _Add_pointer<_Ty>::type type;
+	};
+
 	// TYPE PREDICATES
-	// TEMPLATE CLASS is_void
-template<class _Ty>
-	struct _Is_void
-		: false_type
-	{	// determine whether _Ty is void
-	};
-
-template<>
-	struct _Is_void<void>
-		: true_type
-	{	// determine whether _Ty is void
-	};
-
-template<class _Ty>
-	struct is_void
-		: _Is_void<typename remove_cv<_Ty>::type>
-	{	// determine whether _Ty is void
-	};
-
 	// TEMPLATE CLASS is_array
 template<class _Ty>
 	struct is_array
@@ -389,13 +310,15 @@ template<class _Ty>
 
 	// TEMPLATE CLASS is_union
 template<class _Ty>
-	struct is_union _IS_UNION(_Ty)
+	struct is_union
+		: _Cat_base<__is_union(_Ty)>
 	{	// determine whether _Ty is a union
 	};
 
 	// TEMPLATE CLASS is_class
 template<class _Ty>
-	struct is_class _IS_CLASS(_Ty)
+	struct is_class
+		: _Cat_base<__is_class(_Ty)>
 	{	// determine whether _Ty is a class
 	};
 
@@ -422,14 +345,14 @@ template<class _Ty>
 template<class _From,
 	class _To>
 	struct is_convertible
-		_IS_CONVERTIBLE(_From, _To)
+		: _Cat_base<__is_convertible_to(_From, _To)>
 	{	// determine whether _From is convertible to _To
 	};
 
 	// TEMPLATE CLASS is_enum
 template<class _Ty>
 	struct is_enum
-		_IS_ENUM(_Ty)
+		: _Cat_base<__is_enum(_Ty)>
 	{	// determine whether _Ty is an enumerated type
 	};
 
@@ -462,113 +385,96 @@ template<class _Ty>
 	// TEMPLATE CLASS is_const
 template<class _Ty>
 	struct is_const
-		: _Cat_base<_Ptr_traits<_Ty *>::_Is_const
-		&& !is_function<_Ty>::value>
-	{	// determine whether _Ty is const qualified
-	};
-
-template<class _Ty, size_t _Nx>
-	struct is_const<_Ty[_Nx]>
 		: false_type
 	{	// determine whether _Ty is const qualified
 	};
 
-template<class _Ty, size_t _Nx>
-	struct is_const<const _Ty[_Nx]>
+template<class _Ty>
+	struct is_const<const _Ty>
 		: true_type
-	{	// determine whether _Ty is const qualified
-	};
-
-template<class _Ty>
-	struct is_const<_Ty&>
-		: false_type
-	{	// determine whether _Ty is const qualified
-	};
-
-template<class _Ty>
-	struct is_const<_Ty&&>
-		: false_type
 	{	// determine whether _Ty is const qualified
 	};
 
 	// TEMPLATE CLASS is_volatile
 template<class _Ty>
 	struct is_volatile
-		: _Cat_base<_Ptr_traits<_Ty *>::_Is_volatile
-		&& !is_function<_Ty>::value>
-	{	// determine whether _Ty is volatile qualified
-	};
-
-template<class _Ty>
-	struct is_volatile<_Ty&>
 		: false_type
 	{	// determine whether _Ty is volatile qualified
 	};
 
 template<class _Ty>
-	struct is_volatile<_Ty&&>
-		: false_type
+	struct is_volatile<volatile _Ty>
+		: true_type
 	{	// determine whether _Ty is volatile qualified
 	};
 
 	// TEMPLATE CLASS is_pod
 template<class _Ty>
-	struct is_pod _IS_POD(_Ty)
+	struct is_pod
+		: _Cat_base<__is_pod(_Ty)>
 	{	// determine whether _Ty is a POD type
 	};
 
 	// TEMPLATE CLASS is_empty
 template<class _Ty>
-	struct is_empty _IS_EMPTY(_Ty)
+	struct is_empty
+		: _Cat_base<__is_empty(_Ty)>
 	{	// determine whether _Ty is an empty class
 	};
 
 	// TEMPLATE CLASS is_polymorphic
 template<class _Ty>
-	struct is_polymorphic _IS_POLYMORPHIC(_Ty)
+	struct is_polymorphic
+		: _Cat_base<__is_polymorphic(_Ty)>
 	{	// determine whether _Ty is a polymorphic type
 	};
 
 	// TEMPLATE CLASS is_abstract
 template<class _Ty>
-	struct is_abstract _IS_ABSTRACT(_Ty)
+	struct is_abstract
+		: _Cat_base<__is_abstract(_Ty)>
 	{	// determine whether _Ty is an abstract class
 	};
 
 	// TEMPLATE CLASS is_final
 template<class _Ty>
-	struct is_final _IS_FINAL(_Ty)
+	struct is_final
+		: _Cat_base<__is_final(_Ty)>
 	{	// determine whether _Ty is a final class
 	};
 
 	// TEMPLATE CLASS is_standard_layout
 template<class _Ty>
-	struct is_standard_layout _IS_STANDARD_LAYOUT(_Ty)
+	struct is_standard_layout
+		: _Cat_base<__is_standard_layout(_Ty)>
 	{	// determine whether _Ty is standard layout
 	};
 
 	// TEMPLATE CLASS is_literal_type
 template<class _Ty>
-	struct is_literal_type _IS_LITERAL_TYPE(_Ty)
+	struct is_literal_type
+		: _Cat_base<__is_literal_type(_Ty)>
 	{	// determine whether _Ty is a literal type
 	};
 
 	// TEMPLATE CLASS is_trivial
 template<class _Ty>
-	struct is_trivial _IS_TRIVIAL(_Ty)
+	struct is_trivial
+		: _Cat_base<__is_trivial(_Ty)>
 	{	// determine whether _Ty is trivial
 	};
 
 	// TEMPLATE CLASS is_trivially_copyable
 template<class _Ty>
-	struct is_trivially_copyable _IS_TRIVIALLY_COPYABLE(_Ty)
+	struct is_trivially_copyable
+		: _Cat_base<__is_trivially_copyable(_Ty)>
 	{	// determine whether _Ty is trivially copyable
 	};
 
 	// TEMPLATE CLASS has_virtual_destructor
 template<class _Ty>
 	struct has_virtual_destructor
-		_HAS_VIRTUAL_DESTRUCTOR(_Ty)
+		: _Cat_base<__has_virtual_destructor(_Ty)>
 	{	// determine whether _Ty has a virtual destructor
 	};
 
@@ -578,7 +484,7 @@ template<class _Ty>
 template<class _Ty,
 	class... _Args>
 	struct is_constructible
-		: _Cat_base<_IS_CONSTRUCTIBLE(_Ty, _Args...)>
+		: _Cat_base<__is_constructible(_Ty, _Args...)>
 	{	// determine whether _Ty(_Args...) is constructible
 	};
 
@@ -604,10 +510,8 @@ template<class _Ty>
 	// TEMPLATE CLASS is_move_constructible
 template<class _Ty>
 	struct is_move_constructible
-
 		: is_constructible<
 			_Ty,
-
 			typename add_rvalue_reference<_Ty>::type
 		>::type
 	{	// determine whether _Ty has a move constructor
@@ -616,26 +520,8 @@ template<class _Ty>
 	// TEMPLATE CLASS is_assignable
 template<class _To,
 	class _From>
-	struct _Is_assignable
-	{	// tests for valid assign expression
-	template<class _Dest,
-		class _Src>
-		static auto _Fn(int)
-			-> decltype((void)(_STD declval<_Dest>() = _STD declval<_Src>()),
-				true_type());
-
-	template<class _Dest,
-		class _Src>
-		static auto _Fn(_Wrap_int)
-			-> false_type;
-
-	typedef decltype(_Fn<_To, _From>(0)) type;
-	};
-
-template<class _To,
-	class _From>
 	struct is_assignable
-		: _Is_assignable<_To, _From>::type
+		: integral_constant<bool, __is_assignable(_To, _From)>
 	{	// determine whether _From can be assigned to _To
 	};
 
@@ -664,7 +550,7 @@ template<class _Ty>
 	// TEMPLATE CLASS is_destructible
 template<class _Ty>
 	struct is_destructible
-		_IS_DESTRUCTIBLE(_Ty)
+		: _Cat_base<__is_destructible(_Ty)>
 	{	// determine whether _Ty has a destructor
 	};
 
@@ -674,7 +560,7 @@ template<class _Ty>
 template<class _Ty,
 	class... _Args>
 	struct is_trivially_constructible
-		: _Cat_base<_IS_TRIVIALLY_CONSTRUCTIBLE(_Ty, _Args...)>
+		: _Cat_base<__is_trivially_constructible(_Ty, _Args...)>
 	{	// determine whether _Ty(_Args...) is trivially constructible
 	};
 
@@ -700,12 +586,10 @@ template<class _Ty>
 	// TEMPLATE CLASS is_trivially_move_constructible
 template<class _Ty>
 	struct is_trivially_move_constructible
-
 		: is_trivially_constructible<
 			_Ty,
 			typename add_rvalue_reference<_Ty>::type
 		>::type
-
 	{	// determine whether _Ty has a trivial move constructor
 	};
 
@@ -713,42 +597,36 @@ template<class _Ty>
 template<class _To,
 	class _From>
 	struct is_trivially_assignable
-
-		_IS_TRIVIALLY_ASSIGNABLE(_To, _From)
-
+		: _Cat_base<__is_trivially_assignable(_To, _From)>
 	{	// determine whether _From can be assigned to _To, trivially
 	};
 
 	// TEMPLATE CLASS is_trivially_copy_assignable
 template<class _Ty>
 	struct is_trivially_copy_assignable
-
 		: is_trivially_assignable<
 			typename add_lvalue_reference<_Ty>::type,
 			typename add_lvalue_reference<
 				typename add_const<_Ty>::type
 			>::type
 		>::type
-
 	{	// determine whether _Ty has a trivial copy assignment operator
 	};
 
 	// TEMPLATE CLASS is_trivially_move_assignable
 template<class _Ty>
 	struct is_trivially_move_assignable
-
 		: is_trivially_assignable<
 			typename add_lvalue_reference<_Ty>::type,
 			typename add_rvalue_reference<_Ty>::type
 		>::type
-
 	{	// determine whether _Ty has a trivial move assignment operator
 	};
 
 	// TEMPLATE CLASS is_trivially_destructible
 template<class _Ty>
 	struct is_trivially_destructible
-		_HAS_TRIVIAL_DESTRUCTOR(_Ty)
+		: _Cat_base<__has_trivial_destructor(_Ty)>
 	{	// determine whether _Ty has a trivial destructor
 	};
 
@@ -758,7 +636,7 @@ template<class _Ty>
 template<class _Ty,
 	class... _Args>
 	struct is_nothrow_constructible
-		: _Cat_base<_IS_NOTHROW_CONSTRUCTIBLE(_Ty, _Args...)>
+		: _Cat_base<__is_nothrow_constructible(_Ty, _Args...)>
 	{	// determine whether _Ty(_Args...) is nothrow constructible
 	};
 
@@ -795,42 +673,36 @@ template<class _Ty>
 template<class _To,
 	class _From>
 	struct is_nothrow_assignable
-
-		_IS_NOTHROW_ASSIGNABLE(_To, _From)
-
+		: _Cat_base<__is_nothrow_assignable(_To, _From)>
 	{	// determine whether _From can be assigned to _To, nothrow
 	};
 
 	// TEMPLATE CLASS is_nothrow_copy_assignable
 template<class _Ty>
 	struct is_nothrow_copy_assignable
-
 		: is_nothrow_assignable<
 			typename add_lvalue_reference<_Ty>::type,
 			typename add_lvalue_reference<
 				typename add_const<_Ty>::type
 			>::type
 		>::type
-
 	{	// determine whether _Ty has a nothrow copy assignment operator
 	};
 
 	// TEMPLATE CLASS is_nothrow_move_assignable
 template<class _Ty>
 	struct is_nothrow_move_assignable
-
 		: is_nothrow_assignable<
 			typename add_lvalue_reference<_Ty>::type,
 			typename add_rvalue_reference<_Ty>::type
 		>::type
-
 	{	// determine whether _Ty has a nothrow move assignment operator
 	};
 
 	// TEMPLATE CLASS is_nothrow_destructible
 template<class _Ty>
 	struct is_nothrow_destructible
-		_IS_NOTHROW_DESTRUCTIBLE(_Ty)
+		: _Cat_base<__is_nothrow_destructible(_Ty)>
 	{	// determine whether _Ty has a nothrow destructor
 	};
 
@@ -1019,13 +891,13 @@ template<size_t... _Vals>
 template<>
 	struct _Maximum<>
 	{	// maximum of nothing is 0
-	static const size_t value = 0;
+	static constexpr size_t value = 0;
 	};
 
 template<size_t _Val>
 	struct _Maximum<_Val>
 	{	// maximum of _Val is _Val
-	static const size_t value = _Val;
+	static constexpr size_t value = _Val;
 	};
 
 template<size_t _First,
@@ -1040,9 +912,9 @@ template<size_t _Len,
 	class... _Types>
 	struct aligned_union
 	{	// define type with size at least _Len, for storing anything in _Types
-	static const size_t _Max_len = _Maximum<
+	static constexpr size_t _Max_len = _Maximum<
 		_Len, sizeof(_Types)...>::value;	// NOT sizeof...(_Types)
-	static const size_t alignment_value = _Maximum<
+	static constexpr size_t alignment_value = _Maximum<
 		alignment_of<_Types>::value...>::value;
 	typedef typename aligned_storage<_Max_len, alignment_value>::type type;
 	};
@@ -1051,7 +923,7 @@ template<size_t _Len,
 template<class _Ty>
 	struct underlying_type
 	{	// determine type underlying type for enum
-	typedef _UNDERLYING_TYPE(_Ty) type;
+	typedef __underlying_type(_Ty) type;
 	};
 
 	// TEMPLATE CLASS rank
@@ -1107,7 +979,8 @@ template<class _Ty, unsigned int _Nx = 0>
 	// TEMPLATE CLASS is_base_of
 template<class _Base,
 	class _Der>
-	struct is_base_of _IS_BASE_OF(_Base, _Der)
+	struct is_base_of
+		: _Cat_base<__is_base_of(_Base, _Der)>
 	{	// determine whether _Base is a base of or the same as _Der
 	};
 
@@ -1124,6 +997,106 @@ template<class _Ty>
 			typename remove_cv<_Ty1>::type>::type>::type type;
 	};
 
+	// TEMPLATE CLASS conjunction
+template<class...>
+	struct _Conjunction;
+
+template<bool,
+	class _Lhs,
+	class... _Traits>
+	struct _Choose_conjunction
+	{	// Select _Lhs if it is false
+	typedef _Lhs type;
+	};
+
+template<class _Lhs,
+	class... _Traits>
+	struct _Choose_conjunction<true, _Lhs, _Traits...>
+	{	// Select the conjunction of _Traits if _Lhs is true
+	typedef typename _Conjunction<_Traits...>::type type;
+	};
+
+template<>
+	struct _Conjunction<>
+	{	// Implement conjunction for 0 arguments
+	typedef true_type type;
+	};
+
+template<class _Trait>
+	struct _Conjunction<_Trait>
+	{	// Implement conjunction for 1 argument
+	typedef _Trait type;
+	};
+
+template<class _Lhs,
+	class... _Traits>
+	struct _Conjunction<_Lhs, _Traits...>
+	{	// Implement conjunction for N arguments
+	typedef typename _Choose_conjunction<_Lhs::value, _Lhs, _Traits...>::type type;
+	};
+
+template<class... _Traits>
+	struct conjunction
+		: _Conjunction<_Traits...>::type
+	{	// If _Traits is empty, true_type
+		// Otherwise, if any of _Traits are false, the first false trait
+		// Otherwise, the last trait in _Traits
+	};
+
+	// TEMPLATE CLASS disjunction
+template<class...>
+	struct _Disjunction;
+
+template<bool,
+	class _Lhs,
+	class... _Traits>
+	struct _Choose_disjunction
+	{	// Select the disjunction of _Traits if _Lhs is true
+	typedef _Lhs type;
+	};
+
+template<class _Lhs,
+	class... _Traits>
+	struct _Choose_disjunction<false, _Lhs, _Traits...>
+	{	// Select _Lhs if it is false
+	typedef typename _Disjunction<_Traits...>::type type;
+	};
+
+template<>
+	struct _Disjunction<>
+	{	// Implement disjunction for 0 arguments
+	typedef false_type type;
+	};
+
+template<class _Trait>
+	struct _Disjunction<_Trait>
+	{	// Implement disjunction for 1 argument
+	typedef _Trait type;
+	};
+
+template<class _Lhs,
+	class... _Traits>
+	struct _Disjunction<_Lhs, _Traits...>
+	{	// Implement disjunction for N arguments
+	typedef typename _Choose_disjunction<_Lhs::value, _Lhs, _Traits...>::type type;
+	};
+
+template<class... _Traits>
+	struct disjunction
+		: _Disjunction<_Traits...>::type
+	{	// If _Traits is empty, false_type
+		// Otherwise, if any of _Traits are true, the first true trait
+		// Otherwise, the last trait in _Traits
+	};
+
+	// TEMPLATE CLASS negation
+template<class _Trait>
+	struct negation
+		: bool_constant<!_Trait::value>
+	{	// The negated result of _Trait
+	};
+
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// TR1 additions
 using _STD add_const;
 using _STD add_cv;
@@ -1179,6 +1152,7 @@ using _STD remove_reference;
 using _STD remove_volatile;
 using _STD true_type;
 	}	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 
 		// TEMPLATE STRUCT common_type
 template<class... _Ty>
@@ -1222,13 +1196,14 @@ template<class _Ty,
 	typedef integer_sequence<_Ty, _Vals...> type;
 	typedef _Ty value_type;
 
-	static _CONST_FUN size_t size() _NOEXCEPT
+	static constexpr size_t size() _NOEXCEPT
 		{	// get length of parameter list
 		return (sizeof...(_Vals));
 		}
 	};
 
 	// ALIAS TEMPLATE make_integer_sequence
+ #ifdef __EDG__ /* TRANSITION, VSO#205481, VSO#205484 */
 template<bool _Negative,
 	bool _Zero,
 	class _Int_con,
@@ -1264,6 +1239,11 @@ template<class _Ty,
 	_Ty _Size>
 	using make_integer_sequence = typename _Make_seq<_Size < 0, _Size == 0,
 		integral_constant<_Ty, _Size>, integer_sequence<_Ty> >::type;
+ #else /* __EDG__ */
+template<class _Ty,
+	_Ty _Size>
+	using make_integer_sequence = __make_integer_seq<integer_sequence, _Ty, _Size>;
+ #endif /* __EDG__ */
 
 template<size_t... _Vals>
 	using index_sequence = integer_sequence<size_t, _Vals...>;
@@ -1274,6 +1254,7 @@ template<size_t _Size>
 template<class... _Types>
 	using index_sequence_for = make_index_sequence<sizeof...(_Types)>;
 
+#if _HAS_IDENTITY_STRUCT
 	// TEMPLATE CLASS identity
 template<class _Ty>
 	struct identity
@@ -1285,17 +1266,18 @@ template<class _Ty>
 		return (_Left);
 		}
 	};
+#endif /* _HAS_IDENTITY_STRUCT */
 
 	// TEMPLATE FUNCTION forward
 template<class _Ty> inline
-	_CONST_FUN _Ty&& forward(
+	constexpr _Ty&& forward(
 		typename remove_reference<_Ty>::type& _Arg) _NOEXCEPT
 	{	// forward an lvalue as either an lvalue or an rvalue
 	return (static_cast<_Ty&&>(_Arg));
 	}
 
 template<class _Ty> inline
-	_CONST_FUN _Ty&& forward(
+	constexpr _Ty&& forward(
 		typename remove_reference<_Ty>::type&& _Arg) _NOEXCEPT
 	{	// forward an rvalue as an rvalue
 	static_assert(!is_lvalue_reference<_Ty>::value, "bad forward call");
@@ -1304,35 +1286,20 @@ template<class _Ty> inline
 
 		// TEMPLATE FUNCTION move
 template<class _Ty> inline
-	_CONST_FUN typename remove_reference<_Ty>::type&&
+	constexpr typename remove_reference<_Ty>::type&&
 		move(_Ty&& _Arg) _NOEXCEPT
-	{	// forward _Arg as movable
-	return (static_cast<typename remove_reference<_Ty>::type&&>(_Arg));
-	}
-
-		// TEMPLATE FUNCTION _Move
-template<class _Ty> inline
-	_CONST_FUN typename remove_reference<_Ty>::type&&
-		_Move(_Ty&& _Arg) _NOEXCEPT
 	{	// forward _Arg as movable
 	return (static_cast<typename remove_reference<_Ty>::type&&>(_Arg));
 	}
 
 		// TEMPLATE FUNCTION move_if_noexcept
 template<class _Ty> inline
-	_CONST_FUN typename _If<!is_nothrow_move_constructible<_Ty>::value
+	constexpr typename _If<!is_nothrow_move_constructible<_Ty>::value
 		&& is_copy_constructible<_Ty>::value,
 			const _Ty&, _Ty&&>::type
 	move_if_noexcept(_Ty& _Arg) _NOEXCEPT
 	{	// forward _Arg as movable, sometimes
 	return (_STD move(_Arg));
-	}
-
-	// TEMPLATE FUNCTION _Decay_copy
-template<class _Ty> inline
-	typename decay<_Ty>::type _Decay_copy(_Ty&& _Arg)
-	{	// forward _Arg as value of decayed type
-	return (_STD forward<_Ty>(_Arg));
 	}
 
 	// TEMPLATE STRUCT _Param_tester
@@ -1343,7 +1310,7 @@ template<class...>
 	};
 
 	// ALIAS TEMPLATE void_t
-template<class... _Types>	// TRANSITION, needs CWG 1558
+template<class... _Types>	// TRANSITION, VSO#138046
 	using void_t = typename _Param_tester<_Types...>::type;
 
 	// TEMPLATE FUNCTION invoke
@@ -1509,6 +1476,26 @@ template<class... _Valtys> inline
 	}
 
 	// TEMPLATE CLASS result_of
+struct _Unique_tag_result_of
+	{	// used by workaround below
+	};
+
+template<class _Void,
+	class... _Types>
+	struct _Result_of
+	{	// selected when _Fty isn't callable with _Args
+	};
+
+template<class... _Types>
+	struct _Result_of<
+		void_t<
+			_Unique_tag_result_of,	// TRANSITION, C1XX
+			decltype(_STD invoke(_STD declval<_Types>()...))>,
+		_Types...>
+	{	// selected when _Fty is callable with _Args
+	typedef decltype(_STD invoke(_STD declval<_Types>()...)) type;
+	};
+
 template<class _Fty>
 	struct result_of
 	{	// explain usage
@@ -1517,16 +1504,15 @@ template<class _Fty>
 		"result_of<CallableType(zero or more argument types)> instead.");
 	};
 
-#define _RESULT_OF(CALL_OPT) \
+#define _RESULT_OF(CALL_OPT, X1, X2) \
 template<class _Fty, \
 	class... _Args> \
 	struct result_of<_Fty CALL_OPT (_Args...)> \
+		: _Result_of<void, _Fty, _Args...> \
 	{	/* template to determine result of call operation */ \
-	typedef decltype(_STD invoke(_STD declval<_Fty>(), \
-		_STD declval<_Args>()...)) type; \
 	};
 
-_NON_MEMBER_CALL(_RESULT_OF)
+_NON_MEMBER_CALL(_RESULT_OF, , )
 #undef _RESULT_OF
 
 	// TEMPLATE STRUCT _Weak_types
@@ -1537,8 +1523,8 @@ template<class _Ty,
 	};
 
 template<class _Ty>
-	struct _Weak_result_type<_Ty, typename _Param_tester<
-		typename _Ty::result_type>::type>
+	struct _Weak_result_type<_Ty, void_t<
+		typename _Ty::result_type> >
 	{	// defined if _Ty::result_type exists
 	typedef typename _Ty::result_type result_type;
 	};
@@ -1551,8 +1537,8 @@ template<class _Ty,
 	};
 
 template<class _Ty>
-	struct _Weak_argument_type<_Ty, typename _Param_tester<
-		typename _Ty::argument_type>::type>
+	struct _Weak_argument_type<_Ty, void_t<
+		typename _Ty::argument_type> >
 		: _Weak_result_type<_Ty>
 	{	// defined if _Ty::argument_type exists
 	typedef typename _Ty::argument_type argument_type;
@@ -1566,9 +1552,9 @@ template<class _Ty,
 	};
 
 template<class _Ty>
-	struct _Weak_binary_args<_Ty, typename _Param_tester<
+	struct _Weak_binary_args<_Ty, void_t<
 		typename _Ty::first_argument_type,
-		typename _Ty::second_argument_type>::type>
+		typename _Ty::second_argument_type> >
 		: _Weak_argument_type<_Ty>
 	{	// defined if both types exist
 	typedef typename _Ty::first_argument_type first_argument_type;
@@ -1665,14 +1651,14 @@ template<class _Ty>
 	struct _Unrefwrap_helper
 	{	// leave unchanged if not a reference_wrapper
 	typedef _Ty type;
-	static const bool _Is_refwrap = false;
+	static constexpr bool _Is_refwrap = false;
 	};
 
 template<class _Ty>
 	struct _Unrefwrap_helper<reference_wrapper<_Ty> >
 	{	// make a reference from a reference_wrapper
 	typedef _Ty& type;
-	static const bool _Is_refwrap = true;
+	static constexpr bool _Is_refwrap = true;
 	};
 
 template<class _Ty>
@@ -1680,15 +1666,154 @@ template<class _Ty>
 	{	// decay, then unwrap a reference_wrapper
 	typedef typename decay<_Ty>::type _Ty1;
 	typedef typename _Unrefwrap_helper<_Ty1>::type type;
-	static const bool _Is_refwrap = _Unrefwrap_helper<_Ty1>::_Is_refwrap;
+	static constexpr bool _Is_refwrap = _Unrefwrap_helper<_Ty1>::_Is_refwrap;
 	};
 
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// TR1 additions
 using _STD cref;
 using _STD ref;
 using _STD reference_wrapper;
 using _STD result_of;
 	}	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
+
+		// CLASS TEMPLATE _Is_swappable
+template<class _Ty>
+	struct _Is_swappable;
+
+		// CLASS TEMPLATE _Is_nothrow_swappable
+template<class _Ty>
+	struct _Is_nothrow_swappable;
+
+		// FUNCTION TEMPLATE swap
+#if _HAS_CXX17
+template<class _Ty,
+	class = typename enable_if<is_move_constructible<_Ty>::value
+		&& is_move_assignable<_Ty>::value>::type> inline
+#else /* _HAS_CXX17 */
+template<class _Ty,
+	class = void> inline
+#endif /* _HAS_CXX17 */
+	void swap(_Ty&, _Ty&)
+		_NOEXCEPT_OP(is_nothrow_move_constructible<_Ty>::value
+			&& is_nothrow_move_assignable<_Ty>::value);
+
+template<class _Ty,
+	size_t _Size,
+	class = typename enable_if<_Is_swappable<_Ty>::value>::type> inline
+	void swap(_Ty (&)[_Size], _Ty (&)[_Size])
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Ty>::value);
+
+		// CLASS TEMPLATE _Swappable_with_helper
+template<class _Ty1,
+	class _Ty2,
+	class = void>
+	struct _Swappable_with_helper
+		: false_type
+	{	// swap(declval<_Ty1>(), declval<_Ty2>()) is not valid
+	};
+
+struct _Swappable_with_helper_unique_type {}; // TRANSITION, C1XX
+template<class _Ty1,
+	class _Ty2>
+	struct _Swappable_with_helper<_Ty1, _Ty2, void_t<
+		_Swappable_with_helper_unique_type,
+		decltype(swap(_STD declval<_Ty1>(), _STD declval<_Ty2>()))>>
+		: true_type
+	{	// swap(declval<_Ty1>(), declval<_Ty2>()) is valid
+	};
+
+		// CLASS TEMPLATE _Is_swappable_with
+template<class _Ty1,
+	class _Ty2>
+	struct _Is_swappable_with
+		: conjunction<
+			_Swappable_with_helper<_Ty1, _Ty2>,
+			_Swappable_with_helper<_Ty2, _Ty1>>::type
+	{	// Determine if expressions with type and value category _Ty1 and _Ty2
+		// can be swapped (and vice versa)
+	};
+
+		// CLASS TEMPLATE _Is_swappable
+template<class _Ty>
+	struct _Is_swappable
+		: _Is_swappable_with<
+			typename add_lvalue_reference<_Ty>::type,
+			typename add_lvalue_reference<_Ty>::type>::type
+	{	// Determine if _Ty lvalues satisfy is_swappable_with
+	};
+
+		// CLASS TEMPLATE _Swap_cannot_throw
+template<class _Ty1,
+	class _Ty2>
+	struct _Swap_cannot_throw
+	{	// Determine if expressions with type and value category _Ty1 and _Ty2
+		// (presumed to satisfy is_swappable_with) can be swapped without
+		// emitting exceptions
+#if _HAS_EXCEPTIONS
+	static constexpr bool value = // TRANSITION, VSO#207029
+		noexcept(swap(_STD declval<_Ty1>(), _STD declval<_Ty2>()))
+		&& noexcept(swap(_STD declval<_Ty2>(), _STD declval<_Ty1>()));
+#else /* _HAS_EXCEPTIONS */
+	static constexpr bool value = true;
+#endif /* _HAS_EXCEPTIONS */
+	using type = bool_constant<value>;
+	};
+
+		// CLASS TEMPLATE _Is_nothrow_swappable_with
+template<class _Ty1,
+	class _Ty2>
+	struct _Is_nothrow_swappable_with
+		: conjunction<
+			_Is_swappable_with<_Ty1, _Ty2>,
+			_Swap_cannot_throw<_Ty1, _Ty2>>::type
+	{	// Determine if expressions with type and value category _Ty1 and _Ty2
+		// satisfy is_swappable_with, and can be swapped without emitting exceptions
+	};
+
+		// CLASS TEMPLATE _Is_nothrow_swappable
+template<class _Ty>
+	struct _Is_nothrow_swappable
+		: _Is_nothrow_swappable_with<
+			typename add_lvalue_reference<_Ty>::type,
+			typename add_lvalue_reference<_Ty>::type>::type
+	{	// Determine if _Ty lvalues satisfy is_nothrow_swappable_with
+	};
+
+#if _HAS_CXX17
+		// CLASS TEMPLATE is_swappable_with
+template<class _Ty1,
+	class _Ty2>
+	struct is_swappable_with
+		: _Is_swappable_with<_Ty1, _Ty2>::type
+	{	// Determine if expressions with type and value category _Ty1 and _Ty2
+		// can be swapped (and vice versa)
+	};
+
+		// CLASS TEMPLATE is_swappable
+template<class _Ty>
+	struct is_swappable
+		: _Is_swappable<_Ty>::type
+	{	// Determine if _Ty lvalues satisfy is_swappable_with
+	};
+
+		// CLASS TEMPLATE is_nothrow_swappable_with
+template<class _Ty1,
+	class _Ty2>
+	struct is_nothrow_swappable_with
+		: _Is_nothrow_swappable_with<_Ty1, _Ty2>::type
+	{	// Determine if expressions with type and value category _Ty1 and _Ty2
+		// satisfy is_swappable_with, and can be swapped without emitting exceptions
+	};
+
+		// CLASS TEMPLATE is_nothrow_swappable
+template<class _Ty>
+	struct is_nothrow_swappable
+		: _Is_nothrow_swappable<_Ty>::type
+	{	// Determine if _Ty lvalues satisfy is_nothrow_swappable_with
+	};
+#endif /* _HAS_CXX17 */
 
 		// ALIAS TEMPLATES
 template<class _Ty>
@@ -1764,6 +1889,160 @@ template<class _Ty>
 
 template<class _Ty>
 	using result_of_t = typename result_of<_Ty>::type;
+
+	// VARIABLE TEMPLATES
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_void_v = is_void<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_null_pointer_v = is_null_pointer<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_array_v = is_array<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_pointer_v = is_pointer<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_lvalue_reference_v = is_lvalue_reference<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_rvalue_reference_v = is_rvalue_reference<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_member_object_pointer_v = is_member_object_pointer<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_member_function_pointer_v = is_member_function_pointer<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_enum_v = is_enum<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_union_v = is_union<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_class_v = is_class<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_reference_v = is_reference<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_fundamental_v = is_fundamental<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_object_v = is_object<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_scalar_v = is_scalar<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_compound_v = is_compound<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_member_pointer_v = is_member_pointer<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_const_v = is_const<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_volatile_v = is_volatile<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_trivial_v = is_trivial<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_trivially_copyable_v = is_trivially_copyable<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_standard_layout_v = is_standard_layout<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_pod_v = is_pod<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_literal_type_v = is_literal_type<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_empty_v = is_empty<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_polymorphic_v = is_polymorphic<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_abstract_v = is_abstract<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_final_v = is_final<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_signed_v = is_signed<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_unsigned_v = is_unsigned<_Ty>::value;
+template<class _Ty,
+	class... _Args>
+	constexpr bool is_constructible_v = is_constructible<_Ty, _Args...>::value;
+template<class _Ty>
+	constexpr bool is_default_constructible_v = is_default_constructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_copy_constructible_v = is_copy_constructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_move_constructible_v = is_move_constructible<_Ty>::value;
+template<class _Ty,
+	class _Uty>
+	constexpr bool is_assignable_v = is_assignable<_Ty, _Uty>::value;
+template<class _Ty>
+	constexpr bool is_copy_assignable_v = is_copy_assignable<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_move_assignable_v = is_move_assignable<_Ty>::value;
+#if _HAS_CXX17
+template<class _Ty1,
+	class _Ty2>
+	constexpr bool is_swappable_with_v = is_swappable_with<_Ty1, _Ty2>::value;
+template<class _Ty>
+	constexpr bool is_swappable_v = is_swappable<_Ty>::value;
+#endif /* _HAS_CXX17 */
+template<class _Ty>
+	constexpr bool is_destructible_v = is_destructible<_Ty>::value;
+template<class _Ty,
+	class... _Args>
+	constexpr bool is_trivially_constructible_v = is_trivially_constructible<_Ty, _Args...>::value;
+template<class _Ty>
+	constexpr bool is_trivially_default_constructible_v = is_trivially_default_constructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_trivially_copy_constructible_v = is_trivially_copy_constructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_trivially_move_constructible_v = is_trivially_move_constructible<_Ty>::value;
+template<class _Ty,
+	class _Uty>
+	constexpr bool is_trivially_assignable_v = is_trivially_assignable<_Ty, _Uty>::value;
+template<class _Ty>
+	constexpr bool is_trivially_copy_assignable_v = is_trivially_copy_assignable<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_trivially_move_assignable_v = is_trivially_move_assignable<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_trivially_destructible_v = is_trivially_destructible<_Ty>::value;
+template<class _Ty,
+	class... _Args>
+	constexpr bool is_nothrow_constructible_v = is_nothrow_constructible<_Ty, _Args...>::value;
+template<class _Ty>
+	constexpr bool is_nothrow_default_constructible_v = is_nothrow_default_constructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_nothrow_copy_constructible_v = is_nothrow_copy_constructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_nothrow_move_constructible_v = is_nothrow_move_constructible<_Ty>::value;
+template<class _Ty,
+	class _Uty>
+	constexpr bool is_nothrow_assignable_v = is_nothrow_assignable<_Ty, _Uty>::value;
+template<class _Ty>
+	constexpr bool is_nothrow_copy_assignable_v = is_nothrow_copy_assignable<_Ty>::value;
+template<class _Ty>
+	constexpr bool is_nothrow_move_assignable_v = is_nothrow_move_assignable<_Ty>::value;
+#if _HAS_CXX17
+template<class _Ty1,
+	class _Ty2>
+	constexpr bool is_nothrow_swappable_with_v = is_nothrow_swappable_with<_Ty1, _Ty2>::value;
+template<class _Ty>
+	constexpr bool is_nothrow_swappable_v = is_nothrow_swappable<_Ty>::value;
+#endif /* _HAS_CXX17 */
+template<class _Ty>
+	constexpr bool is_nothrow_destructible_v = is_nothrow_destructible<_Ty>::value;
+template<class _Ty>
+	constexpr bool has_virtual_destructor_v = has_virtual_destructor<_Ty>::value;
+template<class _Ty>
+	constexpr size_t alignment_of_v = alignment_of<_Ty>::value;
+template<class _Ty>
+	constexpr size_t rank_v = rank<_Ty>::value;
+template<class _Ty,
+	unsigned int _Ix = 0>
+	constexpr size_t extent_v = extent<_Ty, _Ix>::value;
+template<class _Base,
+	class _Derived>
+	constexpr bool is_base_of_v = is_base_of<_Base, _Derived>::value;
+template<class _From,
+	class _To>
+	constexpr bool is_convertible_v = is_convertible<_From, _To>::value;
+template<class... _Traits>
+	constexpr bool conjunction_v = conjunction<_Traits...>::value;
+template<class... _Traits>
+	constexpr bool disjunction_v = disjunction<_Traits...>::value;
+template<class _Trait>
+	constexpr bool negation_v = negation<_Trait>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
+
 _STD_END
 
  #pragma pop_macro("new")

@@ -60,6 +60,16 @@ _CRTIMP2_PURE void *__cdecl _Mtx_getconcrtcs(_Mtx_t);
 _CRTIMP2_PURE void __cdecl _Mtx_clear_owner(_Mtx_t);
 _CRTIMP2_PURE void __cdecl _Mtx_reset_owner(_Mtx_t);
 
+	/* shared mutex */
+	/* these declarations must be in sync with those in thr/sharedmutex.cpp */
+typedef void * _Smtx_t;
+void __cdecl _Smtx_lock_exclusive(_Smtx_t *);
+void __cdecl _Smtx_lock_shared(_Smtx_t *);
+int __cdecl _Smtx_try_lock_exclusive(_Smtx_t *);
+int __cdecl _Smtx_try_lock_shared(_Smtx_t *);
+void __cdecl _Smtx_unlock_exclusive(_Smtx_t *);
+void __cdecl _Smtx_unlock_shared(_Smtx_t *);
+
 	/* condition variables */
 typedef _Cnd_imp_t _Cnd_t;
 

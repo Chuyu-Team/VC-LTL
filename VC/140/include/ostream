@@ -372,7 +372,6 @@ public:
 		return (*this);
 		}
 
- #ifdef _LONGLONG
 	_Myt& __CLR_OR_THIS_CALL operator<<(_LONGLONG _Val)
 		{	// insert a long long
 		ios_base::iostate _State = ios_base::goodbit;
@@ -412,7 +411,6 @@ public:
 		_Myios::setstate(_State);
 		return (*this);
 		}
- #endif /* _LONGLONG */
 
 	_Myt& __CLR_OR_THIS_CALL operator<<(float _Val)
 		{	// insert a float

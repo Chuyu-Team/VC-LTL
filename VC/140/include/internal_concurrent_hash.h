@@ -425,7 +425,7 @@ public:
     {
         if (this != &_Right)
         {
-            std::_Swap_adl(_M_comparator, _Right._M_comparator);
+            std::_Swap_adl(this->_M_comparator, _Right._M_comparator);
             _M_split_ordered_list.swap(_Right._M_split_ordered_list);
             _Swap_buckets(_Right);
             std::swap(_M_number_of_buckets, _Right._M_number_of_buckets);
@@ -506,7 +506,7 @@ public:
     {
         size_type _Count = 0;
         const_iterator _It = _Find(_Keyval);
-        for (;_It != end() && !_M_comparator(_Key_function(*_It), _Keyval); _It++)
+        for (;_It != end() && !this->_M_comparator(this->_Key_function(*_It), _Keyval); _It++)
         {
             _Count++;
         }
@@ -619,7 +619,7 @@ public:
     /**/
     size_type unsafe_bucket(const key_type& _Keyval) const
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Keyval);
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(_Keyval);
         size_type _Bucket = _Order_key % _M_number_of_buckets;
         return _Bucket;
     }
@@ -661,9 +661,8 @@ public:
         // It is possible the bucket being searched for has not yet been initialized
         if (!_Is_initialized(_Bucket))
         {
-            _Initialize_bucket(_Bucket);
+            const_cast<_Concurrent_hash*>(this)->_Initialize_bucket(_Bucket);
         }
-
 
         _Full_const_iterator _Iterator = _Get_bucket(_Bucket);
         return _M_split_ordered_list._Get_first_real_iterator(_Iterator);
@@ -726,7 +725,7 @@ public:
         {
             if (!_Is_initialized(_Bucket_index))
             {
-                _Initialize_bucket(_Bucket_index);
+                const_cast<_Concurrent_hash*>(this)->_Initialize_bucket(_Bucket_index);
             }
         }
 
@@ -861,7 +860,7 @@ protected:
     template<typename _ValTy>
     std::pair<iterator, bool> _Insert(_ValTy&& _Value)
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Key_function(_Value));
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(this->_Key_function(_Value));
         size_type _Bucket = _Order_key % _M_number_of_buckets;
 
         // If bucket is empty, initialize it first
@@ -907,8 +906,8 @@ protected:
                     continue;
                 }
             }
-            else if (!_M_allow_multimapping && _Mylist::_Get_key(_Where) == _Order_key &&
-                _M_comparator(_Key_function(*_Where), _Key_function(_New_node->_M_element)) == 0)
+            else if (!this->_M_allow_multimapping && _Mylist::_Get_key(_Where) == _Order_key &&
+                this->_M_comparator(this->_Key_function(*_Where), this->_Key_function(_New_node->_M_element)) == 0)
             {
                 // If the insert failed (element already there), then delete the new one
                 _M_split_ordered_list._Erase(_New_node);
@@ -955,7 +954,7 @@ private:
         try
         {
             _Insert(_Right.begin(), _Right.end());
-            _M_comparator = _Right._M_comparator;
+            this->_M_comparator = _Right._M_comparator;
         }
         catch(...)
         {
@@ -998,7 +997,7 @@ private:
     // Find the element in the split-ordered list
     iterator _Find(const key_type& _Keyval)
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Keyval);
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(_Keyval);
         size_type _Bucket = _Order_key % _M_number_of_buckets;
 
         // If _Bucket is empty, initialize it first
@@ -1023,7 +1022,7 @@ private:
                 // The fact that order keys match does not mean that the element is found.
                 // Key function comparison has to be performed to check whether this is the
                 // right element. If not, keep searching while order key is the same.
-                if (!_M_comparator(_Key_function(*_Iterator), _Keyval))
+                if (!this->_M_comparator(this->_Key_function(*_Iterator), _Keyval))
                 {
                     return _M_split_ordered_list._Get_iterator(_Iterator);
                 }
@@ -1036,7 +1035,7 @@ private:
     // Find the element in the split-ordered list
     const_iterator _Find(const key_type& _Keyval) const
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Keyval);
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(_Keyval);
         size_type _Bucket = _Order_key % _M_number_of_buckets;
 
         // If _Bucket has not been initialized, keep searching up for a parent bucket
@@ -1062,7 +1061,7 @@ private:
                 // The fact that order keys match does not mean that the element is found.
                 // Key function comparison has to be performed to check whether this is the
                 // right element. If not, keep searching while order key is the same.
-                if (!_M_comparator(_Key_function(*_Iterator), _Keyval))
+                if (!this->_M_comparator(this->_Key_function(*_Iterator), _Keyval))
                 {
                     return _M_split_ordered_list._Get_iterator(_Iterator);
                 }
@@ -1075,7 +1074,7 @@ private:
     // Erase an element from the list. This is not a concurrency safe function.
     iterator _Erase(const_iterator _Iterator)
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Key_function(*_Iterator));
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(this->_Key_function(*_Iterator));
         size_type _Bucket = _Order_key % _M_number_of_buckets;
 
         // If bucket is empty, initialize it first
@@ -1116,7 +1115,7 @@ private:
     // This operation makes sense only if mapping is many-to-one.
     std::pair<iterator, iterator> _Equal_range(const key_type& _Keyval)
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Keyval);
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(_Keyval);
         size_type _Bucket = _Order_key % _M_number_of_buckets;
 
         // If _Bucket is empty, initialize it first
@@ -1135,12 +1134,12 @@ private:
                 // There is no element with the given key
                 return std::pair<iterator, iterator>(end(), end());
             }
-            else if (_Mylist::_Get_key(_Iterator) == _Order_key && !_M_comparator(_Key_function(*_Iterator), _Keyval))
+            else if (_Mylist::_Get_key(_Iterator) == _Order_key && !this->_M_comparator(this->_Key_function(*_Iterator), _Keyval))
             {
                 iterator _Begin = _M_split_ordered_list._Get_iterator(_Iterator);
                 iterator _End= _Begin;
 
-                for (;_End != end() && !_M_comparator(_Key_function(*_End), _Keyval); _End++)
+                for (;_End != end() && !this->_M_comparator(this->_Key_function(*_End), _Keyval); _End++)
                 {
                 }
 
@@ -1155,7 +1154,7 @@ private:
     // This operation makes sense only if mapping is many-to-one.
     std::pair<const_iterator, const_iterator> _Equal_range(const key_type& _Keyval) const
     {
-        _Split_order_key _Order_key = (_Split_order_key) _M_comparator(_Keyval);
+        _Split_order_key _Order_key = (_Split_order_key) this->_M_comparator(_Keyval);
         size_type _Bucket = _Order_key % _M_number_of_buckets;
 
         // If _Bucket has not been initialized, keep searching up for a parent bucket
@@ -1175,12 +1174,12 @@ private:
                 // There is no element with the given key
                 return std::pair<const_iterator, const_iterator>(end(), end());
             }
-            else if (_Mylist::_Get_key(_Iterator) == _Order_key && !_M_comparator(_Key_function(*_Iterator), _Keyval))
+            else if (_Mylist::_Get_key(_Iterator) == _Order_key && !this->_M_comparator(this->_Key_function(*_Iterator), _Keyval))
             {
                 const_iterator _Begin = _M_split_ordered_list._Get_iterator(_Iterator);
                 const_iterator _End = _Begin;
 
-                for (; _End != end() && !_M_comparator(_Key_function(*_End), _Keyval); _End++)
+                for (; _End != end() && !this->_M_comparator(this->_Key_function(*_End), _Keyval); _End++)
                 {
                 }
 
@@ -1316,6 +1315,6 @@ private:
 } // namespace details;
 } // namespace Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pack(pop)

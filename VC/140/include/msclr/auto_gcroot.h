@@ -19,7 +19,7 @@
 #endif  /* __cplusplus_cli */
 
 #include <vcclr.h>
-#include <msclr\safebool.h>
+#include <msclr/safebool.h>
 #include <algorithm>
 
 namespace msclr

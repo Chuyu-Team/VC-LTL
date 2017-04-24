@@ -211,7 +211,7 @@ public:
 
 	typedef const _Ty *pointer;
 
-	_CONST_FUN istream_iterator()
+	constexpr istream_iterator()
 		: _Myistr(0), _Myval()
 		{	// construct singular iterator
 		}
@@ -229,7 +229,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myt& operator++()
@@ -312,7 +312,7 @@ public:
 		{	// construct from output stream and delimiter
 		}
 
-	ostream_iterator<_Ty, _Elem, _Traits>& operator=(const _Ty& _Val)
+	ostream_iterator& operator=(const _Ty& _Val)
 		{	// insert value into output stream, followed by delimiter
 		*_Myostr << _Val;
 		if (_Mydelim != 0)
@@ -320,17 +320,17 @@ public:
 		return (*this);
 		}
 
-	ostream_iterator<_Ty, _Elem, _Traits>& operator*()
+	ostream_iterator& operator*()
 		{	// pretend to return designated value
 		return (*this);
 		}
 
-	ostream_iterator<_Ty, _Elem, _Traits>& operator++()
+	ostream_iterator& operator++()
 		{	// pretend to preincrement
 		return (*this);
 		}
 
-	ostream_iterator<_Ty, _Elem, _Traits>& operator++(int)
+	ostream_iterator& operator++(int)
 		{	// pretend to postincrement
 		return (*this);
 		}

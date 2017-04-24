@@ -3,44 +3,133 @@
 #ifndef _TUPLE_
 #define _TUPLE_
 #ifndef RC_INVOKED
+#include <new>
 #include <type_traits>
 #include <xutility>
-#include <new>
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,3)
  #pragma push_macro("new")
  #undef new
 
- #pragma warning(disable: 4100 4296 4521 4522)
-
 _STD_BEGIN
-	// STRUCT _Tuple_enable
-template<class _Src,
-	class _Dest>
-	struct _Tuple_enable
-	{	// default has no type definition
+	// ALIAS TEMPLATE _Tuple_implicit_t
+template<bool _Same,
+	class _Dest,
+	class... _Srcs>
+	struct _Tuple_implicit_val0
+		: false_type
+	{	// Constrain tuple's implicit constructors
 	};
 
-template<>
-	struct _Tuple_enable<tuple<>, tuple<> >
-	{	// empty tuples match
-	typedef void ** type;
+template<class... _Dests,
+	class... _Srcs>
+	struct _Tuple_implicit_val0<true, tuple<_Dests...>, _Srcs...>
+		: conjunction<
+			is_constructible<_Dests, _Srcs>...,
+			is_convertible<_Srcs, _Dests>...
+		>::type
+	{	// Constrain tuple's implicit constructors
 	};
 
-template<class _Src0,
-	class... _Types1,
-	class _Dest0,
-	class... _Types2>
-	struct _Tuple_enable<tuple<_Src0, _Types1...>,
-		tuple<_Dest0, _Types2...> >
-	: _If<is_convertible<_Src0, _Dest0>::value,
-		_Tuple_enable<tuple<_Types1...>, tuple<_Types2...> >,
-		_Tuple_enable<int, int>
-	>::type
-	{	// tests if all tuple element pairs are implicitly convertible
+template<class _Dest,
+	class... _Srcs>
+	struct _Tuple_implicit_val
+		: _Tuple_implicit_val0<tuple_size<_Dest>::value == sizeof...(_Srcs), _Dest, _Srcs...>::type
+	{	// Constrain tuple's implicit constructors
 	};
 
+template<class _Dest,
+	class... _Srcs>
+	using _Tuple_implicit_t = enable_if_t<_Tuple_implicit_val<_Dest, _Srcs...>::value, int>;
+
+	// ALIAS TEMPLATE _Tuple_explicit_t
+template<bool _Same,
+	class _Dest,
+	class... _Srcs>
+	struct _Tuple_explicit_val0
+		: false_type
+	{	// Constrain tuple's explicit constructors
+	};
+
+template<class... _Dests,
+	class... _Srcs>
+	struct _Tuple_explicit_val0<true, tuple<_Dests...>, _Srcs...>
+		: conjunction<
+			is_constructible<_Dests, _Srcs>...,
+			negation<conjunction<is_convertible<_Srcs, _Dests>...>>
+		>::type
+	{	// Constrain tuple's explicit constructors
+	};
+
+template<class _Dest,
+	class... _Srcs>
+	struct _Tuple_explicit_val
+		: _Tuple_explicit_val0<tuple_size<_Dest>::value == sizeof...(_Srcs), _Dest, _Srcs...>::type
+	{	// Constrain tuple's explicit constructors
+	};
+
+template<class _Dest,
+	class... _Srcs>
+	using _Tuple_explicit_t = enable_if_t<_Tuple_explicit_val<_Dest, _Srcs...>::value, int>;
+
+	// ALIAS TEMPLATE _Tuple_convert_copy_t
+template<class _Myt,
+	class... _Other>
+	struct _Tuple_convert_copy
+	{	// Constrain tuple's converting copy constructor (LWG 2549)
+	typedef int type;
+	};
+
+template<class _This,
+	class _Uty>
+	struct _Tuple_convert_copy<tuple<_This>, _Uty>
+		: enable_if<!is_same<_This, _Uty>::value
+			&& !is_constructible<_This, const tuple<_Uty>&>::value
+			&& !is_convertible<const tuple<_Uty>&, _This>::value, int>
+	{	// Constrain tuple's converting copy constructor (LWG 2549)
+	};
+
+template<class _Myt,
+	class... _Other>
+	using _Tuple_convert_copy_t = typename _Tuple_convert_copy<_Myt, _Other...>::type;
+
+	// ALIAS TEMPLATE _Tuple_convert_move_t
+template<class _Myt,
+	class... _Other>
+	struct _Tuple_convert_move
+	{	// Constrain tuple's converting move constructor (LWG 2549)
+	typedef int type;
+	};
+
+template<class _This,
+	class _Uty>
+	struct _Tuple_convert_move<tuple<_This>, _Uty>
+		: enable_if<!is_same<_This, _Uty>::value
+			&& !is_constructible<_This, tuple<_Uty> >::value
+			&& !is_convertible<tuple<_Uty>, _This>::value, int>
+	{	// Constrain tuple's converting move constructor (LWG 2549)
+	};
+
+template<class _Myt,
+	class... _Other>
+	using _Tuple_convert_move_t = typename _Tuple_convert_move<_Myt, _Other...>::type;
+
+	// STRUCT TEMPLATE _Tuple_perfect_val
+template<class _Myt,
+	class _This2,
+	class... _Rest2>
+	struct _Tuple_perfect_val
+		: true_type
+	{	// Constrain tuple's perfect forwarding constructor (LWG issue not yet filed)
+	};
+
+template<class _Myt,
+	class _This2>
+	struct _Tuple_perfect_val<_Myt, _This2>
+		: negation<is_same<_Myt, remove_const_t<remove_reference_t<_This2>>>>::type
+	{	// Constrain tuple's perfect forwarding constructor (LWG issue not yet filed)
+	};
 
 	// STRUCT _Ignore
 struct _Ignore
@@ -51,26 +140,26 @@ struct _Ignore
 		}
 	};
 
-_CONST_DATA _Ignore ignore{};
+constexpr _Ignore ignore{};
 
 		// STRUCT _Tuple_alloc_t
 struct _Tuple_alloc_t
 	{	// tag type to disambiguate added allocator argument
 	};
 
-_CONST_DATA _Tuple_alloc_t _Tuple_alloc{};
+constexpr _Tuple_alloc_t _Tuple_alloc{};
 
 	// TEMPLATE CLASS _Tuple_val
 template<class _Ty>
 	struct _Tuple_val
 	{	// stores each value in a tuple
-	_CONST_FUN _Tuple_val()
+	constexpr _Tuple_val()
 		: _Val()
 		{	// default construct
 		}
 
 	template<class _Other>
-		_CONST_FUN _Tuple_val(_Other&& _Arg)
+		constexpr _Tuple_val(_Other&& _Arg)
 		: _Val(_STD forward<_Other>(_Arg))
 		{	// construct with argument
 		}
@@ -113,11 +202,26 @@ template<class _Ty>
 		{	// construct with optional arguments, trailing allocator
 		}
 
-
 	_Ty _Val;
 	};
 
-	// CLASS tuple
+	// TEMPLATE CLASS tuple
+struct _Exact_args_t
+	{	// tag type to disambiguate construction (from one arg per element)
+	};
+
+struct _Unpack_tuple_t
+	{	// tag type to disambiguate construction (from unpacking a tuple/pair)
+	};
+
+struct _Alloc_exact_args_t
+	{	// tag type to disambiguate construction (from an allocator and one arg per element)
+	};
+
+struct _Alloc_unpack_tuple_t
+	{	// tag type to disambiguate construction (from an allocator and unpacking a tuple/pair)
+	};
+
 template<class... _Types>
 	class tuple;
 
@@ -127,7 +231,7 @@ template<>
 public:
 	typedef tuple<> _Myt;
 
-	_CONST_FUN tuple() _NOEXCEPT
+	constexpr tuple() _NOEXCEPT
 		{	// default construct
 		}
 
@@ -136,7 +240,7 @@ public:
 		{	// default construct, allocator
 		}
 
-	_CONST_FUN tuple(const tuple&) _NOEXCEPT
+	constexpr tuple(const tuple&) _NOEXCEPT
 		{	// copy construct
 		}
 
@@ -145,23 +249,38 @@ public:
 		{	// copy construct, allocator
 		}
 
+	template<class _Tag,
+		enable_if_t<is_same<_Tag, _Exact_args_t>::value, int> = 0>
+		constexpr tuple(_Tag) _NOEXCEPT
+		{	// construct from one arg per element
+		}
+
+	template<class _Tag,
+		enable_if_t<is_same<_Tag, _Unpack_tuple_t>::value, int> = 0>
+		constexpr tuple(_Tag, const _Myt&) _NOEXCEPT
+		{	// construct from unpacking a tuple (TRANSITION, VSO#194815)
+		}
+
+	template<class _Tag,
+		class _Alloc,
+		enable_if_t<is_same<_Tag, _Alloc_exact_args_t>::value, int> = 0>
+		tuple(_Tag, const _Alloc&) _NOEXCEPT
+		{	// construct from an allocator and one arg per element
+		}
+
 	void swap(_Myt&) _NOEXCEPT
 		{	// swap elements
 		}
 
-	_CONST_FUN bool _Equals(const _Myt&) const _NOEXCEPT
+	constexpr bool _Equals(const _Myt&) const _NOEXCEPT
 		{	// test if *this == _Right
 		return (true);
 		}
 
-	_CONST_FUN bool _Less(const _Myt&) const _NOEXCEPT
+	constexpr bool _Less(const _Myt&) const _NOEXCEPT
 		{	// test if *this < _Right
 		return (false);
 		}
-	};
-
-struct _One_arg_t
-	{	// tag type to disambiguate construction
 	};
 
 template<class _This,
@@ -173,62 +292,193 @@ public:
 	typedef _This _This_type;
 	typedef tuple<_This, _Rest...> _Myt;
 	typedef tuple<_Rest...> _Mybase;
-	static const size_t _Mysize = 1 + sizeof...(_Rest);
+	static constexpr size_t _Mysize = 1 + sizeof...(_Rest);
 
-	_CONST_FUN tuple()
-		: _Mybase(),
-			_Myfirst()
+	template<class _Tag,
+		class _This2,
+		class... _Rest2,
+		enable_if_t<is_same<_Tag, _Exact_args_t>::value, int> = 0>
+		constexpr tuple(_Tag, _This2&& _This_arg, _Rest2&&... _Rest_arg)
+		: _Mybase(_Exact_args_t{}, _STD forward<_Rest2>(_Rest_arg)...),
+			_Myfirst(_STD forward<_This2>(_This_arg))
+		{	// construct from one arg per element
+		}
+
+/* TRANSITION, VSO#194815
+	template<class _Tag,
+		class _Tpl,
+		size_t... _Indices,
+		enable_if_t<is_same<_Tag, _Unpack_tuple_t>::value, int> = 0> inline
+		constexpr tuple(_Tag, _Tpl&& _Right, integer_sequence<size_t, _Indices...>);
+*/
+
+/* TRANSITION, VSO#194815
+	template<class _Tag,
+		class _Tpl,
+		enable_if_t<is_same<_Tag, _Unpack_tuple_t>::value, int> = 0>
+		constexpr tuple(_Tag, _Tpl&& _Right)
+		: tuple(_Unpack_tuple_t{}, _STD forward<_Tpl>(_Right),
+			make_integer_sequence<size_t, tuple_size<remove_reference_t<_Tpl>>::value>{})
+		{	// construct from unpacking a tuple/pair
+		}
+*/
+
+	template<class _Tag,
+		class... _Other,
+		enable_if_t<is_same<_Tag, _Unpack_tuple_t>::value, int> = 0>
+		constexpr tuple(_Tag, const tuple<_Other...>& _Right)
+		: _Mybase(_Unpack_tuple_t{}, _Right._Get_rest()),
+			_Myfirst(_Right._Myfirst._Val)
+		{	// construct from unpacking a tuple (TRANSITION, VSO#194815)
+		}
+
+	template<class _Tag,
+		class... _Other,
+		enable_if_t<is_same<_Tag, _Unpack_tuple_t>::value, int> = 0>
+		constexpr tuple(_Tag, tuple<_Other...>&& _Right)
+		: _Mybase(_Unpack_tuple_t{}, (typename tuple<_Other...>::_Mybase&&) _Right),
+			_Myfirst(_STD forward<typename tuple<_Other...>::_This_type>(_Right._Myfirst._Val))
+		{	// construct from unpacking a tuple (TRANSITION, VSO#194815)
+		}
+
+	template<class _Tag,
+		class _Alloc,
+		class _This2,
+		class... _Rest2,
+		enable_if_t<is_same<_Tag, _Alloc_exact_args_t>::value, int> = 0>
+		tuple(_Tag, const _Alloc& _Al, _This2&& _This_arg, _Rest2&&... _Rest_arg)
+		: _Mybase(_Alloc_exact_args_t{}, _Al, _STD forward<_Rest2>(_Rest_arg)...),
+			_Myfirst(_Al, _Tuple_alloc, _STD forward<_This2>(_This_arg))
+		{	// construct from an allocator and one arg per element
+		}
+
+	template<class _Tag,
+		class _Alloc,
+		class _Tpl,
+		size_t... _Indices,
+		enable_if_t<is_same<_Tag, _Alloc_unpack_tuple_t>::value, int> = 0> inline
+		tuple(_Tag, const _Alloc& _Al, _Tpl&& _Right, integer_sequence<size_t, _Indices...>);
+
+	template<class _Tag,
+		class _Alloc,
+		class _Tpl,
+		enable_if_t<is_same<_Tag, _Alloc_unpack_tuple_t>::value, int> = 0>
+		tuple(_Tag, const _Alloc& _Al, _Tpl&& _Right)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _STD forward<_Tpl>(_Right),
+			make_integer_sequence<size_t, tuple_size<remove_reference_t<_Tpl>>::value>{})
+		{	// construct from an allocator and unpacking a tuple/pair
+		}
+
+	template<class _This2 = _This,
+		class = enable_if_t<conjunction<is_default_constructible<_This2>,
+										is_default_constructible<_Rest>...>::value> >
+		constexpr tuple()
+		: _Mybase(), _Myfirst()
 		{	// construct default
 		}
 
-	template<class... _Rest2>
-		explicit tuple(_Tuple_alloc_t, _Rest2&&... _Rest_arg)
-			: _Mybase(_STD forward<_Rest2>(_Rest_arg)...),
-				_Myfirst(allocator_arg)
-		{	// construct smuggled allocator_arg_t element
+	template<class... _Other,
+		_Tuple_implicit_t<_Myt, const _Other&...> = 0,
+		_Tuple_convert_copy_t<_Myt, _Other...> = 0>
+		constexpr tuple(const tuple<_Other...>& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _Right)
+		: _Mybase(_Unpack_tuple_t{}, _Right._Get_rest()),
+			_Myfirst(_Right._Myfirst._Val)
+		{	// construct by copying same size tuple
 		}
 
 	template<class... _Other,
-		class = typename _Tuple_enable<
-			tuple<const _Other&...>, _Myt>::type>
-		_CONST_FUN tuple(const tuple<_Other...>& _Right)
-		: _Mybase(_Right._Get_rest()), _Myfirst(_Right._Myfirst._Val)
+		_Tuple_explicit_t<_Myt, const _Other&...> = 0,
+		_Tuple_convert_copy_t<_Myt, _Other...> = 0>
+		constexpr explicit tuple(const tuple<_Other...>& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _Right)
+		: _Mybase(_Unpack_tuple_t{}, _Right._Get_rest()),
+			_Myfirst(_Right._Myfirst._Val)
 		{	// construct by copying same size tuple
 		}
 
 	template<class _Alloc,
 		class... _Other,
-		class = typename _Tuple_enable<
-			tuple<const _Other&...>, _Myt>::type>
+		_Tuple_implicit_t<_Myt, const _Other&...> = 0,
+		_Tuple_convert_copy_t<_Myt, _Other...> = 0>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			const tuple<_Other...>& _Right)
-		: _Mybase(allocator_arg, _Al, _Right._Get_rest()),
-			_Myfirst(_Al, _Tuple_alloc,
-				_Right._Myfirst._Val)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _Right)
 		{	// construct by copying same size tuple, allocator
 		}
 
-	_CONST_FUN explicit tuple(const _This& _This_arg,
-		const _Rest&... _Rest_arg)
-		: _Mybase(_Rest_arg...),
-			_Myfirst(_This_arg)
+	template<class _Alloc,
+		class... _Other,
+		_Tuple_explicit_t<_Myt, const _Other&...> = 0,
+		_Tuple_convert_copy_t<_Myt, _Other...> = 0>
+		explicit tuple(allocator_arg_t, const _Alloc& _Al,
+			const tuple<_Other...>& _Right)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _Right)
+		{	// construct by copying same size tuple, allocator
+		}
+
+	template<class _This2 = _This,
+		_Tuple_implicit_t<_Myt, const _This2&, const _Rest&...> = 0>
+		constexpr tuple(const _This& _This_arg, const _Rest&... _Rest_arg)
+// TRANSITION, VSO#194815
+// : tuple(_Exact_args_t{}, _This_arg, _Rest_arg...)
+		: _Mybase(_Exact_args_t{}, _Rest_arg...), _Myfirst(_This_arg)
 		{	// construct from one or more copied elements
 		}
 
-	template<class _Alloc>
+	template<class _This2 = _This,
+		_Tuple_explicit_t<_Myt, const _This2&, const _Rest&...> = 0>
+		constexpr explicit tuple(const _This& _This_arg, const _Rest&... _Rest_arg)
+// TRANSITION, VSO#194815
+// : tuple(_Exact_args_t{}, _This_arg, _Rest_arg...)
+		: _Mybase(_Exact_args_t{}, _Rest_arg...), _Myfirst(_This_arg)
+		{	// construct from one or more copied elements
+		}
+
+	template<class _Alloc,
+		class _This2 = _This,
+		_Tuple_implicit_t<_Myt, const _This2&, const _Rest&...> = 0>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			const _This& _This_arg, const _Rest&... _Rest_arg)
-		: _Mybase(allocator_arg, _Al, _Rest_arg...),
-			_Myfirst(_Al, _Tuple_alloc, _This_arg)
+		: tuple(_Alloc_exact_args_t{}, _Al, _This_arg, _Rest_arg...)
+		{	// construct from one or more copied elements, allocator
+		}
+
+	template<class _Alloc,
+		class _This2 = _This,
+		_Tuple_explicit_t<_Myt, const _This2&, const _Rest&...> = 0>
+		explicit tuple(allocator_arg_t, const _Alloc& _Al,
+			const _This& _This_arg, const _Rest&... _Rest_arg)
+		: tuple(_Alloc_exact_args_t{}, _Al, _This_arg, _Rest_arg...)
 		{	// construct from one or more copied elements, allocator
 		}
 
 	template<class _This2,
 		class... _Rest2,
-		class = typename _Tuple_enable<
-			tuple<_This2, _Rest2...>, _Myt>::type>
-		_CONST_FUN explicit tuple(_This2&& _This_arg, _Rest2&&... _Rest_arg)
-		: _Mybase(_STD forward<_Rest2>(_Rest_arg)...),
+		enable_if_t<conjunction<
+			_Tuple_perfect_val<_Myt, _This2, _Rest2...>,
+			_Tuple_implicit_val<_Myt, _This2, _Rest2...>
+		>::value, int> = 0>
+		constexpr tuple(_This2&& _This_arg, _Rest2&&... _Rest_arg)
+// TRANSITION, VSO#194815
+// : tuple(_Exact_args_t{}, _STD forward<_This2>(_This_arg), _STD forward<_Rest2>(_Rest_arg)...)
+		: _Mybase(_Exact_args_t{}, _STD forward<_Rest2>(_Rest_arg)...),
+			_Myfirst(_STD forward<_This2>(_This_arg))
+		{	// construct from one or more moved elements
+		}
+
+	template<class _This2,
+		class... _Rest2,
+		enable_if_t<conjunction<
+			_Tuple_perfect_val<_Myt, _This2, _Rest2...>,
+			_Tuple_explicit_val<_Myt, _This2, _Rest2...>
+		>::value, int> = 0>
+		constexpr explicit tuple(_This2&& _This_arg, _Rest2&&... _Rest_arg)
+// TRANSITION, VSO#194815
+// : tuple(_Exact_args_t{}, _STD forward<_This2>(_This_arg), _STD forward<_Rest2>(_Rest_arg)...)
+		: _Mybase(_Exact_args_t{}, _STD forward<_Rest2>(_Rest_arg)...),
 			_Myfirst(_STD forward<_This2>(_This_arg))
 		{	// construct from one or more moved elements
 		}
@@ -236,39 +486,68 @@ public:
 	template<class _Alloc,
 		class _This2,
 		class... _Rest2,
-		class = typename _Tuple_enable<
-			tuple<_This2, _Rest2...>, _Myt>::type>
+		enable_if_t<conjunction<
+			_Tuple_perfect_val<_Myt, _This2, _Rest2...>,
+			_Tuple_implicit_val<_Myt, _This2, _Rest2...>
+		>::value, int> = 0>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			_This2&& _This_arg, _Rest2&&... _Rest_arg)
-		: _Mybase(allocator_arg, _Al,
-				_STD forward<_Rest2>(_Rest_arg)...),
-			_Myfirst(_Al, _Tuple_alloc,
-				_STD forward<_This2>(_This_arg))
+		: tuple(_Alloc_exact_args_t{}, _Al, _STD forward<_This2>(_This_arg), _STD forward<_Rest2>(_Rest_arg)...)
+		{	// construct from one or more moved elements, allocator
+		}
+
+	template<class _Alloc,
+		class _This2,
+		class... _Rest2,
+		enable_if_t<conjunction<
+			_Tuple_perfect_val<_Myt, _This2, _Rest2...>,
+			_Tuple_explicit_val<_Myt, _This2, _Rest2...>
+		>::value, int> = 0>
+		explicit tuple(allocator_arg_t, const _Alloc& _Al,
+			_This2&& _This_arg, _Rest2&&... _Rest_arg)
+		: tuple(_Alloc_exact_args_t{}, _Al, _STD forward<_This2>(_This_arg), _STD forward<_Rest2>(_Rest_arg)...)
 		{	// construct from one or more moved elements, allocator
 		}
 
 	template<class... _Other,
-		class = typename _Tuple_enable<
-			tuple<_Other...>, _Myt>::type>
-		_CONST_FUN tuple(tuple<_Other...>&& _Right)
-		: _Mybase((typename tuple<_Other...>::_Mybase&&)_Right),
-			_Myfirst(_STD forward<typename tuple<_Other...>::_This_type>
-				(_Right._Myfirst._Val))
+		_Tuple_implicit_t<_Myt, _Other...> = 0,
+		_Tuple_convert_move_t<_Myt, _Other...> = 0>
+		constexpr tuple(tuple<_Other...>&& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _STD move(_Right))
+		: _Mybase(_Unpack_tuple_t{}, (typename tuple<_Other...>::_Mybase&&) _Right),
+			_Myfirst(_STD forward<typename tuple<_Other...>::_This_type>(_Right._Myfirst._Val))
+		{	// construct by moving same size tuple
+		}
+
+	template<class... _Other,
+		_Tuple_explicit_t<_Myt, _Other...> = 0,
+		_Tuple_convert_move_t<_Myt, _Other...> = 0>
+		constexpr explicit tuple(tuple<_Other...>&& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _STD move(_Right))
+		: _Mybase(_Unpack_tuple_t{}, (typename tuple<_Other...>::_Mybase&&) _Right),
+			_Myfirst(_STD forward<typename tuple<_Other...>::_This_type>(_Right._Myfirst._Val))
 		{	// construct by moving same size tuple
 		}
 
 	template<class _Alloc,
 		class... _Other,
-		class = typename _Tuple_enable<
-			tuple<_Other...>, _Myt>::type>
+		_Tuple_implicit_t<_Myt, _Other...> = 0,
+		_Tuple_convert_move_t<_Myt, _Other...> = 0>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			tuple<_Other...>&& _Right)
-		: _Mybase(allocator_arg, _Al,
-				_STD forward<typename tuple<_Other...>::_Mybase>
-					(_Right._Get_rest())),
-			_Myfirst(_Al, _Tuple_alloc,
-				_STD forward<typename tuple<_Other...>::_This_type>
-					(_Right._Myfirst._Val))
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _STD move(_Right))
+		{	// construct by moving same size tuple, allocator
+		}
+
+	template<class _Alloc,
+		class... _Other,
+		_Tuple_explicit_t<_Myt, _Other...> = 0,
+		_Tuple_convert_move_t<_Myt, _Other...> = 0>
+		explicit tuple(allocator_arg_t, const _Alloc& _Al,
+			tuple<_Other...>&& _Right)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _STD move(_Right))
 		{	// construct by moving same size tuple, allocator
 		}
 
@@ -291,7 +570,7 @@ public:
 		}
 
 	template<class... _Other>
-		_CONST_FUN bool _Equals(const tuple<_Other...>& _Right) const
+		constexpr bool _Equals(const tuple<_Other...>& _Right) const
 		{	// test if *this == _Right
 		static_assert(_Mysize == sizeof...(_Other),
 			"comparing tuple to object with different size");
@@ -300,7 +579,7 @@ public:
 		}
 
 	template<class... _Other>
-		_CONST_FUN bool _Less(const tuple<_Other...>& _Right) const
+		constexpr bool _Less(const tuple<_Other...>& _Right) const
 		{	// test if *this < _Right
 		static_assert(_Mysize == sizeof...(_Other),
 			"comparing tuple to object with different size");
@@ -309,59 +588,63 @@ public:
 				&& _Mybase::_Less(_Right._Get_rest())));
 		}
 
-	template<class _Alloc>
+	template<class _Alloc,
+		class _This2 = _This,
+		class = enable_if_t<conjunction<is_default_constructible<_This2>,
+										is_default_constructible<_Rest>...>::value> >
 		tuple(allocator_arg_t, const _Alloc& _Al)
-		: _Mybase(allocator_arg, _Al),
-			_Myfirst(_Al, _Tuple_alloc)
+		: _Mybase(allocator_arg, _Al), _Myfirst(_Al, _Tuple_alloc)
 		{	// construct default, allocator
 		}
 
 	template<class _Alloc>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			const _Myt& _Right)
-		: _Mybase(allocator_arg, _Al, _Right._Get_rest()),
-			_Myfirst(_Al, _Tuple_alloc,
-				_Right._Myfirst._Val)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _Right)
 		{	// construct by copying, allocator
 		}
 
 	tuple(const _Myt&) = default;
 	tuple(_Myt&&) = default;
 
-	template<class _Tag,
-		class _This2,
-		class = typename enable_if<is_same<_Tag, _One_arg_t>::value>::type>
-		_CONST_FUN tuple(_Tag, _This2&& _This_arg)
-		: _Mybase(),
-			_Myfirst(_STD forward<_This2>(_This_arg))
-		{	// construct from one perfectly forwarded element
+	template<class _First,
+		class _Second,
+		_Tuple_implicit_t<_Myt, const _First&, const _Second&> = 0>
+		constexpr tuple(const pair<_First, _Second>& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _Right)
+		: _Mybase(_Exact_args_t{}, _Right.second), _Myfirst(_Right.first)
+		{	// construct by copying pair
 		}
 
 	template<class _First,
 		class _Second,
-		class = typename _Tuple_enable<
-			tuple<const _First&, const _Second&>, _Myt>::type>
-		_CONST_FUN tuple(const pair<_First, _Second>& _Right)
-
-		: _Mybase(_One_arg_t(), _Right.second),
-			_Myfirst(_Right.first)
+		_Tuple_explicit_t<_Myt, const _First&, const _Second&> = 0>
+		constexpr explicit tuple(const pair<_First, _Second>& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _Right)
+		: _Mybase(_Exact_args_t{}, _Right.second), _Myfirst(_Right.first)
 		{	// construct by copying pair
-		// no static_assert necessary
 		}
 
 	template<class _Alloc,
 		class _First,
 		class _Second,
-		class = typename _Tuple_enable<
-			tuple<const _First&, const _Second&>, _Myt>::type>
+		_Tuple_implicit_t<_Myt, const _First&, const _Second&> = 0>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			const pair<_First, _Second>& _Right)
-
-		: _Mybase(allocator_arg, _Al, tuple<_Second>(_Right.second)),
-			_Myfirst(_Al, _Tuple_alloc,
-				_Right.first)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _Right)
 		{	// construct by copying pair, allocator
-		// no static_assert necessary
+		}
+
+	template<class _Alloc,
+		class _First,
+		class _Second,
+		_Tuple_explicit_t<_Myt, const _First&, const _Second&> = 0>
+		explicit tuple(allocator_arg_t, const _Alloc& _Al,
+			const pair<_First, _Second>& _Right)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _Right)
+		{	// construct by copying pair, allocator
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -385,39 +668,50 @@ public:
 	template<class _Alloc>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			_Myt&& _Right)
-		: _Mybase(allocator_arg, _Al,
-				_STD forward<_Mybase>(_Right._Get_rest())),
-			_Myfirst(_Al, _Tuple_alloc,
-				_STD forward<_This>(_Right._Myfirst._Val))
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _STD move(_Right))
 		{	// construct by moving, allocator
 		}
 
 	template<class _First,
 		class _Second,
-		class = typename _Tuple_enable<
-			tuple<_First, _Second>, _Myt>::type>
-		_CONST_FUN tuple(pair<_First, _Second>&& _Right)
-
-		: _Mybase(_One_arg_t(), _STD forward<_Second>(_Right.second)),
+		_Tuple_implicit_t<_Myt, _First, _Second> = 0>
+		constexpr tuple(pair<_First, _Second>&& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _STD move(_Right))
+		: _Mybase(_Exact_args_t{}, _STD forward<_Second>(_Right.second)),
 			_Myfirst(_STD forward<_First>(_Right.first))
 		{	// construct by moving pair
-		// no static_assert necessary
+		}
+
+	template<class _First,
+		class _Second,
+		_Tuple_explicit_t<_Myt, _First, _Second> = 0>
+		constexpr explicit tuple(pair<_First, _Second>&& _Right)
+// TRANSITION, VSO#194815
+// : tuple(_Unpack_tuple_t{}, _STD move(_Right))
+		: _Mybase(_Exact_args_t{}, _STD forward<_Second>(_Right.second)),
+			_Myfirst(_STD forward<_First>(_Right.first))
+		{	// construct by moving pair
 		}
 
 	template<class _Alloc,
 		class _First,
 		class _Second,
-		class = typename _Tuple_enable<
-			tuple<_First, _Second>, _Myt>::type>
+		_Tuple_implicit_t<_Myt, _First, _Second> = 0>
 		tuple(allocator_arg_t, const _Alloc& _Al,
 			pair<_First, _Second>&& _Right)
-
-		: _Mybase(allocator_arg, _Al,
-				tuple<_Second>(_STD forward<_Second>(_Right.second))),
-			_Myfirst(_Al, _Tuple_alloc,
-				_STD forward<_First>(_Right.first))
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _STD move(_Right))
 		{	// construct by moving pair, allocator
-		// no static_assert necessary
+		}
+
+	template<class _Alloc,
+		class _First,
+		class _Second,
+		_Tuple_explicit_t<_Myt, _First, _Second> = 0>
+		explicit tuple(allocator_arg_t, const _Alloc& _Al,
+			pair<_First, _Second>&& _Right)
+		: tuple(_Alloc_unpack_tuple_t{}, _Al, _STD move(_Right))
+		{	// construct by moving pair, allocator
 		}
 
 	_Myt& operator=(_Myt&& _Right)
@@ -445,21 +739,20 @@ public:
 		return (*this);
 		}
 
-	_CONST_FUN const _Mybase& _Get_rest() const _NOEXCEPT
+	constexpr const _Mybase& _Get_rest() const _NOEXCEPT
 		{	// get const reference to rest of elements
 		return (*this);
 		}
 
+	_Tuple_val<_This> _Myfirst;	// the stored element
+
 	void swap(tuple& _Right)
-		_NOEXCEPT_OP(
-			_NOEXCEPT_OP(_Swap_adl(this->_Myfirst._Val, _Right._Myfirst._Val))
-			&& _NOEXCEPT_OP(_Swap_adl(_Right._Get_rest(), _Right._Get_rest())))
+		_NOEXCEPT_OP((conjunction<_Is_nothrow_swappable<_This>,
+			_Is_nothrow_swappable<_Rest>...>::value))
 		{	// swap *this and _Right
 		_Swap_adl(_Myfirst._Val, _Right._Myfirst._Val);
 		_Mybase::swap(_Right._Get_rest());
 		}
-
-	_Tuple_val<_This> _Myfirst;	// the stored element
 	};
 
 
@@ -467,7 +760,7 @@ public:
 
 template<class... _Types1,
 	class... _Types2> inline
-	_CONST_FUN bool operator==(const tuple<_Types1...>& _Left,
+	constexpr bool operator==(const tuple<_Types1...>& _Left,
 		const tuple<_Types2...>& _Right)
 	{	// test if _Left == _Right
 	return (_Left._Equals(_Right));
@@ -475,7 +768,7 @@ template<class... _Types1,
 
 template<class... _Types1,
 	class... _Types2> inline
-	_CONST_FUN bool operator!=(const tuple<_Types1...>& _Left,
+	constexpr bool operator!=(const tuple<_Types1...>& _Left,
 		const tuple<_Types2...>& _Right)
 	{	// test if _Left != _Right
 	return (!(_Left == _Right));
@@ -483,7 +776,7 @@ template<class... _Types1,
 
 template<class... _Types1,
 	class... _Types2> inline
-	_CONST_FUN bool operator<(const tuple<_Types1...>& _Left,
+	constexpr bool operator<(const tuple<_Types1...>& _Left,
 		const tuple<_Types2...>& _Right)
 	{	// test if _Left < _Right
 	return (_Left._Less(_Right));
@@ -491,7 +784,7 @@ template<class... _Types1,
 
 template<class... _Types1,
 	class... _Types2> inline
-	_CONST_FUN bool operator>=(const tuple<_Types1...>& _Left,
+	constexpr bool operator>=(const tuple<_Types1...>& _Left,
 		const tuple<_Types2...>& _Right)
 	{	// test if _Left >= _Right
 	return (!(_Left < _Right));
@@ -499,7 +792,7 @@ template<class... _Types1,
 
 template<class... _Types1,
 	class... _Types2> inline
-	_CONST_FUN bool operator>(const tuple<_Types1...>& _Left,
+	constexpr bool operator>(const tuple<_Types1...>& _Left,
 		const tuple<_Types2...>& _Right)
 	{	// test if _Left > _Right
 	return (_Right < _Left);
@@ -507,13 +800,14 @@ template<class... _Types1,
 
 template<class... _Types1,
 	class... _Types2> inline
-	_CONST_FUN bool operator<=(const tuple<_Types1...>& _Left,
+	constexpr bool operator<=(const tuple<_Types1...>& _Left,
 		const tuple<_Types2...>& _Right)
 	{	// test if _Left <= _Right
 	return (!(_Right < _Left));
 	}
 
-template<class... _Types> inline
+template<class... _Types,
+	class = enable_if_t<conjunction<_Is_swappable<_Types>...>::value>> inline
 	void swap(tuple<_Types...>& _Left,
 		tuple<_Types...>& _Right)
 			_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
@@ -584,7 +878,7 @@ template<class _Ty,
 	// TEMPLATE FUNCTION get (by index)
 template<size_t _Index,
 	class... _Types> inline
-	_CONST_FUN typename tuple_element<_Index, tuple<_Types...> >::type&
+	constexpr typename tuple_element<_Index, tuple<_Types...> >::type&
 		get(tuple<_Types...>& _Tuple) _NOEXCEPT
 	{	// get reference to _Index element of tuple
 	typedef typename tuple_element<_Index, tuple<_Types...> >::_Ttype
@@ -594,7 +888,7 @@ template<size_t _Index,
 
 template<size_t _Index,
 	class... _Types> inline
-	_CONST_FUN const typename tuple_element<_Index, tuple<_Types...> >::type&
+	constexpr const typename tuple_element<_Index, tuple<_Types...> >::type&
 		get(const tuple<_Types...>& _Tuple) _NOEXCEPT
 	{	// get const reference to _Index element of tuple
 	typedef typename tuple_element<_Index, tuple<_Types...> >::_Ttype
@@ -604,7 +898,7 @@ template<size_t _Index,
 
 template<size_t _Index,
 	class... _Types> inline
-	_CONST_FUN typename tuple_element<_Index, tuple<_Types...> >::type&&
+	constexpr typename tuple_element<_Index, tuple<_Types...> >::type&&
 		get(tuple<_Types...>&& _Tuple) _NOEXCEPT
 	{	// get rvalue reference to _Index element of tuple
 	typedef typename tuple_element<_Index, tuple<_Types...> >::_Ttype
@@ -617,7 +911,7 @@ template<size_t _Index,
 	// TEMPLATE FUNCTION get (by type)
 template<class _Ty,
 	class... _Types> inline
-	_CONST_FUN _Ty& get(tuple<_Types...>& _Tuple) _NOEXCEPT
+	constexpr _Ty& get(tuple<_Types...>& _Tuple) _NOEXCEPT
 	{	// get reference to _Ty element of tuple
 	typedef typename _Tuple_element<_Ty, tuple<_Types...> >::_Ttype _Ttype;
 	return (((_Ttype&)_Tuple)._Myfirst._Val);
@@ -625,7 +919,7 @@ template<class _Ty,
 
 template<class _Ty,
 	class... _Types> inline
-	_CONST_FUN const _Ty& get(const tuple<_Types...>& _Tuple) _NOEXCEPT
+	constexpr const _Ty& get(const tuple<_Types...>& _Tuple) _NOEXCEPT
 	{	// get const reference to _Ty element of tuple
 	typedef typename _Tuple_element<_Ty, tuple<_Types...> >::_Ttype _Ttype;
 	return (((_Ttype&)_Tuple)._Myfirst._Val);
@@ -633,15 +927,41 @@ template<class _Ty,
 
 template<class _Ty,
 	class... _Types> inline
-	_CONST_FUN _Ty&& get(tuple<_Types...>&& _Tuple) _NOEXCEPT
+	constexpr _Ty&& get(tuple<_Types...>&& _Tuple) _NOEXCEPT
 	{	// get rvalue reference to _Ty element of tuple
 	typedef typename _Tuple_element<_Ty, tuple<_Types...> >::_Ttype _Ttype;
 	return (_STD forward<_Ty&&>(((_Ttype&)_Tuple)._Myfirst._Val));
 	}
 
+	// CONSTRUCTOR TEMPLATES FOR tuple
+/* TRANSITION, VSO#194815
+template<class _This,
+	class... _Rest>
+	template<class _Tag,
+		class _Tpl,
+		size_t... _Indices,
+		enable_if_t<is_same<_Tag, _Unpack_tuple_t>::value, int>> inline
+		constexpr tuple<_This, _Rest...>::tuple(_Tag, _Tpl&& _Right, integer_sequence<size_t, _Indices...>)
+		: tuple(_Exact_args_t{}, _STD get<_Indices>(_STD forward<_Tpl>(_Right))...)
+		{	// construct from unpacking a tuple/pair, using get<I>()
+		}
+*/
+
+template<class _This,
+	class... _Rest>
+	template<class _Tag,
+		class _Alloc,
+		class _Tpl,
+		size_t... _Indices,
+		enable_if_t<is_same<_Tag, _Alloc_unpack_tuple_t>::value, int>> inline
+		tuple<_This, _Rest...>::tuple(_Tag, const _Alloc& _Al, _Tpl&& _Right, integer_sequence<size_t, _Indices...>)
+		: tuple(_Alloc_exact_args_t{}, _Al, _STD get<_Indices>(_STD forward<_Tpl>(_Right))...)
+		{	// construct from an allocator and unpacking a tuple/pair, using get<I>()
+		}
+
 	// TEMPLATE FUNCTION make_tuple
 template<class... _Types> inline
-	_CONST_FUN tuple<typename _Unrefwrap<_Types>::type...>
+	constexpr tuple<typename _Unrefwrap<_Types>::type...>
 		make_tuple(_Types&&... _Args)
 	{	// make tuple from elements
 	typedef tuple<typename _Unrefwrap<_Types>::type...> _Ttype;
@@ -650,7 +970,7 @@ template<class... _Types> inline
 
 	// TEMPLATE FUNCTION tie
 template<class... _Types> inline
-	_CONST_FUN tuple<_Types&...>
+	constexpr tuple<_Types&...>
 		tie(_Types&... _Args) _NOEXCEPT
 	{	// make tuple from elements
 	typedef tuple<_Types&...> _Ttype;
@@ -661,7 +981,7 @@ template<class... _Types> inline
 	// TEMPLATE FUNCTION forward_as_tuple
 
 template<class... _Types> inline
-	_CONST_FUN tuple<_Types&&...>
+	constexpr tuple<_Types&&...>
 		forward_as_tuple(_Types&&... _Args) _NOEXCEPT
 	{	// forward arguments in a tuple
 	return (tuple<_Types&&...>(_STD forward<_Types>(_Args)...));
@@ -689,17 +1009,17 @@ template<class _Ty,
 template<size_t _Idx,
 	class _Ty,
 	size_t _Size>
-	_CONST_FUN _Ty& get(array<_Ty, _Size>& _Arr) _NOEXCEPT;
+	constexpr _Ty& get(array<_Ty, _Size>& _Arr) _NOEXCEPT;
 
 template<size_t _Idx,
 	class _Ty,
 	size_t _Size>
-	_CONST_FUN const _Ty& get(const array<_Ty, _Size>& _Arr) _NOEXCEPT;
+	constexpr const _Ty& get(const array<_Ty, _Size>& _Arr) _NOEXCEPT;
 
 template<size_t _Idx,
 	class _Ty,
 	size_t _Size>
-	_CONST_FUN _Ty&& get(array<_Ty, _Size>&& _Arr) _NOEXCEPT;
+	constexpr _Ty&& get(array<_Ty, _Size>&& _Arr) _NOEXCEPT;
 
 	// TEMPLATE STRUCT _View_as_tuple
 template<class _Ty,
@@ -773,9 +1093,7 @@ template<class... _Types1,
 		: _Tuple_cat2<
 			tuple<_Types1..., _Types2...>,
 			typename _Cat_sequences<_Kx_arg,
-
 				make_integer_sequence<size_t, sizeof...(_Types2)> >::type,
-
 			integer_sequence<size_t, _Ix...,
 				_Repeat_for<_Ix_next, _Types2>::value...>,
 			_Ix_next + 1,
@@ -795,14 +1113,22 @@ template<class _Ret,
 	size_t... _Kx,
 	size_t... _Ix,
 	class _Ty> inline
-	_CONST_FUN _Ret _Tuple_cat(integer_sequence<size_t, _Kx...>,
+	constexpr _Ret _Tuple_cat(integer_sequence<size_t, _Kx...>,
 		integer_sequence<size_t, _Ix...>, _Ty&& _Arg)
 	{	// concatenate tuples
 	return (_Ret(_STD get<_Kx>(_STD get<_Ix>(_STD forward<_Ty>(_Arg)))...));
 	}
 
+template<class _Ret,
+	class _Ty> inline
+	constexpr _Ret _Tuple_cat(integer_sequence<size_t>,
+		integer_sequence<size_t>, _Ty&&)
+	{	// TRANSITION, VSO#181496
+	return (_Ret());
+	}
+
 template<class... _Tuples> inline
-	_CONST_FUN typename _Tuple_cat1<_Tuples...>::type
+	constexpr typename _Tuple_cat1<_Tuples...>::type
 		tuple_cat(_Tuples&&... _Tpls)
 	{	// concatenate tuples
 	typedef _Tuple_cat1<_Tuples...> _Cat1;
@@ -811,6 +1137,31 @@ template<class... _Tuples> inline
 		_STD forward_as_tuple(_STD forward<_Tuples>(_Tpls)...)));
 	}
 
+
+	// FUNCTION TEMPLATE _For_each_tuple_element
+template<class _Tpl,
+	class _Fx,
+	size_t... _Indices> inline
+	void _For_each_tuple_element_impl(_Tpl&& _Tuple,
+		_Fx _Func, integer_sequence<size_t, _Indices...>)
+	{	// call _Func() on the _Indices elements of _Tuple
+	int _Ignored[] = { (static_cast<void>(_Func(
+		_STD get<_Indices>(_STD forward<_Tpl>(_Tuple))
+		)), 0)... };
+	(void)_Ignored;
+	}
+
+template<class _Tpl,
+	class _Fx> inline
+	void _For_each_tuple_element(_Tpl&& _Tuple, _Fx _Func)
+	{	// call _Func() on each element in _Tuple
+	_For_each_tuple_element_impl(
+		_STD forward<_Tpl>(_Tuple),
+		_Func,
+		make_integer_sequence<size_t,
+			tuple_size<remove_reference_t<_Tpl>>::value>()
+		);
+	}
 
 
 	// TEMPLATE CONSTRUCTOR pair::pair(tuple, tuple, sequence, sequence)
@@ -827,6 +1178,8 @@ template<class _Ty1,
 		: first(_STD get<_Indexes1>(_STD move(_Val1))...),
 			second(_STD get<_Indexes2>(_STD move(_Val2))...)
 		{	// construct from pair of tuples
+		(void) _Val1;	// TRANSITION, VSO#181496
+		(void) _Val2;
 		}
 
 	// TEMPLATE CONSTRUCTOR pair::pair(piecewise_construct_t, tuple, tuple)
@@ -856,6 +1209,7 @@ template<class... _Types,
 
 }	// namespace std
 
+#if _HAS_TR1_NAMESPACE
 _STD_BEGIN
 namespace tr1 {	// TR1 ADDITIONS
 using _STD get;
@@ -866,6 +1220,7 @@ using _STD tie;
 using _STD tuple;
 }	// namespace tr1
 _STD_END
+#endif /* _HAS_TR1_NAMESPACE */
 
  #pragma pop_macro("new")
  #pragma warning(pop)

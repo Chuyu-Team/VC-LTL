@@ -1655,7 +1655,7 @@ public:
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IDBInitializeImpl::Uninitialize\n"));
 		T* pT = (T*)this;
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 		if (pT->m_cSessionsOpen != 0)
 		{
 			ATLTRACE(atlTraceDBProvider, 0, _T("Uninitialized called with Open Sessions\n"));
@@ -1678,7 +1678,7 @@ public:
 
 		ATLTRACE(atlTraceDBProvider, 2, _T("IDBInitializeImpl::Initialize\n"));
 		T *pT = (T*)(this);
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 		HRESULT hr;
 		if (pT->m_dwStatus & DSF_INITIALIZED)
 		{
@@ -2138,7 +2138,7 @@ public:
 			{
 				if (pGuid != NULL)
 				{
-					// Need to change this: set the guidPropertySet to the maching
+					// Need to change this: set the guidPropertySet to the matching
 					// initialization property group (not DBINITALL).
 					for (ULONG ulCurrentInitSet = ulTempPropsetIndex; ulCurrentInitSet < m_cUPropSet; ulCurrentInitSet++)
 					{
@@ -2653,7 +2653,7 @@ public:
 		return DB_E_ERRORSOCCURRED;
 	}
 
-    _Post_satisfies_(return == S_OK || return == S_FALSE)
+	_Post_satisfies_(return == S_OK || return == S_FALSE)
 	_Success_(return == S_OK)
 	HRESULT	GetIndexofPropIdinPropSet(
 		_In_ ULONG iCurSet,
@@ -2693,9 +2693,9 @@ public:
 
 	virtual HRESULT OnInterfaceRequested(_In_ REFIID riid)
 	{
-		// This function exists as part of the change in the OLE DB spec.  If
+		// This function exists as part of the change in the OLE DB spec. If
 		// a consumer opens an object and requests an optional interface, the
-		// provider should automatically set the property representating that
+		// provider should automatically set the property representing that
 		// interface to true.
 		CDBPropSet propset(DBPROPSET_ROWSET);
 		const GUID* ppGuid[1];
@@ -2876,7 +2876,7 @@ EXIT:
 	}
 ATLPREFAST_UNSUPPRESS()
 
-ATLPREFAST_SUPPRESS(6102)   
+ATLPREFAST_SUPPRESS(6102)
 	HRESULT	SetProperties(
 		_In_ const DWORD /*dwStatus*/,
 		_In_ const ULONG cPropertySets,
@@ -3047,13 +3047,13 @@ ATLPREFAST_SUPPRESS(6102)
 				}
 
 				// Check that the property is being set with the correct VARTYPE
-				if( (rgDBProp[ulProp].vValue.vt != pUPropInfo->VarType) && 
+				if( (rgDBProp[ulProp].vValue.vt != pUPropInfo->VarType) &&
 					(rgDBProp[ulProp].vValue.vt != VT_EMPTY) )
 				{
 					// The SQL Native Client OLE DB provider uses different authentication based on the content of the VARIANT.
 					// If the variant is an empty VT_BSTR, Windows Authentication Mode is used to authorize user access to the SQL Server database
-					// If the variant is VT_EMPTY,  SQL Server security is used to authorize user access to the SQL Server database					
-					if (rgDBProp[ulProp].dwPropertyID != DBPROP_AUTH_INTEGRATED && 
+					// If the variant is VT_EMPTY,  SQL Server security is used to authorize user access to the SQL Server database
+					if (rgDBProp[ulProp].dwPropertyID != DBPROP_AUTH_INTEGRATED &&
 						(rgDBProp[ulProp].vValue.vt != VT_EMPTY && rgDBProp[ulProp].vValue.vt != VT_BSTR))
 					{
 						dwState |= SETPROP_ERRORS;
@@ -4907,8 +4907,8 @@ public:
 
 		// You can get PROPERTIESINERROR on IDBProperties::GetProperties so do the
 		// appropriate argument checking for it.
-		m_dwFlags |= ARGCHK_PROPERTIESINERROR;
-		HRESULT hr = GetPropertiesArgChk(cPropertySets, rgPropertySets, pcProperties, prgProperties);
+		this->m_dwFlags |= ARGCHK_PROPERTIESINERROR;
+		HRESULT hr = this->GetPropertiesArgChk(cPropertySets, rgPropertySets, pcProperties, prgProperties);
 		if (FAILED(hr))
 			return hr;
 
@@ -4962,7 +4962,7 @@ public:
 				for(l=0; l<cSets; l++)
 				{
 					if (IsEqualGUID(*pSetTemp[l].pPropSet, DBPROPSET_DBINIT) ||
-						pSetTemp[l].dwFlags & UPROPSET_USERINIT)
+						pSetTemp[l].dwFlags & CUtlPropsBase::EnumUPropSetFlags::UPROPSET_USERINIT)
 						ulPropInits++;
 				}
 				CTempBuffer<PCGUID> tmpBuffer2;
@@ -4974,7 +4974,7 @@ public:
 				for(l=0; l<cSets; l++)
 				{
 					if (IsEqualGUID(*pSetTemp[l].pPropSet, DBPROPSET_DBINIT) ||
-						pSetTemp[l].dwFlags & UPROPSET_USERINIT)
+						pSetTemp[l].dwFlags & CUtlPropsBase::EnumUPropSetFlags::UPROPSET_USERINIT)
 						ppGuid[ulPropInits++] = pSetTemp[l].pPropSet;
 				}
 
@@ -4983,10 +4983,10 @@ public:
 			}
 		}
 
-		m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
+		this->m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
 		return hr;
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	STDMETHOD(GetPropertyInfo)(
 		_In_ ULONG cPropertySets,
@@ -4997,7 +4997,7 @@ ATLPREFAST_SUPPRESS(6387)
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IDBPropertiesImpl::GetPropertyInfo\n"));
 		T* pT = static_cast<T*>(this);
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 
 		if (pT->m_pCUtlPropInfo == NULL)
 		{
@@ -5075,7 +5075,7 @@ ATLPREFAST_SUPPRESS(6387)
 
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	STDMETHOD(SetProperties)(
 		_In_ ULONG cPropertySets,
 		_In_reads_(cPropertySets) DBPROPSET rgPropertySets[])
@@ -5092,7 +5092,7 @@ ATLPREFAST_UNSUPPRESS()
 			return S_OK;
 
 		// Determine how many sets are in the current map
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 		UPROPSET* pSetA = NULL;
 		UPROPSET* pSetTemp = NULL;
 		ULONG l=0;
@@ -5183,7 +5183,7 @@ ATLPREFAST_UNSUPPRESS()
 				for(l=0; l<cSets; l++)
 				{
 					if (IsEqualGUID(*pSetTemp[l].pPropSet, DBPROPSET_DBINIT) ||
-						pSetTemp[l].dwFlags & UPROPSET_USERINIT)
+						pSetTemp[l].dwFlags & CUtlPropsBase::EnumUPropSetFlags::UPROPSET_USERINIT)
 						ulPropInits++;
 				}
 
@@ -5196,7 +5196,7 @@ ATLPREFAST_UNSUPPRESS()
 				for(l=0; l<cSets; l++)
 				{
 					if (IsEqualGUID(*pSetTemp[l].pPropSet, DBPROPSET_DBINIT) ||
-						pSetTemp[l].dwFlags & UPROPSET_USERINIT)
+						pSetTemp[l].dwFlags & CUtlPropsBase::EnumUPropSetFlags::UPROPSET_USERINIT)
 						ppGuid[ulPropInits++] = pSetTemp[l].pPropSet;
 				}
 
@@ -5258,7 +5258,7 @@ ATLPREFAST_UNSUPPRESS()
 			return hr; \
 		return E_INVALIDARG; \
 	}
-	
+
 
 template <class SessionClass>
 class  ATL_NO_VTABLE IDBSchemaRowsetImpl:
@@ -5331,7 +5331,7 @@ public:
 		}
 		return (hrProps == DB_S_ERRORSOCCURRED) ? hrProps : hr;
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	template <class SchemaRowsetClass>
 	HRESULT CreateSchemaRowset(
@@ -5375,7 +5375,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return (hrProps == DB_S_ERRORSOCCURRED) ? hrProps : hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	void SetRestrictions(
 		_In_ ULONG cRestrictions,
 		_In_opt_ GUID* /*rguidSchema*/,
@@ -5762,7 +5762,7 @@ public:
 		*ppInfo = T::GetColumnInfo(pT, pcColumns);
 		return S_OK;
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	STDMETHOD(GetColumnInfo)(
 		_Out_ DBORDINAL *pcColumns,
@@ -5855,7 +5855,7 @@ ATLPREFAST_SUPPRESS(6387)
 		}
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	STDMETHOD(MapColumnIDs)(
 		_In_ DBORDINAL cColumnIDs,
 		_In_reads_(cColumnIDs) const DBID rgColumnIDs[],
@@ -6050,11 +6050,11 @@ public:
 
 		T* pT;
 		pT = static_cast<T*>(this);
-		m_dwFlags |= ARGCHK_PROPERTIESINERROR;
-		HRESULT hr = GetPropertiesArgChk(cPropertyIDSets, rgPropertyIDSets, pcPropertySets, prgPropertySets);
+		this->m_dwFlags |= ARGCHK_PROPERTIESINERROR;
+		HRESULT hr = this->GetPropertiesArgChk(cPropertyIDSets, rgPropertyIDSets, pcPropertySets, prgPropertySets);
 		if(SUCCEEDED(hr))
 		{
-			// Scan property sets to allow user defined properies
+			// Scan property sets to allow user defined properties
 			ULONG ulPropSets = 0;
 			ULONG ulPropElems = 0;
 			ULONG ulPropInits = 0;
@@ -6095,7 +6095,7 @@ ATLPREFAST_SUPPRESS(6385)
 					ulPropInits, ppGuid);
 ATLPREFAST_UNSUPPRESS()
 		}
-		m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
+		this->m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
 		return hr;
 
 	}
@@ -6110,10 +6110,10 @@ ATLPREFAST_UNSUPPRESS()
 		if (pT->m_cRowsetsOpen > 0)
 			return DB_E_OBJECTOPEN;	// Don't allow property sets on an open rowset
 
-		HRESULT hr = SetPropertiesArgChk(cPropertySets, rgPropertySets);
+		HRESULT hr = CUtlPropsBase::SetPropertiesArgChk(cPropertySets, rgPropertySets);
 		if(SUCCEEDED(hr))
 		{
-			// Scan property sets to allow user defined properies
+			// Scan property sets to allow user defined properties
 			ULONG ulPropSets = 0;
 			ULONG ulPropElems = 0;
 			ULONG ulPropInits = 0;
@@ -6202,7 +6202,7 @@ public:
 		ATLASSERT(pT->m_spUnkSite != NULL);
 		return pT->m_spUnkSite->QueryInterface(riid, (void**) ppSession);
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	template <class RowsetClass>
 	HRESULT CreateRowset(
@@ -6272,12 +6272,12 @@ ATLPREFAST_SUPPRESS(6387)
 		POSITION pos = pT->m_rgBindings.GetStartPosition();
 		while( pos != NULL )
 		{
-			T::_BindingVector::CPair *pPair = pT->m_rgBindings.GetNext(pos);
+			typename T::_BindingVector::CPair *pPair = pT->m_rgBindings.GetNext(pos);
 			ATLENSURE_RETURN( pPair != NULL );
-			T::_BindType* pBind = NULL;
-			T::_BindType* pBindSrc = NULL;
-			ATLTRY(pBind = _ATL_NEW T::_BindType);
-			CAutoPtr<T::_BindType> amr(pBind);
+			typename T::_BindType* pBind = NULL;
+			typename T::_BindType* pBindSrc = NULL;
+			ATLTRY(pBind = _ATL_NEW typename T::_BindType);
+			CAutoPtr<typename T::_BindType> amr(pBind);
 			if (pBind == NULL)
 			{
 				ATLTRACE(atlTraceDBProvider, 2, _T("Failed to allocate memory for new Binding\n"));
@@ -6351,7 +6351,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hrExecute;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	unsigned m_bIsExecuting:1;
 	unsigned m_bCancelWhenExecuting:1;
 	unsigned m_bCancel:1;
@@ -6378,7 +6378,7 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("ICommandTextImpl::GetCommandText\n"));
 
 		T* pT = (T*)this;
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 
 		GUID guidOrig = IID_NULL;
 
@@ -6421,7 +6421,7 @@ public:
 		_ATLTRY
 		{
 			T* pT = (T*)this;
-			T::ObjectLock cab(pT);
+			typename T::ObjectLock cab(pT);
 
 			ATLTRACE(atlTraceDBProvider, 2, _T("ICommandTextImpl::SetCommandText\n"));
 
@@ -6496,13 +6496,13 @@ public:
 
 		// You can't retrieve PROPERTIESINERROR here (it would be processed
 		// like any other property set.  Therefore, turn checking off
-		m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
-		HRESULT hr = GetPropertiesArgChk(cPropertyIDSets, rgPropertyIDSets,
+		this->m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
+		HRESULT hr = this->GetPropertiesArgChk(cPropertyIDSets, rgPropertyIDSets,
 			pcPropertySets, prgPropertySets);
 
 		if(SUCCEEDED(hr))
 		{
-			// Scan property sets to allow user defined properies
+			// Scan property sets to allow user defined properties
 			ULONG ulPropSets = 0;
 			ULONG ulPropElems = 0;
 			ULONG ulPropInits = 0;
@@ -6551,11 +6551,11 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("ISessionPropertiesImpl::SetProperties"));
 		T* pT;
 		pT = static_cast<T*>(this);
-		HRESULT hr = SetPropertiesArgChk(cPropertySets, rgPropertySets);
+		HRESULT hr = CUtlPropsBase::SetPropertiesArgChk(cPropertySets, rgPropertySets);
 
 		if(SUCCEEDED(hr))
 		{
-			// Scan property sets to allow user defined properies
+			// Scan property sets to allow user defined properties
 			ULONG ulPropSets = 0;
 			ULONG ulPropElems = 0;
 			ULONG ulPropInits = 0;
@@ -6784,9 +6784,9 @@ public:
 	typedef BindingVector _BindingVector;
 	IAccessorImpl()
 	{
-		m_bIsCommand = FALSE;
-		m_bHasParamaters = FALSE;
-		m_bIsChangeable = FALSE;
+		this->m_bIsCommand = FALSE;
+		this->m_bHasParamaters = FALSE;
+		this->m_bIsChangeable = FALSE;
 	}
 	OUT_OF_LINE HRESULT InternalFinalConstruct(_In_opt_ IUnknown* /*pUnkThis*/)
 	{
@@ -6798,9 +6798,9 @@ public:
 
 		if (spCommand !=NULL)  // It's a command
 		{
-			m_bIsCommand = TRUE;
+			this->m_bIsCommand = TRUE;
 			pT->_InternalQueryInterface(__uuidof(ICommandWithParameters), (void **) &spCommandWithParameters);
-			m_bHasParamaters =  spCommandWithParameters != NULL;
+			this->m_bHasParamaters =  spCommandWithParameters != NULL;
 
 		}
 		return S_OK;
@@ -6910,11 +6910,11 @@ public:
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IAccessorImpl::CreateAccessor\n"));
 		T* pT = (T*)this;
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 
 		if (!phAccessor)
 		{
-			ATLTRACE(atlTraceDBProvider, 0, _T("IAccessorImpl::CreateAccessor : Inavlid NULL Parameter for HACCESSOR*\n"));
+			ATLTRACE(atlTraceDBProvider, 0, _T("IAccessorImpl::CreateAccessor : Invalid NULL Parameter for HACCESSOR*\n"));
 			return E_INVALIDARG;
 		}
 		*phAccessor = NULL;
@@ -6931,7 +6931,7 @@ public:
 			if (FAILED(hr) || varByRef.boolVal == ATL_VARIANT_FALSE)
 				return DB_E_BYREFACCESSORNOTSUPPORTED;
 		}
-		if (!m_bHasParamaters)
+		if (!this->m_bHasParamaters)
 		{
 			if (dwAccessorFlags & DBACCESSOR_PARAMETERDATA)
 				return DB_E_BADACCESSORFLAGS;
@@ -6940,16 +6940,16 @@ public:
 		// since our accessor does not provide any further restrictions or optimizations based
 		// on the DBACCESSOR_OPTIMIZED flag, the flag will be ignored.  In particular we will
 		// not be returning this flag in the call to IAccessor::GetBindings.  This way we will
-		// be complient with the OLEDB specifications and we will not have to prevent the
+		// be compliant with the OLEDB specifications and we will not have to prevent the
 		// client from creating additional accessors after the first row is fetched.
 		DBACCESSORFLAGS dwMask = DBACCESSOR_OPTIMIZED;
 		dwAccessorFlags &= ~dwMask;
 
 		CComVariant varUpdate;
 		HRESULT hr = pT->GetPropValue(&DBPROPSET_ROWSET, DBPROP_UPDATABILITY, &varUpdate);
-		m_bIsChangeable = (SUCCEEDED(hr) && (varUpdate.iVal & DBPROPVAL_UP_INSERT));
+		this->m_bIsChangeable = (SUCCEEDED(hr) && (varUpdate.iVal & DBPROPVAL_UP_INSERT));
 
-		if (m_bIsCommand || !m_bIsChangeable)
+		if (this->m_bIsCommand || !this->m_bIsChangeable)
 		{
 			if (cBindings == 0) // No NULL Accessors on the command
 				return DB_E_NULLACCESSORNOTSUPPORTED;
@@ -6965,11 +6965,11 @@ public:
 		HRESULT hrLocal = pT->GetPropValue(&DBPROPSET_ROWSET, DBPROP_BOOKMARKS, &varBookmarks);
 		bHasBookmarks = (hrLocal == S_OK &&  varBookmarks.boolVal != ATL_VARIANT_FALSE);
 
-		hr = ValidateBindings(cBindings, rgBindings, rgStatus, bHasBookmarks);
+		hr = this->ValidateBindings(cBindings, rgBindings, rgStatus, bHasBookmarks);
 
 		if (FAILED(hr))
 			return hr;
-		if (!m_bIsCommand)
+		if (!this->m_bIsCommand)
 		{
 			hr = ValidateBindingsFromMetaData(cBindings, rgBindings, rgStatus,
 					bHasBookmarks);
@@ -7042,7 +7042,7 @@ public:
 		_Out_opt_ DBREFCOUNT *pcRefCount)
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IAccessorImpl::ReleaseAccessor\n"));
-		T::ObjectLock cab((T*)this);
+		typename T::ObjectLock cab((T*)this);
 		BindType* pBind;
 		bool bFound = m_rgBindings.Lookup((INT_PTR)hAccessor, pBind);
 		if (!bFound || pBind == NULL)
@@ -7273,7 +7273,7 @@ HRESULT TransferData(
 			POSITION pos = pT->m_rgRowHandles.GetStartPosition();
 			while( pos != NULL )
 			{
-				MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
+				typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
 				ATLASSUME( pPair != NULL );
 				if( pPair->m_value == pRow )
 				{
@@ -7326,7 +7326,7 @@ HRESULT TransferData(
 		return DB_E_DELETEDROW;
 	}
 
-	T::_BindType* pBinding;
+	typename T::_BindType* pBinding;
 	bool bFound = pT->m_rgBindings.Lookup((INT_PTR)hAccessor, pBinding);
 	if (!bFound || pBinding == NULL)
 	{
@@ -7929,7 +7929,7 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetChangeImpl::DeleteRows"));
 
 		T* pT = (T*)this;
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 
 		__if_exists(T::Fire_OnRowChange)
 		{
@@ -8095,7 +8095,7 @@ public:
 				{
 					pT->m_rgRowData.RemoveAt(pRow->m_iRowset);
 
-					// Perform the actual delete of the row.  Send notificaitons
+					// Perform the actual delete of the row.  Send notifications
 					// to inform the consumer of the change.
 
 					// Need to update any outstanding pRow->m_iRowset
@@ -8103,7 +8103,7 @@ public:
 					POSITION pos = pT->m_rgRowHandles.GetStartPosition();
 					while (pos != NULL)
 					{
-						MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
+						typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
 						ATLENSURE_RETURN( pPair != NULL );
 						RowClass* pCheckRow = pPair->m_value;
 						if (pCheckRow != NULL &&
@@ -8182,7 +8182,7 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetChangeImpl::SetData\n"));
 
 		T* pT = (T*)this;
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 
 		__if_exists(T::Fire_OnFieldChange)
 		{
@@ -8234,7 +8234,7 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetChangeImpl::InsertRow\n"));
 
 		T* pT = (T*) this;
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 
 		__if_exists(T::Fire_OnRowChange)
 		{
@@ -8267,7 +8267,7 @@ public:
 			*phRow = NULL;
 
 		// validate that the hAccessor is valid
-		T::_BindType* pBinding;
+		typename T::_BindType* pBinding;
 		bool bFound = pT->m_rgBindings.Lookup((INT_PTR)hAccessor, pBinding);
 		if (!bFound || pBinding == NULL)
 			return DB_E_BADACCESSORHANDLE;
@@ -8291,7 +8291,7 @@ public:
 
 				while (pos != NULL)
 				{
-					MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
+					typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
 					ATLENSURE_RETURN( pPair != NULL );
 					HROW hCheckRow = pPair->m_key;
 					bool bFoundHandle = pT->m_rgRowHandles.Lookup(hCheckRow, pCheckRow);
@@ -8351,7 +8351,7 @@ public:
 					DBEVENTPHASE_OKTODO, FALSE);
 				if ((hrNotify != S_OK) && (hrNotify != E_FAIL))
 				{
-					pT->m_rgRowHandles.RemoveKey((RowClass::KeyType)hInsertedRow);
+					pT->m_rgRowHandles.RemoveKey((typename RowClass::KeyType)hInsertedRow);
 					return DB_E_CANCELED;
 				}
 
@@ -8359,7 +8359,7 @@ public:
 					DBEVENTPHASE_ABOUTTODO, FALSE);
 				if ((hrNotify != S_OK) && (hrNotify != E_FAIL))
 				{
-					pT->m_rgRowHandles.RemoveKey((RowClass::KeyType)hInsertedRow);
+					pT->m_rgRowHandles.RemoveKey((typename RowClass::KeyType)hInsertedRow);
 					return DB_E_CANCELED;
 				}
 			}
@@ -8441,7 +8441,7 @@ public:
 				pT->m_rgRowData.RemoveAt(pRowInserted->m_iRowset);
 
 				// Remove Handle
-				pT->m_rgRowHandles.RemoveKey((RowClass::KeyType)hInsertedRow);
+				pT->m_rgRowHandles.RemoveKey((typename RowClass::KeyType)hInsertedRow);
 
 				return DB_E_CANCELED;
 			}
@@ -8493,7 +8493,7 @@ public:
 		POSITION pos = m_rgRowHandles.GetStartPosition();
 		while( pos != NULL )
 		{
-			MapClass::CPair *pPair = m_rgRowHandles.GetNext(pos);
+			typename MapClass::CPair *pPair = m_rgRowHandles.GetNext(pos);
 			if(pPair!=NULL)
 			{
 				delete pPair->m_value;
@@ -8516,7 +8516,7 @@ public:
 			return S_OK;
 		if (rghRows == NULL)
 			return E_INVALIDARG;
-		T::ObjectLock cab((T*)this);
+		typename T::ObjectLock cab((T*)this);
 		BOOL bSuccess1 = FALSE;
 		BOOL bFailed1 = FALSE;
 		DBROWSTATUS rs;
@@ -8532,7 +8532,7 @@ public:
 		{
 			HROW hRowCur = rghRows[iRow];
 			RowClass* pRow;
-			bool bFoundCur = m_rgRowHandles.Lookup((RowClass::KeyType)hRowCur, pRow);
+			bool bFoundCur = m_rgRowHandles.Lookup((typename RowClass::KeyType)hRowCur, pRow);
 			if (!bFoundCur || pRow == NULL)
 			{
 				ATLTRACE(atlTraceDBProvider, 0, _T("Could not find HANDLE %x in list\n"), hRowCur);
@@ -8614,7 +8614,7 @@ public:
 						if (FAILED(hr) || varDeferred.boolVal != ATL_VARIANT_FALSE)
 						{
 							delete pRow;
-							m_rgRowHandles.RemoveKey((RowClass::KeyType)hRowCur);
+							m_rgRowHandles.RemoveKey((typename RowClass::KeyType)hRowCur);
 						}
 					}
 				}
@@ -8688,7 +8688,7 @@ public:
 	{
 		ATLENSURE_RETURN(ppBinding != NULL);
 		T* pT = (T*) this;
-		T::_BindingVector::CPair* pPair = pT->m_rgBindings.Lookup( hAccessor );
+		typename T::_BindingVector::CPair* pPair = pT->m_rgBindings.Lookup( hAccessor );
 		if (pPair == NULL || pPair->m_value == NULL)
 			return DB_E_BADACCESSORHANDLE;
 		*ppBinding = pPair->m_value;
@@ -8725,7 +8725,7 @@ public:
 	{
 		RowClass* pRow = NULL;
 		ATLASSERT(lRowsOffset >= 0);
-		RowClass::KeyType key = lRowsOffset+1;
+		typename RowClass::KeyType key = lRowsOffset+1;
 		ATLASSERT(key > 0);
 		bool bFound = m_rgRowHandles.Lookup(key,pRow);
 		if (!bFound || pRow == NULL)
@@ -8784,7 +8784,7 @@ public:
 		if (cRows == 0)
 			return S_OK;
 		HRESULT hr = S_OK;
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 		if (lRowsOffset < 0 && !m_bCanScrollBack)
 			return DB_E_CANTSCROLLBACKWARDS;
 		if (cRows < 0  && !m_bCanFetchBack)
@@ -8817,7 +8817,7 @@ public:
 			while( nRowsToSkip > 0 && nCurrentRow <= cRowsInSet )
 			{
 				RowClass* pRow = NULL;
-				RowClass::KeyType key = nCurrentRow + 1;
+				typename RowClass::KeyType key = nCurrentRow + 1;
 				bool bFound = m_rgRowHandles.Lookup(key,pRow);
 				if( bFound && pRow != NULL )
 				{
@@ -8847,7 +8847,7 @@ public:
 				nCurrentRow--;
 
 				RowClass* pRow = NULL;
-				RowClass::KeyType key = nCurrentRow + 1;
+				typename RowClass::KeyType key = nCurrentRow + 1;
 				bool bFound = m_rgRowHandles.Lookup(key,pRow);
 				if( bFound && pRow != NULL )
 				{
@@ -8873,7 +8873,7 @@ public:
 			while( cRowsToFetch > 0 && nCurrentRow < cRowsInSet )
 			{
 				RowClass* pRow = NULL;
-				RowClass::KeyType key = nCurrentRow + 1;
+				typename RowClass::KeyType key = nCurrentRow + 1;
 				bool bFound = m_rgRowHandles.Lookup(key,pRow);
 				if( bFound && pRow != NULL )
 				{
@@ -8895,7 +8895,7 @@ public:
 			{
 				nCurrentRow--;
 				RowClass* pRow = NULL;
-				RowClass::KeyType key = nCurrentRow + 1;
+				typename RowClass::KeyType key = nCurrentRow + 1;
 				bool bFound = m_rgRowHandles.Lookup(key,pRow);
 				if( bFound && pRow != NULL )
 				{
@@ -8977,7 +8977,7 @@ public:
 				while(true)
 				{
 					RowClass* pRow = NULL;
-					RowClass::KeyType key = lRow + 1;
+					typename RowClass::KeyType key = lRow + 1;
 					bool bFound = m_rgRowHandles.Lookup(key,pRow);
 					if( bFound && pRow != NULL )
 					{
@@ -8997,7 +8997,7 @@ public:
 				{
 					lRow--;
 					RowClass* pRow = NULL;
-					RowClass::KeyType key = lRow + 1;
+					typename RowClass::KeyType key = lRow + 1;
 					bool bFound = m_rgRowHandles.Lookup(key,pRow);
 					if( bFound && pRow != NULL )
 					{
@@ -9122,7 +9122,7 @@ public:
 		if (cRows == 0)
 			return S_OK;
 		HRESULT hr = S_OK;
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 		if (lRowsOffset < 0 && !m_bCanScrollBack)
 			return DB_E_CANTSCROLLBACKWARDS;
 		if (cRows < 0  && !m_bCanFetchBack)
@@ -9379,7 +9379,7 @@ public:
 
 				while (pos != NULL)
 				{
-					MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
+					typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
 					ATLENSURE_RETURN( pPair != NULL );
 					HROW hRow = pPair->m_key;
 					bool bFound = pT->m_rgRowHandles.Lookup(hRow, pRow);
@@ -9538,7 +9538,7 @@ public:
 				pT->DecrementMutex();
 		}
 
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 
 		// Check input parameters
 		if (pcRowsObtained == NULL)
@@ -9562,10 +9562,10 @@ public:
 		// do not have m_bCanScrollBack then return an error.  The
 		// GetNextRows function handles the case where cRows is negative
 		// and we don't have m_bCanFetchBack set.
-		if (lRowsOffset < 0 && !m_bCanScrollBack)
+		if (lRowsOffset < 0 && !this->m_bCanScrollBack)
 			return DB_E_CANTSCROLLBACKWARDS;
 
-		DBROWOFFSET iRowsetTemp = m_iRowset;  // Cache the current rowset
+		DBROWOFFSET iRowsetTemp = this->m_iRowset; // Cache the current rowset
 
 		// Determine if this row is deleted or not.
 		size_t lBookmarkIndex = (size_t)(*pBookmark);
@@ -9575,43 +9575,40 @@ public:
 		{
 			if (m_rgBookmarks[lBookmarkIndex] == -1)
 			{
-				m_iRowset = iRowsetTemp;
+				this->m_iRowset = iRowsetTemp;
 				return DB_E_BADBOOKMARK;
 			}
 			else
 			{
-				m_iRowset = m_rgBookmarks[lBookmarkIndex];
+				this->m_iRowset = m_rgBookmarks[lBookmarkIndex];
 			}
 		}
 
 		if ((cbBookmark == 1) && (*pBookmark == DBBMK_FIRST))
-			m_iRowset = 1;
+			this->m_iRowset = 1;
 
 		if ((cbBookmark == 1) && (*pBookmark == DBBMK_LAST))
-			m_iRowset = (DBROWOFFSET)pT->m_rgRowData.GetCount();
+			this->m_iRowset = (DBROWOFFSET)pT->m_rgRowData.GetCount();
 
 		// Set the start position to m_iRowset + lRowsOffset
-		m_iRowset += lRowsOffset;
+		this->m_iRowset += lRowsOffset;
 
-		if (lRowsOffset >= 0)
-			(cRows >= 0) ? m_iRowset -= 1 : m_iRowset +=0;
-		else
-			(cRows >= 0) ? m_iRowset -= 1 : m_iRowset +=0;
-//		(lRowsOffset >= 0) ? m_iRowset -= 1 : m_iRowset += 1;
+		if (cRows >= 0)
+			this->m_iRowset -=1;
 
 		// BUG: If we get DBBMK_FIRST and lRowsOffset == -1, then we set
 		// m_iRowset to 0xFFFFFFFF.
 
-		if (m_iRowset < 0 || m_iRowset > (DBROWOFFSET)pT->m_rgRowData.GetCount())
+		if (this->m_iRowset < 0 || this->m_iRowset > (DBROWOFFSET)pT->m_rgRowData.GetCount())
 		{
-			m_iRowset = iRowsetTemp;
+			this->m_iRowset = iRowsetTemp;
 			return DB_S_ENDOFROWSET;
 		}
 
 		// Call IRowsetImpl::GetNextRows to actually get the rows.
-		m_bExternalFetch = true;
-		hr = GetNextRows(hReserved2, 0, cRows, pcRowsObtained, prghRows);
-		m_bExternalFetch = false;
+		this->m_bExternalFetch = true;
+		hr = this->GetNextRows(hReserved2, 0, cRows, pcRowsObtained, prghRows);
+		this->m_bExternalFetch = false;
 
 		// If we have multiple rows fetched, return one event, per the specification
 		// containing all rows activated.
@@ -9627,7 +9624,7 @@ public:
 					// problem would be to modify the signature of CreateRow to take
 					// a CAtlArray<HROW> as a parameter and store the activated rows.
 					RowClass* pActiveRow;
-					bool bFound = m_rgRowHandles.Lookup((*prghRows)[ulActivated], pActiveRow);
+					bool bFound = this->m_rgRowHandles.Lookup((*prghRows)[ulActivated], pActiveRow);
 					if ( bFound && pActiveRow != NULL && pActiveRow->m_dwRef == 1)
 					{
 						_ATLTRY
@@ -9649,7 +9646,7 @@ public:
 			}
 		}
 
-		m_iRowset = iRowsetTemp;
+		this->m_iRowset = iRowsetTemp;
 		return hr;
 	}
 
@@ -9678,7 +9675,7 @@ public:
 				pT->DecrementMutex();
 		}
 
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 		if (rgcbBookmarks == NULL || rgpBookmarks == NULL || rghRows == NULL)
 			return E_INVALIDARG;
 
@@ -9722,7 +9719,7 @@ public:
 //				lRow = ((long)*rgpBookmarks[l]) - 1;
 
 			// Attempt to create the row
-			if (CreateRow(lRow, ulRowsObtained, &rghRows[l]) != S_OK)
+			if (this->CreateRow(lRow, ulRowsObtained, &rghRows[l]) != S_OK)
 			{
 				bErrors |= true;
 			}
@@ -9745,7 +9742,7 @@ public:
 				// problem would be to modify the signature of CreateRow to take
 				// a CAtlArray<HROW> as a parameter and store the activated rows.
 				RowClass* pActiveRow;
-				bool bFound = m_rgRowHandles.Lookup(rghRows[ulActivated], pActiveRow);
+				bool bFound = this->m_rgRowHandles.Lookup(rghRows[ulActivated], pActiveRow);
 				if (bFound && pActiveRow != NULL && pActiveRow->m_dwRef == 1)
 				{
 					_ATLTRY
@@ -9891,11 +9888,11 @@ public:
 
 		// Validate row handles
 		RowClass* pRow1;
-		if( ! pT->m_rgRowHandles.Lookup((RowClass::KeyType)hThisRow, pRow1) )
+		if( ! pT->m_rgRowHandles.Lookup((typename RowClass::KeyType)hThisRow, pRow1) )
 			return DB_E_BADROWHANDLE;
 
 		RowClass* pRow2;
-		if( ! pT->m_rgRowHandles.Lookup((RowClass::KeyType)hThatRow, pRow2) )
+		if( ! pT->m_rgRowHandles.Lookup((typename RowClass::KeyType)hThatRow, pRow2) )
 			return DB_E_BADROWHANDLE;
 
 		if (pRow1->m_status == DBPENDINGSTATUS_DELETED ||
@@ -9970,9 +9967,9 @@ public:
 	virtual ~IObjectWithSiteSessionImpl()
 	{
 		CComPtr<IInternalConnection> pConn;
-		if (m_spUnkSite != NULL)
+		if (this->m_spUnkSite != NULL)
 		{
-			if (SUCCEEDED(m_spUnkSite->QueryInterface(__uuidof(IInternalConnection), (void**)&pConn)))
+			if (SUCCEEDED(this->m_spUnkSite->QueryInterface(__uuidof(IInternalConnection), (void**)&pConn)))
 				pConn->ReleaseConnection();
 		}
 	}
@@ -9981,7 +9978,7 @@ public:
 		HRESULT hr = S_OK;
 		T* pT = (T*)this;
 		pT->Lock();
-		m_spUnkSite = pCreator;
+		this->m_spUnkSite = pCreator;
 		pT->Unlock();
 		CComPtr<IInternalConnection> pConn;
 		if (pCreator != NULL)
@@ -10005,9 +10002,9 @@ public:
 	virtual ~IRowsetCreatorImpl()
 	{
 		CComPtr<IInternalConnection> pConn;
-		if (m_spUnkSite != NULL)
+		if (this->m_spUnkSite != NULL)
 		{
-			if (SUCCEEDED(m_spUnkSite->QueryInterface(__uuidof(IInternalConnection), (void**)&pConn)))
+			if (SUCCEEDED(this->m_spUnkSite->QueryInterface(__uuidof(IInternalConnection), (void**)&pConn)))
 				pConn->ReleaseConnection();
 		}
 	}
@@ -10017,7 +10014,7 @@ public:
 		T* pT = (T*)this;
 		HRESULT hr = S_OK;
 		pT->Lock();
-		m_spUnkSite = pCreator;
+		this->m_spUnkSite = pCreator;
 		pT->Unlock();
 		CComVariant varPropScroll, varPropFetch, varPropRemove, varPropUpdate;
 		HRESULT hrProps = pT->GetPropValue(&DBPROPSET_ROWSET, DBPROP_CANSCROLLBACKWARDS, &varPropScroll);
@@ -10076,12 +10073,12 @@ public:
 
 		// IRowsetInfo can't return PROPERTIESINERROR.  Therefore, disable
 		// checking for it.  Instead, treat it as any normal property set.
-		m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
-		HRESULT hr = GetPropertiesArgChk(cPropertyIDSets, rgPropertyIDSets,
+		this->m_dwFlags &= ~ARGCHK_PROPERTIESINERROR;
+		HRESULT hr = this->GetPropertiesArgChk(cPropertyIDSets, rgPropertyIDSets,
 			pcPropertySets, prgPropertySets);
 		if(SUCCEEDED(hr))
 		{
-			// Scan property sets to allow user defined properies
+			// Scan property sets to allow user defined properties
 			ULONG ulPropSets = 0;
 			ULONG ulPropElems = 0;
 			ULONG ulPropInits = 0;
@@ -10161,7 +10158,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return QueryInterface(riid, (void**)ppReferencedRowset);
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	STDMETHOD(GetSpecification)(
 		_In_ REFIID riid,
 		_Outptr_ IUnknown **ppSpecification)
@@ -10171,13 +10168,13 @@ ATLPREFAST_UNSUPPRESS()
 		if (ppSpecification == NULL)
 			return E_INVALIDARG;
 		T* pT = (T*) this;
-		T::ObjectLock cab(pT);
+		typename T::ObjectLock cab(pT);
 		ATLASSERT(pT->m_spUnkSite != NULL);
 		return pT->m_spUnkSite->QueryInterface(riid, (void**)ppSpecification);
 	}
 };
 
-	
+
 /*
 template <class Storage, class ContainedArray = CAtlArray<Storage> >
 class CUpdateArray :
@@ -10283,16 +10280,16 @@ public:
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetNotifyCP::Fire_OnFieldChange\n"));
 
-		IncrementMutex();	// Lock the event handler so other's can't call methods
+		this->IncrementMutex();	// Lock the event handler so other's can't call methods
 		HRESULT ret = S_OK;
 		T* pT = static_cast<T*>(this);
 		int nConnectionIndex;
-		int nConnections = m_vec.GetSize();
+		int nConnections = this->m_vec.GetSize();
 
 		for (nConnectionIndex = 0; nConnectionIndex < nConnections; nConnectionIndex++)
 		{
 			pT->Lock();
-			CComPtr<IUnknown> sp = m_vec.GetAt(nConnectionIndex);
+			CComPtr<IUnknown> sp = this->m_vec.GetAt(nConnectionIndex);
 			pT->Unlock();
 			IRowsetNotify* pIRowsetNotify = reinterpret_cast<IRowsetNotify*>(sp.p);
 			if (pIRowsetNotify != NULL)
@@ -10309,7 +10306,7 @@ public:
 					for (int nFailedIndex = 0; nFailedIndex <= nConnectionIndex; nFailedIndex++)
 					{
 						pT->Lock();
-						CComPtr<IUnknown> spFailed = m_vec.GetAt(nFailedIndex);
+						CComPtr<IUnknown> spFailed = this->m_vec.GetAt(nFailedIndex);
 						pT->Unlock();
 						IRowsetNotify* pIFailedNotify = reinterpret_cast<IRowsetNotify*>(spFailed.p);
 						if (pIFailedNotify != NULL)
@@ -10318,7 +10315,7 @@ public:
 					}
 					// Terminate the loop as no further consumers should be
 					// notified.
-					DecrementMutex();
+					this->DecrementMutex();
 					return ret;
 				}
 				else
@@ -10333,7 +10330,7 @@ public:
 				{
 					Fire_OnFieldChange(pRowset, hRow, cColumns, rgColumns,
 						eReason, DBEVENTPHASE_FAILEDTODO, FALSE);
-					DecrementMutex();
+					this->DecrementMutex();
 					return ret;
 				}
 				else
@@ -10348,11 +10345,11 @@ public:
 			default:
 				ATLTRACE(atlTraceDBProvider, 0, _T("IRowsetNotifyCP::Fire_OnFieldChange: Unknown Phase requested\n"));
 				ATLASSERT(FALSE);
-				DecrementMutex();
+				this->DecrementMutex();
 				return E_FAIL;
 			};
 		}
-		DecrementMutex();
+		this->DecrementMutex();
 		if( ret != S_OK && ret != S_FALSE )
 			ret = S_OK;
 		return ret;
@@ -10367,16 +10364,16 @@ public:
 		_In_ BOOL fCantDeny)
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetNotifyCP::Fire_OnRowChange\n"));
-		IncrementMutex();  // Lock the handler so other's can't call methods
+		this->IncrementMutex();  // Lock the handler so other's can't call methods
 		HRESULT ret = S_OK;
 		T* pT = static_cast<T*>(this);
 		int nConnectionIndex;
-		int nConnections = m_vec.GetSize();
+		int nConnections = this->m_vec.GetSize();
 
 		for (nConnectionIndex = 0; nConnectionIndex < nConnections; nConnectionIndex++)
 		{
 			pT->Lock();
-			CComPtr<IUnknown> sp = m_vec.GetAt(nConnectionIndex);
+			CComPtr<IUnknown> sp = this->m_vec.GetAt(nConnectionIndex);
 			pT->Unlock();
 			IRowsetNotify* pIRowsetNotify = reinterpret_cast<IRowsetNotify*>(sp.p);
 			if (pIRowsetNotify != NULL)
@@ -10394,7 +10391,7 @@ public:
 					for (int nFailedIndex = 0; nFailedIndex <= nConnectionIndex; nFailedIndex++)
 					{
 						pT->Lock();
-						CComPtr<IUnknown> spFailed = m_vec.GetAt(nFailedIndex);
+						CComPtr<IUnknown> spFailed = this->m_vec.GetAt(nFailedIndex);
 						pT->Unlock();
 						IRowsetNotify* pIFailedNotify = reinterpret_cast<IRowsetNotify*>(spFailed.p);
 						if (pIFailedNotify != NULL)
@@ -10403,7 +10400,7 @@ public:
 					}
 					// Terminate the loop as no further consumers should be
 					// notified.
-					DecrementMutex();
+					this->DecrementMutex();
 					return ret;
 				}
 				break;
@@ -10413,7 +10410,7 @@ public:
 				{
 					Fire_OnRowChange(pRowset, cRows, rghRows, eReason,
 						DBEVENTPHASE_FAILEDTODO, FALSE);
-					DecrementMutex();
+					this->DecrementMutex();
 					return ret;
 				}
 				break;
@@ -10423,11 +10420,11 @@ public:
 			default:
 				ATLTRACE(atlTraceDBProvider, 0, _T("IRowsetNotifyCP::Fire_OnRowChange: Unknown Phase requested\n"));
 				ATLASSERT(FALSE);
-				DecrementMutex();
+				this->DecrementMutex();
 				return E_FAIL;
 			};
 		}
-		DecrementMutex();
+		this->DecrementMutex();
 		if( ret != S_OK && ret != S_FALSE )
 			ret = S_OK;
 		return ret;
@@ -10440,16 +10437,16 @@ public:
 		_In_ BOOL fCantDeny)
 	{
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetNotifyCP::Fire_OnRowsetChange\n"));
-		IncrementMutex(); // Lock the handler so others can't call methods
+		this->IncrementMutex(); // Lock the handler so others can't call methods
 		HRESULT ret = S_OK;
 		T* pT = static_cast<T*>(this);
 		int nConnectionIndex;
-		int nConnections = m_vec.GetSize();
+		int nConnections = this->m_vec.GetSize();
 
 		for (nConnectionIndex = 0; nConnectionIndex < nConnections; nConnectionIndex++)
 		{
 			pT->Lock();
-			CComPtr<IUnknown> sp = m_vec.GetAt(nConnectionIndex);
+			CComPtr<IUnknown> sp = this->m_vec.GetAt(nConnectionIndex);
 			pT->Unlock();
 			IRowsetNotify* pIRowsetNotify = reinterpret_cast<IRowsetNotify*>(sp.p);
 			if (pIRowsetNotify != NULL)
@@ -10465,7 +10462,7 @@ public:
 					for (int nFailedIndex = 0; nFailedIndex <= nConnectionIndex; nFailedIndex++)
 					{
 						pT->Lock();
-						CComPtr<IUnknown> spFailed = m_vec.GetAt(nFailedIndex);
+						CComPtr<IUnknown> spFailed = this->m_vec.GetAt(nFailedIndex);
 						pT->Unlock();
 						IRowsetNotify* pIFailedNotify = reinterpret_cast<IRowsetNotify*>(spFailed.p);
 						if (pIFailedNotify != NULL)
@@ -10474,7 +10471,7 @@ public:
 					}
 					// Terminate the loop as no further consumers should be
 					// notified.
-					DecrementMutex();
+					this->DecrementMutex();
 					return ret;
 				}
 				break;
@@ -10484,7 +10481,7 @@ public:
 				{
 					Fire_OnRowsetChange(pRowset, eReason, DBEVENTPHASE_FAILEDTODO,
 						FALSE);
-					DecrementMutex();
+					this->DecrementMutex();
 					return ret;
 				}
 				break;
@@ -10494,11 +10491,11 @@ public:
 			default:
 				ATLTRACE(atlTraceDBProvider, 0, _T("IRowsetNotifyCP::Fire_OnRowChange: Unknown Phase requested\n"));
 				ATLASSERT(FALSE);
-				DecrementMutex();
+				this->DecrementMutex();
 				return E_FAIL;
 			};
 		}
-		DecrementMutex();
+		this->DecrementMutex();
 		if( ret != S_OK && ret != S_FALSE )
 			ret = S_OK;
 		return ret;
@@ -10661,7 +10658,7 @@ END_COM_MAP()
 
 	void FinalRelease()
 	{
-		m_rgRowData.RemoveAll();
+		this->m_rgRowData.RemoveAll();
 		IAccessorImpl<T>::FinalRelease();
 		__if_exists(T::Fire_OnRowsetChange)
 		{
@@ -10707,7 +10704,7 @@ END_COM_MAP()
 
 	void FinalRelease()
 	{
-		m_rgRowData.RemoveAll();
+		this->m_rgRowData.RemoveAll();
 		__if_exists(T::Fire_OnRowsetChange)
 		{
 			T* pT = (T*)this;
@@ -11421,7 +11418,7 @@ public:
 		}
 
 		// Validate input parameters
-		T::_BindType* pBinding;
+		typename T::_BindType* pBinding;
 		bool bFound = pT->m_rgBindings.Lookup((INT_PTR)hAccessor, pBinding);
 		if (!bFound || pBinding == NULL)
 			return DB_E_BADACCESSORHANDLE;
@@ -11585,7 +11582,7 @@ public:
 		POSITION pos = pT->m_rgRowHandles.GetStartPosition();
 		while( pos != NULL )
 		{
-			MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
+			typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
 			ATLASSERT( pPair != NULL );
 			if(!pPair)
 			{
@@ -11647,7 +11644,7 @@ public:
 			pos = pT->m_rgRowHandles.GetStartPosition();
 			while( pos != NULL )
 			{
-				MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
+				typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext( pos );
 				ATLASSERT( pPair != NULL );
 
 				pRow = pPair->m_value;
@@ -11747,7 +11744,7 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetUpdateImpl::Undo\n"));
 
 		T* pT = (T*)this;
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 
 		__if_exists(T::Fire_OnRowChange)
 		{
@@ -11755,7 +11752,7 @@ public:
 			// we should return DB_E_NOTREENTRANT.
 			if (!pT->IncrementMutex())
 			{
-				// Note, we can't set this up above as we may inadvertantly
+				// Note, we can't set this up above as we may inadvertently
 				// step on the pcRowsUndone variable.
 				if (pcRowsUndone != NULL)
 					*pcRowsUndone = NULL;
@@ -11776,7 +11773,7 @@ public:
 		// But if you use _alloca you don't have to worry about cleaning this memory.  So we will use these
 		// temporary variables to allocate memory on heap.  As soon as we exit the function, the memory will
 		// be cleaned up, just as if we were using alloca. So now, instead of calling alloca, I'll alloc
-		// memory on heap using the two smnart pointers below, and then assing it to the actual pointers.
+		// memory on heap using the two smart pointers below, and then assigning it to the actual pointers.
 		CHeapPtr<HROW> spTempRowsUndone;
 		CHeapPtr<DBROWSTATUS> spTempRowStatus;
 
@@ -11881,7 +11878,7 @@ public:
 			{
 				ATLASSERT(ulUndoRow < (ULONG)pT->m_rgRowHandles.GetCount());
 				ATLASSERT( pos != NULL );
-				MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
+				typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
 				ATLASSERT( pPair != NULL );
 				if(!pPair)
 				{
@@ -11983,7 +11980,7 @@ public:
 					POSITION posRow = pT->m_rgRowHandles.GetStartPosition();
 					while(posRow != NULL)
 					{
-						MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(posRow);
+						typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(posRow);
 						ATLASSERT( pPair != NULL );
 						if(!pPair)
 						{
@@ -12141,7 +12138,7 @@ public:
 				// information
 				if (pRow->m_dwRef == 0)
 				{
-					pRow->AddRefRow();	// Artifically bump this to remove it
+					pRow->AddRefRow();	// Artificially bump this to remove it
 					if( FAILED( pT->RefRows(1, &hRowUndo, NULL, NULL, false) ) )
 						return E_FAIL;
 				}
@@ -12242,7 +12239,7 @@ public:
 		ATLTRACE(atlTraceDBProvider, 2, _T("IRowsetUpdateImpl::Update\n"));
 
 		T* pT = (T*)this;
-		T::ObjectLock lock(pT);
+		typename T::ObjectLock lock(pT);
 
 		__if_exists(T::Fire_OnRowChange)
 		{
@@ -12381,7 +12378,7 @@ public:
 			{
 				ATLASSERT(ulRow < (ULONG)pT->m_rgRowHandles.GetCount());
 				ATLASSERT( pos != NULL );
-				MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
+				typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(pos);
 				ATLASSERT( pPair != NULL );
 				if(!pPair)
 				{
@@ -12542,7 +12539,7 @@ public:
 					POSITION posRow = pT->m_rgRowHandles.GetStartPosition();
 					while( posRow != NULL )
 					{
-						MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(posRow);
+						typename MapClass::CPair* pPair = pT->m_rgRowHandles.GetNext(posRow);
 						ATLASSERT( pPair != NULL );
 						RowClass* pCheckRow = pPair->m_value;
 						if (pCheckRow != NULL &&

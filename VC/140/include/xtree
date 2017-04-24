@@ -35,7 +35,7 @@ public:
 	typedef typename _Mytree::const_reference reference;
 
 	_Tree_unchecked_const_iterator()
-		: _Ptr(0)
+		: _Ptr()
 		{	// construct with null node pointer
 		}
 
@@ -52,7 +52,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -158,12 +158,12 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
 		{	// preincrement
-		++(*(_Mybase *)this);
+		++static_cast<_Mybase&>(*this);
 		return (*this);
 		}
 
@@ -176,7 +176,7 @@ public:
 
 	_Myiter& operator--()
 		{	// predecrement
-		--(*(_Mybase *)this);
+		--static_cast<_Mybase&>(*this);
 		return (*this);
 		}
 
@@ -230,18 +230,20 @@ public:
 	reference operator*() const
 		{	// return designated value
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr == ((_Mytree *)this->_Getcont())->_Myhead)
+		const auto _Mycont = static_cast<const _Mytree *>(this->_Getcont());
+		if (_Mycont == 0
+			|| this->_Ptr == nullptr_t{}
+			|| this->_Ptr == _Mycont->_Myhead)
 			{	// report error
 			_DEBUG_ERROR("map/set iterator not dereferencable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr !=
-			((_Mytree *)this->_Getcont())->_Myhead);
+		_SCL_SECURE_VALIDATE(this->_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mytree *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr != _Mycont->_Myhead);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		return (_Mytree::_Myval(this->_Ptr));
@@ -249,14 +251,14 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
+			|| this->_Ptr == nullptr_t{}
 			|| _Mytree::_Isnil(this->_Ptr))
 			{	// report error
 			_DEBUG_ERROR("map/set iterator not incrementable");
@@ -264,11 +266,11 @@ public:
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
+		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != nullptr_t{});
 		_SCL_SECURE_VALIDATE_RANGE(!_Mytree::_Isnil(this->_Ptr));
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		++(*(_Mybase *)this);
+		++static_cast<_Mybase&>(*this);
 		return (*this);
 		}
 
@@ -283,14 +285,14 @@ public:
 		{	// predecrement
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (this->_Getcont() == 0
-			|| this->_Ptr == 0)
+			|| this->_Ptr == nullptr_t{})
 			{	// report error
 			_DEBUG_ERROR("map/set iterator not decrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
 		_Nodeptr _Ptrsav = this->_Ptr;
-		--(*(_Mybase *)this);
+		--static_cast<_Mybase&>(*this);
 		if (_Ptrsav == this->_Ptr)
 			{	// report error
 			_DEBUG_ERROR("map/set iterator not decrementable");
@@ -298,14 +300,14 @@ public:
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
+		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != nullptr_t{});
 
 		_Nodeptr _Ptrsav = this->_Ptr;
-		--(*(_Mybase *)this);
+		--static_cast<_Mybase&>(*this);
 		_SCL_SECURE_VALIDATE(_Ptrsav != this->_Ptr);
 
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-		--(*(_Mybase *)this);
+		--static_cast<_Mybase&>(*this);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		return (*this);
@@ -392,7 +394,7 @@ public:
 
 	_Unchecked_type _Unchecked() const
 		{	// make an unchecked iterator
-		return (_Unchecked_type(this->_Ptr, (_Mytree *)this->_Getcont()));
+		return (_Unchecked_type(this->_Ptr, static_cast<const _Mytree *>(this->_Getcont())));
 		}
 
 	reference operator*() const
@@ -402,12 +404,12 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
 		{	// preincrement
-		++(*(_Mybase *)this);
+		++static_cast<_Mybase&>(*this);
 		return (*this);
 		}
 
@@ -420,7 +422,7 @@ public:
 
 	_Myiter& operator--()
 		{	// predecrement
-		--(*(_Mybase *)this);
+		--static_cast<_Mybase&>(*this);
 		return (*this);
 		}
 
@@ -517,7 +519,6 @@ template<class _Ty,
 	typedef _Wrap_alloc<_Alloc> _Alty0;
 	typedef typename _Alty0::template rebind<_Ty>::other _Alty;
 
-
 	typedef typename _Get_voidptr<_Alty, typename _Alty::pointer>::type
 		_Voidptr;
 	typedef _Tree_node<typename _Alty::value_type,
@@ -563,9 +564,9 @@ public:
 	typedef _Tree_iterator<_Myt> iterator;
 
 	_Tree_val()
+		: _Myhead(),
+		_Mysize(0)
 		{	// initialize data
-		this->_Myhead = 0;
-		this->_Mysize = 0;
 		}
 
 	enum _Redbl
@@ -697,16 +698,19 @@ public:
 		return (_Tree_val<_Val_types>::_Min(_Pnode));
 		}
 
-	_Tree_comp_alloc(const key_compare& _Parg, const allocator_type& _Al)
+	_Tree_comp_alloc(const key_compare& _Parg)
 		: _Mypair(_One_then_variadic_args_t(), _Parg,
-			_One_then_variadic_args_t(), _Al)
-		{	// construct from comparator, allocator
+			_Zero_then_variadic_args_t())
+		{	// construct from comparator
 		_Construct();
 		}
 
-	_Tree_comp_alloc(const key_compare& _Parg, allocator_type&& _Al)
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_Tree_comp_alloc(const key_compare& _Parg, _Any_alloc&& _Al)
 		: _Mypair(_One_then_variadic_args_t(), _Parg,
-			_One_then_variadic_args_t(), _STD move(_Al))
+			_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct from comparator, allocator
 		_Construct();
 		}
@@ -730,11 +734,6 @@ public:
 	void _Move_alloc(_Alty& _Al)
 		{	// replace old allocator
 		_Pocma(_Getal(), _Al);
-		}
-
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
 		}
 
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
@@ -769,17 +768,11 @@ public:
 		_Alloc_proxy();
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		_Swap_adl(_Myproxy(), _Right._Myproxy());
-		}
-
 	void _Alloc_proxy()
 		{	// construct proxy
 		typename _Alty::template rebind<_Container_proxy>::other
 			_Alproxy(_Getal());
-		_Myproxy() = _Alproxy.allocate(1);
+		_Myproxy() = _Unfancy(_Alproxy.allocate(1));
 		_Alproxy.construct(_Myproxy(), _Container_proxy());
 		_Myproxy()->_Mycont = &_Get_data();
 		}
@@ -790,7 +783,7 @@ public:
 			_Alproxy(_Getal());
 		_Orphan_all();
 		_Alproxy.destroy(_Myproxy());
-		_Alproxy.deallocate(_Myproxy(), 1);
+		_Alproxy.deallocate(_Alproxy.address(*_Myproxy()), 1);
 		_Myproxy() = 0;
 		}
 
@@ -902,7 +895,6 @@ public:
 		return (_Pnode);
 		}
 
-
 	key_compare& _Getcomp() _NOEXCEPT
 		{	// return reference to ordering predicate
 		return (_Mypair._Get_first());
@@ -1007,14 +999,20 @@ public:
 		{	// signals moving
 		};
 
+	_Tree(const key_compare& _Parg)
+		: _Mybase(_Parg)
+		{	// construct empty tree from comparator
+		}
+
 	_Tree(const key_compare& _Parg,
 		const allocator_type& _Al)
 		: _Mybase(_Parg, _Al)
-		{	// construct empty tree
+		{	// construct empty tree from comparator, allocator
 		}
 
-	_Tree(const _Myt& _Right, const allocator_type& _Al)
-		: _Mybase(_Right.key_comp(), _Al)
+	template<class _Any_alloc>
+		_Tree(const _Myt& _Right, _Any_alloc&& _Al)
+		: _Mybase(_Right.key_comp(), _STD forward<_Any_alloc>(_Al))
 		{	// construct tree by copying _Right, allocator
 		_TRY_BEGIN
 		_Copy(_Right, _Copy_tag());
@@ -1072,39 +1070,6 @@ public:
 			typename _Alty::propagate_on_container_move_assignment());
 		}
 
-
-	_Pairib insert(value_type&& _Val)
-		{	// try to insert node with value _Val, favoring right side
-		return (_Insert_nohint(false,
-			_STD forward<value_type>(_Val), _Nil()));
-		}
-
-	iterator insert(const_iterator _Where, value_type&& _Val)
-		{	// try to insert node with value _Val using _Where as a hint
-		return (_Insert_hint(_Where,
-			_STD forward<value_type>(_Val), _Nil()));
-		}
-
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			_Pairib>::type
-		insert(_Valty&& _Val)
-		{	// try to insert node with value _Val, favoring right side
-		_Nodeptr _Newnode = this->_Buynode(_STD forward<_Valty>(_Val));
-		return (_Insert_nohint(false,
-			this->_Myval(_Newnode), _Newnode));
-		}
-
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			iterator>::type
-		insert(const_iterator _Where, _Valty&& _Val)
-		{	// try to insert node with value _Val using _Where as a hint
-		_Nodeptr _Newnode = this->_Buynode(_STD forward<_Valty>(_Val));
-		return (_Insert_hint(_Where,
-			this->_Myval(_Newnode), _Newnode));
-		}
-
 	template<class... _Valty>
 		_Pairib emplace(_Valty&&... _Val)
 		{	// try to insert value_type(_Val...), favoring right side
@@ -1120,7 +1085,6 @@ public:
 		return (_Insert_hint(_Where,
 			this->_Myval(_Newnode), _Newnode));
 		}
-
 
 	~_Tree() _NOEXCEPT
 		{	// destroy tree
@@ -1219,7 +1183,8 @@ public:
 
 	allocator_type get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (this->_Getal());
+		allocator_type _Ret(this->_Getal());
+		return (_Ret);
 		}
 
 	key_compare key_comp() const
@@ -1232,10 +1197,36 @@ public:
 		return (value_compare(key_comp()));
 		}
 
-	_Pairib insert(const value_type& _Val)
+	template<bool _Multi2 = _Multi,
+		enable_if_t<!_Multi2, int> = 0>
+		_Pairib insert(const value_type& _Val)
 		{	// try to insert node with value _Val, favoring right side
 		return (_Insert_nohint(false,
 			_Val, _Nil()));
+		}
+
+	template<bool _Multi2 = _Multi,
+		enable_if_t<_Multi2, int> = 0>
+		iterator insert(const value_type& _Val)
+		{	// try to insert node with value _Val, favoring right side
+		return (_Insert_nohint(false,
+			_Val, _Nil()).first);
+		}
+
+	template<bool _Multi2 = _Multi,
+		enable_if_t<!_Multi2, int> = 0>
+		_Pairib insert(value_type&& _Val)
+		{	// try to insert node with value _Val, favoring right side
+		return (_Insert_nohint(false,
+			_STD forward<value_type>(_Val), _Nil()));
+		}
+
+	template<bool _Multi2 = _Multi,
+		enable_if_t<_Multi2, int> = 0>
+		iterator insert(value_type&& _Val)
+		{	// try to insert node with value _Val, favoring right side
+		return (_Insert_nohint(false,
+			_STD forward<value_type>(_Val), _Nil()).first);
 		}
 
 	iterator insert(const_iterator _Where,
@@ -1245,12 +1236,17 @@ public:
 			_Val, _Nil()));
 		}
 
+	iterator insert(const_iterator _Where, value_type&& _Val)
+		{	// try to insert node with value _Val using _Where as a hint
+		return (_Insert_hint(_Where,
+			_STD forward<value_type>(_Val), _Nil()));
+		}
+
 	template<class _Iter>
 		void insert(_Iter _First, _Iter _Last)
 		{	// insert [_First, _Last) one at a time
 		_DEBUG_RANGE(_First, _Last);
 		for (; _First != _Last; ++_First)
-
 			emplace_hint(end(), *_First);
 		}
 
@@ -1462,8 +1458,7 @@ public:
 	size_type erase(const key_type& _Keyval)
 		{	// erase and count all that match _Keyval
 		_Pairii _Where = equal_range(_Keyval);
-		size_type _Num = 0;
-		_Distance(_Where.first, _Where.second, _Num);
+		size_type _Num = _STD distance(_Where.first, _Where.second);
 		erase(_Where.first, _Where.second);
 		return (_Num);
 		}
@@ -1471,7 +1466,7 @@ public:
 	void clear() _NOEXCEPT
 		{	// erase all
  #if _ITERATOR_DEBUG_LEVEL == 2
-		this->_Orphan_ptr(0);
+		this->_Orphan_ptr(nullptr_t{});
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 
 		_Erase(_Root());
@@ -1526,9 +1521,7 @@ public:
 	size_type count(const key_type& _Keyval) const
 		{	// count all elements that match _Keyval
 		_Paircc _Ans = equal_range(_Keyval);
-		size_type _Num = 0;
-		_Distance(_Ans.first, _Ans.second, _Num);
-		return (_Num);
+		return (_STD distance(_Ans.first, _Ans.second));
 		}
 
 	template<class _Other,
@@ -1537,9 +1530,7 @@ public:
 		size_type count(const _Other& _Keyval) const
 		{	// count all elements that match _Keyval
 		_Paircc _Ans = equal_range(_Keyval);
-		size_type _Num = 0;
-		_Distance(_Ans.first, _Ans.second, _Num);
-		return (_Num);
+		return (_STD distance(_Ans.first, _Ans.second));
 		}
 
 	iterator lower_bound(const key_type& _Keyval)
@@ -1622,32 +1613,13 @@ public:
 
 	void swap(_Myt& _Right)
 		{	// exchange contents with _Right
-		if (this == &_Right)
-			;	// same object, do nothing
-		else if (this->_Getal() == _Right._Getal())
-			{	// same allocator, swap control information
+		if (this != &_Right)
+			{	// (maybe) swap allocators, swap control information
+			_Pocs(this->_Getal(), _Right._Getal());
 			this->_Swap_all(_Right);
 			_Swap_adl(this->_Getcomp(), _Right._Getcomp());
 			_Swap_adl(this->_Myhead(), _Right._Myhead());
 			_STD swap(this->_Mysize(), _Right._Mysize());
-			}
-
-		else if (_Alty::propagate_on_container_swap::value)
-			{	// swap allocators and control information
-			this->_Swap_alloc(_Right);
-			_Swap_adl(this->_Getcomp(), _Right._Getcomp());
-			_Swap_adl(this->_Myhead(), _Right._Myhead());
-			_STD swap(this->_Mysize(), _Right._Mysize());
-			}
-
-		else
-			{	// containers are incompatible
- #if _ITERATOR_DEBUG_LEVEL == 2
-			_DEBUG_ERROR("map/set containers incompatible for swap");
-
- #else /* ITERATOR_DEBUG_LEVEL == 2 */
-			_XSTD terminate();
- #endif /* ITERATOR_DEBUG_LEVEL == 2 */
 			}
 		}
 
@@ -1856,7 +1828,7 @@ protected:
 		if (max_size() - 1 <= this->_Mysize())
 			{	// tree would get too big, fail
 			_Destroy_if_not_nil(_Node);
-			//_Xlength_error("map/set<T> too long");
+			_Xlength_error("map/set<T> too long");
 			}
 		_Nodeptr _Newnode = _Buynode_if_nil(_Node,
 			_STD forward<_Valty>(_Val));
@@ -2181,7 +2153,7 @@ protected:
 		if (_Pnext != 0)
 			while (*_Pnext != 0)
 				if ((*_Pnext)->_Ptr == this->_Myhead()
-					|| _Ptr != 0 && (*_Pnext)->_Ptr != _Ptr)
+					|| _Ptr != nullptr_t{} && (*_Pnext)->_Ptr != _Ptr)
 					_Pnext = (const_iterator **)(*_Pnext)->_Getpnext();
 				else
 					{	// orphan the iterator

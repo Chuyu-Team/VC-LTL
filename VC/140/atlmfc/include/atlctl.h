@@ -92,7 +92,7 @@ class CFirePropNotifyEvent
 public:
 	// Ask any objects sinking the IPropertyNotifySink notification if it is ok to edit a specified property
 	static HRESULT FireOnRequestEdit(
-		_Inout_ IUnknown* pUnk, 
+		_Inout_ IUnknown* pUnk,
 		_In_ DISPID dispID)
 	{
 		CComQIPtr<IConnectionPointContainer, &__uuidof(IConnectionPointContainer)> pCPC(pUnk);
@@ -131,7 +131,7 @@ public:
 	}
 	// Notify any objects sinking the IPropertyNotifySink notification that a property has changed
 	static HRESULT FireOnChanged(
-		_Inout_ IUnknown* pUnk, 
+		_Inout_ IUnknown* pUnk,
 		_In_ DISPID dispID)
 	{
 		CComQIPtr<IConnectionPointContainer, &__uuidof(IConnectionPointContainer)> pCPC(pUnk);
@@ -177,7 +177,7 @@ public:
 class ATL_NO_VTABLE CComControlBase
 {
 public:
-	typedef short AppearanceType;  // Override in derived class if your 
+	typedef short AppearanceType;  // Override in derived class if your
 		// m_nAppearance stock property isn't of type 'short'
 public:
 	CComControlBase(_Inout_ HWND& h) : m_hWndCD(h)
@@ -221,7 +221,7 @@ public:
 	{
 		m_bRequiresSave = bDirty;
 	}
-	// Obtain the dirty state for the control 
+	// Obtain the dirty state for the control
 	BOOL GetDirty()
 	{
 		return m_bRequiresSave;
@@ -263,9 +263,9 @@ public:
 	}
 	// Sends a notification to the container that the control has received focus
 	LRESULT OnSetFocus(
-		_In_ UINT /*uMsg*/, 
-		_In_ WPARAM /*wParam*/, 
-		_In_ LPARAM /*lParam*/, 
+		_In_ UINT /*uMsg*/,
+		_In_ WPARAM /*wParam*/,
+		_In_ LPARAM /*lParam*/,
 		_Out_ BOOL& bHandled)
 	{
 		if (m_bInPlaceActive)
@@ -282,9 +282,9 @@ public:
 		return 1;
 	}
 	LRESULT OnKillFocus(
-		_In_ UINT /*uMsg*/, 
-		_In_ WPARAM /*wParam*/, 
-		_In_ LPARAM /*lParam*/, 
+		_In_ UINT /*uMsg*/,
+		_In_ WPARAM /*wParam*/,
+		_In_ LPARAM /*lParam*/,
 		_Out_ BOOL& bHandled)
 	{
 		CComQIPtr<IOleControlSite, &__uuidof(IOleControlSite)> spSite(m_spClientSite);
@@ -294,9 +294,9 @@ public:
 		return 1;
 	}
 	LRESULT OnMouseActivate(
-		_In_ UINT /*uMsg*/, 
-		_In_ WPARAM /*wParam*/, 
-		_In_ LPARAM /*lParam*/, 
+		_In_ UINT /*uMsg*/,
+		_In_ WPARAM /*wParam*/,
+		_In_ LPARAM /*lParam*/,
 		_Out_ BOOL& bHandled)
 	{
 		BOOL bUserMode = TRUE;
@@ -314,14 +314,14 @@ public:
 		return 1;
 	}
 	BOOL PreTranslateAccelerator(
-		_In_opt_ LPMSG /*pMsg*/, 
+		_In_opt_ LPMSG /*pMsg*/,
 		_In_ HRESULT& /*hRet*/)
 	{
 		return FALSE;
 	}
 
 	HRESULT GetAmbientProperty(
-		_In_ DISPID dispid, 
+		_In_ DISPID dispid,
 		_Out_ VARIANT& var)
 	{
 		HRESULT hRes = E_FAIL;
@@ -356,7 +356,7 @@ public:
 	}
 	HRESULT GetAmbientDisplayName(_Inout_ _Outref_result_maybenull_ _Post_z_ BSTR& bstrDisplayName)
 	{
-		CComVariant var;		
+		CComVariant var;
 
 		if (bstrDisplayName)
 		{
@@ -395,7 +395,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hRes;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	HRESULT GetAmbientFontDisp(_Outptr_result_maybenull_ IFontDisp** ppFont)
 	{
@@ -416,7 +416,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hRes;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	HRESULT GetAmbientForeColor(_Out_ OLE_COLOR& ForeColor)
 	{
 		CComVariant var;
@@ -437,7 +437,7 @@ ATLPREFAST_UNSUPPRESS()
 	}
 	HRESULT GetAmbientScaleUnits(_Inout_ _Outref_result_maybenull_ _Post_z_ BSTR& bstrScaleUnits)
 	{
-		CComVariant var;		
+		CComVariant var;
 
 		if (bstrScaleUnits)
 		{
@@ -654,7 +654,7 @@ ATLPREFAST_UNSUPPRESS()
 
 ATLPREFAST_SUPPRESS(6387)
 	HRESULT InternalGetSite(
-		_In_ REFIID riid, 
+		_In_ REFIID riid,
 		_Outptr_ void** ppUnkSite)
 	{
 		ATLASSERT(ppUnkSite != NULL);
@@ -668,7 +668,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return m_spClientSite->QueryInterface(riid, ppUnkSite);
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	BOOL DoesVerbUIActivate(_In_ LONG iVerb)
 	{
 		BOOL b = FALSE;
@@ -702,54 +702,54 @@ ATLPREFAST_UNSUPPRESS()
 
 	BOOL SetControlFocus(_In_ BOOL bGrab);
 	HRESULT IQuickActivate_QuickActivate(
-		_In_ QACONTAINER *pQACont, 
+		_In_ QACONTAINER *pQACont,
 		_Inout_ QACONTROL *pQACtrl);
 	HRESULT DoVerbProperties(
-		_In_opt_ LPCRECT /* prcPosRect */, 
+		_In_opt_ LPCRECT /* prcPosRect */,
 		_In_ HWND hwndParent);
 	HRESULT InPlaceActivate(
-		_In_ LONG iVerb, 
+		_In_ LONG iVerb,
 		_In_opt_ const RECT* prcPosRect = NULL);
 
 	HRESULT IOleObject_SetClientSite(_Inout_opt_ IOleClientSite *pClientSite);
 	HRESULT IOleObject_GetClientSite(_Outptr_result_maybenull_ IOleClientSite **ppClientSite);
 	HRESULT IOleObject_Advise(
-		_Inout_ IAdviseSink *pAdvSink, 
+		_Inout_ IAdviseSink *pAdvSink,
 		_Out_ DWORD *pdwConnection);
 	HRESULT IOleObject_Close(_In_ DWORD dwSaveOption);
 	HRESULT IOleObject_SetExtent(
-		_In_ DWORD dwDrawAspect, 
+		_In_ DWORD dwDrawAspect,
 		_In_reads_bytes_(sizeof(SIZE)) SIZEL *psizel);
 	HRESULT IOleInPlaceObject_InPlaceDeactivate(void);
 	HRESULT IOleInPlaceObject_UIDeactivate(void);
 	HRESULT IOleInPlaceObject_SetObjectRects(
-		_In_ LPCRECT prcPos, 
+		_In_ LPCRECT prcPos,
 		_In_ LPCRECT prcClip);
 	HRESULT IViewObject_Draw(
-		_In_ DWORD dwDrawAspect, 
-		_In_ LONG lindex, 
+		_In_ DWORD dwDrawAspect,
+		_In_ LONG lindex,
 		_In_opt_ void *pvAspect,
-		_In_opt_ DVTARGETDEVICE *ptd, 
-		_In_ HDC hicTargetDev, 
+		_In_opt_ DVTARGETDEVICE *ptd,
+		_In_ HDC hicTargetDev,
 		_In_ HDC hdcDraw,
-		_In_opt_ LPCRECTL prcBounds, 
+		_In_opt_ LPCRECTL prcBounds,
 		_In_opt_ LPCRECTL prcWBounds);
 	HRESULT IDataObject_GetData(
-		_In_ FORMATETC *pformatetcIn, 
+		_In_ FORMATETC *pformatetcIn,
 		_Out_ STGMEDIUM *pmedium);
 
 	HRESULT FireViewChange();
 	LRESULT OnPaint(
-		_In_ UINT uMsg, 
+		_In_ UINT uMsg,
 		_In_ WPARAM wParam,
-		_In_ LPARAM lParam, 
+		_In_ LPARAM lParam,
 		_In_ BOOL& lResult);
 
 	virtual HWND CreateControlWindow(
-		_In_ HWND hWndParent, 
+		_In_ HWND hWndParent,
 		_In_ RECT& rcPos) = 0;
 	virtual HRESULT ControlQueryInterface(
-		_In_ const IID& iid, 
+		_In_ const IID& iid,
 		_Outptr_ void** ppv) = 0;
 	virtual HRESULT OnDrawAdvanced(_Inout_ ATL_DRAWINFO& di);
 	virtual HRESULT OnDraw(_In_ ATL_DRAWINFO& di)
@@ -907,7 +907,7 @@ inline BOOL CComControlBase::SetControlFocus(_In_ BOOL bGrab)
 }
 
 inline HRESULT CComControlBase::DoVerbProperties(
-	_In_opt_ LPCRECT /* prcPosRect */, 
+	_In_opt_ LPCRECT /* prcPosRect */,
 	_In_ HWND hwndParent)
 {
 	HRESULT hr = S_OK;
@@ -939,7 +939,7 @@ inline HRESULT CComControlBase::DoVerbProperties(
 
 				hr = spObj->GetUserType(USERCLASSTYPE_SHORT, &szTitle);
 				_Analysis_assume_(SUCCEEDED(hr) || (szTitle = NULL) == NULL);
-				
+
 				LCID lcid;
 				if (FAILED(GetAmbientLocaleID(lcid)))
 					lcid = LOCALE_USER_DEFAULT;
@@ -965,9 +965,9 @@ inline HRESULT CComControlBase::DoVerbProperties(
 }
 
 inline HRESULT CComControlBase::InPlaceActivate(
-	_In_ LONG iVerb, 
+	_In_ LONG iVerb,
 	_In_opt_ const RECT* /*prcPosRect*/)
-{	
+{
 	HRESULT hr;
 
 	if (m_spClientSite == NULL)
@@ -1244,7 +1244,7 @@ inline HRESULT CComControlBase::IOleInPlaceObject_UIDeactivate(void)
 
 	m_bUIActive = FALSE;
 
-	HWND hwndParent; 
+	HWND hwndParent;
 	// This call to GetWindow is a fix for Delphi
 	if (m_spInPlaceSite)
 	{
@@ -1272,7 +1272,7 @@ inline HRESULT CComControlBase::IOleInPlaceObject_UIDeactivate(void)
 }
 
 inline HRESULT CComControlBase::IOleInPlaceObject_SetObjectRects(
-	_In_ LPCRECT prcPos, 
+	_In_ LPCRECT prcPos,
 	_In_ LPCRECT prcClip)
 {
 	if (prcPos == NULL || prcClip == NULL)
@@ -1307,7 +1307,7 @@ inline HRESULT CComControlBase::IOleInPlaceObject_SetObjectRects(
 }
 
 inline HRESULT CComControlBase::IOleObject_SetExtent(
-	_In_ DWORD dwDrawAspect, 
+	_In_ DWORD dwDrawAspect,
 	_In_reads_bytes_(sizeof(SIZE)) SIZEL *psizel)
 {
 	if (dwDrawAspect != DVASPECT_CONTENT)
@@ -1342,17 +1342,17 @@ inline HRESULT CComControlBase::IOleObject_SetExtent(
 }
 
 inline HRESULT CComControlBase::IViewObject_Draw(
-	_In_ DWORD dwDrawAspect, 
+	_In_ DWORD dwDrawAspect,
 	_In_ LONG lindex,
-	_In_opt_ void *pvAspect, 
-	_In_opt_ DVTARGETDEVICE *ptd, 
-	_In_ HDC hicTargetDev, 
+	_In_opt_ void *pvAspect,
+	_In_opt_ DVTARGETDEVICE *ptd,
+	_In_ HDC hicTargetDev,
 	_In_ HDC hdcDraw,
-	_In_opt_ LPCRECTL prcBounds, 
+	_In_opt_ LPCRECTL prcBounds,
 	_In_opt_ LPCRECTL prcWBounds)
 {
 	ATLTRACE(atlTraceControls,2,_T("Draw dwDrawAspect=%x lindex=%d ptd=%x hic=%x hdc=%x\n"),
-		dwDrawAspect, lindex, reinterpret_cast<ULONG_PTR>(ptd), 
+		dwDrawAspect, lindex, reinterpret_cast<ULONG_PTR>(ptd),
 			reinterpret_cast<ULONG_PTR>(hicTargetDev), reinterpret_cast<ULONG_PTR>(hdcDraw));
 #ifdef _DEBUG
 	if (prcBounds == NULL)
@@ -1555,9 +1555,9 @@ inline HRESULT CComControlBase::OnDrawAdvanced(_Inout_ ATL_DRAWINFO& di)
 }
 
 inline LRESULT CComControlBase::OnPaint(
-	_In_ UINT /* uMsg */, 
+	_In_ UINT /* uMsg */,
 	_In_ WPARAM wParam,
-	_In_ LPARAM /* lParam */, 
+	_In_ LPARAM /* lParam */,
 	_In_ BOOL& /* lResult */)
 {
 	RECT rc;
@@ -1584,15 +1584,15 @@ inline LRESULT CComControlBase::OnPaint(
 
 
 template <class T, class WinBase =  CWindowImpl< T > >
-class ATL_NO_VTABLE CComControl : 
-	public CComControlBase, 
+class ATL_NO_VTABLE CComControl :
+	public CComControlBase,
 	public WinBase
 {
 public:
-	CComControl() : CComControlBase(m_hWnd) {}
+	CComControl() : CComControlBase(this->m_hWnd) {}
 
 	virtual HWND CreateControlWindow(
-		_In_ HWND hWndParent, 
+		_In_ HWND hWndParent,
 		_In_ RECT& rcPos)
 	{
 		T* pT = static_cast<T*>(this);
@@ -1611,7 +1611,7 @@ public:
 	}
 
 	virtual HRESULT ControlQueryInterface(
-		_In_ const IID& iid, 
+		_In_ const IID& iid,
 		_Outptr_ void** ppv)
 	{
 		T* pT = static_cast<T*>(this);
@@ -1619,8 +1619,8 @@ public:
 	}
 
 	int MessageBox(
-		_In_z_ LPCTSTR lpszText, 
-		_In_opt_z_ LPCTSTR lpszCaption = _T(""), 
+		_In_z_ LPCTSTR lpszText,
+		_In_opt_z_ LPCTSTR lpszCaption = _T(""),
 		_In_ UINT nType = MB_OK)
 	{
 		if (::IsWindow(m_hWndCD))
@@ -1653,7 +1653,7 @@ public:
 
 #ifndef _ATL_NO_HOSTING
 template <class T>
-class CComCompositeControl : 
+class CComCompositeControl :
 	public CComControl< T, CAxDialogImpl< T > >
 {
 public:
@@ -1668,7 +1668,7 @@ public:
 	}
 	HRESULT AdviseSinkMap(_In_ bool bAdvise)
 	{
-		if(!bAdvise && m_hWnd == NULL)
+		if(!bAdvise && this->m_hWnd == NULL)
 		{
 			// window is gone, controls are already unadvised
 			ATLTRACE(atlTraceControls, 1, _T("CComCompositeControl::AdviseSinkMap called after the window was destroyed\n"));
@@ -1686,13 +1686,13 @@ public:
 			m_hbrBackground = NULL;
 		}
 		OLE_COLOR clr;
-		HRESULT hr = GetAmbientBackColor(clr);
+		HRESULT hr = this->GetAmbientBackColor(clr);
 		if (SUCCEEDED(hr))
 		{
 			COLORREF rgb;
 			::OleTranslateColor(clr, NULL, &rgb);
 			m_hbrBackground = ::CreateSolidBrush(rgb);
-			EnumChildWindows(m_hWnd, (WNDENUMPROC)BackgroundColorEnumProc, (LPARAM) clr);
+			EnumChildWindows(this->m_hWnd, (WNDENUMPROC)BackgroundColorEnumProc, (LPARAM) clr);
 		}
 		return hr;
 	}
@@ -1706,19 +1706,19 @@ public:
 		return TRUE;
 	}
 	LRESULT OnDialogColor(
-		_In_ UINT, 
-		_In_ WPARAM w, 
-		_In_ LPARAM, 
+		_In_ UINT,
+		_In_ WPARAM w,
+		_In_ LPARAM,
 		_In_ BOOL&)
 	{
 		HIGHCONTRAST contrastMode;
 		memset(&contrastMode, 0, sizeof(HIGHCONTRAST));
 		contrastMode.cbSize = sizeof(HIGHCONTRAST);
 
-		if (SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &contrastMode, 0) && 
+		if (SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &contrastMode, 0) &&
 			(contrastMode.dwFlags & HCF_HIGHCONTRASTON) != 0)
 
-			return DefWindowProc();
+			return this->DefWindowProc();
 
 		HDC dc = (HDC) w;
 		LOGBRUSH lb;
@@ -1727,17 +1727,17 @@ public:
 		return (LRESULT)m_hbrBackground;
 	}
 	HWND Create(
-		_In_ HWND hWndParent, 
-		_In_ RECT& /*rcPos*/, 
+		_In_ HWND hWndParent,
+		_In_ RECT& /*rcPos*/,
 		_In_ LPARAM dwInitParam = NULL)
 	{
 		CComControl< T, CAxDialogImpl< T > >::Create(hWndParent, dwInitParam);
-		if (m_hWnd != NULL)
+		if (this->m_hWnd != NULL)
 		{
 			SetBackgroundColorFromAmbient();
-			ShowWindow(SW_SHOWNOACTIVATE);
+			this->ShowWindow(SW_SHOWNOACTIVATE);
 		}
-		return m_hWnd;
+		return this->m_hWnd;
 	}
 	BOOL CalcExtent(_Inout_ SIZE& size)
 	{
@@ -1758,7 +1758,7 @@ public:
 	}
 //Implementation
 	BOOL PreTranslateAccelerator(
-		_In_ LPMSG pMsg, 
+		_In_ LPMSG pMsg,
 		_Out_ HRESULT& hRet)
 	{
 		hRet = S_OK;
@@ -1768,13 +1768,13 @@ public:
 			return FALSE;
 		// find a direct child of the dialog from the window that has focus
 		HWND hWndCtl = ::GetFocus();
-		if (IsChild(hWndCtl) && ::GetParent(hWndCtl) != m_hWnd)
+		if (this->IsChild(hWndCtl) && ::GetParent(hWndCtl) != this->m_hWnd)
 		{
 			do
 			{
 				hWndCtl = ::GetParent(hWndCtl);
 			}
-			while (::GetParent(hWndCtl) != m_hWnd);
+			while (::GetParent(hWndCtl) != this->m_hWnd);
 		}
 		// give controls a chance to translate this message
 		if (::SendMessage(hWndCtl, WM_FORWARDMSG, 0, (LPARAM)pMsg) == 1)
@@ -1795,9 +1795,9 @@ public:
 				// prevent tab from looping inside of our dialog
 				if((dwDlgCode & DLGC_WANTTAB) == 0)
 				{
-					HWND hWndFirstOrLast = ::GetWindow(m_hWnd, GW_CHILD);
+					HWND hWndFirstOrLast = ::GetWindow(this->m_hWnd, GW_CHILD);
 					if (::GetKeyState(VK_SHIFT) >= 0)  // not pressed
-						hWndFirstOrLast = GetNextDlgTabItem(hWndFirstOrLast, TRUE);
+						hWndFirstOrLast = this->GetNextDlgTabItem(hWndFirstOrLast, TRUE);
 					if (hWndFirstOrLast == hWndCtl)
 						return FALSE;
 				}
@@ -1809,9 +1809,9 @@ public:
 				// prevent arrows from looping inside of our dialog
 				if((dwDlgCode & DLGC_WANTARROWS) == 0)
 				{
-					HWND hWndFirstOrLast = ::GetWindow(m_hWnd, GW_CHILD);
+					HWND hWndFirstOrLast = ::GetWindow(this->m_hWnd, GW_CHILD);
 					if (pMsg->wParam == VK_RIGHT || pMsg->wParam == VK_DOWN)	// going forward
-						hWndFirstOrLast = GetNextDlgTabItem(hWndFirstOrLast, TRUE);
+						hWndFirstOrLast = this->GetNextDlgTabItem(hWndFirstOrLast, TRUE);
 					if (hWndFirstOrLast == hWndCtl)
 						return FALSE;
 				}
@@ -1856,7 +1856,7 @@ public:
 						if (((pAccel[i].fVirt & ~FNOINVERT & ~FVIRTKEY) == fVert) &&
 							((pAccel[i].key == _toupper(key)) || pAccel[i].key == _tolower(key)))
 						{
-							bRet = ::IsDialogMessage(m_hWnd, pMsg);	//Accel is valid, process
+							bRet = ::IsDialogMessage(this->m_hWnd, pMsg);	//Accel is valid, process
 							break;
 						}
 					}
@@ -1867,31 +1867,31 @@ public:
 			}
 			else
 			{
-				bRet = ::IsDialogMessage(m_hWnd, pMsg);	//Backward compt. (not impl GetControlInfo)
+				bRet = ::IsDialogMessage(this->m_hWnd, pMsg);	//Backward compt. (not impl GetControlInfo)
 			}
 		}
 		else
 		{
-			bRet = ::IsDialogMessage(m_hWnd, pMsg);	//Not an accelerator msg
+			bRet = ::IsDialogMessage(this->m_hWnd, pMsg);	//Not an accelerator msg
 		}
 
 		if (bRet)
 		{
 			HWND hWndCtlNewFocus = ::GetFocus();
-			if (IsChild(hWndCtlNewFocus))
+			if (this->IsChild(hWndCtlNewFocus))
 				m_hWndFocus = hWndCtlNewFocus;
 			else
 				m_hWndFocus = NULL;
-			if (IsChild(hWndCtlNewFocus) && ::GetParent(hWndCtlNewFocus) != m_hWnd)
+			if (this->IsChild(hWndCtlNewFocus) && ::GetParent(hWndCtlNewFocus) != this->m_hWnd)
 			{
 				do
 				{
 					hWndCtlNewFocus = ::GetParent(hWndCtlNewFocus);
 				}
-				while (::GetParent(hWndCtlNewFocus) != m_hWnd);
+				while (::GetParent(hWndCtlNewFocus) != this->m_hWnd);
 			}
 
-			if (IsChild(hWndCtlNewFocus)  && IsChild(hWndCtl) && hWndCtl != hWndCtlNewFocus)
+			if (this->IsChild(hWndCtlNewFocus)  && this->IsChild(hWndCtl) && hWndCtl != hWndCtlNewFocus)
 			{
 				CComPtr<IUnknown> spUnknown;
 				HRESULT hr = AtlAxGetControl(hWndCtl, &spUnknown);
@@ -1920,8 +1920,8 @@ public:
 			{
 				hWnd = ::GetParent(hWnd);
 			}
-			while (hWnd != NULL && ::GetParent(hWnd) != m_hWnd);
-			
+			while (hWnd != NULL && ::GetParent(hWnd) != this->m_hWnd);
+
 			if (hWnd != m_hWndFocus && hWnd != NULL)
 			{
 				CComPtr<IUnknown> spUnknown;
@@ -1941,7 +1941,7 @@ public:
 	}
 
 	virtual HWND CreateControlWindow(
-		_In_ HWND hWndParent, 
+		_In_ HWND hWndParent,
 		_In_ RECT& rcPos)
 	{
 		T* pT = static_cast<T*>(this);
@@ -1952,7 +1952,7 @@ public:
 	}
 	virtual HRESULT OnDraw(_In_ ATL_DRAWINFO& di)
 	{
-		if(!m_bInPlaceActive)
+		if(!this->m_bInPlaceActive)
 		{
 			HPEN hPen = (HPEN)::GetStockObject(BLACK_PEN);
 			HBRUSH hBrush = (HBRUSH)::GetStockObject(GRAY_BRUSH);
@@ -1966,9 +1966,9 @@ public:
 		return S_OK;
 	}
 	LRESULT OnInitDialog(
-		_In_ UINT /*uMsg*/, 
-		_In_ WPARAM /*wParam*/, 
-		_In_ LPARAM /*lParam*/, 
+		_In_ UINT /*uMsg*/,
+		_In_ WPARAM /*wParam*/,
+		_In_ LPARAM /*lParam*/,
 		_Out_  BOOL& bHandled)
 	{
 		// initialize controls in dialog with DLGINIT resource section
@@ -1978,9 +1978,9 @@ public:
 	}
 	// save HWND of child that last had focus
 	LRESULT OnChildKillFocus(
-		_In_ WORD /*wNotifyCode*/, 
-		_In_ WORD /*wID*/, 
-		_In_ HWND hWndCtl, 
+		_In_ WORD /*wNotifyCode*/,
+		_In_ WORD /*wID*/,
+		_In_ HWND hWndCtl,
 		_Out_ BOOL& bHandled)
 	{
 		m_hWndFocus = hWndCtl;
@@ -1988,8 +1988,8 @@ public:
 		return 0;
 	}
 	LRESULT OnNMKillFocus(
-		_In_ int /*idCtrl*/, 
-		_In_ LPNMHDR pnmh, 
+		_In_ int /*idCtrl*/,
+		_In_ LPNMHDR pnmh,
 		_Out_ BOOL& bHandled)
 	{
 		m_hWndFocus = pnmh->hwndFrom;
@@ -1997,9 +1997,9 @@ public:
 		return 0;
 	}
 	LRESULT OnSetFocus(
-		_In_ UINT /*uMsg*/, 
-		_In_ WPARAM /*wParam*/, 
-		_In_ LPARAM /*lParam*/, 
+		_In_ UINT /*uMsg*/,
+		_In_ WPARAM /*wParam*/,
+		_In_ LPARAM /*lParam*/,
 		_Out_ BOOL& bHandled)
 	{
 		// Call base class OnSetFocus so control is UI-activated.
@@ -2008,18 +2008,18 @@ public:
 		if ((GetKeyState(VK_SHIFT) < 0 && GetKeyState(VK_TAB) < 0) ||
 			(GetKeyState(VK_UP) < 0) || (GetKeyState(VK_LEFT) < 0))
 		{
-			::SetFocus(::GetWindow(::GetWindow(m_hWnd, GW_CHILD), GW_HWNDLAST));
+			::SetFocus(::GetWindow(::GetWindow(this->m_hWnd, GW_CHILD), GW_HWNDLAST));
 		}
 		// Tab, down or right arrow was pressed, set focus to first control.
 		else if (GetKeyState(VK_TAB) < 0 || GetKeyState(VK_DOWN) < 0 ||
 				GetKeyState(VK_RIGHT) < 0)
 		{
-			::SetFocus(::GetWindow(m_hWnd, GW_CHILD));
+			::SetFocus(::GetWindow(this->m_hWnd, GW_CHILD));
 		}
 		else
 		{
-			if (!::IsWindow(m_hWndFocus) || !::IsChild(m_hWnd, m_hWndFocus))
-				m_hWndFocus = ::GetWindow(m_hWnd, GW_CHILD);
+			if (!::IsWindow(m_hWndFocus) || !::IsChild(this->m_hWnd, m_hWndFocus))
+				m_hWndFocus = ::GetWindow(this->m_hWnd, GW_CHILD);
 			// set focus to last child window that had focus
 			::SetFocus(m_hWndFocus);
 		}
@@ -2029,23 +2029,23 @@ public:
 	}
 	typedef CComControl< T, CAxDialogImpl< T > >	baseClass;
 	LRESULT OnMouseActivate(
-		_In_ UINT uMsg, 
-		_In_ WPARAM wParam, 
-		_In_ LPARAM lParam, 
+		_In_ UINT uMsg,
+		_In_ WPARAM wParam,
+		_In_ LPARAM lParam,
 		_Out_ BOOL& bHandled)
 	{
 		ATLTRACE(_T("CComCompositeControl::OnMouseActivate\n"));
 		HWND hWndFocus = GetFocus();
 		if (m_hWndFocus != NULL)
 		{
-			if (m_hWndFocus != m_hWnd && hWndFocus != m_hWndFocus)
+			if (m_hWndFocus != this->m_hWnd && hWndFocus != m_hWndFocus)
 			{
 				HWND hWnd = m_hWndFocus;
 				do
 				{
 					hWnd = ::GetParent(hWnd);
 				}
-				while (hWnd != NULL && ::GetParent(hWnd) != m_hWnd);
+				while (hWnd != NULL && ::GetParent(hWnd) != this->m_hWnd);
 
 				if (hWnd != m_hWndFocus)
 				{
@@ -2061,7 +2061,7 @@ public:
 				}
 			}
 		}
-		if (IsChild(hWndFocus))
+		if (this->IsChild(hWndFocus))
 			m_hWndFocus = hWndFocus;
 		else
 			m_hWndFocus = NULL;
@@ -2112,7 +2112,7 @@ template <class T, int nBindFlags> class CBindStatusCallback;
 //////////////////////////////////////////////////////////////////////////////
 // IOleControlImpl
 template <class T>
-class ATL_NO_VTABLE IOleControlImpl : 
+class ATL_NO_VTABLE IOleControlImpl :
 	public IOleControl
 {
 public:
@@ -2147,12 +2147,12 @@ public:
 //////////////////////////////////////////////////////////////////////////////
 // IQuickActivateImpl
 template <class T>
-class ATL_NO_VTABLE IQuickActivateImpl : 
+class ATL_NO_VTABLE IQuickActivateImpl :
 	public IQuickActivate
 {
 public:
 	STDMETHOD(QuickActivate)(
-		_In_ QACONTAINER *pQACont, 
+		_In_ QACONTAINER *pQACont,
 		_Inout_ QACONTROL *pQACtrl)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2170,7 +2170,7 @@ public:
 			// If you've declared m_nAppearance as something other than
 			// 'short', you'll need to typedef AppearanceType to that type
 			// in your derived class T.
-			pT->m_nAppearance = static_cast<T::AppearanceType>(pQACont->dwAppearance);
+			pT->m_nAppearance = static_cast<typename T::AppearanceType>(pQACont->dwAppearance);
 		}
 		return pT->IQuickActivate_QuickActivate(pQACont, pQACtrl);
 	}
@@ -2192,7 +2192,7 @@ public:
 // IOleObjectImpl
 ATLPREFAST_SUPPRESS(6387)
 template <class T>
-class ATL_NO_VTABLE IOleObjectImpl : 
+class ATL_NO_VTABLE IOleObjectImpl :
 	public IOleObject
 {
 public:
@@ -2209,7 +2209,7 @@ public:
 		return pT->IOleObject_GetClientSite(ppClientSite);
 	}
 	STDMETHOD(SetHostNames)(
-		_In_opt_z_ LPCOLESTR /* szContainerApp */, 
+		_In_opt_z_ LPCOLESTR /* szContainerApp */,
 		_In_opt_z_ LPCOLESTR /* szContainerObj */)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IOleObjectImpl::SetHostNames\n"));
@@ -2222,27 +2222,27 @@ public:
 		return pT->IOleObject_Close(dwSaveOption);
 	}
 	STDMETHOD(SetMoniker)(
-		_In_ DWORD /* dwWhichMoniker */, 
+		_In_ DWORD /* dwWhichMoniker */,
 		_In_opt_ IMoniker* /* pmk */)
 	{
 		ATLTRACENOTIMPL(_T("IOleObjectImpl::SetMoniker"));
 	}
 	STDMETHOD(GetMoniker)(
-		_In_ DWORD /* dwAssign */, 
-		_In_ DWORD /* dwWhichMoniker */, 
+		_In_ DWORD /* dwAssign */,
+		_In_ DWORD /* dwWhichMoniker */,
 		_In_opt_ IMoniker** /* ppmk */)
 	{
 		ATLTRACENOTIMPL(_T("IOleObjectImpl::GetMoniker"));
 	}
 	STDMETHOD(InitFromData)(
-		_In_ IDataObject* /* pDataObject */, 
-		_In_ BOOL /* fCreation */, 
+		_In_ IDataObject* /* pDataObject */,
+		_In_ BOOL /* fCreation */,
 		_In_ DWORD /* dwReserved */)
 	{
 		ATLTRACENOTIMPL(_T("IOleObjectImpl::InitFromData"));
 	}
 	STDMETHOD(GetClipboardData)(
-		_In_ DWORD /* dwReserved */, 
+		_In_ DWORD /* dwReserved */,
 		_In_opt_ IDataObject** /* ppDataObject */)
 	{
 		ATLTRACENOTIMPL(_T("IOleObjectImpl::GetClipboardData"));
@@ -2250,7 +2250,7 @@ public:
 
 	// Helpers for DoVerb - Over-rideable in user class
 	HRESULT DoVerbPrimary(
-		_In_ LPCRECT prcPosRect, 
+		_In_ LPCRECT prcPosRect,
 		_In_ HWND hwndParent)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2266,7 +2266,7 @@ public:
 		return pT->DoVerbInPlaceActivate(prcPosRect, hwndParent);
 	}
 	HRESULT DoVerbShow(
-		_In_ LPCRECT prcPosRect, 
+		_In_ LPCRECT prcPosRect,
 		_In_ HWND /* hwndParent */)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2281,7 +2281,7 @@ public:
 		return hr;
 	}
 	HRESULT DoVerbInPlaceActivate(
-		_In_ LPCRECT prcPosRect, 
+		_In_ LPCRECT prcPosRect,
 		_In_ HWND /* hwndParent */)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2298,7 +2298,7 @@ public:
 		return hr;
 	}
 	HRESULT DoVerbUIActivate(
-		_In_ LPCRECT prcPosRect, 
+		_In_ LPCRECT prcPosRect,
 		_In_ HWND /* hwndParent */)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2332,7 +2332,7 @@ public:
 		return hr;
 	}
 	HRESULT DoVerbOpen(
-		_In_opt_ LPCRECT /* prcPosRect */, 
+		_In_opt_ LPCRECT /* prcPosRect */,
 		_In_ HWND /* hwndParent */)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2343,7 +2343,7 @@ public:
 		return hr;
 	}
 	HRESULT DoVerbDiscardUndo(
-		_In_opt_ LPCRECT /* prcPosRect */, 
+		_In_opt_ LPCRECT /* prcPosRect */,
 		_In_ HWND /* hwndParent */)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2354,11 +2354,11 @@ public:
 		return hr;
 	}
 	STDMETHOD(DoVerb)(
-		_In_ LONG iVerb, 
-		_In_opt_ LPMSG /* pMsg */, 
-		_Inout_ IOleClientSite* pActiveSite, 
+		_In_ LONG iVerb,
+		_In_opt_ LPMSG /* pMsg */,
+		_Inout_ IOleClientSite* pActiveSite,
 		_In_ LONG /* lindex */,
-		_In_ HWND hwndParent, 
+		_In_ HWND hwndParent,
 		_In_ LPCRECT lprcPosRect)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2437,14 +2437,14 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(GetUserType)(
-		_In_ DWORD dwFormOfType, 
+		_In_ DWORD dwFormOfType,
 		_Outptr_result_z_ LPOLESTR *pszUserType)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IOleObjectImpl::GetUserType\n"));
 		return OleRegGetUserType(T::GetObjectCLSID(), dwFormOfType, pszUserType);
 	}
 	STDMETHOD(SetExtent)(
-		_In_ DWORD dwDrawAspect, 
+		_In_ DWORD dwDrawAspect,
 		_In_ SIZEL *psizel)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2452,7 +2452,7 @@ public:
 		return pT->IOleObject_SetExtent(dwDrawAspect, psizel);
 	}
 	STDMETHOD(GetExtent)(
-		_In_ DWORD dwDrawAspect, 
+		_In_ DWORD dwDrawAspect,
 		_Out_ SIZEL *psizel)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2465,7 +2465,7 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(Advise)(
-		_Inout_ IAdviseSink *pAdvSink, 
+		_Inout_ IAdviseSink *pAdvSink,
 		_Out_ DWORD *pdwConnection)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2492,11 +2492,11 @@ public:
 		HRESULT hRes = E_FAIL;
 		if (pT->m_spOleAdviseHolder != NULL)
 			hRes = pT->m_spOleAdviseHolder->EnumAdvise(ppenumAdvise);
-				
+
 		return hRes;
 	}
 	STDMETHOD(GetMiscStatus)(
-		_In_ DWORD dwAspect, 
+		_In_ DWORD dwAspect,
 		_Out_ DWORD *pdwStatus)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IOleObjectImpl::GetMiscStatus\n"));
@@ -2508,53 +2508,53 @@ public:
 	}
 // Implementation
 public:
-	HRESULT OnPreVerbShow() 
+	HRESULT OnPreVerbShow()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPostVerbShow() 
+	HRESULT OnPostVerbShow()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPreVerbInPlaceActivate() 
+	HRESULT OnPreVerbInPlaceActivate()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPostVerbInPlaceActivate() 
+	HRESULT OnPostVerbInPlaceActivate()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPreVerbUIActivate() 
+	HRESULT OnPreVerbUIActivate()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPostVerbUIActivate() 
+	HRESULT OnPostVerbUIActivate()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPreVerbHide() 
+	HRESULT OnPreVerbHide()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPostVerbHide() 
+	HRESULT OnPostVerbHide()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPreVerbOpen() 
+	HRESULT OnPreVerbOpen()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPostVerbOpen() 
+	HRESULT OnPostVerbOpen()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPreVerbDiscardUndo() 
+	HRESULT OnPreVerbDiscardUndo()
 	{
-		return S_OK; 
+		return S_OK;
 	}
-	HRESULT OnPostVerbDiscardUndo() 
+	HRESULT OnPostVerbDiscardUndo()
 	{
-		return S_OK; 
+		return S_OK;
 	}
 };
 ATLPREFAST_UNSUPPRESS()
@@ -2562,7 +2562,7 @@ ATLPREFAST_UNSUPPRESS()
 //////////////////////////////////////////////////////////////////////////////
 // IPropertyPageImpl
 template <class T>
-class ATL_NO_VTABLE IPropertyPageImpl : 
+class ATL_NO_VTABLE IPropertyPageImpl :
 	public IPropertyPage
 {
 
@@ -2633,8 +2633,8 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(Activate)(
-		_In_ HWND hWndParent, 
-		_In_ LPCRECT pRect, 
+		_In_ HWND hWndParent,
+		_In_ LPCRECT pRect,
 		_In_ BOOL /* bModal */)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2715,7 +2715,7 @@ public:
 	}
 
 	STDMETHOD(SetObjects)(
-		_In_ ULONG nObjects, 
+		_In_ ULONG nObjects,
 		_Inout_ _Deref_pre_opt_valid_ IUnknown **ppUnk)
 	{
 		T* pT = static_cast<T*>(this);
@@ -2838,9 +2838,9 @@ public:
 	END_MSG_MAP()
 
 	LRESULT OnStyleChange(
-		_In_ UINT, 
-		_In_ WPARAM wParam, 
-		_In_ LPARAM lParam, 
+		_In_ UINT,
+		_In_ WPARAM wParam,
+		_In_ LPARAM lParam,
 		_In_ BOOL&)
 	{
 		if (wParam == GWL_EXSTYLE)
@@ -2854,7 +2854,7 @@ public:
 
 	LPOLESTR LoadStringHelper(_In_ UINT idRes)
 	{
-		const ATLSTRINGRESOURCEIMAGE* pString = AtlGetStringResourceImage( 
+		const ATLSTRINGRESOURCEIMAGE* pString = AtlGetStringResourceImage(
 			_AtlBaseModule.GetResourceInstance(), idRes);
 		if (pString == NULL)
 		{
@@ -2879,7 +2879,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////
 // IPropertyPage2Impl
 template <class T>
-class ATL_NO_VTABLE IPropertyPage2Impl : 
+class ATL_NO_VTABLE IPropertyPage2Impl :
 	public IPropertyPageImpl<T>
 {
 public:
@@ -2904,7 +2904,7 @@ public:
 
 	_Success_(return == S_OK)
 	STDMETHOD(GetDisplayString)(
-		_In_ DISPID dispID, 
+		_In_ DISPID dispID,
 		_Outptr_result_maybenull_z_ BSTR *pBstr)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IPerPropertyBrowsingImpl::GetDisplayString\n"));
@@ -2951,7 +2951,7 @@ public:
 	}
 
 	STDMETHOD(MapPropertyToPage)(
-		_In_ DISPID dispID, 
+		_In_ DISPID dispID,
 		_Out_ CLSID *pClsid)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IPerPropertyBrowsingImpl::MapPropertyToPage\n"));
@@ -2988,8 +2988,8 @@ public:
 	}
 
 	STDMETHOD(GetPredefinedStrings)(
-		_In_ DISPID dispID, 
-		_Out_ CALPOLESTR *pCaStringsOut, 
+		_In_ DISPID dispID,
+		_Out_ CALPOLESTR *pCaStringsOut,
 		_Out_ CADWORD *pCaCookiesOut)
 	{
 		ATL_PROPVALMAP_ENTRY *valmap;
@@ -3043,7 +3043,7 @@ public:
 				dst = (LPOLESTR)::ATL::AtlCoTaskMemCAlloc(static_cast<ULONG>(len),static_cast<ULONG>(sizeof(WCHAR)));
 				if (! dst)
 					goto outofmem;
-				
+
 				if(!ocscpy_s(dst, len, src))
 				{
 					goto outofmem;
@@ -3073,8 +3073,8 @@ outofmem:
 	}
 
 	STDMETHOD(GetPredefinedValue)(
-		_In_ DISPID /* dispID */, 
-		_In_ DWORD dwCookie, 
+		_In_ DISPID /* dispID */,
+		_In_ DWORD dwCookie,
 		_Out_ VARIANT* pVarOut)
 	{
 		ATL_PROPVALMAP_ENTRY *valmap;
@@ -3099,7 +3099,7 @@ outofmem:
 //////////////////////////////////////////////////////////////////////////////
 // IViewObjectExImpl
 template <class T>
-class ATL_NO_VTABLE IViewObjectExImpl : 
+class ATL_NO_VTABLE IViewObjectExImpl :
 	public IViewObjectEx
 {
 public:
@@ -3110,8 +3110,8 @@ public:
 		_In_opt_ DVTARGETDEVICE *ptd,
 		_In_ HDC hicTargetDev,
 		_In_ HDC hdcDraw,
-		_In_opt_ LPCRECTL prcBounds, 
-		_In_ LPCRECTL prcWBounds, 
+		_In_opt_ LPCRECTL prcBounds,
+		_In_ LPCRECTL prcWBounds,
 		/* _In_opt_ */ BOOL (__stdcall * /*pfnContinue*/)(DWORD_PTR dwContinue),
 		_In_ DWORD_PTR /*dwContinue*/)
 	{
@@ -3121,19 +3121,19 @@ public:
 			prcBounds, prcWBounds);
 	}
 	STDMETHOD(GetColorSet)(
-		_In_ DWORD /* dwDrawAspect */, 
-		_In_ LONG /* lindex */, 
-		_In_opt_ void* /* pvAspect */, 
-		_In_opt_ DVTARGETDEVICE* /* ptd */, 
-		_In_ HDC /* hicTargetDev */, 
+		_In_ DWORD /* dwDrawAspect */,
+		_In_ LONG /* lindex */,
+		_In_opt_ void* /* pvAspect */,
+		_In_opt_ DVTARGETDEVICE* /* ptd */,
+		_In_ HDC /* hicTargetDev */,
 		_In_opt_ LOGPALETTE** /* ppColorSet */)
 	{
 		ATLTRACENOTIMPL(_T("IViewObjectExImpl::GetColorSet"));
 	}
 	STDMETHOD(Freeze)(
-		_In_ DWORD /* dwDrawAspect */, 
-		_In_ LONG /* lindex */, 
-		_In_opt_ void* /* pvAspect */, 
+		_In_ DWORD /* dwDrawAspect */,
+		_In_ LONG /* lindex */,
+		_In_opt_ void* /* pvAspect */,
 		_In_ DWORD* /* pdwFreeze */)
 	{
 		ATLTRACENOTIMPL(_T("IViewObjectExImpl::Freeze"));
@@ -3143,8 +3143,8 @@ public:
 		ATLTRACENOTIMPL(_T("IViewObjectExImpl::Unfreeze"));
 	}
 	STDMETHOD(SetAdvise)(
-		_In_ DWORD /* aspects */, 
-		_In_ DWORD /* advf */, 
+		_In_ DWORD /* aspects */,
+		_In_ DWORD /* advf */,
 		_Inout_ IAdviseSink* pAdvSink)
 	{
 		T* pT = static_cast<T*>(this);
@@ -3153,8 +3153,8 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(GetAdvise)(
-		_In_opt_  DWORD* /* pAspects */, 
-		_In_opt_  DWORD* /* pAdvf */, 
+		_In_opt_  DWORD* /* pAspects */,
+		_In_opt_  DWORD* /* pAdvf */,
 		_Outptr_result_maybenull_ IAdviseSink** ppAdvSink)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IViewObjectExImpl::GetAdvise\n"));
@@ -3175,9 +3175,9 @@ public:
 	// IViewObject2
 	//
 	STDMETHOD(GetExtent)(
-		_In_ DWORD /* dwDrawAspect */, 
-		_In_ LONG /* lindex */, 
-		_In_ DVTARGETDEVICE* /* ptd */, 
+		_In_ DWORD /* dwDrawAspect */,
+		_In_ LONG /* lindex */,
+		_In_ DVTARGETDEVICE* /* ptd */,
 		_Out_ LPSIZEL lpsizel)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IViewObjectExImpl::GetExtent\n"));
@@ -3193,7 +3193,7 @@ public:
 	// IViewObjectEx
 	//
 	STDMETHOD(GetRect)(
-		_In_ DWORD /* dwAspect */, 
+		_In_ DWORD /* dwAspect */,
 		_In_opt_ LPRECTL /* pRect */)
 	{
 		ATLTRACENOTIMPL(_T("IViewObjectExImpl::GetRect"));
@@ -3211,10 +3211,10 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(QueryHitPoint)(
-		_In_ DWORD dwAspect, 
-		_In_ LPCRECT pRectBounds, 
-		_In_ POINT ptlLoc, 
-		_In_ LONG /* lCloseHint */, 
+		_In_ DWORD dwAspect,
+		_In_ LPCRECT pRectBounds,
+		_In_ POINT ptlLoc,
+		_In_ LONG /* lCloseHint */,
 		_Out_ DWORD *pHitResult)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IViewObjectExImpl::QueryHitPoint\n"));
@@ -3232,10 +3232,10 @@ public:
 		return E_FAIL;
 	}
 	STDMETHOD(QueryHitRect)(
-		_In_ DWORD dwAspect, 
-		_In_ LPCRECT pRectBounds, 
-		_In_ LPCRECT prcLoc, 
-		_In_ LONG /* lCloseHint */, 
+		_In_ DWORD dwAspect,
+		_In_ LPCRECT pRectBounds,
+		_In_ LPCRECT prcLoc,
+		_In_ LONG /* lCloseHint */,
 		_Out_ DWORD* pHitResult)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IViewObjectExImpl::QueryHitRect\n"));
@@ -3254,11 +3254,11 @@ public:
 		return E_FAIL;
 	}
 	STDMETHOD(GetNaturalExtent)(
-		_In_ DWORD dwAspect, 
-		_In_ LONG /* lindex */, 
-		_In_opt_ DVTARGETDEVICE* /* ptd */, 
-		_In_ HDC /* hicTargetDev */, 
-		_In_ DVEXTENTINFO* pExtentInfo , 
+		_In_ DWORD dwAspect,
+		_In_ LONG /* lindex */,
+		_In_opt_ DVTARGETDEVICE* /* ptd */,
+		_In_ HDC /* hicTargetDev */,
+		_In_ DVEXTENTINFO* pExtentInfo ,
 		_Out_ LPSIZEL psizel)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IViewObjectExImpl::GetNaturalExtent\n"));
@@ -3287,7 +3287,7 @@ public:
 // IOleInPlaceObjectWindowlessImpl
 //
 template <class T>
-class ATL_NO_VTABLE IOleInPlaceObjectWindowlessImpl : 
+class ATL_NO_VTABLE IOleInPlaceObjectWindowlessImpl :
 	public IOleInPlaceObjectWindowless
 {
 public:
@@ -3346,9 +3346,9 @@ public:
 	// IOleInPlaceObjectWindowless
 	//
 	STDMETHOD(OnWindowMessage)(
-		_In_ UINT msg, 
-		_In_ WPARAM wParam, 
-		_In_ LPARAM lParam, 
+		_In_ UINT msg,
+		_In_ WPARAM wParam,
+		_In_ LPARAM lParam,
 		_Inout_ LRESULT *plResult)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IOleInPlaceObjectWindowlessImpl::OnWindowMessage\n"));
@@ -3374,7 +3374,7 @@ public:
 // IOleInPlaceActiveObjectImpl
 //
 template <class T>
-class ATL_NO_VTABLE IOleInPlaceActiveObjectImpl : 
+class ATL_NO_VTABLE IOleInPlaceActiveObjectImpl :
 	public IOleInPlaceActiveObject
 {
 public:
@@ -3410,7 +3410,7 @@ public:
 		ATLTRACE(atlTraceControls,2,_T("IOleInPlaceActiveObjectImpl::TranslateAccelerator\n"));
 		T* pT = static_cast<T*>(this);
 		HRESULT hRet = S_OK;
-		MSG msg = *pMsg; 
+		MSG msg = *pMsg;
 		if (pT->PreTranslateAccelerator(&msg, hRet))
 		{
 			return hRet;
@@ -3450,8 +3450,8 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(ResizeBorder)(
-		_In_ LPCRECT /* prcBorder */, 
-		_In_opt_ IOleInPlaceUIWindow* /* pUIWindow */, 
+		_In_ LPCRECT /* prcBorder */,
+		_In_opt_ IOleInPlaceUIWindow* /* pUIWindow */,
 		_In_ BOOL /* fFrameWindow */)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IOleInPlaceActiveObjectImpl::ResizeBorder\n"));
@@ -3467,7 +3467,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////
 // IPointerInactiveImpl
 template <class T>
-class ATL_NO_VTABLE IPointerInactiveImpl : 
+class ATL_NO_VTABLE IPointerInactiveImpl :
 	public IPointerInactive
 {
 public:
@@ -3478,18 +3478,18 @@ public:
 		ATLTRACENOTIMPL(_T("IPointerInactiveImpl::GetActivationPolicy"));
 	}
 	STDMETHOD(OnInactiveMouseMove)(
-		_In_ LPCRECT /*pRectBounds*/, 
-		_In_ long /*x*/, 
-		_In_ long /*y*/, 
+		_In_ LPCRECT /*pRectBounds*/,
+		_In_ long /*x*/,
+		_In_ long /*y*/,
 		_In_ DWORD /*dwMouseMsg*/)
 	{
 		ATLTRACENOTIMPL(_T("IPointerInactiveImpl::OnInactiveMouseMove"));
 	}
 	STDMETHOD(OnInactiveSetCursor)(
-		_In_ LPCRECT /*pRectBounds*/, 
-		_In_ long /*x*/, 
-		_In_ long /*y*/, 
-		_In_ DWORD /*dwMouseMsg*/, 
+		_In_ LPCRECT /*pRectBounds*/,
+		_In_ long /*x*/,
+		_In_ long /*y*/,
+		_In_ DWORD /*dwMouseMsg*/,
 		_In_ BOOL /*fSetAlways*/)
 	{
 		ATLTRACENOTIMPL(_T("IPointerInactiveImpl::OnInactiveSetCursor"));
@@ -3499,7 +3499,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////
 // IRunnableObjectImpl
 template <class T>
-class ATL_NO_VTABLE IRunnableObjectImpl : 
+class ATL_NO_VTABLE IRunnableObjectImpl :
 	public IRunnableObject
 {
 public:
@@ -3522,7 +3522,7 @@ public:
 		return TRUE;
 	}
 	STDMETHOD(LockRunning)(
-		_In_ BOOL /*fLock*/, 
+		_In_ BOOL /*fLock*/,
 		_In_ BOOL /*fLastUnlockCloses*/)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IRunnableObjectImpl::LockRunning\n"));
@@ -3540,12 +3540,12 @@ public:
 // IDataObjectImpl
 ATLPREFAST_SUPPRESS(6387)
 template <class T>
-class ATL_NO_VTABLE IDataObjectImpl : 
+class ATL_NO_VTABLE IDataObjectImpl :
 	public IDataObject
 {
 public:
 	STDMETHOD(GetData)(
-		_In_ FORMATETC *pformatetcIn, 
+		_In_ FORMATETC *pformatetcIn,
 		_Out_ STGMEDIUM *pmedium)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IDataObjectImpl::GetData\n"));
@@ -3553,7 +3553,7 @@ public:
 		return pT->IDataObject_GetData(pformatetcIn, pmedium);
 	}
 	STDMETHOD(GetDataHere)(
-		_In_opt_ FORMATETC* /* pformatetc */, 
+		_In_opt_ FORMATETC* /* pformatetc */,
 		_In_opt_ /* _Inout_ */ STGMEDIUM* /* pmedium */)
 	{
 		ATLTRACENOTIMPL(_T("IDataObjectImpl::GetDataHere"));
@@ -3563,27 +3563,27 @@ public:
 		ATLTRACENOTIMPL(_T("IDataObjectImpl::QueryGetData"));
 	}
 	STDMETHOD(GetCanonicalFormatEtc)(
-		_In_opt_ FORMATETC* /* pformatectIn */, 
+		_In_opt_ FORMATETC* /* pformatectIn */,
 		_In_opt_ FORMATETC* /* pformatetcOut */)
 	{
 		ATLTRACENOTIMPL(_T("IDataObjectImpl::GetCanonicalFormatEtc"));
 	}
 	STDMETHOD(SetData)(
-		_In_opt_ FORMATETC* /* pformatetc */, 
-		_In_opt_ STGMEDIUM* /* pmedium */, 
+		_In_opt_ FORMATETC* /* pformatetc */,
+		_In_opt_ STGMEDIUM* /* pmedium */,
 		_In_ BOOL /* fRelease */)
 	{
 		ATLTRACENOTIMPL(_T("IDataObjectImpl::SetData"));
 	}
 	STDMETHOD(EnumFormatEtc)(
-		_In_ DWORD /* dwDirection */, 
+		_In_ DWORD /* dwDirection */,
 		_In_opt_ IEnumFORMATETC** /* ppenumFormatEtc */)
 	{
 		ATLTRACENOTIMPL(_T("IDataObjectImpl::EnumFormatEtc"));
 	}
 	STDMETHOD(DAdvise)(
-		_In_ FORMATETC *pformatetc, 
-		_In_ DWORD advf, 
+		_In_ FORMATETC *pformatetc,
+		_In_ DWORD advf,
 		_Inout_ IAdviseSink *pAdvSink,
 		_Out_ DWORD *pdwConnection)
 	{
@@ -3609,7 +3609,7 @@ public:
 			hr = pT->m_spDataAdviseHolder->Unadvise(dwConnection);
 		return hr;
 	}
-	
+
 	STDMETHOD(EnumDAdvise)(_Outptr_ IEnumSTATDATA **ppenumAdvise)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IDataObjectImpl::EnumDAdvise\n"));
@@ -3644,7 +3644,7 @@ public:
 // INTERFACESAFE_FOR_UNTRUSTED_CALLER - safe for scripting
 // INTERFACESAFE_FOR_UNTRUSTED_DATA   - safe for initialization from data
 template <class T, DWORD dwSupportedSafety>
-class ATL_NO_VTABLE IObjectSafetyImpl : 
+class ATL_NO_VTABLE IObjectSafetyImpl :
 	public IObjectSafety
 {
 protected:
@@ -3655,14 +3655,14 @@ protected:
 public:
 	IObjectSafetyImpl() : m_dwCurrentSafety(0)
 	{
-		ATLSTATIC_ASSERT((dwSupportedSafety != 0 && 
-				(~(INTERFACESAFE_FOR_UNTRUSTED_CALLER | INTERFACESAFE_FOR_UNTRUSTED_DATA) & dwSupportedSafety) == 0), 				
-					"Only INTERFACESAFE_FOR_UNTRUSTED_CALLER and/or INTERFACESAFE_FOR_UNTRUSTED_DATA are supported for dwSupportedSafety parameter.");		
+		ATLSTATIC_ASSERT((dwSupportedSafety != 0 &&
+				(~(INTERFACESAFE_FOR_UNTRUSTED_CALLER | INTERFACESAFE_FOR_UNTRUSTED_DATA) & dwSupportedSafety) == 0),
+					"Only INTERFACESAFE_FOR_UNTRUSTED_CALLER and/or INTERFACESAFE_FOR_UNTRUSTED_DATA are supported for dwSupportedSafety parameter.");
 	}
 
 	STDMETHOD(GetInterfaceSafetyOptions)(
-		_In_ REFIID riid, 
-		_Out_ DWORD *pdwSupportedOptions, 
+		_In_ REFIID riid,
+		_Out_ DWORD *pdwSupportedOptions,
 		_Out_ DWORD *pdwEnabledOptions)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IObjectSafetyImpl::GetInterfaceSafetyOptions\n"));
@@ -3679,12 +3679,12 @@ public:
 			// We support this interface so set the safety options accordingly
 			pUnk->Release();	// Release the interface we just acquired
 			*pdwSupportedOptions = dwSupportedSafety;
-			
+
 			if (FAccessAllowed())
 			{
 				*pdwEnabledOptions   = m_dwCurrentSafety;
 			}
-			else 
+			else
 			{
 				*pdwEnabledOptions   = 0;
 			}
@@ -3698,8 +3698,8 @@ public:
 		return hr;
 	}
 	STDMETHOD(SetInterfaceSafetyOptions)(
-		_In_ REFIID riid, 
-		_In_ DWORD dwOptionSetMask, 
+		_In_ REFIID riid,
+		_In_ DWORD dwOptionSetMask,
 		_In_ DWORD dwEnabledOptions)
 	{
 		ATLTRACE(atlTraceControls,2,_T("IObjectSafetyImpl::SetInterfaceSafetyOptions\n"));
@@ -3716,26 +3716,26 @@ public:
 			return E_FAIL;
 
 		DWORD dwNewSafety = (m_dwCurrentSafety & ~dwOptionSetMask) | (dwOptionSetMask & dwEnabledOptions);
-			
+
 		if (m_dwCurrentSafety == dwNewSafety)
 		{
 			return S_OK;
 		}
-		
+
 		if (!FAccessAllowed())
 		{
 			return E_ACCESSDENIED;
 		}
 		// Set the safety options we have been asked to
-		m_dwCurrentSafety = dwNewSafety;	
-		
+		m_dwCurrentSafety = dwNewSafety;
+
 		return S_OK;
 	}
 	DWORD m_dwCurrentSafety;
 };
 
 template <class T>
-class ATL_NO_VTABLE IOleLinkImpl : 
+class ATL_NO_VTABLE IOleLinkImpl :
 	public IOleLink
 {
 	STDMETHOD(SetUpdateOptions)(_In_ DWORD /* dwUpdateOpt */)
@@ -3749,7 +3749,7 @@ class ATL_NO_VTABLE IOleLinkImpl :
 	}
 
 	STDMETHOD(SetSourceMoniker)(
-		_Inout_opt_ IMoniker* /* pmk */, 
+		_Inout_opt_ IMoniker* /* pmk */,
 		_In_ REFCLSID /* rclsid */)
 	{
 		ATLTRACENOTIMPL(_T("IOleLinkImpl::SetSourceMoniker"));
@@ -3827,7 +3827,7 @@ END_COM_MAP()
 	}
 
 	STDMETHOD(OnStartBinding)(
-		DWORD /*dwReserved*/, 
+		DWORD /*dwReserved*/,
 		_In_opt_ IBinding *pBinding)
 	{
 		ATLTRACE(atlTraceControls,2,_T("CBindStatusCallback::OnStartBinding\n"));
@@ -3853,9 +3853,9 @@ END_COM_MAP()
 	}
 
 	STDMETHOD(OnProgress)(
-		ULONG /*ulProgress*/, 
-		ULONG /*ulProgressMax*/, 
-		ULONG /*ulStatusCode*/, 
+		ULONG /*ulProgress*/,
+		ULONG /*ulProgressMax*/,
+		ULONG /*ulStatusCode*/,
 		_In_opt_z_ LPCWSTR /*szStatusText*/)
 	{
 		ATLTRACE(atlTraceControls,2,_T("CBindStatusCallback::OnProgress"));
@@ -3863,7 +3863,7 @@ END_COM_MAP()
 	}
 
 	STDMETHOD(OnStopBinding)(
-		_In_ HRESULT hresult, 
+		_In_ HRESULT hresult,
 		_In_opt_z_ LPCWSTR /*szError*/)
 	{
 		ATLTRACE(atlTraceControls,2,_T("CBindStatusCallback::OnStopBinding\n"));
@@ -3877,7 +3877,7 @@ END_COM_MAP()
 	}
 
 	STDMETHOD(GetBindInfo)(
-		DWORD *pgrfBINDF, 
+		DWORD *pgrfBINDF,
 		BINDINFO *pbindInfo)
 	{
 		ATLTRACE(atlTraceControls,2,_T("CBindStatusCallback::GetBindInfo\n"));
@@ -3887,18 +3887,18 @@ END_COM_MAP()
 
 		*pgrfBINDF = nBindFlags;
 
-		ULONG cbSize = pbindInfo->cbSize;		  // remember incoming cbSize		
+		ULONG cbSize = pbindInfo->cbSize;		  // remember incoming cbSize
 		memset(pbindInfo, 0, sizeof(*pbindInfo)); // zero out structure
 		pbindInfo->cbSize = cbSize;				  // restore cbSize
 		pbindInfo->dwBindVerb = BINDVERB_GET;	  // set verb
-		
+
 		return S_OK;
 	}
 
 	STDMETHOD(OnDataAvailable)(
-		DWORD grfBSCF, 
-		DWORD dwSize, 
-		FORMATETC * /*pformatetc*/, 
+		DWORD grfBSCF,
+		DWORD dwSize,
+		FORMATETC * /*pformatetc*/,
 		STGMEDIUM *pstgmed)
 	{
 		ATLTRACE(atlTraceControls,2,_T("CBindStatusCallback::OnDataAvailable\n"));
@@ -3948,7 +3948,7 @@ END_COM_MAP()
 	}
 
 	STDMETHOD(OnObjectAvailable)(
-		_In_ REFIID /*riid*/, 
+		_In_ REFIID /*riid*/,
 		_In_opt_ IUnknown * /*punk*/)
 	{
 		ATLTRACE(atlTraceControls,2,_T("CBindStatusCallback::OnObjectAvailable"));
@@ -3956,8 +3956,8 @@ END_COM_MAP()
 	}
 
 	HRESULT _StartAsyncDownload(
-		_In_z_ BSTR bstrURL, 
-		_Inout_opt_ IUnknown* pUnkContainer, 
+		_In_z_ BSTR bstrURL,
+		_Inout_opt_ IUnknown* pUnkContainer,
 		_In_ BOOL bRelative)
 	{
 		m_dwTotalRead = 0;
@@ -4010,10 +4010,10 @@ END_COM_MAP()
 	}
 
 	HRESULT StartAsyncDownload(
-		_In_ T* pT, 
-		_In_ ATL_PDATAAVAILABLE pFunc, 
-		_In_z_ BSTR bstrURL, 
-		_Inout_opt_ IUnknown* pUnkContainer = NULL, 
+		_In_ T* pT,
+		_In_ ATL_PDATAAVAILABLE pFunc,
+		_In_z_ BSTR bstrURL,
+		_Inout_opt_ IUnknown* pUnkContainer = NULL,
 		_In_ BOOL bRelative = FALSE)
 	{
 		m_pT = pT;
@@ -4022,10 +4022,10 @@ END_COM_MAP()
 	}
 
 	static HRESULT Download(
-		_In_ T* pT, 
-		_In_ ATL_PDATAAVAILABLE pFunc, 
-		_In_z_ BSTR bstrURL, 
-		_Inout_opt_ IUnknown* pUnkContainer = NULL, 
+		_In_ T* pT,
+		_In_ ATL_PDATAAVAILABLE pFunc,
+		_In_z_ BSTR bstrURL,
+		_Inout_opt_ IUnknown* pUnkContainer = NULL,
 		_In_ BOOL bRelative = FALSE)
 	{
 		CComObject<CBindStatusCallback<T, nBindFlags> > *pbsc;
@@ -4163,15 +4163,15 @@ ATLPREFAST_UNSUPPRESS()
 
 template < class T, class InterfaceName, const IID* piid = &_ATL_IIDOF(InterfaceName), const GUID* plibid = &CAtlModule::m_libid, WORD wMajor = 1,
 WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
-class ATL_NO_VTABLE CStockPropImpl : 
+class ATL_NO_VTABLE CStockPropImpl :
 	public IDispatchImpl< InterfaceName, piid, plibid, wMajor, wMinor, tihclass >
 {
 public:
 	// Font
 	HRESULT STDMETHODCALLTYPE put_Font(_In_ IFontDisp* pFontDisp)
 	{
-		__if_exists(T::m_pFont) 
-		{ 
+		__if_exists(T::m_pFont)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::put_Font\n"));
 			T* pT = (T*) this;
 			if (pT->m_nFreezeEvents == 0 && pT->FireOnRequestEdit(DISPID_FONT) == S_FALSE)
@@ -4193,7 +4193,7 @@ public:
 			pT->m_bRequiresSave = TRUE;
 			if (pT->m_nFreezeEvents == 0)
 				pT->FireOnChanged(DISPID_FONT);
-			__if_exists(T::OnFontChanged) 
+			__if_exists(T::OnFontChanged)
 			{
 				pT->OnFontChanged();
 			}
@@ -4204,8 +4204,8 @@ public:
 	}
 	HRESULT STDMETHODCALLTYPE putref_Font(_In_ IFontDisp* pFont)
 	{
-		__if_exists(T::m_pFont) 
-		{ 
+		__if_exists(T::m_pFont)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::putref_Font\n"));
 			T* pT = (T*) this;
 			if (pT->m_nFreezeEvents == 0 && pT->FireOnRequestEdit(DISPID_FONT) == S_FALSE)
@@ -4214,7 +4214,7 @@ public:
 			pT->m_bRequiresSave = TRUE;
 			if (pT->m_nFreezeEvents == 0)
 				pT->FireOnChanged(DISPID_FONT);
-			__if_exists(T::OnFontChanged) 
+			__if_exists(T::OnFontChanged)
 			{
 				pT->OnFontChanged();
 			}
@@ -4226,8 +4226,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Font(
 		_Outptr_result_maybenull_ IFontDisp** ppFont)
 	{
-		__if_exists(T::m_pFont) 
-		{ 
+		__if_exists(T::m_pFont)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::get_Font\n"));
 			ATLASSERT(ppFont != NULL);
 			if (ppFont == NULL)
@@ -4243,8 +4243,8 @@ public:
 	// Picture
 	HRESULT STDMETHODCALLTYPE put_Picture(_In_ IPictureDisp* pPicture)
 	{
-		__if_exists(T::m_pPicture) 
-		{ 
+		__if_exists(T::m_pPicture)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::put_Picture\n"));
 			T* pT = (T*) this;
 			if (pT->m_nFreezeEvents == 0 && pT->FireOnRequestEdit(DISPID_PICTURE) == S_FALSE)
@@ -4280,7 +4280,7 @@ public:
 			pT->m_bRequiresSave = TRUE;
 			if (pT->m_nFreezeEvents == 0)
 				pT->FireOnChanged(DISPID_PICTURE);
-			__if_exists(T::OnPictureChanged) 
+			__if_exists(T::OnPictureChanged)
 			{
 				pT->OnPictureChanged();
 			}
@@ -4291,8 +4291,8 @@ public:
 	}
 	HRESULT STDMETHODCALLTYPE putref_Picture(_In_ IPictureDisp* pPicture)
 	{
-		__if_exists(T::m_pPicture) 
-		{ 
+		__if_exists(T::m_pPicture)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::putref_Picture\n"));
 			T* pT = (T*) this;
 			if (pT->m_nFreezeEvents == 0 && pT->FireOnRequestEdit(DISPID_PICTURE) == S_FALSE)
@@ -4301,7 +4301,7 @@ public:
 			pT->m_bRequiresSave = TRUE;
 			if (pT->m_nFreezeEvents == 0)
 				pT->FireOnChanged(DISPID_PICTURE);
-			__if_exists(T::OnPictureChanged) 
+			__if_exists(T::OnPictureChanged)
 			{
 				pT->OnPictureChanged();
 			}
@@ -4313,8 +4313,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Picture(
 		_Outptr_result_maybenull_ IPictureDisp** ppPicture)
 	{
-		__if_exists(T::m_pPicture) 
-		{ 
+		__if_exists(T::m_pPicture)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::get_Picture\n"));
 			ATLASSERT(ppPicture != NULL);
 			if (ppPicture == NULL)
@@ -4330,8 +4330,8 @@ public:
 	// MouseIcon
 	HRESULT STDMETHODCALLTYPE put_MouseIcon(_In_ IPictureDisp* pPicture)
 	{
-		__if_exists(T::m_pMouseIcon) 
-		{ 
+		__if_exists(T::m_pMouseIcon)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::put_MouseIcon\n"));
 			T* pT = (T*) this;
 			if (pT->m_nFreezeEvents == 0 && pT->FireOnRequestEdit(DISPID_MOUSEICON) == S_FALSE)
@@ -4367,7 +4367,7 @@ public:
 			pT->m_bRequiresSave = TRUE;
 			if (pT->m_nFreezeEvents == 0)
 				pT->FireOnChanged(DISPID_MOUSEICON);
-			__if_exists(T::OnMouseIconChanged) 
+			__if_exists(T::OnMouseIconChanged)
 			{
 				pT->OnMouseIconChanged();
 			}
@@ -4378,8 +4378,8 @@ public:
 	}
 	HRESULT STDMETHODCALLTYPE putref_MouseIcon(_In_ IPictureDisp* pPicture)
 	{
-		__if_exists(T::m_pMouseIcon) 
-		{ 
+		__if_exists(T::m_pMouseIcon)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::putref_MouseIcon\n"));
 			T* pT = (T*) this;
 			if (pT->m_nFreezeEvents == 0 && pT->FireOnRequestEdit(DISPID_MOUSEICON) == S_FALSE)
@@ -4388,7 +4388,7 @@ public:
 			pT->m_bRequiresSave = TRUE;
 			if (pT->m_nFreezeEvents == 0)
 				pT->FireOnChanged(DISPID_MOUSEICON);
-			__if_exists(T::OnMouseIconChanged) 
+			__if_exists(T::OnMouseIconChanged)
 			{
 				pT->OnMouseIconChanged();
 			}
@@ -4400,8 +4400,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_MouseIcon(
 		_Outptr_result_maybenull_ IPictureDisp** ppPicture)
 	{
-		__if_exists(T::m_pMouseIcon) 
-		{ 
+		__if_exists(T::m_pMouseIcon)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::get_MouseIcon\n"));
 			ATLASSERT(ppPicture != NULL);
 			if (ppPicture == NULL)
@@ -4440,8 +4440,8 @@ public:
 	}
 	HRESULT STDMETHODCALLTYPE get_HWND(_Out_ LONG_PTR* phWnd)
 	{
-		__if_exists(T::m_hWnd) 
-		{ 
+		__if_exists(T::m_hWnd)
+		{
 			ATLTRACE(atlTraceControls,2,_T("CStockPropImpl::get_HWND\n"));
 			ATLASSERT(phWnd != NULL);
 			if (phWnd == NULL)

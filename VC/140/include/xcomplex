@@ -123,7 +123,7 @@ _TMPLT(_Ty) inline
 
 		// TEMPLATE FUNCTION operator==
 _TMPLT(_Ty) inline
-	_CONST_FUN bool operator==(const _CMPLX(_Ty)& _Left,
+	constexpr bool operator==(const _CMPLX(_Ty)& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex equal to complex
 	return (_Left.real() == _Right.real()
@@ -131,7 +131,7 @@ _TMPLT(_Ty) inline
 	}
 
 _TMPLT(_Ty) inline
-	_CONST_FUN bool operator==(const _CMPLX(_Ty)& _Left,
+	constexpr bool operator==(const _CMPLX(_Ty)& _Left,
 		const _Ty& _Right)
 	{	// test real equal to complex
 	return (_Left.real() == _Right
@@ -139,7 +139,7 @@ _TMPLT(_Ty) inline
 	}
 
 _TMPLT(_Ty) inline
-	_CONST_FUN bool operator==(const _Ty& _Left,
+	constexpr bool operator==(const _Ty& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex equal to real
 	return (_Left == _Right.real()
@@ -148,21 +148,21 @@ _TMPLT(_Ty) inline
 
 		// TEMPLATE FUNCTION operator!=
 _TMPLT(_Ty) inline
-	_CONST_FUN bool operator!=(const _CMPLX(_Ty)& _Left,
+	constexpr bool operator!=(const _CMPLX(_Ty)& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex not equal to complex
 	return (!(_Left == _Right));
 	}
 
 _TMPLT(_Ty) inline
-	_CONST_FUN bool operator!=(const _CMPLX(_Ty)& _Left,
+	constexpr bool operator!=(const _CMPLX(_Ty)& _Left,
 		const _Ty& _Right)
 	{	// test real not equal to complex
 	return (!(_Left == _Right));
 	}
 
 _TMPLT(_Ty) inline
-	_CONST_FUN bool operator!=(const _Ty& _Left,
+	constexpr bool operator!=(const _Ty& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex not equal to real
 	return (!(_Left == _Right));
@@ -170,14 +170,14 @@ _TMPLT(_Ty) inline
 
 		// TEMPLATE FUNCTION imag
 _TMPLT(_Ty) inline
-	_CONST_FUN _Ty imag(const _CMPLX(_Ty)& _Left)
+	constexpr _Ty imag(const _CMPLX(_Ty)& _Left)
 	{	// return imaginary component
 	return (_Left.imag());
 	}
 
 		// TEMPLATE FUNCTION real
 _TMPLT(_Ty) inline
-	_CONST_FUN _Ty real(const _CMPLX(_Ty)& _Left)
+	constexpr _Ty real(const _CMPLX(_Ty)& _Left)
 	{	// return real component
 	return (_Left.real());
 	}
@@ -226,11 +226,11 @@ _TMPLT(_Ty) inline
 			}
 		else
 			{	// use 1 1/2 precision to preserve bits
-			static const _Ty _Root2 =
+			constexpr _Ty _Root2 =
 				(_Ty)1.4142135623730950488016887242096981L;
-			static const _Ty _Oneplusroot2high =
+			constexpr _Ty _Oneplusroot2high =
 				(_Ty)(10125945.0 / 4194304.0);	// exact if prec >= 24 bits
-			static const _Ty _Oneplusroot2low =
+			constexpr _Ty _Oneplusroot2low =
 				(_Ty)1.4341252375973918872420969807856967e-7L;
 
 			const _Ty _Qv = _Tmp / _Bv;
@@ -262,9 +262,9 @@ _TMPLT(_Ty) inline
 _TMPLT(_Ty) inline
 	_CMPLX(_Ty) acos(const _CMPLX(_Ty)& _Left)
 	{	// return acos
-	static const _Ty _Arcbig = (_Ty)0.25L
+	const _Ty _Arcbig = (_Ty)0.25L
 		* _CTR(_Ty)::sqrt(_CTR(_Ty)::_Flt_max());
-	static const _Ty _Pi = (_Ty)3.1415926535897932384626433832795029L;
+	constexpr _Ty _Pi = (_Ty)3.1415926535897932384626433832795029L;
 
 	const _Ty _Re = real(_Left);
 	const _Ty _Im = imag(_Left);
@@ -345,9 +345,9 @@ _TMPLT(_Ty) inline
 _TMPLT(_Ty) inline
 	_CMPLX(_Ty) acosh(const _CMPLX(_Ty)& _Left)
 	{	// return acosh
-	static const _Ty _Arcbig = (_Ty)0.25L
+	const _Ty _Arcbig = (_Ty)0.25L
 		* _CTR(_Ty)::sqrt(_CTR(_Ty)::_Flt_max());
-	static const _Ty _Pi = (_Ty)3.1415926535897932384626433832795029L;
+	constexpr _Ty _Pi = (_Ty)3.1415926535897932384626433832795029L;
 
 	const _Ty _Re = real(_Left);
 	_Ty _Im = imag(_Left);
@@ -437,9 +437,9 @@ _TMPLT(_Ty) inline
 _TMPLT(_Ty) inline
 	_CMPLX(_Ty) asinh(const _CMPLX(_Ty)& _Left)
 	{	// return asinh
-	static const _Ty _Arcbig = (_Ty)0.25L
+	const _Ty _Arcbig = (_Ty)0.25L
 		* _CTR(_Ty)::sqrt(_CTR(_Ty)::_Flt_max());
-	static const _Ty _Pi = (_Ty)3.1415926535897932384626433832795029L;
+	constexpr _Ty _Pi = (_Ty)3.1415926535897932384626433832795029L;
 
 	const _Ty _Re = real(_Left);
 	_Ty _Im = imag(_Left);
@@ -529,9 +529,9 @@ _TMPLT(_Ty) inline
 _TMPLT(_Ty) inline
 	_CMPLX(_Ty) atanh(const _CMPLX(_Ty)& _Left)
 	{	// return atanh
-	static const _Ty _Arcbig = (_Ty)0.25L
+	const _Ty _Arcbig = (_Ty)0.25L
 		* _CTR(_Ty)::sqrt(_CTR(_Ty)::_Flt_max());
-	static const _Ty _Piby2 = (_Ty)1.5707963267948966192313216916397514L;
+	constexpr _Ty _Piby2 = (_Ty)1.5707963267948966192313216916397514L;
 
 	_Ty _Re = real(_Left);
 	_Ty _Im = imag(_Left);
@@ -643,8 +643,8 @@ _TMPLT(_Ty) inline
 		return (_CMPLX(_Ty)(_Theta, _Theta));	// real or imag is NaN
 	else
 		{	// use 1 1/2 precision to preserve bits
-		static const _Ty _Cm = (_Ty)(22713.0L / 32768.0L);
-		static const _Ty _Cl =
+		constexpr _Ty _Cm = (_Ty)(22713.0L / 32768.0L);
+		constexpr _Ty _Cl =
 			(_Ty)1.4286068203094172321214581765680755e-6L;
 		int _Leftexp;
 		_Ty _Rho = _Fabs(_Left, &_Leftexp);	// get magnitude and scale factor

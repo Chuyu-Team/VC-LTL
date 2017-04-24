@@ -53,54 +53,54 @@ public:
 		{	// constants for formatting options
 		_Fmtmask = 0xffff, _Fmtzero = 0};
 
-	static _CONST_DATA _Fmtflags skipws = (_Fmtflags)_IOSskipws;
-	static _CONST_DATA _Fmtflags unitbuf = (_Fmtflags)_IOSunitbuf;
-	static _CONST_DATA _Fmtflags uppercase = (_Fmtflags)_IOSuppercase;
-	static _CONST_DATA _Fmtflags showbase = (_Fmtflags)_IOSshowbase;
-	static _CONST_DATA _Fmtflags showpoint = (_Fmtflags)_IOSshowpoint;
-	static _CONST_DATA _Fmtflags showpos = (_Fmtflags)_IOSshowpos;
-	static _CONST_DATA _Fmtflags left = (_Fmtflags)_IOSleft;
-	static _CONST_DATA _Fmtflags right = (_Fmtflags)_IOSright;
-	static _CONST_DATA _Fmtflags internal = (_Fmtflags)_IOSinternal;
-	static _CONST_DATA _Fmtflags dec = (_Fmtflags)_IOSdec;
-	static _CONST_DATA _Fmtflags oct = (_Fmtflags)_IOSoct;
-	static _CONST_DATA _Fmtflags hex = (_Fmtflags)_IOShex;
-	static _CONST_DATA _Fmtflags scientific = (_Fmtflags)_IOSscientific;
-	static _CONST_DATA _Fmtflags fixed = (_Fmtflags)_IOSfixed;
+	static constexpr _Fmtflags skipws = (_Fmtflags)_IOSskipws;
+	static constexpr _Fmtflags unitbuf = (_Fmtflags)_IOSunitbuf;
+	static constexpr _Fmtflags uppercase = (_Fmtflags)_IOSuppercase;
+	static constexpr _Fmtflags showbase = (_Fmtflags)_IOSshowbase;
+	static constexpr _Fmtflags showpoint = (_Fmtflags)_IOSshowpoint;
+	static constexpr _Fmtflags showpos = (_Fmtflags)_IOSshowpos;
+	static constexpr _Fmtflags left = (_Fmtflags)_IOSleft;
+	static constexpr _Fmtflags right = (_Fmtflags)_IOSright;
+	static constexpr _Fmtflags internal = (_Fmtflags)_IOSinternal;
+	static constexpr _Fmtflags dec = (_Fmtflags)_IOSdec;
+	static constexpr _Fmtflags oct = (_Fmtflags)_IOSoct;
+	static constexpr _Fmtflags hex = (_Fmtflags)_IOShex;
+	static constexpr _Fmtflags scientific = (_Fmtflags)_IOSscientific;
+	static constexpr _Fmtflags fixed = (_Fmtflags)_IOSfixed;
 
-	static _CONST_DATA _Fmtflags hexfloat =
+	static constexpr _Fmtflags hexfloat =
 		(_Fmtflags)_IOShexfloat;	// added with TR1 (not in C++11)
 
-	static _CONST_DATA _Fmtflags boolalpha = (_Fmtflags)_IOSboolalpha;
-	static _CONST_DATA _Fmtflags _Stdio = (_Fmtflags)_IOS_Stdio;
-	static _CONST_DATA _Fmtflags adjustfield = (_Fmtflags)(_IOSleft
+	static constexpr _Fmtflags boolalpha = (_Fmtflags)_IOSboolalpha;
+	static constexpr _Fmtflags _Stdio = (_Fmtflags)_IOS_Stdio;
+	static constexpr _Fmtflags adjustfield = (_Fmtflags)(_IOSleft
 		| _IOSright | _IOSinternal);
-	static _CONST_DATA _Fmtflags basefield = (_Fmtflags)(_IOSdec
+	static constexpr _Fmtflags basefield = (_Fmtflags)(_IOSdec
 		| _IOSoct | _IOShex);
-	static _CONST_DATA _Fmtflags floatfield = (_Fmtflags)(_IOSscientific
+	static constexpr _Fmtflags floatfield = (_Fmtflags)(_IOSscientific
 		| _IOSfixed);
 
 	enum _Iostate
 		{	// constants for stream states
 		_Statmask = 0x17};
 
-	static _CONST_DATA _Iostate goodbit = (_Iostate)0x0;
-	static _CONST_DATA _Iostate eofbit = (_Iostate)0x1;
-	static _CONST_DATA _Iostate failbit = (_Iostate)0x2;
-	static _CONST_DATA _Iostate badbit = (_Iostate)0x4;
+	static constexpr _Iostate goodbit = (_Iostate)0x0;
+	static constexpr _Iostate eofbit = (_Iostate)0x1;
+	static constexpr _Iostate failbit = (_Iostate)0x2;
+	static constexpr _Iostate badbit = (_Iostate)0x4;
 
 	enum _Openmode
 		{	// constants for file opening options
 		_Openmask = 0xff};
 
-	static _CONST_DATA _Openmode in = (_Openmode)0x01;
-	static _CONST_DATA _Openmode out = (_Openmode)0x02;
-	static _CONST_DATA _Openmode ate = (_Openmode)0x04;
-	static _CONST_DATA _Openmode app = (_Openmode)0x08;
-	static _CONST_DATA _Openmode trunc = (_Openmode)0x10;
-	static _CONST_DATA _Openmode _Nocreate = (_Openmode)_IOS_Nocreate;
-	static _CONST_DATA _Openmode _Noreplace = (_Openmode)_IOS_Noreplace;
-	static _CONST_DATA _Openmode binary = (_Openmode)_IOSbinary;
+	static constexpr _Openmode in = (_Openmode)0x01;
+	static constexpr _Openmode out = (_Openmode)0x02;
+	static constexpr _Openmode ate = (_Openmode)0x04;
+	static constexpr _Openmode app = (_Openmode)0x08;
+	static constexpr _Openmode trunc = (_Openmode)0x10;
+	static constexpr _Openmode _Nocreate = (_Openmode)_IOS_Nocreate;
+	static constexpr _Openmode _Noreplace = (_Openmode)_IOS_Noreplace;
+	static constexpr _Openmode binary = (_Openmode)_IOSbinary;
 
 	enum _Seekdir
 		{	// constants for file positioning options
@@ -109,9 +109,9 @@ public:
 		_Seekend
 		};
 
-	static _CONST_DATA _Seekdir beg = _Seekbeg;
-	static _CONST_DATA _Seekdir cur = _Seekcur;
-	static _CONST_DATA _Seekdir end = _Seekend;
+	static constexpr _Seekdir beg = _Seekbeg;
+	static constexpr _Seekdir cur = _Seekcur;
+	static constexpr _Seekdir end = _Seekend;
 
 	enum
 		{	// constant for default file opening protection
@@ -205,15 +205,20 @@ public:
 	_IOS_BITMASK(_Openmode, openmode);
 	_IOS_BITMASK(_Seekdir, seekdir);
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	typedef _STD streamoff streamoff;
 	typedef _STD streampos streampos;
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	enum event
 		{	// constants for ios events
 		erase_event, imbue_event, copyfmt_event};
 
 	typedef void (__CLRCALL_OR_CDECL *event_callback)(event, ios_base&, int);
+
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	typedef unsigned int io_state, open_mode, seek_dir;
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 			// CLASS failure
 	class failure
@@ -298,10 +303,12 @@ public:
 		clear(_State, false);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void __CLR_OR_THIS_CALL clear(io_state _State)
 		{	// set state to argument, old-style
 		clear((iostate)_State);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	iostate __CLR_OR_THIS_CALL rdstate() const
 		{	// return stream state
@@ -320,10 +327,12 @@ public:
 			clear((iostate)((int)rdstate() | (int)_State), false);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void __CLR_OR_THIS_CALL setstate(io_state _State)
 		{	// merge in state argument, old style
 		setstate((iostate)_State);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	bool __CLR_OR_THIS_CALL good() const
 		{	// test if no state bits are set
@@ -357,10 +366,12 @@ public:
 		clear(_Mystate);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void __CLR_OR_THIS_CALL exceptions(io_state _State)
 		{	// set exception mask to argument, old style
 		exceptions((iostate)_State);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	fmtflags __CLR_OR_THIS_CALL flags() const
 		{	// return format flags

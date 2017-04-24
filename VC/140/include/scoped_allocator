@@ -174,7 +174,7 @@ template<class _Alloc,
 		_Scoped_construct_tuple(_Alloc&, false_type, _Dont_care,
 			tuple<_Atypes...> _Val)
 	{	// construct tuple from tuple argument, no allocator
-	return (_Val);
+	return (_STD move(_Val));
 	}
 
 template<class _Alloc,
@@ -184,8 +184,8 @@ template<class _Alloc,
 		_Scoped_construct_tuple(_Alloc& _Alty, true_type, false_type,
 			tuple<_Atypes...> _Val)
 	{	// construct tuple from tuple argument, leading allocator
-	return (tuple_cat(tuple<allocator_arg_t, _Alloc&>(
-		_Tuple_alloc, _Alty), _Val));
+	return (_STD tuple_cat(tuple<allocator_arg_t>(allocator_arg),
+		tuple<_Alloc&>(_Alty), _STD move(_Val)));
 	}
 
 template<class _Alloc,
@@ -195,7 +195,7 @@ template<class _Alloc,
 		_Scoped_construct_tuple(_Alloc& _Alty, true_type, true_type,
 			tuple<_Atypes...> _Val)
 	{	// construct tuple from tuple argument, trailing allocator
-	return (tuple_cat(_Val,
+	return (_STD tuple_cat(_STD move(_Val),
 		tuple<_Alloc&>(_Alty)));
 	}
 
@@ -214,12 +214,12 @@ template<class _Inner,
 			_Inner_alval,
 			uses_allocator<_Ty1, _Inner>(),
 			is_constructible<_Ty1, _Uy1..., _Inner>(),
-			_Val1),
+			_STD move(_Val1)),
 		_Scoped_construct_tuple<_Inner, _Ty2, _Uy2...>(
 			_Inner_alval,
 			uses_allocator<_Ty2, _Inner>(),
 			is_constructible<_Ty2, _Uy2..., _Inner>(),
-			_Val2));
+			_STD move(_Val2)));
 	}
 
 		// TEMPLATE CLASS _Scoped_base
@@ -446,7 +446,7 @@ public:
 		scoped_allocator_adaptor& operator=(
 			scoped_allocator_adaptor<_Other, _Inner...>&& _Right)
 		{	// assign from adaptor<_Other, _Inner...>&&
-		_Mybase::operator=(_STD forward<_Other>(_Right));
+		_Mybase::operator=(_STD move(_Right));
 		return (*this);
 		}
 
@@ -508,7 +508,7 @@ public:
 		void construct(pair<_Ty1, _Ty2> *_Ptr, piecewise_construct_t,
 			_Tpl1 _Val1, _Tpl2 _Val2)
 		{	// construct pair from tuples
-		_Scoped_construct_pair(inner_allocator(), _Ptr, _Val1, _Val2);
+		_Scoped_construct_pair(inner_allocator(), _Ptr, _STD move(_Val1), _STD move(_Val2));
 		}
 
 	template<class _Ty1,
@@ -528,8 +528,8 @@ public:
 			_Uy1&& _Val1, _Uy2&& _Val2)
 		{	// construct pair from two movable values
 		this->construct(_Ptr, piecewise_construct,
-			forward_as_tuple(_STD forward<_Uy1>(_Val1)),
-			forward_as_tuple(_STD forward<_Uy2>(_Val2)));
+			_STD forward_as_tuple(_STD forward<_Uy1>(_Val1)),
+			_STD forward_as_tuple(_STD forward<_Uy2>(_Val2)));
 		}
 
 	template<class _Ty1,
@@ -540,8 +540,8 @@ public:
 			const pair<_Uy1, _Uy2>& _Other)
 		{	// construct pair from copyable pair
 		this->construct(_Ptr, piecewise_construct,
-			forward_as_tuple(_Other.first),
-			forward_as_tuple(_Other.second));
+			_STD forward_as_tuple(_Other.first),
+			_STD forward_as_tuple(_Other.second));
 		}
 
 	template<class _Ty1,
@@ -552,8 +552,8 @@ public:
 			pair<_Uy1, _Uy2>&& _Other)
 		{	// construct pair from movable pair
 		this->construct(_Ptr, piecewise_construct,
-			forward_as_tuple(_STD forward<_Uy1>(_Other.first)),
-			forward_as_tuple(_STD forward<_Uy2>(_Other.second)));
+			_STD forward_as_tuple(_STD forward<_Uy1>(_Other.first)),
+			_STD forward_as_tuple(_STD forward<_Uy2>(_Other.second)));
 		}
 	};
 

@@ -409,7 +409,7 @@ class _Texture_base
 
 public:
     static const int rank = _Rank;
-    typedef typename _Value_type value_type;
+    typedef _Value_type value_type;
     typedef typename _Short_vector_type_traits<_Value_type>::_Scalar_type scalar_type;
 
 public:
@@ -502,7 +502,7 @@ protected:
     _Texture_base() __CPU_ONLY
     {
         // This default ctor is required to enable move ctor for a derived types,
-        // empty _Texture_base is later initialized by move assigment operator
+        // empty _Texture_base is later initialized by move assignment operator
     }
 
     _Texture_base(const Concurrency::extent<_Rank>& _Ext, unsigned int _Mipmap_levels = 1) __CPU_ONLY
@@ -2144,8 +2144,8 @@ public:
     {
         if (this != &_Other)
         {
-            _M_extent = _Other._M_extent;
-            _M_texture_descriptor._Set_view_mipmap_levels(_Other.get_mipmap_levels());
+            this->_M_extent = _Other._M_extent;
+            this->_M_texture_descriptor._Set_view_mipmap_levels(_Other.get_mipmap_levels());
             _Initialize(_Other.accelerator_view, _Other.associated_accelerator_view, _Other);
         }
         return *this;
@@ -2164,8 +2164,8 @@ public:
     {
         if (this != &_Other)
         {
-            _M_extent = _Other._M_extent;
-            _M_texture_descriptor = _Other._M_texture_descriptor;
+            this->_M_extent = _Other._M_extent;
+            this->_M_texture_descriptor = _Other._M_texture_descriptor;
 
             _Other._M_texture_descriptor._M_data_ptr = NULL;
             _Other._M_texture_descriptor._Set_texture_ptr(NULL);
@@ -2190,7 +2190,7 @@ public:
                                                                             concurrency::details::_Get_texture_descriptor(_Dest),
                                                                             this->get_data_length());
 
-        _Texture_base::_Copy_to(_Dest);
+        this->_Copy_to(_Dest);
 
         concurrency::details::_Get_amp_trace()->_Write_end_event(_Span_id);
     }
@@ -2214,7 +2214,7 @@ public:
                                                                             concurrency::details::_Get_texture_descriptor(_Dest),
                                                                             this->get_data_length());
 
-        _Texture_base::_Copy_to(_Dest);
+        this->_Copy_to(_Dest);
 
         concurrency::details::_Get_amp_trace()->_Write_end_event(_Span_id);
     }
@@ -2235,10 +2235,10 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    const value_type operator[] (const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type operator[] (const index<_Rank>& _Index) const __GPU_ONLY
     {
-        value_type _Tmp;
-        _Texture_read_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, /*_Mip_level=*/0);
+        typename details::_Texture_base<_Value_type, _Rank>::value_type _Tmp;
+        _Texture_read_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, /*_Mip_level=*/0);
         return _Tmp;
     }
 
@@ -2251,7 +2251,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I.
     /// </returns>
-    const value_type operator[] (int _I0) const __GPU_ONLY
+    const _Value_type operator[] (int _I0) const __GPU_ONLY
     {
         static_assert(_Rank == 1, "value_type texture::operator[](int) is only permissible on texture<value_type, 1>.");
         return (*this)[index<1>(_I0)];
@@ -2266,7 +2266,7 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    const value_type operator() (const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type operator() (const index<_Rank>& _Index) const __GPU_ONLY
     {
         return (*this)[_Index];
     }
@@ -2280,7 +2280,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I0.
     /// </returns>
-    const value_type operator() (int _I0) const __GPU_ONLY
+    const _Value_type operator() (int _I0) const __GPU_ONLY
     {
         static_assert(_Rank == 1, "value_type texture::operator()(int) is only permissible on texture<value_type, 1>.");
         return (*this)[index<1>(_I0)];
@@ -2298,7 +2298,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    const value_type operator() (int _I0, int _I1) const __GPU_ONLY
+    const _Value_type operator() (int _I0, int _I1) const __GPU_ONLY
     {
         static_assert(_Rank == 2, "value_type texture::operator()(int, int) is only permissible on texture<value_type, 2>.");
         return (*this)[index<2>(_I0, _I1)];
@@ -2319,7 +2319,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    const value_type operator() (int _I0, int _I1, int _I2) const __GPU_ONLY
+    const _Value_type operator() (int _I0, int _I1, int _I2) const __GPU_ONLY
     {
         static_assert(_Rank == 3, "value_type texture::operator()(int, int, int) is only permissible on texture<value_type, 3>.");
         return (*this)[index<3>(_I0, _I1, _I2)];
@@ -2334,7 +2334,7 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    const value_type get(const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type get(const index<_Rank>& _Index) const __GPU_ONLY
     {
         return (*this)[_Index];
     }
@@ -2348,12 +2348,12 @@ public:
     /// <param name="_Value">
     ///     The value to be set to the element indexed by _Index.
     /// </param>
-    void set(const index<_Rank>& _Index, const value_type& _Value) __GPU_ONLY
+    void set(const index<_Rank>& _Index, const _Value_type& _Value) __GPU_ONLY
     {
         static_assert(_Short_vector_type_traits<_Value_type>::_Num_channels == 1, "Invalid value_type for set method.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Unorm_type, "Invalid value_type for set method.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Norm_type, "Invalid value_type for set method.");
-        _Texture_write_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Value, _Index);
+        _Texture_write_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Value, _Index);
     }
 
     /// <summary>
@@ -2361,7 +2361,7 @@ public:
     /// </summary>
     _Ret_ void* data() __CPU_ONLY
     {
-        return _Get_texture()->_Get_host_ptr();
+        return this->_Get_texture()->_Get_host_ptr();
     }
 
     /// <summary>
@@ -2369,7 +2369,7 @@ public:
     /// </summary>
     const void* data() const __CPU_ONLY
     {
-        return _Get_texture()->_Get_host_ptr();
+        return this->_Get_texture()->_Get_host_ptr();
     }
 
     /// <summary>
@@ -2381,11 +2381,11 @@ public:
     {
         static_assert(_Rank >= 2, "row_pitch is only applicable to staging textures with rank 2 or higher.");
 
-        if (!_Get_texture()->_Is_staging()) {
+        if (!this->_Get_texture()->_Is_staging()) {
             throw runtime_exception("row_pitch is only applicable to staging textures.", E_INVALIDARG);
         }
 
-        return static_cast<unsigned int>(_Get_texture()->_Get_row_pitch());
+        return static_cast<unsigned int>(this->_Get_texture()->_Get_row_pitch());
     }
 
     /// <summary>
@@ -2397,11 +2397,11 @@ public:
     {
         static_assert(_Rank == 3, "depth_pitch is only applicable to staging textures with rank 3.");
 
-        if (!_Get_texture()->_Is_staging()) {
+        if (!this->_Get_texture()->_Is_staging()) {
             throw runtime_exception("depth_pitch is only applicable to staging textures.", E_INVALIDARG);
         }
 
-        return static_cast<unsigned int>(_Get_texture()->_Get_depth_pitch());
+        return static_cast<unsigned int>(this->_Get_texture()->_Get_depth_pitch());
     }
 
     /// <summary>
@@ -2410,7 +2410,7 @@ public:
     __declspec(property(get=get_associated_accelerator_view)) Concurrency::accelerator_view associated_accelerator_view;
     Concurrency::accelerator_view get_associated_accelerator_view() const __CPU_ONLY
     {
-        return _Get_texture()->_Get_accelerator_view();
+        return this->_Get_texture()->_Get_accelerator_view();
     }
 
 private:
@@ -2447,7 +2447,7 @@ private:
             throw runtime_exception("Invalid _Bits_per_scalar_element argument - it can only be 64 for texture of double based short vector types.", E_INVALIDARG);
         }
 
-        details::_Is_valid_data_length(_M_extent.size(), _Bits_per_scalar_element * _Short_vector_type_traits<_Value_type>::_Num_channels);
+        details::_Is_valid_data_length(this->_M_extent.size(), _Bits_per_scalar_element * _Short_vector_type_traits<_Value_type>::_Num_channels);
 
         // the rest of the check is done by _Texture::_Create_texture, it depends on the underlying supported DXGI formats.
 
@@ -2458,22 +2458,22 @@ private:
             _Bits_per_channel = _Short_vector_type_traits<_Value_type>::_Default_bits_per_channel;
         }
 
-        std::array<size_t, 3> _Dimensions = Concurrency::graphics::details::_Get_dimensions(_M_extent, /*_Mip_offset=*/0);
+        std::array<size_t, 3> _Dimensions = Concurrency::graphics::details::_Get_dimensions(this->_M_extent, /*_Mip_offset=*/0);
 
         // release the old texture first before allocating new one to avoid the chance on hitting OOM
-        _M_texture_descriptor._Set_texture_ptr(NULL);
+        this->_M_texture_descriptor._Set_texture_ptr(NULL);
         _Texture_ptr _Tex_ptr = NULL;
 
         // See if we need to allocate a staging texture
         if (_Should_create_staging_texture(_Av, _Associated_av)) {
 
-            if (_M_texture_descriptor._Get_view_mipmap_levels() > 1)
+            if (this->_M_texture_descriptor._Get_view_mipmap_levels() > 1)
             {
                 throw runtime_exception("Creating staging textures with mipmap levels > 1 is not supported", E_INVALIDARG);
             }
 
             _Tex_ptr = _Texture::_Create_stage_texture(
-                _Associated_av, _Av, _Rank, _Dimensions[0], _Dimensions[1], _Dimensions[2], _M_texture_descriptor._Get_view_mipmap_levels(),
+                _Associated_av, _Av, _Rank, _Dimensions[0], _Dimensions[1], _Dimensions[2], this->_M_texture_descriptor._Get_view_mipmap_levels(),
                 _Short_vector_type_traits<_Value_type>::_Format_base_type_id == _Double_type ? _Uint_type : _Short_vector_type_traits<_Value_type>::_Format_base_type_id,
                 _Short_vector_type_traits<_Value_type>::_Num_channels,
                 _Bits_per_channel);
@@ -2482,13 +2482,13 @@ private:
             _Tex_ptr->_Map_buffer(_Write_access, true /* _Wait */);
         }
         else {
-            _Tex_ptr = _Texture::_Create_texture(_Av, _Rank, _Dimensions[0], _Dimensions[1], _Dimensions[2], _M_texture_descriptor._Get_view_mipmap_levels(),
+            _Tex_ptr = _Texture::_Create_texture(_Av, _Rank, _Dimensions[0], _Dimensions[1], _Dimensions[2], this->_M_texture_descriptor._Get_view_mipmap_levels(),
                 _Short_vector_type_traits<_Value_type>::_Format_base_type_id == _Double_type ? _Uint_type : _Short_vector_type_traits<_Value_type>::_Format_base_type_id,
                 _Short_vector_type_traits<_Value_type>::_Num_channels,
                 _Bits_per_channel);
         }
 
-        _M_texture_descriptor._Set_texture_ptr(_Tex_ptr);
+        this->_M_texture_descriptor._Set_texture_ptr(_Tex_ptr);
 #pragma warning( pop )
     }
     
@@ -2566,7 +2566,7 @@ private:
             {
                 _New_tex = _Texture::_Clone_texture(concurrency::details::_Get_texture(_Src),  _Av, _Associated_av);
             }
-            _M_texture_descriptor._Set_texture_ptr(_New_tex);
+            this->_M_texture_descriptor._Set_texture_ptr(_New_tex);
         }
 
         auto _Span_id = Concurrency::details::_Get_amp_trace()->_Start_copy_event_helper(Concurrency::details::_Get_texture_descriptor(_Src),
@@ -2609,7 +2609,7 @@ public:
     writeonly_texture_view(texture<_Value_type, _Rank>& _Src) __CPU_ONLY
         : _Texture_base(_Src, /*_Most_detailed_mipmap_level=*/0, /*_View_mipmap_levels=*/1)
     {
-        _Texture* _Tex = _Get_texture();
+        _Texture* _Tex = this->_Get_texture();
         if ((_Tex->_Get_num_channels() == 3) && (_Tex->_Get_bits_per_channel() == 32)) {
             throw runtime_exception("writeonly_texture_view cannot be created from a 3-channel texture with 32 bits per scalar element.", E_INVALIDARG); 
         }
@@ -2653,8 +2653,8 @@ public:
     {
         if (this != &_Other)
         {
-            _M_extent = _Other._M_extent;
-            _M_texture_descriptor = _Other._M_texture_descriptor;
+            this->_M_extent = _Other._M_extent;
+            this->_M_texture_descriptor = _Other._M_texture_descriptor;
         }
         return *this;
     }
@@ -2675,9 +2675,9 @@ public:
     /// <param name="_Value">
     ///     The value to be set to the element indexed by _Index.
     /// </param>
-    void set(const index<_Rank>& _Index, const value_type& _Value) const __GPU_ONLY
+    void set(const index<_Rank>& _Index, const _Value_type& _Value) const __GPU_ONLY
     {
-        _Texture_write_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Value, _Index);
+        _Texture_write_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Value, _Index);
     }
 };
 #pragma warning( pop )
@@ -2711,7 +2711,7 @@ public:
     texture_view(texture<_Value_type, _Rank>& _Src, unsigned int _Mipmap_level = 0) __CPU_ONLY
         : _Texture_base(_Src, _Mipmap_level, /*_View_mipmap_levels=*/1)
     {
-        if (_Get_texture()->_Is_staging()) {
+        if (this->_Get_texture()->_Is_staging()) {
             throw runtime_exception("texture_view cannot be created from a staging texture object.", E_INVALIDARG);
         }
     }
@@ -2751,8 +2751,8 @@ public:
     {
         if (this != &_Other)
         {
-            _M_extent = _Other._M_extent;
-            _M_texture_descriptor = _Other._M_texture_descriptor;
+            this->_M_extent = _Other._M_extent;
+            this->_M_texture_descriptor = _Other._M_texture_descriptor;
         }
         return *this;
     }
@@ -2773,14 +2773,14 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    const value_type operator[] (const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type operator[] (const index<_Rank>& _Index) const __GPU_ONLY
     {
         static_assert(_Short_vector_type_traits<_Value_type>::_Num_channels == 1, "Read is only permissible on single-component writable texture_view.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Unorm_type, "Read is not permissible on a writable unorm texture_view.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Norm_type, "Read is not permissible on a writable norm texture_view.");
 
-        value_type _Tmp;
-        _Texture_read_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, /*_Mip_level=*/0);
+        _Value_type _Tmp;
+        _Texture_read_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, /*_Mip_level=*/0);
         return _Tmp;
     }
 
@@ -2793,7 +2793,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I0.
     /// </returns>
-    const value_type operator[] (int _I0) const __GPU_ONLY
+    const _Value_type operator[] (int _I0) const __GPU_ONLY
     {
         static_assert(_Rank == 1, "const value_type operator[](int) is only permissible on texture_view<value_type, 1>.");
         return (*this)[index<1>(_I0)];
@@ -2808,7 +2808,7 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    const value_type operator() (const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type operator() (const index<_Rank>& _Index) const __GPU_ONLY
     {
         return (*this)[_Index];
     }
@@ -2822,7 +2822,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I0.
     /// </returns>
-    const value_type operator() (int _I0) const __GPU_ONLY
+    const _Value_type operator() (int _I0) const __GPU_ONLY
     {
         static_assert(_Rank == 1, "const value_type operator()(int) is only permissible on texture_view<value_type, 1>.");
         return (*this)[index<1>(_I0)];
@@ -2840,7 +2840,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    const value_type operator() (int _I0, int _I1) const __GPU_ONLY
+    const _Value_type operator() (int _I0, int _I1) const __GPU_ONLY
     {
         static_assert(_Rank == 2, "const value_type operator()(int, int) is only permissible on texture_view<value_type, 2>.");
         return (*this)[index<2>(_I0, _I1)];
@@ -2861,7 +2861,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    const value_type operator() (int _I0, int _I1, int _I2) const __GPU_ONLY
+    const _Value_type operator() (int _I0, int _I1, int _I2) const __GPU_ONLY
     {
         static_assert(_Rank == 3, "const value_type operator()(int, int, int) is only permissible on texture_view<value_type, 3>.");
         return (*this)[index<3>(_I0, _I1, _I2)];
@@ -2876,7 +2876,7 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    const value_type get(const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type get(const index<_Rank>& _Index) const __GPU_ONLY
     {
         return (*this)[_Index];
     }
@@ -2890,9 +2890,9 @@ public:
     /// <param name="_Value">
     ///     The value to be set to the element indexed by _Index.
     /// </param>
-    void set(const index<_Rank>& _Index, const value_type& _Value) const __GPU_ONLY
+    void set(const index<_Rank>& _Index, const _Value_type& _Value) const __GPU_ONLY
     {
-        _Texture_write_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Value, _Index);
+        _Texture_write_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Value, _Index);
     }
 };
 
@@ -3156,9 +3156,9 @@ private:
 template <typename _Value_type, int _Rank> class texture_view<const _Value_type, _Rank> : public details::_Texture_base<_Value_type, _Rank>
 {
 public:
-    typedef typename const _Value_type value_type;
+    typedef const _Value_type value_type;
     typedef typename short_vector<float, _Rank>::type coordinates_type;
-    typedef typename short_vector<scalar_type, 4>::type gather_return_type;
+    typedef typename short_vector<typename details::_Texture_base<_Value_type, _Rank>::scalar_type, 4>::type gather_return_type;
 
     /// <summary>
     ///     Construct a read-only texture_view of a texture _Src on an accelerator.
@@ -3182,7 +3182,7 @@ public:
     texture_view(const texture<_Value_type, _Rank>& _Src) __CPU_ONLY
         : _Texture_base(_Src)
     {
-        if (_Get_texture()->_Is_staging()) {
+        if (this->_Get_texture()->_Is_staging()) {
             throw runtime_exception("Read-only texture_view cannot be created from a staging texture object.", E_INVALIDARG);
         }
     }
@@ -3202,7 +3202,7 @@ public:
     texture_view(const texture<_Value_type, _Rank>& _Src, unsigned int _Most_detailed_mip, unsigned int _Mip_levels) __CPU_ONLY
         : _Texture_base(_Src, _Most_detailed_mip, _Mip_levels)
     {
-        if (_Get_texture()->_Is_staging()) {
+        if (this->_Get_texture()->_Is_staging()) {
             throw runtime_exception("Read-only texture_view cannot be created from a staging texture object.", E_INVALIDARG);
         }
     }
@@ -3258,8 +3258,8 @@ public:
     {
         if (this != &_Other)
         {
-            _M_extent = _Other._M_extent;
-            _M_texture_descriptor = _Other._M_texture_descriptor;
+            this->_M_extent = _Other._M_extent;
+            this->_M_texture_descriptor = _Other._M_texture_descriptor;
         }
         return *this;
     }
@@ -3273,8 +3273,8 @@ public:
     /// </param>
     texture_view<const _Value_type, _Rank>& operator=(const texture_view<_Value_type, _Rank>& _Other) __CPU_ONLY
     {
-        _M_extent = _Other._M_extent;
-        _M_texture_descriptor = _Other._M_texture_descriptor;
+        this->_M_extent = _Other._M_extent;
+        this->_M_texture_descriptor = _Other._M_texture_descriptor;
         return *this;
     }
 
@@ -3294,10 +3294,10 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    value_type operator[] (const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type operator[] (const index<_Rank>& _Index) const __GPU_ONLY
     {
         _Value_type _Tmp;
-        _Texture_read_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, /*_Mip_level=*/0);
+        _Texture_read_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, /*_Mip_level=*/0);
         return _Tmp;
     }
 
@@ -3310,7 +3310,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I.
     /// </returns>
-    value_type operator[] (int _I0) const __GPU_ONLY
+    const _Value_type operator[] (int _I0) const __GPU_ONLY
     {
         static_assert(_Rank == 1, "value_type operator[](int) is only permissible on texture_view<value_type, 1>.");
         return (*this)[index<1>(_I0)];
@@ -3325,7 +3325,7 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    value_type operator() (const index<_Rank>& _Index) const __GPU_ONLY
+    const _Value_type operator() (const index<_Rank>& _Index) const __GPU_ONLY
     {
         return (*this)[_Index];
     }
@@ -3339,7 +3339,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I0.
     /// </returns>
-    value_type operator() (int _I0) const __GPU_ONLY
+    const _Value_type operator() (int _I0) const __GPU_ONLY
     {
         static_assert(_Rank == 1, "value_type texture_view::operator()(int) is only permissible on texture_view<value_type, 1>.");
         return (*this)[index<1>(_I0)];
@@ -3357,7 +3357,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    value_type operator() (int _I0, int _I1) const __GPU_ONLY
+    const _Value_type operator() (int _I0, int _I1) const __GPU_ONLY
     {
         static_assert(_Rank == 2, "value_type texture_view::operator()(int, int) is only permissible on texture_view<value_type, 2>.");
         return (*this)[index<2>(_I0, _I1)];
@@ -3378,7 +3378,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    value_type operator() (int _I0, int _I1, int _I2) const __GPU_ONLY
+    const _Value_type operator() (int _I0, int _I1, int _I2) const __GPU_ONLY
     {
         static_assert(_Rank == 3, "value_type texture_view::operator()(int, int, int) is only permissible on texture_view<value_type, 3>.");
         return (*this)[index<3>(_I0, _I1, _I2)];
@@ -3397,10 +3397,10 @@ public:
     /// <returns>
     ///     The element value indexed by _Index.
     /// </returns>
-    value_type get(const index<_Rank>& _Index, unsigned int _Mip_level = 0) const __GPU_ONLY
+    const _Value_type get(const index<_Rank>& _Index, unsigned int _Mip_level = 0) const __GPU_ONLY
     {
         _Value_type _Tmp;
-        _Texture_read_helper<index<_Rank>, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, _Mip_level);
+        _Texture_read_helper<index<_Rank>, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Tmp, _Index, _Mip_level);
         return _Tmp;
     }
 
@@ -3420,14 +3420,14 @@ public:
     /// <returns>
     ///     The interpolated value.
     /// </returns>
-    value_type sample(const sampler& _Sampler, const coordinates_type& _Coord, float _Level_of_detail = 0.0f) const __GPU_ONLY
+    const _Value_type sample(const sampler& _Sampler, const coordinates_type& _Coord, float _Level_of_detail = 0.0f) const __GPU_ONLY
     {
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Uint_type, "sample is not allowed for uint component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Int_type, "sample is not allowed for int component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Double_type, "sample is not allowed for double component types in the texture value_type.");
 
         _Value_type _Tmp;
-        _Texture_sample_helper<coordinates_type, _Rank>::func(_M_texture_descriptor._M_data_ptr, _Sampler._Get_descriptor()._M_data_ptr, &_Tmp, _Coord, 4 /*Sampling*/, _Level_of_detail);
+        _Texture_sample_helper<coordinates_type, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, _Sampler._Get_descriptor()._M_data_ptr, &_Tmp, _Coord, 4 /*Sampling*/, _Level_of_detail);
         return _Tmp;
     }
 
@@ -3451,7 +3451,7 @@ public:
     ///     The interpolated value.
     /// </returns>
     template<filter_mode _Filter_mode = filter_linear, address_mode _Address_mode = address_clamp>
-    value_type sample(const coordinates_type& _Coord, float _Level_of_detail = 0.0f) const __GPU_ONLY
+    const _Value_type sample(const coordinates_type& _Coord, float _Level_of_detail = 0.0f) const __GPU_ONLY
     {
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Uint_type, "sample is not allowed for uint component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Int_type, "sample is not allowed for int component types in the texture value_type.");
@@ -3462,7 +3462,7 @@ public:
 
         _Value_type _Tmp;
         // Predefined sampler id is constructed as filter_mode << 16 | address_mode. This is a contract between BE and runtime. Modify with caution!
-        _Texture_predefined_sample_helper<coordinates_type, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Tmp, _Coord, _Filter_mode << 16 |_Address_mode, 4 /*Sampling*/, _Level_of_detail);
+        _Texture_predefined_sample_helper<coordinates_type, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Tmp, _Coord, _Filter_mode << 16 |_Address_mode, 4 /*Sampling*/, _Level_of_detail);
         return _Tmp;
     }
 
@@ -3624,10 +3624,10 @@ private:
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Uint_type, "gather is not allowed for uint component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Int_type, "gather is not allowed for int component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Double_type, "gather is not allowed for double component types in the texture value_type.");
-        static_assert(rank == 2, "gather methods are only permissible on texture_view<value_type, 2>.");
+        static_assert(_Rank == 2, "gather methods are only permissible on texture_view<value_type, 2>.");
 
         gather_return_type _Tmp;
-        _Texture_sample_helper<coordinates_type, _Rank>::func(_M_texture_descriptor._M_data_ptr, _Sampler._Get_descriptor()._M_data_ptr, &_Tmp, _Coord, _Component, /*_Level_of_detail=*/0.0f);
+        _Texture_sample_helper<coordinates_type, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, _Sampler._Get_descriptor()._M_data_ptr, &_Tmp, _Coord, _Component, /*_Level_of_detail=*/0.0f);
         return _Tmp;
     }
 
@@ -3637,14 +3637,14 @@ private:
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Uint_type, "gather is not allowed for uint component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Int_type, "gather is not allowed for int component types in the texture value_type.");
         static_assert(_Short_vector_type_traits<_Value_type>::_Format_base_type_id != _Double_type, "gather is not allowed for double component types in the texture value_type.");
-        static_assert(rank == 2, "gather methods are only permissible on texture_view<value_type, 2>.");
+        static_assert(_Rank == 2, "gather methods are only permissible on texture_view<value_type, 2>.");
         static_assert((_Address_mode == address_wrap || _Address_mode == address_clamp || _Address_mode == address_mirror || _Address_mode == address_border), 
                                 "Invalid address mode for gather methods.");
 
         gather_return_type _Tmp;
         // Predefined sampler id is constructed as filter_mode << 16 | address_mode. This is a contract between BE and runtime. Modify with caution!
         // gather only used the address_mode of the sampler, internally we use filter_point so that the predefined sampler id scheme is same for both sample and gather.
-        _Texture_predefined_sample_helper<coordinates_type, _Rank>::func(_M_texture_descriptor._M_data_ptr, &_Tmp, _Coord, filter_point << 16 |_Address_mode, _Component, /*_Level_of_detail=*/0.0f);
+        _Texture_predefined_sample_helper<coordinates_type, _Rank>::func(this->_M_texture_descriptor._M_data_ptr, &_Tmp, _Coord, filter_point << 16 |_Address_mode, _Component, /*_Level_of_detail=*/0.0f);
         return _Tmp;
     }
 };
@@ -3775,7 +3775,7 @@ _Event _Copy_async_impl(_Input_iterator _First, _Input_iterator _Last,
         return _Event();
     }
     
-    // The dest is not accessbile on the host; we need to copy src to
+    // The dest is not accessible on the host; we need to copy src to
     // a temporary staging texture and launch a copy from the staging texture
     // to the dest texture.
     _Event _Ev;
@@ -3882,7 +3882,7 @@ _Event _Copy_async_impl(_Texture *_Tex, const size_t *_Tex_offset, unsigned int 
         return _Event();
     }
     
-    // The texture is not accessbile on the host; we need to copy to/from a staging
+    // The texture is not accessible on the host; we need to copy to/from a staging
     // texture before the copy to the destination.  This is done in chunks, such that
     // we can concurrently copy from the source texture to a staging texture while
     // copying from a staging texture from a previous chunk to the destination.  
@@ -4969,6 +4969,3 @@ namespace direct3d
 
 } //namespace graphics
 } //namespace Concurrency
-
-
-

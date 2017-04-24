@@ -213,43 +213,43 @@ template<class _Elem,
 		_Left = _Right;
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test for element equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test if _Left precedes _Right
 		return (_Left < _Right);
 		}
 
-	static _CONST_FUN _Elem __CLRCALL_OR_CDECL to_char_type(
+	static constexpr _Elem __CLRCALL_OR_CDECL to_char_type(
 		const int_type& _Meta) _NOEXCEPT
 		{	// convert metacharacter to character
 		return ((_Elem)_Meta);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL to_int_type(
+	static constexpr int_type __CLRCALL_OR_CDECL to_int_type(
 		const _Elem& _Ch) _NOEXCEPT
 		{	// convert character to metacharacter
 		return ((int_type)_Ch);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
 		const int_type& _Right) _NOEXCEPT
 		{	// test for metacharacter equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL not_eof(
+	static constexpr int_type __CLRCALL_OR_CDECL not_eof(
 		const int_type& _Meta) _NOEXCEPT
 		{	// return anything but EOF
 		return (_Meta != eof() ? (int_type)_Meta : (int_type)!eof());
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
+	static constexpr int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
 		{	// return end-of-file metacharacter
 		return ((int_type)EOF);
 		}
@@ -345,43 +345,43 @@ template<>
 		_Left = _Right;
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test for element equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test if _Left precedes _Right
 		return (_Left < _Right);
 		}
 
-	static _CONST_FUN _Elem __CLRCALL_OR_CDECL to_char_type(
+	static constexpr _Elem __CLRCALL_OR_CDECL to_char_type(
 		const int_type& _Meta) _NOEXCEPT
 		{	// convert metacharacter to character
 		return (_Meta);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL to_int_type(
+	static constexpr int_type __CLRCALL_OR_CDECL to_int_type(
 		const _Elem& _Ch) _NOEXCEPT
 		{	// convert character to metacharacter
 		return (_Ch);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
 		const int_type& _Right) _NOEXCEPT
 		{	// test for metacharacter equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL not_eof(
+	static constexpr int_type __CLRCALL_OR_CDECL not_eof(
 		const int_type& _Meta) _NOEXCEPT
 		{	// return anything but EOF
 		return (_Meta != eof() ? _Meta : !eof());
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
+	static constexpr int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
 		{	// return end-of-file metacharacter
 		return (WEOF);
 		}
@@ -458,43 +458,43 @@ template<>
 		_Left = _Right;
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test for element equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test if _Left precedes _Right
 		return (_Left < _Right);
 		}
 
-	static _CONST_FUN _Elem __CLRCALL_OR_CDECL to_char_type(const int_type& _Meta)
+	static constexpr _Elem __CLRCALL_OR_CDECL to_char_type(const int_type& _Meta)
 		_NOEXCEPT
 		{	// convert metacharacter to character
 		return (_Meta);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL to_int_type(const _Elem& _Ch)
+	static constexpr int_type __CLRCALL_OR_CDECL to_int_type(const _Elem& _Ch)
 		_NOEXCEPT
 		{	// convert character to metacharacter
 		return (_Ch);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
 		const int_type& _Right) _NOEXCEPT
 		{	// test for metacharacter equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL not_eof(const int_type& _Meta)
+	static constexpr int_type __CLRCALL_OR_CDECL not_eof(const int_type& _Meta)
 		_NOEXCEPT
 		{	// return anything but EOF
 		return (_Meta != eof() ? _Meta : !eof());
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
+	static constexpr int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
 		{	// return end-of-file metacharacter
 		return (WEOF);
 		}
@@ -565,43 +565,43 @@ template<> struct char_traits<char>
 		_Left = _Right;
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test for element equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL lt(const _Elem& _Left,
 		const _Elem& _Right) _NOEXCEPT
 		{	// test if _Left precedes _Right
 		return ((unsigned char)_Left < (unsigned char)_Right);
 		}
 
-	static _CONST_FUN _Elem __CLRCALL_OR_CDECL to_char_type(
+	static constexpr _Elem __CLRCALL_OR_CDECL to_char_type(
 		const int_type& _Meta) _NOEXCEPT
 		{	// convert metacharacter to character
 		return ((_Elem)_Meta);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL to_int_type(
+	static constexpr int_type __CLRCALL_OR_CDECL to_int_type(
 		const _Elem& _Ch) _NOEXCEPT
 		{	// convert character to metacharacter
 		return ((unsigned char)_Ch);
 		}
 
-	static _CONST_FUN bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
+	static constexpr bool __CLRCALL_OR_CDECL eq_int_type(const int_type& _Left,
 		const int_type& _Right) _NOEXCEPT
 		{	// test for metacharacter equality
 		return (_Left == _Right);
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL not_eof(
+	static constexpr int_type __CLRCALL_OR_CDECL not_eof(
 		const int_type& _Meta) _NOEXCEPT
 		{	// return anything but EOF
 		return (_Meta != eof() ? _Meta : !eof());
 		}
 
-	static _CONST_FUN int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
+	static constexpr int_type __CLRCALL_OR_CDECL eof() _NOEXCEPT
 		{	// return end-of-file metacharacter
 		return (EOF);
 		}
@@ -691,7 +691,7 @@ typedef basic_ifstream<char, char_traits<char> > ifstream;
 typedef basic_ofstream<char, char_traits<char> > ofstream;
 typedef basic_fstream<char, char_traits<char> > fstream;
 
-		// wchat_t TYPEDEFS
+		// wchar_t TYPEDEFS
 typedef basic_ios<wchar_t, char_traits<wchar_t> > wios;
 typedef basic_streambuf<wchar_t, char_traits<wchar_t> >
 	wstreambuf;

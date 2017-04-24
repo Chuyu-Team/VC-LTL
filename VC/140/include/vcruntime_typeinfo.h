@@ -61,29 +61,32 @@ _CRT_END_C_HEADER
 
 class type_info
 {
-public: 
+public:
+
+    type_info(type_info const&) = delete;
+    type_info& operator=(type_info const&) = delete;
 
     size_t hash_code() const throw()
     {
         return __std_type_info_hash(&_Data);
     }
 
-    bool operator==(type_info const& _Other) const
+    bool operator==(type_info const& _Other) const throw()
     {
         return __std_type_info_compare(&_Data, &_Other._Data) == 0;
     }
 
-    bool operator!=(type_info const& _Other) const
+    bool operator!=(type_info const& _Other) const throw()
     {
         return __std_type_info_compare(&_Data, &_Other._Data) != 0;
     }
 
-    bool before(type_info const& _Other) const
+    bool before(type_info const& _Other) const throw()
     {
         return __std_type_info_compare(&_Data, &_Other._Data) < 0;
     }
 
-    char const* name() const
+    char const* name() const throw()
     {
         #ifdef _M_CEE_PURE
         return __std_type_info_name(&_Data, static_cast<__type_info_node*>(__type_info_root_node.ToPointer()));
@@ -92,7 +95,7 @@ public:
         #endif
     }
 
-    char const* raw_name() const
+    char const* raw_name() const throw()
     {
         return _Data._DecoratedName;
     }
@@ -101,36 +104,35 @@ public:
 
 private:
 
-    type_info(type_info const&) = delete;
-    type_info& operator=(type_info const&) = delete;
-
     mutable __std_type_info_data _Data;
 };
+
+namespace std {
+	using ::type_info;
+}
 
 #if _HAS_EXCEPTIONS
 
 namespace std {
-
-using ::type_info;
 
 class bad_cast
     : public exception
 {
 public:
 
-    bad_cast()
+    bad_cast() throw()
         : exception("bad cast", 1)
     {
     }
 
-    static bad_cast __construct_from_string_literal(char const* const _Message)
+    static bad_cast __construct_from_string_literal(char const* const _Message) throw()
     {
         return bad_cast(_Message, 1);
     }
 
 private:
 
-    bad_cast(char const* const _Message, int)
+    bad_cast(char const* const _Message, int) throw()
         : exception(_Message, 1)
     {
     }
@@ -141,12 +143,12 @@ class bad_typeid
 {
 public:
 
-    bad_typeid()
+    bad_typeid() throw()
         : exception("bad typeid", 1)
     {
     }
 
-    static bad_typeid __construct_from_string_literal(char const* const _Message)
+    static bad_typeid __construct_from_string_literal(char const* const _Message) throw()
     {
         return bad_typeid(_Message, 1);
     }
@@ -155,7 +157,7 @@ private:
 
     friend class __non_rtti_object;
 
-    bad_typeid(char const* const _Message, int)
+    bad_typeid(char const* const _Message, int) throw()
         : exception(_Message, 1)
     {
     }
@@ -166,14 +168,14 @@ class __non_rtti_object
 {
 public:
 
-    static __non_rtti_object __construct_from_string_literal(char const* const _Message)
+    static __non_rtti_object __construct_from_string_literal(char const* const _Message) throw()
     {
         return __non_rtti_object(_Message, 1);
     }
 
 private:
 
-    __non_rtti_object(char const* const _Message, int)
+    __non_rtti_object(char const* const _Message, int) throw()
         : bad_typeid(_Message, 1)
     {
     }

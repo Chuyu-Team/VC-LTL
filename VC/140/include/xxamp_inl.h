@@ -29,7 +29,7 @@ namespace details
 // Projection Helpers
 
 template <typename _T, int _R>
-/*static*/ typename _Projection_result_type<_T,_R>::_Const_result_type
+/*static*/ inline typename _Projection_result_type<_T,_R>::_Const_result_type
 _Const_array_view_projection_helper<_T,_R>::_Project0(const array_view<const _T,_R>* _Arr_view, int _I) __GPU
 {
     typename _Projection_result_type<_T,_R>::_Const_result_type _Projected_view;
@@ -38,7 +38,7 @@ _Const_array_view_projection_helper<_T,_R>::_Project0(const array_view<const _T,
 }
 
 template <typename _T, int _R>
-/*static*/ typename _Projection_result_type<_T,_R>::_Result_type
+/*static*/ inline typename _Projection_result_type<_T,_R>::_Result_type
 _Array_view_projection_helper<_T,_R>::_Project0(const array_view<_T,_R>* _Arr_view, int _I) __GPU
 {
     typename _Projection_result_type<_T,_R>::_Result_type _Projected_view;
@@ -47,21 +47,21 @@ _Array_view_projection_helper<_T,_R>::_Project0(const array_view<_T,_R>* _Arr_vi
 }
 
 template <typename _T>
-/*static*/ typename _Projection_result_type<_T,1>::_Const_result_type
+/*static*/ inline typename _Projection_result_type<_T,1>::_Const_result_type
 _Const_array_view_projection_helper<_T,1>::_Project0(const array_view<const _T,1>* _Arr_view, int _I) __GPU
 {
     return _Arr_view->operator[](index<1>(_I));
 }
 
 template <typename _T>
-/*static*/ typename _Projection_result_type<_T,1>::_Result_type
+/*static*/ inline typename _Projection_result_type<_T,1>::_Result_type
 _Array_view_projection_helper<_T,1>::_Project0(const array_view<_T,1>* _Arr_view, int _I) __GPU
 {
     return _Arr_view->operator[](index<1>(_I));
 }
 
 template <typename _T, int _R>
-/*static*/ typename _Projection_result_type<_T,_R>::_Const_result_type
+/*static*/ inline typename _Projection_result_type<_T,_R>::_Const_result_type
 _Const_array_projection_helper<_T,_R>::_Project0(const array<_T, _R>* _Array, int _I) __GPU
 {
     array_view<const _T,_R> _Temp(*_Array);
@@ -69,7 +69,7 @@ _Const_array_projection_helper<_T,_R>::_Project0(const array<_T, _R>* _Array, in
 }
 
 template <typename _T, int _R>
-/*static*/ typename _Projection_result_type<_T,_R>::_Result_type
+/*static*/ inline typename _Projection_result_type<_T,_R>::_Result_type
 _Array_projection_helper<_T,_R>::_Project0(_In_ array<_T, _R>* _Array, int _I) __GPU
 {
     array_view<_T,_R> _Temp(*_Array);
@@ -77,14 +77,14 @@ _Array_projection_helper<_T,_R>::_Project0(_In_ array<_T, _R>* _Array, int _I) _
 }
 
 template <typename _T>
-/*static*/ typename _Projection_result_type<_T,1>::_Const_result_type
+/*static*/ inline typename _Projection_result_type<_T,1>::_Const_result_type
 _Const_array_projection_helper<_T,1>::_Project0(const array<_T,1>* _Array, int _I) __GPU
 {
     return _Array->operator[](index<1>(_I));
 }
 
 template <typename _T>
-/*static*/ typename _Projection_result_type<_T,1>::_Result_type
+/*static*/ inline typename _Projection_result_type<_T,1>::_Result_type
 _Array_projection_helper<_T,1>::_Project0(_In_ array<_T,1>* _Array, int _I) __GPU
 {
     return _Array->operator[](index<1>(_I));

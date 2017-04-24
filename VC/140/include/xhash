@@ -201,26 +201,38 @@ public:
 		_Max_bucket_size() = _Bucket_size;
 		_Init();
 		}
-	_Hash(const _Myt& _Right, const allocator_type& _Al)
-		: _Traitsobj(),
 
-			_List(_Al),
+	template<class _Any_alloc>
+		_Hash(const _Myt& _Right, const _Any_alloc& _Al)
+		: _Traitsobj(_Right._Traitsobj),
+			_List(allocator_type(_Al)),
 			_Vec(_Al)
-
 		{	// construct hash table by copying right
-		_Max_bucket_size() = _Bucket_size;
 		_Copy(_Right);
 		}
 
-	_Hash(_Myt&& _Right, const allocator_type& _Al)
-		: _Traitsobj(),
+	_Hash(_Myt&& _Right)
+		: _Traitsobj(_Right._Traitsobj),
 
-			_List(_Al),
-			_Vec(_Al)
+			_List(_STD move(_Right._List)),
+			_Vec(_STD move(_Right._Vec)),
+			_Mask(_Right._Mask),
+			_Maxidx(_Right._Maxidx)
+
+		{	// construct hash table by moving _Right
+		_Right.clear();
+		}
+
+	_Hash(_Myt&& _Right, const allocator_type& _Al)
+		: _Traitsobj(_Right._Traitsobj),
+
+			_List(_STD move(_Right._List), _Al),
+			_Vec(_STD move(_Right._Vec), _Al),
+			_Mask(_Right._Mask),
+			_Maxidx(_Right._Maxidx)
 
 		{	// construct hash table by moving _Right, allocator
-		_Max_bucket_size() = _Bucket_size;
-		_Assign_rv(_STD forward<_Myt>(_Right));
+		_Right.clear();
 		}
 
 	_Myt& operator=(_Myt&& _Right)
@@ -236,34 +248,6 @@ public:
 		_Right.clear();
 		}
 
-	_Pairib insert(value_type&& _Val)
-		{	// try to insert node with value _Val, favoring right side
-		return (_Insert(_STD forward<value_type>(_Val), _Nil()));
-		}
-
-	iterator insert(const_iterator, value_type&& _Val)
-		{	// try to insert node with value _Val, ignore hint
-		return (_Insert(_STD forward<value_type>(_Val), _Nil()).first);
-		}
-
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			_Pairib>::type
-		insert(_Valty&& _Val)
-		{	// try to insert node with value _Val
-		_List.emplace_front(_STD forward<_Valty>(_Val));
-		return (_Insert(_List.front(), _Unchecked_begin()));
-		}
-
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			iterator>::type
-		insert(const_iterator, _Valty&& _Val)
-		{	// try to insert node with value _Val, ignore hint
-		_List.emplace_front(_STD forward<_Valty>(_Val));
-		return (_Insert(_List.front(), _Unchecked_begin()).first);
-		}
-
 	template<class... _Valty>
 		_Pairib emplace(_Valty&&... _Val)
 		{	// try to insert value_type(_Val...)
@@ -277,7 +261,6 @@ public:
 		_List.emplace_front(_STD forward<_Valty>(_Val)...);
 		return (_Insert(_List.front(), _Unchecked_begin()).first);
 		}
-
 
 	~_Hash() _NOEXCEPT
 		{	// destroy hash table
@@ -368,7 +351,8 @@ public:
 
 	allocator_type get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (_List.get_allocator());
+		allocator_type _Ret(_List.get_allocator());
+		return (_Ret);
 		}
 
 	key_compare key_comp() const
@@ -381,7 +365,6 @@ public:
 		return (value_compare(key_comp()));
 		}
 
-// ADDED WITH TR1
 	typedef iterator local_iterator;
 	typedef const_iterator const_local_iterator;
 
@@ -392,7 +375,7 @@ public:
 
 	size_type max_bucket_count() const _NOEXCEPT
 		{	// return maximum number of buckets
-		return (_Vec.size() / 2);
+		return (_Vec.max_size() / 2);
 		}
 
 	size_type bucket(const key_type& _Keyval) const
@@ -498,11 +481,33 @@ public:
 		{	// rebuild table with room for _Maxcount elements
 		rehash((size_type)((float)(_Maxcount / max_load_factor() + 0.5F)));
 		}
-// ADDED WITH TR1 -- END
 
-	_Pairib insert(const value_type& _Val)
+	template<bool _Multi2 = _Multi,
+		enable_if_t<!_Multi2, int> = 0>
+		_Pairib insert(const value_type& _Val)
 		{	// try to insert node with value _Val
 		return (_Insert(_Val, _Nil()));
+		}
+
+	template<bool _Multi2 = _Multi,
+		enable_if_t<_Multi2, int> = 0>
+		iterator insert(const value_type& _Val)
+		{	// try to insert node with value _Val
+		return (_Insert(_Val, _Nil()).first);
+		}
+
+	template<bool _Multi2 = _Multi,
+		enable_if_t<!_Multi2, int> = 0>
+		_Pairib insert(value_type&& _Val)
+		{	// try to insert node with value _Val, favoring right side
+		return (_Insert(_STD forward<value_type>(_Val), _Nil()));
+		}
+
+	template<bool _Multi2 = _Multi,
+		enable_if_t<_Multi2, int> = 0>
+		iterator insert(value_type&& _Val)
+		{	// try to insert node with value _Val, favoring right side
+		return (_Insert(_STD forward<value_type>(_Val), _Nil()).first);
 		}
 
 	iterator insert(const_iterator,
@@ -511,12 +516,16 @@ public:
 		return (_Insert(_Val, _Nil()).first);
 		}
 
+	iterator insert(const_iterator, value_type&& _Val)
+		{	// try to insert node with value _Val, ignore hint
+		return (_Insert(_STD forward<value_type>(_Val), _Nil()).first);
+		}
+
 	template<class _Iter>
 		void insert(_Iter _First, _Iter _Last)
 		{	// insert [_First, _Last) at front, then put in place
 		_DEBUG_RANGE(_First, _Last);
 		for (; _First != _Last; ++_First)
-
 			emplace(*_First);
 		}
 
@@ -552,8 +561,7 @@ public:
 	size_type erase(const key_type& _Keyval)
 		{	// erase and count all that match _Keyval
 		_Pairii _Where = equal_range(_Keyval);
-		size_type _Num = 0;
-		_Distance(_Where.first, _Where.second, _Num);
+		size_type _Num = _STD distance(_Where.first, _Where.second);
 		erase(_Where.first, _Where.second);
 		return (_Num);
 		}
@@ -577,9 +585,7 @@ public:
 	size_type count(const key_type& _Keyval) const
 		{	// count all elements that match _Keyval
 		_Paircc _Ans = equal_range(_Keyval);
-		size_type _Num = 0;
-		_Distance(_Ans.first, _Ans.second, _Num);
-		return (_Num);
+		return (_STD distance(_Ans.first, _Ans.second));
 		}
 
 	iterator lower_bound(const key_type& _Keyval)
@@ -674,7 +680,6 @@ public:
 			this->_Vec.swap(_Right._Vec);
 			_Swap_adl(this->_Mask, _Right._Mask);
 			_Swap_adl(this->_Maxidx, _Right._Maxidx);
-			_Swap_adl(_Max_bucket_size(), _Right._Max_bucket_size());
 			}
 		}
 
@@ -837,7 +842,6 @@ protected:
 		{	// copy entire hash table
 		_Mask = _Right._Mask;
 		_Maxidx = _Right._Maxidx;
-		_Max_bucket_size() = _Right._Max_bucket_size();
 		_List.clear();
 
 		_TRY_BEGIN

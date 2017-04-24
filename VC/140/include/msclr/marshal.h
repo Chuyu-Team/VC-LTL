@@ -177,11 +177,14 @@ namespace details
 // Forward declarations
 //--------------------------------------------------------------------------------
 
+ref class context_node_base;
+
+template<class _To_Type, class _From_Type>
+ref class context_node;
+
 template <class _To_Type, class _From_Type,
          bool _Needs_Context = context_node<_To_Type,_From_Type>::_Needs_Context>
 class error_reporting_helper;
-
-ref class context_node_base;
 
 template<class _To_Type>
 inline _To_Type marshal_as(_In_z_ const char  _from_object[])
@@ -196,9 +199,6 @@ inline _To_Type marshal_as(_In_z_ const wchar_t  _from_object[])
         const wchar_t* _ptr = _from_object;
         return marshal_as<_To_Type, const wchar_t*>(_ptr);
 }
-
-template<class _To_Type, class _From_Type>
-ref class context_node;
 
 ref class marshal_context;
 

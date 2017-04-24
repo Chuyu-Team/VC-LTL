@@ -66,7 +66,7 @@ public:
             if (_Schedule_chore(&_M_Chore) != 0)
             {
                 delete this;
-                throw ::std::runtime_error("Fail to schedule the chore!");
+                _THROW_NCEE(::std::runtime_error, "Fail to schedule the chore!");
             }
         }
     };
@@ -125,7 +125,7 @@ namespace details
 #define _REPORT_PPLTASK_UNOBSERVED_EXCEPTION() do { \
         ReportUnhandledError(); \
         __debugbreak(); \
-        Concurrency::details::_ReportUnobservedException(); \
+        ::Concurrency::details::_ReportUnobservedException(); \
 } while (false)
 
 #endif
@@ -270,7 +270,7 @@ namespace details
 } // details
 } // Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pop_macro("new")
 #pragma warning(pop)

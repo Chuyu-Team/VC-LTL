@@ -43,31 +43,31 @@ class exception
 {
 public:
 
-    exception()
+    exception() throw()
         : _Data()
     {
     }
 
-    explicit exception(char const* const _Message)
+    explicit exception(char const* const _Message) throw()
         : _Data()
     {
         __std_exception_data _InitData = { _Message, true };
         __std_exception_copy(&_InitData, &_Data);
     }
 
-    exception(char const* const _Message, int)
+    exception(char const* const _Message, int) throw()
         : _Data()
     {
         _Data._What = _Message;
     }
 
-    exception(exception const& _Other)
+    exception(exception const& _Other) throw()
         : _Data()
     {
         __std_exception_copy(&_Other._Data, &_Data);
     }
 
-    exception& operator=(exception const& _Other)
+    exception& operator=(exception const& _Other) throw()
     {
         if (this == &_Other)
         {

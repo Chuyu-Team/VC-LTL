@@ -159,6 +159,8 @@ private:
 	_Mtx_t _MyMtxp;
 	};
 
+ #pragma warning(push)
+ #pragma warning(disable: 4265) // non-virtual destructor in base class
 class _Pad
 	{	// base class for launching threads
 public:
@@ -175,7 +177,7 @@ public:
 		}
 
 	~_Pad() _NOEXCEPT
-		{	// clean up handshake
+		{	// clean up handshake; non-virtual due to type-erasure
 		_Auto_cnd _Cnd_cleaner(_Cond);
 		_Auto_mtx _Mtx_cleaner(_Mtx);
 		_Mtx_unlockX(_Mtx);
@@ -215,7 +217,7 @@ typedef unsigned int _Call_func_ret;
 	};
 
 template<class _Target>
-	class _LaunchPad
+	class _LaunchPad final
 		: public _Pad
 	{	// template class for launching threads
 public:
@@ -249,6 +251,7 @@ private:
 
 	_Target _MyTarget;
 	};
+ #pragma warning(pop)
 
 template<class _Target> inline
 	void _Launch(_Thrd_t *_Thr, _Target&& _Tg)

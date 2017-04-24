@@ -14,24 +14,6 @@
 
  #if !defined(RC_INVOKED)
 
-template<class _Ty>
-	_Check_return_ inline _Ty _Pow_int(_Ty _Xx, int _Yx) _NOEXCEPT
-	{
-	unsigned int _Nx;
-	if (_Yx >= 0)
-		_Nx = static_cast<unsigned int>(_Yx);
-	else
-		_Nx = static_cast<unsigned int>(-_Yx);
-
-	for (_Ty _Zx = static_cast<_Ty>(1); ; _Xx *= _Xx)
-		{
-		if ((_Nx & 1) != 0)
-			_Zx *= _Xx;
-		if ((_Nx >>= 1) == 0)
-			return (_Yx < 0 ? static_cast<_Ty>(1) / _Zx : _Zx);
-		}
-	}
-
 _Check_return_ inline double abs(_In_ double _Xx) _NOEXCEPT
 	{
 	return (_CSTD fabs(_Xx));
@@ -39,7 +21,10 @@ _Check_return_ inline double abs(_In_ double _Xx) _NOEXCEPT
 
 _Check_return_ inline double pow(_In_ double _Xx, _In_ int _Yx) _NOEXCEPT
 	{
-	return (_Pow_int(_Xx, _Yx));
+	if (_Yx == 2)
+		return (_Xx * _Xx);
+
+	return (_CSTD pow(_Xx, static_cast<double>(_Yx)));
 	}
 
 _Check_return_ inline float abs(_In_ float _Xx) _NOEXCEPT
@@ -268,7 +253,10 @@ _Check_return_ inline float pow(_In_ float _Xx,
 
 _Check_return_ inline float pow(_In_ float _Xx, _In_ int _Yx) _NOEXCEPT
 	{
-	return (_Pow_int(_Xx, _Yx));
+	if (_Yx == 2)
+		return (_Xx * _Xx);
+
+	return (_CSTD powf(_Xx, static_cast<float>(_Yx)));
 	}
 
 _Check_return_ inline float remainder(_In_ float _Xx, _In_ float _Yx) _NOEXCEPT
@@ -574,7 +562,10 @@ _Check_return_ inline long double pow(_In_ long double _Xx,
 _Check_return_ inline long double pow(_In_ long double _Xx,
 	_In_ int _Yx) _NOEXCEPT
 	{
-	return (_Pow_int(_Xx, _Yx));
+	if (_Yx == 2)
+		return (_Xx * _Xx);
+
+	return (_CSTD powl(_Xx, static_cast<long double>(_Yx)));
 	}
 
 _Check_return_ inline long double remainder(_In_ long double _Xx,

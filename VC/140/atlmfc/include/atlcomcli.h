@@ -5,7 +5,7 @@
 // This source code is only intended as a supplement to the
 // Active Template Library Reference and related
 // electronic documentation provided with the library.
-// See these sources for detailed information regarding the	
+// See these sources for detailed information regarding the
 // Active Template Library product.
 
 #ifndef __ATLCOMCLI_H__
@@ -49,44 +49,44 @@ HRESULT AtlHresultFromWin32(_In_ DWORD nError) throw()
 // Smart Pointer helpers
 
 ATLAPI_(IUnknown*) AtlComPtrAssign(
-    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp, 
+    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp,
     _In_opt_ IUnknown* lp);
 
 ATLAPI_(IUnknown*) AtlComQIPtrAssign(
-    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp, 
-    _In_opt_ IUnknown* lp, 
+    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp,
+    _In_opt_ IUnknown* lp,
     _In_ REFIID riid);
 
 /////////////////////////////////////////////////////////////////////////////
-// Safe Ole Object Reading 
+// Safe Ole Object Reading
 
-union ClassesAllowedInStream 
+union ClassesAllowedInStream
 {
     const CLSID *rgclsidAllowed;
     HRESULT (*pfnClsidAllowed)(
-        _In_ const CLSID& clsid, 
-        _In_ REFIID iidInterface, 
+        _In_ const CLSID& clsid,
+        _In_ REFIID iidInterface,
         _Outptr_result_maybenull_ void** ppvObj);
 };
 
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 
 _Check_return_ inline HRESULT AtlInternalOleLoadFromStream(
-    _Inout_ IStream* pStm, 
-    _In_ REFIID iidInterface, 
-    _Outptr_ void** ppvObj, 
-    _In_ ClassesAllowedInStream rgclsidAllowed, 
+    _Inout_ IStream* pStm,
+    _In_ REFIID iidInterface,
+    _Outptr_ void** ppvObj,
+    _In_ ClassesAllowedInStream rgclsidAllowed,
     _In_ DWORD cclsidAllowed);
 
 #endif // _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 
 ATLINLINE ATLAPI_(IUnknown*) AtlComPtrAssign(
-    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp, 
+    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp,
     _In_opt_ IUnknown* lp)
 {
     if (pp == NULL)
         return NULL;
-        
+
     if (lp != NULL)
         lp->AddRef();
     if (*pp)
@@ -96,8 +96,8 @@ ATLINLINE ATLAPI_(IUnknown*) AtlComPtrAssign(
 }
 
 ATLINLINE ATLAPI_(IUnknown*) AtlComQIPtrAssign(
-    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp, 
-    _In_opt_ IUnknown* lp, 
+    _Inout_opt_ _Deref_pre_maybenull_ _Deref_post_maybenull_ IUnknown** pp,
+    _In_opt_ IUnknown* lp,
     _In_ REFIID riid)
 {
     if (pp == NULL)
@@ -117,7 +117,7 @@ ATLINLINE ATLAPI_(IUnknown*) AtlComQIPtrAssign(
 // COM Smart pointers
 
 template <class T>
-class _NoAddRefReleaseOnCComPtr : 
+class _NoAddRefReleaseOnCComPtr :
     public T
 {
     private:
@@ -128,7 +128,7 @@ class _NoAddRefReleaseOnCComPtr :
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 
 _Check_return_ inline HRESULT AtlSetChildSite(
-    _Inout_ IUnknown* punkChild, 
+    _Inout_ IUnknown* punkChild,
     _Inout_opt_ IUnknown* punkParent)
 {
     if (punkChild == NULL)
@@ -198,7 +198,7 @@ public:
         return (_NoAddRefReleaseOnCComPtr<T>*)p;
     }
     bool operator!() const throw()
-    {	
+    {
         return (p == NULL);
     }
     bool operator<(_In_opt_ T* pT) const throw()
@@ -225,20 +225,8 @@ public:
         }
     }
     // Compare two objects for equivalence
-    bool IsEqualObject(_Inout_opt_ IUnknown* pOther) throw()
-    {
-        if (p == NULL && pOther == NULL)
-            return true;	// They are both NULL objects
+    inline bool IsEqualObject(_Inout_opt_ IUnknown* pOther) throw();
 
-        if (p == NULL || pOther == NULL)
-            return false;	// One is NULL the other is not
-
-        CComPtr<IUnknown> punk1;
-        CComPtr<IUnknown> punk2;
-        p->QueryInterface(__uuidof(IUnknown), (void**)&punk1);
-        pOther->QueryInterface(__uuidof(IUnknown), (void**)&punk2);
-        return punk1 == punk2;
-    }
     // Attach to an existing interface (does not AddRef)
     void Attach(_In_opt_ T* p2) throw()
     {
@@ -274,15 +262,15 @@ public:
         return AtlSetChildSite(p, punkParent);
     }
     _Check_return_ HRESULT Advise(
-        _Inout_ IUnknown* pUnk, 
-        _In_ const IID& iid, 
+        _Inout_ IUnknown* pUnk,
+        _In_ const IID& iid,
         _Out_ LPDWORD pdw) throw()
     {
         return AtlAdvise(p, pUnk, iid, pdw);
     }
     _Check_return_ HRESULT CoCreateInstance(
-        _In_ REFCLSID rclsid, 
-        _Inout_opt_ LPUNKNOWN pUnkOuter = NULL, 
+        _In_ REFCLSID rclsid,
+        _Inout_opt_ LPUNKNOWN pUnkOuter = NULL,
         _In_ DWORD dwClsContext = CLSCTX_ALL) throw()
     {
         ATLASSERT(p == NULL);
@@ -290,8 +278,8 @@ public:
     }
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
     _Check_return_ HRESULT CoCreateInstance(
-        _In_z_ LPCOLESTR szProgID, 
-        _Inout_opt_ LPUNKNOWN pUnkOuter = NULL, 
+        _In_z_ LPCOLESTR szProgID,
+        _Inout_opt_ LPUNKNOWN pUnkOuter = NULL,
         _In_ DWORD dwClsContext = CLSCTX_ALL) throw()
     {
         CLSID clsid;
@@ -312,7 +300,7 @@ public:
 };
 
 template <class T>
-class CComPtr : 
+class CComPtr :
     public CComPtrBase<T>
 {
 public:
@@ -325,7 +313,7 @@ public:
     }
     CComPtr(_Inout_ const CComPtr<T>& lp) throw() :
         CComPtrBase<T>(lp.p)
-    {	
+    {
     }
     T* operator=(_Inout_opt_ T* lp) throw()
     {
@@ -338,9 +326,9 @@ public:
     template <typename Q>
     T* operator=(_Inout_ const CComPtr<Q>& lp) throw()
     {
-        if( !IsEqualObject(lp) )
+        if( !this->IsEqualObject(lp) )
         {
-            return static_cast<T*>(AtlComQIPtrAssign((IUnknown**)&p, lp, __uuidof(T)));
+            return static_cast<T*>(AtlComQIPtrAssign((IUnknown**)&this->p, lp, __uuidof(T)));
         }
         return *this;
     }
@@ -351,25 +339,25 @@ public:
             CComPtr(lp).Swap(*this);
         }
         return *this;
-    }	
-    CComPtr(_Inout_ CComPtr<T>&& lp) throw() :	
+    }
+    CComPtr(_Inout_ CComPtr<T>&& lp) throw() :
         CComPtrBase<T>()
-    {	
+    {
         lp.Swap(*this);
-    }	
+    }
     T* operator=(_Inout_ CComPtr<T>&& lp) throw()
-    {			
+    {
         if (*this != lp)
         {
             CComPtr(static_cast<CComPtr&&>(lp)).Swap(*this);
         }
-        return *this;		
+        return *this;
     }
 };
 
 //specialization for IDispatch
 template <>
-class CComPtr<IDispatch> : 
+class CComPtr<IDispatch> :
     public CComPtrBase<IDispatch>
 {
 public:
@@ -399,25 +387,25 @@ public:
             CComPtr(lp).Swap(*this);
         }
         return *this;
-    }	
-    CComPtr(_Inout_ CComPtr<IDispatch>&& lp) throw() :	
+    }
+    CComPtr(_Inout_ CComPtr<IDispatch>&& lp) throw() :
         CComPtrBase<IDispatch>()
-    {		
-        p = lp.p;		
+    {
+        this->p = lp.p;
         lp.p = NULL;
     }
     IDispatch* operator=(_Inout_ CComPtr<IDispatch>&& lp) throw()
-    {		
+    {
         CComPtr(static_cast<CComPtr&&>(lp)).Swap(*this);
         return *this;
-    }	
+    }
 // IDispatch specific stuff
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
     _Check_return_ HRESULT GetPropertyByName(
-        _In_z_ LPCOLESTR lpsz, 
+        _In_z_ LPCOLESTR lpsz,
         _Out_ VARIANT* pVar) throw()
     {
-        ATLASSERT(p);
+        ATLASSERT(this->p);
         ATLASSERT(pVar);
         DISPID dwDispID;
         HRESULT hr = GetIDOfName(lpsz, &dwDispID);
@@ -426,16 +414,16 @@ public:
         return hr;
     }
     _Check_return_ HRESULT GetProperty(
-        _In_ DISPID dwDispID, 
+        _In_ DISPID dwDispID,
         _Out_ VARIANT* pVar) throw()
     {
-        return GetProperty(p, dwDispID, pVar);
+        return GetProperty(this->p, dwDispID, pVar);
     }
     _Check_return_ HRESULT PutPropertyByName(
-        _In_z_ LPCOLESTR lpsz, 
+        _In_z_ LPCOLESTR lpsz,
         _In_ VARIANT* pVar) throw()
     {
-        ATLASSERT(p);
+        ATLASSERT(this->p);
         ATLASSERT(pVar);
         DISPID dwDispID;
         HRESULT hr = GetIDOfName(lpsz, &dwDispID);
@@ -444,28 +432,28 @@ public:
         return hr;
     }
     _Check_return_ HRESULT PutProperty(
-        _In_ DISPID dwDispID, 
+        _In_ DISPID dwDispID,
         _In_ VARIANT* pVar) throw()
     {
-        return PutProperty(p, dwDispID, pVar);
+        return PutProperty(this->p, dwDispID, pVar);
     }
     _Check_return_ HRESULT GetIDOfName(
-        _In_z_ LPCOLESTR lpsz, 
+        _In_z_ LPCOLESTR lpsz,
         _Out_ DISPID* pdispid) throw()
     {
-        return p->GetIDsOfNames(IID_NULL, const_cast<LPOLESTR*>(&lpsz), 1, LOCALE_USER_DEFAULT, pdispid);
+        return this->p->GetIDsOfNames(IID_NULL, const_cast<LPOLESTR*>(&lpsz), 1, LOCALE_USER_DEFAULT, pdispid);
     }
     // Invoke a method by DISPID with no parameters
     _Check_return_ HRESULT Invoke0(
-        _In_ DISPID dispid, 
+        _In_ DISPID dispid,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
     {
         DISPPARAMS dispparams = { NULL, NULL, 0, 0};
-        return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
+        return this->p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
     }
     // Invoke a method by name with no parameters
     _Check_return_ HRESULT Invoke0(
-        _In_z_ LPCOLESTR lpszName, 
+        _In_z_ LPCOLESTR lpszName,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
     {
         HRESULT hr;
@@ -477,19 +465,19 @@ public:
     }
     // Invoke a method by DISPID with a single parameter
     _Check_return_ HRESULT Invoke1(
-        _In_ DISPID dispid, 
-        _In_ VARIANT* pvarParam1, 
+        _In_ DISPID dispid,
+        _In_ VARIANT* pvarParam1,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
     {
         DISPPARAMS dispparams = { pvarParam1, NULL, 1, 0};
-        return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
+        return this->p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
     }
     // Invoke a method by name with a single parameter
     _Check_return_ HRESULT Invoke1(
-        _In_z_ LPCOLESTR lpszName, 
-        _In_ VARIANT* pvarParam1, 
+        _In_z_ LPCOLESTR lpszName,
+        _In_ VARIANT* pvarParam1,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
-    {		 
+    {
         DISPID dispid;
         HRESULT hr = GetIDOfName(lpszName, &dispid);
         if (SUCCEEDED(hr))
@@ -498,15 +486,15 @@ public:
     }
     // Invoke a method by DISPID with two parameters
     _Check_return_ HRESULT Invoke2(
-        _In_ DISPID dispid, 
-        _In_ VARIANT* pvarParam1, 
-        _In_ VARIANT* pvarParam2, 
+        _In_ DISPID dispid,
+        _In_ VARIANT* pvarParam1,
+        _In_ VARIANT* pvarParam2,
         _Out_opt_ VARIANT* pvarRet = NULL) throw();
     // Invoke a method by name with two parameters
     _Check_return_ HRESULT Invoke2(
-        _In_z_ LPCOLESTR lpszName, 
-        _In_ VARIANT* pvarParam1, 
-        _In_ VARIANT* pvarParam2, 
+        _In_z_ LPCOLESTR lpszName,
+        _In_ VARIANT* pvarParam1,
+        _In_ VARIANT* pvarParam2,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
     {
         DISPID dispid;
@@ -517,19 +505,19 @@ public:
     }
     // Invoke a method by DISPID with N parameters
     _Check_return_ HRESULT InvokeN(
-        _In_ DISPID dispid, 
-        _In_ VARIANT* pvarParams, 
-        _In_ int nParams, 
+        _In_ DISPID dispid,
+        _In_ VARIANT* pvarParams,
+        _In_ int nParams,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
     {
         DISPPARAMS dispparams = {pvarParams, NULL, (unsigned int)nParams, 0};
-        return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
+        return this->p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
     }
     // Invoke a method by name with Nparameters
     _Check_return_ HRESULT InvokeN(
-        _In_z_ LPCOLESTR lpszName, 
-        _In_ VARIANT* pvarParams, 
-        _In_ int nParams, 
+        _In_z_ LPCOLESTR lpszName,
+        _In_ VARIANT* pvarParams,
+        _In_ int nParams,
         _Out_opt_ VARIANT* pvarRet = NULL) throw()
     {
         HRESULT hr;
@@ -541,25 +529,25 @@ public:
     }
 
     _Check_return_ static HRESULT PutProperty(
-        _In_ IDispatch* pDispatch, 
-        _In_ DISPID dwDispID, 
+        _In_ IDispatch* pDispatch,
+        _In_ DISPID dwDispID,
         _In_ VARIANT* pVar) throw()
     {
         ATLASSERT(pDispatch);
         ATLASSERT(pVar != NULL);
         if (pVar == NULL)
             return E_POINTER;
-        
+
         if (pDispatch == NULL)
             return E_INVALIDARG;
-        
+
         ATLTRACE(atlTraceCOM, 2, _T("CPropertyHelper::PutProperty\n"));
         DISPPARAMS dispparams = {NULL, NULL, 1, 1};
         dispparams.rgvarg = pVar;
         DISPID dispidPut = DISPID_PROPERTYPUT;
         dispparams.rgdispidNamedArgs = &dispidPut;
 
-        if (pVar->vt == VT_UNKNOWN || pVar->vt == VT_DISPATCH || 
+        if (pVar->vt == VT_UNKNOWN || pVar->vt == VT_DISPATCH ||
             (pVar->vt & VT_ARRAY) || (pVar->vt & VT_BYREF))
         {
             HRESULT hr = pDispatch->Invoke(dwDispID, IID_NULL,
@@ -575,17 +563,17 @@ public:
 
     _Check_return_ static HRESULT GetProperty(
         _In_ IDispatch* pDispatch,
-        _In_ DISPID dwDispID, 
+        _In_ DISPID dwDispID,
         _Out_ VARIANT* pVar) throw()
     {
         ATLASSERT(pDispatch);
         ATLASSERT(pVar != NULL);
         if (pVar == NULL)
             return E_POINTER;
-        
+
         if (pDispatch == NULL)
             return E_INVALIDARG;
-            
+
         ATLTRACE(atlTraceCOM, 2, _T("CPropertyHelper::GetProperty\n"));
         DISPPARAMS dispparamsNoArgs = {NULL, NULL, 0, 0};
         return pDispatch->Invoke(dwDispID, IID_NULL,
@@ -595,8 +583,24 @@ public:
 #endif // _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 };
 
+template <class T>
+inline bool CComPtrBase<T>::IsEqualObject(_Inout_opt_ IUnknown* pOther) throw()
+{
+    if (p == NULL && pOther == NULL)
+        return true;	// They are both NULL objects
+
+    if (p == NULL || pOther == NULL)
+        return false;	// One is NULL the other is not
+
+    CComPtr<IUnknown> punk1;
+    CComPtr<IUnknown> punk2;
+    p->QueryInterface(__uuidof(IUnknown), (void**)&punk1);
+    pOther->QueryInterface(__uuidof(IUnknown), (void**)&punk2);
+    return punk1 == punk2;
+}
+
 template <class T, const IID* piid = &__uuidof(T)>
-class CComQIPtr : 
+class CComQIPtr :
     public CComPtr<T>
 {
 public:
@@ -604,7 +608,7 @@ public:
     {
     }
     CComQIPtr(decltype(__nullptr)) throw()
-    {	
+    {
     }
     CComQIPtr(_Inout_opt_ T* lp) throw() :
         CComPtr<T>(lp)
@@ -618,15 +622,15 @@ public:
     {
         if (lp != NULL)
         {
-            if (FAILED(lp->QueryInterface(*piid, (void **)&p)))
-                p = NULL;
+            if (FAILED(lp->QueryInterface(*piid, (void **)&this->p)))
+                this->p = NULL;
         }
     }
     T* operator=(decltype(__nullptr)) throw()
     {
         CComQIPtr(nullptr).Swap(*this);
         return nullptr;
-    }	
+    }
     T* operator=(_Inout_opt_ T* lp) throw()
     {
         if(*this!=lp)
@@ -647,7 +651,7 @@ public:
     {
         if(*this!=lp)
         {
-            return static_cast<T*>(AtlComQIPtrAssign((IUnknown**)&p, lp, *piid));
+            return static_cast<T*>(AtlComQIPtrAssign((IUnknown**)&this->p, lp, *piid));
         }
         return *this;
     }
@@ -655,7 +659,7 @@ public:
 
 //Specialization to make it work
 template<>
-class CComQIPtr<IUnknown, &IID_IUnknown> : 
+class CComQIPtr<IUnknown, &IID_IUnknown> :
     public CComPtr<IUnknown>
 {
 public:
@@ -667,8 +671,8 @@ public:
         //Actually do a QI to get identity
         if (lp != NULL)
         {
-            if (FAILED(lp->QueryInterface(__uuidof(IUnknown), (void **)&p)))
-                p = NULL;
+            if (FAILED(lp->QueryInterface(__uuidof(IUnknown), (void **)&this->p)))
+                this->p = NULL;
         }
     }
     CComQIPtr(_Inout_ const CComQIPtr<IUnknown,&IID_IUnknown>& lp) throw() :
@@ -680,7 +684,7 @@ public:
         if(*this!=lp)
         {
             //Actually do a QI to get identity
-            return AtlComQIPtrAssign((IUnknown**)&p, lp, __uuidof(IUnknown));
+            return AtlComQIPtrAssign((IUnknown**)&this->p, lp, __uuidof(IUnknown));
         }
         return *this;
     }
@@ -713,7 +717,7 @@ public:
     CComBSTR() throw()
     {
         m_str = NULL;
-    }	
+    }
     CComBSTR(decltype(__nullptr)) throw()
     {
         m_str = NULL;
@@ -728,7 +732,7 @@ public:
         {
             AtlThrow(E_INVALIDARG);
         }
-        
+
         if (nSize == 0)
         {
             m_str = NULL;
@@ -749,7 +753,7 @@ public:
         {
             AtlThrow(E_INVALIDARG);
         }
-        
+
         if (nSize == 0)
         {
             m_str = NULL;
@@ -801,7 +805,7 @@ public:
             AtlThrow(E_OUTOFMEMORY);
         }
     }
-    
+
     CComBSTR& operator=(decltype(__nullptr)) throw()
     {
         ::SysFreeString(m_str);
@@ -848,7 +852,7 @@ public:
         m_str = src.m_str;
         src.m_str = NULL;
     }
-    
+
     CComBSTR& operator=(_Inout_ CComBSTR&& src)
     {
         if (m_str != src.m_str)
@@ -859,7 +863,7 @@ public:
         }
         return *this;
     }
-    
+
     ~CComBSTR() throw();
 
     unsigned int Length() const throw()
@@ -979,7 +983,7 @@ public:
     }
 
     _Check_return_ HRESULT Append(_In_z_ LPCOLESTR lpsz) throw()
-    {		
+    {
         return Append(lpsz, UINT(ocslen(lpsz)));
     }
 
@@ -1013,42 +1017,42 @@ public:
         {
             return E_INVALIDARG;
         }
-        
+
         const unsigned int n1 = Length();
         unsigned int n1Bytes = 0;
         unsigned int nSize = 0;
         unsigned int nSizeBytes = 0;
-        
+
         HRESULT hr = AtlAdd<unsigned int>(&nSize, n1, nLen);
         if (FAILED(hr))
         {
             return hr;
         }
-        
+
         hr = AtlMultiply<unsigned int>(&nSizeBytes, nSize, sizeof(OLECHAR));
         if (FAILED(hr))
         {
             return hr;
         }
-        
+
         hr = AtlMultiply<unsigned int>(&n1Bytes, n1, sizeof(OLECHAR));
         if (FAILED(hr))
         {
             return hr;
         }
-        
+
         BSTR b = ::SysAllocStringLen(NULL, nSize);
         if (b == NULL)
         {
             return E_OUTOFMEMORY;
         }
-        
+
         if(::SysStringLen(m_str) > 0)
         {
             _Analysis_assume_(m_str); // ::SysStringLen(m_str) guarantees that m_str != NULL
             Checked::memcpy_s(b, nSizeBytes, m_str, n1Bytes);
         }
-                
+
         Checked::memcpy_s(b+n1, nLen*sizeof(OLECHAR), lpsz, nLen*sizeof(OLECHAR));
         b[nSize] = '\0';
         SysFreeString(m_str);
@@ -1069,7 +1073,7 @@ public:
     }
 
     _Check_return_ HRESULT AppendBytes(
-        _In_reads_opt_(nLen) const char* lpsz, 
+        _In_reads_opt_(nLen) const char* lpsz,
         _In_ int nLen) throw()
     {
         if (lpsz == NULL || nLen == 0)
@@ -1080,24 +1084,24 @@ public:
         {
             return E_INVALIDARG;
         }
-                
-        const unsigned int n1 = ByteLength();		
+
+        const unsigned int n1 = ByteLength();
         unsigned int nSize = 0;
         HRESULT hr = AtlAdd<unsigned int>(&nSize, n1, nLen);
         if (FAILED(hr))
         {
             return hr;
         }
-                         
+
         BSTR b = ::SysAllocStringByteLen(NULL, nSize);
         if (b == NULL)
         {
             return E_OUTOFMEMORY;
         }
-        
+
         Checked::memcpy_s(b, nSize, m_str, n1);
         Checked::memcpy_s(((char*)b) + n1, nLen, lpsz, nLen);
-        
+
         *((OLECHAR*)(((char*)b) + nSize)) = '\0';
         SysFreeString(m_str);
         m_str = b;
@@ -1176,7 +1180,7 @@ public:
                 return AtlHresultFromLastError();
             }
 
-            UINT nBytes=0;	
+            UINT nBytes=0;
             HRESULT hr=S_OK;
             if( FAILED(hr=::ATL::AtlMultiply(&nBytes, static_cast<UINT>(nRet), static_cast<UINT>(sizeof(OLECHAR)))))
             {
@@ -1243,7 +1247,7 @@ public:
             UINT nBytes=0;
             HRESULT hr=S_OK;
             if( FAILED(hr=::ATL::AtlMultiply(&nBytes, static_cast<UINT>(nRet), static_cast<UINT>(sizeof(OLECHAR)))))
-            {		
+            {
                 return hr;
             }
             BSTR b = ::SysAllocStringByteLen((LPCSTR) (LPWSTR) pszW, nBytes);
@@ -1258,7 +1262,7 @@ public:
 
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
     bool LoadString(
-        _In_ HINSTANCE hInst, 
+        _In_ HINSTANCE hInst,
         _In_ UINT nID) throw()
     {
         ::SysFreeString(m_str);
@@ -1319,7 +1323,7 @@ public:
     {
         return operator>((LPCOLESTR)pszSrc);
     }
-    
+
     bool operator!=(_In_ const CComBSTR& bstrSrc) const throw()
     {
         return !operator==(bstrSrc);
@@ -1349,7 +1353,7 @@ public:
     {
         return operator==((LPCOLESTR)pszSrc);
     }
-    
+
     bool operator==(_In_ int nNull) const throw()
     {
         ATLASSERT(nNull == 0);
@@ -1357,14 +1361,14 @@ public:
         return (!*this);
     }
 
-    bool operator==(decltype(__nullptr)) const throw() 
+    bool operator==(decltype(__nullptr)) const throw()
     {
-        return *this == 0; 
+        return *this == 0;
     }
 
-    bool operator!=(decltype(__nullptr)) const throw() 
+    bool operator!=(decltype(__nullptr)) const throw()
     {
-        return *this != 0; 
+        return *this != 0;
     }
 
     CComBSTR(_In_opt_z_ LPCSTR pSrc)
@@ -1389,7 +1393,7 @@ public:
         {
             AtlThrow(E_INVALIDARG);
         }
-        
+
         if (nSize != 0 && sz == NULL)
         {
             m_str = ::SysAllocStringLen(NULL, nSize);
@@ -1459,22 +1463,22 @@ public:
         {
             return E_INVALIDARG;
         }
-        
+
         ULONG cb;
-        ULONG cbStrLen = CComBSTR::GetStreamSize(m_str);		
+        ULONG cbStrLen = CComBSTR::GetStreamSize(m_str);
         ATLASSERT(cbStrLen >= sizeof(ULONG));
         cbStrLen -= sizeof(ULONG);
-            
+
         HRESULT hr = pStream->Write((void*) &cbStrLen, sizeof(cbStrLen), &cb);
         if (FAILED(hr))
         {
             return hr;
         }
-        
+
         if (cbStrLen == 0)
         {
             return S_OK;
-        }			
+        }
         return pStream->Write((void*) m_str, cbStrLen, &cb);
     }
 
@@ -1488,7 +1492,7 @@ public:
 
         ATLASSERT(!*this); // should be empty
         Empty();
-        
+
         HRESULT hrSeek;
         ULARGE_INTEGER nBegOffset;
         {
@@ -1511,9 +1515,9 @@ public:
             }
             // read NULL string
             else if (cbStrLen == 0)
-            {				
+            {
             }
-            // invalid data length	
+            // invalid data length
             else if (cbStrLen < sizeof(OLECHAR))
             {
                 ATLTRACE(atlTraceCOM, 0, _T("Input stream is corrupted."));
@@ -1525,7 +1529,7 @@ public:
                 ATLTRACE(atlTraceCOM, 0, _T("String exceeded the maximum allowed size see _ATL_STREAM_MAX_SIZE."));
                 hr = E_ACCESSDENIED;
             }
-            else 
+            else
             {
                 //subtract size for terminating NULL which we wrote out
                 cbStrLen -= sizeof(OLECHAR);
@@ -1549,10 +1553,10 @@ public:
                         else
                         {
                             OLECHAR ch;
-                            hr = pStream->Read(reinterpret_cast<void*>(&ch), sizeof(OLECHAR), &cbRead);	
+                            hr = pStream->Read(reinterpret_cast<void*>(&ch), sizeof(OLECHAR), &cbRead);
 
                             if (SUCCEEDED(hr))
-                            {								
+                            {
 #ifndef _ATL_CCOMBSTR_READFROMSTREAM_INSECURE
                                 if (cbRead != sizeof(OLECHAR) || ch != L'\0')
 #else
@@ -1560,12 +1564,12 @@ public:
 #endif
                                 {
                                     ATLTRACE(atlTraceCOM, 0, _T("Cannot read NULL terminator from stream."));
-                                    hr = E_FAIL; 									
-                                }								
+                                    hr = E_FAIL;
+                                }
                             }
                         }
-                    }			
-                        
+                    }
+
                     if (FAILED(hr))
                     {
 ATLPREFAST_SUPPRESS(6102)
@@ -1576,34 +1580,34 @@ ATLPREFAST_UNSUPPRESS()
                 }
             }
         }
-        
-        // If SysAllocStringByteLen or IStream::Read failed, reset seek 
+
+        // If SysAllocStringByteLen or IStream::Read failed, reset seek
         // pointer to start of BSTR size.
         if (FAILED(hr) && SUCCEEDED(hrSeek))
         {
             LARGE_INTEGER nOffset;
             nOffset.QuadPart = static_cast<LONGLONG>(nBegOffset.QuadPart);
-            pStream->Seek(nOffset, STREAM_SEEK_SET, NULL);				
+            pStream->Seek(nOffset, STREAM_SEEK_SET, NULL);
         }
-    
+
         return hr;
     }
 
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
     _Success_(return != false)
     static bool LoadStringResource(
-        _In_ HINSTANCE hInstance, 
-        _In_ UINT uID, 
+        _In_ HINSTANCE hInstance,
+        _In_ UINT uID,
         _Inout_ _Pre_null_ _Post_z_ BSTR& bstrText) throw()
     {
         ATLASSERT(bstrText == NULL);
-    
+
         const ATLSTRINGRESOURCEIMAGE* pImage = AtlGetStringResourceImage(hInstance, uID);
         if (pImage != NULL)
         {
             bstrText = ::SysAllocStringLen(pImage->achString, pImage->nLength);
         }
-        else 
+        else
         {
             bstrText = NULL;
         }
@@ -1612,17 +1616,17 @@ ATLPREFAST_UNSUPPRESS()
 
     _Success_(return != false)
     static bool LoadStringResource(
-        _In_ UINT uID, 
+        _In_ UINT uID,
         _Inout_ _Pre_null_ _Post_z_ BSTR& bstrText) throw()
     {
         ATLASSERT(bstrText == NULL);
-    
-        const ATLSTRINGRESOURCEIMAGE* pImage = AtlGetStringResourceImage(uID);	
+
+        const ATLSTRINGRESOURCEIMAGE* pImage = AtlGetStringResourceImage(uID);
         if (pImage != NULL)
         {
             bstrText = ::SysAllocStringLen(pImage->achString, pImage->nLength);
         }
-        else 
+        else
         {
             bstrText = NULL;
         }
@@ -1649,9 +1653,9 @@ ATLPREFAST_UNSUPPRESS()
         ULONG ulSize = sizeof(ULONG);
         if (bstr != NULL)
         {
-            ulSize += SysStringByteLen(bstr) + sizeof(OLECHAR);			
-        }		
-        
+            ulSize += SysStringByteLen(bstr) + sizeof(OLECHAR);
+        }
+
         return ulSize;
     }
 };
@@ -1703,47 +1707,47 @@ public:
     CAdapt(_In_ const T& rSrc) :
         m_T( rSrc )
     {
-    }	
+    }
     CAdapt(_In_ const CAdapt& rSrCA) :
         m_T( rSrCA.m_T )
-    {	
-    }	
+    {
+    }
     CAdapt& operator=(_In_ const T& rSrc)
-    {		
+    {
         m_T = rSrc;
 
         return *this;
-    }	
+    }
     CAdapt& operator=(_In_ const CAdapt<T>& rSrc)
-    {		
+    {
         if (this != &rSrc)
         {
-            m_T = rSrc.m_T;			
-        }		
+            m_T = rSrc.m_T;
+        }
         return *this;
-    }	
+    }
     CAdapt(_Inout_ T&& rSrc) :
         m_T( static_cast<T&&>(rSrc) )
     {
     }
-    CAdapt(_Inout_ CAdapt&& rSrCA) : 
+    CAdapt(_Inout_ CAdapt&& rSrCA) :
         m_T( static_cast<T&&>(rSrCA.m_T) )
-    {		
+    {
     }
     CAdapt& operator=(_Inout_ T&& rSrc)
-    {	
-        m_T = static_cast<T&&>(rSrc);	
-                
+    {
+        m_T = static_cast<T&&>(rSrc);
+
         return *this;
     }
     CAdapt& operator=(_Inout_ CAdapt<T>&& rSrc)
-    {			
+    {
         if (this != &rSrc)
         {
             m_T = static_cast<T&&>( rSrc.m_T );
-        }		
+        }
         return *this;
-    }	
+    }
     bool operator<(_In_ const T& rSrc) const
     {
         return m_T < rSrc;
@@ -1782,7 +1786,7 @@ public:
 #define ATL_VARIANT_TRUE VARIANT_BOOL( -1 )
 #define ATL_VARIANT_FALSE VARIANT_BOOL( 0 )
 
-template< typename T > 
+template< typename T >
 class CVarTypeInfo
 {
 //	static const VARTYPE VT;  // VARTYPE corresponding to type T
@@ -2125,7 +2129,7 @@ __declspec( selectany ) CY* VARIANT::* const CVarTypeInfo< CY* >::pmField = &VAR
 #define ATLVARIANT_THROW()
 #endif
 
-class CComVariant : 
+class CComVariant :
     public tagVARIANT
 {
 // Constructors
@@ -2391,7 +2395,7 @@ public:
             AtlThrow(E_OUTOFMEMORY);
 #endif
         }
-        
+
         return *this;
     }
 
@@ -2530,7 +2534,7 @@ public:
         if (vt != VT_DISPATCH || pSrc != pdispVal)
         {
             ClearThrow();
-            
+
             vt = VT_DISPATCH;
             pdispVal = pSrc;
             // Need to AddRef as VariantClear will Release
@@ -2545,7 +2549,7 @@ public:
         if (vt != VT_UNKNOWN || pSrc != punkVal)
         {
             ClearThrow();
-            
+
             vt = VT_UNKNOWN;
             punkVal = pSrc;
 
@@ -2749,8 +2753,8 @@ public:
 
     CComVariant& operator=(_In_ const SAFEARRAY *pSrc) ATLVARIANT_THROW()
     {
-        ATLASSERT(pSrc != NULL);	
-        
+        ATLASSERT(pSrc != NULL);
+
         if (pSrc == NULL)
         {
             ClearThrow();
@@ -2787,7 +2791,7 @@ public:
 #endif
             }
         }
-        
+
         return *this;
     }
 
@@ -2829,22 +2833,22 @@ public:
 
 private:
     inline HRESULT VarCmp(
-        _In_ LPVARIANT pvarLeft, 
-        _In_ LPVARIANT pvarRight, 
-        _In_ LCID lcid, 
+        _In_ LPVARIANT pvarLeft,
+        _In_ LPVARIANT pvarRight,
+        _In_ LCID lcid,
         _In_ ULONG dwFlags) const throw();
 
 // Operations
 public:
     HRESULT Clear()
-    { 
-        return ::VariantClear(this); 
-    }	
-    HRESULT Copy(_In_ const VARIANT* pSrc)
-    { 
-        return ::VariantCopy(this, const_cast<VARIANT*>(pSrc)); 
+    {
+        return ::VariantClear(this);
     }
-    
+    HRESULT Copy(_In_ const VARIANT* pSrc)
+    {
+        return ::VariantCopy(this, const_cast<VARIANT*>(pSrc));
+    }
+
     // copy VARIANT to BSTR
     HRESULT CopyTo(_Outptr_result_z_ BSTR *pstrDest) const
     {
@@ -2860,15 +2864,15 @@ public:
         }
         else if (vt != VT_BSTR)
             hRes = DISP_E_TYPEMISMATCH;
-                
+
         return hRes;
     }
-    
+
     HRESULT Attach(_In_ VARIANT* pSrc)
     {
         if(pSrc == NULL)
-            return E_INVALIDARG;			
-        
+            return E_INVALIDARG;
+
         HRESULT hr = S_OK;
         if (this != pSrc)
         {
@@ -2890,7 +2894,7 @@ public:
         ATLASSERT(pDest != NULL);
         if(pDest == NULL)
             return E_POINTER;
-            
+
         // Clear out the variant
         HRESULT hr = ::VariantClear(pDest);
         if (SUCCEEDED(hr))
@@ -2924,7 +2928,7 @@ public:
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
     _Check_return_ HRESULT WriteToStream(_Inout_ IStream* pStream);
     _Check_return_ HRESULT WriteToStream(
-        _Inout_ IStream* pStream, 
+        _Inout_ IStream* pStream,
         _In_ VARTYPE vtWrite)
     {
         if (vtWrite != VT_EMPTY && vtWrite != vt)
@@ -2941,13 +2945,13 @@ public:
     }
 
     _Check_return_ HRESULT ReadFromStream(
-        _Inout_ IStream* pStream, 
+        _Inout_ IStream* pStream,
         _In_ VARTYPE vtExpected = VT_EMPTY);
 
     _Check_return_ HRESULT ReadFromStream(
-        _Inout_ IStream* pStream, 
+        _Inout_ IStream* pStream,
         _In_ VARTYPE vtExpected,
-        _In_ ClassesAllowedInStream rgclsidAllowed, 
+        _In_ ClassesAllowedInStream rgclsidAllowed,
         _In_ DWORD cclsidAllowed);
 
     // Return the size in bytes of the current contents
@@ -2969,11 +2973,11 @@ private:
         }
 #endif
     }
-    
+
 public:
     _Check_return_ HRESULT InternalClear() ATLVARIANT_THROW()
     {
-        HRESULT hr = Clear();		
+        HRESULT hr = Clear();
         ATLASSERT(SUCCEEDED(hr));
         if (FAILED(hr))
         {
@@ -3008,7 +3012,7 @@ _Check_return_ inline HRESULT CComVariant::WriteToStream(_Inout_ IStream* pStrea
 {
     if(pStream == NULL)
         return E_INVALIDARG;
-        
+
     HRESULT hr = pStream->Write(&vt, sizeof(VARTYPE), NULL);
     if (FAILED(hr))
         return hr;
@@ -3089,7 +3093,7 @@ _Check_return_ inline HRESULT CComVariant::WriteToStream(_Inout_ IStream* pStrea
 
 
 _Check_return_ inline HRESULT CComVariant::ReadFromStream(
-    _Inout_ IStream* pStream, 
+    _Inout_ IStream* pStream,
     _In_ VARTYPE vtExpected /* = VT_EMPTY */)
 {
     ClassesAllowedInStream allowed;
@@ -3099,15 +3103,15 @@ _Check_return_ inline HRESULT CComVariant::ReadFromStream(
 }
 
 _Check_return_ inline HRESULT CComVariant::ReadFromStream(
-    _Inout_ IStream* pStream, 
-    _In_ VARTYPE vtExpected, 
-    _In_ ClassesAllowedInStream rgclsidAllowed, 
+    _Inout_ IStream* pStream,
+    _In_ VARTYPE vtExpected,
+    _In_ ClassesAllowedInStream rgclsidAllowed,
     _In_ DWORD cclsidAllowed)
 {
     ATLASSERT(pStream != NULL);
     if(pStream == NULL)
         return E_INVALIDARG;
-        
+
     HRESULT hr;
     hr = VariantClear(this);
     if (FAILED(hr))
@@ -3136,7 +3140,7 @@ ATLPREFAST_UNSUPPRESS()
             hr = AtlInternalOleLoadFromStream(pStream,
                 (vtRead == VT_UNKNOWN) ? __uuidof(IUnknown) : __uuidof(IDispatch),
                 (void**)&punkVal, rgclsidAllowed, cclsidAllowed);
-            // If IPictureDisp or IFontDisp property is not set, 
+            // If IPictureDisp or IFontDisp property is not set,
             // OleLoadFromStream() will return REGDB_E_CLASSNOTREG.
             if (hr == REGDB_E_CLASSNOTREG)
                 hr = S_OK;
@@ -3205,22 +3209,22 @@ inline HRESULT CComVariant::GetSizeMax(_Out_ ULARGE_INTEGER* pcbSize) const
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr = S_OK;
     ULARGE_INTEGER nSize;
-    nSize.QuadPart = sizeof(VARTYPE);	
-    
+    nSize.QuadPart = sizeof(VARTYPE);
+
     switch (vt)
     {
     case VT_UNKNOWN:
     case VT_DISPATCH:
-        {	
+        {
             nSize.LowPart += sizeof(CLSID);
-            
+
             if (punkVal != NULL)
             {
                 CComPtr<IPersistStream> spStream;
-                
+
                 hr = punkVal->QueryInterface(__uuidof(IPersistStream), (void**)&spStream);
                 if (FAILED(hr))
                 {
@@ -3230,17 +3234,17 @@ inline HRESULT CComVariant::GetSizeMax(_Out_ ULARGE_INTEGER* pcbSize) const
                         break;
                     }
                 }
-                
+
                 ULARGE_INTEGER nPersistSize;
                 nPersistSize.QuadPart = 0;
-                
+
                 ATLASSERT(spStream != NULL);
-                hr = spStream->GetSizeMax(&nPersistSize);				
+                hr = spStream->GetSizeMax(&nPersistSize);
                 if (SUCCEEDED(hr))
                 {
                     hr = AtlAdd(&nSize.QuadPart, nSize.QuadPart, nPersistSize.QuadPart);
-                }				
-            }			
+                }
+            }
         }
         break;
     case VT_UI1:
@@ -3282,7 +3286,7 @@ inline HRESULT CComVariant::GetSizeMax(_Out_ ULARGE_INTEGER* pcbSize) const
                     bstr = varBSTR.bstrVal;
                     vtTmp = VT_BSTR;
                 }
-            } 
+            }
             else
             {
                 bstr = bstrVal;
@@ -3290,17 +3294,17 @@ inline HRESULT CComVariant::GetSizeMax(_Out_ ULARGE_INTEGER* pcbSize) const
 
             if (vtTmp == VT_BSTR)
             {
-                // Add the size of the length + string (in bytes) + NULL terminator.				
+                // Add the size of the length + string (in bytes) + NULL terminator.
                 nSize.QuadPart += CComBSTR::GetStreamSize(bstr);
             }
-        }		
+        }
     }
-    
+
     if (SUCCEEDED(hr))
     {
         pcbSize->QuadPart = nSize.QuadPart;
     }
-    
+
     return hr;
 }
 
@@ -3309,24 +3313,24 @@ ULONG CComVariant::GetSize() const
 {
     ULARGE_INTEGER nSize;
     HRESULT hr = GetSizeMax(&nSize);
-    
+
     if (SUCCEEDED(hr) && nSize.QuadPart <= ULONG_MAX)
     {
-        return nSize.LowPart;	
+        return nSize.LowPart;
     }
-    
+
     return sizeof(VARTYPE);
 }
 
 _Check_return_ inline HRESULT CComPtr<IDispatch>::Invoke2(
-    _In_ DISPID dispid, 
-    _In_ VARIANT* pvarParam1, 
-    _In_ VARIANT* pvarParam2, 
+    _In_ DISPID dispid,
+    _In_ VARIANT* pvarParam1,
+    _In_ VARIANT* pvarParam2,
     _Out_opt_ VARIANT* pvarRet) throw()
 {
     if(pvarParam1 == NULL || pvarParam2 == NULL)
         return E_INVALIDARG;
-            
+
     CComVariant varArgs[2] = { *pvarParam2, *pvarParam1 };
     DISPPARAMS dispparams = { &varArgs[0], NULL, 2, 0};
     return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
@@ -3338,19 +3342,19 @@ _Check_return_ inline HRESULT CComPtr<IDispatch>::Invoke2(
     Workaround for VarCmp function which does not compare VT_I1, VT_UI2, VT_UI4, VT_UI8 values
 */
 inline HRESULT CComVariant::VarCmp(
-    _In_ LPVARIANT pvarLeft, 
-    _In_ LPVARIANT pvarRight, 
-    _In_ LCID lcid, 
+    _In_ LPVARIANT pvarLeft,
+    _In_ LPVARIANT pvarRight,
+    _In_ LCID lcid,
     _In_ ULONG dwFlags) const throw()
-{			
-    switch(vt) 
+{
+    switch(vt)
     {
         case VT_I1:
             if (pvarLeft->cVal == pvarRight->cVal)
             {
                 return VARCMP_EQ;
             }
-            return pvarLeft->cVal > pvarRight->cVal ? VARCMP_GT : VARCMP_LT;			
+            return pvarLeft->cVal > pvarRight->cVal ? VARCMP_GT : VARCMP_LT;
         case VT_UI2:
             if (pvarLeft->uiVal == pvarRight->uiVal)
             {
@@ -3359,11 +3363,11 @@ inline HRESULT CComVariant::VarCmp(
             return pvarLeft->uiVal > pvarRight->uiVal ? VARCMP_GT : VARCMP_LT;
 
         case VT_UI4:
-            if (pvarLeft->uintVal == pvarRight->uintVal) 
+            if (pvarLeft->uintVal == pvarRight->uintVal)
             {
                 return VARCMP_EQ;
             }
-            return pvarLeft->uintVal > pvarRight->uintVal ? VARCMP_GT : VARCMP_LT;				
+            return pvarLeft->uintVal > pvarRight->uintVal ? VARCMP_GT : VARCMP_LT;
 
         case VT_UI8:
             if (pvarLeft->ullVal == pvarRight->ullVal)
@@ -3381,10 +3385,10 @@ inline HRESULT CComVariant::VarCmp(
 
 ATLPREFAST_SUPPRESS(6387)
 _Check_return_ inline HRESULT AtlInternalOleLoadFromStream(
-    _Inout_ IStream* pStm, 
-    _In_ REFIID iidInterface, 
-    _Outptr_ void** ppvObj, 
-    _In_ ClassesAllowedInStream rgclsidAllowed, 
+    _Inout_ IStream* pStm,
+    _In_ REFIID iidInterface,
+    _Outptr_ void** ppvObj,
+    _In_ ClassesAllowedInStream rgclsidAllowed,
     _In_ DWORD cclsidAllowed)
 {
     ATLASSUME(pStm != NULL);
@@ -3394,17 +3398,17 @@ _Check_return_ inline HRESULT AtlInternalOleLoadFromStream(
     HRESULT hr = ReadClassStm(pStm, &clsid);
 
     if (FAILED(hr))
-    {		
+    {
         return hr;
     }
-    
+
     CComPtr<IUnknown> punkVal;
 
     if (cclsidAllowed != 0)
     {
         ATLASSUME(rgclsidAllowed.rgclsidAllowed != NULL);
         hr = E_ACCESSDENIED;
-        
+
         for(DWORD i = 0; i < cclsidAllowed; i++)
         {
             if (IsEqualCLSID(clsid, rgclsidAllowed.rgclsidAllowed[i]))
@@ -3412,13 +3416,13 @@ _Check_return_ inline HRESULT AtlInternalOleLoadFromStream(
                 hr = S_OK;
                 break;
             }
-        }		
+        }
     }
-    else if (rgclsidAllowed.pfnClsidAllowed != NULL) 
+    else if (rgclsidAllowed.pfnClsidAllowed != NULL)
     {
         hr = rgclsidAllowed.pfnClsidAllowed(clsid, iidInterface, reinterpret_cast<void**>(&punkVal));
     }
-    
+
     if (FAILED(hr))
     {
         return hr;
@@ -3428,24 +3432,24 @@ _Check_return_ inline HRESULT AtlInternalOleLoadFromStream(
     {
         hr = CoCreateInstance(clsid, NULL, CLSCTX_SERVER | CLSCTX_NO_CODE_DOWNLOAD, iidInterface, reinterpret_cast<void**>(&punkVal));
         if (FAILED(hr))
-        {		
+        {
             return hr;
         }
     }
 
     CComPtr<IPersistStream> pPersistStm;
     hr = punkVal->QueryInterface(&pPersistStm);
-    
+
     if (SUCCEEDED(hr))
     {
         hr = pPersistStm->Load(pStm);
-        
+
         if (SUCCEEDED(hr))
         {
-            *ppvObj = punkVal.Detach();			
+            *ppvObj = punkVal.Detach();
         }
     }
-    
+
     return hr;
 }
 ATLPREFAST_UNSUPPRESS()
@@ -3455,7 +3459,7 @@ ATLPREFAST_UNSUPPRESS()
 }	// namespace ATL
 #pragma pack(pop)
 
-#pragma warning (pop)	
+#pragma warning (pop)
 
 #ifndef _ATL_NO_AUTOMATIC_NAMESPACE
 using namespace ATL;

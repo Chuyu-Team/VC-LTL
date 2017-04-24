@@ -236,7 +236,7 @@ ATLPREFAST_SUPPRESS(6101 6054) \
 		*pColumns = nColumns; \
 		return S_OK; \
 	} \
-ATLPREFAST_UNSUPPRESS() 
+ATLPREFAST_UNSUPPRESS()
 
 #define BEGIN_COLUMN_MAP(x) \
 	BEGIN_ACCESSOR_MAP(x, 1) \
@@ -287,7 +287,7 @@ ATLPREFAST_UNSUPPRESS()
 	nColumns++;
 
 ///////////////////////////////////////////////////////////////////////////
-// the following tweleve macros are used for binding column by the column ordinal number
+// the following macros are used for binding column by the column ordinal number
 
 #define COLUMN_ENTRY_EX(nOrdinal, wType, nLength, nPrecision, nScale, data, length, status) \
 	_COLUMN_ENTRY_CODE(nOrdinal, wType, nLength, nPrecision, nScale, offsetbuf(data), offsetbuf(length), offsetbuf(status))
@@ -331,7 +331,7 @@ ATLPREFAST_UNSUPPRESS()
 	_COLUMN_ENTRY_CODE(nOrdinal, _OLEDB_TYPE(data), _SIZE_TYPE(data), nPrecision, nScale, offsetbuf(data), offsetbuf(length), offsetbuf(status))
 
 ///////////////////////////////////////////////////////////////////////////
-// the following tweleve macros are used for binding column by the column name
+// the following macros are used for binding column by the column name
 
 #define COLUMN_NAME_EX(pszName, wType, nLength, nPrecision, nScale, data, length, status) \
 	_COLUMN_NAME_CODE(pszName, wType, nLength, nPrecision, nScale, offsetbuf(data), offsetbuf(length), offsetbuf(status))
@@ -615,7 +615,7 @@ public:
 		return m_spErrorRecords->GetBasicErrorInfo(ulRecordNum, pErrorInfo);
 	}
 
-ATLPREFAST_SUPPRESS(6387)	
+ATLPREFAST_SUPPRESS(6387)
 	// Get the custom error object for the passed record number
 	HRESULT GetCustomErrorObject(
 		_In_ ULONG ulRecordNum,
@@ -1229,7 +1229,7 @@ public:
 		m_nAccessors    = nAccessors;
 		return S_OK;
 	}
-	// BindParameters will be overriden if parameters are used
+	// BindParameters will be overridden if parameters are used
 	HRESULT BindParameters(
 		_In_opt_ HACCESSOR*,
 		_In_opt_ ICommand*,
@@ -1390,1215 +1390,6 @@ public:
 	ULONG               m_nAccessors;
 	BYTE*               m_pBuffer;
 };
-
-class CXMLAccessor;
-
-///////////////////////////////////////////////////////////////////////////
-// class CRowset
-
-template <class TAccessor = CAccessorBase>
-class CRowset
-{
-// Constructors and Destructors
-public:
-	CRowset()
-	{
-		m_pXMLAccessor = NULL;
-		m_pAccessor = NULL;
-		m_hRow      = 0;
-	}
-	CRowset(_In_opt_ IRowset* pRowset)
-	{
-		m_pXMLAccessor = NULL;
-		m_pAccessor = NULL;
-		m_hRow      = 0;
-		m_spRowset  = pRowset;
-	}
-	~CRowset()
-	{
-		Close();
-	}
-
-	HRESULT GetXMLColumnInfo(_Inout_ CSimpleStringW& strOutput) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		HRESULT hr;
-		if( m_pXMLAccessor == NULL )
-		{
-			m_pXMLAccessor = _ATL_NEW CXMLAccessor;
-			if( m_pXMLAccessor == NULL )
-				return E_OUTOFMEMORY;
-			hr = m_pXMLAccessor->BindColumns( m_spRowset );
-			if( FAILED(hr) )
-			{
-				delete m_pXMLAccessor;
-				m_pXMLAccessor = NULL;
-				return hr;
-			}
-		}
-
-		ATLASSUME( m_pXMLAccessor != NULL );
-
-		return m_pXMLAccessor->GetXMLColumnData( strOutput );
-	}
-
-	HRESULT GetXMLRow(
-		_Inout_ CSimpleStringW& strOutput,
-		_In_ bool bAppend = false) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_hRow != 0);
-
-		HRESULT hr;
-		if( m_pXMLAccessor == NULL )
-		{
-			m_pXMLAccessor = _ATL_NEW CXMLAccessor;
-			if( m_pXMLAccessor == NULL )
-				return E_OUTOFMEMORY;
-			hr = m_pXMLAccessor->BindColumns( m_spRowset );
-			if( FAILED(hr) )
-			{
-				delete m_pXMLAccessor;
-				m_pXMLAccessor = NULL;
-				return hr;
-			}
-		}
-
-		ATLASSUME( m_pXMLAccessor != NULL );
-
-		hr = m_spRowset->GetData(m_hRow, m_pXMLAccessor->GetHAccessor(0), m_pXMLAccessor->GetBuffer());
-		if( FAILED(hr) )
-			return hr;
-
-		hr = m_pXMLAccessor->GetXMLRowData( strOutput, bAppend );
-
-		m_pXMLAccessor->FreeRecordMemory( GetInterface() );
-		return hr;
-	}
-
-	// Release any retrieved row handles and then release the rowset
-	void Close() throw()
-	{
-		if( m_pXMLAccessor != NULL )
-		{
-			if (m_spRowset != NULL)
-				m_pXMLAccessor->ReleaseAccessors( m_spRowset );
-			delete m_pXMLAccessor;
-			m_pXMLAccessor = NULL;
-		}
-		if (m_spRowset != NULL)
-		{
-			m_pAccessor->FreeRecordMemory(m_spRowset);
-			ReleaseRows();
-			m_spRowset.Release();
-			m_spRowsetChange.Release();
-		}
-	}
-	// Addref the current row
-	HRESULT AddRefRows() throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		return m_spRowset->AddRefRows(1, &m_hRow, NULL, NULL);
-	}
-	// Release the current row
-	HRESULT ReleaseRows() throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		HRESULT hr = S_OK;
-
-		if (m_hRow != 0)
-		{
-			hr = m_spRowset->ReleaseRows(1, &m_hRow, NULL, NULL, NULL);
-			m_hRow = 0;
-		}
-		return hr;
-	}
-
-	CRowset<>* GetRowsetBase() throw()
-	{
-		return (CRowset<>*)this;
-	}
-
-	// Compare two bookmarks with each other
-	HRESULT Compare(
-		_In_ const CBookmarkBase& bookmark1,
-		_In_ const CBookmarkBase& bookmark2,
-		_Out_ DBCOMPARE* pComparison) const throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		CComPtr<IRowsetLocate> spLocate;
-		HRESULT hr = m_spRowset.QueryInterface(&spLocate);
-		if (FAILED(hr))
-			return hr;
-
-		return spLocate->Compare(NULL, bookmark1.GetSize(), bookmark1.GetBuffer(),
-			bookmark2.GetSize(), bookmark2.GetBuffer(), pComparison);
-	}
-
-	// Compare the passed hRow with the current row
-	HRESULT IsSameRow(_In_ HROW hRow) const throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		if (m_hRow == hRow)
-			return S_OK;
-
-		CComPtr<IRowsetIdentity> spRowsetIdentity;
-		HRESULT hr = m_spRowset.QueryInterface(&spRowsetIdentity);
-		if (FAILED(hr))
-			return hr;
-
-		return spRowsetIdentity->IsSameRow(m_hRow, hRow);
-	}
-
-	// Move to the previous record
-	HRESULT MovePrev() throw()
-	{
-		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
-		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
-		return MoveNext(-2);
-	}
-
-	// Move to the next record
-	HRESULT MoveNext() throw()
-	{
-		return MoveNext(0);
-	}
-
-	// Move lSkip records forward or backward
-	HRESULT MoveNext(
-		_In_ LONG lSkip,
-		_In_ bool bForward = true) throw()
-	{
-		HRESULT hr;
-		DBCOUNTITEM ulRowsFetched = 0;
-
-		// Check the data was opened successfully and the accessor
-		// has been set.
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		// Release a row if one is already around
-		ReleaseRows();
-
-		// Get the row handle
-		HROW* phRow = &m_hRow;
-		hr = m_spRowset->GetNextRows(0, lSkip, (bForward) ? 1 : -1, &ulRowsFetched, &phRow);
-		if (hr != S_OK)
-			return hr;
-
-		// Get the data
-		hr = GetData();
-		if (FAILED(hr))
-		{
-			ATLTRACE(atlTraceDBClient, 0, _T("GetData failed - HRESULT = 0x%X\n"),hr);
-			ReleaseRows();
-		}
-		return hr;
-	}
-
-	// Move to the first record
-	HRESULT MoveFirst() throw()
-	{
-		HRESULT hr;
-
-		// Check the data was opened successfully and the accessor
-		// has been set.
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		// Release a row if one is already around
-		ReleaseRows();
-
-		// the call to RestartPosition may fail if the DBPROP_CANFETCHBACKWARDS and/or
-		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
-		hr = m_spRowset->RestartPosition(NULL);
-		if (FAILED(hr))
-			return hr;
-
-		// Get the data
-		return MoveNext();
-	}
-
-	// Move to the last record
-	HRESULT MoveLast() throw()
-	{
-		// Check the data was opened successfully and the accessor
-		// has been set.
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-
-		// Release a row if one is already around
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		ReleaseRows();
-
-		HRESULT hr;
-		DBCOUNTITEM ulRowsFetched = 0;
-		HROW* phRow = &m_hRow;
-
-		// Restart the rowset position and then move backwards
-
-		// the call to RestartPosition may fail if the DBPROP_CANFETCHBACKWARDS and/or
-		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
-		m_spRowset->RestartPosition(NULL);
-		hr = m_spRowset->GetNextRows(NULL, -1, 1, &ulRowsFetched, &phRow);
-		if (hr != S_OK)
-			return hr;
-
-		// Get the data
-		hr = GetData();
-		if (FAILED(hr))
-		{
-			ATLTRACE(atlTraceDBClient, 0, _T("GetData from MoveLast failed - HRESULT = 0x%X\n"),hr);
-			ReleaseRows();
-		}
-
-		return S_OK;
-	}
-	// Move to the passed bookmark
-	HRESULT MoveToBookmark(
-		_In_ const CBookmarkBase& bookmark,
-		_In_ LONG lSkip = 0) throw()
-	{
-		// Check the data was opened successfully and the accessor
-		// has been set.
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-
-		CComPtr<IRowsetLocate> spLocate;
-		HRESULT hr = m_spRowset.QueryInterface(&spLocate);
-		if (FAILED(hr))
-			return hr;
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		// Release a row if one is already around
-		ReleaseRows();
-
-		DBCOUNTITEM ulRowsFetched = 0;
-		HROW* phRow = &m_hRow;
-		hr = spLocate->GetRowsAt(NULL, NULL, bookmark.GetSize(), bookmark.GetBuffer(),
-			lSkip, 1, &ulRowsFetched, &phRow);
-		// Note we're not using SUCCEEDED here, because we could get DB_S_ENDOFROWSET
-		if (hr != S_OK)
-			return hr;
-
-		// Get the data
-		hr = GetData();
-		if (FAILED(hr))
-		{
-			ATLTRACE(atlTraceDBClient, 0, _T("GetData from Bookmark failed - HRESULT = 0x%X\n"),hr);
-			ReleaseRows();
-		}
-
-		return S_OK;
-	}
-
-	// Get the data for the current record
-	HRESULT GetData() throw()
-	{
-		HRESULT hr = S_OK;
-		ATLASSUME(m_pAccessor != NULL);
-
-		ULONG nAccessors = m_pAccessor->GetNumAccessors();
-		for (ULONG i=0; i<nAccessors; i++)
-		{
-			if (m_pAccessor->IsAutoAccessor(i))
-			{
-				hr = GetData(i);
-				if (FAILED(hr))
-					return hr;
-			}
-		}
-		return hr;
-	}
-
-	// Get the data for the passed accessor. Use for a non-auto accessor
-	HRESULT GetData(_In_ int nAccessor) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-		ATLASSUME(m_hRow != 0);
-
-		// Note that we are using the specified buffer if it has been set,
-		// otherwise we use the accessor for the data.
-		return m_spRowset->GetData(m_hRow, m_pAccessor->GetHAccessor(nAccessor), m_pAccessor->GetBuffer());
-	}
-
-	// Get the data for the passed accessor. Use for a non-auto accessor
-	HRESULT GetDataHere(
-		_In_ int nAccessor,
-		_Out_ void* pBuffer) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-		ATLASSUME(m_hRow != 0);
-
-		// Note that we are using the specified buffer if it has been set,
-		// otherwise we use the accessor for the data.
-		return m_spRowset->GetData(m_hRow, m_pAccessor->GetHAccessor(nAccessor), pBuffer);
-	}
-
-	HRESULT GetDataHere(_Out_ void* pBuffer) throw()
-	{
-		HRESULT hr = S_OK;
-
-		ULONG nAccessors = m_pAccessor->GetNumAccessors();
-		_Analysis_assume_(nAccessors);
-		for (ULONG i=0; i<nAccessors; i++)
-		{
-			hr = GetDataHere(i, pBuffer);
-			if (FAILED(hr))
-				return hr;
-		}
-		return hr;
-	}
-
-	// Insert the current record
-	HRESULT Insert(
-		_In_ int nAccessor = 0,
-		_In_ bool bGetHRow = false) throw()
-	{
-		ATLASSUME(m_pAccessor != NULL);
-		HRESULT hr;
-		if (m_spRowsetChange != NULL)
-		{
-			HROW* pHRow;
-			if (bGetHRow)
-			{
-				ReleaseRows();
-				pHRow = &m_hRow;
-			}
-			else
-				pHRow = NULL;
-
-			hr = m_spRowsetChange->InsertRow(NULL, m_pAccessor->GetHAccessor(nAccessor),
-					m_pAccessor->GetBuffer(), pHRow);
-
-		}
-		else
-			hr = E_NOINTERFACE;
-
-		return hr;
-	}
-
-	// Delete the current record
-	HRESULT Delete() const throw()
-	{
-		ATLASSUME(m_pAccessor != NULL);
-		HRESULT hr;
-		if (m_spRowsetChange != NULL)
-			hr = m_spRowsetChange->DeleteRows(NULL, 1, &m_hRow, NULL);
-		else
-			hr = E_NOINTERFACE;
-
-		return hr;
-	}
-
-	// Update the current record
-	HRESULT SetData() const throw()
-	{
-		ATLASSUME(m_pAccessor != NULL);
-		HRESULT hr = S_OK;
-
-		ULONG nAccessors = m_pAccessor->GetNumAccessors();
-		for (ULONG i=0; i<nAccessors; i++)
-		{
-			hr = SetData(i);
-			if (FAILED(hr))
-				return hr;
-		}
-		return hr;
-	}
-
-	// Update the current record with the data in the passed accessor
-	HRESULT SetData(_In_ int nAccessor) const throw()
-	{
-		ATLASSUME(m_pAccessor != NULL);
-		HRESULT hr;
-		if (m_spRowsetChange != NULL)
-		{
-			hr = m_spRowsetChange->SetData(m_hRow, m_pAccessor->GetHAccessor(nAccessor),
-				m_pAccessor->GetBuffer());
-		}
-		else
-			hr = E_NOINTERFACE;
-
-		return hr;
-	}
-
-	// Get the data most recently fetched from or transmitted to the data source.
-	// Does not get values based on pending changes.
-	HRESULT GetOriginalData() throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_pAccessor != NULL);
-
-		HRESULT hr = S_OK;
-		CComPtr<IRowsetUpdate> spRowsetUpdate;
-		hr = m_spRowset->QueryInterface(&spRowsetUpdate);
-		if (FAILED(hr))
-			return hr;
-
-		ULONG nAccessors = m_pAccessor->GetNumAccessors();
-		for (ULONG i = 0; i < nAccessors; i++)
-		{
-			hr = spRowsetUpdate->GetOriginalData(m_hRow, m_pAccessor->GetHAccessor(i), m_pAccessor->GetBuffer());
-			if (FAILED(hr))
-				return hr;
-		}
-		return hr;
-	}
-
-	// Get the status of the current row
-	HRESULT GetRowStatus(_Out_ DBPENDINGSTATUS* pStatus) const throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSERT(pStatus != NULL);
-
-		CComPtr<IRowsetUpdate> spRowsetUpdate;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
-		if (FAILED(hr))
-			return hr;
-
-		return spRowsetUpdate->GetRowStatus(NULL, 1, &m_hRow, pStatus);
-	}
-
-	// Undo any changes made to the current row since it was last fetched or Update
-	// was called for it
-	HRESULT Undo(
-		_In_opt_ DBCOUNTITEM* pcRows = NULL,
-		_Out_opt_ HROW* phRow = NULL,
-		_Out_opt_ DBROWSTATUS* pStatus = NULL) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-
-		CComPtr<IRowsetUpdate> spRowsetUpdate;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
-		if (FAILED(hr))
-			return hr;
-
-		CComHeapPtr<HROW> sprgRows;
-		CComHeapPtr<DBROWSTATUS> spRowStatus;
-
-		if (phRow != NULL)
-			hr = spRowsetUpdate->Undo(NULL, 1, &m_hRow, pcRows, &sprgRows, &spRowStatus);
-		else
-			hr = spRowsetUpdate->Undo(NULL, 1, &m_hRow, pcRows, NULL, &spRowStatus);
-
-		if (phRow != NULL && sprgRows != NULL)
-			*phRow = *sprgRows;
-		else
-		{
-			_Analysis_assume_(phRow == NULL);
-		}
-
-		if (pStatus != NULL && spRowStatus != NULL)
-			*pStatus = *spRowStatus;
-		else
-		{
-			_Analysis_assume_(pStatus == NULL);
-		}
-
-		return hr;
-	}
-
-	// Transmits any pending changes made to a row since it was last fetched or Update was
-	// called for it. Also see SetData.
-	HRESULT Update(
-		_In_opt_ DBCOUNTITEM* pcRows = NULL,
-		_Out_opt_ HROW* phRow = NULL,
-		_Out_opt_ DBROWSTATUS* pStatus = NULL) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-
-		CComPtr<IRowsetUpdate> spRowsetUpdate;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
-		if (FAILED(hr))
-			return hr;
-
-		CComHeapPtr<HROW>           sprgRows;
-		CComHeapPtr<DBROWSTATUS>    spRowStatus;
-
-		if (phRow != NULL)
-			hr = spRowsetUpdate->Update(NULL, 1, &m_hRow, pcRows, &sprgRows, &spRowStatus);
-		else
-			hr = spRowsetUpdate->Update(NULL, 1, &m_hRow, pcRows, NULL, &spRowStatus);
-
-		if (phRow != NULL && sprgRows != NULL)
-			*phRow = *sprgRows;
-		else
-		{
-			_Analysis_assume_(phRow == NULL);
-		}
-
-		if (pStatus != NULL && spRowStatus != NULL)
-			*pStatus = *spRowStatus;
-		else
-		{
-			_Analysis_assume_(pStatus == NULL);
-		}
-
-		return hr;
-	}
-
-	// Transmits any pending changes to all rows made since it was last fetched or Update was
-	// alled for it.  Differs from Update in that it will do every row (even if we don't hold
-	// the handle for it).
-	HRESULT UpdateAll(
-		_In_opt_ DBCOUNTITEM* pcRows = NULL,
-		_Outptr_opt_ HROW** pphRow = NULL,
-		_Outptr_opt_ DBROWSTATUS** ppStatus = NULL) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-
-		CComPtr<IRowsetUpdate> spRowsetUpdate;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
-		if (FAILED(hr))
-			return hr;
-
-		// Create some temporary variables to help with debugging.
-		DBCOUNTITEM		cRowsReturned = 0;
-		CComHeapPtr<HROW>			sprgRows;
-		CComHeapPtr<DBROWSTATUS>	spRowStatus;
-
-		// Passing zero for the 2nd parameter tells the provider to update ALL pending rows.
-		// The 3rd parameter, prghRows is ignored.
-		hr =  spRowsetUpdate->Update(NULL, 0, NULL, &cRowsReturned, &sprgRows, &spRowStatus);
-
-		// NOTE, the user must CoTaskMemFree *pphRow and *ppStatus after return, if they
-		// are non-NULL.  Otherwise, we'll CoTaskMemFree if they are NULL.
-		if (pcRows != NULL)
-			*pcRows = cRowsReturned;
-
-		if (pphRow != NULL)
-			*pphRow = sprgRows.Detach();
-
-		if (ppStatus != NULL)
-			*ppStatus = spRowStatus.Detach();
-
-		return hr;
-	}
-
-	// Get the approximate position of the row corresponding to the passed bookmark
-	HRESULT GetApproximatePosition(
-		_In_ const CBookmarkBase* pBookmark,
-		_Out_opt_ DBCOUNTITEM* pPosition,
-		_Out_opt_ DBCOUNTITEM* pcRows) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-
-		CComPtr<IRowsetScroll> spRowsetScroll;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetScroll);
-		if (SUCCEEDED(hr))
-		{
-			if (pBookmark != NULL)
-				hr = spRowsetScroll->GetApproximatePosition(NULL, pBookmark->GetSize(), pBookmark->GetBuffer(),
-						pPosition, pcRows);
-			else
-				hr = spRowsetScroll->GetApproximatePosition(NULL, 0, NULL, pPosition, pcRows);
-
-		}
-		return hr;
-
-	}
-	// Move to a fractional position in the rowset
-	HRESULT MoveToRatio(
-		_In_ DBCOUNTITEM nNumerator,
-		_In_ DBCOUNTITEM nDenominator,
-		_In_ bool bForward = true) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		DBCOUNTITEM nRowsFetched;
-
-		CComPtr<IRowsetScroll> spRowsetScroll;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetScroll);
-		if (FAILED(hr))
-			return hr;
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		ReleaseRows();
-		HROW* phRow = &m_hRow;
-		hr = spRowsetScroll->GetRowsAtRatio(NULL, NULL, nNumerator, nDenominator, (bForward) ? 1 : -1,
-			&nRowsFetched, &phRow);
-		// Note we're not using SUCCEEDED here, because we could get DB_S_ENDOFROWSET
-		if (hr == S_OK)
-			hr = GetData();
-
-		return hr;
-	}
-
-	HRESULT FindNextRow(
-		_In_ DBCOMPAREOP op,
-		_In_ BYTE* pData,
-		_In_ DBTYPE wType,
-		_In_ DBLENGTH nLength,
-		_In_ BYTE bPrecision,
-		_In_ BYTE bScale,
-		_In_ BOOL bSkipCurrent = TRUE,
-		_In_opt_ CBookmarkBase* pBookmark = NULL) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		DBBINDING   binding;
-		HRESULT     hr;
-		HACCESSOR   hAccessor;
-		DBCOUNTITEM ulRowsFetched = 0;
-		HROW*       phRow = &m_hRow;
-		DBLENGTH    cbBookmark;
-		BYTE*       pBookmarkBuffer;
-		CComQIPtr<IAccessor, &__uuidof(IAccessor)>        spAccessor(m_spRowset);
-		CComQIPtr<IRowsetFind, &__uuidof(IRowsetFind)>    spRowsetFind(m_spRowset);
-
-		if (spAccessor == NULL || spRowsetFind == NULL)
-			return E_NOINTERFACE;
-
-		TAccessor::Bind(&binding, 1, wType, nLength, bPrecision, bScale, DBPARAMIO_NOTPARAM, 0);
-		hr = CAccessorBase::BindEntries(&binding, 1, &hAccessor, nLength, spAccessor);
-		if (FAILED(hr))
-			return hr;
-
-		if (pBookmark == NULL)
-		{
-			cbBookmark = 0;
-			pBookmarkBuffer = NULL;
-		}
-		else
-		{
-			cbBookmark = pBookmark->GetSize();
-			pBookmarkBuffer = pBookmark->GetBuffer();
-		}
-
-		hr = spRowsetFind->FindNextRow(DB_NULL_HCHAPTER, hAccessor, pData, op, cbBookmark, pBookmarkBuffer,
-					bSkipCurrent, 1,  &ulRowsFetched, &phRow);
-		// Note we're not using SUCCEEDED here, because we could get DB_S_ENDOFROWSET
-		if (hr != S_OK)
-			return hr;
-
-		// Get the data
-		hr = GetData();
-		spAccessor->ReleaseAccessor(hAccessor, NULL);
-		if (FAILED(hr))
-		{
-			ATLTRACE(_T("ATL: GetData from FindNextRows failed - HRESULT = 0x%X\n"),hr);
-			ReleaseRows();
-		}
-		return S_OK;
-	}
-
-// Implementation
-	static const IID& GetIID() throw()
-	{
-		return __uuidof(IRowset);
-	}
-
-	IRowset* GetInterface() const throw()
-	{
-		return m_spRowset;
-	}
-
-	IRowset** GetInterfacePtr() throw()
-	{
-		return &m_spRowset;
-	}
-
-	void SetupOptionalRowsetInterfaces() throw()
-	{
-		// Cache IRowsetChange if available
-		if (m_spRowset != NULL)
-			m_spRowset->QueryInterface(&m_spRowsetChange);
-	}
-
-	HRESULT BindFinished() const throw()
-	{
-		return S_OK;
-	}
-
-	void SetAccessor(_In_opt_ TAccessor* pAccessor) throw()
-	{
-		m_pAccessor = pAccessor;
-	}
-
-	CComPtr<IRowset>        m_spRowset;
-	CComPtr<IRowsetChange>  m_spRowsetChange;
-	TAccessor*				m_pAccessor;
-	HROW                    m_hRow;
-	CXMLAccessor* m_pXMLAccessor;
-};
-
-///////////////////////////////////////////////////////////////////////////
-// class CBulkRowset
-
-template <class TAccessor>
-class CBulkRowset : 
-	public CRowset<TAccessor>
-{
-public:
-	CBulkRowset()
-	{
-		// Default the number of rows to bulk fetch to 10
-		m_nRows = 10;
-		m_hr    = S_OK;
-		m_phRow = NULL;
-	}
-
-	~CBulkRowset()
-	{
-		Close();
-	}
-
-	void Close() throw()
-	{
-		if (m_spRowset != NULL)
-		{
-			m_pAccessor->FreeRecordMemory(m_spRowset);
-			ReleaseRows();
-		}
-		CRowset<TAccessor>::Close();
-
-		delete [] m_phRow;
-		m_phRow = NULL;
-
-		m_hr = S_OK;
-	}
-	// Set the number of row handles that will be retrieved in each
-	// bulk row fetch. The default is 10 and this function must be called
-	// before Open if you wish to change it.
-	void SetRows(_In_ DBROWCOUNT nRows) throw()
-	{
-		if (nRows == 0)
-			nRows = 10;
-		if (nRows != m_nRows)
-		{
-			// This function must be called before the memory is allocated
-			// during binding or between a Close() and a Open()
-			delete m_phRow;
-			m_phRow = NULL;
-			m_nRows = nRows;
-		}
-	}
-	// AddRef all the currently retrieved row handles
-	HRESULT AddRefRows() throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		return m_spRowset->AddRefRows(m_nCurrentRows, m_phRow, NULL, NULL);
-	}
-	// Release all the currently retrieved row handles
-	HRESULT ReleaseRows() throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		// We're going to Release the rows so reset the current row position
-		m_nCurrentRow = 0;
-		m_hRow        = 0;
-		DBCOUNTITEM nCurrentRows = m_nCurrentRows;
-		m_nCurrentRows = 0;
-		return m_spRowset->ReleaseRows(nCurrentRows, m_phRow, NULL, NULL, NULL);
-	}
-	// Move to the first record
-	HRESULT MoveFirst() throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-
-		m_hr = S_OK;
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		ReleaseRows();
-		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
-		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
-		HRESULT hr = m_spRowset->RestartPosition(NULL);
-		if (FAILED(hr))
-			return hr;
-
-		// Get the data
-		return MoveNext(0);
-	}
-	// Move to the last record
-	HRESULT MoveLast() throw()
-	{
-		m_hr = S_OK;
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		ReleaseRows();
-		m_hr = S_OK;
-		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
-		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
-		return CRowset<TAccessor>::MoveLast();
-	}
-	// Move to the next record
-	HRESULT MoveNext() throw()
-	{
-		return MoveNext(0);
-	}
-	// Move to the previous record
-	HRESULT MovePrev() throw()
-	{
-		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
-		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
-		return MoveNext(-2);
-	}
-	// Move lSkip records forward or backward
-	HRESULT MoveNext(
-		_In_ DBROWOFFSET lSkip,
-		_In_ bool bForward = true) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		ATLASSUME(m_phRow    != NULL);
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-
-		// Calculate the record index in the buffer
-		DBROWOFFSET nNewRow = m_nCurrentRow + lSkip + (bForward ? 1 : -1);
-
-		bool bFetchNewRows = false;
-		// Is the row in the buffer?
-		// else adjust the skip value
-		if (m_nCurrentRows == 0)
-		{
-			//lSkip = 0;
-			bFetchNewRows = true;
-		}
-		else if (nNewRow >= (DBROWOFFSET)m_nCurrentRows)
-		{
-			bFetchNewRows = true;
-			lSkip = nNewRow - m_nCurrentRows + (bForward ? 0 : (2 - m_nRows));
-		}
-		else if (nNewRow < 0)
-		{
-			lSkip = nNewRow - (m_nCurrentRows - m_nCurrentRow) + (bForward ? 0 : (2 - m_nRows));
-			bFetchNewRows = true;
-		}
-
-		if (bFetchNewRows)
-		{
-			nNewRow = 0;
-			// If we've reached the end of the buffer and we had a non S_OK HRESULT from
-			// the last call to GetNextRows then return that HRESULT now.
-			if (m_hr != S_OK && m_hr != DB_S_ROWLIMITEXCEEDED)
-				return m_hr;
-
-			// We've finished with these rows so we need some more
-			// First release any HROWs that we have
-			ReleaseRows();
-
-			// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
-			// DBPROP_CANSCROLLBACKWARDS properties have not been set and the lSkip offset is negative.
-			m_hr = m_spRowset->GetNextRows(NULL, lSkip, m_nRows, &m_nCurrentRows, &m_phRow);
-
-			// If we have an error HRESULT or we haven't retrieved any rows then return
-			// the HRESULT now.
-			if (FAILED(m_hr) || m_nCurrentRows == 0)
-				return m_hr;
-			if (!bForward)
-				nNewRow = m_nCurrentRows - 1;
-		}
-
-		// Get the data for the current row
-		m_hRow = m_phRow[m_nCurrentRow = nNewRow];
-		return GetData();
-	}
-	// Move to the passed bookmark
-	HRESULT MoveToBookmark(
-		_In_ const CBookmarkBase& bookmark,
-		_In_ DBCOUNTITEM lSkip = 0) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-		CComPtr<IRowsetLocate> spLocate;
-		HRESULT hr = m_spRowset->QueryInterface(&spLocate);
-		if (FAILED(hr))
-			return hr;
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		ReleaseRows();
-		m_hr = spLocate->GetRowsAt(NULL, NULL, bookmark.GetSize(), bookmark.GetBuffer(),
-			lSkip, m_nRows, &m_nCurrentRows, &m_phRow);
-		if( (m_hr != S_OK || m_nCurrentRows == 0 ) && m_hr != DB_S_ENDOFROWSET)
-			return m_hr;
-
-		// Get the data
-		m_hRow = m_phRow[m_nCurrentRow];
-		return GetData();
-	}
-	// Move to a fractional position in the rowset
-	HRESULT MoveToRatio(
-		_In_ DBCOUNTITEM nNumerator,
-		_In_ DBCOUNTITEM nDenominator) throw()
-	{
-		ATLASSUME(m_spRowset != NULL);
-
-		CComPtr<IRowsetScroll> spRowsetScroll;
-		HRESULT hr = m_spRowset->QueryInterface(&spRowsetScroll);
-		if (FAILED(hr))
-			return hr;
-
-		m_pAccessor->FreeRecordMemory(m_spRowset);
-		ReleaseRows();
-		m_hr = spRowsetScroll->GetRowsAtRatio(NULL, NULL, nNumerator, nDenominator, m_nRows, &m_nCurrentRows, &m_phRow);
-		if (m_hr != S_OK || m_nCurrentRows == 0)
-			return m_hr;
-
-		// Get the data
-		m_hRow = m_phRow[m_nCurrentRow];
-		return GetData();
-	}
-	// Insert the current record
-	HRESULT Insert(
-		_In_ int nAccessor = 0,
-		_In_ bool bGetHRow = false) throw()
-	{
-		ReleaseRows();
-		return CRowset< TAccessor >::Insert(nAccessor, bGetHRow);
-	}
-
-// Implementation
-	HRESULT BindFinished() throw()
-	{
-		// No rows in the buffer yet
-		m_nCurrentRows = 0;
-		// Cause MoveNext to automatically perform a new bulk fetch the first time
-		m_nCurrentRow  = 0;
-		m_hr = S_OK;
-
-		// Do not allocate if the buffer has been allocated by a previous call to BindFinished.
-		if (m_phRow == NULL)
-		{
-			m_phRow = _ATL_NEW HROW[m_nRows];
-			if (m_phRow == NULL)
-				return E_OUTOFMEMORY;
-		}
-
-		return S_OK;
-	}
-
-	HRESULT m_hr;           // HRESULT to return from MoveNext at end of buffer
-	HROW*   m_phRow;        // Pointer to array of HROWs for each row in buffer
-	DBROWCOUNT   m_nRows;        // Number of rows that will fit in the buffer
-	DBCOUNTITEM  m_nCurrentRows; // Number of rows currently in the buffer
-	DBCOUNTITEM  m_nCurrentRow;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// Large Block Allocation Helper - CVBufHelper & CVirtualBuffer
-template <class T>
-class CVBufHelper
-{
-public:
-	virtual T* operator()(_In_opt_ T* pCurrent)
-	{
-		return pCurrent;
-	}
-};
-
-template <class T>
-class CVirtualBuffer
-{
-protected:
-	CVirtualBuffer()
-	{
-	}
-	T* m_pTop;
-	int m_nMaxElements;
-public:
-	T* m_pBase;
-	T* m_pCurrent;
-	explicit CVirtualBuffer(_In_ int nMaxElements)
-	{
-		//in case of overflow throw exception
-		ATLENSURE(nMaxElements>=0);
-
-		ATLENSURE(nMaxElements <=size_t(-1)/sizeof(T)); //overflow check
-		m_nMaxElements = nMaxElements;
-		m_pBase = (T*) VirtualAlloc(NULL,sizeof(T)*nMaxElements,	MEM_RESERVE, PAGE_READWRITE);
-		if(m_pBase == NULL)
-		{
-			_AtlRaiseException((DWORD)STATUS_NO_MEMORY);
-		}
-		m_pTop = m_pCurrent = m_pBase;
-		// Commit first page - chances are this is all that will be used
-		VirtualAlloc(m_pBase, sizeof(T), MEM_COMMIT, PAGE_READWRITE);
-	}
-	~CVirtualBuffer()
-	{
-		VirtualFree(m_pBase, 0, MEM_RELEASE);
-	}
-	int Except(_In_ LPEXCEPTION_POINTERS lpEP)
-	{
-		EXCEPTION_RECORD* pExcept = lpEP->ExceptionRecord;
-		if (pExcept->ExceptionCode != EXCEPTION_ACCESS_VIOLATION)
-			return EXCEPTION_CONTINUE_SEARCH;
-		BYTE* pAddress = (LPBYTE) pExcept->ExceptionInformation[1];
-
-		// The address is out of this buffer arrange means AV is not conflicted with this buffer.
-		BYTE* pTmp = reinterpret_cast<BYTE*>(m_pBase);
-		if ((pAddress < pTmp) || (pAddress >= pTmp + (sizeof(T) * m_nMaxElements)))
-			return EXCEPTION_CONTINUE_SEARCH;
-
-		VirtualAlloc(pAddress, sizeof(T), MEM_COMMIT, PAGE_READWRITE);
-		return EXCEPTION_CONTINUE_EXECUTION;
-	}
-	bool Seek(_In_ int nElement)
-	{
-		ATLASSERT(nElement >= 0 && nElement < m_nMaxElements);
-		if(nElement < 0 || nElement >= m_nMaxElements)
-			return false;
-		m_pCurrent = &m_pBase[nElement];
-		return true;
-	}
-
-#define ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()							\
-	__pragma(warning(push))												\
-	/* we never return EXCEPTION_EXECUTE_HANDLER in Except */			\
-	/* hence, we can safely ignore this warning about the handler */	\
-	/* being empty */													\
-	__pragma(warning(disable:6322))										\
-	__try																\
-	{																	\
-		/**/
-# define ATL_DBCLI_END_VBUF_GUARDED_REGION()							\
-	} /* try { */														\
-	__except(Except(GetExceptionInformation()))							\
-	{																	\
-		/*EMPTY*/														\
-	}																	\
-	__pragma(warning(pop))												\
-		/**/
-
-	void SetAt(
-		_In_ int nElement,
-		_In_ const T& Element)
-	{
-		ATLASSERT(nElement >= 0 && nElement < m_nMaxElements);
-
-		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-			T* p = &m_pBase[nElement];
-			*p = Element;
-			m_pTop = p++ > m_pTop ? p : m_pTop;
-		ATL_DBCLI_END_VBUF_GUARDED_REGION()
-	}
-	template <class Q>
-	void WriteBulk(_In_ Q& helper)
-	{
-		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-			m_pCurrent = helper(m_pBase);
-			m_pTop = m_pCurrent > m_pTop ? m_pCurrent : m_pTop;
-		ATL_DBCLI_END_VBUF_GUARDED_REGION()
-	}
-	void Write(_In_ const T& Element)
-	{
-		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-			*m_pCurrent = Element;
-			m_pCurrent++;
-			m_pTop = m_pCurrent > m_pTop ? m_pCurrent : m_pTop;
-		ATL_DBCLI_END_VBUF_GUARDED_REGION()
-	}
-	T& Read()
-	{
-		return *m_pCurrent;
-	}
-	_Ret_maybenull_z_ operator BSTR()
-	{
-		BSTR bstrTemp = NULL ;
-		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-			bstrTemp = SysAllocStringByteLen((char*) m_pBase,
-				(UINT) ((BYTE*)m_pTop - (BYTE*)m_pBase));
-		ATL_DBCLI_END_VBUF_GUARDED_REGION()
-		return bstrTemp;
-	}
-	const T& operator[](_In_ int nElement) const
-	{
-		if(nElement < 0 || nElement >= m_nMaxElements)
-			_AtlRaiseException((DWORD)EXCEPTION_ARRAY_BOUNDS_EXCEEDED);
-
-		return m_pBase[nElement];
-	}
-	operator T*()
-	{
-		return m_pBase;
-	}
-
-};
-
-
-typedef CVirtualBuffer<BYTE> CVirtualBytes;
-
-///////////////////////////////////////////////////////////////////////////
-// class CArrayRowset
-//
-// Allows you to access a rowset with an array syntax. TAccessor must be a
-// CAccessor<> type class
-
-template <class TAccessor>
-class CArrayRowset :
-	public CVirtualBuffer<typename TAccessor::DataClass>,
-	protected CBulkRowset<TAccessor>
-{
-public:
-	CArrayRowset(_In_ int nMax = 100000) :
-		CVirtualBuffer<TAccessor::DataClass>(nMax)
-	{
-		m_nRowsRead = 0;
-	}
-	typename TAccessor::DataClass& operator[](_In_ int nRow)
-	{
-		ATLASSERT(nRow >= 0);
-		if( nRow < 0 )
-			AtlThrow(E_INVALIDARG);
-
-		HRESULT hr = S_OK;
-		TAccessor::DataClass* pCurrent = m_pBase + m_nRowsRead;
-
-		// Retrieve the row if we haven't retrieved it already
-		while ((ULONG)nRow >= m_nRowsRead)
-		{
-			m_pAccessor->SetBuffer(reinterpret_cast<BYTE*>(pCurrent));
-			ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-				// Get the row
-				hr = MoveNext();
-				if (hr != S_OK)
-					break;
-			ATL_DBCLI_END_VBUF_GUARDED_REGION()
-			m_nRowsRead++;
-			pCurrent++;
-		}
-
-		if(hr != S_OK)
-		{
-			ATLASSERT(hr != DB_S_ENDOFROWSET);	// if you're getting this assertion, then
-												// most likely you are trying to access an
-												// out of bounds element of CArrayRowset
-												// (ex. table[100].data where table has only
-												// 50 records)
-			AtlThrow(hr);
-		}
-
-		return *(m_pBase + nRow);
-	}
-
-	HRESULT Snapshot() throw()
-	{
-		HRESULT hr = S_FALSE;
-		ATLASSUME(m_nRowsRead == 0);
-		ATLASSUME(m_spRowset != NULL);
-		TAccessor::DataClass* pCurrent = m_pBase;
-		m_pAccessor->SetBuffer(reinterpret_cast<BYTE*>(pCurrent));
-		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-			hr = MoveFirst();
-		ATL_DBCLI_END_VBUF_GUARDED_REGION()
-		if (FAILED(hr))
-			return hr;
-		do
-		{
-			m_nRowsRead++;
-			pCurrent++;
-			m_pAccessor->SetBuffer(reinterpret_cast<BYTE*>(pCurrent));
-			ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
-				hr = MoveNext();
-			ATL_DBCLI_END_VBUF_GUARDED_REGION()
-		} while (SUCCEEDED(hr) &&  hr != DB_S_ENDOFROWSET);
-
-		return (hr == DB_S_ENDOFROWSET) ? S_OK : hr;
-	}
-	ULONG   m_nRowsRead;
-};
-
-#undef ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION
-#undef ATL_DBCLI_END_VBUF_GUARDED_REGION
 
 // Used when you don't need any parameters or output columns
 class CNoAccessor
@@ -2928,7 +1719,7 @@ public:
 			hr = BindEntries(spBindings, nColumns, &m_pAccessorInfo[nAccessor].hAccessor, nSize, pAccessor);
 		}
 		else
-		{            
+		{
 ATLPREFAST_SUPPRESS(6102)
 			// free any DBBINDING::pObject's
 			for( ULONG i = 0; i < nColumns; i++ )
@@ -3037,7 +1828,7 @@ protected:
 		}
 		return false;   // Not Found
 	}
-	
+
 	HRESULT GetColumnNames(
 		_Inout_ IAccessor* pAccessor,
 		_Outptr_result_buffer_maybenull_(*pnColumns) DBCOLUMNINFO** ppColumnInfo,
@@ -3643,7 +2434,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	HRESULT AddBindEntry(_In_ const DBCOLUMNINFO& info) throw()
 	{
 		if ((m_nColumns + 1 < m_nColumns))
@@ -3899,7 +2690,7 @@ ATLPREFAST_UNSUPPRESS()
 		ULONG   i;
 		DBBYTEOFFSET   nOffset = 0, nDataOffset, nLengthOffset, nStatusOffset;
 
-		// If the user hasn't specifed the column information to bind by calling AddBindEntry then
+		// If the user hasn't specified the column information to bind by calling AddBindEntry then
 		// we get it ourselves
 		if (m_pColumnInfo == NULL)
 		{
@@ -4194,7 +2985,7 @@ ATLPREFAST_UNSUPPRESS()
 	bool TranslateColumnNo(_Inout_ DBORDINAL& nColumn) const throw()
 	{
 		ATLASSUME(m_pColumnInfo != NULL);
-		// If the user has overriden the binding then we need to search
+		// If the user has overridden the binding then we need to search
 		// through the column info for the ordinal number
 		if (m_bOverride)
 		{
@@ -4395,7 +3186,6 @@ inline void strcpyT(
 	_In_ size_t maxCount,
 	_In_z_ const BaseType *strSource)
 {
-	return NULL;
 }
 
 template< typename BaseType >
@@ -4457,7 +3247,7 @@ public:
 		DBBYTEOFFSET nOffset = 0, nDataOffset, nLengthOffset, nStatusOffset;
 		DBLENGTH nLength;
 
-		// If the user hasn't specifed the column information to bind by calling AddBindEntry then
+		// If the user hasn't specified the column information to bind by calling AddBindEntry then
 		// we get it ourselves
 		if (m_pColumnInfo == NULL)
 		{
@@ -4984,7 +3774,7 @@ public:
 		ULONG   i;
 		DBBYTEOFFSET   nOffset = 0, nDataOffset, nLengthOffset, nStatusOffset;
 
-		// If the user hasn't specifed the column information to bind by calling AddBindEntry then
+		// If the user hasn't specified the column information to bind by calling AddBindEntry then
 		// we get it ourselves
 		if (m_pColumnInfo == NULL)
 		{
@@ -5751,7 +4541,7 @@ public:
 		memset(pBuffer, 0, nBufferSize);
 
 		// If they've previously created some entries then free them
-		delete [] m_pEntry;		
+		delete [] m_pEntry;
 
 		// Allocate memory for the bind structures
 		m_pEntry = _ATL_NEW DBBINDING[nBindEntries];
@@ -6119,6 +4909,1213 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////
+// class CRowset
+
+template <class TAccessor = CAccessorBase>
+class CRowset
+{
+// Constructors and Destructors
+public:
+	CRowset()
+	{
+		m_pXMLAccessor = NULL;
+		m_pAccessor = NULL;
+		m_hRow      = 0;
+	}
+	CRowset(_In_opt_ IRowset* pRowset)
+	{
+		m_pXMLAccessor = NULL;
+		m_pAccessor = NULL;
+		m_hRow      = 0;
+		m_spRowset  = pRowset;
+	}
+	~CRowset()
+	{
+		Close();
+	}
+
+	HRESULT GetXMLColumnInfo(_Inout_ CSimpleStringW& strOutput) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		HRESULT hr;
+		if( m_pXMLAccessor == NULL )
+		{
+			m_pXMLAccessor = _ATL_NEW CXMLAccessor;
+			if( m_pXMLAccessor == NULL )
+				return E_OUTOFMEMORY;
+			hr = m_pXMLAccessor->BindColumns( m_spRowset );
+			if( FAILED(hr) )
+			{
+				delete m_pXMLAccessor;
+				m_pXMLAccessor = NULL;
+				return hr;
+			}
+		}
+
+		ATLASSUME( m_pXMLAccessor != NULL );
+
+		return m_pXMLAccessor->GetXMLColumnData( strOutput );
+	}
+
+	HRESULT GetXMLRow(
+		_Inout_ CSimpleStringW& strOutput,
+		_In_ bool bAppend = false) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_hRow != 0);
+
+		HRESULT hr;
+		if( m_pXMLAccessor == NULL )
+		{
+			m_pXMLAccessor = _ATL_NEW CXMLAccessor;
+			if( m_pXMLAccessor == NULL )
+				return E_OUTOFMEMORY;
+			hr = m_pXMLAccessor->BindColumns( m_spRowset );
+			if( FAILED(hr) )
+			{
+				delete m_pXMLAccessor;
+				m_pXMLAccessor = NULL;
+				return hr;
+			}
+		}
+
+		ATLASSUME( m_pXMLAccessor != NULL );
+
+		hr = m_spRowset->GetData(m_hRow, m_pXMLAccessor->GetHAccessor(0), m_pXMLAccessor->GetBuffer());
+		if( FAILED(hr) )
+			return hr;
+
+		hr = m_pXMLAccessor->GetXMLRowData( strOutput, bAppend );
+
+		m_pXMLAccessor->FreeRecordMemory( GetInterface() );
+		return hr;
+	}
+
+	// Release any retrieved row handles and then release the rowset
+	void Close() throw()
+	{
+		if( m_pXMLAccessor != NULL )
+		{
+			if (m_spRowset != NULL)
+				m_pXMLAccessor->ReleaseAccessors( m_spRowset );
+			delete m_pXMLAccessor;
+			m_pXMLAccessor = NULL;
+		}
+		if (m_spRowset != NULL)
+		{
+			m_pAccessor->FreeRecordMemory(m_spRowset);
+			ReleaseRows();
+			m_spRowset.Release();
+			m_spRowsetChange.Release();
+		}
+	}
+	// Addref the current row
+	HRESULT AddRefRows() throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		return m_spRowset->AddRefRows(1, &m_hRow, NULL, NULL);
+	}
+	// Release the current row
+	HRESULT ReleaseRows() throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		HRESULT hr = S_OK;
+
+		if (m_hRow != 0)
+		{
+			hr = m_spRowset->ReleaseRows(1, &m_hRow, NULL, NULL, NULL);
+			m_hRow = 0;
+		}
+		return hr;
+	}
+
+	CRowset<>* GetRowsetBase() throw()
+	{
+		return (CRowset<>*)this;
+	}
+
+	// Compare two bookmarks with each other
+	HRESULT Compare(
+		_In_ const CBookmarkBase& bookmark1,
+		_In_ const CBookmarkBase& bookmark2,
+		_Out_ DBCOMPARE* pComparison) const throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		CComPtr<IRowsetLocate> spLocate;
+		HRESULT hr = m_spRowset.QueryInterface(&spLocate);
+		if (FAILED(hr))
+			return hr;
+
+		return spLocate->Compare(NULL, bookmark1.GetSize(), bookmark1.GetBuffer(),
+			bookmark2.GetSize(), bookmark2.GetBuffer(), pComparison);
+	}
+
+	// Compare the passed hRow with the current row
+	HRESULT IsSameRow(_In_ HROW hRow) const throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		if (m_hRow == hRow)
+			return S_OK;
+
+		CComPtr<IRowsetIdentity> spRowsetIdentity;
+		HRESULT hr = m_spRowset.QueryInterface(&spRowsetIdentity);
+		if (FAILED(hr))
+			return hr;
+
+		return spRowsetIdentity->IsSameRow(m_hRow, hRow);
+	}
+
+	// Move to the previous record
+	HRESULT MovePrev() throw()
+	{
+		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
+		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
+		return MoveNext(-2);
+	}
+
+	// Move to the next record
+	HRESULT MoveNext() throw()
+	{
+		return MoveNext(0);
+	}
+
+	// Move lSkip records forward or backward
+	HRESULT MoveNext(
+		_In_ LONG lSkip,
+		_In_ bool bForward = true) throw()
+	{
+		HRESULT hr;
+		DBCOUNTITEM ulRowsFetched = 0;
+
+		// Check the data was opened successfully and the accessor
+		// has been set.
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+
+		m_pAccessor->FreeRecordMemory(m_spRowset);
+		// Release a row if one is already around
+		ReleaseRows();
+
+		// Get the row handle
+		HROW* phRow = &m_hRow;
+		hr = m_spRowset->GetNextRows(0, lSkip, (bForward) ? 1 : -1, &ulRowsFetched, &phRow);
+		if (hr != S_OK)
+			return hr;
+
+		// Get the data
+		hr = GetData();
+		if (FAILED(hr))
+		{
+			ATLTRACE(atlTraceDBClient, 0, _T("GetData failed - HRESULT = 0x%X\n"),hr);
+			ReleaseRows();
+		}
+		return hr;
+	}
+
+	// Move to the first record
+	HRESULT MoveFirst() throw()
+	{
+		HRESULT hr;
+
+		// Check the data was opened successfully and the accessor
+		// has been set.
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+
+		m_pAccessor->FreeRecordMemory(m_spRowset);
+		// Release a row if one is already around
+		ReleaseRows();
+
+		// the call to RestartPosition may fail if the DBPROP_CANFETCHBACKWARDS and/or
+		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
+		hr = m_spRowset->RestartPosition(NULL);
+		if (FAILED(hr))
+			return hr;
+
+		// Get the data
+		return MoveNext();
+	}
+
+	// Move to the last record
+	HRESULT MoveLast() throw()
+	{
+		// Check the data was opened successfully and the accessor
+		// has been set.
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+
+		// Release a row if one is already around
+		m_pAccessor->FreeRecordMemory(m_spRowset);
+		ReleaseRows();
+
+		HRESULT hr;
+		DBCOUNTITEM ulRowsFetched = 0;
+		HROW* phRow = &m_hRow;
+
+		// Restart the rowset position and then move backwards
+
+		// the call to RestartPosition may fail if the DBPROP_CANFETCHBACKWARDS and/or
+		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
+		m_spRowset->RestartPosition(NULL);
+		hr = m_spRowset->GetNextRows(NULL, -1, 1, &ulRowsFetched, &phRow);
+		if (hr != S_OK)
+			return hr;
+
+		// Get the data
+		hr = GetData();
+		if (FAILED(hr))
+		{
+			ATLTRACE(atlTraceDBClient, 0, _T("GetData from MoveLast failed - HRESULT = 0x%X\n"),hr);
+			ReleaseRows();
+		}
+
+		return S_OK;
+	}
+	// Move to the passed bookmark
+	HRESULT MoveToBookmark(
+		_In_ const CBookmarkBase& bookmark,
+		_In_ LONG lSkip = 0) throw()
+	{
+		// Check the data was opened successfully and the accessor
+		// has been set.
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+
+		CComPtr<IRowsetLocate> spLocate;
+		HRESULT hr = m_spRowset.QueryInterface(&spLocate);
+		if (FAILED(hr))
+			return hr;
+
+		m_pAccessor->FreeRecordMemory(m_spRowset);
+		// Release a row if one is already around
+		ReleaseRows();
+
+		DBCOUNTITEM ulRowsFetched = 0;
+		HROW* phRow = &m_hRow;
+		hr = spLocate->GetRowsAt(NULL, NULL, bookmark.GetSize(), bookmark.GetBuffer(),
+			lSkip, 1, &ulRowsFetched, &phRow);
+		// Note we're not using SUCCEEDED here, because we could get DB_S_ENDOFROWSET
+		if (hr != S_OK)
+			return hr;
+
+		// Get the data
+		hr = GetData();
+		if (FAILED(hr))
+		{
+			ATLTRACE(atlTraceDBClient, 0, _T("GetData from Bookmark failed - HRESULT = 0x%X\n"),hr);
+			ReleaseRows();
+		}
+
+		return S_OK;
+	}
+
+	// Get the data for the current record
+	HRESULT GetData() throw()
+	{
+		HRESULT hr = S_OK;
+		ATLASSUME(m_pAccessor != NULL);
+
+		ULONG nAccessors = m_pAccessor->GetNumAccessors();
+		for (ULONG i=0; i<nAccessors; i++)
+		{
+			if (m_pAccessor->IsAutoAccessor(i))
+			{
+				hr = GetData(i);
+				if (FAILED(hr))
+					return hr;
+			}
+		}
+		return hr;
+	}
+
+	// Get the data for the passed accessor. Use for a non-auto accessor
+	HRESULT GetData(_In_ int nAccessor) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+		ATLASSUME(m_hRow != 0);
+
+		// Note that we are using the specified buffer if it has been set,
+		// otherwise we use the accessor for the data.
+		return m_spRowset->GetData(m_hRow, m_pAccessor->GetHAccessor(nAccessor), m_pAccessor->GetBuffer());
+	}
+
+	// Get the data for the passed accessor. Use for a non-auto accessor
+	HRESULT GetDataHere(
+		_In_ int nAccessor,
+		_Out_ void* pBuffer) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+		ATLASSUME(m_hRow != 0);
+
+		// Note that we are using the specified buffer if it has been set,
+		// otherwise we use the accessor for the data.
+		return m_spRowset->GetData(m_hRow, m_pAccessor->GetHAccessor(nAccessor), pBuffer);
+	}
+
+	HRESULT GetDataHere(_Out_ void* pBuffer) throw()
+	{
+		HRESULT hr = S_OK;
+
+		ULONG nAccessors = m_pAccessor->GetNumAccessors();
+		_Analysis_assume_(nAccessors);
+		for (ULONG i=0; i<nAccessors; i++)
+		{
+			hr = GetDataHere(i, pBuffer);
+			if (FAILED(hr))
+				return hr;
+		}
+		return hr;
+	}
+
+	// Insert the current record
+	HRESULT Insert(
+		_In_ int nAccessor = 0,
+		_In_ bool bGetHRow = false) throw()
+	{
+		ATLASSUME(m_pAccessor != NULL);
+		HRESULT hr;
+		if (m_spRowsetChange != NULL)
+		{
+			HROW* pHRow;
+			if (bGetHRow)
+			{
+				ReleaseRows();
+				pHRow = &m_hRow;
+			}
+			else
+				pHRow = NULL;
+
+			hr = m_spRowsetChange->InsertRow(NULL, m_pAccessor->GetHAccessor(nAccessor),
+					m_pAccessor->GetBuffer(), pHRow);
+
+		}
+		else
+			hr = E_NOINTERFACE;
+
+		return hr;
+	}
+
+	// Delete the current record
+	HRESULT Delete() const throw()
+	{
+		ATLASSUME(m_pAccessor != NULL);
+		HRESULT hr;
+		if (m_spRowsetChange != NULL)
+			hr = m_spRowsetChange->DeleteRows(NULL, 1, &m_hRow, NULL);
+		else
+			hr = E_NOINTERFACE;
+
+		return hr;
+	}
+
+	// Update the current record
+	HRESULT SetData() const throw()
+	{
+		ATLASSUME(m_pAccessor != NULL);
+		HRESULT hr = S_OK;
+
+		ULONG nAccessors = m_pAccessor->GetNumAccessors();
+		for (ULONG i=0; i<nAccessors; i++)
+		{
+			hr = SetData(i);
+			if (FAILED(hr))
+				return hr;
+		}
+		return hr;
+	}
+
+	// Update the current record with the data in the passed accessor
+	HRESULT SetData(_In_ int nAccessor) const throw()
+	{
+		ATLASSUME(m_pAccessor != NULL);
+		HRESULT hr;
+		if (m_spRowsetChange != NULL)
+		{
+			hr = m_spRowsetChange->SetData(m_hRow, m_pAccessor->GetHAccessor(nAccessor),
+				m_pAccessor->GetBuffer());
+		}
+		else
+			hr = E_NOINTERFACE;
+
+		return hr;
+	}
+
+	// Get the data most recently fetched from or transmitted to the data source.
+	// Does not get values based on pending changes.
+	HRESULT GetOriginalData() throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSUME(m_pAccessor != NULL);
+
+		HRESULT hr = S_OK;
+		CComPtr<IRowsetUpdate> spRowsetUpdate;
+		hr = m_spRowset->QueryInterface(&spRowsetUpdate);
+		if (FAILED(hr))
+			return hr;
+
+		ULONG nAccessors = m_pAccessor->GetNumAccessors();
+		for (ULONG i = 0; i < nAccessors; i++)
+		{
+			hr = spRowsetUpdate->GetOriginalData(m_hRow, m_pAccessor->GetHAccessor(i), m_pAccessor->GetBuffer());
+			if (FAILED(hr))
+				return hr;
+		}
+		return hr;
+	}
+
+	// Get the status of the current row
+	HRESULT GetRowStatus(_Out_ DBPENDINGSTATUS* pStatus) const throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		ATLASSERT(pStatus != NULL);
+
+		CComPtr<IRowsetUpdate> spRowsetUpdate;
+		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
+		if (FAILED(hr))
+			return hr;
+
+		return spRowsetUpdate->GetRowStatus(NULL, 1, &m_hRow, pStatus);
+	}
+
+	// Undo any changes made to the current row since it was last fetched or Update
+	// was called for it
+	HRESULT Undo(
+		_In_opt_ DBCOUNTITEM* pcRows = NULL,
+		_Out_opt_ HROW* phRow = NULL,
+		_Out_opt_ DBROWSTATUS* pStatus = NULL) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+
+		CComPtr<IRowsetUpdate> spRowsetUpdate;
+		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
+		if (FAILED(hr))
+			return hr;
+
+		CComHeapPtr<HROW> sprgRows;
+		CComHeapPtr<DBROWSTATUS> spRowStatus;
+
+		if (phRow != NULL)
+			hr = spRowsetUpdate->Undo(NULL, 1, &m_hRow, pcRows, &sprgRows, &spRowStatus);
+		else
+			hr = spRowsetUpdate->Undo(NULL, 1, &m_hRow, pcRows, NULL, &spRowStatus);
+
+		if (phRow != NULL && sprgRows != NULL)
+			*phRow = *sprgRows;
+		else
+		{
+			_Analysis_assume_(phRow == NULL);
+		}
+
+		if (pStatus != NULL && spRowStatus != NULL)
+			*pStatus = *spRowStatus;
+		else
+		{
+			_Analysis_assume_(pStatus == NULL);
+		}
+
+		return hr;
+	}
+
+	// Transmits any pending changes made to a row since it was last fetched or Update was
+	// called for it. Also see SetData.
+	HRESULT Update(
+		_In_opt_ DBCOUNTITEM* pcRows = NULL,
+		_Out_opt_ HROW* phRow = NULL,
+		_Out_opt_ DBROWSTATUS* pStatus = NULL) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+
+		CComPtr<IRowsetUpdate> spRowsetUpdate;
+		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
+		if (FAILED(hr))
+			return hr;
+
+		CComHeapPtr<HROW>           sprgRows;
+		CComHeapPtr<DBROWSTATUS>    spRowStatus;
+
+		if (phRow != NULL)
+			hr = spRowsetUpdate->Update(NULL, 1, &m_hRow, pcRows, &sprgRows, &spRowStatus);
+		else
+			hr = spRowsetUpdate->Update(NULL, 1, &m_hRow, pcRows, NULL, &spRowStatus);
+
+		if (phRow != NULL && sprgRows != NULL)
+			*phRow = *sprgRows;
+		else
+		{
+			_Analysis_assume_(phRow == NULL);
+		}
+
+		if (pStatus != NULL && spRowStatus != NULL)
+			*pStatus = *spRowStatus;
+		else
+		{
+			_Analysis_assume_(pStatus == NULL);
+		}
+
+		return hr;
+	}
+
+	// Transmits any pending changes to all rows made since it was last fetched or Update was
+	// called for it.  Differs from Update in that it will do every row (even if we don't hold
+	// the handle for it).
+	HRESULT UpdateAll(
+		_In_opt_ DBCOUNTITEM* pcRows = NULL,
+		_Outptr_opt_ HROW** pphRow = NULL,
+		_Outptr_opt_ DBROWSTATUS** ppStatus = NULL) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+
+		CComPtr<IRowsetUpdate> spRowsetUpdate;
+		HRESULT hr = m_spRowset->QueryInterface(&spRowsetUpdate);
+		if (FAILED(hr))
+			return hr;
+
+		// Create some temporary variables to help with debugging.
+		DBCOUNTITEM		cRowsReturned = 0;
+		CComHeapPtr<HROW>			sprgRows;
+		CComHeapPtr<DBROWSTATUS>	spRowStatus;
+
+		// Passing zero for the 2nd parameter tells the provider to update ALL pending rows.
+		// The 3rd parameter, prghRows is ignored.
+		hr =  spRowsetUpdate->Update(NULL, 0, NULL, &cRowsReturned, &sprgRows, &spRowStatus);
+
+		// NOTE, the user must CoTaskMemFree *pphRow and *ppStatus after return, if they
+		// are non-NULL.  Otherwise, we'll CoTaskMemFree if they are NULL.
+		if (pcRows != NULL)
+			*pcRows = cRowsReturned;
+
+		if (pphRow != NULL)
+			*pphRow = sprgRows.Detach();
+
+		if (ppStatus != NULL)
+			*ppStatus = spRowStatus.Detach();
+
+		return hr;
+	}
+
+	// Get the approximate position of the row corresponding to the passed bookmark
+	HRESULT GetApproximatePosition(
+		_In_ const CBookmarkBase* pBookmark,
+		_Out_opt_ DBCOUNTITEM* pPosition,
+		_Out_opt_ DBCOUNTITEM* pcRows) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+
+		CComPtr<IRowsetScroll> spRowsetScroll;
+		HRESULT hr = m_spRowset->QueryInterface(&spRowsetScroll);
+		if (SUCCEEDED(hr))
+		{
+			if (pBookmark != NULL)
+				hr = spRowsetScroll->GetApproximatePosition(NULL, pBookmark->GetSize(), pBookmark->GetBuffer(),
+						pPosition, pcRows);
+			else
+				hr = spRowsetScroll->GetApproximatePosition(NULL, 0, NULL, pPosition, pcRows);
+
+		}
+		return hr;
+
+	}
+	// Move to a fractional position in the rowset
+	HRESULT MoveToRatio(
+		_In_ DBCOUNTITEM nNumerator,
+		_In_ DBCOUNTITEM nDenominator,
+		_In_ bool bForward = true) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		DBCOUNTITEM nRowsFetched;
+
+		CComPtr<IRowsetScroll> spRowsetScroll;
+		HRESULT hr = m_spRowset->QueryInterface(&spRowsetScroll);
+		if (FAILED(hr))
+			return hr;
+
+		m_pAccessor->FreeRecordMemory(m_spRowset);
+		ReleaseRows();
+		HROW* phRow = &m_hRow;
+		hr = spRowsetScroll->GetRowsAtRatio(NULL, NULL, nNumerator, nDenominator, (bForward) ? 1 : -1,
+			&nRowsFetched, &phRow);
+		// Note we're not using SUCCEEDED here, because we could get DB_S_ENDOFROWSET
+		if (hr == S_OK)
+			hr = GetData();
+
+		return hr;
+	}
+
+	HRESULT FindNextRow(
+		_In_ DBCOMPAREOP op,
+		_In_ BYTE* pData,
+		_In_ DBTYPE wType,
+		_In_ DBLENGTH nLength,
+		_In_ BYTE bPrecision,
+		_In_ BYTE bScale,
+		_In_ BOOL bSkipCurrent = TRUE,
+		_In_opt_ CBookmarkBase* pBookmark = NULL) throw()
+	{
+		ATLASSUME(m_spRowset != NULL);
+		DBBINDING   binding;
+		HRESULT     hr;
+		HACCESSOR   hAccessor;
+		DBCOUNTITEM ulRowsFetched = 0;
+		HROW*       phRow = &m_hRow;
+		DBLENGTH    cbBookmark;
+		BYTE*       pBookmarkBuffer;
+		CComQIPtr<IAccessor, &__uuidof(IAccessor)>        spAccessor(m_spRowset);
+		CComQIPtr<IRowsetFind, &__uuidof(IRowsetFind)>    spRowsetFind(m_spRowset);
+
+		if (spAccessor == NULL || spRowsetFind == NULL)
+			return E_NOINTERFACE;
+
+		TAccessor::Bind(&binding, 1, wType, nLength, bPrecision, bScale, DBPARAMIO_NOTPARAM, 0);
+		hr = CAccessorBase::BindEntries(&binding, 1, &hAccessor, nLength, spAccessor);
+		if (FAILED(hr))
+			return hr;
+
+		if (pBookmark == NULL)
+		{
+			cbBookmark = 0;
+			pBookmarkBuffer = NULL;
+		}
+		else
+		{
+			cbBookmark = pBookmark->GetSize();
+			pBookmarkBuffer = pBookmark->GetBuffer();
+		}
+
+		hr = spRowsetFind->FindNextRow(DB_NULL_HCHAPTER, hAccessor, pData, op, cbBookmark, pBookmarkBuffer,
+					bSkipCurrent, 1,  &ulRowsFetched, &phRow);
+		// Note we're not using SUCCEEDED here, because we could get DB_S_ENDOFROWSET
+		if (hr != S_OK)
+			return hr;
+
+		// Get the data
+		hr = GetData();
+		spAccessor->ReleaseAccessor(hAccessor, NULL);
+		if (FAILED(hr))
+		{
+			ATLTRACE(_T("ATL: GetData from FindNextRows failed - HRESULT = 0x%X\n"),hr);
+			ReleaseRows();
+		}
+		return S_OK;
+	}
+
+// Implementation
+	static const IID& GetIID() throw()
+	{
+		return __uuidof(IRowset);
+	}
+
+	IRowset* GetInterface() const throw()
+	{
+		return m_spRowset;
+	}
+
+	IRowset** GetInterfacePtr() throw()
+	{
+		return &m_spRowset;
+	}
+
+	void SetupOptionalRowsetInterfaces() throw()
+	{
+		// Cache IRowsetChange if available
+		if (m_spRowset != NULL)
+			m_spRowset->QueryInterface(&m_spRowsetChange);
+	}
+
+	HRESULT BindFinished() const throw()
+	{
+		return S_OK;
+	}
+
+	void SetAccessor(_In_opt_ TAccessor* pAccessor) throw()
+	{
+		m_pAccessor = pAccessor;
+	}
+
+	CComPtr<IRowset>        m_spRowset;
+	CComPtr<IRowsetChange>  m_spRowsetChange;
+	TAccessor*				m_pAccessor;
+	HROW                    m_hRow;
+	CXMLAccessor* m_pXMLAccessor;
+};
+
+///////////////////////////////////////////////////////////////////////////
+// class CBulkRowset
+
+template <class TAccessor>
+class CBulkRowset :
+	public CRowset<TAccessor>
+{
+public:
+	CBulkRowset()
+	{
+		// Default the number of rows to bulk fetch to 10
+		m_nRows = 10;
+		m_hr    = S_OK;
+		m_phRow = NULL;
+	}
+
+	~CBulkRowset()
+	{
+		Close();
+	}
+
+	void Close() throw()
+	{
+		if (this->m_spRowset != NULL)
+		{
+			this->m_pAccessor->FreeRecordMemory(this->m_spRowset);
+			ReleaseRows();
+		}
+		CRowset<TAccessor>::Close();
+
+		delete [] m_phRow;
+		m_phRow = NULL;
+
+		m_hr = S_OK;
+	}
+	// Set the number of row handles that will be retrieved in each
+	// bulk row fetch. The default is 10 and this function must be called
+	// before Open if you wish to change it.
+	void SetRows(_In_ DBROWCOUNT nRows) throw()
+	{
+		if (nRows == 0)
+			nRows = 10;
+		if (nRows != m_nRows)
+		{
+			// This function must be called before the memory is allocated
+			// during binding or between a Close() and a Open()
+			delete m_phRow;
+			m_phRow = NULL;
+			m_nRows = nRows;
+		}
+	}
+	// AddRef all the currently retrieved row handles
+	HRESULT AddRefRows() throw()
+	{
+		ATLASSUME(this->m_spRowset != NULL);
+		return this->m_spRowset->AddRefRows(m_nCurrentRows, m_phRow, NULL, NULL);
+	}
+	// Release all the currently retrieved row handles
+	HRESULT ReleaseRows() throw()
+	{
+		ATLASSUME(this->m_spRowset != NULL);
+		// We're going to Release the rows so reset the current row position
+		m_nCurrentRow = 0;
+		this->m_hRow        = 0;
+		DBCOUNTITEM nCurrentRows = m_nCurrentRows;
+		m_nCurrentRows = 0;
+		return this->m_spRowset->ReleaseRows(nCurrentRows, m_phRow, NULL, NULL, NULL);
+	}
+	// Move to the first record
+	HRESULT MoveFirst() throw()
+	{
+		ATLASSUME(this->m_spRowset != NULL);
+
+		m_hr = S_OK;
+		this->m_pAccessor->FreeRecordMemory(this->m_spRowset);
+		ReleaseRows();
+		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
+		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
+		HRESULT hr = this->m_spRowset->RestartPosition(NULL);
+		if (FAILED(hr))
+			return hr;
+
+		// Get the data
+		return MoveNext(0);
+	}
+	// Move to the last record
+	HRESULT MoveLast() throw()
+	{
+		m_hr = S_OK;
+		this->m_pAccessor->FreeRecordMemory(this->m_spRowset);
+		ReleaseRows();
+		m_hr = S_OK;
+		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
+		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
+		return CRowset<TAccessor>::MoveLast();
+	}
+	// Move to the next record
+	HRESULT MoveNext() throw()
+	{
+		return MoveNext(0);
+	}
+	// Move to the previous record
+	HRESULT MovePrev() throw()
+	{
+		// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
+		// DBPROP_CANSCROLLBACKWARDS properties have not been set.
+		return MoveNext(-2);
+	}
+	// Move lSkip records forward or backward
+	HRESULT MoveNext(
+		_In_ DBROWOFFSET lSkip,
+		_In_ bool bForward = true) throw()
+	{
+		ATLASSUME(this->m_spRowset != NULL);
+		ATLASSUME(m_phRow    != NULL);
+
+		this->m_pAccessor->FreeRecordMemory(this->m_spRowset);
+
+		// Calculate the record index in the buffer
+		DBROWOFFSET nNewRow = m_nCurrentRow + lSkip + (bForward ? 1 : -1);
+
+		bool bFetchNewRows = false;
+		// Is the row in the buffer?
+		// else adjust the skip value
+		if (m_nCurrentRows == 0)
+		{
+			//lSkip = 0;
+			bFetchNewRows = true;
+		}
+		else if (nNewRow >= (DBROWOFFSET)m_nCurrentRows)
+		{
+			bFetchNewRows = true;
+			lSkip = nNewRow - m_nCurrentRows + (bForward ? 0 : (2 - m_nRows));
+		}
+		else if (nNewRow < 0)
+		{
+			lSkip = nNewRow - (m_nCurrentRows - m_nCurrentRow) + (bForward ? 0 : (2 - m_nRows));
+			bFetchNewRows = true;
+		}
+
+		if (bFetchNewRows)
+		{
+			nNewRow = 0;
+			// If we've reached the end of the buffer and we had a non S_OK HRESULT from
+			// the last call to GetNextRows then return that HRESULT now.
+			if (m_hr != S_OK && m_hr != DB_S_ROWLIMITEXCEEDED)
+				return m_hr;
+
+			// We've finished with these rows so we need some more
+			// First release any HROWs that we have
+			ReleaseRows();
+
+			// the following line of code may fail if the DBPROP_CANFETCHBACKWARDS and/or
+			// DBPROP_CANSCROLLBACKWARDS properties have not been set and the lSkip offset is negative.
+			m_hr = this->m_spRowset->GetNextRows(NULL, lSkip, m_nRows, &m_nCurrentRows, &m_phRow);
+
+			// If we have an error HRESULT or we haven't retrieved any rows then return
+			// the HRESULT now.
+			if (FAILED(m_hr) || m_nCurrentRows == 0)
+				return m_hr;
+			if (!bForward)
+				nNewRow = m_nCurrentRows - 1;
+		}
+
+		// Get the data for the current row
+		this->m_hRow = m_phRow[m_nCurrentRow = nNewRow];
+		return this->GetData();
+	}
+	// Move to the passed bookmark
+	HRESULT MoveToBookmark(
+		_In_ const CBookmarkBase& bookmark,
+		_In_ DBCOUNTITEM lSkip = 0) throw()
+	{
+		ATLASSUME(this->m_spRowset != NULL);
+		CComPtr<IRowsetLocate> spLocate;
+		HRESULT hr = this->m_spRowset->QueryInterface(&spLocate);
+		if (FAILED(hr))
+			return hr;
+
+		this->m_pAccessor->FreeRecordMemory(this->m_spRowset);
+		ReleaseRows();
+		m_hr = spLocate->GetRowsAt(NULL, NULL, bookmark.GetSize(), bookmark.GetBuffer(),
+			lSkip, m_nRows, &m_nCurrentRows, &m_phRow);
+		if( (m_hr != S_OK || m_nCurrentRows == 0 ) && m_hr != DB_S_ENDOFROWSET)
+			return m_hr;
+
+		// Get the data
+		this->m_hRow = m_phRow[m_nCurrentRow];
+		return this->GetData();
+	}
+	// Move to a fractional position in the rowset
+	HRESULT MoveToRatio(
+		_In_ DBCOUNTITEM nNumerator,
+		_In_ DBCOUNTITEM nDenominator) throw()
+	{
+		ATLASSUME(this->m_spRowset != NULL);
+
+		CComPtr<IRowsetScroll> spRowsetScroll;
+		HRESULT hr = this->m_spRowset->QueryInterface(&spRowsetScroll);
+		if (FAILED(hr))
+			return hr;
+
+		this->m_pAccessor->FreeRecordMemory(this->m_spRowset);
+		ReleaseRows();
+		m_hr = spRowsetScroll->GetRowsAtRatio(NULL, NULL, nNumerator, nDenominator, m_nRows, &m_nCurrentRows, &m_phRow);
+		if (m_hr != S_OK || m_nCurrentRows == 0)
+			return m_hr;
+
+		// Get the data
+		this->m_hRow = m_phRow[m_nCurrentRow];
+		return this->GetData();
+	}
+	// Insert the current record
+	HRESULT Insert(
+		_In_ int nAccessor = 0,
+		_In_ bool bGetHRow = false) throw()
+	{
+		ReleaseRows();
+		return CRowset< TAccessor >::Insert(nAccessor, bGetHRow);
+	}
+
+// Implementation
+	HRESULT BindFinished() throw()
+	{
+		// No rows in the buffer yet
+		m_nCurrentRows = 0;
+		// Cause MoveNext to automatically perform a new bulk fetch the first time
+		m_nCurrentRow  = 0;
+		m_hr = S_OK;
+
+		// Do not allocate if the buffer has been allocated by a previous call to BindFinished.
+		if (m_phRow == NULL)
+		{
+			m_phRow = _ATL_NEW HROW[m_nRows];
+			if (m_phRow == NULL)
+				return E_OUTOFMEMORY;
+		}
+
+		return S_OK;
+	}
+
+	HRESULT m_hr;           // HRESULT to return from MoveNext at end of buffer
+	HROW*   m_phRow;        // Pointer to array of HROWs for each row in buffer
+	DBROWCOUNT   m_nRows;        // Number of rows that will fit in the buffer
+	DBCOUNTITEM  m_nCurrentRows; // Number of rows currently in the buffer
+	DBCOUNTITEM  m_nCurrentRow;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// Large Block Allocation Helper - CVBufHelper & CVirtualBuffer
+template <class T>
+class CVBufHelper
+{
+public:
+	virtual T* operator()(_In_opt_ T* pCurrent)
+	{
+		return pCurrent;
+	}
+};
+
+template <class T>
+class CVirtualBuffer
+{
+protected:
+	CVirtualBuffer()
+	{
+	}
+	T* m_pTop;
+	int m_nMaxElements;
+public:
+	T* m_pBase;
+	T* m_pCurrent;
+	explicit CVirtualBuffer(_In_ int nMaxElements)
+	{
+		//in case of overflow throw exception
+		ATLENSURE(nMaxElements>=0);
+
+		ATLENSURE(nMaxElements <=size_t(-1)/sizeof(T)); //overflow check
+		m_nMaxElements = nMaxElements;
+		m_pBase = (T*) VirtualAlloc(NULL,sizeof(T)*nMaxElements,	MEM_RESERVE, PAGE_READWRITE);
+		if(m_pBase == NULL)
+		{
+			_AtlRaiseException((DWORD)STATUS_NO_MEMORY);
+		}
+		m_pTop = m_pCurrent = m_pBase;
+		// Commit first page - chances are this is all that will be used
+		VirtualAlloc(m_pBase, sizeof(T), MEM_COMMIT, PAGE_READWRITE);
+	}
+	~CVirtualBuffer()
+	{
+		VirtualFree(m_pBase, 0, MEM_RELEASE);
+	}
+	int Except(_In_ LPEXCEPTION_POINTERS lpEP)
+	{
+		EXCEPTION_RECORD* pExcept = lpEP->ExceptionRecord;
+		if (pExcept->ExceptionCode != EXCEPTION_ACCESS_VIOLATION)
+			return EXCEPTION_CONTINUE_SEARCH;
+		BYTE* pAddress = (LPBYTE) pExcept->ExceptionInformation[1];
+
+		// The address is out of this buffer arrange means AV is not conflicted with this buffer.
+		BYTE* pTmp = reinterpret_cast<BYTE*>(m_pBase);
+		if ((pAddress < pTmp) || (pAddress >= pTmp + (sizeof(T) * m_nMaxElements)))
+			return EXCEPTION_CONTINUE_SEARCH;
+
+		VirtualAlloc(pAddress, sizeof(T), MEM_COMMIT, PAGE_READWRITE);
+		return EXCEPTION_CONTINUE_EXECUTION;
+	}
+	bool Seek(_In_ int nElement)
+	{
+		ATLASSERT(nElement >= 0 && nElement < m_nMaxElements);
+		if(nElement < 0 || nElement >= m_nMaxElements)
+			return false;
+		m_pCurrent = &m_pBase[nElement];
+		return true;
+	}
+
+#define ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()							\
+	__pragma(warning(push))												\
+	/* we never return EXCEPTION_EXECUTE_HANDLER in Except */			\
+	/* hence, we can safely ignore this warning about the handler */	\
+	/* being empty */													\
+	__pragma(warning(disable:6322))										\
+	__try																\
+	{																	\
+		/**/
+# define ATL_DBCLI_END_VBUF_GUARDED_REGION()							\
+	} /* try { */														\
+	__except(this->Except(GetExceptionInformation()))					\
+	{																	\
+		/*EMPTY*/														\
+	}																	\
+	__pragma(warning(pop))												\
+		/**/
+
+	void SetAt(
+		_In_ int nElement,
+		_In_ const T& Element)
+	{
+		ATLASSERT(nElement >= 0 && nElement < m_nMaxElements);
+
+		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+			T* p = &m_pBase[nElement];
+			*p = Element;
+			m_pTop = p++ > m_pTop ? p : m_pTop;
+		ATL_DBCLI_END_VBUF_GUARDED_REGION()
+	}
+	template <class Q>
+	void WriteBulk(_In_ Q& helper)
+	{
+		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+			m_pCurrent = helper(m_pBase);
+			m_pTop = m_pCurrent > m_pTop ? m_pCurrent : m_pTop;
+		ATL_DBCLI_END_VBUF_GUARDED_REGION()
+	}
+	void Write(_In_ const T& Element)
+	{
+		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+			*m_pCurrent = Element;
+			m_pCurrent++;
+			m_pTop = m_pCurrent > m_pTop ? m_pCurrent : m_pTop;
+		ATL_DBCLI_END_VBUF_GUARDED_REGION()
+	}
+	T& Read()
+	{
+		return *m_pCurrent;
+	}
+	_Ret_maybenull_z_ operator BSTR()
+	{
+		BSTR bstrTemp = NULL ;
+		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+			bstrTemp = SysAllocStringByteLen((char*) m_pBase,
+				(UINT) ((BYTE*)m_pTop - (BYTE*)m_pBase));
+		ATL_DBCLI_END_VBUF_GUARDED_REGION()
+		return bstrTemp;
+	}
+	const T& operator[](_In_ int nElement) const
+	{
+		if(nElement < 0 || nElement >= m_nMaxElements)
+			_AtlRaiseException((DWORD)EXCEPTION_ARRAY_BOUNDS_EXCEEDED);
+
+		return m_pBase[nElement];
+	}
+	operator T*()
+	{
+		return m_pBase;
+	}
+
+};
+
+
+typedef CVirtualBuffer<BYTE> CVirtualBytes;
+
+///////////////////////////////////////////////////////////////////////////
+// class CArrayRowset
+//
+// Allows you to access a rowset with an array syntax. TAccessor must be a
+// CAccessor<> type class
+
+template <class TAccessor>
+class CArrayRowset :
+	public CVirtualBuffer<typename TAccessor::DataClass>,
+	protected CBulkRowset<TAccessor>
+{
+public:
+	CArrayRowset(_In_ int nMax = 100000) :
+		CVirtualBuffer<typename TAccessor::DataClass>(nMax)
+	{
+		m_nRowsRead = 0;
+	}
+	typename TAccessor::DataClass& operator[](_In_ int nRow)
+	{
+		ATLASSERT(nRow >= 0);
+		if( nRow < 0 )
+			AtlThrow(E_INVALIDARG);
+
+		HRESULT hr = S_OK;
+		typename TAccessor::DataClass* pCurrent = this->m_pBase + m_nRowsRead;
+
+		// Retrieve the row if we haven't retrieved it already
+		while ((ULONG)nRow >= m_nRowsRead)
+		{
+			this->m_pAccessor->SetBuffer(reinterpret_cast<BYTE*>(pCurrent));
+			ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+				// Get the row
+				hr = this->MoveNext();
+				if (hr != S_OK)
+					break;
+			ATL_DBCLI_END_VBUF_GUARDED_REGION()
+			m_nRowsRead++;
+			pCurrent++;
+		}
+
+		if(hr != S_OK)
+		{
+			ATLASSERT(hr != DB_S_ENDOFROWSET);	// if you're getting this assertion, then
+												// most likely you are trying to access an
+												// out of bounds element of CArrayRowset
+												// (ex. table[100].data where table has only
+												// 50 records)
+			AtlThrow(hr);
+		}
+
+		return *(this->m_pBase + nRow);
+	}
+
+	HRESULT Snapshot() throw()
+	{
+		HRESULT hr = S_FALSE;
+		ATLASSUME(m_nRowsRead == 0);
+		ATLASSUME(this->m_spRowset != NULL);
+		typename TAccessor::DataClass* pCurrent = this->m_pBase;
+		this->m_pAccessor->SetBuffer(reinterpret_cast<BYTE*>(pCurrent));
+		ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+			hr = this->MoveFirst();
+		ATL_DBCLI_END_VBUF_GUARDED_REGION()
+		if (FAILED(hr))
+			return hr;
+		do
+		{
+			m_nRowsRead++;
+			pCurrent++;
+			this->m_pAccessor->SetBuffer(reinterpret_cast<BYTE*>(pCurrent));
+			ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION()
+				hr = this->MoveNext();
+			ATL_DBCLI_END_VBUF_GUARDED_REGION()
+		} while (SUCCEEDED(hr) &&  hr != DB_S_ENDOFROWSET);
+
+		return (hr == DB_S_ENDOFROWSET) ? S_OK : hr;
+	}
+	ULONG   m_nRowsRead;
+};
+
+#undef ATL_DBCLI_BEGIN_VBUF_GUARDED_REGION
+#undef ATL_DBCLI_END_VBUF_GUARDED_REGION
+
+///////////////////////////////////////////////////////////////////////////
 // CAccessorRowset
 template <class TAccessor = CNoAccessor, template <typename T> class TRowset = CRowset>
 class CAccessorRowset :
@@ -6149,18 +6146,18 @@ ATLPREFAST_SUPPRESS(6387)
 		if (ppColumnInfo == NULL || pulColumns == NULL || ppStrings == NULL)
 			return E_POINTER;
 
-		ATLASSERT(GetInterface() != NULL);
-		if (GetInterface() == NULL)
+		ATLASSERT(this->GetInterface() != NULL);
+		if (this->GetInterface() == NULL)
 			return E_FAIL;
 		CComPtr<IColumnsInfo> spColumns;
-		HRESULT hr = GetInterface()->QueryInterface(&spColumns);
+		HRESULT hr = this->GetInterface()->QueryInterface(&spColumns);
 		if (SUCCEEDED(hr))
 			hr = spColumns->GetColumnInfo(pulColumns, ppColumnInfo, ppStrings);
 
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	// Used to get the column information when overriding the bindings using CDynamicAccessor
 	// The user should CoTaskMemFree the column information pointer that is returned.
 	HRESULT GetColumnInfo(
@@ -6169,33 +6166,33 @@ ATLPREFAST_UNSUPPRESS()
 	{
 		// If you get a compilation here, then you are most likely calling this function
 		// from a class that is not using CDynamicAccessor.
-		ATLASSERT(GetInterface() != NULL);
-		if (GetInterface() == NULL)
+		ATLASSERT(this->GetInterface() != NULL);
+		if (this->GetInterface() == NULL)
 			return E_FAIL;
 
 		ATLASSUME(ppColumnInfo != NULL);
 
-		return TAccessor::GetColumnInfo(GetInterface(), pColumns, ppColumnInfo);
+		return TAccessor::GetColumnInfo(this->GetInterface(), pColumns, ppColumnInfo);
 	}
-	
+
 	// Call to bind the output columns
 	HRESULT Bind() throw()
 	{
 		// Bind should only be called when we've successfully opened the rowset
-		ATLASSERT(GetInterface() != NULL);
-		if (GetInterface() == NULL)
+		ATLASSERT(this->GetInterface() != NULL);
+		if (this->GetInterface() == NULL)
 			return E_FAIL;
-		HRESULT hr = TAccessor::BindColumns(GetInterface());
+		HRESULT hr = TAccessor::BindColumns(this->GetInterface());
 		if (SUCCEEDED(hr))
-			hr = BindFinished();
+			hr = this->BindFinished();
 		return hr;
 	}
 	// Close the opened rowset and release the created accessors for the output columns
 	void Close() throw()
 	{
-		if (GetInterface() != NULL)
+		if (this->GetInterface() != NULL)
 		{
-			ReleaseAccessors(GetInterface());
+			this->ReleaseAccessors(this->GetInterface());
 			TAccessor::Close();
 			TRowset<TAccessor>::Close();
 		}
@@ -6204,11 +6201,11 @@ ATLPREFAST_UNSUPPRESS()
 	// E.g. Calls SysFreeString on any BSTR's and Release on any interfaces.
 	void FreeRecordMemory() throw()
 	{
-		TAccessor::FreeRecordMemory(m_spRowset);
+		TAccessor::FreeRecordMemory(this->m_spRowset);
 	}
 	void FreeRecordMemory(int nAccessor) throw()
 	{
-		TAccessor::FreeRecordMemory(nAccessor, m_spRowset);
+		TAccessor::FreeRecordMemory(nAccessor, this->m_spRowset);
 	}
 };
 
@@ -6564,7 +6561,7 @@ public:
 		return OpenWithServiceComponents(clsid, pPropSet, nPropertySets);
 	}
 	// Bring up the "Organize Dialog" which allows the user to select a previously created data link
-	// file (.UDL file). The selected file will be used to open the datbase.
+	// file (.UDL file). The selected file will be used to open the database.
 	HRESULT OpenWithPromptFileName(
 		_In_ HWND hWnd = GetActiveWindow(),
 		_In_ DBPROMPTOPTIONS dwPromptOptions = DBPROMPTOPTIONS_NONE,
@@ -6794,7 +6791,7 @@ ATLPREFAST_UNSUPPRESS()
 		// Set connection properties
 		CDBPropSet propSet(DBPROPSET_DBINIT);
 
-		// Add Datbase name, User name and Password
+		// Add Database name, User name and Password
 		if (pName != NULL)
 		{
 			if(!propSet.AddProperty(DBPROP_INIT_DATASOURCE, pName))
@@ -7104,15 +7101,15 @@ public:
 		if (pPropSet != NULL && ulPropSets == 0)
 			ulPropSets = 1;
 
-		HRESULT hr = session.m_spOpenRowset->OpenRowset(NULL, &dbid, NULL, GetIID(),
-			ulPropSets, pPropSet, (IUnknown**)GetInterfacePtr());
+		HRESULT hr = session.m_spOpenRowset->OpenRowset(NULL, &dbid, NULL, this->GetIID(),
+			ulPropSets, pPropSet, (IUnknown**)this->GetInterfacePtr());
 		if (SUCCEEDED(hr))
 		{
-			SetupOptionalRowsetInterfaces();
+			this->SetupOptionalRowsetInterfaces();
 
 			// If we have output columns then bind
 			if (_OutputColumnsClass::HasOutputColumns())
-				hr = Bind();
+				hr = this->Bind();
 		}
 
 		return hr;
@@ -7385,7 +7382,7 @@ public:
 		if (_ParamClass::HasParameters())
 		{
 			// Bind the parameters in the accessor if they haven't already been bound
-			hr = BindParameters(&m_hParameterAccessor, m_spCommand, &params.pData);
+			hr = this->BindParameters(&m_hParameterAccessor, m_spCommand, &params.pData);
 			if (FAILED(hr))
 				return hr;
 
@@ -7406,23 +7403,23 @@ public:
 	{
 		// This function should only be called if CMultipleResults is being
 		// used as the third template parameter
-		ATLASSERT(GetMultiplePtrAddress() != NULL);
+		ATLASSERT(this->GetMultiplePtrAddress() != NULL);
 
 		// If user calls GetNextResult but the interface is not available
 		// return E_FAIL.
-		if (GetMultiplePtr() == NULL)
+		if (this->GetMultiplePtr() == NULL)
 			return E_FAIL;
 
 		// Close the existing rowset in preparation for opening the next one
-		Close();
+		this->Close();
 
-		HRESULT hr = GetMultiplePtr()->GetResult(NULL, 0, GetIID(),
-			pulRowsAffected, (IUnknown**)GetInterfacePtr());
+		HRESULT hr = this->GetMultiplePtr()->GetResult(NULL, 0, this->GetIID(),
+			pulRowsAffected, (IUnknown**)this->GetInterfacePtr());
 		if (FAILED(hr))
 			return hr;
 
-		if (bBind && GetInterface() != NULL)
-			return Bind();
+		if (bBind && this->GetInterface() != NULL)
+			return this->Bind();
 		else
 			return hr;
 	}
@@ -7435,7 +7432,7 @@ public:
 		_In_ bool bBind = true,
 		_In_ ULONG ulPropSets = 0) throw()
 	{
-		HRESULT hr = Execute((IUnknown**)GetInterfacePtr(), pParams, pPropSet,
+		HRESULT hr = Execute((IUnknown**)this->GetInterfacePtr(), pParams, pPropSet,
 							pRowsAffected, ulPropSets);
 		if (FAILED(hr))
 			return hr;
@@ -7444,10 +7441,10 @@ public:
 		if (bBind && _OutputColumnsClass::HasOutputColumns())
 		{
 			// for dynamic accessors we don't want to automatically call Bind if we got no rowset in return
-			if( NoBindOnNullRowset() && GetInterface() == NULL )
+			if( this->NoBindOnNullRowset() && this->GetInterface() == NULL )
 				return hr;
 			else
-				return Bind();
+				return this->Bind();
 		}
 		else
 			return hr;
@@ -7501,10 +7498,10 @@ public:
 		else
 			pAffected = &nAffected;
 
-		if (UseMultipleResults())
+		if (this->UseMultipleResults())
 		{
 			hr = m_spCommand->Execute(NULL, __uuidof(IMultipleResults), pParams,
-				pAffected, (IUnknown**)GetMultiplePtrAddress());
+				pAffected, (IUnknown**)this->GetMultiplePtrAddress());
 
 			if (SUCCEEDED(hr))
 			{
@@ -7512,16 +7509,16 @@ public:
 			}
 			else
 				// If we can't get IMultipleResults then just try to get IRowset
-				hr = m_spCommand->Execute(NULL, GetIID(), pParams, pAffected,
+				hr = m_spCommand->Execute(NULL, this->GetIID(), pParams, pAffected,
 					ppInterface);
 		}
 		else
 		{
-			hr = m_spCommand->Execute(NULL, GetIID(), pParams, pAffected,
+			hr = m_spCommand->Execute(NULL, this->GetIID(), pParams, pAffected,
 				ppInterface);
 		}
 		if (SUCCEEDED(hr))
-			SetupOptionalRowsetInterfaces();
+			this->SetupOptionalRowsetInterfaces();
 
 		return hr;
 	}

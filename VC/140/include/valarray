@@ -417,7 +417,7 @@ private:
 		{	// grow to _Count elements and pad with default values
 		if (0 < _Newsize)
 			{	// worth doing, allocate
-			_Myptr = _Allocate(_Newsize, (_Ty *)0, false);
+			_Myptr = static_cast<_Ty*>(_Allocate(_Newsize, sizeof (_Ty), false));
 
 			_TRY_BEGIN
 			for (size_t _Idx = 0; _Idx < _Newsize; ++_Idx)
@@ -437,7 +437,7 @@ private:
 		{	// grow to _Count elements and fill
 		if (0 < _Newsize)
 			{	// worth doing, allocate
-			_Myptr = _Allocate(_Newsize, (_Ty *)0, false);
+			_Myptr = static_cast<_Ty*>(_Allocate(_Newsize, sizeof (_Ty), false));
 
 			_TRY_BEGIN
 			for (size_t _Idx = 0; _Idx < _Newsize; ++_Idx, _Ptr += _Inc)

@@ -104,8 +104,8 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 
 #endif  /* (defined (_M_IX86) || defined (_M_ARM)) */
 
-#if defined (_DEBUG)
-#if _MSC_VER
+#ifdef _DEBUG
+#ifdef _MSC_VER
 // Turn off compiler warnings that are exacerbated by constructs in this
 // file's definitions:
 
@@ -116,12 +116,12 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 //      the "while (false)" part.
 
 #define _CONCRT_ASSERT(x)   __pragma (warning (suppress: 4127)) do {_ASSERTE(x); __assume(x);} while(false)
-#else
+#else  /* _MSC_VER */
 #define _CONCRT_ASSERT(x)   do {_ASSERTE(x); __assume(x);} while(false)
-#endif
-#else  /* defined (_DEBUG) */
+#endif  /* _MSC_VER */
+#else  /* _DEBUG */
 #define _CONCRT_ASSERT(x)   __assume(x)
-#endif  /* defined (_DEBUG) */
+#endif  /* _DEBUG */
 
 // Used internally to represent the smallest unit in which to allocate hidden types
 
@@ -281,13 +281,13 @@ namespace details
         // Standard operator new
         void * operator new(size_t _Size)
         {
-            return Concurrency::Alloc(_Size);
+            return ::Concurrency::Alloc(_Size);
         }
 
         // Standard operator delete
         void operator delete(void * _Ptr) throw()
         {
-            Concurrency::Free(_Ptr);
+            ::Concurrency::Free(_Ptr);
         }
 
         // Standard operator new, no-throw version
@@ -297,7 +297,7 @@ namespace details
 
             try
             {
-                _Ptr = Concurrency::Alloc(_Size);
+                _Ptr = ::Concurrency::Alloc(_Size);
             }
             catch(...)
             {
@@ -379,7 +379,7 @@ namespace details
         _CONCRTIMP _Scheduler(::Concurrency::Scheduler * _PScheduler = NULL) : _M_pScheduler(_PScheduler) {}
         _CONCRTIMP unsigned int _Reference();
         _CONCRTIMP unsigned int _Release();
-        _CONCRTIMP Concurrency::Scheduler * _GetScheduler() { return _M_pScheduler; }
+        _CONCRTIMP ::Concurrency::Scheduler * _GetScheduler() { return _M_pScheduler; }
 
     private:
         ::Concurrency::Scheduler * _M_pScheduler;
@@ -1079,7 +1079,7 @@ namespace details
         {
             for( size_t _I=0; _I < _M_ElemsConstructed; ++_I )
             {
-                _M_ElemArray[_I]._ElemType::~_ElemType();
+                _M_ElemArray[_I].~_ElemType();
             }
             // Works even when object was not initialized, that is, _M_ElemArray == NULL
             _freea(_M_ElemArray);
@@ -2165,7 +2165,7 @@ protected:
     //
     // Privatize operator delete. Clients should utilize Release to relinquish a schedule group.
     //
-    template<class _Ty> friend void Concurrency::details::_InternalDeleteHelper(_Ty * _PObject);
+    template<class _Ty> friend void ::Concurrency::details::_InternalDeleteHelper(_Ty * _PObject);
 
     virtual ~ScheduleGroup() {};
 };
@@ -3452,7 +3452,7 @@ protected:
     //
     // Privatize operator delete. The scheduler internally manages contexts.
     //
-    template<class _Ty> friend void Concurrency::details::_InternalDeleteHelper(_Ty * _PObject);
+    template<class _Ty> friend void ::Concurrency::details::_InternalDeleteHelper(_Ty * _PObject);
 
     virtual ~Context() {};
 };
@@ -4022,7 +4022,7 @@ private:
 
     void * volatile _M_pWaitChain;
     void * _M_pResetChain;
-    Concurrency::critical_section _M_lock;
+    ::Concurrency::critical_section _M_lock;
 };
 
 namespace details
@@ -4121,7 +4121,7 @@ namespace details
 
     private:
         // critical_section
-        Concurrency::critical_section _M_criticalSection;
+        ::Concurrency::critical_section _M_criticalSection;
     };
 
     // This is a reentrant lock implemented using the ConcRT critical section
@@ -4160,7 +4160,7 @@ namespace details
 
     private:
         // critical_section
-        Concurrency::critical_section _M_criticalSection;
+        ::Concurrency::critical_section _M_criticalSection;
 
         // The number of times this lock has been taken recursively
         long _M_recursionCount;
@@ -4193,7 +4193,7 @@ namespace details
 
     // _UnrealizedChore represents an unrealized chore -- a unit of work that scheduled in a work
     // stealing capacity. Some higher level construct (language or library) will map atop this to provide
-    // an usable abstraction to clients.
+    // a usable abstraction to clients.
     class _UnrealizedChore : public _Chore, public _AllocBase
     {
     public:
@@ -4215,7 +4215,7 @@ namespace details
         void _SetDetached(bool _FDetached);
 
         // Returns the owning collection of the chore.
-        Concurrency::details::_TaskCollectionBase* _OwningCollection() const
+        ::Concurrency::details::_TaskCollectionBase* _OwningCollection() const
         {
             return _M_pTaskCollection;
         }
@@ -4266,7 +4266,7 @@ namespace details
         typedef void (__cdecl * CHOREFUNC)(_UnrealizedChore * _PChore);
 
         // The collection of work to which this particular chore belongs.
-        Concurrency::details::_TaskCollectionBase * _M_pTaskCollection;
+        ::Concurrency::details::_TaskCollectionBase * _M_pTaskCollection;
 
         // Internal invocation inside the scheduler.
         CHOREFUNC _M_pChoreFunction;
@@ -4361,8 +4361,8 @@ namespace details
 
     protected:
 
-        friend class Concurrency::details::_UnrealizedChore;
-        friend class Concurrency::details::ContextBase;
+        friend class ::Concurrency::details::_UnrealizedChore;
+        friend class ::Concurrency::details::ContextBase;
 
         enum _TaskCollectionBaseState
         {
@@ -4844,7 +4844,7 @@ namespace details
     private:
 
         friend class _UnrealizedChore;
-        friend class Concurrency::details::ContextBase;
+        friend class ::Concurrency::details::ContextBase;
 
         /// <summary>
         ///     Determines if the task collection is a stale alias (an object which was left over from a deferred delete
@@ -5752,7 +5752,7 @@ _CONCRTIMP void __cdecl _Trace_agents(Agents_EventType _Type, __int64 _AgentId, 
 
 #endif /* _NO_DEFAULT_CONCRT_LIB */
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pop_macro("_YieldProcessor")
 #pragma pop_macro("new")

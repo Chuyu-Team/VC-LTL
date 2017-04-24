@@ -85,7 +85,7 @@ _STD_END
  #pragma warning(pop)
  #pragma pack(pop)
 #endif /* RC_INVOKED */
-#endif /* _TYPE_INDEX_ */
+#endif /* _TYPEINDEX_ */
 
 /*
  * Copyright (c) by P.J. Plauger. All rights reserved.

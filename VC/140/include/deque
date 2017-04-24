@@ -38,16 +38,16 @@ public:
 	typedef typename _Mydeque::const_reference reference;
 
 	_Deque_unchecked_const_iterator()
+		: _Mycont(),
+		_Myoff(0)
 		{	// construct with null pointer
-		_Mycont = 0;
-		_Myoff = 0;
 		}
 
 	_Deque_unchecked_const_iterator(size_type _Off,
 		const _Container_base12 *_Pdeque)
+		: _Mycont(static_cast<const _Mydeque *>(_Pdeque)),
+		_Myoff(_Off)
 		{	// construct with offset _Off
-		_Mycont = (_Mydeque *)_Pdeque;
-		_Myoff = _Off;
 		}
 
 	reference operator*() const
@@ -59,7 +59,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -204,7 +204,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -294,15 +294,15 @@ public:
 	typedef _Mydeque _Mydeque_t;	// helper for expression evaluator
 	enum {_EEN_DS = _DEQUESIZ};	// helper for expression evaluator
 	_Deque_const_iterator()
+		: _Myoff(0)
 		{	// construct with null pointer
 		_Setcont(0);
-		_Myoff = 0;
 		}
 
 	_Deque_const_iterator(size_type _Off, const _Container_base12 *_Pdeque)
+		: _Myoff(_Off)
 		{	// construct with offset _Off in *_Pdeque
 		_Setcont((_Mydeque *)_Pdeque);
-		_Myoff = _Off;
 		}
 
 	typedef _Deque_unchecked_const_iterator<_Mydeque> _Unchecked_type;
@@ -320,8 +320,7 @@ public:
 
 	reference operator*() const
 		{	// return designated object
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
-
+		const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Mycont == 0
 			|| this->_Myoff < _Mycont->_Myoff
@@ -346,13 +345,13 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
+		const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
 		if (_Mycont == 0
 			|| _Mycont->_Myoff + _Mycont->_Mysize <= this->_Myoff)
 		{	// report error
@@ -361,10 +360,9 @@ public:
 		}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
+		const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
 		_SCL_SECURE_VALIDATE(_Mycont != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			this->_Myoff < _Mycont->_Myoff + _Mycont->_Mysize);
+		_SCL_SECURE_VALIDATE_RANGE(this->_Myoff < _Mycont->_Myoff + _Mycont->_Mysize);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		++_Myoff;
@@ -381,7 +379,7 @@ public:
 	_Myiter& operator--()
 		{	// predecrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
+		const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
 		if (_Mycont == 0
 			|| this->_Myoff <= _Mycont->_Myoff)
 		{	// report error
@@ -390,7 +388,7 @@ public:
 		}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
+		const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
 		_SCL_SECURE_VALIDATE(_Mycont != 0);
 		_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myoff < this->_Myoff);
  #endif /* _ITERATOR_DEBUG_LEVEL */
@@ -409,21 +407,26 @@ public:
 	_Myiter& operator+=(difference_type _Off)
 		{	// increment by integer
  #if _ITERATOR_DEBUG_LEVEL == 2
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
-		if (_Mycont == 0
-			|| this->_Myoff + _Off < _Mycont->_Myoff
-			|| _Mycont->_Myoff + _Mycont->_Mysize < this->_Myoff + _Off)
-			{	// report error
-			_DEBUG_ERROR("deque iterator + offset out of range");
-			_SCL_SECURE_OUT_OF_RANGE;
+		if (_Off != 0)
+			{
+			const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
+			if (_Mycont == 0
+				|| this->_Myoff + _Off < _Mycont->_Myoff
+				|| _Mycont->_Myoff + _Mycont->_Mysize < this->_Myoff + _Off)
+				{	// report error
+				_DEBUG_ERROR("deque iterator + offset out of range");
+				_SCL_SECURE_OUT_OF_RANGE;
+				}
 			}
-
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
-		_SCL_SECURE_VALIDATE(_Mycont != 0);
-		_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myoff <= this->_Myoff + _Off
-			&& this->_Myoff + _Off <= _Mycont->_Myoff + _Mycont->_Mysize);
- #endif /* _ITERATOR_DEBUG_LEVEL */
+		if (_Off != 0)
+			{
+			const auto _Mycont = static_cast<const _Mydeque *>(this->_Getcont());
+			_SCL_SECURE_VALIDATE(_Mycont != 0);
+			_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myoff <= this->_Myoff + _Off
+				&& this->_Myoff + _Off <= _Mycont->_Myoff + _Mycont->_Mysize);
+			}
+ #endif /* _ITERATOR_DEBUG_LEVEL == 1 */
 
 		_Myoff += _Off;
 		return (*this);
@@ -461,11 +464,7 @@ public:
 
 	bool operator==(const _Myiter& _Right) const
 		{	// test for iterator equality
- #if 0 < _ITERATOR_DEBUG_LEVEL
-		if (this->_Getcont() != _Right._Getcont())
-			_Compat(_Right);
- #endif /* 0 < _ITERATOR_DEBUG_LEVEL */
-
+		_Compat(_Right);
 		return (this->_Myoff == _Right._Myoff);
 		}
 
@@ -498,43 +497,27 @@ public:
  #if _ITERATOR_DEBUG_LEVEL == 2
 	void _Compat(const _Myiter& _Right) const
 		{	// test for compatible iterator pair
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
-		if (_Mycont == 0
-			|| _Mycont != _Right._Getcont())
-			{	// report error
+		if (this->_Getcont() != _Right._Getcont())
+			{
 			_DEBUG_ERROR("deque iterators incompatible");
 			_SCL_SECURE_INVALID_ARGUMENT;
 			}
 		}
-
-	void _Setcont(const _Mydeque *_Pdeque)
-		{	// set container pointer
-		this->_Adopt(_Pdeque);
-		}
-
  #elif _ITERATOR_DEBUG_LEVEL == 1
 	void _Compat(const _Myiter& _Right) const
 		{	// test for compatible iterator pair
-		_Mydeque *_Mycont = ((_Mydeque *)this->_Getcont());
-		_SCL_SECURE_VALIDATE(_Mycont != 0);
-		_SCL_SECURE_VALIDATE_RANGE(_Mycont == _Right._Getcont());
+		_SCL_SECURE_VALIDATE_RANGE(this->_Getcont() == _Right._Getcont());
 		}
-
-	void _Setcont(const _Mydeque *_Pdeque)
-		{	// set container pointer
-		this->_Adopt(_Pdeque);
-		}
-
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
 	void _Compat(const _Myiter&) const
 		{	// test for compatible iterator pair
 		}
+ #endif /* _ITERATOR_DEBUG_LEVEL */
 
 	void _Setcont(const _Mydeque *_Pdeque)
 		{	// set container pointer
 		this->_Adopt(_Pdeque);
 		}
- #endif /* _ITERATOR_DEBUG_LEVEL */
 
 	size_type _Myoff;	// offset of element in deque
 	};
@@ -609,7 +592,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -773,17 +756,17 @@ public:
 	typedef _Deque_const_iterator<_Myt> const_iterator;
 
 	_Deque_val()
+		: _Map(),
+		_Mapsize(0),
+		_Myoff(0),
+		_Mysize(0)
 		{	// initialize values
-		_Map = _Mapptr();
-		_Mapsize = 0;
-		_Myoff = 0;
-		_Mysize = 0;
 		}
 
 	size_type _Getblock(size_type _Off) const
 		{	// determine block from offset
 			// NB: _Mapsize and _DEQUESIZ are guaranteed to be powers of 2
-		return ((_Off / _DEQUESIZ) & (this->_Mapsize - 1));
+		return ((_Off / _DEQUESIZ) & (_Mapsize - 1));
 		}
 
 	_Mapptr _Map;		// pointer to array of pointers to blocks
@@ -820,15 +803,17 @@ public:
 		return (_Get_data()._Getblock(_Off));
 		}
 
-	_Deque_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct allocator from _Al
+	_Deque_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
 		_Alloc_proxy();
 		}
 
-	_Deque_alloc(_Alloc&& _Al)
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_Deque_alloc(_Any_alloc&& _Al)
 		: _Mypair(_One_then_variadic_args_t(),
-			_STD move(_Al))
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct allocator from _Al
 		_Alloc_proxy();
 		}
@@ -852,17 +837,11 @@ public:
 		_Alloc_proxy();
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		_Swap_adl(_Myproxy(), _Right._Myproxy());
-		}
-
 	void _Alloc_proxy()
 		{	// construct proxy
 		typename _Alty::template rebind<_Container_proxy>::other
 			_Alproxy(_Getal());
-		_Myproxy() = _Alproxy.allocate(1);
+		_Myproxy() = _Unfancy(_Alproxy.allocate(1));
 		_Alproxy.construct(_Myproxy(), _Container_proxy());
 		_Myproxy()->_Mycont = &_Get_data();
 		}
@@ -873,7 +852,7 @@ public:
 			_Alproxy(_Getal());
 		_Orphan_all();
 		_Alproxy.destroy(_Myproxy());
-		_Alproxy.deallocate(_Myproxy(), 1);
+		_Alproxy.deallocate(_Alproxy.address(*_Myproxy()), 1);
 		_Myproxy() = 0;
 		}
 
@@ -1170,7 +1149,7 @@ public:
 		this->_Orphan_all();
 		_PUSH_FRONT_BEGIN;
 		this->_Getal().construct(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ,
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ),
 			_STD forward<value_type>(_Val));
 		_PUSH_FRONT_END;
 		}
@@ -1180,7 +1159,7 @@ public:
 		this->_Orphan_all();
 		_PUSH_BACK_BEGIN;
 		this->_Getal().construct(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ,
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ),
 			_STD forward<value_type>(_Val));
 		_PUSH_BACK_END;
 		}
@@ -1196,7 +1175,7 @@ public:
 		this->_Orphan_all();
 		_PUSH_FRONT_BEGIN;
 		this->_Getal().construct(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ,
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ),
 			_STD forward<_Valty>(_Val)...);
 		_PUSH_FRONT_END;
 		}
@@ -1207,7 +1186,7 @@ public:
 		this->_Orphan_all();
 		_PUSH_BACK_BEGIN;
 		this->_Getal().construct(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ,
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ),
 			_STD forward<_Valty>(_Val)...);
 		_PUSH_BACK_END;
 		}
@@ -1416,7 +1395,8 @@ public:
 
 	allocator_type get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (this->_Getal());
+		allocator_type _Ret(this->_Getal());
+		return (_Ret);
 		}
 
 	const_reference at(size_type _Pos) const
@@ -1478,7 +1458,7 @@ public:
 		this->_Orphan_all();
 		_PUSH_FRONT_BEGIN;
 		this->_Getal().construct(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ, _Val);
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ), _Val);
 		_PUSH_FRONT_END;
 		}
 
@@ -1492,7 +1472,7 @@ public:
 			_Orphan_off(this->_Myoff());
 			size_type _Block = this->_Getblock(this->_Myoff());
 			this->_Getal().destroy(
-				this->_Map()[_Block] + this->_Myoff() % _DEQUESIZ);
+				_Unfancy(this->_Map()[_Block] + this->_Myoff() % _DEQUESIZ));
 			if (--this->_Mysize() == 0)
 				this->_Myoff() = 0;
 			else
@@ -1502,7 +1482,7 @@ public:
  #else /* _ITERATOR_DEBUG_LEVEL == 2 */
 		size_type _Block = this->_Getblock(this->_Myoff());
 		this->_Getal().destroy(
-			this->_Map()[_Block] + this->_Myoff() % _DEQUESIZ);
+			_Unfancy(this->_Map()[_Block] + this->_Myoff() % _DEQUESIZ));
 		if (--this->_Mysize() == 0)
 			this->_Myoff() = 0;
 		else
@@ -1515,7 +1495,7 @@ public:
 		this->_Orphan_all();
 		_PUSH_BACK_BEGIN;
 		this->_Getal().construct(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ, _Val);
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ), _Val);
 		_PUSH_BACK_END;
 		}
 
@@ -1530,7 +1510,7 @@ public:
 			_Orphan_off(_Newoff);
 			size_type _Block = this->_Getblock(_Newoff);
 			this->_Getal().destroy(
-				this->_Map()[_Block] + _Newoff % _DEQUESIZ);
+				_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ));
 			if (--this->_Mysize() == 0)
 				this->_Myoff() = 0;
 			}
@@ -1539,7 +1519,7 @@ public:
 		size_type _Newoff = this->_Myoff() + this->_Mysize() - 1;
 		size_type _Block = this->_Getblock(_Newoff);
 		this->_Getal().destroy(
-			this->_Map()[_Block] + _Newoff % _DEQUESIZ);
+			_Unfancy(this->_Map()[_Block] + _Newoff % _DEQUESIZ));
 		if (--this->_Mysize() == 0)
 			this->_Myoff() = 0;
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
@@ -1671,13 +1651,13 @@ public:
 
 		if (_Off < (size_type)(end() - _Last))
 			{	// closer to front
-			_Move_backward(begin(), _First, _Last);	// copy over hole
+			_STD move_backward(begin(), _First, _Last);	// copy over hole
 			for (; 0 < _Count; --_Count)
 				pop_front();	// pop copied elements
 			}
 		else
 			{	// closer to back
-			_Move(_Last, end(), _First);	// copy over hole
+			_STD move(_Last, end(), _First);	// copy over hole
 			for (; 0 < _Count; --_Count)
 				pop_back();	// pop copied elements
 			}
@@ -1698,35 +1678,15 @@ public:
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value)
 		{	// exchange contents with _Right
-		if (this == &_Right)
-			;	// same object, do nothing
-		else if (this->_Getal() == _Right._Getal())
-			{	// same allocator, swap control information
+		if (this != &_Right)
+			{	// (maybe) swap allocators, swap control information
+			_Pocs(this->_Getal(), _Right._Getal());
 			this->_Swap_all(_Right);
 			_Swap_adl(this->_Map(), _Right._Map());
 			_STD swap(this->_Mapsize(), _Right._Mapsize());
 			_STD swap(this->_Myoff(), _Right._Myoff());
 			_STD swap(this->_Mysize(), _Right._Mysize());
 			}
-
-		else if (_Alty::propagate_on_container_swap::value)
-			{	// swap allocators and control information
-			this->_Swap_alloc(_Right);
-			_Swap_adl(this->_Map(), _Right._Map());
-			_STD swap(this->_Mapsize(), _Right._Mapsize());
-			_STD swap(this->_Myoff(), _Right._Myoff());
-			_STD swap(this->_Mysize(), _Right._Mysize());
-			}
-		else
-			{	// containers are incompatible
- #if _ITERATOR_DEBUG_LEVEL == 2
-			_DEBUG_ERROR("deque containers incompatible for swap");
-
- #else /* ITERATOR_DEBUG_LEVEL == 2 */
-			_XSTD terminate();
- #endif /* ITERATOR_DEBUG_LEVEL == 2 */
-			}
-
 		}
 
 protected:
@@ -1765,7 +1725,7 @@ protected:
 
 				_Mid = begin() + _Count;
 				value_type _Tmp = _Val;	// in case _Val is in sequence
-				_Move(_Mid + _Count, _Mid + _Off,
+				_STD move(_Mid + _Count, _Mid + _Off,
 					_Mid);	// copy rest of prefix
 				_STD fill(begin() + _Off, _Mid + _Off,
 					_Tmp);	// fill in values
@@ -1798,7 +1758,7 @@ protected:
 
 				_Mid = begin() + _Off;
 				value_type _Tmp = _Val;	// in case _Val is in sequence
-				_Move_backward(_Mid, _Mid + _Rem - _Count,
+				_STD move_backward(_Mid, _Mid + _Rem - _Count,
 					_Mid + _Rem);	// copy rest of prefix
 				_STD fill(_Mid, _Mid + _Count,
 					_Tmp);	// fill in values
@@ -1811,20 +1771,20 @@ protected:
 			}
 		}
 
-	//__declspec(noreturn) void _Xlen() const
-	//	{	// report a length_error
-	//	_Xlength_error("deque<T> too long");
-	//	}
+	[[noreturn]] void _Xlen() const
+		{	// report a length_error
+		_Xlength_error("deque<T> too long");
+		}
 
-	//__declspec(noreturn) void _Xran() const
-	//	{	// report an out_of_range error
-	//	_Xout_of_range("invalid deque<T> subscript");
-	//	}
+	[[noreturn]] void _Xran() const
+		{	// report an out_of_range error
+		_Xout_of_range("invalid deque<T> subscript");
+		}
 
 	void _Growmap(size_type _Count)
 		{	// grow map by at least _Count pointers, _Mapsize() a power of 2
-		//static_assert(1 < _DEQUEMAPSIZ,
-		//	"The _Xlen() test should always be performed.");
+		static_assert(1 < _DEQUEMAPSIZ,
+			"The _Xlen() test should always be performed.");
 
 		typedef typename _Alpty::pointer _Blockptr;
 		_Alpty _Almap(this->_Getal());
@@ -1887,7 +1847,7 @@ protected:
 			if (this->_Map()[--_Block] != pointer())
 				{	// free block and destroy its pointer
 				this->_Getal().deallocate(this->_Map()[_Block], _DEQUESIZ);
-				this->_Getal().destroy(&this->_Map()[_Block]);
+				this->_Getal().destroy(_STD addressof(this->_Map()[_Block]));
 				}
 			}
 

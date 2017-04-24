@@ -1321,7 +1321,7 @@ namespace Concurrency
         ///     An enumerated type that represents the operating system version.
         /// </summary>
         /**/
-        static enum OSVersion
+        enum OSVersion
         {
             /// <summary>
             /// An operating system prior to Windows XP. The Concurrency Runtime is not supported on operating
@@ -1454,6 +1454,6 @@ namespace Concurrency
 #endif  /* _CRT_USE_WINAPI_FAMILY_DESKTOP_APP */
 }
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pack(pop)

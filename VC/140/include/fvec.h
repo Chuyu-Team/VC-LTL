@@ -65,10 +65,6 @@
     #include <iostream>
 #endif  /* defined (_ENABLE_VEC_DEBUG) */
 
-#ifdef _MSC_VER
-#pragma pack(push,_CRT_PACKING)
-#endif  /* _MSC_VER */
-
 #pragma pack(push,16) /* Must ensure class & union 16-B aligned */
 
 const union
@@ -288,6 +284,7 @@ Fvec32s4_SELECT(nge)        /* generates select_nge(_A,_B) */
 
 /* Streaming SIMD Extensions Integer Intrinsic Functions */
 
+#if defined(_M_IX86)
 /* Max and Min */
 inline Is16vec4 simd_max(const Is16vec4 &_A, const Is16vec4 &_B)      { return _m_pmaxsw(_A,_B);}
 inline Is16vec4 simd_min(const Is16vec4 &_A, const Is16vec4 &_B)      { return _m_pminsw(_A,_B);}
@@ -348,6 +345,7 @@ inline F32vec4 Is32vec2ToF32vec4(const F32vec4 &_A, const Is32vec2 &_B)
     _Result = _mm_cvt_pi2ps(_A,_B);
     return F32vec4(_Result);
 }
+#endif
 
 class F32vec1
 {
@@ -496,10 +494,6 @@ inline int F32vec1ToInt(const F32vec1 &_A)
 
 
 #pragma pack(pop) /* 16-B aligned */
-
-#ifdef _MSC_VER
-#pragma pack(pop)
-#endif  /* _MSC_VER */
 
 #endif  /* defined (_M_CEE_PURE) */
 

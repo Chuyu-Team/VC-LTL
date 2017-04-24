@@ -9,16 +9,61 @@
  #pragma warning(push,3)
  #pragma push_macro("new")
  #undef new
- #pragma warning(disable: 4244)
+ #pragma warning(disable: 4244 28309 28285)
 
 _STD_BEGIN
 		// COMMON SORT PARAMETERS
 const int _ISORT_MAX = 32;	// maximum size for insertion sort
 
+template<class _Iter1,
+	class _Iter2,
+	class _UIter1,
+	class _UIter2> inline
+	pair<_Iter1, _Iter2>
+		_Rechecked_both(_Iter1 _Dest1, _Iter2 _Dest2, pair<_UIter1, _UIter2> _Src)
+	{	// reset checked from unchecked, generic
+	return (pair<_Iter1, _Iter2>(
+		_Rechecked(_Dest1, _Src.first),
+		_Rechecked(_Dest2, _Src.second)
+		));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _Iter1,
+	class _Iter2> inline
+	pair<_UNCHECKED_TYPE(_Iter1), _UNCHECKED_TYPE(_Iter2)>
+		_Unchecked_both(pair<_Iter1, _Iter2> _Src)
+	{	// unchecks iterators in a pair (for _ITERATOR_DEBUG_ARRAY_OVERLOADS)
+	return (pair<_UNCHECKED_TYPE(_Iter1), _UNCHECKED_TYPE(_Iter2)>(
+		_Unchecked(_Src.first),
+		_Unchecked(_Src.second)));
+	}
+
+template<class _Iter1,
+	class _Iter2> inline
+	pair<_UNCHECKED_TYPE(_Iter1), _Iter2>
+		_Unchecked_first(pair<_Iter1, _Iter2> _Src)
+	{	// unchecks first in a pair (for _ITERATOR_DEBUG_ARRAY_OVERLOADS)
+	return (pair<_UNCHECKED_TYPE(_Iter1), _Iter2>(
+		_Unchecked(_Src.first),
+		_Src.second));
+	}
+
+template<class _Iter1,
+	class _Iter2> inline
+	pair<_Iter1, _UNCHECKED_TYPE(_Iter2)>
+		_Unchecked_second(pair<_Iter1, _Iter2> _Src)
+	{	// unchecks second in a pair (for _ITERATOR_DEBUG_ARRAY_OVERLOADS)
+	return (pair<_Iter1, _UNCHECKED_TYPE(_Iter2)>(
+		_Src.first,
+		_Unchecked(_Src.second)));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
 		// TEMPLATE FUNCTION for_each
 template<class _InIt,
 	class _Fn1> inline
-	void _For_each(_InIt _First, _InIt _Last, _Fn1& _Func)
+	void _For_each_unchecked(_InIt _First, _InIt _Last, _Fn1& _Func)
 	{	// perform function for each element
 	for (; _First != _Last; ++_First)
 		_Func(*_First);
@@ -29,15 +74,14 @@ template<class _InIt,
 	_Fn1 for_each(_InIt _First, _InIt _Last, _Fn1 _Func)
 	{	// perform function for each element
 	_DEBUG_RANGE_PTR(_First, _Last, _Func);
-	_For_each(_Unchecked(_First), _Unchecked(_Last), _Func);
-
-	return (_STD move(_Func));
+	_For_each_unchecked(_Unchecked(_First), _Unchecked(_Last), _Func);
+	return (_Func);
 	}
 
 		// TEMPLATE FUNCTION find_if
 template<class _InIt,
 	class _Pr> inline
-	_InIt _Find_if(_InIt _First, _InIt _Last, _Pr _Pred)
+	_InIt _Find_if_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// find first satisfying _Pred
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First))
@@ -51,13 +95,13 @@ template<class _InIt,
 	{	// find first satisfying _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
 	return (_Rechecked(_First,
-		_Find_if(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Find_if_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION adjacent_find WITH PRED
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Adjacent_find(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+	_FwdIt _Adjacent_find_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// find first satisfying _Pred with successor
 	if (_First != _Last)
 		for (_FwdIt _Firstb; (void)(_Firstb = _First), ++_First != _Last; )
@@ -73,7 +117,7 @@ template<class _FwdIt,
 	_DEBUG_RANGE(_First, _Last);
 	_DEBUG_POINTER_IF(_First != _Last && _STD next(_First) != _Last, _Pred);
 	return (_Rechecked(_First,
-		_Adjacent_find(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Adjacent_find_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION adjacent_find
@@ -87,7 +131,7 @@ template<class _FwdIt> inline
 template<class _InIt,
 	class _Pr> inline
 	typename iterator_traits<_InIt>::difference_type
-		_Count_if(_InIt _First, _InIt _Last, _Pr _Pred)
+		_Count_if_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// count elements satisfying _Pred
 	typename iterator_traits<_InIt>::difference_type _Count = 0;
 
@@ -103,7 +147,7 @@ template<class _InIt,
 		count_if(_InIt _First, _InIt _Last, _Pr _Pred)
 	{	// count elements satisfying _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Count_if(_Unchecked(_First), _Unchecked(_Last), _Pred));
+	return (_Count_if_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred));
 	}
 
 		// TEMPLATE FUNCTION mismatch WITH PRED
@@ -111,92 +155,79 @@ template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
 	pair<_InIt1, _InIt2>
-		_Mismatch(_InIt1 _First1, _InIt1 _Last1,
-			_InIt2 _First2, _Pr _Pred)
+		_Mismatch_unchecked(_InIt1 _First1, _InIt1 _Last1,
+			_InIt2 _First2, _Pr& _Pred)
 	{	// return [_First1, _Last1)/[_First2, ...) mismatch using _Pred
 	for (; _First1 != _Last1 && _Pred(*_First1, *_First2); )
 		{	// point past match
 		++_First1;
 		++_First2;
 		}
+
 	return (pair<_InIt1, _InIt2>(_First1, _First2));
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	pair<_InIt1, _InIt2>
-		mismatch(_InIt1 _First1, _InIt1 _Last1,
-			_InIt2 _First2, _Pr _Pred)
-	{	// return [_First1, _Last1)/[_First2, ...) mismatch using _Pred
-	pair<_UNCHECKED_TYPE(_InIt1), _InIt2> _Ans(
-		_Mismatch(_Unchecked(_First1), _Unchecked(_Last1),
-			_First2, _Pred));
-	return (pair<_InIt1, _InIt2>(
-		_Rechecked(_First1, _Ans.first),
-		_Ans.second));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _Pr> inline
-	pair<_InIt1, _InIt2>
-		_Mismatch2(_InIt1 _First1, _InIt1 _Last1,
-			_InIt2 _First2, _Pr _Pred, true_type)
-	{	// return [_First1, _Last1)/[_First2, ...) mismatch, checked input
-	return (_Mismatch(_First1, _Last1,
-		_First2, _Pred));
+	auto _Mismatch_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr& _Pred, input_iterator_tag, input_iterator_tag)
+			-> pair<_InIt1, decltype(_Unchecked_idl0(_First2))>
+	{	// return [_First1, _Last1)/[_First2, ...) mismatch, input iterators, no deprecation warnings
+	return (_Mismatch_unchecked(_First1, _Last1,
+		_Unchecked_idl0(_First2), _Pred));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	pair<_InIt1, _InIt2>
-		_Mismatch2(_InIt1 _First1, _InIt1 _Last1,
-			_InIt2 _First2, _Pr _Pred, false_type)
-	{	// return [_First1, _Last1)/[_First2, ...) mismatch, unchecked input
-	return (_Mismatch(_First1, _Last1,
-		_First2, _Pred));
+	pair<_InIt1, _UNCHECKED_TYPE(_InIt2)>
+		_Mismatch_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+			_InIt2 _First2, _Pr& _Pred, random_access_iterator_tag, random_access_iterator_tag)
+	{	// return [_First1, _Last1)/[_First2, ...) mismatch; random-access iterators, no deprecation warnings
+	_CHECK_RANIT_RANGE(_First1, _Last1, _First2);
+	return (_Mismatch_unchecked(_First1, _Last1, _Unchecked(_First2), _Pred));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
 	pair<_InIt1, _InIt2>
-		mismatch(_InIt1 _First1, _InIt1 _Last1,
-			_InIt2 _First2, _Pr _Pred)
-	{	// return [_First1, _Last1)/[_First2, ...) mismatch using _Pred
+		_Mismatch_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
+			_InIt2 _First2, _Pr& _Pred)
+	{	// return [_First1, _Last1)/[_First2, ...) mismatch using _Pred, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First1, _Last1, _First2);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Pred);
-	pair<_UNCHECKED_TYPE(_InIt1), _InIt2> _Ans(
-		_Mismatch2(_Unchecked(_First1), _Unchecked(_Last1),
-			_First2, _Pred, _Is_checked(_First2)));
-	return (pair<_InIt1, _InIt2>(
-		_Rechecked(_First1, _Ans.first),
-		_Ans.second));
+	return (_Rechecked_both(_First1, _First2,
+		_Mismatch_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
+			_First2, _Pred, _Iter_cat_t<_InIt1>(), _Iter_cat_t<_InIt2>())));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	pair<_InIt1, _InIt2>
+		mismatch(_InIt1 _First1, _InIt1 _Last1,
+			_InIt2 _First2, _Pr _Pred)
+	{	// return [_First1, _Last1)/[_First2, ...) mismatch using _Pred
+	_DEPRECATE_UNCHECKED(mismatch, _First2);
+	return (_Mismatch_no_deprecate(_First1, _Last1, _First2, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
 template<class _InIt1,
 	class _InTy,
 	size_t _InSize,
-	class _Pr> inline
+	class _Pr,
+	class = enable_if_t<!is_same<_InTy *, _Pr>::value>> inline
 	pair<_InIt1, _InTy *>
 		mismatch(_InIt1 _First1, _InIt1 _Last1,
 			_InTy (&_First2)[_InSize], _Pr _Pred)
 	{	// return [_First1, _Last1)/[_First2, ...) mismatch using _Pred
-	pair<_InIt1, _Array_iterator<_InTy, _InSize> > _Ans(
-		_STD mismatch(_First1, _Last1,
-			_Array_iterator<_InTy, _InSize>(_First2), _Pred));
-	return (pair<_InIt1, _InTy *>(
-		_Ans.first,
-		_Unchecked(_Ans.second)));
+	return (_Unchecked_second(_Mismatch_no_deprecate(_First1, _Last1,
+		_Array_iterator<_InTy, _InSize>(_First2), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION mismatch
 template<class _InIt1,
@@ -227,8 +258,8 @@ template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
 	pair<_InIt1, _InIt2>
-		_Mismatch(_InIt1 _First1, _InIt1 _Last1,
-			_InIt2 _First2, _InIt2 _Last2, _Pr _Pred)
+		_Mismatch_unchecked(_InIt1 _First1, _InIt1 _Last1,
+			_InIt2 _First2, _InIt2 _Last2, _Pr& _Pred)
 	{	// return [_First1, _Last1)/[_First2, _Last2) mismatch using _Pred
 	for (; _First1 != _Last1 && _First2 != _Last2
 		&& _Pred(*_First1, *_First2); )
@@ -236,6 +267,7 @@ template<class _InIt1,
 		++_First1;
 		++_First2;
 		}
+
 	return (pair<_InIt1, _InIt2>(_First1, _First2));
 	}
 
@@ -249,12 +281,9 @@ template<class _InIt1,
 	_DEBUG_RANGE(_First1, _Last1);
 	_DEBUG_RANGE(_First2, _Last2);
 	_DEBUG_POINTER_IF(_First1 != _Last1 && _First2 != _Last2, _Pred);
-	pair<_UNCHECKED_TYPE(_InIt1), _UNCHECKED_TYPE(_InIt2)> _Ans(
-		_Mismatch(_Unchecked(_First1), _Unchecked(_Last1),
-			_Unchecked(_First2), _Unchecked(_Last2), _Pred));
-	return (pair<_InIt1, _InIt2>(
-		_Rechecked(_First1, _Ans.first),
-		_Rechecked(_First2, _Ans.second)));
+	return (_Rechecked_both(_First1, _First2,
+		_Mismatch_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
+			_Unchecked(_First2), _Unchecked(_Last2), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION mismatch WITH TWO RANGES
@@ -271,7 +300,7 @@ template<class _InIt1,
 		// TEMPLATE FUNCTION all_of
 template<class _InIt,
 	class _Pr> inline
-	bool _All_of(_InIt _First, _InIt _Last, _Pr _Pred)
+	bool _All_of_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// test if all elements satisfy _Pred
 	for (; _First != _Last; ++_First)
 		if (!_Pred(*_First))
@@ -284,13 +313,13 @@ template<class _InIt,
 	bool all_of(_InIt _First, _InIt _Last, _Pr _Pred)
 	{	// test if all elements satisfy _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_All_of(_Unchecked(_First), _Unchecked(_Last), _Pred));
+	return (_All_of_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred));
 	}
 
 		// TEMPLATE FUNCTION any_of
 template<class _InIt,
 	class _Pr> inline
-	bool _Any_of(_InIt _First, _InIt _Last, _Pr _Pred)
+	bool _Any_of_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// test if any element satisfies _Pred
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First))
@@ -303,13 +332,13 @@ template<class _InIt,
 	bool any_of(_InIt _First, _InIt _Last, _Pr _Pred)
 	{	// test if any element satisfies _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Any_of(_Unchecked(_First), _Unchecked(_Last), _Pred));
+	return (_Any_of_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred));
 	}
 
 		// TEMPLATE FUNCTION none_of
 template<class _InIt,
 	class _Pr> inline
-	bool _None_of(_InIt _First, _InIt _Last, _Pr _Pred)
+	bool _None_of_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// test if no elements satisfy _Pred
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First))
@@ -322,13 +351,13 @@ template<class _InIt,
 	bool none_of(_InIt _First, _InIt _Last, _Pr _Pred)
 	{	// test if no elements satisfy _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_None_of(_Unchecked(_First), _Unchecked(_Last), _Pred));
+	return (_None_of_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred));
 	}
 
 		// TEMPLATE FUNCTION find_if_not
 template<class _InIt,
 	class _Pr> inline
-	_InIt _Find_if_not(_InIt _First, _InIt _Last, _Pr _Pred)
+	_InIt _Find_if_not_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// find first element that satisfies !_Pred
 	for (; _First != _Last; ++_First)
 		if (!_Pred(*_First))
@@ -342,15 +371,15 @@ template<class _InIt,
 	{	// find first element that satisfies !_Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
 	return (_Rechecked(_First,
-		_Find_if_not(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Find_if_not_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION copy_if
 template<class _InIt,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Copy_if(_InIt _First, _InIt _Last, _OutIt _Dest,
-		_Pr _Pred)
+	_OutIt _Copy_if_unchecked(_InIt _First, _InIt _Last, _OutIt _Dest,
+		_Pr& _Pred)
 	{	// copy each satisfying _Pred
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First))
@@ -358,51 +387,30 @@ template<class _InIt,
 			_DEBUG_POINTER(_Dest);
 			*_Dest++ = *_First;
 			}
+
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt copy_if(_InIt _First, _InIt _Last, _OutIt _Dest,
-		_Pr _Pred)
-	{	// copy each satisfying _Pred
-	return (_Copy_if(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Copy_if(_InIt _First, _InIt _Last, _OutIt _Dest,
-		_Pr _Pred, true_type)
-	{	// copy each satisfying _Pred, checked dest
-	return (_Copy_if(_First, _Last,
-		_Dest, _Pred));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Copy_if(_InIt _First, _InIt _Last, _OutIt _Dest,
-		_Pr _Pred, false_type)
-	{	// copy each satisfying _Pred, unchecked dest
-	return (_Copy_if(_First, _Last,
-		_Dest, _Pred));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt copy_if(_InIt _First, _InIt _Last, _OutIt _Dest,
-		_Pr _Pred)
-	{	// copy each satisfying _Pred
+	_OutIt _Copy_if_no_deprecate(_InIt _First, _InIt _Last, _OutIt _Dest,
+		_Pr& _Pred)
+	{	// copy each satisfying _Pred, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Copy_if(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Pred, _Is_checked(_Dest)));
+	return (_Rechecked(_Dest,
+		_Copy_if_unchecked(_Unchecked(_First), _Unchecked(_Last),
+		_Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt copy_if(_InIt _First, _InIt _Last, _OutIt _Dest,
+		_Pr _Pred)
+	{	// copy each satisfying _Pred
+	_DEPRECATE_UNCHECKED(copy_if, _Dest);
+	return (_Copy_if_no_deprecate(_First, _Last, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -414,11 +422,10 @@ template<class _InIt,
 		_Pr _Pred)
 	{	// copy each satisfying _Pred, array dest
 	return (_Unchecked(
-		_STD copy_if(_First, _Last,
+		_Copy_if_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION partition_copy
 template<class _InIt,
@@ -426,9 +433,9 @@ template<class _InIt,
 	class _OutIt2,
 	class _Pr> inline
 	pair<_OutIt1, _OutIt2>
-		_Partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred)
-	{	// copy true partition *_Dest1++, false to *_Dest2++
+		_Partition_copy_unchecked(_InIt _First, _InIt _Last,
+			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr& _Pred)
+	{	// copy true partition to _Dest1, false to _Dest2
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First))
 			{	// validate _Dest1 and store
@@ -440,81 +447,8 @@ template<class _InIt,
 			_DEBUG_POINTER(_Dest2);
 			*_Dest2++ = *_First;
 			}
-	return (pair<_OutIt1, _OutIt2>( _Dest1, _Dest2));
-	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt,
-	class _OutIt1,
-	class _OutIt2,
-	class _Pr> inline
-	pair<_OutIt1, _OutIt2>
-		partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred)
-	{	// copy true partition *_Dest1++, false to *_Dest2++
-	return (pair<_OutIt1, _OutIt2>(
-		_Partition_copy(_Unchecked(_First), _Unchecked(_Last),
-			_Dest1, _Dest2, _Pred)));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt1,
-	class _OutIt2,
-	class _Pr> inline
-	pair<_OutIt1, _OutIt2>
-		_Partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred,
-			true_type, true_type)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, checked dest
-	return (pair<_OutIt1, _OutIt2>(
-		_Partition_copy(_First, _Last,
-			_Dest1, _Dest2, _Pred)));
-	}
-
-template<class _InIt,
-	class _OutIt1,
-	class _OutIt2,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	pair<_OutIt1, _OutIt2>
-		_Partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred,
-			true_type, false_type)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, unchecked dest
-	return (pair<_OutIt1, _OutIt2>(
-		_Partition_copy(_First, _Last,
-			_Dest1, _Dest2, _Pred)));
-	}
-
-template<class _InIt,
-	class _OutIt1,
-	class _OutIt2,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	pair<_OutIt1, _OutIt2>
-		_Partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred,
-			false_type, true_type)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, unchecked dest
-	return (pair<_OutIt1, _OutIt2>(
-		_Partition_copy(_First, _Last,
-			_Dest1, _Dest2, _Pred)));
-	}
-
-template<class _InIt,
-	class _OutIt1,
-	class _OutIt2,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	pair<_OutIt1, _OutIt2>
-		_Partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred,
-			false_type, false_type)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, unchecked dest
-	return (pair<_OutIt1, _OutIt2>(
-		_Partition_copy(_First, _Last,
-			_Dest1, _Dest2, _Pred)));
+	return (pair<_OutIt1, _OutIt2>(_Dest1, _Dest2));
 	}
 
 template<class _InIt,
@@ -522,14 +456,27 @@ template<class _InIt,
 	class _OutIt2,
 	class _Pr> inline
 	pair<_OutIt1, _OutIt2>
-		partition_copy(_InIt _First, _InIt _Last,
-			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred)
-	{	// copy true partition *_Dest1++, false to *_Dest2++
+		_Partition_copy_no_deprecate(_InIt _First, _InIt _Last,
+			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr& _Pred)
+	{	// copy true partition to _Dest1, false to _Dest2, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (pair<_OutIt1, _OutIt2>(
-		_Partition_copy(_Unchecked(_First), _Unchecked(_Last),
-			_Dest1, _Dest2, _Pred,
-			_Is_checked(_Dest1), _Is_checked(_Dest2))));
+	return (_Rechecked_both(_Dest1, _Dest2,
+		_Partition_copy_unchecked(_Unchecked(_First), _Unchecked(_Last),
+		_Unchecked_idl0(_Dest1), _Unchecked_idl0(_Dest2), _Pred)));
+	}
+
+template<class _InIt,
+	class _OutIt1,
+	class _OutIt2,
+	class _Pr> inline
+	pair<_OutIt1, _OutIt2>
+		partition_copy(_InIt _First, _InIt _Last,
+			_OutIt1 _Dest1, _OutIt2 _Dest2, _Pr _Pred)
+	{	// copy true partition to _Dest1, false to _Dest2
+	_DEFINE_DEPRECATE_UNCHECKED(partition_copy);
+	_USE_DEPRECATE_UNCHECKED(_Dest1);
+	_USE_DEPRECATE_UNCHECKED(_Dest2);
+	return (_Partition_copy_no_deprecate(_First, _Last, _Dest1, _Dest2, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -541,13 +488,11 @@ template<class _InIt,
 	pair<_OutTy1 *, _OutIt2>
 		partition_copy(_InIt _First, _InIt _Last,
 			_OutTy1 (&_Dest1)[_OutSize1], _OutIt2 _Dest2, _Pr _Pred)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, array dest
-	pair<_Array_iterator<_OutTy1, _OutSize1>, _OutIt2> _Ans =
-		_STD partition_copy(_First, _Last,
-			_Array_iterator<_OutTy1, _OutSize1>(_Dest1), _Dest2, _Pred);
-	return (pair<_OutTy1 *, _OutIt2>(
-		_Unchecked(_Ans.first),
-		_Ans.second));
+	{	// copy true partition to _Dest1, false to _Dest2, array dest
+	_DEPRECATE_UNCHECKED(partition_copy, _Dest2);
+	return (_Unchecked_first(
+		_Partition_copy_no_deprecate(_First, _Last,
+			_Array_iterator<_OutTy1, _OutSize1>(_Dest1), _Dest2, _Pred)));
 	}
 
 template<class _InIt,
@@ -558,13 +503,11 @@ template<class _InIt,
 	pair<_OutIt1, _OutTy2 *>
 		partition_copy(_InIt _First, _InIt _Last,
 			_OutIt1 _Dest1, _OutTy2 (&_Dest2)[_OutSize2], _Pr _Pred)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, array dest
-	pair<_OutIt1, _Array_iterator<_OutTy2, _OutSize2> > _Ans =
-		_STD partition_copy(_First, _Last,
-			_Dest1, _Array_iterator<_OutTy2, _OutSize2>(_Dest2), _Pred);
-	return (pair<_OutIt1, _OutTy2 *>(
-		_Ans.first,
-		_Unchecked(_Ans.second)));
+	{	// copy true partition to _Dest1, false to _Dest2, array dest
+	_DEPRECATE_UNCHECKED(partition_copy, _Dest1);
+	return (_Unchecked_second(
+		_Partition_copy_no_deprecate(_First, _Last,
+			_Dest1, _Array_iterator<_OutTy2, _OutSize2>(_Dest2), _Pred)));
 	}
 
 template<class _InIt,
@@ -577,23 +520,18 @@ template<class _InIt,
 		partition_copy(_InIt _First, _InIt _Last,
 			_OutTy1 (&_Dest1)[_OutSize1], _OutTy2 (&_Dest2)[_OutSize2],
 			_Pr _Pred)
-	{	// copy true partition *_Dest1++, false to *_Dest2++, array dest
-	pair<_Array_iterator<_OutTy1, _OutSize1>,
-		_Array_iterator<_OutTy2, _OutSize2> > _Ans =
-			_STD partition_copy(_First, _Last,
+	{	// copy true partition to _Dest1, false to _Dest2, array dest
+	return (_Unchecked_both(
+		_Partition_copy_no_deprecate(_First, _Last,
 				_Array_iterator<_OutTy1, _OutSize1>(_Dest1),
-				_Array_iterator<_OutTy2, _OutSize2>(_Dest2), _Pred);
-	return (pair<_OutTy1 *, _OutTy2 *>(
-		_Unchecked(_Ans.first),
-		_Unchecked(_Ans.second)));
+				_Array_iterator<_OutTy2, _OutSize2>(_Dest2), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION is_partitioned
 template<class _InIt,
 	class _Pr> inline
-	bool _Is_partitioned(_InIt _First, _InIt _Last, _Pr _Pred)
+	bool _Is_partitioned_unchecked(_InIt _First, _InIt _Last, _Pr& _Pred)
 	{	// test if [_First, _Last) partitioned by _Pred
 	for (; _First != _Last; ++_First)
 		if (!_Pred(*_First))
@@ -609,21 +547,19 @@ template<class _InIt,
 	bool is_partitioned(_InIt _First, _InIt _Last, _Pr _Pred)
 	{	// test if [_First, _Last) partitioned by _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Is_partitioned(_Unchecked(_First), _Unchecked(_Last),
+	return (_Is_partitioned_unchecked(_Unchecked(_First), _Unchecked(_Last),
 		_Pred));
 	}
 
 		// TEMPLATE FUNCTION partition_point
 template<class _FwdIt,
-	class _Diff,
 	class _Pr> inline
-	_FwdIt _Partition_point(_FwdIt _First, _FwdIt _Last, _Pr _Pred, _Diff *)
+	_FwdIt _Partition_point_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// find beginning of false partition in [_First, _Last)
-	_Diff _Count = 0;
-	_Distance(_First, _Last, _Count);
+	_Iter_diff_t<_FwdIt> _Count = _STD distance(_First, _Last);
 	while (0 < _Count)
 		{	// divide and conquer, find half that contains answer
-		_Diff _Count2 = _Count / 2;
+		_Iter_diff_t<_FwdIt> _Count2 = _Count / 2;
 		_FwdIt _Mid = _First;
 		_STD advance(_Mid, _Count2);
 
@@ -635,6 +571,7 @@ template<class _FwdIt,
 		else
 			_Count = _Count2;
 		}
+
 	return (_First);
 	}
 
@@ -644,18 +581,15 @@ template<class _FwdIt,
 	{	// find beginning of false partition in [_First, _Last)
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
 	return (_Rechecked(_First,
-		_Partition_point(_Unchecked(_First), _Unchecked(_Last), _Pred,
-			_Dist_type(_First))));
+		_Partition_point_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION search WITH PRED
 template<class _FwdIt1,
 	class _FwdIt2,
-	class _Diff1,
-	class _Diff2,
 	class _Pr> inline
-	_FwdIt1 _Search(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred, _Diff1 *, _Diff2 *,
+	_FwdIt1 _Search_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred,
 		forward_iterator_tag, forward_iterator_tag)
 	{	// find first [_First2, _Last2) satisfying _Pred, arbitrary iterators
 	for (; ; ++_First1)
@@ -673,15 +607,13 @@ template<class _FwdIt1,
 
 template<class _FwdIt1,
 	class _FwdIt2,
-	class _Diff1,
-	class _Diff2,
 	class _Pr> inline
-	_FwdIt1 _Search(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred, _Diff1 *, _Diff2 *,
+	_FwdIt1 _Search_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred,
 		random_access_iterator_tag, random_access_iterator_tag)
 	{	// find first [_First2, _Last2) satisfying _Pred, random-access iterators
-	_Diff1 _Count1 = _Last1 - _First1;
-	_Diff2 _Count2 = _Last2 - _First2;
+	_Iter_diff_t<_FwdIt1> _Count1 = _Last1 - _First1;
+	_Iter_diff_t<_FwdIt2> _Count2 = _Last2 - _First2;
 
 	for (; _Count2 <= _Count1; ++_First1, (void)--_Count1)
 		{	// room for match, try it
@@ -692,6 +624,7 @@ template<class _FwdIt1,
 			else if (!_Pred(*_Mid1, *_Mid2))
 				break;
 		}
+
 	return (_Last1);
 	}
 
@@ -705,10 +638,9 @@ template<class _FwdIt1,
 	_DEBUG_RANGE(_First2, _Last2);
 	_DEBUG_POINTER_IF(_First1 != _Last1 && _First2 != _Last2, _Pred);
 	return (_Rechecked(_First1,
-		_Search(_Unchecked(_First1), _Unchecked(_Last1),
+		_Search_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
 			_Unchecked(_First2), _Unchecked(_Last2), _Pred,
-			_Dist_type(_First1), _Dist_type(_First2),
-			_Iter_cat(_First1), _Iter_cat(_First2))));
+			_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>())));
 	}
 
 		// TEMPLATE FUNCTION search
@@ -726,8 +658,8 @@ template<class _FwdIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	_FwdIt _Search_n(_FwdIt _First, _FwdIt _Last,
-		_Diff _Count, const _Ty& _Val, _Pr _Pred, forward_iterator_tag)
+	_FwdIt _Search_n_unchecked(_FwdIt _First, _FwdIt _Last,
+		_Diff _Count, const _Ty& _Val, _Pr& _Pred, forward_iterator_tag)
 	{	// find first _Count * _Val satisfying _Pred, forward iterators
 	if (_Count <= 0)
 		return (_First);
@@ -749,6 +681,7 @@ template<class _FwdIt,
 
 			_First = _Mid;	// pick up just beyond failed match
 			}
+
 	return (_Last);
 	}
 
@@ -756,8 +689,8 @@ template<class _FwdIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	_FwdIt _Search_n(_FwdIt _First, _FwdIt _Last,
-		_Diff _Count, const _Ty& _Val, _Pr _Pred, random_access_iterator_tag)
+	_FwdIt _Search_n_unchecked(_FwdIt _First, _FwdIt _Last,
+		_Diff _Count, const _Ty& _Val, _Pr& _Pred, random_access_iterator_tag)
 	{	// find first _Count * _Val satisfying _Pred, random-access iterators
 	if (_Count <= 0)
 		return (_First);
@@ -794,6 +727,7 @@ template<class _FwdIt,
 			_Inc = _Count - 1;
 			}
 		}
+
 	return (_Last);
 	}
 
@@ -806,8 +740,8 @@ template<class _FwdIt,
 	{	// find first _Count * _Val satisfying _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
 	return (_Rechecked(_First,
-		_Search_n(_Unchecked(_First), _Unchecked(_Last), _Count, _Val,
-			_Pred, _Iter_cat(_First))));
+		_Search_n_unchecked(_Unchecked(_First), _Unchecked(_Last), _Count, _Val,
+			_Pred, _Iter_cat_t<_FwdIt>())));
 	}
 
 		// TEMPLATE FUNCTION search_n
@@ -824,16 +758,12 @@ template<class _FwdIt,
 		// TEMPLATE FUNCTION find_end WITH PRED
 template<class _FwdIt1,
 	class _FwdIt2,
-	class _Diff1,
-	class _Diff2,
 	class _Pr> inline
-	_FwdIt1 _Find_end(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred, _Diff1 *, _Diff2 *)
+	_FwdIt1 _Find_end_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred)
 	{	// find last [_First2, _Last2) satisfying _Pred
-	_Diff1 _Count1 = 0;
-	_Distance(_First1, _Last1, _Count1);
-	_Diff2 _Count2 = 0;
-	_Distance(_First2, _Last2, _Count2);
+	_Iter_diff_t<_FwdIt1> _Count1 = _STD distance(_First1, _Last1);
+	_Iter_diff_t<_FwdIt2> _Count2 = _STD distance(_First2, _Last2);
 	_FwdIt1 _Ans = _Last1;
 
 	if (0 < _Count2)
@@ -852,6 +782,7 @@ template<class _FwdIt1,
 					}
 			}
 		}
+
 	return (_Ans);
 	}
 
@@ -864,9 +795,8 @@ template<class _FwdIt1,
 	_DEBUG_RANGE(_First1, _Last1);
 	_DEBUG_RANGE(_First2, _Last2);
 	return (_Rechecked(_First1,
-		_Find_end(_Unchecked(_First1), _Unchecked(_Last1),
-			_Unchecked(_First2), _Unchecked(_Last2), _Pred,
-			_Dist_type(_First1), _Dist_type(_First2))));
+		_Find_end_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
+			_Unchecked(_First2), _Unchecked(_Last2), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION find_end
@@ -883,8 +813,8 @@ template<class _FwdIt1,
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	_FwdIt1 _Find_first_of(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred)
+	_FwdIt1 _Find_first_of_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred)
 	{	// look for one of [_First2, _Last2) satisfying _Pred with element
 	for (; _First1 != _Last1; ++_First1)
 		for (_FwdIt2 _Mid2 = _First2; _Mid2 != _Last2; ++_Mid2)
@@ -903,7 +833,7 @@ template<class _FwdIt1,
 	_DEBUG_RANGE(_First2, _Last2);
 	_DEBUG_POINTER_IF(_First1 != _Last1 && _First2 != _Last2, _Pred);
 	return (_Rechecked(_First1,
-		_Find_first_of(_Unchecked(_First1), _Unchecked(_Last1),
+		_Find_first_of_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
 			_Unchecked(_First2), _Unchecked(_Last2), _Pred)));
 	}
 
@@ -920,7 +850,7 @@ template<class _FwdIt1,
 		// TEMPLATE FUNCTION swap_ranges
 template<class _FwdIt1,
 	class _FwdIt2> inline
-	_FwdIt2 _Swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
+	_FwdIt2 _Swap_ranges_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
 		_FwdIt2 _Dest)
 	{	// swap [_First1, _Last1) with [_Dest, ...)
 	for (; _First1 != _Last1; ++_First1, (void)++_Dest)
@@ -928,56 +858,25 @@ template<class _FwdIt1,
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _FwdIt1,
 	class _FwdIt2> inline
-	_FwdIt2 swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _Dest)
-	{	// swap [_First1, _Last1) with [_Dest, ...)
-	return (_Swap_ranges(_Unchecked(_First1), _Unchecked(_Last1),
-		_Dest));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _FwdIt1,
-	class _FwdIt2> inline
-	_FwdIt2 _Swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
+	_FwdIt2 _Swap_ranges1(_FwdIt1 _First1, _FwdIt1 _Last1,
 		_FwdIt2 _Dest,
 		forward_iterator_tag, forward_iterator_tag)
 	{	// swap [_First1, _Last1) with [_Dest, ...), arbitrary iterators
-	return (_Swap_ranges(_First1, _Last1,
-		_Dest));
+	return (_Rechecked(_Dest,
+		_Swap_ranges_unchecked(_First1, _Last1, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _FwdIt1,
 	class _FwdIt2> inline
-	_FwdIt2 _Swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
+	_FwdIt2 _Swap_ranges1(_FwdIt1 _First1, _FwdIt1 _Last1,
 		_FwdIt2 _Dest,
 		random_access_iterator_tag, random_access_iterator_tag)
 	{	// swap [_First1, _Last1) with [_Dest, ...), random-access iterators
-	_FwdIt2 _Ans = _Dest + (_Last1 - _First1);	// also checks range
-	_Swap_ranges(_First1, _Last1,
-		_Unchecked(_Dest));
-	return (_Ans);
-	}
-
-template<class _FwdIt1,
-	class _FwdIt2> inline
-	_FwdIt2 _Swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _Dest, true_type)
-	{	// swap [_First1, _Last1) with [_Dest, ...), checked dest
-	return (_Swap_ranges(_First1, _Last1,
-		_Dest, _Iter_cat(_First1), _Iter_cat(_Dest)));
-	}
-
-template<class _FwdIt1,
-	class _FwdIt2> inline
-_SCL_INSECURE_DEPRECATE
-	_FwdIt2 _Swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _Dest, false_type)
-	{	// swap [_First1, _Last1) with [_Dest, ...), unchecked dest
-	return (_Swap_ranges(_First1, _Last1,
-		_Dest, _Iter_cat(_First1), _Iter_cat(_Dest)));
+	_CHECK_RANIT_RANGE(_First1, _Last1, _Dest);
+	return (_Rechecked(_Dest,
+		_Swap_ranges_unchecked(_First1, _Last1, _Unchecked(_Dest))));
 	}
 
 template<class _FwdIt1,
@@ -985,9 +884,10 @@ template<class _FwdIt1,
 	_FwdIt2 swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1,
 		_FwdIt2 _Dest)
 	{	// swap [_First1, _Last1) with [_Dest, ...)
+	_DEPRECATE_UNCHECKED(swap_ranges, _Dest);
 	_DEBUG_RANGE_PTR(_First1, _Last1, _Dest);
-	return (_Swap_ranges(_Unchecked(_First1), _Unchecked(_Last1),
-		_Dest, _Is_checked(_Dest)));
+	return (_Swap_ranges1(_Unchecked(_First1), _Unchecked(_Last1),
+		_Dest, _Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>()));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1002,89 +902,62 @@ template<class _FwdIt1,
 		_Array_iterator<_OutTy, _OutSize>(_Dest))));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION transform WITH UNARY OP
 template<class _InIt,
 	class _OutIt,
 	class _Fn1> inline
-	_OutIt _Transform(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func)
+	_OutIt _Transform_unchecked(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn1& _Func)
 	{	// transform [_First, _Last) with _Func
 	for (; _First != _Last; ++_First, (void)++_Dest)
 		*_Dest = _Func(*_First);
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Fn1> inline
-	_OutIt transform(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func)
-	{	// transform [_First, _Last) with _Func
-	return (_Transform(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Func));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Fn1> inline
-	_OutIt _Transform1(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func,
-		input_iterator_tag, _Mutable_iterator_tag)
-	{	// transform [_First, _Last) with _Func, arbitrary iterators
-	return (_Transform(_First, _Last,
-		_Dest, _Func));
+	_OutIt _Transform_no_deprecate1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn1& _Func,
+		input_iterator_tag, _Any_tag)
+	{	// transform [_First, _Last) with _Func, arbitrary iterators, no deprecation warnings
+	return (_Rechecked(_Dest,
+		_Transform_unchecked(_First, _Last, _Unchecked_idl0(_Dest), _Func)));
 	}
 
 template<class _InIt,
 	class _OutIt,
 	class _Fn1> inline
-	_OutIt _Transform1(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func,
+	_OutIt _Transform_no_deprecate1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn1& _Func,
 		random_access_iterator_tag, random_access_iterator_tag)
-	{	// transform [_First, _Last) with _Func, random-access iterators
-	_OutIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Transform(_First, _Last,
-		_Unchecked(_Dest), _Func);
-	return (_Ans);
+	{	// transform [_First, _Last) with _Func, random-access iterators, no deprecation warnings
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Transform_unchecked(_First, _Last, _Unchecked(_Dest), _Func)));
 	}
 
 template<class _InIt,
 	class _OutIt,
 	class _Fn1> inline
-	_OutIt _Transform1(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func, true_type)
-	{	// transform [_First, _Last) with _Func, checked dest
-	return (_Transform1(_First, _Last,
-		_Dest, _Func,
-		_Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Fn1> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Transform1(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func, false_type)
-	{	// transform [_First, _Last) with _Func, unchecked dest
-	return (_Transform1(_First, _Last,
-		_Dest, _Func,
-		_Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Fn1> inline
-	_OutIt transform(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn1 _Func)
-	{	// transform [_First, _Last) with _Func
+	_OutIt _Transform_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn1& _Func)
+	{	// transform [_First, _Last) with _Func, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
 	_DEBUG_POINTER_IF(_First != _Last, _Func);
-	return (_Transform1(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Func, _Is_checked(_Dest)));
+	return (_Transform_no_deprecate1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Func, _Iter_cat_t<_InIt>(), _Iter_cat_t<_OutIt>()));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Fn1> inline
+	_OutIt transform(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn1 _Func)
+	{	// transform [_First, _Last) with _Func
+	_DEPRECATE_UNCHECKED(transform, _Dest);
+	return (_Transform_no_deprecate(_First, _Last, _Dest, _Func));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1096,132 +969,102 @@ template<class _InIt,
 		_OutTy (&_Dest)[_OutSize], _Fn1 _Func)
 	{	// transform [_First, _Last) with _Func, array dest
 	return (_Unchecked(
-		_STD transform(_First, _Last,
+		_Transform_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Func)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION transform WITH BINARY OP
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Fn2> inline
-	_OutIt _Transform(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func)
+	_OutIt _Transform_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2& _Func)
 	{	// transform [_First1, _Last1) and [_First2, ...) with _Func
 	for (; _First1 != _Last1; ++_First1, (void)++_First2, ++_Dest)
 		*_Dest = _Func(*_First1, *_First2);
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Fn2> inline
-	_OutIt transform(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func)
-	{	// transform [_First1, _Last1) and [_First2, ...) with _Func
-	return (_Transform(_Unchecked(_First1), _Unchecked(_Last1),
-		_First2, _Dest, _Func));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Fn2> inline
-	_OutIt _Transform3(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func,
-		input_iterator_tag, _Mutable_iterator_tag)
-	{	// transform [_First1, _Last1) and [_First2, ...), arbitrary dest
-	return (_Transform(_First1, _Last1,
-		_First2, _Dest, _Func));
+	_OutIt _Transform_no_deprecate2(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2& _Func,
+		input_iterator_tag, _Any_tag)
+	{	// transform [_First1, _Last1) and [_First2, ...), arbitrary dest, no deprecation warnings
+	return (_Rechecked(_Dest,
+		_Transform_unchecked(_First1, _Last1, _First2, _Unchecked_idl0(_Dest), _Func)));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Fn2> inline
-	_OutIt _Transform3(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func,
+	_OutIt _Transform_no_deprecate2(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2& _Func,
 		random_access_iterator_tag, random_access_iterator_tag)
-	{	// transform [_First1, _Last1) and [_First2, ...), random-access dest
-	_OutIt _Ans = _Dest + (_Last1 - _First1);	// also checks range
-	_Transform(_First1, _Last1,
-		_First2, _Unchecked(_Dest), _Func);
-	return (_Ans);
+	{	// transform [_First1, _Last1) and [_First2, ...), random-access dest, no deprecation warnings
+	_CHECK_RANIT_RANGE(_First1, _Last1, _Dest);
+	return (_Rechecked(_Dest,
+		_Transform_unchecked(_First1, _Last1, _First2, _Unchecked(_Dest), _Func)));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Fn2> inline
-	_OutIt _Transform2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func,
+	_OutIt _Transform_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2& _Func,
 		input_iterator_tag, input_iterator_tag)
-	{	// transform [_First1, _Last1) and [_First2, ...), arbitrary input
-	return (_Transform3(_First1, _Last1,
-		_First2, _Dest, _Func,
-		_Iter_cat(_First1), _Iter_cat(_Dest)));
+	{	// transform [_First1, _Last1) and [_First2, ...), arbitrary input, no deprecation warnings
+	return (_Transform_no_deprecate2(_First1, _Last1,
+		_Unchecked_idl0(_First2), _Dest, _Func,
+		_Iter_cat_t<_InIt1>(), _Iter_cat_t<_OutIt>()));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Fn2> inline
-	_OutIt _Transform2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func,
+	_OutIt _Transform_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2& _Func,
 		random_access_iterator_tag, random_access_iterator_tag)
-	{	// transform [_First1, _Last1) and [_First2, ...), random-access input
-	_InIt2 _Last2 = _First2 + (_Last1 - _First1);	// also checks range
-	_Last2 = _Last2;	// to quiet diagnostics
-	return (_Transform3(_First1, _Last1,
+	{	// transform [_First1, _Last1) and [_First2, ...), random-access input, no deprecation warnings
+	_CHECK_RANIT_RANGE(_First1, _Last1, _First2);
+	return (_Transform_no_deprecate2(_First1, _Last1,
 		_Unchecked(_First2), _Dest, _Func,
-		_Iter_cat(_First1), _Iter_cat(_Dest)));
+		_Iter_cat_t<_InIt1>(), _Iter_cat_t<_OutIt>()));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Fn2> inline
-	_OutIt _Transform2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func,
-		true_type)
-	{	// transform [_First1, _Last1) and [_First2, ...), checked dest
-	return (_Transform2(_First1, _Last1,
-		_First2, _Dest, _Func,
-		_Iter_cat(_First1), _Iter_cat(_First2)));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Fn2> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Transform2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func,
-		false_type)
-	{	// transform [_First1, _Last1) and [_First2, ...), unchecked dest
-	return (_Transform2(_First1, _Last1,
-		_First2, _Dest, _Func,
-		_Iter_cat(_First1), _Iter_cat(_First2)));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Fn2> inline
-	_OutIt transform(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func)
-	{	// transform [_First1, _Last1) and [_First2, ...) with _Func
+	_OutIt _Transform_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2& _Func)
+	{	// transform [_First1, _Last1) and [_First2, ...) with _Func, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First1, _Last1, _First2);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Dest);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Func);
-	return (_Transform2(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Transform_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
 		_First2, _Dest, _Func,
-		_Is_checked(_Dest)));
+		_Iter_cat_t<_InIt1>(), _Iter_cat_t<_InIt2>()));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Fn2> inline
+	_OutIt transform(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func)
+	{	// transform [_First1, _Last1) and [_First2, ...) with _Func
+	_DEFINE_DEPRECATE_UNCHECKED(transform);
+	_USE_DEPRECATE_UNCHECKED(_First2);
+	_USE_DEPRECATE_UNCHECKED(_Dest);
+	return (_Transform_no_deprecate(_First1, _Last1, _First2, _Dest, _Func));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1233,7 +1076,8 @@ template<class _InIt1,
 	_OutIt transform(_InIt1 _First1, _InIt1 _Last1,
 		_InTy (&_First2)[_InSize], _OutIt _Dest, _Fn2 _Func)
 	{	// transform [_First1, _Last1) and [_First2, ...), array input
-	return (_STD transform(_First1, _Last1,
+	_DEPRECATE_UNCHECKED(transform, _Dest);
+	return (_Transform_no_deprecate(_First1, _Last1,
 		_Array_iterator<_InTy, _InSize>(_First2), _Dest, _Func));
 	}
 
@@ -1245,8 +1089,9 @@ template<class _InIt1,
 	_OutTy *transform(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _OutTy (&_Dest)[_OutSize], _Fn2 _Func)
 	{	// transform [_First1, _Last1) and [_First2, ...), array dest
+	_DEPRECATE_UNCHECKED(transform, _First2);
 	return (_Unchecked(
-		_STD transform(_First1, _Last1,
+		_Transform_no_deprecate(_First1, _Last1,
 			_First2, _Array_iterator<_OutTy, _OutSize>(_Dest), _Func)));
 	}
 
@@ -1260,17 +1105,16 @@ template<class _InIt1,
 		_InTy (&_First2)[_InSize], _OutTy (&_Dest)[_OutSize], _Fn2 _Func)
 	{	// transform [_First1, _Last1) and [_First2, ...), array input/dest
 	return (_Unchecked(
-		_STD transform(_First1, _Last1,
+		_Transform_no_deprecate(_First1, _Last1,
 			_Array_iterator<_InTy, _InSize>(_First2),
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Func)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION replace
 template<class _FwdIt,
 	class _Ty> inline
-	void _Replace(_FwdIt _First, _FwdIt _Last,
+	void _Replace_unchecked(_FwdIt _First, _FwdIt _Last,
 		const _Ty& _Oldval, const _Ty& _Newval)
 	{	// replace each matching _Oldval with _Newval
 	for (; _First != _Last; ++_First)
@@ -1284,7 +1128,7 @@ template<class _FwdIt,
 		const _Ty& _Oldval, const _Ty& _Newval)
 	{	// replace each matching _Oldval with _Newval
 	_DEBUG_RANGE(_First, _Last);
-	_Replace(_Unchecked(_First), _Unchecked(_Last),
+	_Replace_unchecked(_Unchecked(_First), _Unchecked(_Last),
 		_Oldval, _Newval);
 	}
 
@@ -1292,7 +1136,7 @@ template<class _FwdIt,
 template<class _FwdIt,
 	class _Pr,
 	class _Ty> inline
-	void _Replace_if(_FwdIt _First, _FwdIt _Last, _Pr _Pred, const _Ty& _Val)
+	void _Replace_if_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred, const _Ty& _Val)
 	{	// replace each satisfying _Pred with _Val
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First))
@@ -1305,7 +1149,7 @@ template<class _FwdIt,
 	void replace_if(_FwdIt _First, _FwdIt _Last, _Pr _Pred, const _Ty& _Val)
 	{	// replace each satisfying _Pred with _Val
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	_Replace_if(_Unchecked(_First), _Unchecked(_Last),
+	_Replace_if_unchecked(_Unchecked(_First), _Unchecked(_Last),
 		_Pred, _Val);
 	}
 
@@ -1313,7 +1157,7 @@ template<class _FwdIt,
 template<class _InIt,
 	class _OutIt,
 	class _Ty> inline
-	_OutIt _Replace_copy(_InIt _First, _InIt _Last,
+	_OutIt _Replace_copy_unchecked(_InIt _First, _InIt _Last,
 		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval)
 	{	// copy replacing each matching _Oldval with _Newval
 	for (; _First != _Last; ++_First, (void)++_Dest)
@@ -1321,65 +1165,29 @@ template<class _InIt,
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Ty> inline
-	_OutIt replace_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval)
-	{	// copy replacing each matching _Oldval with _Newval
-	return (_Replace_copy(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Oldval, _Newval));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Ty> inline
-	_OutIt _Replace_copy(_InIt _First, _InIt _Last,
+	_OutIt _Replace_copy1(_InIt _First, _InIt _Last,
 		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval,
-		input_iterator_tag, _Mutable_iterator_tag)
+		input_iterator_tag, _Any_tag)
 	{	// copy replacing each matching _Oldval, arbitrary iterators
-	return (_Replace_copy(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Oldval, _Newval));
+	return (_Rechecked(_Dest,
+		_Replace_copy_unchecked(_First, _Last, _Unchecked_idl0(_Dest),
+		_Oldval, _Newval)));
 	}
 
 template<class _InIt,
 	class _OutIt,
 	class _Ty> inline
-	_OutIt _Replace_copy(_InIt _First, _InIt _Last,
+	_OutIt _Replace_copy1(_InIt _First, _InIt _Last,
 		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval,
 		random_access_iterator_tag, random_access_iterator_tag)
 	{	// copy replacing each matching _Oldval, random-access iterators
-	_OutIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Replace_copy(_First, _Last,
-		_Unchecked(_Dest), _Oldval, _Newval);
-	return (_Ans);
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Ty> inline
-	_OutIt _Replace_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval,
-		true_type)
-	{	// copy replacing each matching _Oldval with _Newval, checked dest
-	return (_Replace_copy(_First, _Last,
-		_Dest, _Oldval, _Newval,
-		_Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Ty> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Replace_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval,
-		false_type)
-	{	// copy replacing each matching _Oldval with _Newval, unchecked dest
-	return (_Replace_copy(_First, _Last,
-		_Dest, _Oldval, _Newval,
-		_Iter_cat(_First), _Iter_cat(_Dest)));
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Replace_copy_unchecked(_First, _Last, _Unchecked(_Dest),
+		_Oldval, _Newval)));
 	}
 
 template<class _InIt,
@@ -1388,10 +1196,11 @@ template<class _InIt,
 	_OutIt replace_copy(_InIt _First, _InIt _Last,
 		_OutIt _Dest, const _Ty& _Oldval, const _Ty& _Newval)
 	{	// copy replacing each matching _Oldval with _Newval
+	_DEPRECATE_UNCHECKED(replace_copy, _Dest);
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Replace_copy(_Unchecked(_First), _Unchecked(_Last),
+	return (_Replace_copy1(_Unchecked(_First), _Unchecked(_Last),
 		_Dest, _Oldval, _Newval,
-		_Is_checked(_Dest)));
+		_Iter_cat_t<_InIt>(), _Iter_cat_t<_OutIt>()));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1407,99 +1216,68 @@ template<class _InIt,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Oldval, _Newval)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION replace_copy_if
 template<class _InIt,
 	class _OutIt,
 	class _Pr,
 	class _Ty> inline
-	_OutIt _Replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val)
+	_OutIt _Replace_copy_if_unchecked(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred, const _Ty& _Val)
 	{	// copy replacing each satisfying _Pred with _Val
 	for (; _First != _Last; ++_First, (void)++_Dest)
 		*_Dest = _Pred(*_First) ? _Val : *_First;
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Pr,
 	class _Ty> inline
-	_OutIt replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val)
-	{	// copy replacing each satisfying _Pred with _Val
-	return (_Replace_copy_if(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Pred, _Val));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Pr,
-	class _Ty> inline
-	_OutIt _Replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val,
-		input_iterator_tag, _Mutable_iterator_tag)
-	{	// copy replacing each satisfying _Pred, arbitrary iterators
-	return (_Replace_copy_if(_First, _Last,
-		_Dest, _Pred, _Val));
+	_OutIt _Replace_copy_if_no_deprecate1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred, const _Ty& _Val,
+		input_iterator_tag, _Any_tag)
+	{	// copy replacing each satisfying _Pred, arbitrary iterators, no deprecation warnings
+	return (_Rechecked(_Dest,
+		_Replace_copy_if_unchecked(_First, _Last, _Unchecked_idl0(_Dest), _Pred, _Val)));
 	}
 
 template<class _InIt,
 	class _OutIt,
 	class _Pr,
 	class _Ty> inline
-	_OutIt _Replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val,
+	_OutIt _Replace_copy_if_no_deprecate1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred, const _Ty& _Val,
 		random_access_iterator_tag, random_access_iterator_tag)
-	{	// copy replacing each satisfying _Pred, random-access iterators
-	_OutIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Replace_copy_if(_First, _Last,
-		_Unchecked(_Dest), _Pred, _Val);
-	return (_Ans);
+	{	// copy replacing each satisfying _Pred, random-access iterators, no deprecation warnings
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Replace_copy_if_unchecked(_First, _Last, _Unchecked(_Dest), _Pred, _Val)));
 	}
 
 template<class _InIt,
 	class _OutIt,
 	class _Pr,
 	class _Ty> inline
-	_OutIt _Replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val,
-		true_type)
-	{	// copy replacing each satisfying _Pred with _Val, checked dest
-	return (_Replace_copy_if(_First, _Last,
-		_Dest, _Pred, _Val,
-		_Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr,
-	class _Ty> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val,
-		false_type)
-	{	// copy replacing each satisfying _Pred with _Val, unchecked dest
-	return (_Replace_copy_if(_First, _Last,
-		_Dest, _Pred, _Val,
-		_Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr,
-	class _Ty> inline
-	_OutIt replace_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, const _Ty& _Val)
-	{	// copy replacing each satisfying _Pred with _Val
+	_OutIt _Replace_copy_if_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred, const _Ty& _Val)
+	{	// copy replacing each satisfying _Pred with _Val, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
 	_DEBUG_POINTER_IF(_First != _Last, _Pred);
-	return (_Replace_copy_if(_Unchecked(_First), _Unchecked(_Last),
+	return (_Replace_copy_if_no_deprecate1(_Unchecked(_First), _Unchecked(_Last),
 		_Dest, _Pred, _Val,
-		_Is_checked(_Dest)));
+		_Iter_cat_t<_InIt>(), _Iter_cat_t<_OutIt>()));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Pr,
+	class _Ty> inline
+	_OutIt replace_copy_if(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr _Pred, const _Ty& _Val)
+	{	// copy replacing each satisfying _Pred with _Val
+	_DEPRECATE_UNCHECKED(replace_copy_if, _Dest);
+	return (_Replace_copy_if_no_deprecate(_First, _Last, _Dest, _Pred, _Val));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1512,16 +1290,15 @@ template<class _InIt,
 		_OutTy (&_Dest)[_OutSize], _Pr _Pred, const _Ty& _Val)
 	{	// copy replacing each satisfying _Pred with _Val, array dest
 	return (_Unchecked(
-		_STD replace_copy_if(_First, _Last,
+		_Replace_copy_if_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred, _Val)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION generate
 template<class _FwdIt,
 	class _Fn0> inline
-	void _Generate(_FwdIt _First, _FwdIt _Last, _Fn0 _Func)
+	void _Generate_unchecked(_FwdIt _First, _FwdIt _Last, _Fn0& _Func)
 	{	// replace [_First, _Last) with _Func()
 	for (; _First != _Last; ++_First)
 		*_First = _Func();
@@ -1532,81 +1309,27 @@ template<class _FwdIt,
 	void generate(_FwdIt _First, _FwdIt _Last, _Fn0 _Func)
 	{	// replace [_First, _Last) with _Func()
 	_DEBUG_RANGE_PTR(_First, _Last, _Func);
-	_Generate(_Unchecked(_First), _Unchecked(_Last), _Func);
+	_Generate_unchecked(_Unchecked(_First), _Unchecked(_Last), _Func);
 	}
 
 		// TEMPLATE FUNCTION generate_n
 template<class _OutIt,
 	class _Diff,
 	class _Fn0> inline
-	_OutIt _Generate_n(_OutIt _Dest, _Diff _Count, _Fn0 _Func)
+	_OutIt _Generate_n_unchecked(_OutIt _Dest, _Diff _Count, _Fn0& _Func)
 	{	// replace [_Dest, _Dest + _Count) with _Func()
 	for (; 0 < _Count; --_Count, (void)++_Dest)
 		*_Dest = _Func();
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _OutIt,
 	class _Diff,
 	class _Fn0> inline
 	_OutIt generate_n(_OutIt _Dest, _Diff _Count, _Fn0 _Func)
 	{	// replace [_Dest, _Dest + _Count) with _Func()
-	return (_Generate_n(_Dest, _Count, _Func));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _OutIt,
-	class _Diff,
-	class _Fn0> inline
-	_OutIt _Generate_n1(_OutIt _Dest, _Diff _Count, _Fn0 _Func,
-		_Mutable_iterator_tag)
-	{	// replace [_Dest, _Dest + _Count), arbitrary iterators
-	return (_Generate_n(_Dest, _Count, _Func));
-	}
-
-template<class _OutIt,
-	class _Diff,
-	class _Fn0> inline
-	_OutIt _Generate_n1(_OutIt _Dest, _Diff _Count, _Fn0 _Func,
-		random_access_iterator_tag)
-	{	// replace [_Dest, _Dest + _Count), random-access iterators
-	_OutIt _Ans = _Dest + _Count;	// also checks range
-	_Ans = _Ans;	// to quiet diagnostics
 	return (_Rechecked(_Dest,
-		_Generate_n(_Unchecked(_Dest), _Count, _Func)));
-	}
-
-template<class _OutIt,
-	class _Diff,
-	class _Fn0> inline
-	_OutIt _Generate_n(_OutIt _Dest, _Diff _Count, _Fn0 _Func,
-		true_type)
-	{	// replace [_Dest, _Dest + _Count) with _Func(), checked dest
-	return (_Generate_n1(_Dest, _Count, _Func,
-		_Iter_cat(_Dest)));
-	}
-
-template<class _OutIt,
-	class _Diff,
-	class _Fn0> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Generate_n(_OutIt _Dest, _Diff _Count, _Fn0 _Func,
-		false_type)
-	{	// replace [_Dest, _Dest + _Count) with _Func(), unchecked dest
-	return (_Generate_n1(_Dest, _Count, _Func,
-		_Iter_cat(_Dest)));
-	}
-
-template<class _OutIt,
-	class _Diff,
-	class _Fn0> inline
-	_OutIt generate_n(_OutIt _Dest, _Diff _Count, _Fn0 _Func)
-	{	// replace [_Dest, _Dest + _Count) with _Func()
-	_DEBUG_POINTER_IF(0 < _Count, _Dest);
-	_DEBUG_POINTER_IF(0 < _Count, _Func);
-	return (_Generate_n(_Dest, _Count, _Func,
-		_Is_checked(_Dest)));
+		_Generate_n_unchecked(_Unchecked_n(_Dest, _Count), _Count, _Func)));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1616,18 +1339,16 @@ template<class _OutTy,
 	class _Fn0> inline
 	_OutTy *generate_n(_OutTy (&_Dest)[_OutSize], _Diff _Count, _Fn0 _Func)
 	{	// replace [_Dest, _Dest + _Count) with _Func(), array dest
-	return (_Unchecked(
-		_STD generate_n(_Array_iterator<_OutTy, _OutSize>(_Dest),
-			_Count, _Func)));
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Generate_n_unchecked(_Dest, _Count, _Func));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION remove_copy
 template<class _InIt,
 	class _OutIt,
 	class _Ty> inline
-	_OutIt _Remove_copy(_InIt _First, _InIt _Last,
+	_OutIt _Remove_copy_unchecked(_InIt _First, _InIt _Last,
 		_OutIt _Dest, const _Ty& _Val)
 	{	// copy omitting each matching _Val
 	for (; _First != _Last; ++_First)
@@ -1636,54 +1357,21 @@ template<class _InIt,
 			_DEBUG_POINTER(_Dest);
 			*_Dest++ = *_First;
 			}
+
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Ty> inline
 	_OutIt remove_copy(_InIt _First, _InIt _Last,
 		_OutIt _Dest, const _Ty& _Val)
 	{	// copy omitting each matching _Val
-	return (_Remove_copy(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Val));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Ty> inline
-	_OutIt _Remove_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, const _Ty& _Val,
-		true_type)
-	{	// copy omitting each matching _Val, checked dest
-	return (_Remove_copy(_First, _Last,
-		_Dest, _Val));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Ty> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Remove_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, const _Ty& _Val,
-		false_type)
-	{	// copy omitting each matching _Val, unchecked dest
-	return (_Remove_copy(_First, _Last,
-		_Dest, _Val));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Ty> inline
-	_OutIt remove_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, const _Ty& _Val)
-	{	// copy omitting each matching _Val
+	_DEPRECATE_UNCHECKED(remove_copy, _Dest);
 	_DEBUG_RANGE(_First, _Last);
-	return (_Remove_copy(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Val,
-		_Is_checked(_Dest)));
+	return (_Rechecked(_Dest,
+		_Remove_copy_unchecked(_Unchecked(_First), _Unchecked(_Last),
+		_Unchecked_idl0(_Dest), _Val)));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1699,14 +1387,13 @@ template<class _InIt,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Val)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION remove_copy_if
 template<class _InIt,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Remove_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred)
+	_OutIt _Remove_copy_if_unchecked(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred)
 	{	// copy omitting each element satisfying _Pred
 	for (; _First != _Last; ++_First)
 		if (!_Pred(*_First))
@@ -1714,54 +1401,30 @@ template<class _InIt,
 			_DEBUG_POINTER(_Dest);
 			*_Dest++ = *_First;
 			}
+
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt remove_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred)
-	{	// copy omitting each element satisfying _Pred
-	return (_Remove_copy_if(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Remove_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred,
-		true_type)
-	{	// copy omitting each element satisfying _Pred, checked dest
-	return (_Remove_copy_if(_First, _Last,
-		_Dest, _Pred));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Remove_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred,
-		false_type)
-	{	// copy omitting each element satisfying _Pred, unchecked dest
-	return (_Remove_copy_if(_First, _Last,
-		_Dest, _Pred));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt remove_copy_if(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred)
-	{	// copy omitting each element satisfying _Pred
+	_OutIt _Remove_copy_if_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred)
+	{	// copy omitting each element satisfying _Pred, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Remove_copy_if(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Pred,
-		_Is_checked(_Dest)));
+	return (_Rechecked(_Dest,
+		_Remove_copy_if_unchecked(_Unchecked(_First), _Unchecked(_Last),
+		_Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt remove_copy_if(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr _Pred)
+	{	// copy omitting each element satisfying _Pred
+	_DEPRECATE_UNCHECKED(remove_copy_if, _Dest);
+	return (_Remove_copy_if_no_deprecate(_First, _Last, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1773,21 +1436,25 @@ template<class _InIt,
 		_OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// copy omitting each element satisfying _Pred, array dest
 	return (_Unchecked(
-		_STD remove_copy_if(_First, _Last,
+		_Remove_copy_if_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION remove
 template<class _FwdIt,
 	class _Ty> inline
-	_FwdIt _Remove(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
+	_FwdIt _Remove_unchecked(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
 	{	// remove each matching _Val
+	_First = _Find_unchecked(_First, _Last, _Val);
 	_FwdIt _Next = _First;
-	for (++_First; _First != _Last; ++_First)
-		if (!(*_First == _Val))
-			*_Next++ = _Move(*_First);
+	if (_First != _Last)
+		{
+		for (++_First; _First != _Last; ++_First)
+			if (!(*_First == _Val))
+				*_Next++ = _STD move(*_First);
+		}
+
 	return (_Next);
 	}
 
@@ -1795,23 +1462,25 @@ template<class _FwdIt,
 	class _Ty> inline
 	_FwdIt remove(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
 	{	// remove each matching _Val
-	_First = _STD find(_First, _Last, _Val);
-	if (_First == _Last)
-		return (_First);	// empty sequence, all done
-	else
-		return (_Rechecked(_First,
-			_Remove(_Unchecked(_First), _Unchecked(_Last), _Val)));
+	_DEBUG_RANGE(_First, _Last);
+	return (_Rechecked(_First,
+		_Remove_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val)));
 	}
 
 		// TEMPLATE FUNCTION remove_if
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Remove_if(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+	_FwdIt _Remove_if_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// remove each satisfying _Pred
+	_First = _Find_if_unchecked(_First, _Last, _Pred);
 	_FwdIt _Next = _First;
-	for (++_First; _First != _Last; ++_First)
-	if (!_Pred(*_First))
-		*_Next++ = _Move(*_First);
+	if (_First != _Last)
+		{
+		for (++_First; _First != _Last; ++_First)
+		if (!_Pred(*_First))
+			*_Next++ = _STD move(*_First);
+		}
+
 	return (_Next);
 	}
 
@@ -1819,18 +1488,15 @@ template<class _FwdIt,
 	class _Pr> inline
 	_FwdIt remove_if(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
 	{	// remove each satisfying _Pred
-	_First = _STD find_if(_First, _Last, _Pred);
-	if (_First == _Last)
-		return (_First);	// empty sequence, all done
-	else
-		return (_Rechecked(_First,
-			_Remove_if(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+	_DEBUG_RANGE(_First, _Last);
+	return (_Rechecked(_First,
+		_Remove_if_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION unique WITH PRED
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Unique(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+	_FwdIt _Unique_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// remove each satisfying _Pred with previous
 	if (_First != _Last)
 		for (_FwdIt _Firstb; (void)(_Firstb = _First), ++_First != _Last; )
@@ -1838,9 +1504,10 @@ template<class _FwdIt,
 				{	// copy down
 				for (; ++_First != _Last; )
 					if (!_Pred(*_Firstb, *_First))
-						*++_Firstb = _Move(*_First);
+						*++_Firstb = _STD move(*_First);
 				return (++_Firstb);
 				}
+
 	return (_Last);
 	}
 
@@ -1851,7 +1518,7 @@ template<class _FwdIt,
 	_DEBUG_RANGE(_First, _Last);
 	_DEBUG_POINTER_IF(_First != _Last && _STD next(_First) != _Last, _Pred);
 	return (_Rechecked(_First,
-		_Unique(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Unique_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION unique
@@ -1864,94 +1531,67 @@ template<class _FwdIt> inline
 		// TEMPLATE FUNCTION unique_copy WITH PRED
 template<class _InIt,
 	class _OutIt,
-	class _Ty,
 	class _Pr> inline
-	_OutIt _Unique_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, _Ty *)
+	_OutIt _Unique_copy_unchecked(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred, input_iterator_tag)
 	{	// copy compressing pairs satisfying _Pred, input iterators
-	_Ty _Val = *_First;
+	if (_First != _Last)
+		{
+		_Iter_value_t<_InIt> _Val = *_First;
 
-	for (*_Dest++ = _Val; ++_First != _Last; )
-		if (!_Pred(_Val, *_First))
-			{	// copy unmatched
-			_Val = *_First;
-			*_Dest++ = _Val;
-			}
+		for (*_Dest++ = _Val; ++_First != _Last; )
+			if (!_Pred(_Val, *_First))
+				{	// copy unmatched
+				_Val = *_First;
+				*_Dest++ = _Val;
+				}
+		}
+
 	return (_Dest);
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Unique_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, input_iterator_tag)
-	{	// copy compressing pairs satisfying _Pred, input iterators
-	return (_Unique_copy(_First, _Last, _Dest, _Pred,
-		_Val_type(_First)));
 	}
 
 template<class _FwdIt,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Unique_copy(_FwdIt _First, _FwdIt _Last,
-		_OutIt _Dest, _Pr _Pred, forward_iterator_tag)
+	_OutIt _Unique_copy_unchecked(_FwdIt _First, _FwdIt _Last,
+		_OutIt _Dest, _Pr& _Pred, forward_iterator_tag)
 	{	// copy compressing pairs satisfying _Pred, forward iterators
-	_FwdIt _Firstb = _First;
+	if (_First != _Last)
+		{
+		_FwdIt _Firstb = _First;
 
-	for (*_Dest++ = *_Firstb; ++_First != _Last; )
-		if (!_Pred(*_Firstb, *_First))
-			{	// copy unmatched
-			_Firstb = _First;
-			*_Dest++ = *_Firstb;
-			}
+		for (*_Dest++ = *_Firstb; ++_First != _Last; )
+			if (!_Pred(*_Firstb, *_First))
+				{	// copy unmatched
+				_Firstb = _First;
+				*_Dest++ = *_Firstb;
+				}
+		}
+
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt unique_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred)
-	{	// copy compressing pairs that match
-	return (_First == _Last ? _Dest :
-		_Unique_copy(_Unchecked(_First), _Unchecked(_Last),
-			_Dest, _Pred, _Iter_cat(_First)));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Unique_copy1(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, true_type)
-	{	// copy compressing pairs that match, checked dest
-	return (_Unique_copy(_First, _Last,
-		_Dest, _Pred, _Iter_cat(_First)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Unique_copy1(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred, false_type)
-	{	// copy compressing pairs that match, unchecked dest
-	return (_Unique_copy(_First, _Last,
-		_Dest, _Pred, _Iter_cat(_First)));
-	}
-
-template<class _InIt,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt unique_copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Pr _Pred)
-	{	// copy compressing pairs that match
+	_OutIt _Unique_copy_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr& _Pred)
+	{	// copy compressing pairs that match, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
 	_DEBUG_POINTER_IF(_First != _Last, _Pred);
-	return (_First == _Last ? _Dest :
-		_Unique_copy1(_Unchecked(_First), _Unchecked(_Last),
-			_Dest, _Pred, _Is_checked(_Dest)));
+	return (_Rechecked(_Dest,
+		_Unique_copy_unchecked(_Unchecked(_First), _Unchecked(_Last),
+			_Unchecked_idl0(_Dest), _Pred, _Iter_cat_t<_InIt>())));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt unique_copy(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Pr _Pred)
+	{	// copy compressing pairs that match
+	_DEPRECATE_UNCHECKED(unique_copy, _Dest);
+	return (_Unique_copy_no_deprecate(_First, _Last, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -1963,11 +1603,10 @@ template<class _InIt,
 		_OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// copy compressing pairs that match, array dest
 	return (_Unchecked(
-		_STD unique_copy(_First, _Last,
+		_Unique_copy_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION unique_copy
 template<class _InIt,
@@ -1993,7 +1632,7 @@ template<class _InIt,
 		// TEMPLATE FUNCTION reverse_copy
 template<class _BidIt,
 	class _OutIt> inline
-	_OutIt _Reverse_copy(_BidIt _First, _BidIt _Last,
+	_OutIt _Reverse_copy_unchecked(_BidIt _First, _BidIt _Last,
 		_OutIt _Dest)
 	{	// copy reversing elements in [_First, _Last)
 	for (; _First != _Last; ++_Dest)
@@ -2001,58 +1640,25 @@ template<class _BidIt,
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _BidIt,
 	class _OutIt> inline
-	_OutIt reverse_copy(_BidIt _First, _BidIt _Last,
-		_OutIt _Dest)
-	{	// copy reversing elements in [_First, _Last)
-	return (_Reverse_copy(_Unchecked(_First), _Unchecked(_Last),
-		_Dest));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _BidIt,
-	class _OutIt> inline
-	_OutIt _Reverse_copy(_BidIt _First, _BidIt _Last,
+	_OutIt _Reverse_copy1(_BidIt _First, _BidIt _Last,
 		_OutIt _Dest,
-		input_iterator_tag, _Mutable_iterator_tag)
+		bidirectional_iterator_tag, _Any_tag)
 	{	// copy reversing elements in [_First, _Last), arbitrary iterators
-	return (_Reverse_copy(_First, _Last,
-		_Dest));
+	return (_Rechecked(_Dest,
+		_Reverse_copy_unchecked(_First, _Last, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _BidIt,
 	class _OutIt> inline
-	_OutIt _Reverse_copy(_BidIt _First, _BidIt _Last,
+	_OutIt _Reverse_copy1(_BidIt _First, _BidIt _Last,
 		_OutIt _Dest,
 		random_access_iterator_tag, random_access_iterator_tag)
 	{	// copy reversing elements in [_First, _Last), random-access iterators
-	_OutIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Reverse_copy(_First, _Last,
-		_Unchecked(_Dest));
-	return (_Ans);
-	}
-
-template<class _BidIt,
-	class _OutIt> inline
-	_OutIt _Reverse_copy(_BidIt _First, _BidIt _Last,
-		_OutIt _Dest,
-		true_type)
-	{	// copy reversing elements in [_First, _Last), checked dest
-	return (_Reverse_copy(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _BidIt,
-	class _OutIt> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Reverse_copy(_BidIt _First, _BidIt _Last,
-		_OutIt _Dest,
-		false_type)
-	{	// copy reversing elements in [_First, _Last), unchecked dest
-	return (_Reverse_copy(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Reverse_copy_unchecked(_First, _Last, _Unchecked(_Dest))));
 	}
 
 template<class _BidIt,
@@ -2060,9 +1666,10 @@ template<class _BidIt,
 	_OutIt reverse_copy(_BidIt _First, _BidIt _Last,
 		_OutIt _Dest)
 	{	// copy reversing elements in [_First, _Last)
+	_DEPRECATE_UNCHECKED(reverse_copy, _Dest);
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Reverse_copy(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Is_checked(_Dest)));
+	return (_Reverse_copy1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Iter_cat_t<_BidIt>(), _Iter_cat_t<_OutIt>()));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -2077,28 +1684,59 @@ template<class _BidIt,
 			_Array_iterator<_OutTy, _OutSize>(_Dest))));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION rotate_copy
+template<class _FwdIt,
+	class _OutIt> inline
+	_OutIt _Rotate_copy_unchecked(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
+		_OutIt _Dest)
+	{	// copy rotating [_First, _Last)
+	_Dest = _Copy_unchecked(_Mid, _Last, _Dest);
+	return (_Copy_unchecked(_First, _Mid, _Dest));
+	}
+
+template<class _FwdIt,
+	class _OutIt> inline
+	_OutIt _Rotate_copy1(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
+		_OutIt _Dest, forward_iterator_tag, _Any_tag)
+	{	// copy rotating [_First, _Last)
+	return (_Rechecked(_Dest,
+		_Rotate_copy_unchecked(_First, _Mid, _Last, _Unchecked_idl0(_Dest))));
+	}
+
+template<class _FwdIt,
+	class _OutIt> inline
+	_OutIt _Rotate_copy1(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
+		_OutIt _Dest, random_access_iterator_tag, random_access_iterator_tag)
+	{	// copy rotating [_First, _Last)
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Rotate_copy_unchecked(_First, _Mid, _Last, _Unchecked(_Dest))));
+	}
+
 template<class _FwdIt,
 	class _OutIt> inline
 	_OutIt rotate_copy(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
 		_OutIt _Dest)
 	{	// copy rotating [_First, _Last)
-	_Dest = _STD copy(_Mid, _Last, _Dest);
-	return (_STD copy(_First, _Mid, _Dest));
+	_DEBUG_RANGE(_First, _Mid);
+	_DEBUG_RANGE(_Mid, _Last);
+	return (_Rotate_copy1(_Unchecked(_First), _Unchecked(_Mid),
+		_Unchecked(_Last), _Dest, _Iter_cat_t<_FwdIt>(), _Iter_cat_t<_OutIt>()));
 	}
 
 		// TEMPLATE FUNCTION shuffle WITH URNG
 template<class _RanIt,
-	class _Fn1,
-	class _Diff> inline
-	void _Random_shuffle(_RanIt _First, _RanIt _Last, _Fn1& _Func, _Diff *)
+	class _Fn1> inline
+	void _Random_shuffle_unchecked(_RanIt _First, _RanIt _Last, _Fn1& _Func)
 	{	// shuffle nonempty [_First, _Last) using random function _Func
+	if (_Last - _First < 2)
+		return;
+
 	_RanIt _Next = _First;
-	for (_Diff _Index = 2; ++_Next != _Last; ++_Index)
+	for (_Iter_diff_t<_RanIt> _Index = 2; ++_Next != _Last; ++_Index)
 		{	// randomly swap element with self or earlier element
-		_Diff _Off = _Func(_Index);
+		_Iter_diff_t<_RanIt> _Off = _Func(_Index);
 
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Off < 0 || _Index <= _Off)
@@ -2117,15 +1755,10 @@ template<class _RanIt,
 
 template<class _RanIt,
 	class _Fn1> inline
-	void _Random_shuffle(_RanIt _First, _RanIt _Last, _Fn1& _Func)
+	void _Random_shuffle1(_RanIt _First, _RanIt _Last, _Fn1& _Func)
 	{	// shuffle [_First, _Last) using random function _Func
 	_DEBUG_RANGE(_First, _Last);
-	if (2 <= _Last - _First)
-		{	// validate _Func and shuffle
-		_DEBUG_POINTER(_Func);
-		_Random_shuffle(_Unchecked(_First), _Unchecked(_Last), _Func,
-			_Dist_type(_First));
-		}
+	_Random_shuffle_unchecked(_Unchecked(_First), _Unchecked(_Last), _Func);
 	}
 
 template<class _RanIt,
@@ -2135,7 +1768,7 @@ template<class _RanIt,
 	typedef typename iterator_traits<_RanIt>::difference_type _Diff;
 	typedef typename remove_reference<_Urng>::type _Urng0;
 	_Rng_from_urng<_Diff, _Urng0> _Rng(_Func);
-	_Random_shuffle(_First, _Last, _Rng);
+	_Random_shuffle1(_First, _Last, _Rng);
 	}
 
  #if _HAS_AUTO_PTR_ETC
@@ -2144,7 +1777,7 @@ template<class _RanIt,
 	class _Fn1> inline
 	void random_shuffle(_RanIt _First, _RanIt _Last, _Fn1&& _Func)
 	{	// shuffle [_First, _Last) using random function _Func
-	_Random_shuffle(_First, _Last, _Func);
+	_Random_shuffle1(_First, _Last, _Func);
 	}
 
 	// STRUCT _Rand_urng_from_func
@@ -2180,7 +1813,7 @@ template<class _RanIt> inline
 		// TEMPLATE FUNCTION partition
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Partition(_FwdIt _First, _FwdIt _Last, _Pr _Pred,
+	_FwdIt _Partition_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred,
 		forward_iterator_tag)
 	{	// move elements satisfying _Pred to front, forward iterators
 	while (_First != _Last && _Pred(*_First))
@@ -2198,7 +1831,7 @@ template<class _FwdIt,
 
 template<class _BidIt,
 	class _Pr> inline
-	_BidIt _Partition(_BidIt _First, _BidIt _Last, _Pr _Pred,
+	_BidIt _Partition_unchecked(_BidIt _First, _BidIt _Last, _Pr& _Pred,
 		bidirectional_iterator_tag)
 	{	// move elements satisfying _Pred to front, bidirectional iterators
 	for (; ; ++_First)
@@ -2215,6 +1848,7 @@ template<class _BidIt,
 
 		_STD iter_swap(_First, _Last);	// out of place, swap and loop
 		}
+
 	return (_First);
 	}
 
@@ -2224,15 +1858,15 @@ template<class _FwdIt,
 	{	// move elements satisfying _Pred to beginning of sequence
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
 	return (_Rechecked(_First,
-		_Partition(_Unchecked(_First), _Unchecked(_Last), _Pred,
-			_Iter_cat(_First))));
+		_Partition_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred,
+			_Iter_cat_t<_FwdIt>())));
 	}
 
 		// TEMPLATE FUNCTION stable_partition
 template<class _BidIt,
 	class _Diff,
 	class _Ty> inline
-	_BidIt _Buffered_rotate(_BidIt _First, _BidIt _Mid, _BidIt _Last,
+	_BidIt _Buffered_rotate_unchecked(_BidIt _First, _BidIt _Mid, _BidIt _Last,
 		_Diff _Count1, _Diff _Count2, _Temp_iterator<_Ty>& _Tempbuf)
 	{	// rotate [_First, _Last) using temp buffer
 	if (_Count1 == 0 || _Count2 == 0)
@@ -2242,20 +1876,20 @@ template<class _BidIt,
 		}
 	else if (_Count1 <= _Count2 && _Count1 <= _Tempbuf._Maxlen())
 		{	// buffer left partition, then copy parts
-		_Move(_First, _Mid, _Tempbuf._Init());
-		_Move(_Mid, _Last, _First);
-		return (_Move_backward(_Tempbuf._First(), _Tempbuf._Last(),
+		_Move_unchecked(_First, _Mid, _Tempbuf._Init());
+		_Move_unchecked(_Mid, _Last, _First);
+		return (_Move_backward_unchecked(_Tempbuf._First(), _Tempbuf._Last(),
 			_Last));
 		}
 	else if (_Count2 <= _Tempbuf._Maxlen())
 		{	// buffer right partition, then copy parts
-		_Move(_Mid, _Last, _Tempbuf._Init());
-		_Move_backward(_First, _Mid, _Last);
-		return (_Move(_Tempbuf._First(), _Tempbuf._Last(), _First));
+		_Move_unchecked(_Mid, _Last, _Tempbuf._Init());
+		_Move_backward_unchecked(_First, _Mid, _Last);
+		return (_Move_unchecked(_Tempbuf._First(), _Tempbuf._Last(), _First));
 		}
 	else
 		{	// buffer too small, rotate in place
-		return (_STD rotate(_First, _Mid, _Last));
+		return (_Rotate_unchecked(_First, _Mid, _Last));
 		}
 	}
 
@@ -2263,7 +1897,7 @@ template<class _BidIt,
 	class _Pr,
 	class _Diff,
 	class _Ty> inline
-	_BidIt _Stable_partition(_BidIt _First, _BidIt _Last, _Pr _Pred,
+	_BidIt _Stable_partition_unchecked1(_BidIt _First, _BidIt _Last, _Pr& _Pred,
 		_Diff _Count, _Temp_iterator<_Ty>& _Tempbuf)
 	{	// partition preserving order of equivalents, using _Pred
 	if (_Count == 0)
@@ -2275,11 +1909,11 @@ template<class _BidIt,
 		_BidIt _Next = _First;
 		for (_Tempbuf._Init(); _First != _Last; ++_First)
 			if (_Pred(*_First))
-				*_Next++ = _Move(*_First);
+				*_Next++ = _STD move(*_First);
 			else
-				*_Tempbuf++ = _Move(*_First);
+				*_Tempbuf++ = _STD move(*_First);
 
-		_Move(_Tempbuf._First(), _Tempbuf._Last(), _Next);	// copy back
+		_Move_unchecked(_Tempbuf._First(), _Tempbuf._Last(), _Next);	// copy back
 		return (_Next);
 		}
 	else
@@ -2287,32 +1921,28 @@ template<class _BidIt,
 		_BidIt _Mid = _First;
 		_STD advance(_Mid, _Count / 2);
 
-		_BidIt _Left = _Stable_partition(_First, _Mid, _Pred,
+		_BidIt _Left = _Stable_partition_unchecked1(_First, _Mid, _Pred,
 			_Count / 2, _Tempbuf);	// form L1R1 in left half
-		_BidIt _Right = _Stable_partition(_Mid, _Last, _Pred,
+		_BidIt _Right = _Stable_partition_unchecked1(_Mid, _Last, _Pred,
 			_Count - _Count / 2, _Tempbuf);	// form L2R2 in right half
 
-		_Diff _Count1 = 0;
-		_Distance(_Left, _Mid, _Count1);
-		_Diff _Count2 = 0;
-		_Distance(_Mid, _Right, _Count2);
+		_Diff _Count1 = _STD distance(_Left, _Mid);
+		_Diff _Count2 = _STD distance(_Mid, _Right);
 
-		return (_Buffered_rotate(_Left, _Mid, _Right,
+		return (_Buffered_rotate_unchecked(_Left, _Mid, _Right,
 			_Count1, _Count2, _Tempbuf));	// rotate L1R1L2R2 to L1L2R1R2
 		}
 	}
 
 template<class _BidIt,
-	class _Pr,
-	class _Diff,
-	class _Ty> inline
-	_BidIt _Stable_partition(_BidIt _First, _BidIt _Last, _Pr _Pred,
-		_Diff *, _Ty *)
+	class _Pr> inline
+	_BidIt _Stable_partition_unchecked(_BidIt _First, _BidIt _Last, _Pr& _Pred)
 	{	// partition preserving order of equivalents, using _Pred
-	_Diff _Count = 0;
-	_Distance(_First, _Last, _Count);
-	_Temp_iterator<_Ty> _Tempbuf(_Count);
-	return (_Stable_partition(_First, _Last, _Pred, _Count, _Tempbuf));
+	if (_First == _Last)
+		return (_First);
+	_Iter_diff_t<_BidIt> _Count = _STD distance(_First, _Last);
+	_Temp_iterator<_Iter_value_t<_BidIt>> _Tempbuf(_Count);
+	return (_Stable_partition_unchecked1(_First, _Last, _Pred, _Count, _Tempbuf));
 	}
 
 template<class _BidIt,
@@ -2320,17 +1950,15 @@ template<class _BidIt,
 	_BidIt stable_partition(_BidIt _First, _BidIt _Last, _Pr _Pred)
 	{	// partition preserving order of equivalents, using _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_First == _Last ? _First
-		: _Rechecked(_First,
-			_Stable_partition(_Unchecked(_First), _Unchecked(_Last),
-				_Pred, _Dist_type(_First), _Val_type(_First))));
+	return (_Rechecked(_First,
+		_Stable_partition_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
  #if _ITERATOR_DEBUG_LEVEL == 2
 		// TEMPLATE FUNCTION _Debug_heap WITH PRED
 template<class _RanIt,
 	class _Pr> inline
-	void _Debug_heap(_RanIt _First, _RanIt _Last, _Pr _Pred)
+	void _Debug_heap(_RanIt _First, _RanIt _Last, _Pr& _Pred)
 	{	// test if range is a heap ordered by _Pred
 	if (_First != _Last)
 		for (_RanIt _Root = _First; ++_First != _Last; ++_Root)
@@ -2356,31 +1984,30 @@ template<class _RanIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	void _Push_heap(_RanIt _First, _Diff _Hole,
-		_Diff _Top, _Ty&& _Val, _Pr _Pred)
+	void _Push_heap_by_index(_RanIt _First, _Diff _Hole,
+		_Diff _Top, _Ty&& _Val, _Pr& _Pred)
 	{	// percolate _Hole to _Top or where _Val belongs, using _Pred
 	for (_Diff _Idx = (_Hole - 1) / 2;
 		_Top < _Hole && _DEBUG_LT_PRED(_Pred, *(_First + _Idx), _Val);
 		_Idx = (_Hole - 1) / 2)
 		{	// move _Hole up to parent
-		*(_First + _Hole) = _Move(*(_First + _Idx));
+		*(_First + _Hole) = _STD move(*(_First + _Idx));
 		_Hole = _Idx;
 		}
 
-	*(_First + _Hole) = _Move(_Val);	// drop _Val into final hole
+	*(_First + _Hole) = _STD move(_Val);	// drop _Val into final hole
 	}
 
 template<class _RanIt,
-	class _Diff,
-	class _Ty,
 	class _Pr> inline
-	void _Push_heap_0(_RanIt _First, _RanIt _Last, _Pr _Pred, _Diff *, _Ty *)
-	{	// push *_Last onto heap at [_First, _Last), using _Pred
+	void _Push_heap_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
+	{	// push *(_Last - 1) onto heap at [_First, _Last - 1), using _Pred
+	typedef _Iter_diff_t<_RanIt> _Diff;
 	_Diff _Count = _Last - _First;
-	if (0 < _Count)
-		{	// worth doing, percolate *_Last
-		_Ty _Val = _Move(*_Last);
-		_Push_heap(_First, _Count, _Diff(0), _Move(_Val), _Pred);
+	if (2 <= _Count)
+		{
+		_Iter_value_t<_RanIt> _Val = _STD move(*--_Last);
+		_Push_heap_by_index(_First, --_Count, _Diff(0), _STD move(_Val), _Pred);
 		}
 	}
 
@@ -2389,13 +2016,7 @@ template<class _RanIt,
 	void push_heap(_RanIt _First, _RanIt _Last, _Pr _Pred)
 	{	// push *(_Last - 1) onto heap at [_First, _Last - 1), using _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	if (_First != _Last)
-		{	// check and push to nontrivial heap
-		--_Last;
-		_DEBUG_HEAP_PRED(_First, _Last, _Pred);
-		_Push_heap_0(_Unchecked(_First), _Unchecked(_Last), _Pred,
-			_Dist_type(_First), _Val_type(_First));
-		}
+	_Push_heap_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION push_heap
@@ -2410,56 +2031,58 @@ template<class _RanIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	void _Adjust_heap(_RanIt _First, _Diff _Hole, _Diff _Bottom,
-		_Ty&& _Val, _Pr _Pred)
+	void _Pop_heap_hole_by_index(_RanIt _First, _Diff _Hole, _Diff _Bottom,
+		_Ty&& _Val, _Pr& _Pred)
 	{	// percolate _Hole to _Bottom, then push _Val, using _Pred
-	_Diff _Top = _Hole;
-	_Diff _Idx = 2 * _Hole + 2;
+		// precondition: _Bottom != 0
+	const _Diff _Top = _Hole;
+	_Diff _Idx = _Hole;
 
-	for (; _Idx < _Bottom; _Idx = 2 * _Idx + 2)
+	// Check whether _Idx can have a child before calculating that child's index, since
+	// calculating the child's index can trigger integer overflows
+	const _Diff _Max_sequence_non_leaf = (_Bottom - 1) / 2;
+	while (_Idx < _Max_sequence_non_leaf)
 		{	// move _Hole down to larger child
+		_Idx = 2 * _Idx + 2;
 		if (_DEBUG_LT_PRED(_Pred, *(_First + _Idx), *(_First + (_Idx - 1))))
 			--_Idx;
-		*(_First + _Hole) = _Move(*(_First + _Idx));
+		*(_First + _Hole) = _STD move(*(_First + _Idx));
 		_Hole = _Idx;
 		}
 
-	if (_Idx == _Bottom)
+	if (_Idx == _Max_sequence_non_leaf && _Bottom % 2 == 0)
 		{	// only child at bottom, move _Hole down to it
-		*(_First + _Hole) = _Move(*(_First + (_Bottom - 1)));
+		*(_First + _Hole) = _STD move(*(_First + (_Bottom - 1)));
 		_Hole = _Bottom - 1;
 		}
-	_Push_heap(_First, _Hole, _Top, _Move(_Val), _Pred);
+
+	_Push_heap_by_index(_First, _Hole, _Top, _STD move(_Val), _Pred);
 	}
 
 template<class _RanIt,
-	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	void _Pop_heap(_RanIt _First, _RanIt _Last, _RanIt _Dest,
-		_Ty&& _Val, _Pr _Pred, _Diff *)
+	void _Pop_heap_hole_unchecked(_RanIt _First, _RanIt _Last, _RanIt _Dest,
+		_Ty&& _Val, _Pr& _Pred)
 	{	// pop *_First to *_Dest and reheap, using _Pred
-	*_Dest = _Move(*_First);
-	_Adjust_heap(_First, _Diff(0), _Diff(_Last - _First),
-		_Move(_Val), _Pred);
-	}
-
-template<class _RanIt,
-	class _Ty,
-	class _Pr> inline
-	void _Pop_heap_0(_RanIt _First, _RanIt _Last, _Pr _Pred, _Ty *)
-	{	// pop *_First to *(_Last - 1) and reheap, using _Pred
-	_Ty _Val = _Move(*(_Last - 1));
-	_Pop_heap(_First, _Last - 1, _Last - 1,
-		_Move(_Val), _Pred, _Dist_type(_First));
+		// precondition: _First != _Last
+		// precondition: _First != _Dest
+	*_Dest = _STD move(*_First);
+	_Pop_heap_hole_by_index(_First, _Iter_diff_t<_RanIt>(0), _Iter_diff_t<_RanIt>(_Last - _First),
+		_STD move(_Val), _Pred);
 	}
 
 template<class _RanIt,
 	class _Pr> inline
-	void _Pop_heap(_RanIt _First, _RanIt _Last, _Pr _Pred)
+	void _Pop_heap_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
 	{	// pop *_First to *(_Last - 1) and reheap, using _Pred
-	_Pop_heap_0(_Unchecked(_First), _Unchecked(_Last), _Pred,
-		_Val_type(_First));
+	if (2 <= _Last - _First)
+		{
+		--_Last;
+		_Iter_value_t<_RanIt> _Val = _STD move(*_Last);
+		_Pop_heap_hole_unchecked(_First, _Last, _Last,
+			_STD move(_Val), _Pred);
+		}
 	}
 
 template<class _RanIt,
@@ -2468,8 +2091,7 @@ template<class _RanIt,
 	{	// pop *_First to *(_Last - 1) and reheap, using _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
 	_DEBUG_HEAP_PRED(_First, _Last, _Pred);
-	if (2 <= _Last - _First)
-		_Pop_heap(_Unchecked(_First), _Unchecked(_Last), _Pred);
+	_Pop_heap_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION pop_heap
@@ -2481,18 +2103,19 @@ template<class _RanIt> inline
 
 		// TEMPLATE FUNCTION make_heap WITH PRED
 template<class _RanIt,
-	class _Diff,
-	class _Ty,
 	class _Pr> inline
-	void _Make_heap(_RanIt _First, _RanIt _Last, _Pr _Pred, _Diff *, _Ty *)
+	void _Make_heap_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
 	{	// make nontrivial [_First, _Last) into a heap, using _Pred
-	_Diff _Bottom = _Last - _First;
-	for (_Diff _Hole = _Bottom / 2; 0 < _Hole; )
-		{	// reheap top half, bottom to top
-		--_Hole;
-		_Ty _Val = _Move(*(_First + _Hole));
-		_Adjust_heap(_First, _Hole, _Bottom,
-			_Move(_Val), _Pred);
+	_Iter_diff_t<_RanIt> _Bottom = _Last - _First;
+	if (2 <= _Bottom)
+		{
+		for (_Iter_diff_t<_RanIt> _Hole = _Bottom / 2; 0 < _Hole; )
+			{	// reheap top half, bottom to top
+			--_Hole;
+			_Iter_value_t<_RanIt> _Val = _STD move(*(_First + _Hole));
+			_Pop_heap_hole_by_index(_First, _Hole, _Bottom,
+				_STD move(_Val), _Pred);
+			}
 		}
 	}
 
@@ -2501,12 +2124,7 @@ template<class _RanIt,
 	void make_heap(_RanIt _First, _RanIt _Last, _Pr _Pred)
 	{	// make [_First, _Last) into a heap, using _Pred
 	_DEBUG_RANGE(_First, _Last);
-	if (2 <= _Last - _First)
-		{	// validate _Pred and heapify
-		_DEBUG_POINTER(_Pred);
-		_Make_heap(_Unchecked(_First), _Unchecked(_Last), _Pred,
-			_Dist_type(_First), _Val_type(_First));
-		}
+	_Make_heap_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION make_heap
@@ -2519,10 +2137,10 @@ template<class _RanIt> inline
 		// TEMPLATE FUNCTION sort_heap WITH PRED
 template<class _RanIt,
 	class _Pr> inline
-	void _Sort_heap(_RanIt _First, _RanIt _Last, _Pr _Pred)
+	void _Sort_heap_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
 	{	// order heap by repeatedly popping, using _Pred
 	for (; 2 <= _Last - _First; --_Last)
-		_Pop_heap(_First, _Last, _Pred);
+		_Pop_heap_unchecked(_First, _Last, _Pred);
 	}
 
 template<class _RanIt,
@@ -2532,7 +2150,7 @@ template<class _RanIt,
 	_DEBUG_RANGE(_First, _Last);
 	_DEBUG_POINTER_IF(2 <= _Last - _First, _Pred);
 	_DEBUG_HEAP_PRED(_First, _Last, _Pred);
-	_Sort_heap(_Unchecked(_First), _Unchecked(_Last), _Pred);
+	_Sort_heap_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION sort_heap
@@ -2545,17 +2163,15 @@ template<class _RanIt> inline
 		// TEMPLATE FUNCTION lower_bound WITH PRED
 template<class _FwdIt,
 	class _Ty,
-	class _Diff,
 	class _Pr> inline
-	_FwdIt _Lower_bound(_FwdIt _First, _FwdIt _Last,
-		const _Ty& _Val, _Pr _Pred, _Diff *)
+	_FwdIt _Lower_bound_unchecked(_FwdIt _First, _FwdIt _Last,
+		const _Ty& _Val, _Pr& _Pred)
 	{	// find first element not before _Val, using _Pred
-	_Diff _Count = 0;
-	_Distance(_First, _Last, _Count);
+	_Iter_diff_t<_FwdIt> _Count = _STD distance(_First, _Last);
 
 	while (0 < _Count)
 		{	// divide and conquer, find half that contains answer
-		_Diff _Count2 = _Count / 2;
+		_Iter_diff_t<_FwdIt> _Count2 = _Count / 2;
 		_FwdIt _Mid = _First;
 		_STD advance(_Mid, _Count2);
 
@@ -2567,6 +2183,7 @@ template<class _FwdIt,
 		else
 			_Count = _Count2;
 		}
+
 	return (_First);
 	}
 
@@ -2576,9 +2193,9 @@ template<class _FwdIt,
 	_FwdIt lower_bound(_FwdIt _First, _FwdIt _Last,
 		const _Ty& _Val, _Pr _Pred)
 	{	// find first element not before _Val, using _Pred
+	_DEBUG_RANGE(_First, _Last);
 	return (_Rechecked(_First,
-		_Lower_bound(_Unchecked(_First), _Unchecked(_Last), _Val, _Pred,
-			_Dist_type(_First))));
+		_Lower_bound_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val, _Pred)));
 	}
 
 		// TEMPLATE FUNCTION lower_bound
@@ -2592,17 +2209,15 @@ template<class _FwdIt,
 		// TEMPLATE FUNCTION upper_bound WITH PRED
 template<class _FwdIt,
 	class _Ty,
-	class _Diff,
 	class _Pr> inline
-	_FwdIt _Upper_bound(_FwdIt _First, _FwdIt _Last,
-		const _Ty& _Val, _Pr _Pred, _Diff *)
+	_FwdIt _Upper_bound_unchecked(_FwdIt _First, _FwdIt _Last,
+		const _Ty& _Val, _Pr& _Pred)
 	{	// find first element that _Val is before, using _Pred
-	_Diff _Count = 0;
-	_Distance(_First, _Last, _Count);
+	_Iter_diff_t<_FwdIt> _Count = _STD distance(_First, _Last);
 
 	while (0 < _Count)
 		{	// divide and conquer, find half that contains answer
-		_Diff _Count2 = _Count / 2;
+		_Iter_diff_t<_FwdIt> _Count2 = _Count / 2;
 		_FwdIt _Mid = _First;
 		_STD advance(_Mid, _Count2);
 
@@ -2614,6 +2229,7 @@ template<class _FwdIt,
 		else
 			_Count = _Count2;
 		}
+
 	return (_First);
 	}
 
@@ -2623,9 +2239,9 @@ template<class _FwdIt,
 	_FwdIt upper_bound(_FwdIt _First, _FwdIt _Last,
 		const _Ty& _Val, _Pr _Pred)
 	{	// find first element that _Val is before, using _Pred
+	_DEBUG_RANGE(_First, _Last);
 	return (_Rechecked(_First,
-		_Upper_bound(_Unchecked(_First), _Unchecked(_Last), _Val, _Pred,
-			_Dist_type(_First))));
+		_Upper_bound_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val, _Pred)));
 	}
 
 		// TEMPLATE FUNCTION upper_bound
@@ -2639,18 +2255,16 @@ template<class _FwdIt,
 		// TEMPLATE FUNCTION equal_range WITH PRED
 template<class _FwdIt,
 	class _Ty,
-	class _Diff,
 	class _Pr> inline
 	pair<_FwdIt, _FwdIt>
-		_Equal_range(_FwdIt _First, _FwdIt _Last,
-			const _Ty& _Val, _Pr _Pred, _Diff *)
+		_Equal_range_unchecked(_FwdIt _First, _FwdIt _Last,
+			const _Ty& _Val, _Pr& _Pred)
 	{	// find range equivalent to _Val, using _Pred
-	_Diff _Count = 0;
-	_Distance(_First, _Last, _Count);
+	_Iter_diff_t<_FwdIt> _Count = _STD distance(_First, _Last);
 
 	while (0 < _Count)
 		{	// divide and conquer, check midpoint
-		_Diff _Count2 = _Count / 2;
+		_Iter_diff_t<_FwdIt> _Count2 = _Count / 2;
 		_FwdIt _Mid = _First;
 		_STD advance(_Mid, _Count2);
 
@@ -2663,9 +2277,9 @@ template<class _FwdIt,
 			_Count = _Count2;	// range in first half, loop
 		else
 			{	// range straddles _Mid, find each end and return
-			_FwdIt _First2 = _STD lower_bound(_First, _Mid, _Val, _Pred);
+			_FwdIt _First2 = _Lower_bound_unchecked(_First, _Mid, _Val, _Pred);
 			_STD advance(_First, _Count);
-			_FwdIt _Last2 = _STD upper_bound(++_Mid, _First, _Val, _Pred);
+			_FwdIt _Last2 = _Upper_bound_unchecked(++_Mid, _First, _Val, _Pred);
 			return (pair<_FwdIt, _FwdIt>(_First2, _Last2));
 			}
 		}
@@ -2680,12 +2294,9 @@ template<class _FwdIt,
 		equal_range(_FwdIt _First, _FwdIt _Last,
 			const _Ty& _Val, _Pr _Pred)
 	{	// find range equivalent to _Val, using _Pred
-	pair<_UNCHECKED_TYPE(_FwdIt), _UNCHECKED_TYPE(_FwdIt)> _Ans(
-		_Equal_range(_Unchecked(_First), _Unchecked(_Last),
-			_Val, _Pred, _Dist_type(_First)));
-	return (pair<_FwdIt, _FwdIt>(
-		_Rechecked(_First, _Ans.first),
-		_Rechecked(_Last, _Ans.second)));
+	_DEBUG_RANGE(_First, _Last);
+	return (_Rechecked_both(_First, _Last,
+		_Equal_range_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val, _Pred)));
 	}
 
 		// TEMPLATE FUNCTION equal_range
@@ -2702,11 +2313,22 @@ template<class _FwdIt,
 template<class _FwdIt,
 	class _Ty,
 	class _Pr> inline
+	bool _Binary_search_unchecked(_FwdIt _First, _FwdIt _Last,
+		const _Ty& _Val, _Pr& _Pred)
+	{	// test if _Val equivalent to some element, using _Pred
+	_First = _Lower_bound_unchecked(_First, _Last, _Val, _Pred);
+	return (_First != _Last && !_Pred(_Val, *_First));
+	}
+
+template<class _FwdIt,
+	class _Ty,
+	class _Pr> inline
 	bool binary_search(_FwdIt _First, _FwdIt _Last,
 		const _Ty& _Val, _Pr _Pred)
 	{	// test if _Val equivalent to some element, using _Pred
-	_First = _STD lower_bound(_First, _Last, _Val, _Pred);
-	return (_First != _Last && !_Pred(_Val, *_First));
+	_DEBUG_RANGE(_First, _Last);
+	return (_Binary_search_unchecked(_Unchecked(_First), _Unchecked(_Last),
+		_Val, _Pred));
 	}
 
 		// TEMPLATE FUNCTION binary_search
@@ -2722,120 +2344,85 @@ template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Merge0(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Merge_unchecked(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
+		_OutIt _Dest, _Pr& _Pred)
 	{	// copy merging ranges, both using _Pred
 	if (_First1 != _Last1 && _First2 != _Last2)
 		for (; ; )
 			{	// merge either first or second
 			if (_DEBUG_LT_PRED(_Pred, *_First2, *_First1))
-				{	// merge first
+				{
 				*_Dest++ = *_First2++;
 				if (_First2 == _Last2)
 					break;
 				}
 			else
-				{	// merge second
+				{
 				*_Dest++ = *_First1++;
 				if (_First1 == _Last1)
 					break;
 				}
 			}
 
-	_Dest = _Copy_impl(_First1, _Last1, _Dest);	// copy any tail
-	return (_Copy_impl(_First2, _Last2, _Dest));
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt merge(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// copy merging ranges, both using _Pred
-	return (_Merge0(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Merge2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, input_iterator_tag,
-		input_iterator_tag, _Mutable_iterator_tag)
-	{	// copy merging ranges, both using _Pred, arbitrary iterators
-	return (_Merge0(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
+	_Dest = _Copy_unchecked(_First1, _Last1, _Dest);	// copy any tail
+	return (_Copy_unchecked(_First2, _Last2, _Dest));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Merge2(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Merge_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, random_access_iterator_tag,
+		_OutIt _Dest, _Pr& _Pred, input_iterator_tag,
+		input_iterator_tag, _Any_tag)
+	{	// copy merging ranges, both using _Pred, arbitrary iterators, no deprecation warnings
+	return (_Rechecked(_Dest,
+		_Merge_unchecked(_First1, _Last1, _First2, _Last2, _Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt _Merge_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2,
+		_OutIt _Dest, _Pr& _Pred, random_access_iterator_tag,
 		random_access_iterator_tag, random_access_iterator_tag)
-	{	// copy merging ranges, both using _Pred, random-access iterators
-	_OutIt _Ans = _Dest + (_Last1 - _First1)
-		+ (_Last2 - _First2);	// also checks range
-	_Merge0(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred);
-	return (_Ans);
+	{	// copy merging ranges, both using _Pred, random-access iterators, no deprecation warnings
+	_CHECK_RANIT_RANGE_N(_Dest, (_Last1 - _First1) + (_Last2 - _First2));
+	return (_Rechecked(_Dest,
+		_Merge_unchecked(_First1, _Last1, _First2, _Last2, _Unchecked(_Dest), _Pred)));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Merge2(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Merge_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, true_type)
-	{	// copy merging ranges, both using _Pred, checked dest
-	return (_Merge2(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred, _Iter_cat(_First1),
-		_Iter_cat(_First2), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Merge2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, false_type)
-	{	// copy merging ranges, both using _Pred, unchecked dest
-	return (_Merge2(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred, _Iter_cat(_First1),
-		_Iter_cat(_First2), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt merge(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// copy merging ranges, both using _Pred
+		_OutIt _Dest, _Pr& _Pred)
+	{	// copy merging ranges, both using _Pred, no deprecation warnings
 	_DEBUG_ORDER_PRED(_First1, _Last1, _Pred);
 	_DEBUG_ORDER_PRED(_First2, _Last2, _Pred);
 	_DEBUG_POINTER_IF(_First1 != _Last1 || _First2 != _Last2, _Dest);
-	return (_Merge2(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Merge_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred, _Is_checked(_Dest)));
+		_Dest, _Pred,
+		_Iter_cat_t<_InIt1>(), _Iter_cat_t<_InIt2>(), _Iter_cat_t<_OutIt>()));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt merge(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2,
+		_OutIt _Dest, _Pr _Pred)
+	{	// copy merging ranges, both using _Pred
+	_DEPRECATE_UNCHECKED(merge, _Dest);
+	return (_Merge_no_deprecate(_First1, _Last1, _First2, _Last2, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -2849,12 +2436,11 @@ template<class _InIt1,
 		_OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// copy merging ranges, both using _Pred, array dest
 	return (_Unchecked(
-		_STD merge(_First1, _Last1,
+		_Merge_no_deprecate(_First1, _Last1,
 			_First2, _Last2,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION merge
 template<class _InIt1,
@@ -2887,32 +2473,32 @@ template<class _BidIt1,
 	class _BidIt2,
 	class _BidIt3,
 	class _Pr> inline
-	_BidIt3 _Merge_backward(_BidIt1 _First1, _BidIt1 _Last1,
-		_BidIt2 _First2, _BidIt2 _Last2, _BidIt3 _Dest, _Pr _Pred,
+	_BidIt3 _Buffered_merge_backward_unchecked(_BidIt1 _First1, _BidIt1 _Last1,
+		_BidIt2 _First2, _BidIt2 _Last2, _BidIt3 _Dest, _Pr& _Pred,
 		bool _In_place = false)
 	{	// merge backwards to _Dest, using _Pred
 	if (_First1 != _Last1 && _First2 != _Last2)
 		for (; ; )
 			{	// merge either first or second
 			if (_DEBUG_LT_PRED(_Pred, *--_Last2, *--_Last1))
-				{	// merge first
-				*--_Dest = _Move(*_Last1);
+				{
+				*--_Dest = _STD move(*_Last1);
 				++_Last2;
 				if (_First1 == _Last1)
 					break;
 				}
 			else
-				{	// merge second
-				*--_Dest = _Move(*_Last2);
+				{
+				*--_Dest = _STD move(*_Last2);
 				++_Last1;
 				if (_First2 == _Last2)
 					break;
 				}
 			}
 
-	_Dest = _Move_backward(_First2, _Last2, _Dest);	// move any tail
+	_Dest = _Move_backward_unchecked(_First2, _Last2, _Dest);	// move any tail
 	if (!_In_place)
-		_Dest = _Move_backward(_First1, _Last1, _Dest);
+		_Dest = _Move_backward_unchecked(_First1, _Last1, _Dest);
 	return (_Dest);
 	}
 
@@ -2920,30 +2506,30 @@ template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Merge(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Buffered_merge_unchecked(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, bool _In_place = false)
+		_OutIt _Dest, _Pr& _Pred, bool _In_place = false)
 	{	// move merging ranges, both using _Pred
 	if (_First1 != _Last1 && _First2 != _Last2)
 		for (; ; )
 			{	// merge either first or second
 			if (_DEBUG_LT_PRED(_Pred, *_First2, *_First1))
 				{	// merge first
-				*_Dest++ = _Move(*_First2++);
+				*_Dest++ = _STD move(*_First2++);
 				if (_First2 == _Last2)
 					break;
 				}
 			else
 				{	// merge second
-				*_Dest++ = _Move(*_First1++);
+				*_Dest++ = _STD move(*_First1++);
 				if (_First1 == _Last1)
 					break;
 				}
 			}
 
-	_Dest = _Move(_First1, _Last1, _Dest);	// move any tail
+	_Dest = _Move_unchecked(_First1, _Last1, _Dest);	// move any tail
 	if (!_In_place)
-		_Dest = _Move(_First2, _Last2, _Dest);
+		_Dest = _Move_unchecked(_First2, _Last2, _Dest);
 	return (_Dest);
 	}
 
@@ -2951,9 +2537,9 @@ template<class _BidIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	void _Buffered_merge(_BidIt _First, _BidIt _Mid, _BidIt _Last,
+	void _Buffered_merge_unchecked(_BidIt _First, _BidIt _Mid, _BidIt _Last,
 		_Diff _Count1, _Diff _Count2,
-			_Temp_iterator<_Ty>& _Tempbuf, _Pr _Pred)
+			_Temp_iterator<_Ty>& _Tempbuf, _Pr& _Pred)
 	{	// merge [_First, _Mid) with [_Mid, _Last), using _Pred
 	if (_Count1 == 0 || _Count2 == 0)
 		;	// do nothing
@@ -2964,14 +2550,14 @@ template<class _BidIt,
 		}
 	else if (_Count1 <= _Count2 && _Count1 <= _Tempbuf._Maxlen())
 		{	// buffer left partition, then merge
-		_Move(_First, _Mid, _Tempbuf._Init());
-		_Merge(_Tempbuf._First(), _Tempbuf._Last(),
+		_Move_unchecked(_First, _Mid, _Tempbuf._Init());
+		_Buffered_merge_unchecked(_Tempbuf._First(), _Tempbuf._Last(),
 			_Mid, _Last, _First, _Pred, true);
 		}
 	else if (_Count2 <= _Tempbuf._Maxlen())
 		{	// buffer right partition, then merge
-		_Move(_Mid, _Last, _Tempbuf._Init());
-		_Merge_backward(_First, _Mid,
+		_Move_unchecked(_Mid, _Last, _Tempbuf._Init());
+		_Buffered_merge_backward_unchecked(_First, _Mid,
 			_Tempbuf._First(), _Tempbuf._Last(), _Last, _Pred, true);
 		}
 	else
@@ -2980,43 +2566,41 @@ template<class _BidIt,
 		_Diff _Count1n, _Count2n;
 		if (_Count2 < _Count1)
 			{	// left larger, cut it in half and partition right to match
-			_Count1n = _Count1 / 2, _Count2n = 0;
+			_Count1n = _Count1 / 2;
 			_Firstn = _First;
 			_STD advance(_Firstn, _Count1n);
-			_Lastn = _STD lower_bound(_Mid, _Last, *_Firstn, _Pred);
-			_Distance(_Mid, _Lastn, _Count2n);
+			_Lastn = _Lower_bound_unchecked(_Mid, _Last, *_Firstn, _Pred);
+			_Count2n = _STD distance(_Mid, _Lastn);
 			}
 		else
 			{	// right larger, cut it in half and partition left to match
-			_Count1n = 0, _Count2n = _Count2 / 2;
+			_Count2n = _Count2 / 2;
 			_Lastn = _Mid;
 			_STD advance(_Lastn, _Count2n);
-			_Firstn = _STD upper_bound(_First, _Mid, *_Lastn, _Pred);
-			_Distance(_First, _Firstn, _Count1n);
+			_Firstn = _Upper_bound_unchecked(_First, _Mid, *_Lastn, _Pred);
+			_Count1n = _STD distance(_First, _Firstn);
 			}
-		_BidIt _Midn = _Buffered_rotate(_Firstn, _Mid, _Lastn,
+		_BidIt _Midn = _Buffered_rotate_unchecked(_Firstn, _Mid, _Lastn,
 			_Count1 - _Count1n, _Count2n, _Tempbuf);	// rearrange middle
-		_Buffered_merge(_First, _Firstn, _Midn,
+		_Buffered_merge_unchecked(_First, _Firstn, _Midn,
 			_Count1n, _Count2n, _Tempbuf, _Pred);	// merge each new part
-		_Buffered_merge(_Midn, _Lastn, _Last,
+		_Buffered_merge_unchecked(_Midn, _Lastn, _Last,
 			_Count1 - _Count1n, _Count2 - _Count2n, _Tempbuf, _Pred);
 		}
 	}
 
 template<class _BidIt,
-	class _Diff,
-	class _Ty,
 	class _Pr> inline
-	void _Inplace_merge(_BidIt _First, _BidIt _Mid, _BidIt _Last, _Pr _Pred,
-		_Diff *, _Ty *)
+	void _Inplace_merge_unchecked(_BidIt _First, _BidIt _Mid, _BidIt _Last, _Pr& _Pred)
 	{	// merge [_First, _Mid) with [_Mid, _Last), using _Pred
-	_Diff _Count1 = 0;
-	_Distance(_First, _Mid, _Count1);
-	_Diff _Count2 = 0;
-	_Distance(_Mid, _Last, _Count2);
-	_Temp_iterator<_Ty> _Tempbuf(_Count1 < _Count2 ? _Count1 : _Count2);
-	_Buffered_merge(_First, _Mid, _Last,
-		_Count1, _Count2, _Tempbuf, _Pred);
+	if (_First != _Mid && _Mid != _Last)
+		{
+		_Iter_diff_t<_BidIt> _Count1 = _STD distance(_First, _Mid);
+		_Iter_diff_t<_BidIt> _Count2 = _STD distance(_Mid, _Last);
+		_Temp_iterator<_Iter_value_t<_BidIt>> _Tempbuf(_Count1 < _Count2 ? _Count1 : _Count2);
+		_Buffered_merge_unchecked(_First, _Mid, _Last,
+			_Count1, _Count2, _Tempbuf, _Pred);
+		}
 	}
 
 template<class _BidIt,
@@ -3025,10 +2609,8 @@ template<class _BidIt,
 	{	// merge [_First, _Mid) with [_Mid, _Last), using _Pred
 	_DEBUG_ORDER_PRED(_First, _Mid, _Pred);
 	_DEBUG_ORDER_PRED(_Mid, _Last, _Pred);
-	if (_First != _Mid && _Mid != _Last)
-		_Inplace_merge(
-			_Unchecked(_First), _Unchecked(_Mid), _Unchecked(_Last), _Pred,
-			_Dist_type(_First), _Val_type(_First));
+	_Inplace_merge_unchecked(
+		_Unchecked(_First), _Unchecked(_Mid), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION inplace_merge
@@ -3040,42 +2622,34 @@ template<class _BidIt> inline
 
 		// TEMPLATE FUNCTION sort WITH PRED
 template<class _BidIt,
-	class _Pr,
-	class _Ty> inline
-	void _Insertion_sort1(_BidIt _First, _BidIt _Last, _Pr _Pred, _Ty *)
+	class _Pr> inline
+	void _Insertion_sort_unchecked(_BidIt _First, _BidIt _Last, _Pr& _Pred)
 	{	// insertion sort [_First, _Last), using _Pred
 	if (_First != _Last)
 		for (_BidIt _Next = _First; ++_Next != _Last; )
 			{	// order next element
 			_BidIt _Next1 = _Next;
-			_Ty _Val = _Move(*_Next);
+			_Iter_value_t<_BidIt> _Val = _STD move(*_Next);
 
 			if (_DEBUG_LT_PRED(_Pred, _Val, *_First))
 				{	// found new earliest element, move to front
-				_Move_backward(_First, _Next, ++_Next1);
-				*_First = _Move(_Val);
+				_Move_backward_unchecked(_First, _Next, ++_Next1);
+				*_First = _STD move(_Val);
 				}
 			else
 				{	// look for insertion point after first
 				for (_BidIt _First1 = _Next1;
 					_DEBUG_LT_PRED(_Pred, _Val, *--_First1);
 					_Next1 = _First1)
-					*_Next1 = _Move(*_First1);	// move hole down
-				*_Next1 = _Move(_Val);	// insert element in hole
+					*_Next1 = _STD move(*_First1);	// move hole down
+				*_Next1 = _STD move(_Val);	// insert element in hole
 				}
 			}
 	}
 
-template<class _BidIt,
-	class _Pr> inline
-	void _Insertion_sort(_BidIt _First, _BidIt _Last, _Pr _Pred)
-	{	// insertion sort [_First, _Last), using _Pred
-	_Insertion_sort1(_First, _Last, _Pred, _Val_type(_First));
-	}
-
 template<class _RanIt,
 	class _Pr> inline
-	void _Med3(_RanIt _First, _RanIt _Mid, _RanIt _Last, _Pr _Pred)
+	void _Med3_unchecked(_RanIt _First, _RanIt _Mid, _RanIt _Last, _Pr& _Pred)
 	{	// sort median of three elements to middle
 	if (_DEBUG_LT_PRED(_Pred, *_Mid, *_First))
 		_STD iter_swap(_Mid, _First);
@@ -3089,27 +2663,27 @@ template<class _RanIt,
 
 template<class _RanIt,
 	class _Pr> inline
-	void _Median(_RanIt _First, _RanIt _Mid, _RanIt _Last, _Pr _Pred)
+	void _Guess_median_unchecked(_RanIt _First, _RanIt _Mid, _RanIt _Last, _Pr& _Pred)
 	{	// sort median element to middle
 	if (40 < _Last - _First)
 		{	// median of nine
 		size_t _Step = (_Last - _First + 1) / 8;
-		_Med3(_First, _First + _Step, _First + 2 * _Step, _Pred);
-		_Med3(_Mid - _Step, _Mid, _Mid + _Step, _Pred);
-		_Med3(_Last - 2 * _Step, _Last - _Step, _Last, _Pred);
-		_Med3(_First + _Step, _Mid, _Last - _Step, _Pred);
+		_Med3_unchecked(_First, _First + _Step, _First + 2 * _Step, _Pred);
+		_Med3_unchecked(_Mid - _Step, _Mid, _Mid + _Step, _Pred);
+		_Med3_unchecked(_Last - 2 * _Step, _Last - _Step, _Last, _Pred);
+		_Med3_unchecked(_First + _Step, _Mid, _Last - _Step, _Pred);
 		}
 	else
-		_Med3(_First, _Mid, _Last, _Pred);
+		_Med3_unchecked(_First, _Mid, _Last, _Pred);
 	}
 
 template<class _RanIt,
 	class _Pr> inline
 	pair<_RanIt, _RanIt>
-		_Unguarded_partition(_RanIt _First, _RanIt _Last, _Pr _Pred)
+		_Partition_by_median_guess_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
 	{	// partition [_First, _Last), using _Pred
 	_RanIt _Mid = _First + (_Last - _First) / 2;
-	_Median(_First, _Mid, _Last - 1, _Pred);
+	_Guess_median_unchecked(_First, _Mid, _Last - 1, _Pred);
 	_RanIt _Pfirst = _Mid;
 	_RanIt _Plast = _Pfirst + 1;
 
@@ -3165,34 +2739,41 @@ template<class _RanIt,
 template<class _RanIt,
 	class _Diff,
 	class _Pr> inline
-	void _Sort(_RanIt _First, _RanIt _Last, _Diff _Ideal, _Pr _Pred)
+	void _Sort_unchecked1(_RanIt _First, _RanIt _Last, _Diff _Ideal, _Pr& _Pred)
 	{	// order [_First, _Last), using _Pred
 	_Diff _Count;
-	for (; _ISORT_MAX < (_Count = _Last - _First) && 0 < _Ideal; )
+	while (_ISORT_MAX < (_Count = _Last - _First) && 0 < _Ideal)
 		{	// divide and conquer by quicksort
 		pair<_RanIt, _RanIt> _Mid =
-			_Unguarded_partition(_First, _Last, _Pred);
+			_Partition_by_median_guess_unchecked(_First, _Last, _Pred);
 		_Ideal /= 2, _Ideal += _Ideal / 2;	// allow 1.5 log2(N) divisions
 
 		if (_Mid.first - _First < _Last - _Mid.second)
 			{	// loop on second half
-			_Sort(_First, _Mid.first, _Ideal, _Pred);
+			_Sort_unchecked1(_First, _Mid.first, _Ideal, _Pred);
 			_First = _Mid.second;
 			}
 		else
 			{	// loop on first half
-			_Sort(_Mid.second, _Last, _Ideal, _Pred);
+			_Sort_unchecked1(_Mid.second, _Last, _Ideal, _Pred);
 			_Last = _Mid.first;
 			}
 		}
 
 	if (_ISORT_MAX < _Count)
 		{	// heap sort if too many divisions
-		_STD make_heap(_First, _Last, _Pred);
-		_STD sort_heap(_First, _Last, _Pred);
+		_Make_heap_unchecked(_First, _Last, _Pred);
+		_Sort_heap_unchecked(_First, _Last, _Pred);
 		}
 	else if (2 <= _Count)
-		_Insertion_sort(_First, _Last, _Pred);	// small
+		_Insertion_sort_unchecked(_First, _Last, _Pred);	// small
+	}
+
+template<class _RanIt,
+	class _Pr> inline
+	void _Sort_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
+	{	// order [_First, _Last), using _Pred
+	_Sort_unchecked1(_First, _Last, _Last - _First, _Pred);
 	}
 
 template<class _RanIt,
@@ -3200,8 +2781,7 @@ template<class _RanIt,
 	void sort(_RanIt _First, _RanIt _Last, _Pr _Pred)
 	{	// order [_First, _Last), using _Pred
 	_DEBUG_RANGE(_First, _Last);
-	_DEBUG_POINTER_IF(2 <= _Last - _First, _Pred);
-	_Sort(_Unchecked(_First), _Unchecked(_Last), _Last - _First, _Pred);
+	_Sort_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION sort
@@ -3216,8 +2796,8 @@ template<class _BidIt,
 	class _OutIt,
 	class _Diff,
 	class _Pr> inline
-	void _Chunked_merge(_BidIt _First, _BidIt _Last, _OutIt _Dest,
-		_Diff _Chunk, _Diff _Count, _Pr _Pred)
+	void _Chunked_merge_unchecked(_BidIt _First, _BidIt _Last, _OutIt _Dest,
+		_Diff _Chunk, _Diff _Count, _Pr& _Pred)
 	{	// copy merging chunks, using _Pred
 	for (_Diff _Chunk2 = _Chunk * 2; _Chunk2 <= _Count; _Count -= _Chunk2)
 		{	// copy merging pairs of adjacent chunks
@@ -3226,18 +2806,18 @@ template<class _BidIt,
 		_BidIt _Mid2 = _Mid1;
 		_STD advance(_Mid2, _Chunk);
 
-		_Dest = _Merge(_First, _Mid1, _Mid1, _Mid2, _Dest, _Pred);
+		_Dest = _Buffered_merge_unchecked(_First, _Mid1, _Mid1, _Mid2, _Dest, _Pred);
 		_First = _Mid2;
 		}
 
 	if (_Count <= _Chunk)
-		_Move(_First, _Last, _Dest);	// copy partial last chunk
+		_Move_unchecked(_First, _Last, _Dest);	// copy partial last chunk
 	else
 		{	// copy merging whole and partial last chunk
 		_BidIt _Mid1 = _First;
 		_STD advance(_Mid1, _Chunk);
 
-		_Merge(_First, _Mid1, _Mid1, _Last, _Dest, _Pred);
+		_Buffered_merge_unchecked(_First, _Mid1, _Mid1, _Last, _Dest, _Pred);
 		}
 	}
 
@@ -3245,8 +2825,8 @@ template<class _BidIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	void _Buffered_merge_sort(_BidIt _First, _BidIt _Last, _Diff _Count,
-		_Temp_iterator<_Ty>& _Tempbuf, _Pr _Pred)
+	void _Buffered_merge_sort_unchecked(_BidIt _First, _BidIt _Last, _Diff _Count,
+		_Temp_iterator<_Ty>& _Tempbuf, _Pr& _Pred)
 	{	// sort using temp buffer for merges, using _Pred
 	_BidIt _Mid = _First;
 	for (_Diff _Nleft = _Count; _ISORT_MAX <= _Nleft; _Nleft -= _ISORT_MAX)
@@ -3254,16 +2834,16 @@ template<class _BidIt,
 		_BidIt _Midn = _Mid;
 		_STD advance(_Midn, (int)_ISORT_MAX);
 
-		_Insertion_sort(_Mid, _Midn, _Pred);
+		_Insertion_sort_unchecked(_Mid, _Midn, _Pred);
 		_Mid = _Midn;
 		}
-	_Insertion_sort(_Mid, _Last, _Pred);	// sort partial last chunk
+	_Insertion_sort_unchecked(_Mid, _Last, _Pred);	// sort partial last chunk
 
 	for (_Diff _Chunk = _ISORT_MAX; _Chunk < _Count; _Chunk *= 2)
 		{	// merge adjacent pairs of chunks to and from temp buffer
-		_Chunked_merge(_First, _Last, _Tempbuf._Init(),
+		_Chunked_merge_unchecked(_First, _Last, _Tempbuf._Init(),
 			_Chunk, _Count, _Pred);
-		_Chunked_merge(_Tempbuf._First(), _Tempbuf._Last(), _First,
+		_Chunked_merge_unchecked(_Tempbuf._First(), _Tempbuf._Last(), _First,
 			_Chunk *= 2, _Count, _Pred);
 		}
 	}
@@ -3272,11 +2852,11 @@ template<class _BidIt,
 	class _Diff,
 	class _Ty,
 	class _Pr> inline
-	void _Stable_sort(_BidIt _First, _BidIt _Last, _Diff _Count,
-		_Temp_iterator<_Ty>& _Tempbuf, _Pr _Pred)
+	void _Stable_sort_unchecked1(_BidIt _First, _BidIt _Last, _Diff _Count,
+		_Temp_iterator<_Ty>& _Tempbuf, _Pr& _Pred)
 	{	// sort preserving order of equivalents, using _Pred
 	if (_Count <= _ISORT_MAX)
-		_Insertion_sort(_First, _Last, _Pred);	// small
+		_Insertion_sort_unchecked(_First, _Last, _Pred);	// small
 	else
 		{	// sort halves and merge
 		_Diff _Count2 = (_Count + 1) / 2;
@@ -3285,31 +2865,31 @@ template<class _BidIt,
 
 		if (_Count2 <= _Tempbuf._Maxlen())
 			{	// temp buffer big enough, sort each half using buffer
-			_Buffered_merge_sort(_First, _Mid, _Count2, _Tempbuf, _Pred);
-			_Buffered_merge_sort(_Mid, _Last, _Count - _Count2,
+			_Buffered_merge_sort_unchecked(_First, _Mid, _Count2, _Tempbuf, _Pred);
+			_Buffered_merge_sort_unchecked(_Mid, _Last, _Count - _Count2,
 				_Tempbuf, _Pred);
 			}
 		else
 			{	// temp buffer not big enough, divide and conquer
-			_Stable_sort(_First, _Mid, _Count2, _Tempbuf, _Pred);
-			_Stable_sort(_Mid, _Last, _Count - _Count2, _Tempbuf, _Pred);
+			_Stable_sort_unchecked1(_First, _Mid, _Count2, _Tempbuf, _Pred);
+			_Stable_sort_unchecked1(_Mid, _Last, _Count - _Count2, _Tempbuf, _Pred);
 			}
 
-		_Buffered_merge(_First, _Mid, _Last,
+		_Buffered_merge_unchecked(_First, _Mid, _Last,
 			_Count2, _Count - _Count2, _Tempbuf, _Pred);	// merge halves
 		}
 	}
 
 template<class _BidIt,
-	class _Diff,
-	class _Ty,
 	class _Pr> inline
-	void _Stable_sort(_BidIt _First, _BidIt _Last, _Diff *, _Ty *, _Pr _Pred)
+	void _Stable_sort_unchecked(_BidIt _First, _BidIt _Last, _Pr& _Pred)
 	{	// sort preserving order of equivalents, using _Pred
-	_Diff _Count = 0;
-	_Distance(_First, _Last, _Count);
-	_Temp_iterator<_Ty> _Tempbuf((_Count + 1) / 2);
-	_Stable_sort(_First, _Last, _Count, _Tempbuf, _Pred);
+	if (_First != _Last)
+		{
+		_Iter_diff_t<_BidIt> _Count = _STD distance(_First, _Last);
+		_Temp_iterator<_Iter_value_t<_BidIt>> _Tempbuf((_Count + 1) / 2);
+		_Stable_sort_unchecked1(_First, _Last, _Count, _Tempbuf, _Pred);
+		}
 	}
 
 template<class _BidIt,
@@ -3317,12 +2897,7 @@ template<class _BidIt,
 	void stable_sort(_BidIt _First, _BidIt _Last, _Pr _Pred)
 	{	// sort preserving order of equivalents, using _Pred
 	_DEBUG_RANGE(_First, _Last);
-	if (_First != _Last)
-		{	// validate predicate and sort
-		_DEBUG_POINTER_IF(_STD next(_First) != _Last, _Pred);
-		_Stable_sort(_Unchecked(_First), _Unchecked(_Last),
-			_Dist_type(_First), _Val_type(_First), _Pred);
-		}
+	_Stable_sort_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION stable_sort
@@ -3334,21 +2909,20 @@ template<class _BidIt> inline
 
 		// TEMPLATE FUNCTION partial_sort WITH PRED
 template<class _RanIt,
-	class _Ty,
 	class _Pr> inline
-	void _Partial_sort(_RanIt _First, _RanIt _Mid, _RanIt _Last,
-		_Pr _Pred, _Ty *)
+	void _Partial_sort_unchecked(_RanIt _First, _RanIt _Mid, _RanIt _Last,
+		_Pr& _Pred)
 	{	// order [_First, _Last) up to _Mid, using _Pred
-	_STD make_heap(_First, _Mid, _Pred);
-
+	if (_First == _Mid)
+		return;	// nothing to do, avoid violating _Pop_heap_hole_unchecked preconditions
+	_Make_heap_unchecked(_First, _Mid, _Pred);
 	for (_RanIt _Next = _Mid; _Next < _Last; ++_Next)
 		if (_DEBUG_LT_PRED(_Pred, *_Next, *_First))
 			{	// replace top with new largest
-			_Ty _Val = _Move(*_Next);
-			_Pop_heap(_First, _Mid, _Next, _Move(_Val), _Pred,
-				_Dist_type(_First));
+			_Iter_value_t<_RanIt> _Val = _STD move(*_Next);
+			_Pop_heap_hole_unchecked(_First, _Mid, _Next, _STD move(_Val), _Pred);
 			}
-	_STD sort_heap(_First, _Mid, _Pred);
+	_Sort_heap_unchecked(_First, _Mid, _Pred);
 	}
 
 template<class _RanIt,
@@ -3358,9 +2932,8 @@ template<class _RanIt,
 	_DEBUG_RANGE(_First, _Mid);
 	_DEBUG_RANGE(_Mid, _Last);
 	_DEBUG_POINTER_IF(2 <= _Last - _First, _Pred);
-	_Partial_sort(
-		_Unchecked(_First), _Unchecked(_Mid), _Unchecked(_Last), _Pred,
-		_Val_type(_First));
+	_Partial_sort_unchecked(
+		_Unchecked(_First), _Unchecked(_Mid), _Unchecked(_Last), _Pred);
 	}
 
 		// TEMPLATE FUNCTION partial_sort
@@ -3373,23 +2946,25 @@ template<class _RanIt> inline
 		// TEMPLATE FUNCTION partial_sort_copy WITH PRED
 template<class _InIt,
 	class _RanIt,
-	class _Diff,
-	class _Ty,
 	class _Pr> inline
-	_RanIt _Partial_sort_copy(_InIt _First1, _InIt _Last1,
-		_RanIt _First2, _RanIt _Last2, _Pr _Pred, _Diff *, _Ty *)
+	_RanIt _Partial_sort_copy_unchecked(_InIt _First1, _InIt _Last1,
+		_RanIt _First2, _RanIt _Last2, _Pr& _Pred)
 	{	// copy [_First1, _Last1) into [_First2, _Last2) using _Pred
 	_RanIt _Mid2 = _First2;
-	for (; _First1 != _Last1 && _Mid2 != _Last2; ++_First1, (void)++_Mid2)
-		*_Mid2 = *_First1;	// copy min(_Last1 - _First1, _Last2 - _First2)
-	_STD make_heap(_First2, _Mid2, _Pred);
+	if (_First1 != _Last1 && _First2 != _Last2)
+		{
+		for (; _First1 != _Last1 && _Mid2 != _Last2; ++_First1, (void)++_Mid2)
+			*_Mid2 = *_First1;	// copy min(_Last1 - _First1, _Last2 - _First2)
+		_Make_heap_unchecked(_First2, _Mid2, _Pred);
 
-	for (; _First1 != _Last1; ++_First1)
-		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
-			_Adjust_heap(_First2, _Diff(0), _Diff(_Mid2 - _First2),
-				_Ty(*_First1), _Pred);	// replace top with new largest
+		for (; _First1 != _Last1; ++_First1)
+			if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
+				_Pop_heap_hole_by_index(_First2, _Iter_diff_t<_RanIt>(0), _Iter_diff_t<_RanIt>(_Mid2 - _First2),
+					_Iter_value_t<_InIt>(*_First1), _Pred);	// replace top with new largest
 
-	_STD sort_heap(_First2, _Mid2, _Pred);
+		_Sort_heap_unchecked(_First2, _Mid2, _Pred);
+		}
+
 	return (_Mid2);
 	}
 
@@ -3401,13 +2976,10 @@ template<class _InIt,
 	{	// copy [_First1, _Last1) into [_First2, _Last2) using _Pred
 	_DEBUG_RANGE(_First1, _Last1);
 	_DEBUG_RANGE(_First2, _Last2);
-//	_DEBUG_POINTER(_Pred);	// checked in make_heap
-	return (_First1 == _Last1 || _First2 == _Last2 ? _First2
-		: _Rechecked(_First2,
-			_Partial_sort_copy(
-				_Unchecked(_First1), _Unchecked(_Last1),
-				_Unchecked(_First2), _Unchecked(_Last2), _Pred,
-				_Dist_type(_First2), _Val_type(_First1))));
+	return (_Rechecked(_First2,
+		_Partial_sort_copy_unchecked(
+			_Unchecked(_First1), _Unchecked(_Last1),
+			_Unchecked(_First2), _Unchecked(_Last2), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION partial_sort_copy
@@ -3423,7 +2995,7 @@ template<class _InIt,
 		// TEMPLATE FUNCTION nth_element WITH PRED
 template<class _RanIt,
 	class _Pr> inline
-	void _Nth_element(_RanIt _First, _RanIt _Nth, _RanIt _Last, _Pr _Pred)
+	void _Nth_element_unchecked(_RanIt _First, _RanIt _Nth, _RanIt _Last, _Pr& _Pred)
 	{	// order Nth element, using _Pred
 	if (_Nth == _Last)
 		return;	// nothing to do
@@ -3431,7 +3003,7 @@ template<class _RanIt,
 	for (; _ISORT_MAX < _Last - _First; )
 		{	// divide and conquer, ordering partition containing Nth
 		pair<_RanIt, _RanIt> _Mid =
-			_Unguarded_partition(_First, _Last, _Pred);
+			_Partition_by_median_guess_unchecked(_First, _Last, _Pred);
 
 		if (_Mid.second <= _Nth)
 			_First = _Mid.second;
@@ -3441,7 +3013,7 @@ template<class _RanIt,
 			_Last = _Mid.first;
 		}
 
-	_Insertion_sort(_First, _Last, _Pred);	// sort any remainder
+	_Insertion_sort_unchecked(_First, _Last, _Pred);	// sort any remainder
 	}
 
 template<class _RanIt,
@@ -3451,7 +3023,7 @@ template<class _RanIt,
 	_DEBUG_RANGE(_First, _Nth);
 	_DEBUG_RANGE(_Nth, _Last);
 	_DEBUG_POINTER_IF(2 <= _Last - _First, _Pred);
-	_Nth_element(
+	_Nth_element_unchecked(
 		_Unchecked(_First), _Unchecked(_Nth), _Unchecked(_Last), _Pred);
 	}
 
@@ -3466,8 +3038,8 @@ template<class _RanIt> inline
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool _Includes(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _Pr _Pred)
+	bool _Includes_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr& _Pred)
 	{	// test if set [_First1, _Last1) in [_First2, _Last2), using _Pred
 	for (; _First1 != _Last1 && _First2 != _Last2; )
 		if (_DEBUG_LT_PRED(_Pred, *_First2, *_First1))
@@ -3479,6 +3051,7 @@ template<class _InIt1,
 			++_First1;
 			++_First2;
 			}
+
 	return (_First2 == _Last2);
 	}
 
@@ -3490,7 +3063,7 @@ template<class _InIt1,
 	{	// test if set [_First1, _Last1) in [_First2, _Last2), using _Pred
 	_DEBUG_ORDER_PRED(_First1, _Last1, _Pred);
 	_DEBUG_ORDER_PRED(_First2, _Last2, _Pred);
-	return (_Includes(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Includes_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2), _Pred));
 	}
 
@@ -3509,9 +3082,9 @@ template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Set_union(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
-	{	// OR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_OutIt _Set_union_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr& _Pred)
+	{	// OR sets [_First1, _Last1) and [_First2, _Last2), using _Pred, no deprecation warnings
 	for (; _First1 != _Last1 && _First2 != _Last2; )
 		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
 			{	// copy first
@@ -3529,64 +3102,35 @@ template<class _InIt1,
 			++_First1;
 			++_First2;
 			}
-	_Dest = _STD copy(_First1, _Last1, _Dest);
-	return (_STD copy(_First2, _Last2, _Dest));
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_union(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
-	{	// OR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
-	return (_Set_union(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Set_union2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, true_type)
-	{	// OR sets [_First1, _Last1) and [_First2, _Last2), checked dest
-	return (_Set_union(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
+	_Dest = _Copy_no_deprecate(_First1, _Last1, _Dest);
+	return (_Copy_no_deprecate(_First2, _Last2, _Dest));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Set_union2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, false_type)
-	{	// OR sets [_First1, _Last1) and [_First2, _Last2), unchecked dest
-	return (_Set_union(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_union(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
-	{	// OR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_OutIt _Set_union_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr& _Pred)
+	{	// OR sets [_First1, _Last1) and [_First2, _Last2), using _Pred, no deprecation warnings
 	_DEBUG_ORDER_PRED(_First1, _Last1, _Pred);
 	_DEBUG_ORDER_PRED(_First2, _Last2, _Pred);
 	_DEBUG_POINTER_IF(_First1 != _Last1 || _First2 != _Last2, _Dest);
-	return (_Set_union2(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Rechecked(_Dest,
+		_Set_union_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred, _Is_checked(_Dest)));
+		_Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt set_union(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
+	{	// OR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_DEPRECATE_UNCHECKED(set_union, _Dest);
+	return (_Set_union_no_deprecate(_First1, _Last1, _First2, _Last2, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -3599,12 +3143,11 @@ template<class _InIt1,
 		_InIt2 _First2, _InIt2 _Last2, _OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// OR sets [_First1, _Last1) and [_First2, _Last2), array dest
 	return (_Unchecked(
-		set_union(_First1, _Last1,
+		_Set_union_no_deprecate(_First1, _Last1,
 			_First2, _Last2,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION set_union
 template<class _InIt1,
@@ -3635,9 +3178,9 @@ template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Set_intersection(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
-	{	// AND sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_OutIt _Set_intersection_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr& _Pred)
+	{	// AND sets [_First1, _Last1) and [_First2, _Last2), using _Pred, no deprecation warnings
 	for (; _First1 != _Last1 && _First2 != _Last2; )
 		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
 			++_First1;
@@ -3649,62 +3192,34 @@ template<class _InIt1,
 			*_Dest++ = *_First1++;
 			++_First2;
 			}
+
 	return (_Dest);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt set_intersection(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
-	{	// AND sets [_First1, _Last1) and [_First2, _Last2), using _Pred
-	return (_Set_intersection(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Set_intersection2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, true_type)
-	{	// AND sets [_First1, _Last1) and [_First2, _Last2), checked dest
-	return (_Set_intersection(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Set_intersection2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, false_type)
-	{	// AND sets [_First1, _Last1) and [_First2, _Last2), unchecked dest
-	return (_Set_intersection(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_intersection(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
-	{	// AND sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_OutIt _Set_intersection_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr& _Pred)
+	{	// AND sets [_First1, _Last1) and [_First2, _Last2), using _Pred, no deprecation warnings
 	_DEBUG_ORDER_PRED(_First1, _Last1, _Pred);
 	_DEBUG_ORDER_PRED(_First2, _Last2, _Pred);
-	return (_Set_intersection2(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Rechecked(_Dest,
+		_Set_intersection_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred, _Is_checked(_Dest)));
+		_Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt set_intersection(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _OutIt _Dest, _Pr _Pred)
+	{	// AND sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_DEPRECATE_UNCHECKED(set_intersection, _Dest);
+	return (_Set_intersection_no_deprecate(_First1, _Last1, _First2, _Last2, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -3717,12 +3232,11 @@ template<class _InIt1,
 		_InIt2 _First2, _InIt2 _Last2, _OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// AND sets [_First1, _Last1) and [_First2, _Last2), array dest
 	return (_Unchecked(
-		set_intersection(_First1, _Last1,
+		_Set_intersection_no_deprecate(_First1, _Last1,
 			_First2, _Last2,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION set_intersection
 template<class _InIt1,
@@ -3753,10 +3267,10 @@ template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Set_difference(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Set_difference_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// take set [_First2, _Last2) from [_First1, _Last1), using _Pred
+		_OutIt _Dest, _Pr& _Pred)
+	{	// take set [_First2, _Last2) from [_First1, _Last1), using _Pred, no deprecation warnings
 	for (; _First1 != _Last1 && _First2 != _Last2; )
 		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
 			{	// validate _Dest and copy first
@@ -3771,64 +3285,36 @@ template<class _InIt1,
 			++_First1;
 			++_First2;
 			}
-	return (_STD copy(_First1, _Last1, _Dest));
-	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_difference(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// take set [_First2, _Last2) from [_First1, _Last1), using _Pred
-	return (_Set_difference(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Set_difference2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, true_type)
-	{	// take set [_First1, _Last1) from [_First2, _Last2), checked dest
-	return (_Set_difference(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
+	return (_Copy_no_deprecate(_First1, _Last1, _Dest));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Set_difference2(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Set_difference_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, false_type)
-	{	// take set [_First1, _Last1) from [_First2, _Last2), unchecked dest
-	return (_Set_difference(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_difference(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// take set [_First2, _Last2) from [_First1, _Last1), using _Pred
+		_OutIt _Dest, _Pr& _Pred)
+	{	// take set [_First2, _Last2) from [_First1, _Last1), using _Pred, no deprecation warnings
 	_DEBUG_ORDER_PRED(_First1, _Last1, _Pred);
 	_DEBUG_ORDER_PRED(_First2, _Last2, _Pred);
-	return (_Set_difference2(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Rechecked(_Dest,
+		_Set_difference_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred, _Is_checked(_Dest)));
+		_Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt set_difference(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2,
+		_OutIt _Dest, _Pr _Pred)
+	{	// take set [_First2, _Last2) from [_First1, _Last1), using _Pred
+	_DEPRECATE_UNCHECKED(set_difference, _Dest);
+	return (_Set_difference_no_deprecate(_First1, _Last1, _First2, _Last2, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -3842,12 +3328,11 @@ template<class _InIt1,
 		_OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// take set [_First2, _Last2) from [_First1, _Last1), array dest
 	return (_Unchecked(
-		set_difference(_First1, _Last1,
+		_Set_difference_no_deprecate(_First1, _Last1,
 			_First2, _Last2,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION set_difference
 template<class _InIt1,
@@ -3880,10 +3365,10 @@ template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-	_OutIt _Set_symmetric_difference(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Set_symmetric_difference_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+		_OutIt _Dest, _Pr& _Pred)
+	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), using _Pred, no deprecation warnings
 	for (; _First1 != _Last1 && _First2 != _Last2; )
 		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
 			{	// validate _Dest and copy first
@@ -3902,67 +3387,38 @@ template<class _InIt1,
 			++_First1;
 			++_First2;
 			}
-	_Dest = _STD copy(_First1, _Last1, _Dest);
-	return (_STD copy(_First2, _Last2, _Dest));
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_symmetric_difference(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
-	return (_Set_symmetric_difference(
-		_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt _Set_symmetric_difference2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, true_type)
-	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), checked dest
-	return (_Set_symmetric_difference(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
+	_Dest = _Copy_no_deprecate(_First1, _Last1, _Dest);
+	return (_Copy_no_deprecate(_First2, _Last2, _Dest));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _OutIt,
 	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Set_symmetric_difference2(_InIt1 _First1, _InIt1 _Last1,
+	_OutIt _Set_symmetric_difference_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred, false_type)
-	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), unchecked dest
-	return (_Set_symmetric_difference(_First1, _Last1,
-		_First2, _Last2,
-		_Dest, _Pred));
-	}
-
-template<class _InIt1,
-	class _InIt2,
-	class _OutIt,
-	class _Pr> inline
-	_OutIt set_symmetric_difference(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2,
-		_OutIt _Dest, _Pr _Pred)
-	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+		_OutIt _Dest, _Pr& _Pred)
+	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), using _Pred, no deprecation warnings
 	_DEBUG_ORDER_PRED(_First1, _Last1, _Pred);
 	_DEBUG_ORDER_PRED(_First2, _Last2, _Pred);
-	return (_Set_symmetric_difference2(
+	return (_Rechecked(_Dest,
+		_Set_symmetric_difference_no_deprecate1(
 		_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2),
-		_Dest, _Pred, _Is_checked(_Dest)));
+		_Unchecked_idl0(_Dest), _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _OutIt,
+	class _Pr> inline
+	_OutIt set_symmetric_difference(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2,
+		_OutIt _Dest, _Pr _Pred)
+	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), using _Pred
+	_DEPRECATE_UNCHECKED(set_symmetric_difference, _Dest);
+	return (_Set_symmetric_difference_no_deprecate(
+		_First1, _Last1, _First2, _Last2, _Dest, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -3976,12 +3432,11 @@ template<class _InIt1,
 		_OutTy (&_Dest)[_OutSize], _Pr _Pred)
 	{	// XOR sets [_First1, _Last1) and [_First2, _Last2), array dest
 	return (_Unchecked(
-		set_symmetric_difference(_First1, _Last1,
+		_Set_symmetric_difference_no_deprecate(_First1, _Last1,
 			_First2, _Last2,
 			_Array_iterator<_OutTy, _OutSize>(_Dest), _Pred)));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION set_symmetric_difference
 template<class _InIt1,
@@ -4012,7 +3467,7 @@ template<class _InIt1,
 		// TEMPLATE FUNCTION max_element WITH PRED
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Max_element(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+	_FwdIt _Max_element_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// find largest element, using _Pred
 	_FwdIt _Found = _First;
 	if (_First != _Last)
@@ -4027,9 +3482,8 @@ template<class _FwdIt,
 	_FwdIt max_element(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
 	{	// find largest element, using _Pred
 	_DEBUG_RANGE(_First, _Last);
-	_DEBUG_POINTER_IF(_First != _Last && _STD next(_First) != _Last, _Pred);
 	return (_Rechecked(_First,
-		_Max_element(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Max_element_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION max_element
@@ -4042,7 +3496,7 @@ template<class _FwdIt> inline
 		// TEMPLATE FUNCTION min_element WITH PRED
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Min_element(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+	_FwdIt _Min_element_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// find smallest element, using _Pred
 	_FwdIt _Found = _First;
 	if (_First != _Last)
@@ -4057,9 +3511,8 @@ template<class _FwdIt,
 	_FwdIt min_element(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
 	{	// find smallest element, using _Pred
 	_DEBUG_RANGE(_First, _Last);
-	_DEBUG_POINTER_IF(_First != _Last && _STD next(_First) != _Last, _Pred);
 	return (_Rechecked(_First,
-		_Min_element(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Min_element_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION min_element
@@ -4073,7 +3526,7 @@ template<class _FwdIt> inline
 template<class _FwdIt,
 	class _Pr> inline
 	pair<_FwdIt, _FwdIt>
-		_Minmax_element(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+		_Minmax_element_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// find smallest and largest elements, using _Pred
 	pair<_FwdIt, _FwdIt> _Found(_First, _First);
 
@@ -4107,6 +3560,7 @@ template<class _FwdIt,
 				_First = _Next;
 				}
 			}
+
 	return (_Found);
 	}
 
@@ -4116,12 +3570,8 @@ template<class _FwdIt,
 		minmax_element(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
 	{	// find smallest and largest elements, using _Pred
 	_DEBUG_RANGE(_First, _Last);
-	_DEBUG_POINTER_IF(_First != _Last && _STD next(_First) != _Last, _Pred);
-	pair<_UNCHECKED_TYPE(_FwdIt), _UNCHECKED_TYPE(_FwdIt)> _Ans(
-		_Minmax_element(_Unchecked(_First), _Unchecked(_Last), _Pred));
-	return (pair<_FwdIt, _FwdIt>(
-		_Rechecked(_First, _Ans.first),
-		_Rechecked(_Last, _Ans.second)));
+	return (_Rechecked_both(_First, _Last,
+		_Minmax_element_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 		// TEMPLATE FUNCTION minmax_element
@@ -4132,39 +3582,59 @@ template<class _FwdIt> inline
 	return (_STD minmax_element(_First, _Last, less<>()));
 	}
 
-		// TEMPLATE FUNCTION max
-template<class _Ty> inline
-
-	_Post_equal_to_(_Left < _Right ? _Right : _Left)
-
-	_CONST_FUN const _Ty& (max)(const _Ty& _Left, const _Ty& _Right)
-	{	// return larger of _Left and _Right
-	return (_DEBUG_LT(_Left, _Right) ? _Right : _Left);
-	}
-
-template<class _Ty> inline
-	/* _CONST_FUN */	// TRANSITION
-	_Ty (max)(_XSTD initializer_list<_Ty> _Ilist)
-	{	// return leftmost/largest
-	const _Ty *_Res = _STD max_element(_Ilist.begin(), _Ilist.end());
-	return (*_Res);
-	}
-
 		// TEMPLATE FUNCTION max WITH PRED
 template<class _Ty,
 	class _Pr> inline
-	_CONST_FUN const _Ty& (max)(const _Ty& _Left, const _Ty& _Right,
+	constexpr const _Ty& (max)(const _Ty& _Left, const _Ty& _Right,
 		_Pr _Pred)
+		_NOEXCEPT_OP(_NOEXCEPT_OP(_DEBUG_LT_PRED(_Pred, _Left, _Right)))
 	{	// return larger of _Left and _Right using _Pred
 	return (_DEBUG_LT_PRED(_Pred, _Left, _Right) ? _Right : _Left);
 	}
 
 template<class _Ty,
 	class _Pr> inline
-	/* _CONST_FUN */	// TRANSITION
+	/* constexpr */	// TRANSITION
 	_Ty (max)(_XSTD initializer_list<_Ty> _Ilist, _Pr _Pred)
 	{	// return leftmost/largest
-	const _Ty *_Res = _STD max_element(_Ilist.begin(), _Ilist.end(), _Pred);
+	const _Ty *_Res = _Max_element_unchecked(_Ilist.begin(), _Ilist.end(), _Pred);
+	return (*_Res);
+	}
+
+		// TEMPLATE FUNCTION max
+template<class _Ty> inline
+
+	_Post_equal_to_(_Left < _Right ? _Right : _Left)
+
+	constexpr const _Ty& (max)(const _Ty& _Left, const _Ty& _Right)
+		_NOEXCEPT_OP(_NOEXCEPT_OP(_DEBUG_LT(_Left, _Right)))
+	{	// return larger of _Left and _Right
+	return (_DEBUG_LT(_Left, _Right) ? _Right : _Left);
+	}
+
+template<class _Ty> inline
+	/* constexpr */	// TRANSITION
+	_Ty (max)(_XSTD initializer_list<_Ty> _Ilist)
+	{	// return leftmost/largest
+	return ((_STD max)(_Ilist, less<>()));
+	}
+
+		// TEMPLATE FUNCTION min WITH PRED
+template<class _Ty,
+	class _Pr> inline
+	constexpr const _Ty& (min)(const _Ty& _Left, const _Ty& _Right,
+		_Pr _Pred)
+		_NOEXCEPT_OP(_NOEXCEPT_OP(_DEBUG_LT_PRED(_Pred, _Right, _Left)))
+	{	// return smaller of _Left and _Right using _Pred
+	return (_DEBUG_LT_PRED(_Pred, _Right, _Left) ? _Right : _Left);
+	}
+
+template<class _Ty,
+	class _Pr> inline
+	/* constexpr */	// TRANSITION
+	_Ty (min)(_XSTD initializer_list<_Ty> _Ilist, _Pr _Pred)
+	{	// return leftmost/smallest
+	const _Ty *_Res = _Min_element_unchecked(_Ilist.begin(), _Ilist.end(), _Pred);
 	return (*_Res);
 	}
 
@@ -4173,60 +3643,24 @@ template<class _Ty> inline
 
 	_Post_equal_to_(_Right < _Left ? _Right : _Left)
 
-	_CONST_FUN const _Ty& (min)(const _Ty& _Left, const _Ty& _Right)
+	constexpr const _Ty& (min)(const _Ty& _Left, const _Ty& _Right)
+		_NOEXCEPT_OP(_NOEXCEPT_OP(_DEBUG_LT(_Right, _Left)))
 	{	// return smaller of _Left and _Right
 	return (_DEBUG_LT(_Right, _Left) ? _Right : _Left);
 	}
 
 template<class _Ty> inline
-	/* _CONST_FUN */	// TRANSITION
+	/* constexpr */	// TRANSITION
 	_Ty (min)(_XSTD initializer_list<_Ty> _Ilist)
 	{	// return leftmost/smallest
-	const _Ty *_Res = _STD min_element(_Ilist.begin(), _Ilist.end());
-	return (*_Res);
+	return ((_STD min)(_Ilist, less<>()));
 	}
 
-		// TEMPLATE FUNCTION min WITH PRED
-template<class _Ty,
-	class _Pr> inline
-	_CONST_FUN const _Ty& (min)(const _Ty& _Left, const _Ty& _Right,
-		_Pr _Pred)
-	{	// return smaller of _Left and _Right using _Pred
-	return (_DEBUG_LT_PRED(_Pred, _Right, _Left) ? _Right : _Left);
-	}
-
-template<class _Ty,
-	class _Pr> inline
-	/* _CONST_FUN */	// TRANSITION
-	_Ty (min)(_XSTD initializer_list<_Ty> _Ilist, _Pr _Pred)
-	{	// return leftmost/smallest
-	const _Ty *_Res = _STD min_element(_Ilist.begin(), _Ilist.end(), _Pred);
-	return (*_Res);
-	}
-
-		// TEMPLATE FUNCTION minmax
-template<class _Ty> inline
-	_CONST_FUN pair<const _Ty&, const _Ty&>
-		minmax(const _Ty& _Left, const _Ty& _Right)
-	{	// return pair(leftmost/smaller, rightmost/larger) of _Left and _Right
-	return (_Right < _Left
-		? pair<const _Ty&, const _Ty&>(_Right, _Left)
-		: pair<const _Ty&, const _Ty&>(_Left, _Right));
-	}
-
-template<class _Ty> inline
-	/* _CONST_FUN */	// TRANSITION
-	pair<_Ty, _Ty> minmax(_XSTD initializer_list<_Ty> _Ilist)
-	{	// return {leftmost/smallest, rightmost/largest}
-	pair<const _Ty *, const _Ty *> _Res = _STD minmax_element(
-		_Ilist.begin(), _Ilist.end());
-	return (pair<_Ty, _Ty>(*_Res.first, *_Res.second));
-	}
 
 		// TEMPLATE FUNCTION minmax WITH PRED
 template<class _Ty,
 	class _Pr> inline
-	_CONST_FUN pair<const _Ty&, const _Ty&>
+	constexpr pair<const _Ty&, const _Ty&>
 		minmax(const _Ty& _Left, const _Ty& _Right, _Pr _Pred)
 	{	// return pair(leftmost/smaller, rightmost/larger) of _Left and _Right
 	return (_Pred(_Right, _Left)
@@ -4236,19 +3670,36 @@ template<class _Ty,
 
 template<class _Ty,
 	class _Pr> inline
-	/* _CONST_FUN */	// TRANSITION
+	/* constexpr */	// TRANSITION
 	pair<_Ty, _Ty> minmax(_XSTD initializer_list<_Ty> _Ilist,
 		_Pr _Pred)
 	{	// return {leftmost/smallest, rightmost/largest}
-	pair<const _Ty *, const _Ty *> _Res = _STD minmax_element(
+	pair<const _Ty *, const _Ty *> _Res = _Minmax_element_unchecked(
 		_Ilist.begin(), _Ilist.end(), _Pred);
 	return (pair<_Ty, _Ty>(*_Res.first, *_Res.second));
+	}
+
+		// TEMPLATE FUNCTION minmax
+template<class _Ty> inline
+	constexpr pair<const _Ty&, const _Ty&>
+		minmax(const _Ty& _Left, const _Ty& _Right)
+	{	// return pair(leftmost/smaller, rightmost/larger) of _Left and _Right
+	return (_Right < _Left
+		? pair<const _Ty&, const _Ty&>(_Right, _Left)
+		: pair<const _Ty&, const _Ty&>(_Left, _Right));
+	}
+
+template<class _Ty> inline
+	/* constexpr */	// TRANSITION
+	pair<_Ty, _Ty> minmax(_XSTD initializer_list<_Ty> _Ilist)
+	{	// return {leftmost/smallest, rightmost/largest}
+	return (_STD minmax(_Ilist, less<>()));
 	}
 
 		// TEMPLATE FUNCTION next_permutation WITH PRED
 template<class _BidIt,
 	class _Pr> inline
-	bool _Next_permutation(_BidIt _First, _BidIt _Last, _Pr _Pred)
+	bool _Next_permutation_unchecked(_BidIt _First, _BidIt _Last, _Pr& _Pred)
 	{	// permute and test for pure ascending, using _Pred
 	_BidIt _Next = _Last;
 	if (_First == _Last || _First == --_Next)
@@ -4263,13 +3714,13 @@ template<class _BidIt,
 			for (; !_DEBUG_LT_PRED(_Pred, *_Next, *--_Mid); )
 				;
 			_STD iter_swap(_Next, _Mid);
-			_STD reverse(_Next1, _Last);
+			_Reverse_unchecked(_Next1, _Last);
 			return (true);
 			}
 
 		if (_Next == _First)
 			{	// pure descending, flip all
-			_STD reverse(_First, _Last);
+			_Reverse_unchecked(_First, _Last);
 			return (false);
 			}
 		}
@@ -4280,7 +3731,7 @@ template<class _BidIt,
 	bool next_permutation(_BidIt _First, _BidIt _Last, _Pr _Pred)
 	{	// permute and test for pure ascending, using _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Next_permutation(_Unchecked(_First), _Unchecked(_Last), _Pred));
+	return (_Next_permutation_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred));
 	}
 
 		// TEMPLATE FUNCTION next_permutation
@@ -4293,7 +3744,7 @@ template<class _BidIt> inline
 		// TEMPLATE FUNCTION prev_permutation WITH PRED
 template<class _BidIt,
 	class _Pr> inline
-	bool _Prev_permutation(_BidIt _First, _BidIt _Last, _Pr _Pred)
+	bool _Prev_permutation_unchecked(_BidIt _First, _BidIt _Last, _Pr& _Pred)
 	{	// reverse permute and test for pure descending, using _Pred
 	_BidIt _Next = _Last;
 	if (_First == _Last || _First == --_Next)
@@ -4308,13 +3759,13 @@ template<class _BidIt,
 			for (; !_DEBUG_LT_PRED(_Pred, *--_Mid, *_Next); )
 				;
 			_STD iter_swap(_Next, _Mid);
-			_STD reverse(_Next1, _Last);
+			_Reverse_unchecked(_Next1, _Last);
 			return (true);
 			}
 
 		if (_Next == _First)
 			{	// pure ascending, flip all
-			_STD reverse(_First, _Last);
+			_Reverse_unchecked(_First, _Last);
 			return (false);
 			}
 		}
@@ -4325,7 +3776,7 @@ template<class _BidIt,
 	bool prev_permutation(_BidIt _First, _BidIt _Last, _Pr _Pred)
 	{	// reverse permute and test for pure descending, using _Pred
 	_DEBUG_RANGE_PTR(_First, _Last, _Pred);
-	return (_Prev_permutation(_Unchecked(_First), _Unchecked(_Last), _Pred));
+	return (_Prev_permutation_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred));
 	}
 
 		// TEMPLATE FUNCTION prev_permutation
@@ -4337,14 +3788,13 @@ template<class _BidIt> inline
 
 		// TEMPLATE FUNCTIONS is_heap AND is_heap_until WITH PRED
 template<class _RanIt,
-	class _Diff,
 	class _Pr> inline
-	_RanIt _Is_heap_until(_RanIt _First, _RanIt _Last, _Pr _Pred, _Diff *)
+	_RanIt _Is_heap_until_unchecked(_RanIt _First, _RanIt _Last, _Pr& _Pred)
 	{	// find extent of range that is a heap ordered by _Pred
-	_Diff _Size = _Last - _First;
+	_Iter_diff_t<_RanIt> _Size = _Last - _First;
 
 	if (2 <= _Size)
-		for (_Diff _Off = 0; ++_Off < _Size; )
+		for (_Iter_diff_t<_RanIt> _Off = 0; ++_Off < _Size; )
 			if (_DEBUG_LT_PRED(_Pred, *(_First + (_Off - 1) / 2),
 				*(_First + _Off)))
 				return (_First + _Off);
@@ -4352,31 +3802,30 @@ template<class _RanIt,
 	}
 
 template<class _RanIt,
-	class _Pr>
+	class _Pr> inline
 	_RanIt is_heap_until(_RanIt _First, _RanIt _Last, _Pr _Pred)
 	{	// find extent of range that is a heap ordered by _Pred
 	_DEBUG_RANGE(_First, _Last);
-	_DEBUG_POINTER_IF(2 <= _Last - _First, _Pred);
 	return (_Rechecked(_First,
-		_Is_heap_until(_Unchecked(_First), _Unchecked(_Last), _Pred,
-			_Dist_type(_First))));
+		_Is_heap_until_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 template<class _RanIt,
-	class _Pr>
+	class _Pr> inline
 	bool is_heap(_RanIt _First, _RanIt _Last, _Pr _Pred)
 	{	// test if range is a heap ordered by _Pred
-	return (_STD is_heap_until(_First, _Last, _Pred) == _Last);
+	_DEBUG_RANGE(_First, _Last);
+	return (_Is_heap_until_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred) == _Unchecked(_Last));
 	}
 
 		// TEMPLATE FUNCTIONS is_heap AND is_heap_until
-template<class _RanIt>
+template<class _RanIt> inline
 	_RanIt is_heap_until(_RanIt _First, _RanIt _Last)
 	{	// find extent of range that is a heap ordered by operator<
 	return (_STD is_heap_until(_First, _Last, less<>()));
 	}
 
-template<class _RanIt>
+template<class _RanIt> inline
 	bool is_heap(_RanIt _First, _RanIt _Last)
 	{	// test if range is a heap ordered by operator<
 	return (_STD is_heap(_First, _Last, less<>()));
@@ -4385,7 +3834,7 @@ template<class _RanIt>
 		// TEMPLATE FUNCTIONS is_sorted AND is_sorted_until WITH PRED
 template<class _FwdIt,
 	class _Pr> inline
-	_FwdIt _Is_sorted_until(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
+	_FwdIt _Is_sorted_until_unchecked(_FwdIt _First, _FwdIt _Last, _Pr& _Pred)
 	{	// find extent of range that is ordered by predicate
 	if (_First != _Last)
 		for (_FwdIt _Next = _First; ++_Next != _Last; ++_First)
@@ -4399,16 +3848,16 @@ template<class _FwdIt,
 	_FwdIt is_sorted_until(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
 	{	// find extent of range that is ordered by predicate
 	_DEBUG_RANGE(_First, _Last);
-	_DEBUG_POINTER_IF(_First != _Last && _STD next(_First) != _Last, _Pred);
 	return (_Rechecked(_First,
-		_Is_sorted_until(_Unchecked(_First), _Unchecked(_Last), _Pred)));
+		_Is_sorted_until_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)));
 	}
 
 template<class _FwdIt,
 	class _Pr> inline
 	bool is_sorted(_FwdIt _First, _FwdIt _Last, _Pr _Pred)
 	{	// test if range is ordered by predicate
-	return (_STD is_sorted_until(_First, _Last, _Pred) == _Last);
+	_DEBUG_RANGE(_First, _Last);
+	return (_Is_sorted_until_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred) == _Unchecked(_Last));
 	}
 
 		// TEMPLATE FUNCTIONS is_sorted AND is_sorted_until
@@ -4423,6 +3872,39 @@ template<class _FwdIt> inline
 	{	// test if range is ordered by operator<
 	return (_STD is_sorted(_First, _Last, less<>()));
 	}
+
+#if _HAS_CXX17
+		// FUNCTION TEMPLATE clamp
+template<class _Ty,
+	class _Pr>
+	constexpr const _Ty& clamp(const _Ty& _Val, const _Ty& _Min_val,
+		const _Ty& _Max_val, _Pr _Pred)
+	{	// returns _Val constrained to [_Min_val, _Max_val] ordered by _Pred
+#if _ITERATOR_DEBUG_LEVEL == 2
+	return (_DEBUG_LT_PRED(_Pred, _Max_val, _Min_val)
+		? (_DEBUG_ERROR("invalid bounds arguments passed to std::clamp"), _Val)
+		: _DEBUG_LT_PRED(_Pred, _Max_val, _Val)
+			? _Max_val
+			: _DEBUG_LT_PRED(_Pred, _Val, _Min_val)
+				? _Min_val
+				: _Val);
+#else /* ^^^ _ITERATOR_DEBUG_LEVEL == 2 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 2 vvv */
+	return (_Pred(_Max_val, _Val)
+		? _Max_val
+		: _Pred(_Val, _Min_val)
+			? _Min_val
+			: _Val);
+#endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+	}
+
+template<class _Ty>
+	constexpr const _Ty& clamp(const _Ty& _Val, const _Ty& _Min_val,
+		const _Ty& _Max_val)
+	{	// returns _Val constrained to [_Min_val, _Max_val]
+	return (_STD clamp(_Val, _Min_val, _Max_val, less<>()));
+	}
+#endif /* _HAS_CXX17 */
+
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

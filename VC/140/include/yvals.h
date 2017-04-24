@@ -12,20 +12,14 @@
 #undef new
 
 #define _CPPLIB_VER	650
-#define _HAS_DECLTYPE	1
-#define _HAS_EXCEPTION_POINTERS	1
-#define _HAS_FUNCTION_DELETE	1
-#define _HAS_INITIALIZER_LISTS	1
-#define _HAS_NULLPTR_T	1
-#define _HAS_RVALUE_REFERENCES	1
-#define _HAS_SCOPED_ENUM	1
-#define _HAS_TEMPLATE_ALIAS	1
-#define _HAS_TEMPLATE_TEMPLATE	1
-#define _HAS_VARIADIC_TEMPLATES	1
 
-#define _HAS_CPP0X	1
-#define _HAS_CPP1X	1
-#define _HAS_CPP17	1
+ #ifndef _HAS_VARIABLE_TEMPLATES
+  #ifdef __EDG__
+   #define _HAS_VARIABLE_TEMPLATES	0	// TRANSITION
+  #else /* __EDG__ */
+   #define _HAS_VARIABLE_TEMPLATES	1
+  #endif /* __EDG__ */
+ #endif /* _HAS_VARIABLE_TEMPLATES */
 
  #if _HAS_EXCEPTIONS
   #define _NOEXCEPT	noexcept
@@ -35,26 +29,95 @@
   #define _NOEXCEPT_OP(x)
  #endif /* _HAS_EXCEPTIONS */
 
- #ifndef _HAS_CONSTEXPR
-  #define _HAS_CONSTEXPR	1
- #endif /* _HAS_CONSTEXPR */
 
- #if _HAS_CONSTEXPR
-  #define _CONST_DATA	constexpr
-  #define _CONST_FUN	constexpr
- #else /* _HAS_CONSTEXPR */
-  #define _CONST_DATA	const
-  #define _CONST_FUN
- #endif /* _HAS_CONSTEXPR */
+// _HAS_CXX17 directly controls:
+// P0025R1 clamp()
+// P0185R1 is_swappable, is_nothrow_swappable
+// P0272R1 Non-const basic_string::data()
 
+// _HAS_CXX17 indirectly controls:
+// N4190 Removing auto_ptr, random_shuffle(), And Old <functional> Stuff
+// P0004R1 Removing Deprecated Iostreams Aliases
+// LWG 2385 function::assign allocator argument doesn't make sense
+// The non-Standard std::tr1 namespace and TR1-only machinery
+// The non-Standard std::identity struct
+
+ #ifndef _HAS_CXX17
+  #ifdef _MSVC_LANG
+   #if _MSVC_LANG > 201402
+    #define _HAS_CXX17	1
+   #else /* _MSVC_LANG > 201402 */
+    #define _HAS_CXX17	0
+   #endif /* _MSVC_LANG > 201402 */
+  #else /* _MSVC_LANG */
+   #if __cplusplus > 201402
+    #define _HAS_CXX17	1
+   #else /* __cplusplus > 201402 */
+    #define _HAS_CXX17	0
+   #endif /* __cplusplus > 201402 */
+  #endif /* _MSVC_LANG */
+ #endif /* _HAS_CXX17 */
+
+// N4190 Removing auto_ptr, random_shuffle(), And Old <functional> Stuff
  #ifndef _HAS_AUTO_PTR_ETC
-  #define _HAS_AUTO_PTR_ETC	1
+  #if _HAS_CXX17
+   #define _HAS_AUTO_PTR_ETC	0
+  #else /* _HAS_CXX17 */
+   #define _HAS_AUTO_PTR_ETC	1
+  #endif /* _HAS_CXX17 */
  #endif /* _HAS_AUTO_PTR_ETC */
 
+// P0004R1 Removing Deprecated Iostreams Aliases
+ #ifndef _HAS_OLD_IOSTREAMS_MEMBERS
+  #if _HAS_CXX17
+   #define _HAS_OLD_IOSTREAMS_MEMBERS	0
+  #else /* _HAS_CXX17 */
+   #define _HAS_OLD_IOSTREAMS_MEMBERS	1
+  #endif /* _HAS_CXX17 */
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
+
+// LWG 2385 function::assign allocator argument doesn't make sense
+ #ifndef _HAS_FUNCTION_ASSIGN
+  #if _HAS_CXX17
+   #define _HAS_FUNCTION_ASSIGN	0
+  #else /* _HAS_CXX17 */
+   #define _HAS_FUNCTION_ASSIGN	1
+  #endif /* _HAS_CXX17 */
+ #endif /* _HAS_FUNCTION_ASSIGN */
+
+// The non-Standard std::tr1 namespace and TR1-only machinery
+ #ifndef _HAS_TR1_NAMESPACE
+  #if _HAS_CXX17
+   #define _HAS_TR1_NAMESPACE	0
+  #else /* _HAS_CXX17 */
+   #define _HAS_TR1_NAMESPACE	1
+  #endif /* _HAS_CXX17 */
+ #endif /* _HAS_TR1_NAMESPACE */
+
+// The non-Standard std::identity struct
+ #ifndef _HAS_IDENTITY_STRUCT
+  #if _HAS_CXX17
+   #define _HAS_IDENTITY_STRUCT	0
+  #else /* _HAS_CXX17 */
+   #define _HAS_IDENTITY_STRUCT	1
+  #endif /* _HAS_CXX17 */
+ #endif /* _HAS_IDENTITY_STRUCT */
+
+
+ #ifdef _RTC_CONVERSION_CHECKS_ENABLED
+  #ifndef _ALLOW_RTCc_IN_STL
+static_assert(false, "/RTCc rejects conformant code, "
+	"so it isn't supported by the C++ Standard Library. "
+	"Either remove this compiler option, or define _ALLOW_RTCc_IN_STL "
+	"to acknowledge that you have received this warning.");
+  #endif /* _ALLOW_RTCc_IN_STL */
+ #endif /* _RTC_CONVERSION_CHECKS_ENABLED */
+
 /* Note on use of "deprecate":
- * Various places in this header and other headers use __declspec(deprecate) or macros that have the term DEPRECATE in them.
- * We use deprecate here ONLY to signal the compiler to emit a warning about these items. The use of deprecate
- * should NOT be taken to imply that any standard committee has deprecated these functions from the relevant standards.
+ * Various places in this header and other headers use __declspec(deprecate) or macros that
+ * have the term DEPRECATE in them. We use deprecate here ONLY to signal the compiler to
+ * emit a warning about these items. The use of deprecate should NOT be taken to imply that
+ * any standard committee has deprecated these functions from the relevant standards.
  * In fact, these functions are NOT deprecated from the standard.
  *
  * Full details can be found in our documentation by searching for "Checked Iterators".
@@ -238,12 +301,14 @@ clients and process-global for mixed clients.
 /* See note on use of deprecate at the top of this file */
 
 #if _ITERATOR_DEBUG_LEVEL > 0 && _SECURE_SCL_DEPRECATE
-#define _SCL_INSECURE_DEPRECATE \
+#define _SCL_INSECURE_DEPRECATE_FN(_Func) \
 	_CRT_DEPRECATE_TEXT( \
-		"Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. " \
-		"To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'")
+		"Call to 'std::" #_Func "' with parameters that may be unsafe - " \
+		"this call relies on the caller to check that the passed values are correct. " \
+		"To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. " \
+		"See documentation on how to use Visual C++ 'Checked Iterators'")
 #else
-#define _SCL_INSECURE_DEPRECATE
+#define _SCL_INSECURE_DEPRECATE_FN(_Func)
 #endif
 
 #ifndef _SCL_SECURE_INVALID_PARAMETER
@@ -511,8 +576,8 @@ We use the stdext (standard extension) namespace to contain extensions that are 
  #endif /* __cplusplus */
 
 		/* VC++ COMPILER PARAMETERS */
-#define _LONGLONG	__int64
-#define _ULONGLONG	unsigned __int64
+#define _LONGLONG	long long
+#define _ULONGLONG	unsigned long long
 #define _LLONG_MAX	0x7fffffffffffffff
 #define _ULLONG_MAX	0xffffffffffffffff
 
@@ -521,7 +586,8 @@ We use the stdext (standard extension) namespace to contain extensions that are 
 
 #define _MAX_EXP_DIG	8	/* for parsing numerics */
 #define _MAX_INT_DIG	32
-#define _MAX_SIG_DIG	36
+#define _MAX_SIG_DIG_V1	36
+#define _MAX_SIG_DIG_V2	768
 
 typedef _LONGLONG _Longlong;
 typedef _ULONGLONG _ULonglong;
@@ -670,7 +736,7 @@ private:
 	_Locinfo _VarName;
 
   #define _END_LOCINFO() \
-	_END_LOCK() \
+	_END_LOCK()
 
   #define _RELIABILITY_CONTRACT \
 	[System::Runtime::ConstrainedExecution::ReliabilityContract( \
@@ -746,8 +812,6 @@ typedef unsigned long _Uint32t;
 
 #define _Mbstinit(x)	mbstate_t x = {}
 _C_STD_END
-
- #define _NO_RETURN(fun)	__declspec(noreturn) void fun
 
  #pragma pop_macro("new")
  #pragma pack(pop)

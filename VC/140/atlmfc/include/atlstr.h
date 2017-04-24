@@ -99,10 +99,10 @@ public:
 		return( pData );
 	}
 	virtual void Free(_In_ CStringData* pData) throw()
-	{		
+	{
 		ATLASSUME(pData != NULL);
 		ATLASSERT(pData->pStringMgr == this);
-			
+
 		m_pMemMgr->Free( pData );
 	}
 	virtual _Ret_maybenull_ _Post_writable_byte_size_(sizeof(CStringData) + nChars*nCharSize) CStringData* Reallocate(
@@ -344,7 +344,7 @@ public:
 		_In_z_ LPCSTR pStr,
 		_In_z_ LPCSTR pCharSet) throw()
 	{
-		return strstrT< ChTraitsOS<XCHAR> >(pStr,pCharSet);
+		return strstrT< ChTraitsOS<typename ChTraitsBase<_CharType>::XCHAR> >(pStr,pCharSet);
 	}
 	static int strspn(
 		_In_z_ const _CharType* pStr,
@@ -559,7 +559,7 @@ public:
 	}
 
 	static int GetFormattedLength(
-		_In_z_ _Printf_format_string_ const _CharType* pszFormat, 
+		_In_z_ _Printf_format_string_ const _CharType* pszFormat,
 		_In_ va_list args)
 	{
 		return AtlUtil::GetFormattedLengthWorker(pszFormat, args);
@@ -568,7 +568,7 @@ public:
 	static int Format(
 		_Out_writes_to_(nlength, return) _Post_z_ _CharType*  pszBuffer,
 		_In_ size_t nlength,
-		_In_z_ _Printf_format_string_ const _CharType* pszFormat, 
+		_In_z_ _Printf_format_string_ const _CharType* pszFormat,
 		_In_ va_list args )
 	{
 		return AtlUtil::Format(pszBuffer, nlength, pszFormat, args);
@@ -799,8 +799,8 @@ protected:
 	{
 		return ::CharUpperW(psz);
 	}
-ATLPREFAST_SUPPRESS(6103)    
-    _Success_(return != 0 && return < nSize) 
+ATLPREFAST_SUPPRESS(6103)
+    _Success_(return != 0 && return < nSize)
 	static DWORD _GetEnvironmentVariableW(
 		_In_z_ LPCWSTR pszName,
 		_Out_writes_opt_z_(nSize) LPWSTR pszBuffer,
@@ -841,7 +841,7 @@ public:
 	}
 	_Ret_maybenull_z_ static wchar_t* _strrev(_Inout_opt_z_ wchar_t* psz) throw()
 	{
-		// Optimize NULL, zero-length, and single-char case.		
+		// Optimize NULL, zero-length, and single-char case.
 		ATLPREFAST_SUPPRESS(6385)
 		if ((psz == NULL) || (psz[0] == L'\0') || (psz[1] == L'\0'))
 			return psz;
@@ -1060,7 +1060,7 @@ public:
 	}
 
 	static int GetFormattedLength(
-		_In_z_ _Printf_format_string_ const wchar_t* pszFormat, 
+		_In_z_ _Printf_format_string_ const wchar_t* pszFormat,
 		_In_ va_list args)
 	{
 		return AtlUtil::GetFormattedLengthWorker(pszFormat, args);
@@ -1202,8 +1202,8 @@ public:
 		return int( p-psz );
 	}
 
-ATLPREFAST_SUPPRESS(6103)    
-    _Success_(return != 0 && return < dwSize) 
+ATLPREFAST_SUPPRESS(6103)
+    _Success_(return != 0 && return < dwSize)
 	static DWORD GetEnvironmentVariable(
 		_In_z_ const wchar_t* pstrVar,
 		_Out_writes_opt_z_(dwSize) wchar_t* pstrBuffer,
@@ -1248,7 +1248,7 @@ inline typename ChTraits::PCXSTR strstrT(
 }
 
 template< typename _BaseType = char, class StringIterator = ChTraitsOS< _BaseType > >
-class StrTraitATL : 
+class StrTraitATL :
 	public StringIterator
 {
 public:

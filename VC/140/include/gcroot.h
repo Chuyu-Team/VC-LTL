@@ -3,11 +3,11 @@
 //		Copyright (C) Microsoft Corporation
 //		All rights reserved.
 //
-//	This include file is provided for back-compatibilty.
-//	Include <msclr\gcroot.h> and use ::msclr::gcroot instead of ::gcroot.
+//	This include file is provided for back-compatibility.
+//	Include <msclr/gcroot.h> and use ::msclr::gcroot instead of ::gcroot.
 //
 //	Use this class to declare gc "pointers" that live in the C++ heap.
-//	
+//
 //	Example:
 //		struct StringList {
 //			gcroot<String^> str;
@@ -25,9 +25,8 @@
 //	Note that we cannot currently embed a GCHandle directly in an unmanaged C++
 //	class.  We therefore store a void*, and use the conversion methods of
 //	GCHandle to reconstitute a GCHandle from the void* on demand.
-//	
-//	See msclr\gcroot.h for implementations details.
-
+//
+//	See msclr/gcroot.h for implementation details.
 
 #if _MSC_VER > 1000
 #pragma once
@@ -38,8 +37,14 @@
 #ifndef RC_INVOKED
 
 #include <stddef.h>
-#define __DEFINE_GCROOT_IN_GLOBAL_NAMESPACE
-#include <msclr\gcroot.h>
+#if !defined (_INC_MSCLR_GCROOT) // This means that msclr/gcroot.h is already included
+#define __DEFINE_GCROOT_IN_GLOBAL_NAMESPACE // Scheduled for removal. The intention is to retain ::msclr::gcroot
+#include <msclr/gcroot.h>
+namespace msclr
+{
+    using ::gcroot;
+}
+#endif /* !defined (_INC_MSCLR_GCROOT) */
 
 #endif /* RC_INVOKED */
-#endif  // _INC_GCROOT 
+#endif  // _INC_GCROOT

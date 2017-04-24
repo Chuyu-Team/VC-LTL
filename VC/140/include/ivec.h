@@ -85,6 +85,7 @@ class I64vec1;          /* 1 element, a __m64 data type - Base I64vec1 class  */
 
 #define _MM_QW (*((__int64*)&vec))
 
+#if defined(_M_IX86)
 /* M64 Class:
  * 1 element, a __m64 data type
  * Contructors & Logical Operations
@@ -825,6 +826,8 @@ IVEC_SELECT(s32,32,2,ge)
 #undef IVEC_SELECT
 
 inline static void empty(void)      { _m_empty(); }
+
+#endif  // defined(_M_IX86)
 
 #if defined (_SILENCE_IVEC_C4799)
     #pragma warning(pop)

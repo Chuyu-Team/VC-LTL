@@ -1,5 +1,5 @@
 /***
-*** Copyright (C) 1985-1999 Intel Corporation.  All rights reserved.
+*** Copyright (C) 1985-2015 Intel Corporation.  All rights reserved.
 ***
 *** The information and source code contained herein is the exclusive
 *** property of Intel Corporation and may not be disclosed, examined
@@ -158,9 +158,11 @@ extern int _mm_cvtsd_si32(__m128d _A);
 extern int _mm_cvttsd_si32(__m128d _A);
 extern __m128d _mm_cvtsi32_sd(__m128d _A, int _B);
 
+#if defined(_M_IX86)
 extern __m64 _mm_cvtpd_pi32(__m128d _A);
 extern __m64 _mm_cvttpd_pi32(__m128d _A);
 extern __m128d _mm_cvtpi32_pd(__m64 _A);
+#endif
 
 /*
  * DP, misc
@@ -213,7 +215,9 @@ extern void _mm_storel_pd(double *_Dp, __m128d _A);
 extern __m128i _mm_add_epi8(__m128i _A, __m128i _B);
 extern __m128i _mm_add_epi16(__m128i _A, __m128i _B);
 extern __m128i _mm_add_epi32(__m128i _A, __m128i _B);
+#if defined(_M_IX86)
 extern __m64 _mm_add_si64(__m64 _A, __m64 _B);
+#endif
 extern __m128i _mm_add_epi64(__m128i _A, __m128i _B);
 extern __m128i _mm_adds_epi8(__m128i _A, __m128i _B);
 extern __m128i _mm_adds_epi16(__m128i _A, __m128i _B);
@@ -229,13 +233,17 @@ extern __m128i _mm_min_epu8(__m128i _A, __m128i _B);
 extern __m128i _mm_mulhi_epi16(__m128i _A, __m128i _B);
 extern __m128i _mm_mulhi_epu16(__m128i _A, __m128i _B);
 extern __m128i _mm_mullo_epi16(__m128i _A, __m128i _B);
+#if defined(_M_IX86)
 extern __m64 _mm_mul_su32(__m64 _A, __m64 _B);
+#endif
 extern __m128i _mm_mul_epu32(__m128i _A, __m128i _B);
 extern __m128i _mm_sad_epu8(__m128i _A, __m128i _B);
 extern __m128i _mm_sub_epi8(__m128i _A, __m128i _B);
 extern __m128i _mm_sub_epi16(__m128i _A, __m128i _B);
 extern __m128i _mm_sub_epi32(__m128i _A, __m128i _B);
+#if defined(_M_IX86)
 extern __m64 _mm_sub_si64(__m64 _A, __m64 _B);
+#endif
 extern __m128i _mm_sub_epi64(__m128i _A, __m128i _B);
 extern __m128i _mm_subs_epi8(__m128i _A, __m128i _B);
 extern __m128i _mm_subs_epi16(__m128i _A, __m128i _B);
@@ -329,7 +337,10 @@ extern __m128i _mm_loadl_epi64(__m128i const*_P);
  * Integer, sets
  */
 
+#if defined(_M_IX86)
 extern __m128i _mm_set_epi64(__m64 _Q1, __m64 _Q0);
+#endif
+extern __m128i _mm_set_epi64x(__int64 _I1,__int64 _I0);
 extern __m128i _mm_set_epi32(int _I3, int _I2, int _I1, int _I0);
 extern __m128i _mm_set_epi16(short _W7, short _W6, short _W5, short _W4,
                              short _W3, short _W2, short _W1, short _W0);
@@ -337,12 +348,17 @@ extern __m128i _mm_set_epi8(char _B15, char _B14, char _B13, char _B12,
                             char _B11, char _B10, char _B9, char _B8,
                             char _B7, char _B6, char _B5, char _B4,
                             char _B3, char _B2, char _B1, char _B0);
+#if defined(_M_IX86)
 extern __m128i _mm_set1_epi64(__m64 _Q);
+#endif
+extern __m128i _mm_set1_epi64x(__int64 i);
 extern __m128i _mm_set1_epi32(int _I);
 extern __m128i _mm_set1_epi16(short _W);
 extern __m128i _mm_set1_epi8(char _B);
 extern __m128i _mm_setl_epi64(__m128i _Q);
+#if defined(_M_IX86)
 extern __m128i _mm_setr_epi64(__m64 _Q0, __m64 _Q1);
+#endif
 extern __m128i _mm_setr_epi32(int _I0, int _I1, int _I2, int _I3);
 extern __m128i _mm_setr_epi16(short _W0, short _W1, short _W2, short _W3,
                               short _W4, short _W5, short _W6, short _W7);
@@ -366,8 +382,10 @@ extern void _mm_maskmoveu_si128(__m128i _D, __m128i _N, char *_P);
  */
 
 extern __m128i _mm_move_epi64(__m128i _Q);
+#if defined(_M_IX86)
 extern __m128i _mm_movpi64_epi64(__m64 _Q);
 extern __m64 _mm_movepi64_pi64(__m128i _Q);
+#endif
 
 /*
  * Cacheability support

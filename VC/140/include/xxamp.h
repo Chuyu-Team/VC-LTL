@@ -894,9 +894,8 @@ namespace details
     template<typename _T1, typename _T2>
     struct _Array_flatten_helper<1, _T1, _T2>
     {
-        static _T2 func(const _T1 *_Multiplier, const _T2 *_Index) __GPU
+        static _T2 func(const _T1 * /*_Multiplier*/, const _T2 *_Index) __GPU
         {
-            UNREFERENCED_PARAMETER(_Multiplier);
             return _Index[0];
         }
     };
@@ -1059,7 +1058,7 @@ namespace details
     };
 
 
-    // Retreive these field from arrays
+    // Retrieve these fields from arrays
     template <typename _Array_type>
     const _Buffer_descriptor& _Get_buffer_descriptor(const _Array_type& _Array) __GPU
     { 
@@ -1090,7 +1089,7 @@ namespace details
         return _Get_buffer_descriptor(_Array)._Get_buffer_ptr()._Get_ptr();
     }
 
-    // Retreive these field from textures
+    // Retrieve these fields from textures
     template <typename _Texture_type>
     const _Texture_descriptor& _Get_texture_descriptor(const _Texture_type& _Tex) __GPU
     { 
@@ -1122,13 +1121,10 @@ namespace details
 
     template<int _Rank, template <int> class _T1, template <int> class _T2>
     static void _Is_valid_section(
-        const _T2<_Rank>& _Base_extent,
-        const _T1<_Rank>& _Section_origin,
-        const _T2<_Rank>& _Section_extent) __GPU_ONLY 
+        const _T2<_Rank>& /*_Base_extent*/,
+        const _T1<_Rank>& /*_Section_origin*/,
+        const _T2<_Rank>& /*_Section_extent*/) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Base_extent);
-        UNREFERENCED_PARAMETER(_Section_origin);
-        UNREFERENCED_PARAMETER(_Section_extent);
     };
 
     template<int _Rank, template <int> class _T1>
@@ -1140,10 +1136,8 @@ namespace details
     }
 
     template<int _Rank, template <int> class _T1>
-    static void _Is_valid_projection(int _I, const _T1<_Rank>& _Base_extent) __GPU_ONLY
+    static void _Is_valid_projection(int /*_I*/, const _T1<_Rank>& /*_Base_extent*/) __GPU_ONLY
     {
-        UNREFERENCED_PARAMETER(_I);
-        UNREFERENCED_PARAMETER(_Base_extent);
     }
 
     template<int _Rank, template <int> class _T>
@@ -1165,9 +1159,8 @@ namespace details
 
     // The GPU version is a no-op for since there is no good exception-like mechanism on GPU
     template<int _Rank, template <int> class _T>
-    static void _Is_positive(const _T<_Rank> &_Tuple) __GPU_ONLY 
+    static void _Is_positive(const _T<_Rank> &/*_Tuple*/) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Tuple);
     }
 
 
@@ -1190,9 +1183,8 @@ namespace details
 
     // The GPU version is a no-op for since there is no good exception-like mechanism on GPU
     template<int _Rank, template <int> class _T>
-    static void _Is_nonnegative(const _T<_Rank> & _Tuple) __GPU_ONLY 
+    static void _Is_nonnegative(const _T<_Rank> & /*_Tuple*/) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Tuple);
     }
 
     // An extent is valid if the value in each dimension is > 0 and the
@@ -1225,9 +1217,8 @@ namespace details
 
     // The GPU version is a no-op for since there is no good exception-like mechanism on GPU
     template<int _Rank, template <int> class _T>
-    static void _Is_valid_extent(const _T<_Rank> & _Tuple) __GPU_ONLY 
+    static void _Is_valid_extent(const _T<_Rank> & /*_Tuple*/) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Tuple);
     }
 
     template<int _Rank>
@@ -1392,7 +1383,7 @@ unsigned int __dp_get_physical_id(
         unsigned int /* 0 - gid, 1 - tid, 2 - dtid */, 
         unsigned int /* 0 - x, 1 - y, 2 - z */) __GPU_ONLY;
 
-// This instrinsic is used to aid line number debug info generation for C++ AMP kernels
+// This intrinsic is used to aid line number debug info generation for C++ AMP kernels
 void __dp_no_source_stub() __GPU_ONLY;
 
 // This intrinsic is used to pass the call site info

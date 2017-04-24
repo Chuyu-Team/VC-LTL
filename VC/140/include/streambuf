@@ -91,6 +91,7 @@ public:
 		return (seekoff(_Off, _Way, _Mode));
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	pos_type __CLR_OR_THIS_CALL pubseekoff(off_type _Off,
 		ios_base::seek_dir _Way,
 		ios_base::open_mode _Mode)
@@ -98,6 +99,7 @@ public:
 		return (pubseekoff(_Off, (ios_base::seekdir)_Way,
 			(ios_base::openmode)_Mode));
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	pos_type __CLR_OR_THIS_CALL pubseekpos(pos_type _Pos,
 		ios_base::openmode _Mode = ios_base::in | ios_base::out)
@@ -105,11 +107,13 @@ public:
 		return (seekpos(_Pos, _Mode));
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	pos_type __CLR_OR_THIS_CALL pubseekpos(pos_type _Pos,
 		ios_base::open_mode _Mode)
 		{	// change position to _Pos, according to _Mode (old style)
 		return (seekpos(_Pos, (ios_base::openmode)_Mode));
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	_Myt *__CLR_OR_THIS_CALL pubsetbuf(_Elem *_Buffer,
 		streamsize _Count)
@@ -175,6 +179,7 @@ public:
 			: pbackfail(_Traits::to_int_type(_Ch)));
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void __CLR_OR_THIS_CALL stossc()
 		{	// point past a character
 		if (0 < _Gnavail())
@@ -182,6 +187,7 @@ public:
 		else
 			uflow();
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	int_type __CLR_OR_THIS_CALL sungetc()
 		{	// back up one position
@@ -491,7 +497,7 @@ public:
 	typedef typename traits_type::int_type int_type;
 	typedef const _Elem *pointer;
 
-	_CONST_FUN istreambuf_iterator(streambuf_type *_Sb = 0) _THROW0()
+	constexpr istreambuf_iterator(streambuf_type *_Sb = 0) _THROW0()
 		: _Strbuf(_Sb), _Got(_Sb == 0), _Val()
 		{	// construct from stream buffer _Sb
 		}
@@ -516,7 +522,7 @@ public:
 
 	const _Elem *operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myt& operator++()

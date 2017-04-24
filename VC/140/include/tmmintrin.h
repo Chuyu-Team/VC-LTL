@@ -46,9 +46,11 @@ extern "C" {
     extern __m128i _mm_hadd_epi32 (__m128i, __m128i);
     extern __m128i _mm_hadds_epi16 (__m128i, __m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_hadd_pi16 (__m64, __m64);
     extern __m64 _mm_hadd_pi32 (__m64, __m64);
     extern __m64 _mm_hadds_pi16 (__m64, __m64);
+#endif
 
     // Horizontal Subtract: subtract pairs of adjacent words or double
     // words. Each field in the result is the difference of two adjacent
@@ -62,9 +64,11 @@ extern "C" {
     extern __m128i _mm_hsub_epi32 (__m128i, __m128i);
     extern __m128i _mm_hsubs_epi16 (__m128i, __m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_hsub_pi16 (__m64, __m64);
     extern __m64 _mm_hsub_pi32 (__m64, __m64);
     extern __m64 _mm_hsubs_pi16 (__m64, __m64);
+#endif
 
     // Multiply unsigned bytes by signed bytes and sum the word
     // results in pairs with saturation. Each byte of the first
@@ -77,21 +81,27 @@ extern "C" {
 
     extern __m128i _mm_maddubs_epi16 (__m128i, __m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_maddubs_pi16 (__m64, __m64);
+#endif
 
     // Packed multiply high integers with round and scaling,
     // {X,}MM2/m{128,64} (b) to {X,}MM1 (a).
 
     extern __m128i _mm_mulhrs_epi16 (__m128i, __m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_mulhrs_pi16 (__m64, __m64);
+#endif
 
     // Packed shuffle bytes
     // {X,}MM2/m{128,64} (b) by {X,}MM1 (a).
 
     extern __m128i _mm_shuffle_epi8 (__m128i, __m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_shuffle_pi8 (__m64, __m64);
+#endif
 
     // Packed byte, word, double word sign, {X,}MM2/m{128,64} (b) to
     // {X,}MM1 (a).
@@ -100,16 +110,20 @@ extern "C" {
     extern __m128i _mm_sign_epi16 (__m128i, __m128i);
     extern __m128i _mm_sign_epi32 (__m128i, __m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_sign_pi8 (__m64, __m64);
     extern __m64 _mm_sign_pi16 (__m64, __m64);
     extern __m64 _mm_sign_pi32 (__m64, __m64);
+#endif
 
     // Packed align and shift right by n*8 bits,
     // {X,}MM2/m{128,64} (b) to {X,}MM1 (a).
 
     extern __m128i _mm_alignr_epi8 (__m128i, __m128i, int);
 
+#if defined(_M_IX86)
     extern __m64 _mm_alignr_pi8 (__m64, __m64, int);
+#endif
 
     // Packed byte, word, double word absolute value,
     // {X,}MM2/m{128,64} (b) to {X,}MM1 (a).
@@ -118,9 +132,11 @@ extern "C" {
     extern __m128i _mm_abs_epi16 (__m128i);
     extern __m128i _mm_abs_epi32 (__m128i);
 
+#if defined(_M_IX86)
     extern __m64 _mm_abs_pi8 (__m64);
     extern __m64 _mm_abs_pi16 (__m64);
     extern __m64 _mm_abs_pi32 (__m64);
+#endif
 
 #ifdef __cplusplus
 };

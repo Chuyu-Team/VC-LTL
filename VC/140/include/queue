@@ -162,19 +162,21 @@ public:
 		return (c);
 		}
 
+protected:
+	_Container c;	// the underlying container
+
+public:
 	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Swap_adl(this->c, _Right.c)))
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Container>::value)
 		{	// exchange contents with _Right
 		_Swap_adl(c, _Right.c);
 		}
-
-protected:
-	_Container c;	// the underlying container
 	};
 
 		// queue TEMPLATE FUNCTIONS
 template<class _Ty,
-	class _Container> inline
+	class _Container,
+	class = enable_if_t<_Is_swappable<_Container>::value>> inline
 	void swap(queue<_Ty, _Container>& _Left,
 		queue<_Ty, _Container>& _Right)
 			_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
@@ -420,23 +422,25 @@ public:
 		c.pop_back();
 		}
 
+protected:
+	_Container c;	// the underlying container
+	_Pr comp;	// the comparator functor
+
+public:
 	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Swap_adl(this->c, _Right.c))
-			&& _NOEXCEPT_OP(_Swap_adl(this->comp, _Right.comp)))
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Container>::value
+			&& _Is_nothrow_swappable<_Pr>::value)
 		{	// exchange contents with _Right
 		_Swap_adl(c, _Right.c);
 		_Swap_adl(comp, _Right.comp);
 		}
-
-protected:
-	_Container c;	// the underlying container
-	_Pr comp;	// the comparator functor
 	};
 
 		// priority_queue TEMPLATE FUNCTIONS
 template<class _Ty,
 	class _Container,
-	class _Pr> inline
+	class _Pr,
+	class = enable_if_t<_Is_swappable<_Container>::value && _Is_swappable<_Pr>::value>> inline
 	void swap(priority_queue<_Ty, _Container, _Pr>& _Left,
 		priority_queue<_Ty, _Container, _Pr>& _Right)
 			_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))

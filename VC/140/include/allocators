@@ -13,11 +13,7 @@
  #undef new
 
  #if !defined(_DECLSPEC_ALLOCATOR)
-  #if 1900 <= _MSC_VER && !defined(__EDG__)
-   #define _DECLSPEC_ALLOCATOR	__declspec(allocator)
-  #else /* 1900 <= _MSC_VER, etc. */
-   #define _DECLSPEC_ALLOCATOR
-  #endif /* 1900 <= _MSC_VER, etc. */
+  #define _DECLSPEC_ALLOCATOR	__declspec(allocator)
  #endif /* !defined(_DECLSPEC_ALLOCATOR) */
 
  #if !defined(_ALLOCATORS_NO_REBIND)
@@ -35,10 +31,12 @@ namespace stdext {
 		_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Mtx_lock(void *);
 		_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Mtx_unlock(void *);
 
+class _Scoped_lock;
+
 class mutex
 	{
 public:
-	friend class _Scoped_lock;
+	friend _Scoped_lock;
 	typedef _Scoped_lock scoped_lock;
 
 	mutex()
@@ -99,9 +97,9 @@ public:
 		_Mycache.deallocate(_Ptr, _Count);
 		}
 
-	bool equals(const sync_none<_Cache>& _Other) const
+	bool equals(const sync_none<_Cache>&) const
 		{	// compare two caches for equality
-		return (_Mycache.equals(_Other._Mycache));
+		return (_Mycache.equals(_Mycache));
 		}
 
 private:
@@ -772,6 +770,7 @@ public:
 	template<class _Other>
 		void destroy(_Other *_Ptr)
 		{	// destroy *_Ptr
+		(void) _Ptr;
 		_Ptr->~_Other();
 		}
 

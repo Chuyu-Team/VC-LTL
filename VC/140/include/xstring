@@ -40,80 +40,81 @@ public:
 	typedef typename _Mystr::const_reference reference;
 
 	_String_const_iterator()
+		: _Ptr()
 		{	// construct with null pointer
-		this->_Ptr = 0;
 		}
 
 	_String_const_iterator(pointer _Parg, const _Container_base *_Pstring)
+		: _Ptr(_Parg)
 		{	// construct with pointer _Parg
 		this->_Adopt(_Pstring);
-		this->_Ptr = _Parg;
 		}
 
 	typedef pointer _Unchecked_type;
 
 	_Myiter& _Rechecked(_Unchecked_type _Right)
 		{	// reset from unchecked iterator
-		this->_Ptr = _Right;
+		_Ptr = _Right;
 		return (*this);
 		}
 
 	_Unchecked_type _Unchecked() const
 		{	// make an unchecked iterator
-		return (_Unchecked_type(this->_Ptr));
+		return (_Ptr);
 		}
 
 	reference operator*() const
 		{	// return designated object
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr < ((_Mystr *)this->_Getcont())->_Myptr()
-			|| ((_Mystr *)this->_Getcont())->_Myptr()
-				+ ((_Mystr *)this->_Getcont())->_Mysize <= this->_Ptr)
+		const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+		const auto _Contptr = _Mycont ? _Mycont->_Myptr() : 0;
+		if (_Mycont == 0
+			|| _Ptr == nullptr_t{}
+			|| _Unfancy(_Ptr) < _Contptr
+			|| _Contptr + _Mycont->_Mysize <= _Unfancy(_Ptr))
 			{	// report error
 			_DEBUG_ERROR("string iterator not dereferencable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			((_Mystr *)this->_Getcont())->_Myptr() <= this->_Ptr
-			&& this->_Ptr < ((_Mystr *)this->_Getcont())->_Myptr()
-				+ ((_Mystr *)this->_Getcont())->_Mysize);
+		_SCL_SECURE_VALIDATE(_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		const auto _Contptr = _Mycont->_Myptr();
+		_SCL_SECURE_VALIDATE_RANGE(_Contptr <= _Unfancy(_Ptr) && _Unfancy(_Ptr) < _Contptr + _Mycont->_Mysize);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		_Analysis_assume_(this->_Ptr != 0);
+		_Analysis_assume_(_Ptr != nullptr_t{});
 
-		return (*this->_Ptr);
+		return (*_Ptr);
 		}
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| ((_Mystr *)this->_Getcont())->_Myptr()
-				+ ((_Mystr *)this->_Getcont())->_Mysize <= this->_Ptr)
+		const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+		if (_Mycont == 0
+			|| _Ptr == nullptr_t{}
+			|| _Mycont->_Myptr() + _Mycont->_Mysize <= _Unfancy(_Ptr))
 			{	// report error
 			_DEBUG_ERROR("string iterator not incrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			this->_Ptr < ((_Mystr *)this->_Getcont())->_Myptr()
-				+ ((_Mystr *)this->_Getcont())->_Mysize);
+		_SCL_SECURE_VALIDATE(_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Unfancy(_Ptr) < _Mycont->_Myptr() + _Mycont->_Mysize);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		++this->_Ptr;
+		++_Ptr;
 		return (*this);
 		}
 
@@ -127,21 +128,23 @@ public:
 	_Myiter& operator--()
 		{	// predecrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr <= ((_Mystr *)this->_Getcont())->_Myptr())
+		const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+		if (_Mycont == 0
+			|| _Ptr == nullptr_t{}
+			|| _Unfancy(_Ptr) <= _Mycont->_Myptr())
 			{	// report error
 			_DEBUG_ERROR("string iterator not decrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			((_Mystr *)this->_Getcont())->_Myptr() < this->_Ptr);
+		_SCL_SECURE_VALIDATE(_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myptr() < _Unfancy(_Ptr));
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		--this->_Ptr;
+		--_Ptr;
 		return (*this);
 		}
 
@@ -155,22 +158,30 @@ public:
 	_Myiter& operator+=(difference_type _Off)
 		{	// increment by integer
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr + _Off < ((_Mystr *)this->_Getcont())->_Myptr()
-			|| ((_Mystr *)this->_Getcont())->_Myptr()
-				+ ((_Mystr *)this->_Getcont())->_Mysize < this->_Ptr + _Off)
-			{	// report error
-			_DEBUG_ERROR("string iterator + offset out of range");
-			_SCL_SECURE_OUT_OF_RANGE;
+		if (_Off != 0)
+			{
+			const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+			const auto _Contptr = _Mycont ? _Mycont->_Myptr() : 0;
+			if (_Mycont == 0
+				|| _Ptr == nullptr_t{}
+				|| _Unfancy(_Ptr) + _Off < _Contptr
+				|| _Contptr + _Mycont->_Mysize < _Unfancy(_Ptr) + _Off)
+				{
+				_DEBUG_ERROR("string iterator + offset out of range");
+				_SCL_SECURE_OUT_OF_RANGE;
+				}
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			((_Mystr *)this->_Getcont())->_Myptr() <= this->_Ptr + _Off
-				&& this->_Ptr + _Off <= ((_Mystr *)this->_Getcont())->_Myptr()
-					+ ((_Mystr *)this->_Getcont())->_Mysize);
+		if (_Off != 0)
+			{
+			_SCL_SECURE_VALIDATE(_Ptr != nullptr_t{});
+			const auto _Mycont = static_cast<const _Mystr *>(this->_Getcont());
+			_SCL_SECURE_VALIDATE(_Mycont != 0);
+			const auto _Contptr = _Mycont->_Myptr();
+			_SCL_SECURE_VALIDATE_RANGE(_Contptr <= _Unfancy(_Ptr) + _Off
+				&& _Unfancy(_Ptr) + _Off <= _Contptr + _Mycont->_Mysize);
+			}
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		_Ptr += _Off;
@@ -197,7 +208,7 @@ public:
 	difference_type operator-(const _Myiter& _Right) const
 		{	// return difference of iterators
 		_Compat(_Right);
-		return (this->_Ptr - _Right._Ptr);
+		return (_Ptr - _Right._Ptr);
 		}
 
 	reference operator[](difference_type _Off) const
@@ -207,9 +218,8 @@ public:
 
 	bool operator==(const _Myiter& _Right) const
 		{	// test for iterator equality
-		if (this->_Getcont() != _Right._Getcont())
-			_Compat(_Right);
-		return (this->_Ptr == _Right._Ptr);
+		_Compat(_Right);
+		return (_Ptr == _Right._Ptr);
 		}
 
 	bool operator!=(const _Myiter& _Right) const
@@ -220,7 +230,7 @@ public:
 	bool operator<(const _Myiter& _Right) const
 		{	// test if this < _Right
 		_Compat(_Right);
-		return (this->_Ptr < _Right._Ptr);
+		return (_Ptr < _Right._Ptr);
 		}
 
 	bool operator>(const _Myiter& _Right) const
@@ -241,9 +251,8 @@ public:
  #if _ITERATOR_DEBUG_LEVEL == 2
 	void _Compat(const _Myiter& _Right) const
 		{	// test for compatible iterator pair
-		if (this->_Getcont() == 0
-			|| this->_Getcont() != _Right._Getcont())
-			{	// report error
+		if (this->_Getcont() != _Right._Getcont())
+			{
 			_DEBUG_ERROR("string iterators incompatible");
 			_SCL_SECURE_INVALID_ARGUMENT;
 			}
@@ -252,7 +261,6 @@ public:
  #elif _ITERATOR_DEBUG_LEVEL == 1
 	void _Compat(const _Myiter& _Right) const
 		{	// test for compatible iterator pair
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
 		_SCL_SECURE_VALIDATE_RANGE(this->_Getcont() == _Right._Getcont());
 		}
 
@@ -324,7 +332,7 @@ public:
 
 	_Unchecked_type _Unchecked() const
 		{	// make an unchecked iterator
-		return (_Unchecked_type(this->_Ptr));
+		return (_Const_cast(this->_Ptr));
 		}
 
 	reference operator*() const
@@ -334,7 +342,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -484,9 +492,10 @@ public:
 	typedef _String_const_iterator<_Myt> const_iterator;
 
 	_String_val()
+		: _Bx(),
+		_Mysize(0),
+		_Myres(0)
 		{	// initialize values
-		_Mysize = 0;
-		_Myres = 0;
 		}
 
 	enum
@@ -502,20 +511,28 @@ public:
 
 	value_type *_Myptr()
 		{	// determine current pointer to buffer for mutable string
-		return (this->_BUF_SIZE <= this->_Myres
-			? _STD addressof(*this->_Bx._Ptr)
-			: this->_Bx._Buf);
+		return (this->_BUF_SIZE <= _Myres
+			? _Unfancy(_Bx._Ptr)
+			: _Bx._Buf);
 		}
 
 	const value_type *_Myptr() const
 		{	// determine current pointer to buffer for nonmutable string
-		return (this->_BUF_SIZE <= this->_Myres
-			? _STD addressof(*this->_Bx._Ptr)
-			: this->_Bx._Buf);
+		return (this->_BUF_SIZE <= _Myres
+			? _Unfancy(_Bx._Ptr)
+			: _Bx._Buf);
 		}
 
 	union _Bxty
 		{	// storage for small buffer or pointer to larger one
+		_Bxty()
+			{	// user-provided, for fancy pointers
+			}
+
+		~_Bxty() _NOEXCEPT
+			{	// user-provided, for fancy pointers
+			}
+
 		value_type _Buf[_BUF_SIZE];
 		pointer _Ptr;
 		char _Alias[_BUF_SIZE];	// to permit aliasing
@@ -567,13 +584,16 @@ public:
 		}
 
  #if _ITERATOR_DEBUG_LEVEL == 0
-	_String_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct allocator from _Al
+	_String_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
 		}
 
-	_String_alloc(_Alloc&& _Al)
-		: _Mypair(_One_then_variadic_args_t(), _STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_String_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct allocator from _Al
 		}
 
@@ -587,20 +607,18 @@ public:
 		_Pocma(_Getal(), _Al);
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		}
-
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-	_String_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct allocator from _Al
+	_String_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
 		_Alloc_proxy();
 		}
 
-	_String_alloc(_Alloc&& _Al)
-		: _Mypair(_One_then_variadic_args_t(), _STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_String_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct allocator from _Al
 		_Alloc_proxy();
 		}
@@ -624,17 +642,11 @@ public:
 		_Alloc_proxy();
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		_Swap_adl(_Myproxy(), _Right._Myproxy());
-		}
-
 	void _Alloc_proxy()
 		{	// construct proxy
 		typename _Alty::template rebind<_Container_proxy>::other
 			_Alproxy(_Getal());
-		_Myproxy() = _Alproxy.allocate(1);
+		_Myproxy() = _Unfancy(_Alproxy.allocate(1));
 		_Alproxy.construct(_Myproxy(), _Container_proxy());
 		_Myproxy()->_Mycont = &_Get_data();
 		}
@@ -645,7 +657,7 @@ public:
 			_Alproxy(_Getal());
 		_Orphan_all();
 		_Alproxy.destroy(_Myproxy());
-		_Alproxy.deallocate(_Myproxy(), 1);
+		_Alproxy.deallocate(_Alproxy.address(*_Myproxy()), 1);
 		_Myproxy() = 0;
 		}
 
@@ -777,7 +789,7 @@ public:
 		assign(_Right, 0, npos);
 		}
 
-	basic_string() _NOEXCEPT
+	basic_string() _NOEXCEPT_OP(is_nothrow_default_constructible<_Alloc>::value)
 		: _Mybase()
 		{	// construct empty string
 		_Tidy();
@@ -855,7 +867,7 @@ public:
 		{	// construct from [_First, _Last) with optional allocator
 		_DEBUG_RANGE(_First, _Last);
 		_Tidy();
-		_Construct(_Unchecked(_First), _Unchecked(_Last), _Iter_cat(_First));
+		_Construct(_Unchecked(_First), _Unchecked(_Last), _Iter_cat_t<_Iter>());
 		}
 
 	template<class _Iter>
@@ -875,8 +887,7 @@ public:
 		void _Construct(_Iter _First,
 			_Iter _Last, forward_iterator_tag)
 		{	// initialize from [_First, _Last), forward iterators
-		size_type _Count = 0;
-		_Distance(_First, _Last, _Count);
+		size_type _Count = _STD distance(_First, _Last);
 		reserve(_Count);
 		_Construct(_First, _Last, input_iterator_tag());
 		}
@@ -953,7 +964,7 @@ public:
 				_Right._Mysize() + 1);
 		else
 			{	// copy pointer
-			this->_Getal().construct(&this->_Bx()._Ptr, _Right._Bx()._Ptr);
+			this->_Getal().construct(_STD addressof(this->_Bx()._Ptr), _Right._Bx()._Ptr);
 			_Right._Bx()._Ptr = pointer();
 			}
 		this->_Mysize() = _Right._Mysize();
@@ -1057,15 +1068,13 @@ public:
 	_Myt& append(const _Myt& _Right,
 		size_type _Roff, size_type _Count = npos)
 		{	// append _Right [_Roff, _Roff + _Count)
-		//if (_Right.size() < _Roff)
-		//	_Xran();	// _Roff off end
-		size_type _Num = _Right.size() - _Roff;
-		if (_Num < _Count)
-			_Count = _Num;	// trim _Count to size
-		//if (npos - this->_Mysize() <= _Count)
-		//	_Xlen();	// result too long
+		_Right._Check_offset(_Roff);
+		_Count = _Right._Clamp_suffix_size(_Roff, _Count);
+		if (npos - this->_Mysize() <= _Count)
+			_Xlen();	// result too long
 
-		if (0 < _Count && _Grow(_Num = this->_Mysize() + _Count))
+		const size_type _Num = this->_Mysize() + _Count;
+		if (0 < _Count && _Grow(_Num))
 			{	// make room and append new stuff
 			_Traits::copy(this->_Myptr() + this->_Mysize(),
 				_Right._Myptr() + _Roff, _Count);
@@ -1080,11 +1089,11 @@ public:
 		if (_Inside(_Ptr))
 			return (append(*this,
 				_Ptr - this->_Myptr(), _Count));	// substring
-		//if (npos - this->_Mysize() <= _Count)
-		//	_Xlen();	// result too long
+		if (npos - this->_Mysize() <= _Count)
+			_Xlen();	// result too long
 
-		size_type _Num;
-		if (0 < _Count && _Grow(_Num = this->_Mysize() + _Count))
+		const size_type _Num = this->_Mysize() + _Count;
+		if (0 < _Count && _Grow(_Num))
 			{	// make room and append new stuff
 			_Traits::copy(this->_Myptr() + this->_Mysize(), _Ptr, _Count);
 			_Eos(_Num);
@@ -1100,11 +1109,11 @@ public:
 
 	_Myt& append(size_type _Count, _Elem _Ch)
 		{	// append _Count * _Ch
-		//if (npos - this->_Mysize() <= _Count)
-		//	_Xlen();	// result too long
+		if (npos - this->_Mysize() <= _Count)
+			_Xlen();	// result too long
 
-		size_type _Num;
-		if (0 < _Count && _Grow(_Num = this->_Mysize() + _Count))
+		const size_type _Num = this->_Mysize() + _Count;
+		if (0 < _Count && _Grow(_Num))
 			{	// make room and append new stuff using assign
 			_Chassign(this->_Mysize(), _Count, _Ch);
 			_Eos(_Num);
@@ -1138,19 +1147,16 @@ public:
 	_Myt& assign(const _Myt& _Right,
 		size_type _Roff, size_type _Count = npos)
 		{	// assign _Right [_Roff, _Roff + _Count)
-		//if (_Right.size() < _Roff)
-		//	_Xran();	// _Roff off end
-		size_type _Num = _Right.size() - _Roff;
-		if (_Count < _Num)
-			_Num = _Count;	// trim _Num to size
+		_Right._Check_offset(_Roff);
+		_Count = _Right._Clamp_suffix_size(_Roff, _Count);
 
 		if (this == &_Right)
-			erase((size_type)(_Roff + _Num)), erase(0, _Roff);	// substring
-		else if (_Grow(_Num))
+			erase((size_type)(_Roff + _Count)), erase(0, _Roff);	// substring
+		else if (_Grow(_Count))
 			{	// make room and assign new stuff
 			_Traits::copy(this->_Myptr(),
-				_Right._Myptr() + _Roff, _Num);
-			_Eos(_Num);
+				_Right._Myptr() + _Roff, _Count);
+			_Eos(_Count);
 			}
 		return (*this);
 		}
@@ -1178,8 +1184,8 @@ public:
 
 	_Myt& assign(size_type _Count, _Elem _Ch)
 		{	// assign _Count * _Ch
-		//if (_Count == npos)
-		//	_Xlen();	// result too long
+		if (_Count == npos)
+			_Xlen();	// result too long
 
 		if (_Grow(_Count))
 			{	// make room and assign new stuff
@@ -1215,15 +1221,14 @@ public:
 	_Myt& insert(size_type _Off,
 		const _Myt& _Right, size_type _Roff, size_type _Count = npos)
 		{	// insert _Right [_Roff, _Roff + _Count) at _Off
-		//if (this->_Mysize() < _Off || _Right.size() < _Roff)
-		//	_Xran();	// _Off or _Roff off end
-		size_type _Num = _Right.size() - _Roff;
-		if (_Num < _Count)
-			_Count = _Num;	// trim _Count to size
-		//if (npos - this->_Mysize() <= _Count)
-		//	_Xlen();	// result too long
+		_Check_offset(_Off);
+		_Right._Check_offset(_Roff);
+		_Count = _Right._Clamp_suffix_size(_Roff, _Count);
+		if (npos - this->_Mysize() <= _Count)
+			_Xlen();	// result too long
 
-		if (0 < _Count && _Grow(_Num = this->_Mysize() + _Count))
+		const size_type _Num = this->_Mysize() + _Count;
+		if (0 < _Count && _Grow(_Num))
 			{	// make room and insert new stuff
 			_Traits::move(this->_Myptr() + _Off + _Count,
 				this->_Myptr() + _Off,
@@ -1247,12 +1252,11 @@ public:
 		if (_Inside(_Ptr))
 			return (insert(_Off, *this,
 				_Ptr - this->_Myptr(), _Count));	// substring
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		//if (npos - this->_Mysize() <= _Count)
-		//	_Xlen();	// result too long
-		size_type _Num;
-		if (0 < _Count && _Grow(_Num = this->_Mysize() + _Count))
+		_Check_offset(_Off);
+		if (npos - this->_Mysize() <= _Count)
+			_Xlen();	// result too long
+		const size_type _Num = this->_Mysize() + _Count;
+		if (0 < _Count && _Grow(_Num))
 			{	// make room and insert new stuff
 			_Traits::move(this->_Myptr() + _Off + _Count,
 				this->_Myptr() + _Off,
@@ -1272,12 +1276,11 @@ public:
 	_Myt& insert(size_type _Off,
 		size_type _Count, _Elem _Ch)
 		{	// insert _Count * _Ch at _Off
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		//if (npos - this->_Mysize() <= _Count)
-		//	_Xlen();	// result too long
-		size_type _Num;
-		if (0 < _Count && _Grow(_Num = this->_Mysize() + _Count))
+		_Check_offset(_Off);
+		if (npos - this->_Mysize() <= _Count)
+			_Xlen();	// result too long
+		const size_type _Num = this->_Mysize() + _Count;
+		if (0 < _Count && _Grow(_Num))
 			{	// make room and insert new stuff
 			_Traits::move(this->_Myptr() + _Off + _Count,
 				this->_Myptr() + _Off,
@@ -1335,16 +1338,14 @@ public:
 
 	_Myt& erase(size_type _Off = 0)
 		{	// erase elements [_Off, ...)
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
+		_Check_offset(_Off);
 		_Eos(_Off);
 		return (*this);
 		}
 
 	_Myt& erase(size_type _Off, size_type _Count)
 		{	// erase elements [_Off, _Off + _Count)
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
+		_Check_offset(_Off);
 		if (this->_Mysize() - _Off <= _Count)
 			_Eos(_Off);	// erase elements [_Off, ...)
 		else if (0 < _Count)
@@ -1386,29 +1387,31 @@ public:
 		size_type _N0, const _Myt& _Right, size_type _Roff,
 			size_type _Count = npos)
 		{	// replace [_Off, _Off + _N0) with _Right [_Roff, _Roff + _Count)
-		//if (this->_Mysize() < _Off || _Right.size() < _Roff)
-		//	_Xran();	// _Off or _Roff off end
-		if (this->_Mysize() - _Off < _N0)
-			_N0 = this->_Mysize() - _Off;	// trim _N0 to size
-		size_type _Num = _Right.size() - _Roff;
-		if (_Num < _Count)
-			_Count = _Num;	// trim _Count to size
-		//if (npos - _Count <= this->_Mysize() - _N0)
-		//	_Xlen();	// result too long
+		_Check_offset(_Off);
+		_Right._Check_offset(_Roff);
+		_N0 = _Clamp_suffix_size(_Off, _N0);
+		_Count = _Right._Clamp_suffix_size(_Roff, _Count);
+		if (npos - _Count <= this->_Mysize() - _N0)
+			_Xlen();	// result too long
 
-		size_type _Nm = this->_Mysize() - _N0 - _Off;	// length of kept tail
-		size_type _Newsize = this->_Mysize() + _Count - _N0;
+		const size_type _Nm = this->_Mysize() - _N0 - _Off;	// length of kept tail
+		const size_type _Newsize = this->_Mysize() + _Count - _N0;
 		if (this->_Mysize() < _Newsize)
 			_Grow(_Newsize);
 
-		if (this != &_Right)
+		if (_Count == _N0)
+			{	// only one movement required, so _Traits::move handles any overlap
+			_Traits::move(this->_Myptr() + _Off,
+				_Right._Myptr() + _Roff, _Count);	// fill hole
+			}
+		else if (this != &_Right)
 			{	// no overlap, just move down and copy in new stuff
 			_Traits::move(this->_Myptr() + _Off + _Count,
 				this->_Myptr() + _Off + _N0, _Nm);	// empty hole
 			_Traits::copy(this->_Myptr() + _Off,
 				_Right._Myptr() + _Roff, _Count);	// fill hole
 			}
-		else if (_Count <= _N0)
+		else if (_Count < _N0)
 			{	// hole doesn't get larger, just copy in substring
 			_Traits::move(this->_Myptr() + _Off,
 				this->_Myptr() + _Roff, _Count);	// fill hole
@@ -1453,21 +1456,19 @@ public:
 			return (replace(_Off, _N0, *this,
 				_Ptr - this->_Myptr(),
 				_Count));	// substring, replace carefully
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		if (this->_Mysize() - _Off < _N0)
-			_N0 = this->_Mysize() - _Off;	// trim _N0 to size
-		//if (npos - _Count <= this->_Mysize() - _N0)
-		//	_Xlen();	// result too long
+		_Check_offset(_Off);
+		_N0 = _Clamp_suffix_size(_Off, _N0);
+		if (npos - _Count <= this->_Mysize() - _N0)
+			_Xlen();	// result too long
 		size_type _Nm = this->_Mysize() - _N0 - _Off;
 
 		if (_Count < _N0)
 			_Traits::move(this->_Myptr() + _Off + _Count,
 				this->_Myptr() + _Off + _N0,
 				_Nm);	// smaller hole, move tail up
-		size_type _Num;
+		const size_type _Num = this->_Mysize() + _Count - _N0;
 		if ((0 < _Count || 0 < _N0)
-			&& _Grow(_Num = this->_Mysize() + _Count - _N0))
+			&& _Grow(_Num))
 			{	// make room and rearrange
 			if (_N0 < _Count)
 				_Traits::move(this->_Myptr() + _Off + _Count,
@@ -1487,21 +1488,19 @@ public:
 	_Myt& replace(size_type _Off,
 		size_type _N0, size_type _Count, _Elem _Ch)
 		{	// replace [_Off, _Off + _N0) with _Count * _Ch
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		if (this->_Mysize() - _Off < _N0)
-			_N0 = this->_Mysize() - _Off;	// trim _N0 to size
-		//if (npos - _Count <= this->_Mysize() - _N0)
-		//	_Xlen();	// result too long
+		_Check_offset(_Off);
+		_N0 = _Clamp_suffix_size(_Off, _N0);
+		if (npos - _Count <= this->_Mysize() - _N0)
+			_Xlen();	// result too long
 		size_type _Nm = this->_Mysize() - _N0 - _Off;
 
 		if (_Count < _N0)
 			_Traits::move(this->_Myptr() + _Off + _Count,
 				this->_Myptr() + _Off + _N0,
 				_Nm);	// smaller hole, move tail up
-		size_type _Num;
+		const size_type _Num = this->_Mysize() + _Count - _N0;
 		if ((0 < _Count || 0 < _N0)
-			&& _Grow(_Num = this->_Mysize() + _Count - _N0))
+			&& _Grow(_Num))
 			{	// make room and rearrange
 			if (_N0 < _Count)
 				_Traits::move(this->_Myptr() + _Off + _Count,
@@ -1593,22 +1592,26 @@ public:
 
 	iterator begin() _NOEXCEPT
 		{	// return iterator for beginning of mutable sequence
-		return (iterator(this->_Myptr(), &this->_Get_data()));
+		auto _Mydata = &this->_Get_data();
+		return (iterator(this->_Getal().address(*_Mydata->_Myptr()), _Mydata));
 		}
 
 	const_iterator begin() const _NOEXCEPT
 		{	// return iterator for beginning of nonmutable sequence
-		return (const_iterator(this->_Myptr(), &this->_Get_data()));
+		auto _Mydata = &this->_Get_data();
+		return (const_iterator(this->_Getal().address(*_Mydata->_Myptr()), _Mydata));
 		}
 
 	iterator end() _NOEXCEPT
 		{	// return iterator for end of mutable sequence
-		return (iterator(this->_Myptr() + this->_Mysize(), &this->_Get_data()));
+		auto _Mydata = &this->_Get_data();
+		return (iterator(this->_Getal().address(*_Mydata->_Myptr()) + _Mydata->_Mysize, _Mydata));
 		}
 
 	const_iterator end() const _NOEXCEPT
 		{	// return iterator for end of nonmutable sequence
-		return (const_iterator(this->_Myptr() + this->_Mysize(), &this->_Get_data()));
+		auto _Mydata = &this->_Get_data();
+		return (const_iterator(this->_Getal().address(*_Mydata->_Myptr()) + _Mydata->_Mysize, _Mydata));
 		}
 
 	reverse_iterator rbegin() _NOEXCEPT
@@ -1662,15 +1665,13 @@ public:
 
 	reference at(size_type _Off)
 		{	// subscript mutable sequence with checking
-		//if (this->_Mysize() <= _Off)
-		//	_Xran();	// _Off off end
+		_Check_offset_exclusive(_Off);
 		return (this->_Myptr()[_Off]);
 		}
 
 	const_reference at(size_type _Off) const
 		{	// subscript nonmutable sequence with checking
-		//if (this->_Mysize() <= _Off)
-		//	_Xran();	// _Off off end
+		_Check_offset_exclusive(_Off);
 		return (this->_Myptr()[_Off]);
 		}
 
@@ -1702,7 +1703,14 @@ public:
 
 	void push_back(_Elem _Ch)
 		{	// insert element at end
-		insert(end(), _Ch);
+		auto& _Dx = this->_Get_data();
+		auto& _Sz = _Dx._Mysize;
+		if (_Sz == _Dx._Myres)
+			_Grow(_Sz + 1); // _Grow checks for overflow
+		auto _Ptr = _Dx._Myptr();
+		_Traits::assign(_Ptr[_Sz], _Ch);
+		++_Sz;
+		_Traits::assign(_Ptr[_Sz], _Elem());
 		}
 
 	void pop_back()
@@ -1737,8 +1745,15 @@ public:
 
 	const _Elem *data() const _NOEXCEPT
 		{	// return pointer to nonmutable array
-		return (c_str());
+		return (this->_Myptr());
 		}
+
+#if _HAS_CXX17
+	_Elem *data() _NOEXCEPT
+		{	// return pointer to mutable array
+		return (this->_Myptr());
+		}
+#endif /* _HAS_CXX17 */
 
 	size_type length() const _NOEXCEPT
 		{	// return length of sequence
@@ -1752,7 +1767,7 @@ public:
 
 	size_type max_size() const _NOEXCEPT
 		{	// return maximum possible length of sequence
-		size_type _Num = this->_Getal().max_size();
+		const size_type _Num = this->_Getal().max_size();
 		return (_Num <= 1 ? 1 : _Num - 1);
 		}
 
@@ -1789,16 +1804,13 @@ public:
 		return (this->_Mysize() == 0);
 		}
 
-	_SCL_INSECURE_DEPRECATE
-
+	_SCL_INSECURE_DEPRECATE_FN(basic_string::copy)
 	size_type copy(_Elem *_Ptr,
 		size_type _Count, size_type _Off = 0) const
 		{	// copy [_Off, _Off + _Count) to [_Ptr, _Ptr + _Count)
 		_DEBUG_POINTER_IF(_Count != 0, _Ptr);
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		if (this->_Mysize() - _Off < _Count)
-			_Count = this->_Mysize() - _Off;
+		_Check_offset(_Off);
+		_Count = _Clamp_suffix_size(_Off, _Count);
 		_Traits::copy(_Ptr, this->_Myptr() + _Off, _Count);
 		return (_Count);
 		}
@@ -1807,10 +1819,8 @@ public:
 		size_type _Count, size_type _Off = 0) const
 		{	// copy [_Off, _Off + _Count) to [_Dest, _Dest + _Count)
 		_DEBUG_POINTER_IF(_Count != 0, _Dest);
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		if (this->_Mysize() - _Off < _Count)
-			_Count = this->_Mysize() - _Off;
+		_Check_offset(_Off);
+		_Count = _Clamp_suffix_size(_Off, _Count);
 		_Traits::_Copy_s(_Dest, _Dest_size, this->_Myptr() + _Off, _Count);
 		return (_Count);
 		}
@@ -1823,10 +1833,10 @@ public:
 			else
 				{	// swap large with small
 				pointer _Ptr = this->_Bx()._Ptr;
-				this->_Getal().destroy(&this->_Bx()._Ptr);
+				this->_Getal().destroy(_STD addressof(this->_Bx()._Ptr));
 				_Traits::copy(this->_Bx()._Buf,
 					_Right._Bx()._Buf, _Right._Mysize() + 1);
-				this->_Getal().construct(&_Right._Bx()._Ptr, _Ptr);
+				this->_Getal().construct(_STD addressof(_Right._Bx()._Ptr), _Ptr);
 				}
 		else
 			if (_Right._Myres() < this->_BUF_SIZE)
@@ -1834,10 +1844,10 @@ public:
 			else
 				{	// swap small with large
 				pointer _Ptr = _Right._Bx()._Ptr;
-				this->_Getal().destroy(&_Right._Bx()._Ptr);
+				this->_Getal().destroy(_STD addressof(_Right._Bx()._Ptr));
 				_Traits::copy(_Right._Bx()._Buf,
 					this->_Bx()._Buf, this->_Mysize() + 1);
-				this->_Getal().construct(&this->_Bx()._Ptr, _Ptr);
+				this->_Getal().construct(_STD addressof(this->_Bx()._Ptr), _Ptr);
 				}
 		}
 
@@ -1845,32 +1855,13 @@ public:
 		_NOEXCEPT_OP(_Alty::propagate_on_container_swap::value
 			|| _Alty::is_always_equal::value)
 		{	// exchange contents with _Right
-		if (this == &_Right)
-			;	// same object, do nothing
-		else if (this->_Getal() == _Right._Getal())
-			{	// same allocator, swap control information
+		if (this != &_Right)
+			{	// (maybe) swap allocators, swap control information
+			_Pocs(this->_Getal(), _Right._Getal());
 			this->_Swap_all(_Right);
 			_Swap_bx(_Right);
 			_STD swap(this->_Mysize(), _Right._Mysize());
 			_STD swap(this->_Myres(), _Right._Myres());
-			}
-
-		else if (_Alty::propagate_on_container_swap::value)
-			{	// swap allocators and control information
-				// assumes pointer is bitwise copyable
-			this->_Swap_alloc(_Right);
-			_Swap_bx(_Right);
-			_STD swap(this->_Bx(), _Right._Bx());
-			_STD swap(this->_Mysize(), _Right._Mysize());
-			_STD swap(this->_Myres(), _Right._Myres());
-			}
-
-		else
-			{	// different allocator, do multiple assigns
-			_Myt _Tmp = *this;
-
-			*this = _Right;
-			_Right = _Tmp;
 			}
 		}
 
@@ -2098,58 +2089,85 @@ public:
 		return (_Myt(*this, _Off, _Count, get_allocator()));
 		}
 
-	int compare(const _Myt& _Right) const _NOEXCEPT
-		{	// compare [0, _Mysize()) with _Right
-		return (compare(0, this->_Mysize(), _Right._Myptr(), _Right.size()));
+	static int _Traits_compare(const _Elem * const _Left, const size_type _Left_size,
+		const _Elem * const _Right, const size_type _Right_size)
+		{	// compare [_Left, _Left + _Left_size) to [_Right, _Right + _Right_size) using _Traits
+		const size_type _Min_size = _Left_size < _Right_size ? _Left_size : _Right_size;
+		const int _Ans = _Traits::compare(_Left, _Right, _Min_size);
+
+		if (_Ans != 0)
+			return (_Ans);
+
+		if (_Left_size < _Right_size)
+			return (-1);
+
+		if (_Left_size > _Right_size)
+			return (1);
+
+		return (0);
 		}
 
-	int compare(size_type _Off, size_type _N0,
-		const _Myt& _Right) const
+	size_type _Clamp_suffix_size(const size_type _Off, const size_type _Size) const
+		{	// trims _Size to the longest it can be assuming a string starting at _Off
+		const size_type _Max_effective_size = this->_Mysize() - _Off;
+		if (_Size <= _Max_effective_size)
+			return (_Size);
+		else
+			return (_Max_effective_size);
+		}
+
+	int compare(const _Myt& _Right) const _NOEXCEPT
+		{	// compare [0, _Mysize()) with _Right
+		return (_Traits_compare(this->_Myptr(), this->_Mysize(),
+			_Right._Myptr(), _Right._Mysize()));
+		}
+
+	int compare(size_type _Off,
+		size_type _N0, const _Myt& _Right) const
 		{	// compare [_Off, _Off + _N0) with _Right
-		return (compare(_Off, _N0, _Right, 0, npos));
+		_Check_offset(_Off);
+		return (_Traits_compare(this->_Myptr() + _Off, _Clamp_suffix_size(_Off, _N0),
+			_Right._Myptr(), _Right._Mysize()));
 		}
 
 	int compare(size_type _Off,
 		size_type _N0, const _Myt& _Right,
 		size_type _Roff, size_type _Count = npos) const
 		{	// compare [_Off, _Off + _N0) with _Right [_Roff, _Roff + _Count)
-		//if (_Right.size() < _Roff)
-		//	_Xran();	// _Off off end
-		if (_Right._Mysize() - _Roff < _Count)
-			_Count = _Right._Mysize() - _Roff;	// trim _Count to size
-		return (compare(_Off, _N0, _Right._Myptr() + _Roff, _Count));
+		_Check_offset(_Off);
+		_Right._Check_offset(_Roff);
+		return (_Traits_compare(this->_Myptr() + _Off, _Clamp_suffix_size(_Off, _N0),
+			_Right._Myptr() + _Roff, _Right._Clamp_suffix_size(_Roff, _Count)));
 		}
 
 	int compare(const _Elem *_Ptr) const
 		{	// compare [0, _Mysize()) with [_Ptr, <null>)
 		_DEBUG_POINTER(_Ptr);
-		return (compare(0, this->_Mysize(), _Ptr, _Traits::length(_Ptr)));
+		return (_Traits_compare(this->_Myptr(), this->_Mysize(),
+			_Ptr, _Traits::length(_Ptr)));
 		}
 
 	int compare(size_type _Off, size_type _N0, const _Elem *_Ptr) const
 		{	// compare [_Off, _Off + _N0) with [_Ptr, <null>)
 		_DEBUG_POINTER(_Ptr);
-		return (compare(_Off, _N0, _Ptr, _Traits::length(_Ptr)));
+		_Check_offset(_Off);
+		return (_Traits_compare(this->_Myptr() + _Off, _Clamp_suffix_size(_Off, _N0),
+			_Ptr, _Traits::length(_Ptr)));
 		}
 
 	int compare(size_type _Off,
 		size_type _N0, const _Elem *_Ptr, size_type _Count) const
 		{	// compare [_Off, _Off + _N0) with [_Ptr, _Ptr + _Count)
 		_DEBUG_POINTER_IF(_Count != 0, _Ptr);
-		//if (this->_Mysize() < _Off)
-		//	_Xran();	// _Off off end
-		if (this->_Mysize() - _Off < _N0)
-			_N0 = this->_Mysize() - _Off;	// trim _N0 to size
-
-		size_type _Ans = _Traits::compare(this->_Myptr() + _Off, _Ptr,
-			_N0 < _Count ? _N0 : _Count);
-		return (_Ans != 0 ? (int)_Ans : _N0 < _Count ? -1
-			: _N0 == _Count ? 0 : +1);
+		_Check_offset(_Off);
+		return (_Traits_compare(this->_Myptr() + _Off, _Clamp_suffix_size(_Off, _N0),
+			_Ptr, _Count));
 		}
 
 	allocator_type get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (this->_Getal());
+		allocator_type _Ret(this->_Getal());
+		return (_Ret);
 		}
 
 	void _Chassign(size_type _Off, size_type _Count, _Elem _Ch)
@@ -2173,7 +2191,7 @@ public:
 		else
 			_Newres = max_size();	// settle for max_size()
 
-		_Elem *_Ptr;
+		pointer _Ptr;
 		_TRY_BEGIN
 			_Ptr = this->_Getal().allocate(_Newres + 1);
 		_CATCH_ALL
@@ -2187,24 +2205,25 @@ public:
 		_CATCH_END
 
 		if (0 < _Oldlen)
-			_Traits::copy(_Ptr, this->_Myptr(),
+			_Traits::copy(_Unfancy(_Ptr), this->_Myptr(),
 				_Oldlen);	// copy existing elements
 		_Tidy(true);
-		this->_Getal().construct(&this->_Bx()._Ptr, _Ptr);
+		this->_Getal().construct(_STD addressof(this->_Bx()._Ptr), _Ptr);
 		this->_Myres() = _Newres;
 		_Eos(_Oldlen);
 		}
 
 	void _Eos(size_type _Newsize)
 		{	// set new length and null terminator
-		_Traits::assign(this->_Myptr()[this->_Mysize() = _Newsize], _Elem());
+		auto& _Dx = this->_Get_data();
+		_Traits::assign(_Dx._Myptr()[_Dx._Mysize = _Newsize], _Elem());
 		}
 
 	bool _Grow(size_type _Newsize,
 		bool _Trim = false)
 		{	// ensure buffer is big enough, trim to size if _Trim is true
-		//if (max_size() < _Newsize)
-		//	_Xlen();	// result too long
+		if (max_size() < _Newsize)
+			_Xlen();	// result too long
 		if (this->_Myres() < _Newsize)
 			_Copy(_Newsize, this->_Mysize());	// reallocate to grow
 		else if (_Trim && _Newsize < this->_BUF_SIZE)
@@ -2217,7 +2236,7 @@ public:
 
 	bool _Inside(const _Elem *_Ptr)
 		{	// test if _Ptr points inside string
-		if (_Ptr == 0 || _Ptr < this->_Myptr()
+		if (_Ptr == nullptr_t{} || _Ptr < this->_Myptr()
 			|| this->_Myptr() + this->_Mysize() <= _Ptr)
 			return (false);	// don't ask
 		else
@@ -2232,25 +2251,37 @@ public:
 		else if (this->_BUF_SIZE <= this->_Myres())
 			{	// copy any leftovers to small buffer and deallocate
 			pointer _Ptr = this->_Bx()._Ptr;
-			this->_Getal().destroy(&this->_Bx()._Ptr);
+			this->_Getal().destroy(_STD addressof(this->_Bx()._Ptr));
 			if (0 < _Newsize)
 				_Traits::copy(this->_Bx()._Buf,
-					_STD addressof(*_Ptr), _Newsize);
+					_Unfancy(_Ptr), _Newsize);
 			this->_Getal().deallocate(_Ptr, this->_Myres() + 1);
 			}
 		this->_Myres() = this->_BUF_SIZE - 1;
 		_Eos(_Newsize);
 		}
 
-	//__declspec(noreturn) void _Xlen() const
-	//	{	// report a length_error
-	//	_Xlength_error("string too long");
-	//	}
+	[[noreturn]] void _Xlen() const
+		{	// report a length_error
+		_Xlength_error("string too long");
+		}
 
-	//__declspec(noreturn) void _Xran() const
-	//	{	// report an out_of_range error
-	//	_Xout_of_range("invalid string position");
-	//	}
+	void _Check_offset(const size_type _Off) const
+		{	// checks whether _Off is in the bounds of [0, this->size()]
+		if (this->_Mysize() < _Off)
+			_Xran();
+		}
+
+	void _Check_offset_exclusive(const size_type _Off) const
+		{	// checks whether _Off is in the bounds of [0, this->size())
+		if (this->_Mysize() <= _Off)
+			_Xran();
+		}
+
+	[[noreturn]] void _Xran() const
+		{	// report an out_of_range error
+		_Xout_of_range("invalid string position");
+		}
 	};
 
 		// STATIC npos OBJECT
@@ -2424,7 +2455,7 @@ template<class _Elem,
 	class _Alloc> inline
 	bool operator==(
 		const basic_string<_Elem, _Traits, _Alloc>& _Left,
-		const basic_string<_Elem, _Traits, _Alloc>& _Right)
+		const basic_string<_Elem, _Traits, _Alloc>& _Right) _NOEXCEPT
 	{	// test for string equality
 	return (_Left.compare(_Right) == 0);
 	}
@@ -2454,7 +2485,7 @@ template<class _Elem,
 	class _Alloc> inline
 	bool operator!=(
 		const basic_string<_Elem, _Traits, _Alloc>& _Left,
-		const basic_string<_Elem, _Traits, _Alloc>& _Right)
+		const basic_string<_Elem, _Traits, _Alloc>& _Right) _NOEXCEPT
 	{	// test for string inequality
 	return (!(_Left == _Right));
 	}
@@ -2484,7 +2515,7 @@ template<class _Elem,
 	class _Alloc> inline
 	bool operator<(
 		const basic_string<_Elem, _Traits, _Alloc>& _Left,
-		const basic_string<_Elem, _Traits, _Alloc>& _Right)
+		const basic_string<_Elem, _Traits, _Alloc>& _Right) _NOEXCEPT
 	{	// test if string < string
 	return (_Left.compare(_Right) < 0);
 	}
@@ -2514,7 +2545,7 @@ template<class _Elem,
 	class _Alloc> inline
 	bool operator>(
 		const basic_string<_Elem, _Traits, _Alloc>& _Left,
-		const basic_string<_Elem, _Traits, _Alloc>& _Right)
+		const basic_string<_Elem, _Traits, _Alloc>& _Right) _NOEXCEPT
 	{	// test if string > string
 	return (_Right < _Left);
 	}
@@ -2544,7 +2575,7 @@ template<class _Elem,
 	class _Alloc> inline
 	bool operator<=(
 		const basic_string<_Elem, _Traits, _Alloc>& _Left,
-		const basic_string<_Elem, _Traits, _Alloc>& _Right)
+		const basic_string<_Elem, _Traits, _Alloc>& _Right) _NOEXCEPT
 	{	// test if string <= string
 	return (!(_Right < _Left));
 	}
@@ -2574,7 +2605,7 @@ template<class _Elem,
 	class _Alloc> inline
 	bool operator>=(
 		const basic_string<_Elem, _Traits, _Alloc>& _Left,
-		const basic_string<_Elem, _Traits, _Alloc>& _Right)
+		const basic_string<_Elem, _Traits, _Alloc>& _Right) _NOEXCEPT
 	{	// test if string >= string
 	return (!(_Left < _Right));
 	}
@@ -2630,7 +2661,7 @@ _STD_END
  #pragma warning(pop)
  #pragma pack(pop)
 #endif /* RC_INVOKED */
-#endif /* _XSTRING */
+#endif /* _XSTRING_ */
 
 /*
  * Copyright (c) by P.J. Plauger. All rights reserved.

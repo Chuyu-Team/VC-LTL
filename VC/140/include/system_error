@@ -125,6 +125,11 @@ template<>
 	{	// tests for error_condition enumeration
 	};
 
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_error_code_enum_v = is_error_code_enum<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
+
 		// TEMPLATE CLASS is_error_condition_enum
 template<class _Enum>
 	struct is_error_condition_enum
@@ -137,6 +142,11 @@ template<>
 		: public true_type
 	{	// tests for error_condition enumeration
 	};
+
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_error_condition_enum_v = is_error_condition_enum<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
 
 class error_code;
 class error_condition;
@@ -155,7 +165,7 @@ const error_category& system_category() _NOEXCEPT;
 class error_category
 	{	// categorize an error
 public:
-	/* _CONST_FUN */ error_category() _NOEXCEPT	// TRANSITION
+	/* constexpr */ error_category() _NOEXCEPT	// TRANSITION
 		{	// default constructor
 		_Addr = reinterpret_cast<uintptr_t>(this);
 		}
@@ -685,7 +695,7 @@ template<class _Ty>
 template<class _Ty> inline
 	_Ty& _Immortalize()
 	{	// return a reference to an object that will live forever
-	static _Immortalizer<_Ty> _Static;
+	/* MAGIC */ static _Immortalizer<_Ty> _Static;
 	return (*reinterpret_cast<_Ty *>(&_Static._Storage));
 	}
 

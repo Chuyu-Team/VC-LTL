@@ -1675,6 +1675,8 @@ protected:
 template <int _Rank, int _Element_size>
 class _Array_view_base : public _Array_view_shape<_Rank,_Element_size /* in number of ints */>
 {
+    typedef _Array_flatten_helper<_Rank, typename Concurrency::extent<_Rank>::value_type, typename Concurrency::index<_Rank>::value_type> _Flatten_helper;
+
     template <int _R, int _S>
     friend class _Array_view_base;
 
@@ -1692,7 +1694,7 @@ protected:
 
     _Array_view_base() __GPU {}
 
-    _Array_view_base(const _Buffer_descriptor& _Buffer_desc, const _Array_view_shape& _Shape) __GPU
+    _Array_view_base(const _Buffer_descriptor& _Buffer_desc, const _Array_view_shape<_Rank, _Element_size>& _Shape) __GPU
         :
         _M_buffer_descriptor(_Buffer_desc),
         _Array_view_shape<_Rank, _Element_size>(_Shape)
@@ -1874,7 +1876,7 @@ protected:
     _Ret_ void * _Access(const index<_Rank>& _Index) const __GPU
     {
         int * _Ptr = reinterpret_cast<int *>(_M_buffer_descriptor._M_data_ptr);
-        return &_Ptr[_M_total_linear_offset + (_Element_size * _Flatten_helper::func(_M_array_multiplier._M_base, _Index._M_base))]; 
+        return &_Ptr[this->_M_total_linear_offset + (_Element_size * _Flatten_helper::func(this->_M_array_multiplier._M_base, _Index._M_base))]; 
     }
 
     _Ret_ void * _Access(_Access_mode _Requested_mode, const index<_Rank>& _Index) const __CPU_ONLY
@@ -1887,10 +1889,8 @@ protected:
         return _Access(_Index);
     }
 
-    _Ret_ void * _Access(_Access_mode _Requested_mode, const index<_Rank>& _Index) const __GPU_ONLY
+    _Ret_ void * _Access(_Access_mode /*_Requested_mode*/, const index<_Rank>& _Index) const __GPU_ONLY
     {
-        UNREFERENCED_PARAMETER(_Requested_mode);
-
         return _Access(_Index);
     }
 
@@ -1922,9 +1922,9 @@ protected:
     _Array_view_base<_Rank,_New_element_size> _Reinterpret_as() const __GPU
     {
         static_assert(_Rank==1, "reinterpret_as is only permissible on array views of rank 1");
-        int _New_size = _Calculate_reinterpreted_size<_Element_size,_New_element_size>(_M_view_extent.size());
+        int _New_size = _Calculate_reinterpreted_size<_Element_size,_New_element_size>(this->_M_view_extent.size());
         return _Array_view_base<_Rank,_New_element_size>(this->_M_buffer_descriptor,
-                                                         _M_total_linear_offset,
+                                                         this->_M_total_linear_offset,
                                                          Concurrency::extent<_Rank>(_New_size));
     }
 
@@ -1933,7 +1933,7 @@ protected:
     {
         static_assert(_Rank==1, "view_as is only permissible on array views of rank 1");
         return _Array_view_base<_New_rank, _Element_size>(this->_M_buffer_descriptor,
-                                                          _M_total_linear_offset,
+                                                          this->_M_total_linear_offset,
                                                           _View_extent,
                                                           index<_New_rank>(),
                                                           _View_extent);
@@ -1944,15 +1944,15 @@ protected:
         unsigned int bufElemSize = static_cast<unsigned int>(_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_buffer_elem_size());
         unsigned int elemSize = _Element_size * sizeof(int);
 
-        size_t linearOffsetInBytes = _Base_linear_offset() * sizeof(int);
+        size_t linearOffsetInBytes = this->_Base_linear_offset() * sizeof(int);
 
-        size_t baseLSDExtentInBytes = _M_array_extent[_Rank - 1];
+        size_t baseLSDExtentInBytes = this->_M_array_extent[_Rank - 1];
         baseLSDExtentInBytes *= elemSize;
 
-        size_t viewLSDOffsetInBytes = _M_view_offset[_Rank - 1];
+        size_t viewLSDOffsetInBytes = this->_M_view_offset[_Rank - 1];
         viewLSDOffsetInBytes *= elemSize;
 
-        size_t viewLSDExtentInBytes = _M_view_extent[_Rank - 1];
+        size_t viewLSDExtentInBytes = this->_M_view_extent[_Rank - 1];
         viewLSDExtentInBytes *= elemSize;
 
         // The base array extent, view extent, and view offset must be compatible with the underlying 
@@ -1977,9 +1977,9 @@ protected:
 #pragma warning( disable : 6294 ) 
 #pragma warning( disable : 6201 ) //  Index '-1' is out of valid index range '0' to '0' for possibly stack allocated buffer 'baseExtent'.
         for (int i = 0; i < _Rank - 1; ++i) {
-            baseExtent[i] = _M_array_extent[i];
-            viewOffset[i] = _M_view_offset[i];
-            viewExtent[i] = _M_view_extent[i];
+            baseExtent[i] = this->_M_array_extent[i];
+            viewOffset[i] = this->_M_view_offset[i];
+            viewExtent[i] = this->_M_view_extent[i];
         }
 #pragma warning( pop )
 
@@ -2189,36 +2189,25 @@ private:
 
     void _Register() __GPU_ONLY {}
 
-    void _Register_copy(const _Array_view_base &_Other) __GPU_ONLY 
+    void _Register_copy(const _Array_view_base &/*_Other*/) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Other);
     }
 
-    void _Register(_In_ void* _Shape) __GPU_ONLY 
+    void _Register(_In_ void* /*_Shape*/) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Shape);
     }
 
-    void _Unregister(bool _Throw_exception = true) __GPU_ONLY 
+    void _Unregister(bool /*_Throw_exception*/ = true) __GPU_ONLY 
     {
-        UNREFERENCED_PARAMETER(_Throw_exception);
     }
 
-    static _Ret_ void* _Create_projection_buffer_shape(const _Buffer_descriptor& _Descriptor, int _Dim, int _I) __GPU_ONLY
+    static _Ret_ void* _Create_projection_buffer_shape(const _Buffer_descriptor& /*_Descriptor*/, int /*_Dim*/, int /*_I*/) __GPU_ONLY
     {
-        UNREFERENCED_PARAMETER(_Descriptor);
-        UNREFERENCED_PARAMETER(_Dim);
-        UNREFERENCED_PARAMETER(_I);
-
         return NULL;
     }
 
-    static _Ret_ void* _Create_section_buffer_shape(const _Buffer_descriptor& _Descriptor, const Concurrency::index<_Rank>& _Section_origin, const Concurrency::extent<_Rank>& _Section_extent) __GPU_ONLY
+    static _Ret_ void* _Create_section_buffer_shape(const _Buffer_descriptor& /*_Descriptor*/, const Concurrency::index<_Rank>& /*_Section_origin*/, const Concurrency::extent<_Rank>& /*_Section_extent*/) __GPU_ONLY
     {
-        UNREFERENCED_PARAMETER(_Descriptor);
-        UNREFERENCED_PARAMETER(_Section_origin);
-        UNREFERENCED_PARAMETER(_Section_extent);
-
         return NULL;
     }
 };
@@ -2351,7 +2340,7 @@ public:
         :_Base(Concurrency::extent<1>(_E0))
     {
         static_assert(_Rank == 1, "rank must be 1");
-        _Initialize(get_extent().size(), true);
+        _Initialize(this->get_extent().size(), true);
     }
 
     /// <summary>
@@ -2402,7 +2391,7 @@ public:
         :_Base(Concurrency::extent<2>(_E0,_E1))
     {
         static_assert(_Rank == 2, "rank must be 2");
-        _Initialize(get_extent().size(), true);
+        _Initialize(this->get_extent().size(), true);
     }
 
     /// <summary>
@@ -2441,7 +2430,7 @@ public:
         :_Base(Concurrency::extent<3>(_E0,_E1,_E2))
     {
         static_assert(_Rank == 3, "rank must be 3");
-        _Initialize(get_extent().size(), true);
+        _Initialize(this->get_extent().size(), true);
     }
 
     /// <summary>
@@ -2593,7 +2582,7 @@ public:
     /// <returns>
     ///     Reference to the element indexed by _Index
     /// </returns>
-    value_type& get_ref(const index<_Rank>& _Index) const __GPU
+    _Value_type& get_ref(const index<_Rank>& _Index) const __GPU
     {
         void *_Ptr = _Access(_Index);
         return *reinterpret_cast<value_type*>(_Ptr);
@@ -2608,7 +2597,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    value_type& operator[] (const index<_Rank>& _Index) const __GPU
+    _Value_type& operator[] (const index<_Rank>& _Index) const __GPU
     {
         return this->operator()(_Index);
     }
@@ -2622,10 +2611,10 @@ public:
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    value_type& operator() (const index<_Rank>& _Index) const __GPU 
+    _Value_type& operator() (const index<_Rank>& _Index) const __GPU 
     {
         void * _Ptr = _Access(_Read_write_access, _Index);
-        return *reinterpret_cast<value_type*>(_Ptr);
+        return *reinterpret_cast<_Value_type*>(_Ptr);
     }
 
     /// <summary>
@@ -2655,7 +2644,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    value_type& operator() (int _I0, int _I1) const __GPU 
+    _Value_type& operator() (int _I0, int _I1) const __GPU 
     {
         static_assert(_Rank == 2, "value_type& array_view::operator()(int,int) is only permissible on array_view<T, 2>");
         return this->operator()(index<2>(_I0,_I1));
@@ -2676,7 +2665,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    value_type& operator() (int _I0, int _I1, int _I2) const __GPU 
+    _Value_type& operator() (int _I0, int _I1, int _I2) const __GPU 
     {
         static_assert(_Rank == 3, "value_type& array_view::operator()(int,int,int) is only permissible on array_view<T, 3>");
         return this->operator()(index<3>(_I0,_I1,_I2));
@@ -2848,12 +2837,12 @@ public:
     {
         // If the array_view corresponds to a ubiquitous buffer with no data source,
         // then refresh is a no-op
-        if (!_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
+        if (!this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
             return;
         }
 
         _Buffer_ptr _PBuf;
-        _Get_access_async(_M_buffer_descriptor._Get_view_key(), _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Write_access, _PBuf)._Get();
+        _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Write_access, _PBuf)._Get();
     }
 
     /// <summary>
@@ -2871,13 +2860,13 @@ public:
     /// </returns>
     concurrency::completion_future synchronize_to_async(const accelerator_view& _Accl_view, access_type _Access_type = access_type_read) const __CPU_ONLY
     {
-        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
         _Event _Ev;
 
         if (_Access_type != access_type_none) {
-            _Ev = _Get_access_async(_M_buffer_descriptor._Get_view_key(), _Accl_view, _Get_synchronize_access_mode(_Access_type), _PBuf);
+            _Ev = _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), _Accl_view, _Get_synchronize_access_mode(_Access_type), _PBuf);
         }
 
         return details::_Get_amp_trace()->_Start_async_op_wait_event_helper(_Async_op_id, _Ev);
@@ -2895,16 +2884,16 @@ public:
     /// </returns>
     concurrency::completion_future synchronize_async(access_type _Access_type = access_type_read) const __CPU_ONLY
     {
-        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
         _Event _Ev;
 
         // If the array_view corresponds to a ubiquitous buffer with no data source, then synchronize is a no-op
-        if ((_Access_type != access_type_none) && _M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source())
+        if ((_Access_type != access_type_none) && this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source())
         {
-            _Ev = _Get_access_async(_M_buffer_descriptor._Get_view_key(),
-                                    _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(),
+            _Ev = _Get_access_async(this->_M_buffer_descriptor._Get_view_key(),
+                                    this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(),
                                     _Get_synchronize_access_mode(_Access_type),
                                     _PBuf);
         }
@@ -2924,12 +2913,12 @@ public:
     /// </param>
     void synchronize_to(const accelerator_view& _Accl_view, access_type _Access_type = access_type_read) const __CPU_ONLY
     {
-        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
 
         if (_Access_type != access_type_none) {
-            _Get_access_async(_M_buffer_descriptor._Get_view_key(), _Accl_view, _Get_synchronize_access_mode(_Access_type), _PBuf)._Get();
+            _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), _Accl_view, _Get_synchronize_access_mode(_Access_type), _PBuf)._Get();
         }
 
         details::_Get_amp_trace()->_Write_end_event(_Span_id);
@@ -2944,15 +2933,15 @@ public:
     /// </param>
     void synchronize(access_type _Access_type = access_type_read) const __CPU_ONLY
     {
-        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
 
         // If the array_view corresponds to a ubiquitous buffer with no data source, then synchronize is a no-op
-        if ((_Access_type != access_type_none) && _M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) 
+        if ((_Access_type != access_type_none) && this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) 
         {
-            _Get_access_async(_M_buffer_descriptor._Get_view_key(),
-                              _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(),
+            _Get_access_async(this->_M_buffer_descriptor._Get_view_key(),
+                              this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(),
                               _Get_synchronize_access_mode(_Access_type),
                               _PBuf)._Get();
         }
@@ -2969,7 +2958,7 @@ public:
     /// </summary>
     void discard_data() const __CPU_ONLY
     {
-        _M_buffer_descriptor._Get_buffer_ptr()->_Discard(_M_buffer_descriptor._Get_view_key());
+        this->_M_buffer_descriptor._Get_buffer_ptr()->_Discard(this->_M_buffer_descriptor._Get_view_key());
     }
 
     /// <summary>
@@ -2978,8 +2967,8 @@ public:
     /// </summary>
     accelerator_view get_source_accelerator_view() const
     {
-        if (_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
-            return _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view();
+        if (this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
+            return this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view();
         }
         else {
             throw runtime_exception("Cannot query source accelerator_view for an array_view without a data source.", E_INVALIDARG);
@@ -3019,7 +3008,7 @@ private:
     void _Initialize() __GPU
     {
         // Set the type access mode
-        _M_buffer_descriptor._M_type_access_mode = _Read_write_access;
+        this->_M_buffer_descriptor._M_type_access_mode = _Read_write_access;
     }
 
     void _Initialize(size_t _Src_data_size, bool _Discard_data = false) __CPU_ONLY
@@ -3439,7 +3428,7 @@ public:
     /// <returns>
     ///     Reference to the element indexed by _Index
     /// </returns>
-    value_type& get_ref(const index<_Rank>& _Index) const __GPU
+    const _Value_type& get_ref(const index<_Rank>& _Index) const __GPU
     {
         void *_Ptr = _Access(_Index);
         return *reinterpret_cast<value_type*>(_Ptr);
@@ -3454,7 +3443,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    value_type& operator[] (const index<_Rank>& _Index) const __GPU
+    const _Value_type& operator[] (const index<_Rank>& _Index) const __GPU
     {
         return this->operator()(_Index);
     }
@@ -3468,7 +3457,7 @@ public:
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    value_type& operator() (const index<_Rank>& _Index) const __GPU 
+    const _Value_type& operator() (const index<_Rank>& _Index) const __GPU 
     {
         void * _Ptr = _Access(_Read_access, _Index);
         return *reinterpret_cast<value_type*>(_Ptr);
@@ -3501,7 +3490,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    value_type& operator() (int _I0, int _I1) const __GPU 
+    const _Value_type& operator() (int _I0, int _I1) const __GPU 
     {
         static_assert(_Rank == 2, "value_type& array_view::operator()(int,int) is only permissible on array_view<T, 2>");
         return this->operator()(index<2>(_I0,_I1));
@@ -3522,7 +3511,7 @@ public:
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    value_type& operator() (int _I0, int _I1, int _I2) const __GPU 
+    const _Value_type& operator() (int _I0, int _I1, int _I2) const __GPU 
     {
         static_assert(_Rank == 3, "value_type& array_view::operator()(int,int,int) is only permissible on array_view<T, 3>");
         return this->operator()(index<3>(_I0,_I1,_I2));
@@ -3693,7 +3682,7 @@ public:
     void refresh() const __CPU_ONLY
     {
         _Buffer_ptr _PBuf;
-        _Get_access_async(_M_buffer_descriptor._Get_view_key(), _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Write_access, _PBuf)._Get();
+        _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Write_access, _PBuf)._Get();
     }
 
     /// <summary>
@@ -3707,12 +3696,12 @@ public:
     /// </returns>
     concurrency::completion_future synchronize_to_async(const accelerator_view& _Accl_view) const __CPU_ONLY
     {
-        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
         _Event _Ev;
 
-        _Ev = _Get_access_async(_M_buffer_descriptor._Get_view_key(), _Accl_view, _Read_access, _PBuf);
+        _Ev = _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), _Accl_view, _Read_access, _PBuf);
 
         return details::_Get_amp_trace()->_Start_async_op_wait_event_helper(_Async_op_id, _Ev);
     }
@@ -3725,15 +3714,15 @@ public:
     /// </returns>
     concurrency::completion_future synchronize_async() const __CPU_ONLY
     {
-        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Async_op_id = details::_Get_amp_trace()->_Launch_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
         _Event _Ev;
 
         // If the array_view corresponds to a ubiquitous buffer with no data source,
         // then synchronize is a no-op
-        if (_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
-            _Ev = _Get_access_async(_M_buffer_descriptor._Get_view_key(), _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Read_access, _PBuf);
+        if (this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
+            _Ev = _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Read_access, _PBuf);
         }
 
         return details::_Get_amp_trace()->_Start_async_op_wait_event_helper(_Async_op_id, _Ev);
@@ -3747,11 +3736,11 @@ public:
     /// </param>
     void synchronize_to(const accelerator_view& _Accl_view) const __CPU_ONLY
     {
-        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
 
-        _Get_access_async(_M_buffer_descriptor._Get_view_key(), _Accl_view, _Read_access, _PBuf)._Get();
+        _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), _Accl_view, _Read_access, _PBuf)._Get();
 
         details::_Get_amp_trace()->_Write_end_event(_Span_id);
     }
@@ -3761,14 +3750,14 @@ public:
     /// </summary>
     void synchronize() const __CPU_ONLY
     {
-        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(_M_buffer_descriptor);
+        auto _Span_id = details::_Get_amp_trace()->_Start_array_view_synchronize_event_helper(this->_M_buffer_descriptor);
 
         _Buffer_ptr _PBuf;
 
         // If the array_view corresponds to a ubiquitous buffer with no data source,
         // then synchronize is a no-op
-        if (_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
-            _Get_access_async(_M_buffer_descriptor._Get_view_key(), _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Read_access, _PBuf)._Get();
+        if (this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
+            _Get_access_async(this->_M_buffer_descriptor._Get_view_key(), this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view(), _Read_access, _PBuf)._Get();
         }
 
         details::_Get_amp_trace()->_Write_end_event(_Span_id);
@@ -3780,8 +3769,8 @@ public:
     /// </summary>
     accelerator_view get_source_accelerator_view() const
     {
-        if (_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
-            return _M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view();
+        if (this->_M_buffer_descriptor._Get_buffer_ptr()->_Has_data_source()) {
+            return this->_M_buffer_descriptor._Get_buffer_ptr()->_Get_master_accelerator_view();
         }
         else {
             throw runtime_exception("Cannot query source accelerator_view for an array_view without a data source.", E_INVALIDARG);
@@ -3816,7 +3805,7 @@ private:
     void _Initialize() __GPU
     {
         // Set the type access mode
-        _M_buffer_descriptor._M_type_access_mode = _Read_access;
+        this->_M_buffer_descriptor._M_type_access_mode = _Read_access;
     }
 
     void _Initialize(size_t _Src_data_size) __CPU_ONLY
@@ -4980,7 +4969,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    value_type& operator[] (const index<_Rank>& _Index) __GPU
+    _Value_type& operator[] (const index<_Rank>& _Index) __GPU
     {
         // Refresh the data ptr if needed
         _Refresh_data_ptr(_Read_write_access);
@@ -4998,7 +4987,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    const value_type& operator[] (const index<_Rank>& _Index) const __GPU
+    const _Value_type& operator[] (const index<_Rank>& _Index) const __GPU
     {
         // Refresh the data ptr if needed
 #pragma warning( push )
@@ -5053,7 +5042,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by _I
     /// </returns>
-    value_type& operator() (const index<_Rank>& _Index) __GPU 
+    _Value_type& operator() (const index<_Rank>& _Index) __GPU 
     {
         return this->operator[](_Index);
     }
@@ -5067,7 +5056,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by _Index
     /// </returns>
-    const value_type& operator() (const index<_Rank>& _Index) const __GPU 
+    const _Value_type& operator() (const index<_Rank>& _Index) const __GPU 
     {
         return this->operator[](_Index);
     }
@@ -5084,7 +5073,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    value_type& operator() (int _I0, int _I1) __GPU 
+    _Value_type& operator() (int _I0, int _I1) __GPU 
     {
         static_assert(_Rank == 2, "value_type& array::operator()(int, int) is only permissible on array<T, 2>");
         return this->operator[](index<2>(_I0, _I1));
@@ -5102,7 +5091,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by (_I0,_I1)
     /// </returns>
-    const value_type& operator() (int _I0, int _I1) const __GPU 
+    const _Value_type& operator() (int _I0, int _I1) const __GPU 
     {
         static_assert(_Rank == 2, "const value_type& array::operator()(int, int) is only permissible on array<T, 2>");
         return this->operator[](index<2>(_I0, _I1));
@@ -5123,7 +5112,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    value_type& operator() (int _I0, int _I1, int _I2) __GPU 
+    _Value_type& operator() (int _I0, int _I1, int _I2) __GPU 
     {
         static_assert(_Rank == 3, "value_type& array::operator()(int, int, int) is only permissible on array<T, 3>");
         return this->operator[](index<3>(_I0, _I1, _I2));
@@ -5144,7 +5133,7 @@ template <typename _Value_type, int _Rank = 1> class array
     /// <returns>
     ///     The element value indexed by (_I0,_I1,_I2)
     /// </returns>
-    const value_type& operator() (int _I0, int _I1, int _I2) const __GPU 
+    const _Value_type& operator() (int _I0, int _I1, int _I2) const __GPU 
     {
         static_assert(_Rank == 3, "const value_type& array::operator()(int, int, int) const is only permissible on array<T, 3>");
         return this->operator[](index<3>(_I0, _I1, _I2));
@@ -5672,12 +5661,12 @@ private:
         }
     }
 
-    _Ret_ _Ubiquitous_buffer* _Get_buffer() __CPU_ONLY const
+    _Ret_ _Ubiquitous_buffer* _Get_buffer() const __CPU_ONLY
     {
         return _M_buffer_descriptor._Get_buffer_ptr(); 
     }
 
-    _Event _Get_access_async(_Access_mode _Mode, _Buffer_ptr &_Buf_ptr, bool _Zero_copy_cpu_access = false) __CPU_ONLY const
+    _Event _Get_access_async(_Access_mode _Mode, _Buffer_ptr &_Buf_ptr, bool _Zero_copy_cpu_access = false) const __CPU_ONLY
     {
         _ASSERTE(!_Zero_copy_cpu_access || (_Get_buffer()->_Get_master_buffer()->_Get_allowed_host_access_mode() != _No_access));
 
@@ -5750,10 +5739,8 @@ private:
         }
     }
 
-    void _Refresh_data_ptr(_Access_mode _Requested_mode, bool _Exception = true) __GPU_ONLY
+    void _Refresh_data_ptr(_Access_mode /*_Requested_mode*/, bool /*_Exception*/ = true) __GPU_ONLY
     {
-        UNREFERENCED_PARAMETER(_Requested_mode);
-        UNREFERENCED_PARAMETER(_Exception);
     }
 
 private:

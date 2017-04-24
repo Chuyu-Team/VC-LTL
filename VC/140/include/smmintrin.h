@@ -250,7 +250,7 @@ extern "C" {
          * Load double quadword using non-temporal aligned hint
          */
 
-        extern __m128i _mm_stream_load_si128(__m128i*);
+        extern __m128i _mm_stream_load_si128(const __m128i*);
 
 #if defined __cplusplus
 }; /* End "C" */

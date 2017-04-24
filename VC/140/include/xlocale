@@ -147,12 +147,12 @@ public:
 
 		virtual void __CLR_OR_THIS_CALL _Incref()
 			{	// increment use count
-			_MT_INCR(_Mtx, _Myrefs);
+			_MT_INCR(_Myrefs);
 			}
 
 		virtual _Facet_base *__CLR_OR_THIS_CALL _Decref()
 			{	// decrement use count
-			if (_MT_DECR(_Mtx, _Myrefs) == 0)
+			if (_MT_DECR(_Myrefs) == 0)
 				return (this);
 			else
 				return (0);
@@ -384,7 +384,7 @@ private:
 		if (_Bad)
 			{	// Don't throw within _BEGIN_LOCINFO if we can avoid it
 			delete _Ptr->_Decref();
-			//_Xruntime_error("bad locale name");
+			_Xruntime_error("bad locale name");
 			}
 		}
 
@@ -395,8 +395,8 @@ public:
 		{	// construct a locale with named facets
 		// _Locname might have been returned from setlocale().
 		// Therefore, _Construct() takes const string&.
-		//if (_Locname == 0)
-		//	_Xruntime_error("bad locale name");
+		if (_Locname == 0)
+			_Xruntime_error("bad locale name");
 		_Construct(_Locname, _Cat);
 		}
 
@@ -406,8 +406,8 @@ public:
 		{	// construct a locale by copying, replacing named facets
 		// _Locname might have been returned from setlocale().
 		// Therefore, _Construct() takes const string&.
-		//if (_Locname == 0)
-		//	_Xruntime_error("bad locale name");
+		if (_Locname == 0)
+			_Xruntime_error("bad locale name");
 		_Construct(_Locname, _Cat);
 		}
 
@@ -610,7 +610,7 @@ template<class _Elem,
 	string _Str(_Numfields, '\0');	// one column counter for each field
 
 	int _Ans = -2;	// no candidates so far
-	for (size_t _Column = 1; ; ++_Column, ++_First, _Ans = -1)
+	for (size_t _Column = 1; ; ++_Column, (void)++_First, _Ans = -1)
 		{	// test each element against all viable fields
 		bool _Prefix = false;	// seen at least one valid prefix
 		size_t _Off = 0;	// offset into fields
@@ -722,8 +722,8 @@ template<class _Elem> inline
 	_Elem *_Ptrdest = (_Elem *)_calloc_dbg(_Count, sizeof (_Elem),
 		_CRT_BLOCK, __FILE__, __LINE__);
 
-	/*if (!_Ptrdest)
-		_Xbad_alloc();*/
+	if (!_Ptrdest)
+		_Xbad_alloc();
 
  #pragma warning(push)
  #pragma warning(disable: 6011)	/* quiet prefast noise */
@@ -755,8 +755,8 @@ template<> inline
 	wchar_t *_Ptrdest = (wchar_t *)_calloc_dbg(_Wchars, sizeof (wchar_t),
 		_CRT_BLOCK, __FILE__, __LINE__);
 
-	//if (!_Ptrdest)
-	//	_Xbad_alloc();
+	if (!_Ptrdest)
+		_Xbad_alloc();
 	wchar_t *_Ptrnext = _Ptrdest;
 	_Mbstinit(_Mbst2);
 
@@ -795,8 +795,8 @@ template<> inline
 	wchar_t *_Ptrdest = (wchar_t *)_calloc_dbg(_Wchars, sizeof (wchar_t),
 		_CRT_BLOCK, __FILE__, __LINE__);
 
-	//if (!_Ptrdest)
-	//	_Xbad_alloc();
+	if (!_Ptrdest)
+		_Xbad_alloc();
 
 	wchar_t *_Ptrnext = _Ptrdest;
 	_Mbstinit(_Mbst2);
@@ -2502,7 +2502,7 @@ protected:
 		if (0 < _Ctype._Delfl)
 			_CSTD free((void *)_Ctype._Table);
 		else if (_Ctype._Delfl < 0)
-			delete[] (void *)_Ctype._Table;
+			delete[] _Ctype._Table;
 
 		_CSTD free(_Ctype._LocaleName);
 		}

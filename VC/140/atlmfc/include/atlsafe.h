@@ -88,7 +88,7 @@ struct _ATL_AutomationType
 	DEFINE_AUTOMATION_TYPE_FUNCTION(CY			, CY			,VT_CY)
 
 // wrapper for SAFEARRAYBOUND used with CComSafeArray
-class CComSafeArrayBound : 
+class CComSafeArrayBound :
 	public SAFEARRAYBOUND
 {
 public:
@@ -332,7 +332,7 @@ public:
 		if ((lIndex < lLBound) || (lIndex > GetUpperBound()))
 			AtlThrow(E_INVALIDARG);
 
-		return ((_ATL_AutomationType<T>::_typewrapper*)m_psa->pvData)[lIndex-lLBound];
+		return ((typename _ATL_AutomationType<T>::_typewrapper*)m_psa->pvData)[lIndex-lLBound];
 	}
 
 	typename _ATL_AutomationType<T>::_typewrapper& GetAt(_In_ LONG lIndex)
@@ -347,7 +347,7 @@ public:
 		if ((lIndex < lLBound) || (lIndex > GetUpperBound()))
 			AtlThrow(E_INVALIDARG);
 
-		return ((_ATL_AutomationType<T>::_typewrapper*)m_psa->pvData)[lIndex-lLBound];
+		return ((typename _ATL_AutomationType<T>::_typewrapper*)m_psa->pvData)[lIndex-lLBound];
 	}
 	HRESULT SetAt(
 		_In_ LONG lIndex,

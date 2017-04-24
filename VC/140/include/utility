@@ -16,11 +16,6 @@
 
 _STD_BEGIN
 		// TEMPLATE FUNCTION iter_swap (from <xutility>)
-template<class _Ty> inline
-	void swap(_Ty&, _Ty&)
-		_NOEXCEPT_OP(is_nothrow_move_constructible<_Ty>::value
-			&& is_nothrow_move_assignable<_Ty>::value);
-
 template<class _FwdIt1,
 	class _FwdIt2> inline
 	void iter_swap(_FwdIt1 _Left, _FwdIt2 _Right)
@@ -30,9 +25,10 @@ template<class _FwdIt1,
 
 		// TEMPLATE FUNCTION swap
 template<class _Ty,
-	size_t _Size> inline
+	size_t _Size,
+	class> inline
 	void swap(_Ty (&_Left)[_Size], _Ty (&_Right)[_Size])
-		_NOEXCEPT_OP(_NOEXCEPT_OP(swap(*_Left, *_Right)))
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Ty>::value)
 	{	// exchange arrays stored at _Left and _Right
 	if (&_Left != &_Right)
 		{	// worth swapping, swap ranges
@@ -44,20 +40,21 @@ template<class _Ty,
 		}
 	}
 
-template<class _Ty> inline
+template<class _Ty,
+	class> inline
 	void swap(_Ty& _Left, _Ty& _Right)
 		_NOEXCEPT_OP(is_nothrow_move_constructible<_Ty>::value
 			&& is_nothrow_move_assignable<_Ty>::value)
 	{	// exchange values stored at _Left and _Right
-	_Ty _Tmp = _Move(_Left);
-	_Left = _Move(_Right);
-	_Right = _Move(_Tmp);
+	_Ty _Tmp = _STD move(_Left);
+	_Left = _STD move(_Right);
+	_Right = _STD move(_Tmp);
 	}
 
 		// TEMPLATE FUNCTION _Swap_adl
 template<class _Ty> inline
 	void _Swap_adl(_Ty& _Left, _Ty& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(swap(_Left, _Right)))
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Ty>::value)
 	{	// exchange values stored at _Left and _Right, using ADL
 	swap(_Left, _Right);
 	}
@@ -67,13 +64,11 @@ struct piecewise_construct_t
 	{	// tag type for pair tuple arguments
 	};
 
-_CONST_DATA piecewise_construct_t piecewise_construct{};
+constexpr piecewise_construct_t piecewise_construct{};
 
 		// TEMPLATE STRUCT pair
-
 template<class...>
 	class tuple;
-
 
 template<class _Ty1,
 	class _Ty2>
@@ -83,12 +78,33 @@ template<class _Ty1,
 	typedef _Ty1 first_type;
 	typedef _Ty2 second_type;
 
-	_CONST_FUN pair()
+	template<class _Uty1 = _Ty1,
+		class _Uty2 = _Ty2,
+		class = enable_if_t<is_default_constructible<_Uty1>::value
+						&& is_default_constructible<_Uty2>::value> >
+		constexpr pair()
 		: first(), second()
 		{	// default construct
 		}
 
-	_CONST_FUN pair(const _Ty1& _Val1, const _Ty2& _Val2)
+	template<class _Uty1 = _Ty1,
+		class _Uty2 = _Ty2,
+		class = enable_if_t<is_copy_constructible<_Uty1>::value
+						&& is_copy_constructible<_Uty2>::value>,
+		enable_if_t<is_convertible<const _Uty1&, _Uty1>::value
+				&& is_convertible<const _Uty2&, _Uty2>::value, int> = 0>
+		constexpr pair(const _Ty1& _Val1, const _Ty2& _Val2)
+		: first(_Val1), second(_Val2)
+		{	// construct from specified values
+		}
+
+	template<class _Uty1 = _Ty1,
+		class _Uty2 = _Ty2,
+		class = enable_if_t<is_copy_constructible<_Uty1>::value
+						&& is_copy_constructible<_Uty2>::value>,
+		enable_if_t<!is_convertible<const _Uty1&, _Uty1>::value
+				|| !is_convertible<const _Uty2&, _Uty2>::value, int> = 0>
+		constexpr explicit pair(const _Ty1& _Val1, const _Ty2& _Val2)
 		: first(_Val1), second(_Val2)
 		{	// construct from specified values
 		}
@@ -98,10 +114,22 @@ template<class _Ty1,
 
 	template<class _Other1,
 		class _Other2,
-		class = typename enable_if<is_convertible<const _Other1&, _Ty1>::value
-			&& is_convertible<const _Other2&, _Ty2>::value,
-			void>::type>
-		_CONST_FUN pair(const pair<_Other1, _Other2>& _Right)
+		class = enable_if_t<is_constructible<_Ty1, const _Other1&>::value
+						&& is_constructible<_Ty2, const _Other2&>::value>,
+		enable_if_t<is_convertible<const _Other1&, _Ty1>::value
+				&& is_convertible<const _Other2&, _Ty2>::value, int> = 0>
+		constexpr pair(const pair<_Other1, _Other2>& _Right)
+		: first(_Right.first), second(_Right.second)
+		{	// construct from compatible pair
+		}
+
+	template<class _Other1,
+		class _Other2,
+		class = enable_if_t<is_constructible<_Ty1, const _Other1&>::value
+						&& is_constructible<_Ty2, const _Other2&>::value>,
+		enable_if_t<!is_convertible<const _Other1&, _Ty1>::value
+				|| !is_convertible<const _Other2&, _Ty2>::value, int> = 0>
+		constexpr explicit pair(const pair<_Other1, _Other2>& _Right)
 		: first(_Right.first), second(_Right.second)
 		{	// construct from compatible pair
 		}
@@ -114,7 +142,6 @@ template<class _Ty1,
 		second = _Right.second;
 		return (*this);
 		}
-
 
 	template<class _Tuple1,
 		class _Tuple2,
@@ -131,15 +158,15 @@ template<class _Ty1,
 			tuple<_Types1...> _Val1,
 			tuple<_Types2...> _Val2);
 
-
 	template<class _Other1,
 		class _Other2,
-		class = typename enable_if<is_convertible<_Other1, _Ty1>::value
-			&& is_convertible<_Other2, _Ty2>::value,
-			void>::type>
-		_CONST_FUN pair(_Other1&& _Val1, _Other2&& _Val2)
-			_NOEXCEPT_OP((is_nothrow_constructible<_Ty1, _Other1&&>::value
-				&& is_nothrow_constructible<_Ty2, _Other2&&>::value))
+		class = enable_if_t<is_constructible<_Ty1, _Other1>::value
+						&& is_constructible<_Ty2, _Other2>::value>,
+		enable_if_t<is_convertible<_Other1, _Ty1>::value
+				&& is_convertible<_Other2, _Ty2>::value, int> = 0>
+		constexpr pair(_Other1&& _Val1, _Other2&& _Val2)
+			_NOEXCEPT_OP((is_nothrow_constructible<_Ty1, _Other1>::value
+				&& is_nothrow_constructible<_Ty2, _Other2>::value))
 		: first(_STD forward<_Other1>(_Val1)),
 				second(_STD forward<_Other2>(_Val2))
 		{	// construct from moved values
@@ -147,12 +174,41 @@ template<class _Ty1,
 
 	template<class _Other1,
 		class _Other2,
-		class = typename enable_if<is_convertible<_Other1, _Ty1>::value
-			&& is_convertible<_Other2, _Ty2>::value,
-			void>::type>
-		_CONST_FUN pair(pair<_Other1, _Other2>&& _Right)
-			_NOEXCEPT_OP((is_nothrow_constructible<_Ty1, _Other1&&>::value
-				&& is_nothrow_constructible<_Ty2, _Other2&&>::value))
+		class = enable_if_t<is_constructible<_Ty1, _Other1>::value
+						&& is_constructible<_Ty2, _Other2>::value>,
+		enable_if_t<!is_convertible<_Other1, _Ty1>::value
+				|| !is_convertible<_Other2, _Ty2>::value, int> = 0>
+		constexpr explicit pair(_Other1&& _Val1, _Other2&& _Val2)
+			_NOEXCEPT_OP((is_nothrow_constructible<_Ty1, _Other1>::value
+				&& is_nothrow_constructible<_Ty2, _Other2>::value))
+		: first(_STD forward<_Other1>(_Val1)),
+				second(_STD forward<_Other2>(_Val2))
+		{	// construct from moved values
+		}
+
+	template<class _Other1,
+		class _Other2,
+		class = enable_if_t<is_constructible<_Ty1, _Other1>::value
+						&& is_constructible<_Ty2, _Other2>::value>,
+		enable_if_t<is_convertible<_Other1, _Ty1>::value
+				&& is_convertible<_Other2, _Ty2>::value, int> = 0>
+		constexpr pair(pair<_Other1, _Other2>&& _Right)
+			_NOEXCEPT_OP((is_nothrow_constructible<_Ty1, _Other1>::value
+				&& is_nothrow_constructible<_Ty2, _Other2>::value))
+		: first(_STD forward<_Other1>(_Right.first)),
+			second(_STD forward<_Other2>(_Right.second))
+		{	// construct from moved compatible pair
+		}
+
+	template<class _Other1,
+		class _Other2,
+		class = enable_if_t<is_constructible<_Ty1, _Other1>::value
+						&& is_constructible<_Ty2, _Other2>::value>,
+		enable_if_t<!is_convertible<_Other1, _Ty1>::value
+				|| !is_convertible<_Other2, _Ty2>::value, int> = 0>
+		constexpr explicit pair(pair<_Other1, _Other2>&& _Right)
+			_NOEXCEPT_OP((is_nothrow_constructible<_Ty1, _Other1>::value
+				&& is_nothrow_constructible<_Ty2, _Other2>::value))
 		: first(_STD forward<_Other1>(_Right.first)),
 			second(_STD forward<_Other2>(_Right.second))
 		{	// construct from moved compatible pair
@@ -176,17 +232,6 @@ template<class _Ty1,
 		return (*this);
 		}
 
-	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Swap_adl(this->first, _Right.first))
-			&& _NOEXCEPT_OP(_Swap_adl(this->second, _Right.second)))
-		{	// exchange contents with _Right
-		if (this != &_Right)
-			{	// different, worth swapping
-			_Swap_adl(first, _Right.first);
-			_Swap_adl(second, _Right.second);
-			}
-		}
-
 	_Myt& operator=(const _Myt& _Right)
 		{	// assign from copied pair
 		first = _Right.first;
@@ -194,14 +239,26 @@ template<class _Ty1,
 		return (*this);
 		}
 
-	_Ty1 first;	// the first stored value
+	_Ty1 first;		// the first stored value
 	_Ty2 second;	// the second stored value
+
+	void swap(_Myt& _Right)
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Ty1>::value
+			&& _Is_nothrow_swappable<_Ty2>::value)
+		{	// exchange contents with _Right
+		if (this != &_Right)
+			{	// different, worth swapping
+			_Swap_adl(first, _Right.first);
+			_Swap_adl(second, _Right.second);
+			}
+		}
 	};
 
 		// pair TEMPLATE FUNCTIONS
 
 template<class _Ty1,
-	class _Ty2> inline
+	class _Ty2,
+	class = enable_if_t<_Is_swappable<_Ty1>::value && _Is_swappable<_Ty2>::value>> inline
 	void swap(pair<_Ty1, _Ty2>& _Left, pair<_Ty1, _Ty2>& _Right)
 		_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
 	{	// swap _Left and _Right pairs
@@ -210,7 +267,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool operator==(const pair<_Ty1, _Ty2>& _Left,
+	constexpr bool operator==(const pair<_Ty1, _Ty2>& _Left,
 		const pair<_Ty1, _Ty2>& _Right)
 	{	// test for pair equality
 	return (_Left.first == _Right.first && _Left.second == _Right.second);
@@ -218,7 +275,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool operator!=(const pair<_Ty1, _Ty2>& _Left,
+	constexpr bool operator!=(const pair<_Ty1, _Ty2>& _Left,
 		const pair<_Ty1, _Ty2>& _Right)
 	{	// test for pair inequality
 	return (!(_Left == _Right));
@@ -226,7 +283,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool operator<(const pair<_Ty1, _Ty2>& _Left,
+	constexpr bool operator<(const pair<_Ty1, _Ty2>& _Left,
 		const pair<_Ty1, _Ty2>& _Right)
 	{	// test if _Left < _Right for pairs
 	return (_Left.first < _Right.first ||
@@ -235,7 +292,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool operator>(const pair<_Ty1, _Ty2>& _Left,
+	constexpr bool operator>(const pair<_Ty1, _Ty2>& _Left,
 		const pair<_Ty1, _Ty2>& _Right)
 	{	// test if _Left > _Right for pairs
 	return (_Right < _Left);
@@ -243,7 +300,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool operator<=(const pair<_Ty1, _Ty2>& _Left,
+	constexpr bool operator<=(const pair<_Ty1, _Ty2>& _Left,
 		const pair<_Ty1, _Ty2>& _Right)
 	{	// test if _Left <= _Right for pairs
 	return (!(_Right < _Left));
@@ -251,7 +308,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool operator>=(const pair<_Ty1, _Ty2>& _Left,
+	constexpr bool operator>=(const pair<_Ty1, _Ty2>& _Left,
 		const pair<_Ty1, _Ty2>& _Right)
 	{	// test if _Left >= _Right for pairs
 	return (!(_Left < _Right));
@@ -261,7 +318,7 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN pair<typename _Unrefwrap<_Ty1>::type,
+	constexpr pair<typename _Unrefwrap<_Ty1>::type,
 		typename _Unrefwrap<_Ty2>::type>
 		make_pair(_Ty1&& _Val1, _Ty2&& _Val2)
 	{	// return pair composed from arguments
@@ -307,11 +364,7 @@ template<class _Ty,
 
 	// TEMPLATE STRUCT tuple_size
 template<class _Tuple>
-	struct tuple_size
-	{	// size of non-tuple
-	static_assert(_Always_false<_Tuple>::value,
-		"The C++ Standard doesn't define tuple_size for this type.");
-	};
+	struct tuple_size;
 
 template<class _Ty,
 	size_t _Size>
@@ -352,14 +405,15 @@ template<class _Tuple>
 	{	// size of const volatile tuple
 	};
 
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr size_t tuple_size_v = tuple_size<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
+
 	// CLASS tuple_element (find element by index)
 template<size_t _Index,
 	class _Tuple>
-	struct tuple_element
-	{	// struct to enforce bounds checking
-	static_assert(_Always_false<_Tuple>::value,
-		"tuple_element index out of bounds");
-	};
+	struct tuple_element;
 
 template<size_t _Idx,
 	class _Ty,
@@ -383,6 +437,13 @@ template<class _Ty1,
 	struct tuple_element<1, pair<_Ty1, _Ty2> >
 	{	// struct to determine type of element 1 in pair
 	typedef _Ty2 type;
+	};
+
+template<size_t _Index>
+	struct tuple_element<_Index, tuple<> >
+	{	// enforce bounds checking
+	static_assert(_Always_false<integral_constant<size_t, _Index> >::value,
+		"tuple index out of bounds");
 	};
 
 template<class _This,
@@ -436,7 +497,7 @@ template<size_t _Index,
 	// TUPLE INTERFACE TO pair
 template<class _Ret,
 	class _Pair> inline
-	_CONST_FUN _Ret _Pair_get(_Pair& _Pr,
+	constexpr _Ret _Pair_get(_Pair& _Pr,
 		integral_constant<size_t, 0>) _NOEXCEPT
 	{	// get reference to element 0 in pair _Pr
 	return (_Pr.first);
@@ -444,7 +505,7 @@ template<class _Ret,
 
 template<class _Ret,
 	class _Pair> inline
-	_CONST_FUN _Ret _Pair_get(_Pair& _Pr,
+	constexpr _Ret _Pair_get(_Pair& _Pr,
 		integral_constant<size_t, 1>) _NOEXCEPT
 	{	// get reference to element 1 in pair _Pr
 	return (_Pr.second);
@@ -453,7 +514,7 @@ template<class _Ret,
 template<size_t _Idx,
 	class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&
+	constexpr typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&
 		get(pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
 	{	// get reference to element at _Idx in pair _Pr
 	typedef typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type& _Rtype;
@@ -462,14 +523,14 @@ template<size_t _Idx,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN _Ty1& get(pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
+	constexpr _Ty1& get(pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
 	{	// get reference to element _Ty1 in pair _Pr
 	return (_STD get<0>(_Pr));
 	}
 
 template<class _Ty2,
 	class _Ty1> inline
-	_CONST_FUN _Ty2& get(pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
+	constexpr _Ty2& get(pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
 	{	// get reference to element _Ty2 in pair _Pr
 	return (_STD get<1>(_Pr));
 	}
@@ -477,7 +538,7 @@ template<class _Ty2,
 template<size_t _Idx,
 	class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN const typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&
+	constexpr const typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&
 		get(const pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
 	{	// get const reference to element at _Idx in pair _Pr
 	typedef const typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&
@@ -487,14 +548,14 @@ template<size_t _Idx,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN const _Ty1& get(const pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
+	constexpr const _Ty1& get(const pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
 	{	// get const reference to element _Ty1 in pair _Pr
 	return (_STD get<0>(_Pr));
 	}
 
 template<class _Ty2,
 	class _Ty1> inline
-	_CONST_FUN const _Ty2& get(const pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
+	constexpr const _Ty2& get(const pair<_Ty1, _Ty2>& _Pr) _NOEXCEPT
 	{	// get const reference to element _Ty2 in pair _Pr
 	return (_STD get<1>(_Pr));
 	}
@@ -502,7 +563,7 @@ template<class _Ty2,
 template<size_t _Idx,
 	class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&&
+	constexpr typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&&
 		get(pair<_Ty1, _Ty2>&& _Pr) _NOEXCEPT
 	{	// get rvalue reference to element at _Idx in pair _Pr
 	typedef typename tuple_element<_Idx, pair<_Ty1, _Ty2> >::type&& _RRtype;
@@ -511,20 +572,19 @@ template<size_t _Idx,
 
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN _Ty1&& get(pair<_Ty1, _Ty2>&& _Pr) _NOEXCEPT
+	constexpr _Ty1&& get(pair<_Ty1, _Ty2>&& _Pr) _NOEXCEPT
 	{	// get rvalue reference to element _Ty1 in pair _Pr
 	return (_STD get<0>(_STD move(_Pr)));
 	}
 
 template<class _Ty2,
 	class _Ty1> inline
-	_CONST_FUN _Ty2&& get(pair<_Ty1, _Ty2>&& _Pr) _NOEXCEPT
+	constexpr _Ty2&& get(pair<_Ty1, _Ty2>&& _Pr) _NOEXCEPT
 	{	// get rvalue reference to element _Ty2 in pair _Pr
 	return (_STD get<1>(_STD move(_Pr)));
 	}
 
 	// TEMPLATE FUNCTION exchange
-
 template<class _Ty,
 	class _Other = _Ty> inline
 	_Ty exchange(_Ty& _Val, _Other&& _New_val)
@@ -533,8 +593,19 @@ template<class _Ty,
 	_Val = _STD forward<_Other>(_New_val);
 	return (_Old_val);
 	}
+
+	// TEMPLATE FUNCTION as_const
+template<class _Ty> inline
+	constexpr add_const_t<_Ty>& as_const(_Ty& _Val) _NOEXCEPT
+	{	// view _Val through const lenses
+	return (_Val);
+	}
+
+template<class _Ty>
+	void as_const(const _Ty&&) = delete;
 _STD_END
 
+#if _HAS_TR1_NAMESPACE
 _STD_BEGIN
 namespace tr1 {	// TR1 additions
 using _STD get;
@@ -542,6 +613,7 @@ using _STD tuple_element;
 using _STD tuple_size;
 }	// namespace tr1
 _STD_END
+#endif /* _HAS_TR1_NAMESPACE */
 
  #pragma pop_macro("new")
  #pragma warning(pop)

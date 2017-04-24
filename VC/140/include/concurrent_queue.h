@@ -105,7 +105,7 @@ namespace details
         _CONCRTIMP void _Internal_move_push( void* _Src );
 
         // swap the internal representation
-        _CONCRTIMP void _Concurrent_queue_base_v4::_Internal_swap( _Concurrent_queue_base_v4& other );
+        _CONCRTIMP void _Internal_swap( _Concurrent_queue_base_v4& other );
 
         // Attempt to dequeue item from queue.
         /** NULL if there was no item to dequeue. */
@@ -825,7 +825,7 @@ void concurrent_queue<_Ty,_Ax>::clear()
 
 } // namespace Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pop_macro("new")
 #pragma warning(pop)

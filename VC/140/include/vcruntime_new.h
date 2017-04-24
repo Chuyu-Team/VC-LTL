@@ -16,7 +16,6 @@ extern "C++" {
 
 #pragma warning(push)
 #pragma warning(disable: 4985) // attributes not present on previous declaration
-#pragma warning(disable: 4100) // unreferenced formal parameter
 
 #pragma push_macro("new")
 #undef new

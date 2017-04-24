@@ -96,7 +96,7 @@ public:
 	typedef typename _Mybase::_Pairib _Pairib;
 
 	map()
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct empty map from defaults
 		}
 
@@ -106,11 +106,8 @@ public:
 		}
 
 	map(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._Getal().select_on_container_copy_construction())
-
-
 		{	// construct map by copying _Right
 		}
 
@@ -120,7 +117,7 @@ public:
 		}
 
 	explicit map(const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct empty map from comparator
 		}
 
@@ -131,17 +128,17 @@ public:
 
 	template<class _Iter>
 		map(_Iter _First, _Iter _Last)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct map from [_First, _Last), defaults
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
 		map(_Iter _First, _Iter _Last,
 			const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct map from [_First, _Last), comparator
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -149,7 +146,7 @@ public:
 			const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct map from [_First, _Last), comparator, and allocator
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -178,25 +175,30 @@ public:
 
 	mapped_type& operator[](key_type&& _Keyval)
 		{	// find element matching _Keyval or insert with default mapped
-		iterator _Where = _Mybase::lower_bound(_Keyval);
-		if (_Where == _Mybase::end()
-			|| _Mybase::_Getcomp()(_Keyval, _Mybase::_Key(_Where._Mynode())))
-
-			_Where = _Mybase::emplace_hint(_Where,
-				piecewise_construct,
-				_STD forward_as_tuple(_STD move(_Keyval)),
-				tuple<>());
-
-
-		return (_Where->second);
+		return (try_emplace(_STD move(_Keyval)).first->second);
 		}
 
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _NOEXCEPT_OP(_Swap_adl(
-				_STD declval<_Pr&>(), _STD declval<_Pr&>())))
+			&& _Is_nothrow_swappable<_Pr>::value)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
+		}
+
+	using _Mybase::insert;
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		_Pairib insert(_Valty&& _Val)
+		{	// insert _Val
+		return (this->emplace(_STD forward<_Valty>(_Val)));
+		}
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		iterator insert(const_iterator _Where, _Valty&& _Val)
+		{	// insert _Val with hint
+		return (this->emplace_hint(_Where, _STD forward<_Valty>(_Val)));
 		}
 
 	template<class _Keyty,
@@ -305,67 +307,52 @@ public:
 		}
 
 	map(_XSTD initializer_list<value_type> _Ilist)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct from initializer_list, defaults
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	map(_XSTD initializer_list<value_type> _Ilist,
 		const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct from initializer_list, comparator
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	map(_XSTD initializer_list<value_type> _Ilist,
 		const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct from initializer_list, comparator, and allocator
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		_Mybase::clear();
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		return (*this);
 		}
 
-//	void insert(_XSTD initializer_list<value_type> _Ilist)
-//		{	// insert initializer_list
-//		_Mybase::insert(_Ilist.begin(), _Ilist.end());
-//		}
-
 	mapped_type& operator[](const key_type& _Keyval)
 		{	// find element matching _Keyval or insert with default mapped
-		iterator _Where = _Mybase::lower_bound(_Keyval);
-		if (_Where == _Mybase::end()
-			|| _Mybase::_Getcomp()(_Keyval, _Mybase::_Key(_Where._Mynode())))
-
-			_Where = _Mybase::emplace_hint(_Where,
-				piecewise_construct,
-				_STD forward_as_tuple(_Keyval),
-				tuple<>());
-
-
-		return (_Where->second);
+		return (try_emplace(_Keyval).first->second);
 		}
 
 	mapped_type& at(const key_type& _Keyval)
 		{	// find element matching _Keyval
 		iterator _Where = _Mybase::lower_bound(_Keyval);
-		/*if (_Where == _Mybase::end()
+		if (_Where == _Mybase::end()
 			|| _Mybase::_Getcomp()(_Keyval, _Mybase::_Key(_Where._Mynode())))
-			_Xout_of_range("invalid map<K, T> key");*/
+			_Xout_of_range("invalid map<K, T> key");
 		return (_Where->second);
 		}
 
 	const mapped_type& at(const key_type& _Keyval) const
 		{	// find element matching _Keyval
 		const_iterator _Where = _Mybase::lower_bound(_Keyval);
-		/*if (_Where == _Mybase::end()
+		if (_Where == _Mybase::end()
 			|| _Mybase::_Getcomp()(_Keyval, _Mybase::_Key(_Where._Mynode())))
-			_Xout_of_range("invalid map<K, T> key");*/
+			_Xout_of_range("invalid map<K, T> key");
 		return (_Where->second);
 		}
 	};
@@ -413,7 +400,7 @@ public:
 	typedef typename _Mybase::_Alty _Alty;
 
 	multimap()
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct empty map from defaults
 		}
 
@@ -423,11 +410,8 @@ public:
 		}
 
 	multimap(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._Getal().select_on_container_copy_construction())
-
-
 		{	// construct map by copying _Right
 		}
 
@@ -437,7 +421,7 @@ public:
 		}
 
 	explicit multimap(const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct empty map from comparator
 		}
 
@@ -448,17 +432,17 @@ public:
 
 	template<class _Iter>
 		multimap(_Iter _First, _Iter _Last)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct map from [_First, _Last), defaults
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
 		multimap(_Iter _First, _Iter _Last,
 			const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct map from [_First, _Last), comparator
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -466,7 +450,7 @@ public:
 			const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct map from [_First, _Last), comparator, and allocator
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -493,83 +477,60 @@ public:
 		return (*this);
 		}
 
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			iterator>::type
-		insert(_Valty&& _Val)
-		{	// insert a {key, mapped} value
-		return (_Mybase::insert(_STD forward<_Valty>(_Val)).first);
-		}
-
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			iterator>::type
-		insert(const_iterator _Where, _Valty&& _Val)
-		{	// insert a {key, mapped} value, with hint
-		return (_Mybase::insert(_Where, _STD forward<_Valty>(_Val)));
-		}
-
 	template<class... _Valty>
 		iterator emplace(_Valty&&... _Val)
 		{	// try to insert value_type(_Val...), favoring right side
 		return (_Mybase::emplace(_STD forward<_Valty>(_Val)...).first);
 		}
 
-
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _NOEXCEPT_OP(_Swap_adl(
-				_STD declval<_Pr&>(), _STD declval<_Pr&>())))
+			&& _Is_nothrow_swappable<_Pr>::value)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
 
+	using _Mybase::insert;
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		iterator insert(_Valty&& _Val)
+		{	// insert _Val
+		return (this->emplace(_STD forward<_Valty>(_Val)));
+		}
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		iterator insert(const_iterator _Where, _Valty&& _Val)
+		{	// insert _Val with hint
+		return (this->emplace_hint(_Where, _STD forward<_Valty>(_Val)));
+		}
+
 	multimap(_XSTD initializer_list<value_type> _Ilist)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct from initializer_list, defaults
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	multimap(_XSTD initializer_list<value_type> _Ilist,
 		const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct from initializer_list, comparator
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	multimap(_XSTD initializer_list<value_type> _Ilist,
 		const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct from initializer_list, comparator, and allocator
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		_Mybase::clear();
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		return (*this);
-		}
-
-	void insert(_XSTD initializer_list<value_type> _Ilist)
-		{	// insert initializer_list
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
-		}
-
-	iterator insert(const value_type& _Val)
-		{	// insert a {key, mapped} value
-		return (_Mybase::insert(_Val).first);
-		}
-
-	iterator insert(const_iterator _Where, const value_type& _Val)
-		{	// insert a {key, mapped} value, with hint
-		return (_Mybase::insert(_Where, _Val));
-		}
-
-	template<class _Iter>
-		void insert(_Iter _First, _Iter _Last)
-		{	// insert [_First, _Last), arbitrary iterators
-		_Mybase::insert(_First, _Last);
 		}
 	};
 

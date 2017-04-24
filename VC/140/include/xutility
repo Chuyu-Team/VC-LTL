@@ -133,6 +133,7 @@ public:
 			_Orphan_me();
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 			}
+
 		return (*this);
 		}
 
@@ -273,7 +274,7 @@ private:
 
 public:
 	template<class... _Other2>
-		_CONST_FUN explicit _Compressed_pair(_Zero_then_variadic_args_t,
+		constexpr explicit _Compressed_pair(_Zero_then_variadic_args_t,
 			_Other2&&... _Val2)
 		: _Ty1(), _Myval2(_STD forward<_Other2>(_Val2)...)
 		{	// construct from forwarded values
@@ -341,7 +342,7 @@ private:
 
 public:
 	template<class... _Other2>
-		_CONST_FUN explicit _Compressed_pair(_Zero_then_variadic_args_t,
+		constexpr explicit _Compressed_pair(_Zero_then_variadic_args_t,
 			_Other2&&... _Val2)
 		: _Myval1(), _Myval2(_STD forward<_Other2>(_Val2)...)
 		{	// construct from forwarded values
@@ -398,18 +399,6 @@ public:
 		}
 	};
 
-		// TEMPLATE FUNCTION _Is_checked AND FRIENDS
-
-		// TEMPLATE STRUCT _Get_unchecked_type AND FRIENDS
- #define _UNCHECKED_TYPE(_Iter) \
-	typename _Get_unchecked_type<_Iter>::type
-
-		// TEMPLATE STRUCT _Get_unchecked_type
-template<class _Ty>
-	struct _Get_unchecked_type
-		_GET_TYPE_OR_DEFAULT(_Unchecked_type,
-			_Ty);
-
 		// TEMPLATE STRUCT _Is_checked_helper
 template<class _Ty,
 	class = void>
@@ -419,8 +408,8 @@ template<class _Ty,
 	};
 
 template<class _Ty>
-	struct _Is_checked_helper<_Ty, typename _Param_tester<
-		typename _Ty::_Unchecked_type>::type>
+	struct _Is_checked_helper<_Ty, void_t<
+		typename _Ty::_Unchecked_type> >
 		: true_type
 	{	// defined if _Ty::_Unchecked_type exists
 	};
@@ -428,8 +417,8 @@ template<class _Ty>
 		// TEMPLATE FUNCTION _Is_checked
 template<class _Iter> inline
 	typename _Is_checked_helper<_Iter>::type _Is_checked(_Iter)
-	{	// return type is derived from true_type if iterator is checked
-	return (typename _Is_checked_helper<_Iter>::type());
+	{	// return type is true_type if iterator is checked
+	return {};
 	}
 
 		// TEMPLATE FUNCTION _Unchecked
@@ -438,6 +427,28 @@ template<class _Iter> inline
 	{	// construct unchecked from checked, generic
 	return (_Src);
 	}
+
+ #define _UNCHECKED_TYPE(_Iter) \
+	decltype(_Unchecked(_STD declval<_Iter>()))
+
+		// FUNCTION TEMPLATE _Unchecked_idl0
+ #if _ITERATOR_DEBUG_LEVEL == 0
+
+template<class _Iter> inline
+	_UNCHECKED_TYPE(_Iter) _Unchecked_idl0(_Iter _Src)
+	{	// uncheck _Src in IDL == 0 only
+	return (_Unchecked(_Src));
+	}
+
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+
+template<class _Iter> inline
+	_Iter _Unchecked_idl0(_Iter _Src)
+	{	// don't uncheck _Src for IDL > 0
+	return (_Src);
+	}
+
+ #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		// TEMPLATE FUNCTION _Rechecked
 template<class _Iter,
@@ -448,13 +459,55 @@ template<class _Iter,
 	return (_Dest);
 	}
 
+		// MACRO _DEPRECATE_UNCHECKED AND FRIENDS
+#define _DEFINE_DEPRECATE_UNCHECKED(_Func) \
+struct _Unchecked_iterators \
+	{	/* Warns about unchecked iterators */ \
+	static void _SCL_INSECURE_DEPRECATE_FN(_Func) _Deprecate(false_type) \
+		{	/* Detected unchecked iterator, warn */ \
+		} \
+	\
+	static void _Deprecate(true_type) \
+		{	/* Detected checked iterator, do not warn */ \
+		} \
+	}
+
+#define _USE_DEPRECATE_UNCHECKED(_Iter) \
+	(_Unchecked_iterators::_Deprecate(_Is_checked(_Iter)))
+
+#define _DEPRECATE_UNCHECKED(_Func, _Iter) \
+	_DEFINE_DEPRECATE_UNCHECKED(_Func); \
+	_USE_DEPRECATE_UNCHECKED(_Iter)
+
+
+		// MACROS _CHECK_RANIT_RANGE_xxx
+		// These macros work by forming an iterator to the opposite end of a range; the iterator
+		// itself contains the debug machinery that will assert if the range is not valid.
+#if _ITERATOR_DEBUG_LEVEL == 0
+#define _CHECK_RANIT_RANGE(_First, _Last, _Target)
+#define _CHECK_RANIT_RANGE_BACKWARD(_First, _Last, _Target)
+#define _CHECK_RANIT_RANGE_N(_Iter, _Diff)
+#else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+
+		// checks that the range [_Target, _Target + (_Last - _First)) is valid
+#define _CHECK_RANIT_RANGE(_First, _Last, _Target)          static_cast<void>((_Target) + ((_Last) - (_First)))
+
+		// checks that the range [_Target - (_Last - _First), _Target) is valid
+#define _CHECK_RANIT_RANGE_BACKWARD(_First, _Last, _Target) static_cast<void>((_Target) - ((_Last) - (_First)))
+
+		// checks that the range [_Iter, _Iter + _Diff) is valid
+#define _CHECK_RANIT_RANGE_N(_Iter, _Diff)                  static_cast<void>((_Iter) + (_Diff))
+
+#endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+
+
 		//	ITERATOR STUFF (from <iterator>)
 		// ITERATOR TAGS (from <iterator>)
 struct input_iterator_tag
 	{	// identifying tag for input iterators
 	};
 
-struct _Mutable_iterator_tag
+struct _Mutable_iterator_tag	// TRANSITION, remove for Dev15
 	{	// identifying tag for mutable iterators
 	};
 
@@ -479,11 +532,26 @@ struct random_access_iterator_tag
 	};
 
 		// POINTER ITERATOR TAGS
-struct _Nonscalar_ptr_iterator_tag
-	{	// pointer to unknown type
+struct _General_ptr_iterator_tag
+	{	// general case, no special optimizations
 	};
-struct _Scalar_ptr_iterator_tag
-	{	// pointer to scalar type
+
+struct _Trivially_copyable_ptr_iterator_tag
+	: _General_ptr_iterator_tag
+	{	// iterator is a pointer to a trivially copyable type
+	};
+
+struct _Really_trivial_ptr_iterator_tag
+	: _Trivially_copyable_ptr_iterator_tag
+	{	// iterator is a pointer to a trivial type
+	};
+
+	// STRUCT _Any_tag
+struct _Any_tag
+	{	// generic fallback/default/"other" target for tag dispatch
+	constexpr _Any_tag() _NOEXCEPT = default;
+	template<class _Ty>
+		constexpr _Any_tag(_Ty&&) _NOEXCEPT {}
 	};
 
 		// TEMPLATE CLASS iterator
@@ -522,48 +590,28 @@ template<class _Category,
 // base for output iterators
 typedef iterator<output_iterator_tag, void, void, void, void> _Outit;
 
-		// TEMPLATE CLASS _Is_iterator
+		// TEMPLATE CLASS iterator_traits
 template<class,
 	class = void>
-	struct _Is_iterator
-		: false_type
-	{	// default definition
-	};
-
-template<class _Ty>
-	struct _Is_iterator<_Ty, typename _Param_tester<
-		typename _Ty::iterator_category,
-		typename _Ty::value_type,
-		typename _Ty::difference_type,
-		typename _Ty::pointer,
-		typename _Ty::reference
-		>::type>
-		: true_type
-	{	// defined if _Ty::* types exist
-	};
-
-template<class _Ty>
-	struct _Is_iterator<_Ty *>
-		: true_type
-	{	// defined for pointers
-	};
-
-		// TEMPLATE CLASS iterator_traits
-template<class _Iter,
-	bool = _Is_iterator<_Iter>::value>
 	struct _Iterator_traits_base
-	{	// get traits from iterator _Iter
+	{	// empty for non-iterators
+	};
+
+template<class _Iter>
+	struct _Iterator_traits_base<_Iter, void_t<
+		typename _Iter::iterator_category,
+		typename _Iter::value_type,
+		typename _Iter::difference_type,
+		typename _Iter::pointer,
+		typename _Iter::reference
+		> >
+	{	// defined if _Iter::* types exist
 	typedef typename _Iter::iterator_category iterator_category;
 	typedef typename _Iter::value_type value_type;
 	typedef typename _Iter::difference_type difference_type;
 
 	typedef typename _Iter::pointer pointer;
 	typedef typename _Iter::reference reference;
-	};
-
-template<class _Iter>
-	struct _Iterator_traits_base<_Iter, false>
-	{	// empty for non-iterators
 	};
 
 template<class _Iter>
@@ -594,61 +642,172 @@ template<class _Ty>
 	typedef const _Ty& reference;
 	};
 
-		// TEMPLATE FUNCTION _Iter_cat
-template<class _Iter> inline
-	typename iterator_traits<_Iter>::iterator_category
-		_Iter_cat(const _Iter&)
-	{	// return category from iterator argument
-	typename iterator_traits<_Iter>::iterator_category _Cat;
-	return (_Cat);
+		// ALIAS TEMPLATE _Iter_value_t
+template<class _Iter>
+	using _Iter_value_t = typename iterator_traits<_Iter>::value_type;
+
+		// ALIAS TEMPLATE _Iter_diff_t
+template<class _Iter>
+	using _Iter_diff_t = typename iterator_traits<_Iter>::difference_type;
+
+		// ALIAS TEMPLATE _Iter_cat_t
+template<class _Iter>
+	using _Iter_cat_t = typename iterator_traits<_Iter>::iterator_category;
+
+		// TEMPLATE CLASS _Is_iterator
+template<class _Ty,
+	class = void>
+	struct _Is_iterator
+		: false_type
+	{	// default definition
+	};
+
+template<class _Ty>
+	struct _Is_iterator<_Ty, void_t<
+		typename iterator_traits<_Ty>::iterator_category
+		> >
+		: true_type
+	{	// defined if iterator_category is provided by iterator_traits<_Ty>
+	};
+
+
+		// FUNCTION TEMPLATE _Unchecked_n
+ #if _ITERATOR_DEBUG_LEVEL == 0
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n(_Iter _Src, _Diff)
+	{	// blindly unwrap _Src under IDL == 0
+	return (_Unchecked(_Src));
+	}
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n1(_Iter _Src, _Diff, false_type)
+	{	// checking range [_Src, _Src + _Diff) not possible; leave _Src wrapped
+	return (_Src);
 	}
 
-		// TEMPLATE FUNCTION _Ptr_cat
-template<class _Iter1,
-	class _Iter2> inline
-	_Nonscalar_ptr_iterator_tag _Ptr_cat(_Iter1&, _Iter2&)
-	{	// return pointer category from arbitrary arguments
-	_Nonscalar_ptr_iterator_tag _Cat;
-	return (_Cat);
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n1(_Iter _Src, _Diff _Count, true_type)
+	{	// check range [_Src, _Src + _Count) and unwrap _Src
+	if (0 < _Count)
+		{
+		_CHECK_RANIT_RANGE_N(_Src, _Count);
+		}
+
+	return (_Unchecked(_Src));
 	}
 
-template<class _Elem1,
-	class _Elem2>
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n(_Iter _Src, _Diff _Count)
+	{	// if possible, checks the range [_Src, _Src + _Count) and unwraps _Src; otherwise, returns _Src unchanged
+	return (_Unchecked_n1(_Src, _Count, is_base_of<random_access_iterator_tag, _Iter_cat_t<_Iter>>()));
+	}
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+
+		// STRUCT TEMPLATE _Is_same_size
+template<class _Ty1,
+	class _Ty2>
+	struct _Is_same_size
+		: bool_constant<sizeof(_Ty1) == sizeof(_Ty2)>
+	{	// determine whether two types have the same size
+	};
+
+		// STRUCT TEMPLATE _Unwrap_enum
+template<class _Elem,
+	bool _Is_enum = is_enum<_Elem>::value>
+	struct _Unwrap_enum
+	{	// if _Elem is an enum, gets its underlying type; otherwise leaves _Elem unchanged
+	typedef underlying_type_t<_Elem> type;
+	};
+
+template<class _Elem>
+	struct _Unwrap_enum<_Elem, false>
+	{	// passthrough non-enum type
+	typedef _Elem type;
+	};
+
+		// STRUCT TEMPLATE _Both_or_neither_bool
+template<class _Ty1,
+	class _Ty2>
+	struct _Both_or_neither_bool
+		: bool_constant<is_same<bool, _Ty1>::value == is_same<bool, _Ty2>::value>
+	{	// determines if both _Ty1 and _Ty2 are exactly bool, or neither are
+	};
+
+		// TEMPLATE FUNCTIONS _Ptr_copy_cat AND _Ptr_move_cat
+template<class _Source,
+	class _Dest>
 	struct _Ptr_cat_helper
-	{	// determines pointer category, nonscalar by default
-	typedef _Nonscalar_ptr_iterator_tag type;
+	{	// determines _Ptr_cat's result in the most general case
+	typedef typename _Unwrap_enum<_Source>::type _USource;
+	typedef typename _Unwrap_enum<_Dest>::type _UDest;
+	typedef conditional_t<
+		conjunction<
+			_Is_same_size<_USource, _UDest>,
+			is_integral<_USource>,
+			is_integral<_UDest>,
+			_Both_or_neither_bool<_USource, _UDest>,
+			// note: _Unwrap_enum strips volatile so we must check the type directly
+			negation<is_volatile<_Source>>,
+			negation<is_volatile<_Dest>>
+		>::value,
+		_Really_trivial_ptr_iterator_tag,
+		_General_ptr_iterator_tag> type;
 	};
 
 template<class _Elem>
 	struct _Ptr_cat_helper<_Elem, _Elem>
-	{	// determines pointer category, common type
-	typedef typename _If<is_scalar<_Elem>::value,
-		_Scalar_ptr_iterator_tag,
-		_Nonscalar_ptr_iterator_tag>::type type;
+	{	// determines _Ptr_cat's result when the types are the same
+	typedef conditional_t<
+		is_trivially_copyable<_Elem>::value,
+		conditional_t<is_trivial<_Elem>::value,
+			_Really_trivial_ptr_iterator_tag,
+			_Trivially_copyable_ptr_iterator_tag>,
+		_General_ptr_iterator_tag> type;
 	};
 
 template<class _Anything>
 	struct _Ptr_cat_helper<_Anything *, const _Anything *>
-	{	// determines pointer category
-	typedef _Scalar_ptr_iterator_tag type;
+	{	// determines _Ptr_cat's result when all we do is add const to a pointer
+	typedef _Really_trivial_ptr_iterator_tag type;
 	};
 
-template<class _Elem1,
-	class _Elem2> inline
-	typename _Ptr_cat_helper<_Elem1, _Elem2>::type
-		_Ptr_cat(_Elem1 *, _Elem2 *)
-	{	// return pointer category from pointers
-	typename _Ptr_cat_helper<_Elem1, _Elem2>::type _Cat;
-	return (_Cat);
+template<class _Source,
+	class _Dest> inline
+	_General_ptr_iterator_tag _Ptr_copy_cat(const _Source&, const _Dest&)
+	{	// return pointer copy optimization category for arbitrary iterators
+	return {};
 	}
 
-template<class _Elem1,
-	class _Elem2> inline
-	typename _Ptr_cat_helper<_Elem1, _Elem2>::type
-		_Ptr_cat(const _Elem1 *, _Elem2 *)
-	{	// return pointer category from pointers
-	typename _Ptr_cat_helper<_Elem1, _Elem2>::type _Cat;
-	return (_Cat);
+template<class _Source,
+	class _Dest> inline
+	conditional_t<is_trivially_assignable<_Dest&, _Source&>::value,
+		typename _Ptr_cat_helper<remove_const_t<_Source>, _Dest>::type,
+		_General_ptr_iterator_tag>
+		_Ptr_copy_cat(_Source * const&, _Dest * const&)
+	{	// return pointer copy optimization category for pointers
+	return {};
+	}
+
+template<class _Source,
+	class _Dest> inline
+	_General_ptr_iterator_tag _Ptr_move_cat(const _Source&, const _Dest&)
+	{	// return pointer move optimization category for arbitrary iterators
+	return {};
+	}
+
+template<class _Source,
+	class _Dest> inline
+	conditional_t<is_trivially_assignable<_Dest&, _Source>::value,
+		typename _Ptr_cat_helper<remove_const_t<_Source>, _Dest>::type,
+		_General_ptr_iterator_tag>
+		_Ptr_move_cat(_Source * const&, _Dest * const&)
+	{	// return pointer move optimization category for pointers
+	return {};
 	}
 
 		// DEBUG TESTING MACROS
@@ -728,9 +887,11 @@ template<class _Elem1,
 template<class _Pr,
 	class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool _Debug_lt_pred(_Pr _Pred,
+	constexpr bool _Debug_lt_pred(_Pr&& _Pred,
 		_Ty1&& _Left, _Ty2&& _Right,
 		_Dbfile_t _File, _Dbline_t _Line)
+		_NOEXCEPT_OP(_NOEXCEPT_OP(!_Pred(_Left, _Right))
+		&& _NOEXCEPT_OP(_Pred(_Right, _Left)))
 	{	// test if _Pred(_Left, _Right) and _Pred is strict weak ordering
 	return (!_Pred(_Left, _Right)
 		? false
@@ -742,8 +903,10 @@ template<class _Pr,
 		// TEMPLATE FUNCTION _Debug_lt
 template<class _Ty1,
 	class _Ty2> inline
-	_CONST_FUN bool _Debug_lt(_Ty1&& _Left, _Ty2&& _Right,
+	constexpr bool _Debug_lt(_Ty1&& _Left, _Ty2&& _Right,
 		_Dbfile_t _File, _Dbline_t _Line)
+		_NOEXCEPT_OP(_NOEXCEPT_OP(!(_Left < _Right))
+		&& _NOEXCEPT_OP(_Right < _Left))
 	{	// test if _Left < _Right and operator< is strict weak ordering
 	return (_Debug_lt_pred(less<>(),
 		_STD forward<_Ty1>(_Left), _STD forward<_Ty2>(_Right), _File, _Line));
@@ -781,8 +944,7 @@ template<class _InIt> inline
 	void _Debug_range2(_InIt _First, _InIt _Last,
 		_Dbfile_t, _Dbline_t, input_iterator_tag)
 	{	// test iterator pair for valid range, arbitrary iterators
-	bool _Ans = _First == _Last;	// make sure they're comparable
-	_Ans = _Ans;	// to quiet diagnostics
+	static_cast<void>(_First == _Last);	// make sure they're comparable
 	}
 
 template<class _RanIt> inline
@@ -802,7 +964,7 @@ template<class _InIt> inline
 	void _Debug_range(_InIt _First, _InIt _Last,
 		_Dbfile_t _File, _Dbline_t _Line)
 	{	// test iterator pair for valid range
-	_Debug_range2(_First, _Last, _File, _Line, _Iter_cat(_First));
+	_Debug_range2(_First, _Last, _File, _Line, _Iter_cat_t<_InIt>());
 	}
 
 		// TEMPLATE FUNCTION _Debug_range_ptr
@@ -835,20 +997,20 @@ template<class _InIt,
 	void _Debug_range_ptr(_InIt _First, _InIt _Last, _Pty& _Ptr,
 		_Dbfile_t _File, _Dbline_t _Line)
 	{	// test iterator pair for valid range/pointer
-	_Debug_range_ptr2(_First, _Last, _Ptr, _File, _Line, _Iter_cat(_First));
+	_Debug_range_ptr2(_First, _Last, _Ptr, _File, _Line, _Iter_cat_t<_InIt>());
 	}
 
 		// TEMPLATE FUNCTION _Debug_order WITH PRED
 template<class _InIt,
 	class _Pr> inline
-	void _Debug_order2(_InIt, _InIt, _Pr,
+	void _Debug_order2(_InIt, _InIt, _Pr&,
 		_Dbfile_t, _Dbline_t, input_iterator_tag)
 	{	// test if range is ordered by predicate, input iterators
 	}
 
 template<class _FwdIt,
 	class _Pr> inline
-	void _Debug_order2(_FwdIt _First, _FwdIt _Last, _Pr _Pred,
+	void _Debug_order2(_FwdIt _First, _FwdIt _Last, _Pr& _Pred,
 		_Dbfile_t _File, _Dbline_t _Line, forward_iterator_tag)
 	{	// test if range is ordered by predicate, forward iterators
 	for (_FwdIt _Next = _First; _First != _Last && ++_Next != _Last; ++_First)
@@ -858,27 +1020,43 @@ template<class _FwdIt,
 
 template<class _InIt,
 	class _Pr> inline
-	void _Debug_order(_InIt _First, _InIt _Last, _Pr _Pred,
+	void _Debug_order(_InIt _First, _InIt _Last, _Pr&& _Pred,
 		_Dbfile_t _File, _Dbline_t _Line)
 	{	// test if range is ordered by predicate
 	_DEBUG_RANGE_PTR2(_First, _Last, _Pred, _File, _Line);
-	_Debug_order2(_First, _Last, _Pred, _File, _Line, _Iter_cat(_First));
+	_Debug_order2(_First, _Last, _Pred, _File, _Line, _Iter_cat_t<_InIt>());
 	}
  #endif /* _ITERATOR_DEBUG_LEVEL < 2 */
 
-		// MORE ITERATOR STUFF (from <iterator>)
-		// TEMPLATE FUNCTION _Val_type
-
-template<class _Iter> inline
-	typename iterator_traits<_Iter>::value_type *_Val_type(_Iter)
-	{	// return value type from arbitrary argument
-	return (0);
+ #if _ITERATOR_DEBUG_LEVEL == 0
+  #define _DEBUG_ARRAY_SIZE(_Array, _Desired)
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+template<class _Ty,
+	size_t _Actual,
+	class _Diff> inline
+	void _Debug_array_size1(_Ty (&)[_Actual], _Diff _Desired)
+	{	// verify that _Actual is >= _Desired
+	_SCL_SECURE_VALIDATE_RANGE(_Actual >= _Desired);
 	}
+  #define _DEBUG_ARRAY_SIZE(_Array, _Desired) _Debug_array_size1(_Array, _Desired)
+ #else /* _ITERATOR_DEBUG_LEVEL == 2 */
+template<class _Ty,
+	size_t _Actual,
+	class _Diff> inline
+	void _Debug_array_size2(_Ty (&)[_Actual], _Diff _Desired,
+		_Dbfile_t _File, _Dbline_t _Line)
+	{	// verify that _Actual is >= _Desired
+	if (_Actual < _Desired)
+		_DEBUG_ERROR2("array too small", _File, _Line);
+	}
+  #define _DEBUG_ARRAY_SIZE(_Array, _Desired) _Debug_array_size2(_Array, _Desired, _FILENAME, __LINE__)
+ #endif /* _ITERATOR_DEBUG_LEVEL */
 
+		// MORE ITERATOR STUFF (from <iterator>)
 		// TEMPLATE FUNCTION advance
 template<class _InIt,
 	class _Diff> inline
-	void _Advance(_InIt& _Where, _Diff _Off, input_iterator_tag)
+	void _Advance1(_InIt& _Where, _Diff _Off, input_iterator_tag)
 	{	// increment iterator by offset, input iterators
  #if _ITERATOR_DEBUG_LEVEL == 2
 	if (_Off < 0)
@@ -889,22 +1067,9 @@ template<class _InIt,
 		++_Where;
 	}
 
-template<class _FwdIt,
-	class _Diff> inline
-	void _Advance(_FwdIt& _Where, _Diff _Off, forward_iterator_tag)
-	{	// increment iterator by offset, forward iterators
- #if _ITERATOR_DEBUG_LEVEL == 2
-	if (_Off < 0)
-		_DEBUG_ERROR("negative offset in advance");
- #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
-
-	for (; 0 < _Off; --_Off)
-		++_Where;
-	}
-
 template<class _BidIt,
 	class _Diff> inline
-	void _Advance(_BidIt& _Where, _Diff _Off, bidirectional_iterator_tag)
+	void _Advance1(_BidIt& _Where, _Diff _Off, bidirectional_iterator_tag)
 	{	// increment iterator by offset, bidirectional iterators
 	for (; 0 < _Off; --_Off)
 		++_Where;
@@ -914,7 +1079,7 @@ template<class _BidIt,
 
 template<class _RanIt,
 	class _Diff> inline
-	void _Advance(_RanIt& _Where, _Diff _Off, random_access_iterator_tag)
+	void _Advance1(_RanIt& _Where, _Diff _Off, random_access_iterator_tag)
 	{	// increment iterator by offset, random-access iterators
 	_Where += _Off;
 	}
@@ -923,51 +1088,26 @@ template<class _InIt,
 	class _Diff> inline
 	void advance(_InIt& _Where, _Diff _Off)
 	{	// increment iterator by offset, arbitrary iterators
-	_Advance(_Where, _Off, _Iter_cat(_Where));
+		// we remove_const_t before _Iter_cat_t for better diagnostics if the user passes an iterator that is const
+	_Advance1(_Where, _Off, _Iter_cat_t<remove_const_t<_InIt>>());
 	}
 
-		// TEMPLATE FUNCTION _Dist_type
-
-template<class _Iter> inline
-	typename iterator_traits<_Iter>::difference_type
-		*_Dist_type(_Iter)
-	{	// return distance type from arbitrary argument
-	return (0);
-	}
-
-		// TEMPLATE FUNCTIONS distance and _Distance
-template<class _InIt,
-	class _Diff> inline
-		void _Distance2(_InIt _First, _InIt _Last, _Diff& _Off,
-			input_iterator_tag)
-	{	// add to _Off distance between input iterators
+		// TEMPLATE FUNCTION distance
+template<class _InIt> inline
+	_Iter_diff_t<_InIt>
+		_Distance1(_InIt _First, _InIt _Last, input_iterator_tag)
+	{	// return distance between iterators; input
+	_Iter_diff_t<_InIt> _Off = 0;
 	for (; _First != _Last; ++_First)
 		++_Off;
+
+	return (_Off);
 	}
 
-template<class _FwdIt,
-	class _Diff> inline
-		void _Distance2(_FwdIt _First, _FwdIt _Last, _Diff& _Off,
-			forward_iterator_tag)
-	{	// add to _Off distance between forward iterators (redundant)
-	for (; _First != _Last; ++_First)
-		++_Off;
-	}
-
-template<class _BidIt,
-	class _Diff> inline
-		void _Distance2(_BidIt _First, _BidIt _Last, _Diff& _Off,
-			bidirectional_iterator_tag)
-	{	// add to _Off distance between bidirectional iterators (redundant)
-	for (; _First != _Last; ++_First)
-		++_Off;
-	}
-
-template<class _RanIt,
-	class _Diff> inline
-		void _Distance2(_RanIt _First, _RanIt _Last, _Diff& _Off,
-			random_access_iterator_tag)
-	{	// add to _Off distance between random-access iterators
+template<class _RanIt> inline
+	_Iter_diff_t<_RanIt>
+		_Distance1(_RanIt _First, _RanIt _Last, random_access_iterator_tag)
+	{	// return distance between iterators; random-access
  #if _ITERATOR_DEBUG_LEVEL == 2
 	if (_First != _Last)
 		{	// check for null pointers
@@ -976,33 +1116,23 @@ template<class _RanIt,
 		}
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 
-	_Off += _Last - _First;
+	return (_Last - _First);
 	}
 
 template<class _InIt> inline
-	typename iterator_traits<_InIt>::difference_type
+	_Iter_diff_t<_InIt>
 		distance(_InIt _First, _InIt _Last)
 	{	// return distance between iterators
-	typename iterator_traits<_InIt>::difference_type _Off = 0;
-	_Distance2(_First, _Last, _Off, _Iter_cat(_First));
-	return (_Off);
-	}
-
-template<class _InIt,
-	class _Diff> inline
-		void _Distance(_InIt _First, _InIt _Last, _Diff& _Off)
-	{	// add to _Off distance between iterators
-	_Distance2(_First, _Last, _Off, _Iter_cat(_First));
+	return (_Distance1(_First, _Last, _Iter_cat_t<_InIt>()));
 	}
 
 		// TEMPLATE FUNCTION next
-template<class _FwdIt> inline
-	_FwdIt next(_FwdIt _First,
-		typename iterator_traits<_FwdIt>::difference_type _Off = 1)
+template<class _InIt> inline
+	_InIt next(_InIt _First, _Iter_diff_t<_InIt> _Off = 1)
 	{	// increment iterator
-	static_assert(is_base_of<forward_iterator_tag,
-		typename iterator_traits<_FwdIt>::iterator_category>::value,
-		"next requires forward iterator");
+	static_assert(is_base_of<input_iterator_tag,
+		typename iterator_traits<_InIt>::iterator_category>::value,
+		"next requires input iterator");
 
 	_STD advance(_First, _Off);
 	return (_First);
@@ -1010,8 +1140,7 @@ template<class _FwdIt> inline
 
 		// TEMPLATE FUNCTION prev
 template<class _BidIt> inline
-	_BidIt prev(_BidIt _First,
-		typename iterator_traits<_BidIt>::difference_type _Off = 1)
+	_BidIt prev(_BidIt _First, _Iter_diff_t<_BidIt> _Off = 1)
 	{	// decrement iterator
 	static_assert(is_base_of<bidirectional_iterator_tag,
 		typename iterator_traits<_BidIt>::iterator_category>::value,
@@ -1078,7 +1207,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myt& operator++()
@@ -1247,21 +1376,21 @@ template<class _Container>
 
 template<class _Ty,
 	size_t _Size> inline
-	_CONST_FUN _Ty *begin(_Ty (&_Array)[_Size]) _NOEXCEPT
+	constexpr _Ty *begin(_Ty (&_Array)[_Size]) _NOEXCEPT
 	{	// get beginning of array
 	return (_Array);
 	}
 
 template<class _Ty,
 	size_t _Size> inline
-	_CONST_FUN _Ty *end(_Ty (&_Array)[_Size]) _NOEXCEPT
+	constexpr _Ty *end(_Ty (&_Array)[_Size]) _NOEXCEPT
 	{	// get end of array
 	return (_Array + _Size);
 	}
 
 		// TEMPLATE FUNCTIONS cbegin AND cend
 template<class _Container>
-	_CONST_FUN auto inline cbegin(const _Container& _Cont)
+	constexpr auto inline cbegin(const _Container& _Cont)
 		_NOEXCEPT_OP(_NOEXCEPT_OP(_STD begin(_Cont)))
 		-> decltype(_STD begin(_Cont))
 	{	// get beginning of sequence
@@ -1269,7 +1398,7 @@ template<class _Container>
 	}
 
 template<class _Container>
-	_CONST_FUN auto inline cend(const _Container& _Cont)
+	constexpr auto inline cend(const _Container& _Cont)
 		_NOEXCEPT_OP(_NOEXCEPT_OP(_STD end(_Cont)))
 		-> decltype(_STD end(_Cont))
 	{	// get end of sequence
@@ -1346,7 +1475,7 @@ template<class _Container>
 
 
 template<class _Container>
-	_CONST_FUN auto inline size(const _Container& _Cont)
+	constexpr auto inline size(const _Container& _Cont)
 		-> decltype(_Cont.size())
 	{	// get size() for container
 	return (_Cont.size());
@@ -1354,13 +1483,13 @@ template<class _Container>
 
 template<class _Ty,
 	size_t _Size> inline
-	_CONST_FUN size_t size(const _Ty(&)[_Size]) _NOEXCEPT
+	constexpr size_t size(const _Ty(&)[_Size]) _NOEXCEPT
 	{	// get dimension for array
 	return (_Size);
 	}
 
 template<class _Container>
-	_CONST_FUN auto inline empty(const _Container& _Cont)
+	constexpr auto inline empty(const _Container& _Cont)
 		-> decltype(_Cont.empty())
 	{	// get empty() for container
 	return (_Cont.empty());
@@ -1368,27 +1497,27 @@ template<class _Container>
 
 template<class _Ty,
 	size_t _Size> inline
-	_CONST_FUN bool empty(const _Ty(&)[_Size]) _NOEXCEPT
+	constexpr bool empty(const _Ty(&)[_Size]) _NOEXCEPT
 	{	// get dimension==0 for array (can't happen)
 	return (false);
 	}
 
 template<class _Elem> inline
-	_CONST_FUN bool empty(
+	constexpr bool empty(
 		_XSTD initializer_list<_Elem> _Ilist) _NOEXCEPT
 	{	// get dimension==0 for initializer_list
 	return (_Ilist.size() == 0);
 	}
 
 template<class _Container>
-	_CONST_FUN auto inline data(_Container& _Cont)
+	constexpr auto inline data(_Container& _Cont)
 		-> decltype(_Cont.data())
 	{	// get data() for container
 	return (_Cont.data());
 	}
 
 template<class _Container>
-	_CONST_FUN auto inline data(const _Container& _Cont)
+	constexpr auto inline data(const _Container& _Cont)
 		-> decltype(_Cont.data())
 	{	// get pointer to data of const container
 	return (_Cont.data());
@@ -1396,13 +1525,13 @@ template<class _Container>
 
 template<class _Ty,
 	size_t _Size> inline
-	_CONST_FUN _Ty *data(_Ty(&_Array)[_Size]) _NOEXCEPT
+	constexpr _Ty *data(_Ty(&_Array)[_Size]) _NOEXCEPT
 	{	// get pointer to data of array
 	return (_Array);
 	}
 
 template<class _Elem> inline
-	_CONST_FUN const _Elem *data(
+	constexpr const _Elem *data(
 		_XSTD initializer_list<_Elem> _Ilist) _NOEXCEPT
 	{	// get pointer to data of initializer_list
 	return (_Ilist.begin());
@@ -1431,13 +1560,13 @@ public:
 	enum {_EEN_SIZE = _Size};	// helper for expression evaluator
  #if _ITERATOR_DEBUG_LEVEL == 0
 	_Array_const_iterator()
+		: _Ptr(0)
 		{	// construct with null pointer
-		_Ptr = 0;
 		}
 
 	explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
+		: _Ptr(_Parg + _Off)
 		{	// construct with pointer and offset
-		_Ptr = _Parg + _Off;
 		}
 
 	typedef pointer _Unchecked_type;
@@ -1460,7 +1589,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -1556,15 +1685,15 @@ public:
 
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
 	_Array_const_iterator()
+		: _Ptr(),
+		_Idx(0)
 		{	// construct with null pointer
-		_Ptr = 0;
-		_Idx = 0;
 		}
 
 	explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
+		: _Ptr(_Parg),
+		_Idx(_Off)
 		{	// construct with pointer and offset
-		_Ptr = _Parg;
-		_Idx = _Off;
 		}
 
 	typedef pointer _Unchecked_type;
@@ -1602,7 +1731,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -1831,7 +1960,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -1934,7 +2063,9 @@ public:
 	typedef typename iterator_traits<_RanIt>::difference_type
 		difference_type;
 	typedef _RanIt pointer;
-	typedef value_type&& reference;
+	typedef typename iterator_traits<_RanIt>::reference _Ref0;
+	typedef conditional_t<is_reference<_Ref0>::value,
+		remove_reference_t<_Ref0>&&, _Ref0> reference;
 	typedef _RanIt iterator_type;
 
 	move_iterator()
@@ -1967,7 +2098,7 @@ public:
 
 	reference operator*() const
 		{	// return designated value
-		return (_STD move(*current));
+		return (static_cast<reference>(*current));
 		}
 
 	pointer operator->() const
@@ -2138,11 +2269,48 @@ template<class _RanIt> inline
 	return (move_iterator<_RanIt>(_Iter));
 	}
 
+		// STRUCT TEMPLATE _Char_traits_eq
+template<class _Traits>
+	struct _Char_traits_eq
+	{
+	typedef typename _Traits::char_type _Elem;
+
+	bool operator()(_Elem _Left, _Elem _Right) const
+		{
+		return (_Traits::eq(_Left, _Right));
+		}
+	};
+
+		// STRUCT TEMPLATE _Char_traits_lt
+template<class _Traits>
+	struct _Char_traits_lt
+	{
+	typedef typename _Traits::char_type _Elem;
+
+	bool operator()(_Elem _Left, _Elem _Right) const
+		{
+		return (_Traits::lt(_Left, _Right));
+		}
+	};
+
 		// TEMPLATE FUNCTION copy
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Nonscalar_ptr_iterator_tag)
+	_OutIt _Copy_memmove(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// implement copy-like function as memmove
+	const char * const _First_ch = reinterpret_cast<const char *>(_First);
+	const char * const _Last_ch = reinterpret_cast<const char *>(_Last);
+	char * const _Dest_ch = reinterpret_cast<char *>(_Dest);
+	const size_t _Count = _Last_ch - _First_ch;
+	_CSTD memmove(_Dest_ch, _First_ch, _Count);
+	return (reinterpret_cast<_OutIt>(_Dest_ch + _Count));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Copy_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _General_ptr_iterator_tag)
 	{	// copy [_First, _Last) to [_Dest, ...), arbitrary iterators
 	for (; _First != _Last; ++_Dest, (void)++_First)
 		*_Dest = *_First;
@@ -2151,73 +2319,49 @@ template<class _InIt,
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) to [_Dest, ...), pointers to scalars
-	ptrdiff_t _Count = _Last - _First;
-	_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest + _Count);
+	_OutIt _Copy_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// copy [_First, _Last) to [_Dest, ...), pointers to trivially copyable
+	return (_Copy_memmove(_First, _Last, _Dest));
 	}
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
+	_OutIt _Copy_unchecked(_InIt _First, _InIt _Last,
 		_OutIt _Dest)
 	{	// copy [_First, _Last) to [_Dest, ...)
-	return (_Copy_impl(_First, _Last,
-		_Dest, _Ptr_cat(_First, _Dest)));
+		// note: _Copy_unchecked is called directly elsewhere in the STL
+	return (_Copy_unchecked1(_First, _Last,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt copy(_InIt _First, _InIt _Last,
-		_OutIt _Dest)
-	{	// copy [_First, _Last) to [_Dest, ...)
-	return (_Rechecked(_Dest,
-		_Copy_impl(_Unchecked(_First), _Unchecked(_Last),
-			_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt> inline
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
-		_OutIt _Dest, input_iterator_tag, _Mutable_iterator_tag)
+	_OutIt _Copy_no_deprecate1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, input_iterator_tag, _Any_tag)
 	{	// copy [_First, _Last) to [_Dest, ...), arbitrary iterators
-	return (_Copy_impl(_First, _Last,
-		_Dest));
+	return (_Rechecked(_Dest,
+		_Copy_unchecked(_First, _Last, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
+	_OutIt _Copy_no_deprecate1(_InIt _First, _InIt _Last,
 		_OutIt _Dest, random_access_iterator_tag, random_access_iterator_tag)
 	{	// copy [_First, _Last) to [_Dest, ...), random-access iterators
-	_OutIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Copy_impl(_First, _Last,
-		_Unchecked(_Dest));
-	return (_Ans);
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Copy_unchecked(_First, _Last, _Unchecked(_Dest))));
 	}
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
-		_OutIt _Dest, true_type)
-	{	// copy [_First, _Last) to [_Dest, ...), checked dest
-	return (_Copy_impl(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Copy_impl(_InIt _First, _InIt _Last,
-		_OutIt _Dest, false_type)
-	{	// copy [_First, _Last) to [_Dest, ...), unchecked dest
-	return (_Copy_impl(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
+	_OutIt _Copy_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// copy [_First, _Last) to [_Dest, ...), no _SCL_INSECURE_DEPRECATE_FN warnings
+	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
+	return (_Copy_no_deprecate1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Iter_cat_t<_InIt>(), _Iter_cat_t<_OutIt>()));
 	}
 
 template<class _InIt,
@@ -2225,9 +2369,8 @@ template<class _InIt,
 	_OutIt copy(_InIt _First, _InIt _Last,
 		_OutIt _Dest)
 	{	// copy [_First, _Last) to [_Dest, ...)
-	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Copy_impl(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Is_checked(_Dest)));
+	_DEPRECATE_UNCHECKED(copy, _Dest);
+	return (_Copy_no_deprecate(_First, _Last, _Dest));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -2238,29 +2381,33 @@ template<class _InIt,
 		_OutTy (&_Dest)[_OutSize])
 	{	// copy [_First, _Last) to [_Dest, ...)
 	return (_Unchecked(
-		_STD copy(_First, _Last,
+		_Copy_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest))));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION copy_n
 template<class _InIt,
 	class _Diff,
 	class _OutIt> inline
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
+	_OutIt _Copy_n_unchecked2(_InIt _First, _Diff _Count,
 		_OutIt _Dest, input_iterator_tag)
 	{	// copy [_First, _First + _Count) to [_Dest, ...), input iterators
-	*_Dest = *_First;	// 0 < _Count has been guaranteed
-	while (0 < --_Count)
-		*++_Dest = *++_First;
-	return (++_Dest);
+	if (0 < _Count)
+		{
+		*_Dest = *_First;
+		while (0 < --_Count)
+			*++_Dest = *++_First;
+		return (++_Dest);
+		}
+
+	return (_Dest);
 	}
 
 template<class _InIt,
 	class _Diff,
 	class _OutIt> inline
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
+	_OutIt _Copy_n_unchecked2(_InIt _First, _Diff _Count,
 		_OutIt _Dest, forward_iterator_tag)
 	{	// copy [_First, _First + _Count) to [_Dest, ...), forward iterators
 	for (; 0 < _Count; --_Count, (void)++_Dest, ++_First)
@@ -2271,112 +2418,34 @@ template<class _InIt,
 template<class _InIt,
 	class _Diff,
 	class _OutIt> inline
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
-		_OutIt _Dest, _Nonscalar_ptr_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), arbitrary iterators
-	return (_Copy_n(_First, _Count,
-		_Dest, _Iter_cat(_First)));
-	}
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
-		_OutIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), pointers to scalars
-	_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest + _Count);
+	_OutIt _Copy_n_unchecked1(_InIt _First, _Diff _Count,
+		_OutIt _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), no special optimization
+		// note that we must dispatch on iterator power here to avoid incrementing
+		// istream_iterator too many times; see LWG# 2471
+	return (_Copy_n_unchecked2(_First, _Count,
+		_Dest, _Iter_cat_t<_InIt>()));
 	}
 
 template<class _InIt,
 	class _Diff,
 	class _OutIt> inline
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
+	_OutIt _Copy_n_unchecked1(_InIt _First, _Diff _Count,
+		_OutIt _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), memmove optimization
+	if (0 < _Count)
+		return (_Copy_memmove(_First, _First + _Count, _Dest));
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt _Copy_n_unchecked(_InIt _First, _Diff _Count,
 		_OutIt _Dest)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), unchecked
-	return (_Copy_n(_First, _Count,
-		_Dest, _Ptr_cat(_First, _Dest)));
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt copy_n(_InIt _First, _Diff _Count,
-		_OutIt _Dest)
-	{	// copy [_First, _First + _Count) to [_Dest, ...)
-	if (_Count <= 0)
-		return (_Dest);
-	else
-		return (_Rechecked(_Dest,
-			_Copy_n(_Unchecked(_First), _Count,
-				_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt _Copy_n2(_InIt _First, _Diff _Count,
-		_OutIt _Dest, _Mutable_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), arbitrary dest
-	return (_Copy_n(_First, _Count,
-		_Dest));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt _Copy_n2(_InIt _First, _Diff _Count,
-		_OutIt _Dest, random_access_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), random-access dest
-	_OutIt _Ans = _Dest + _Count;	// also checks range
-	_Copy_n(_First, _Count,
-		_Unchecked(_Dest));
-	return (_Ans);
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt _Copy_n1(_InIt _First, _Diff _Count,
-		_OutIt _Dest, input_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), arbitrary input
-	return (_Copy_n2(_First, _Count,
-		_Dest, _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt _Copy_n1(_InIt _First, _Diff _Count,
-		_OutIt _Dest, random_access_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), random-access input
-	_InIt _Last = _First + _Count;	// also checks range
-	_Last = _Last;	// to quiet diagnostics
-	return (_Copy_n2(_Unchecked(_First), _Count,
-		_Dest, _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
-		_OutIt _Dest, true_type)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), checked dest
-	return (_Copy_n1(_First, _Count,
-		_Dest, _Iter_cat(_First)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _OutIt> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Copy_n(_InIt _First, _Diff _Count,
-		_OutIt _Dest, false_type)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), unchecked dest
-	return (_Copy_n1(_First, _Count,
-		_Dest, _Iter_cat(_First)));
+	{	// copy [_First, _First + _Count) to [_Dest, ...), choose optimization
+	return (_Copy_n_unchecked1(_First, _Count,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
 	}
 
 template<class _InIt,
@@ -2385,15 +2454,10 @@ template<class _InIt,
 	_OutIt copy_n(_InIt _First, _Diff _Count,
 		_OutIt _Dest)
 	{	// copy [_First, _First + _Count) to [_Dest, ...)
-	if (_Count <= 0)
-		return (_Dest);
-	else
-		{	// validate parameters and copy
-		_DEBUG_POINTER(_First);
-		_DEBUG_POINTER(_Dest);
-		return (_Copy_n(_First, _Count,
-			_Dest, _Is_checked(_Dest)));
-		}
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	_DEPRECATE_UNCHECKED(copy_n, _Dest);
+	return (_Rechecked(_Dest,
+		_Copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Unchecked_n(_Dest, _Count))));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -2404,8 +2468,11 @@ template<class _InTy,
 	_OutIt copy_n(_InTy (&_First)[_InSize], _Diff _Count,
 		_OutIt _Dest)
 	{	// copy [_First, _First + _Count) to [_Dest, ...), array input
-	return (_STD copy_n(_Array_iterator<_InTy, _InSize>(_First), _Count,
-		_Dest));
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	_DEPRECATE_UNCHECKED(copy_n, _Dest);
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	return (_Rechecked(_Dest,
+		_Copy_n_unchecked(_First, _Count, _Unchecked_n(_Dest, _Count))));
 	}
 
 template<class _InIt,
@@ -2415,9 +2482,8 @@ template<class _InIt,
 	_OutTy *copy_n(_InIt _First, _Diff _Count,
 		_OutTy (&_Dest)[_OutSize])
 	{	// copy [_First, _First + _Count) to [_Dest, ...), array dest
-	return (_Unchecked(
-		_STD copy_n(_First, _Count,
-			_Array_iterator<_OutTy, _OutSize>(_Dest))));
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Dest));
 	}
 
 template<class _InTy,
@@ -2428,73 +2494,70 @@ template<class _InTy,
 	_OutTy *copy_n(_InTy (&_First)[_InSize], _Diff _Count,
 		_OutTy (&_Dest)[_OutSize])
 	{	// copy [_First, _First + _Count) to [_Dest, ...), array input/dest
-	return (_Unchecked(
-		_STD copy_n(_Array_iterator<_InTy, _InSize>(_First), _Count,
-			_Array_iterator<_OutTy, _OutSize>(_Dest))));
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Copy_n_unchecked(_First, _Count, _Dest));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION copy_backward
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 _Copy_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest, _Nonscalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) backwards to [..., _Dest), arbitrary iterators
+	_BidIt2 _Copy_backward_memmove(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest)
+	{	// implement copy_backward-like function as memmove
+	const char * const _First_ch = reinterpret_cast<const char *>(_First);
+	const char * const _Last_ch = reinterpret_cast<const char *>(_Last);
+	char * const _Dest_ch = reinterpret_cast<char *>(_Dest);
+	const size_t _Count = _Last_ch - _First_ch;
+	return (static_cast<_BidIt2>(
+		_CSTD memmove(_Dest_ch - _Count, _First_ch, _Count)));
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Copy_backward_unchecked1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _Last) backwards to [..., _Dest), no special optimization
 	while (_First != _Last)
 		*--_Dest = *--_Last;
 	return (_Dest);
 	}
 
-template<class _InIt,
-	class _OutIt> inline
-	_OutIt _Copy_backward(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) backwards to [..., _Dest), pointers to scalars
-	ptrdiff_t _Count = _Last - _First;
-	_CSTD memmove(&*_Dest - _Count, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest - _Count);
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Copy_backward_unchecked1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// copy [_First, _Last) backwards to [..., _Dest), memmove optimization
+	return (_Copy_backward_memmove(_First, _Last, _Dest));
 	}
 
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 _Copy_backward(_BidIt1 _First, _BidIt1 _Last,
+	_BidIt2 _Copy_backward_unchecked(_BidIt1 _First, _BidIt1 _Last,
 		_BidIt2 _Dest)
-	{	// copy [_First, _Last) backwards to [..., _Dest), unchecked
-	return (_Copy_backward(_First, _Last,
-		_Dest, _Ptr_cat(_First, _Dest)));
+	{	// copy [_First, _Last) backwards to [..., _Dest), choose optimization
+	return (_Copy_backward_unchecked1(_First, _Last,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 copy_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest)
-	{	// copy [_First, _Last) backwards to [..., _Dest)
+	_BidIt2 _Copy_backward1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, input_iterator_tag, _Any_tag)
+	{	// copy [_First, _Last) backwards to [..., _Dest), arbitrary iterators
 	return (_Rechecked(_Dest,
-		_Copy_backward(_Unchecked(_First), _Unchecked(_Last),
-			_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _BidIt1,
-	class _BidIt2> inline
-	_BidIt2 _Copy_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest, true_type)
-	{	// copy [_First, _Last) backwards to [..., _Dest), checked dest
-	return (_Copy_backward(_Unchecked(_First), _Unchecked(_Last),
-		_Dest));
+		_Copy_backward_unchecked(_First, _Last, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _BidIt1,
 	class _BidIt2> inline
-_SCL_INSECURE_DEPRECATE
-	_BidIt2 _Copy_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest, false_type)
-	{	// copy [_First, _Last) backwards to [..., _Dest), unchecked dest
-	return (_Copy_backward(_Unchecked(_First), _Unchecked(_Last),
-		_Dest));
+	_BidIt2 _Copy_backward1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, random_access_iterator_tag, random_access_iterator_tag)
+	{	// copy [_First, _Last) backwards to [..., _Dest), random-access iterators
+	_CHECK_RANIT_RANGE_BACKWARD(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Copy_backward_unchecked(_First, _Last, _Unchecked(_Dest))));
 	}
 
 template<class _BidIt1,
@@ -2502,18 +2565,18 @@ template<class _BidIt1,
 	_BidIt2 copy_backward(_BidIt1 _First, _BidIt1 _Last,
 		_BidIt2 _Dest)
 	{	// copy [_First, _Last) backwards to [..., _Dest)
+	_DEPRECATE_UNCHECKED(copy_backward, _Dest);
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Copy_backward(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Is_checked(_Dest)));
+	return (_Copy_backward1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Iter_cat_t<_BidIt1>(), _Iter_cat_t<_BidIt2>()));
 	}
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION move
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Move(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Nonscalar_ptr_iterator_tag)
-	{	// move [_First, _Last) to [_Dest, ...), arbitrary iterators
+	_OutIt _Move_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _Last) to [_Dest, ...), no special optimization
 	for (; _First != _Last; ++_Dest, (void)++_First)
 		*_Dest = _STD move(*_First);
 	return (_Dest);
@@ -2521,73 +2584,48 @@ template<class _InIt,
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Move(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// move [_First, _Last) to [_Dest, ...), pointers to scalars
-	ptrdiff_t _Count = _Last - _First;
-	_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest + _Count);
+	_OutIt _Move_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// move [_First, _Last) to [_Dest, ...), memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
 	}
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Move(_InIt _First, _InIt _Last,
+	_OutIt _Move_unchecked(_InIt _First, _InIt _Last,
 		_OutIt _Dest)
-	{	// move [_First, _Last) to [_Dest, ...), unchecked
-	return (_Move(_First, _Last,
-		_Dest, _Ptr_cat(_First, _Dest)));
+	{	// move [_First, _Last) to [_Dest, ...), choose optimization
+	return (_Move_unchecked1(_First, _Last,
+		_Dest, _Ptr_move_cat(_First, _Dest)));
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt move(_InIt _First, _InIt _Last,
-		_OutIt _Dest)
-	{	// move [_First, _Last) to [_Dest, ...)
-	return (_Rechecked(_Dest,
-		_Move(_Unchecked(_First), _Unchecked(_Last),
-			_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _OutIt> inline
-	_OutIt _Move(_InIt _First, _InIt _Last,
-		_OutIt _Dest, input_iterator_tag, _Mutable_iterator_tag)
+	_OutIt _Move_no_deprecate1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, input_iterator_tag, _Any_tag)
 	{	// move [_First, _Last) to [_Dest, ...), arbitrary iterators
-	return (_Move(_First, _Last,
-		_Dest));
+	return (_Rechecked(_Dest,
+		_Move_unchecked(_First, _Last, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Move(_InIt _First, _InIt _Last,
+	_OutIt _Move_no_deprecate1(_InIt _First, _InIt _Last,
 		_OutIt _Dest, random_access_iterator_tag, random_access_iterator_tag)
 	{	// move [_First, _Last) to [_Dest, ...), random-access iterators
-	_OutIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Move(_First, _Last,
-		_Unchecked(_Dest));
-	return (_Ans);
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Move_unchecked(_First, _Last, _Unchecked(_Dest))));
 	}
 
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Move(_InIt _First, _InIt _Last,
-		_OutIt _Dest, true_type)
-	{	// move [_First, _Last) to [_Dest, ...), checked dest
-	return (_Move(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _OutIt> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Move(_InIt _First, _InIt _Last,
-		_OutIt _Dest, false_type)
-	{	// move [_First, _Last) to [_Dest, ...), unchecked dest
-	return (_Move(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
+	_OutIt _Move_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// move [_First, _Last) to [_Dest, ...), no _SCL_INSECURE_DEPRECATE_FN warnings
+	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
+	return (_Move_no_deprecate1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Iter_cat_t<_InIt>(), _Iter_cat_t<_OutIt>()));
 	}
 
 template<class _InIt,
@@ -2595,9 +2633,8 @@ template<class _InIt,
 	_OutIt move(_InIt _First, _InIt _Last,
 		_OutIt _Dest)
 	{	// move [_First, _Last) to [_Dest, ...)
-	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Move(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Is_checked(_Dest)));
+	_DEPRECATE_UNCHECKED(move, _Dest);
+	return (_Move_no_deprecate(_First, _Last, _Dest));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -2608,72 +2645,56 @@ template<class _InIt,
 		_OutTy (&_Dest)[_OutSize])
 	{	// move [_First, _Last) to [_Dest, ...)
 	return (_Unchecked(
-		_STD move(_First, _Last,
+		_Move_no_deprecate(_First, _Last,
 			_Array_iterator<_OutTy, _OutSize>(_Dest))));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION move_backward
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 _Move_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest, _Nonscalar_ptr_iterator_tag)
-	{	// move [_First, _Last) backwards to [..., _Dest), arbitrary iterators
+	_BidIt2 _Move_backward_unchecked1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _Last) backwards to [..., _Dest), no special optimization
 	while (_First != _Last)
 		*--_Dest = _STD move(*--_Last);
 	return (_Dest);
 	}
 
-template<class _InIt,
-	class _OutIt> inline
-	_OutIt _Move_backward(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// move [_First, _Last) backwards to [..., _Dest), pointers to scalars
-	ptrdiff_t _Count = _Last - _First;
-	_CSTD memmove(&*_Dest - _Count, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest - _Count);
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Move_backward_unchecked1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// move [_First, _Last) backwards to [..., _Dest), memmove optimization
+	return (_Copy_backward_memmove(_First, _Last, _Dest));
 	}
 
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 _Move_backward(_BidIt1 _First, _BidIt1 _Last,
+	_BidIt2 _Move_backward_unchecked(_BidIt1 _First, _BidIt1 _Last,
 		_BidIt2 _Dest)
-	{	// move [_First, _Last) backwards to [..., _Dest), unchecked
-	return (_Move_backward(_First, _Last,
-		_Dest, _Ptr_cat(_First, _Dest)));
+	{	// move [_First, _Last) backwards to [..., _Dest), choose optimization
+	return (_Move_backward_unchecked1(_First, _Last,
+		_Dest, _Ptr_move_cat(_First, _Dest)));
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 move_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest)
-	{	// move [_First, _Last) backwards to [..., _Dest)
+	_BidIt2 _Move_backward1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, input_iterator_tag, _Any_tag)
+	{	// move [_First, _Last) backwards to [..., _Dest), arbitrary iterators
 	return (_Rechecked(_Dest,
-		_Move_backward(_Unchecked(_First), _Unchecked(_Last),
-			_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _BidIt1,
-	class _BidIt2> inline
-	_BidIt2 _Move_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest, true_type)
-	{	// move [_First, _Last) backwards to [..., _Dest), checked dest
-	return (_Move_backward(_Unchecked(_First), _Unchecked(_Last),
-		_Dest));
+		_Move_backward_unchecked(_First, _Last, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _BidIt1,
 	class _BidIt2> inline
-_SCL_INSECURE_DEPRECATE
-	_BidIt2 _Move_backward(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest, false_type)
-	{	// move [_First, _Last) backwards to [..., _Dest), unchecked dest
-	return (_Move_backward(_Unchecked(_First), _Unchecked(_Last),
-		_Dest));
+	_BidIt2 _Move_backward1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, random_access_iterator_tag, random_access_iterator_tag)
+	{	// move [_First, _Last) backwards to [..., _Dest), random-access iterators
+	_CHECK_RANIT_RANGE_BACKWARD(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Move_backward_unchecked(_First, _Last, _Unchecked(_Dest))));
 	}
 
 template<class _BidIt1,
@@ -2681,34 +2702,82 @@ template<class _BidIt1,
 	_BidIt2 move_backward(_BidIt1 _First, _BidIt1 _Last,
 		_BidIt2 _Dest)
 	{	// move [_First, _Last) backwards to [..., _Dest)
+	_DEPRECATE_UNCHECKED(move_backward, _Dest);
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Move_backward(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Is_checked(_Dest)));
+	return (_Move_backward1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Iter_cat_t<_BidIt1>(), _Iter_cat_t<_BidIt2>()));
 	}
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
-		// TEMPLATE FUNCTION fill
+		// FUNCTION TEMPLATE fill
+template<class _Ty>
+	struct _Is_character
+		: false_type
+		{	// by default, not a character type
+		};
+
+template<>
+	struct _Is_character<char>
+		: true_type
+		{	// chars are characters
+		};
+
+template<>
+	struct _Is_character<signed char>
+		: true_type
+		{	// signed chars are also characters
+		};
+
+template<>
+	struct _Is_character<unsigned char>
+		: true_type
+		{	// unsigned chars are also characters
+		};
+
+template<class _FwdIt,
+	class _Ty>
+	struct _Fill_memset_is_safe_helper
+	{	// determines if _FwdIt and _Ty are eligible for memset optimization in fill
+	typedef _Iter_value_t<_FwdIt> _Value_type;
+	typedef typename conjunction<
+		is_pointer<_FwdIt>,
+		disjunction<
+			conjunction<
+				_Is_character<_Ty>,
+				_Is_character<_Value_type>>,
+			conjunction<
+				is_same<bool, _Ty>,
+				is_same<bool, _Value_type>>
+		>>::type type;
+	};
+
 template<class _FwdIt,
 	class _Ty> inline
-	void _Fill(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
-	{	// copy _Val through [_First, _Last)
+	typename _Fill_memset_is_safe_helper<_FwdIt, _Ty>::type
+	_Fill_memset_is_safe(const _FwdIt&, const _Ty&)
+	{	// type deduction for _Fill_memset_is_safe_helper
+	return {};
+	}
+
+template<class _FwdIt,
+	class _Ty> inline
+	void _Fill_unchecked1(_FwdIt _First, _FwdIt _Last, const _Ty& _Val, false_type)
+	{	// copy _Val through [_First, _Last), no special optimization
 	for (; _First != _Last; ++_First)
 		*_First = _Val;
 	}
 
-inline void _Fill(char *_First, char *_Last, char _Val)
-	{	// copy char _Val through [_First, _Last)
+template<class _FwdIt,
+	class _Ty> inline
+	void _Fill_unchecked1(_FwdIt _First, _FwdIt _Last, const _Ty& _Val, true_type)
+	{	// copy _Val through [_First, _Last), memset optimization
 	_CSTD memset(_First, _Val, _Last - _First);
 	}
 
-inline void _Fill(signed char *_First, signed char *_Last, signed char _Val)
-	{	// copy signed char _Val through [_First, _Last)
-	_CSTD memset(_First, _Val, _Last - _First);
-	}
-
-inline void _Fill(unsigned char *_First, unsigned char *_Last, unsigned char _Val)
-	{	// copy unsigned char _Val through [_First, _Last)
-	_CSTD memset(_First, _Val, _Last - _First);
+template<class _FwdIt,
+	class _Ty> inline
+	void _Fill_unchecked(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
+	{	// copy _Val through [_First, _Last), choose optimization
+	_Fill_unchecked1(_First, _Last, _Val, _Fill_memset_is_safe(_First, _Val));
 	}
 
 template<class _FwdIt,
@@ -2716,89 +2785,41 @@ template<class _FwdIt,
 	void fill(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
 	{	// copy _Val through [_First, _Last)
 	_DEBUG_RANGE(_First, _Last);
-	_Fill(_Unchecked(_First), _Unchecked(_Last), _Val);
+	_Fill_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val);
 	}
 
 		// TEMPLATE FUNCTION fill_n
 template<class _OutIt,
 	class _Diff,
 	class _Ty> inline
-	_OutIt _Fill_n(_OutIt _Dest, _Diff _Count, const _Ty& _Val)
-	{	// copy _Val _Count times through [_Dest, ...)
+	_OutIt _Fill_n_unchecked1(_OutIt _Dest, _Diff _Count, const _Ty& _Val, false_type)
+	{	// copy _Val _Count times through [_Dest, ...), no special optimization
 	for (; 0 < _Count; --_Count, (void)++_Dest)
 		*_Dest = _Val;
 	return (_Dest);
 	}
 
-inline char *_Fill_n(char *_Dest, size_t _Count, char _Val)
-	{	// copy char _Val _Count times through [_Dest, ...)
-	_CSTD memset(_Dest, _Val, _Count);
-	return (_Dest + _Count);
-	}
-
-inline signed char *_Fill_n(signed char *_Dest, size_t _Count,
-	signed char _Val)
-	{	// copy signed char _Val _Count times through [_Dest, ...)
-	_CSTD memset(_Dest, _Val, _Count);
-	return (_Dest + _Count);
-	}
-
-inline unsigned char *_Fill_n(unsigned char *_Dest, size_t _Count,
-	unsigned char _Val)
-	{	// copy unsigned char _Val _Count times through [_Dest, ...)
-	_CSTD memset(_Dest, _Val, _Count);
-	return (_Dest + _Count);
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _OutIt,
 	class _Diff,
 	class _Ty> inline
-	_OutIt fill_n(_OutIt _Dest, _Diff _Count, const _Ty& _Val)
-	{	// copy _Val _Count times through [_Dest, ...)
-	return (_Rechecked(_Dest, _Fill_n(_Unchecked(_Dest), _Count, _Val)));
-	}
+	_OutIt _Fill_n_unchecked1(_OutIt _Dest, _Diff _Count, const _Ty& _Val, true_type)
+	{	// copy _Val _Count times through [_Dest, ...), memset optimization
+	if (0 < _Count)
+		{
+		_CSTD memset(_Dest, _Val, _Count);
+		return (_Dest + _Count);
+		}
 
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _OutIt,
-	class _Diff,
-	class _Ty> inline
-	_OutIt _Fill_n1(_OutIt _Dest, _Diff _Count, const _Ty& _Val,
-		_Mutable_iterator_tag)
-	{	// copy _Val _Count times through [_Dest, ...), arbitrary iterator
-	return (_Fill_n(_Dest, _Count, _Val));
+	return (_Dest);
 	}
 
 template<class _OutIt,
 	class _Diff,
 	class _Ty> inline
-	_OutIt _Fill_n1(_OutIt _Dest, _Diff _Count, const _Ty& _Val,
-		random_access_iterator_tag)
-	{	// copy _Val _Count times through [_Dest, ...), random-access iterator
-	_OutIt _Ans = _Dest + _Count;	// also checks range
-	_Fill_n(_Unchecked(_Dest), _Count, _Val);
-	return (_Ans);
-	}
-
-template<class _OutIt,
-	class _Diff,
-	class _Ty> inline
-	_OutIt _Fill_n(_OutIt _Dest, _Diff _Count, const _Ty& _Val,
-		true_type)
-	{	// copy _Val _Count times through [_Dest, ...), checked dest
-	return (_Fill_n1(_Dest, _Count, _Val,
-		_Iter_cat(_Dest)));
-	}
-
-template<class _OutIt,
-	class _Diff,
-	class _Ty> inline
-_SCL_INSECURE_DEPRECATE
-	_OutIt _Fill_n(_OutIt _Dest, _Diff _Count, const _Ty& _Val,
-		false_type)
-	{	// copy _Val _Count times through [_Dest, ...), unchecked dest
-	return (_Fill_n1(_Dest, _Count, _Val,
-		_Iter_cat(_Dest)));
+	_OutIt _Fill_n_unchecked(_OutIt _Dest, _Diff _Count, const _Ty& _Val)
+	{	// copy _Val _Count times through [_Dest, ...), choose optimization
+		// note: This is called directly from elsewhere in the STL
+	return (_Fill_n_unchecked1(_Dest, _Count, _Val, _Fill_memset_is_safe(_Dest, _Val)));
 	}
 
 template<class _OutIt,
@@ -2806,113 +2827,176 @@ template<class _OutIt,
 	class _Ty> inline
 	_OutIt fill_n(_OutIt _Dest, _Diff _Count, const _Ty& _Val)
 	{	// copy _Val _Count times through [_Dest, ...)
-	_DEBUG_POINTER_IF(0 < _Count, _Dest);
-	return (_Fill_n(_Dest, _Count, _Val,
-		_Is_checked(_Dest)));
+	return (_Rechecked(_Dest,
+		_Fill_n_unchecked(_Unchecked_n(_Dest, _Count), _Count, _Val)));
 	}
-
- #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
-template<class _OutTy,
-	size_t _OutSize,
-	class _Diff,
-	class _Ty> inline
-	_OutTy *fill_n(_OutTy (&_Dest)[_OutSize], _Diff _Count, const _Ty& _Val)
-	{	// copy _Val _Count times through [_Dest, ...)
-	return (_Unchecked(_STD fill_n(_Array_iterator<_OutTy, _OutSize>(_Dest),
-		_Count, _Val)));
-	}
- #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION equal WITH PRED
+template<class _Elem1,
+	class _Elem2>
+	struct _Value_equality_is_bitwise_equality
+		: bool_constant<static_cast<_Elem1>(-1) == static_cast<_Elem2>(-1)>
+	{	// Tests whether the usual arithmetic conversions will preserve the bit-pattern
+		// when promoting to int
+		// e.g. short == unsigned short -> false
+		//      int == unsigned int -> true
+	};
+
+template<class _Elem1,
+	class _Elem2,
+	class _Pr>
+	struct _Equal_memcmp_is_safe_helper
+		: false_type
+	{	// determines whether it is safe to call memcmp to compare things;
+		// defaults to false
+	};
+
+template<class _Elem1,
+	class _Elem2>
+	struct _Equal_memcmp_is_safe_helper<_Elem1, _Elem2, equal_to<>>
+		: conjunction<
+			_Is_same_size<_Elem1, _Elem2>,
+			is_integral<_Elem1>,
+			is_integral<_Elem2>,
+			negation<is_same<bool, _Elem1>>,
+			negation<is_same<bool, _Elem2>>,
+			negation<is_volatile<_Elem1>>,
+			negation<is_volatile<_Elem2>>,
+			// note that order matters here, as being integral is a precondition
+			// of _Value_equality_is_bitwise_equality
+			_Value_equality_is_bitwise_equality<_Elem1, _Elem2>
+		>::type
+	{	// allow memcmping same-size integral non-bool non-volatile bitwise types using equal_to<>
+	};
+
+template<class _Elem1,
+	class _Elem2>
+	struct _Equal_memcmp_is_safe_helper<_Elem1 *, _Elem2 *, equal_to<>>
+		: is_same<remove_cv_t<_Elem1>, remove_cv_t<_Elem2>>::type
+	{	// allow memcmping pointers-to-cv-T with equal_to<>
+	};
+
+template<class _Elem>
+	struct _Equal_memcmp_is_safe_helper<_Elem, _Elem, _Char_traits_eq<char_traits<_Elem>>>
+		: _Equal_memcmp_is_safe_helper<_Elem, _Elem, equal_to<>>::type
+	{	// builtin char_traits::eq behaves like equal_to<>
+	};
+
+template<class _Elem>
+	struct _Equal_memcmp_is_safe_helper<_Elem, _Elem, equal_to<_Elem>>
+		: _Equal_memcmp_is_safe_helper<_Elem, _Elem, equal_to<>>::type
+	{	// treat equal_to with exact T as equal_to<>
+		// this is safe because we only activate the optimization for builtin _Elem
+	};
+
+template<class _Iter1,
+	class _Iter2,
+	class _Pr> inline
+	false_type _Equal_memcmp_is_safe(const _Iter1&, const _Iter2&, const _Pr&)
+	{	// return equal optimization category for arbitrary iterators
+	return {};
+	}
+
+template<class _Obj1,
+	class _Obj2,
+	class _Pr> inline
+	typename _Equal_memcmp_is_safe_helper<
+		remove_const_t<_Obj1>,
+		remove_const_t<_Obj2>,
+		_Pr>::type
+		_Equal_memcmp_is_safe(_Obj1 * const&, _Obj2 * const&, const _Pr&)
+	{	// return equal optimization category for pointers
+	return {};
+	}
+
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool _Equal(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _Pr _Pred)
-	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	bool _Equal_unchecked1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr& _Pred, false_type)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, no special optimization
 	for (; _First1 != _Last1; ++_First1, (void)++_First2)
 		if (!_Pred(*_First1, *_First2))
 			return (false);
 	return (true);
 	}
 
-inline bool _Equal(const char *_First1, const char *_Last1,
-	const char *_First2, equal_to<>)
-	{	// compare [_First1, _Last1) to [_First2, ...), for chars
-	return (_CSTD memcmp(_First1, _First2, _Last1 - _First1) == 0);
-	}
-
-inline bool _Equal(const signed char *_First1, const signed char *_Last1,
-	const signed char *_First2, equal_to<>)
-	{	// compare [_First1, _Last1) to [_First2, ...), for signed chars
-	return (_CSTD memcmp(_First1, _First2, _Last1 - _First1) == 0);
-	}
-
-inline bool _Equal(const unsigned char *_First1, const unsigned char *_Last1,
-	const unsigned char *_First2, equal_to<>)
-	{	// compare [_First1, _Last1) to [_First2, ...), for unsigned chars
-	return (_CSTD memcmp(_First1, _First2, _Last1 - _First1) == 0);
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool equal(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _Pr _Pred)
-	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
-	return (_Equal(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt1,
-	class _InIt2,
-	class _Pr> inline
-	bool _Equal2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _Pr _Pred, true_type)
-	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, checked
-	return (_Equal(_First1, _Last1,
-		_First2, _Pred));
+	bool _Equal_unchecked1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr&, true_type)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pr, memcmp optimization
+	const char * const _First1_ch = reinterpret_cast<const char *>(_First1);
+	const char * const _First2_ch = reinterpret_cast<const char *>(_First2);
+	const size_t _Count = reinterpret_cast<const char *>(_Last1) - _First1_ch;
+	return (_CSTD memcmp(_First1_ch, _First2_ch, _Count) == 0);
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	bool _Equal2(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _Pr _Pred, false_type)
-	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, unchecked
-	return (_Equal(_First1, _Last1,
-		_First2, _Pred));
+	bool _Equal_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr& _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, choose optimization
+	return (_Equal_unchecked1(_First1, _Last1, _First2, _Pred,
+		_Equal_memcmp_is_safe(_First1, _First2, _Pred)));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool equal(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _Pr _Pred)
-	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	bool _Equal_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr& _Pred, input_iterator_tag, input_iterator_tag)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, arbitrary iterators
+	return (_Equal_unchecked(_First1, _Last1, _Unchecked_idl0(_First2), _Pred));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_no_deprecate1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr& _Pred, random_access_iterator_tag, random_access_iterator_tag)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, random-access iterators
+	_CHECK_RANIT_RANGE(_First1, _Last1, _First2);
+	return (_Equal_unchecked(_First1, _Last1, _Unchecked(_First2), _Pred));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr& _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, no _SCL_INSECURE_DEPRECATE_FN warnings
 	_DEBUG_RANGE_PTR(_First1, _Last1, _First2);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Pred);
-	return (_Equal2(_Unchecked(_First1), _Unchecked(_Last1),
-		_First2, _Pred, _Is_checked(_First2)));
+	return (_Equal_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
+		_First2, _Pred, _Iter_cat_t<_InIt1>(), _Iter_cat_t<_InIt2>()));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool equal(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	_DEPRECATE_UNCHECKED(equal, _First2);
+	return (_Equal_no_deprecate(_First1, _Last1, _First2, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
 template<class _InIt1,
 	class _InTy,
 	size_t _InSize,
-	class _Pr> inline
+	class _Pr,
+	class = enable_if_t<!is_same<_InTy *, _Pr>::value>> inline
 	bool equal(_InIt1 _First1, _InIt1 _Last1,
 		_InTy (&_First2)[_InSize], _Pr _Pred)
 	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
-	return (_STD equal(_First1, _Last1,
+	return (_Equal_no_deprecate(_First1, _Last1,
 		_Array_iterator<_InTy, _InSize>(_First2), _Pred));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION equal
 template<class _InIt1,
@@ -2940,8 +3024,8 @@ template<class _InIt1,
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool _Equal(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _Pr _Pred,
+	bool _Equal_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr& _Pred,
 			input_iterator_tag, input_iterator_tag)
 	{	// compare [_First1, _Last1) to [_First2, _Last2)
 		// using _Pred, arbitrary iterators
@@ -2955,15 +3039,15 @@ template<class _InIt1,
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool _Equal(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _Pr _Pred,
+	bool _Equal_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr& _Pred,
 			random_access_iterator_tag, random_access_iterator_tag)
 	{	// compare [_First1, _Last1) to [_First2, _Last2)
 		// using _Pred, random-access iterators
 	if (_Last1 - _First1 != _Last2 - _First2)
 		return (false);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Pred);
-	return (_Equal(_First1, _Last1, _First2, _Pred));
+	return (_Equal_unchecked(_First1, _Last1, _First2, _Pred));
 	}
 
 template<class _InIt1,
@@ -2974,9 +3058,9 @@ template<class _InIt1,
 	{	// compare [_First1, _Last1) to [_First2, _Last2) using _Pred
 	_DEBUG_RANGE(_First1, _Last1);
 	_DEBUG_RANGE(_First2, _Last2);
-	return (_Equal(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Equal_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2), _Pred,
-			_Iter_cat(_First1), _Iter_cat(_First2)));
+			_Iter_cat_t<_InIt1>(), _Iter_cat_t<_InIt2>()));
 	}
 
 		// TEMPLATE FUNCTION equal WITH TWO RANGES
@@ -2989,60 +3073,69 @@ template<class _InIt1,
 		equal_to<>()));
 	}
 
-		// TEMPLATE FUNCTION lexicographical_compare
-template<class _InIt1,
-	class _InIt2> inline
-	bool _Lexicographical_compare(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2)
-	{	// order [_First1, _Last1) vs. [_First2, _Last2)
-	for (; _First1 != _Last1 && _First2 != _Last2; ++_First1, (void)++_First2)
-		if (_DEBUG_LT(*_First1, *_First2))
-			return (true);
-		else if (*_First2 < *_First1)
-			return (false);
-	return (_First1 == _Last1 && _First2 != _Last2);
-	}
-
-inline bool _Lexicographical_compare(
-	const unsigned char *_First1, const unsigned char *_Last1,
-	const unsigned char *_First2, const unsigned char *_Last2)
-	{	// order [_First1, _Last1) vs. [_First2, _Last2), for unsigned char
-	ptrdiff_t _Num1 = _Last1 - _First1;
-	ptrdiff_t _Num2 = _Last2 - _First2;
-	int _Ans = _CSTD memcmp(_First1, _First2, _Num1 < _Num2 ? _Num1 : _Num2);
-	return (_Ans < 0 || (_Ans == 0 && _Num1 < _Num2));
-	}
-
- #if CHAR_MAX == UCHAR_MAX
-inline bool _Lexicographical_compare(
-	const char *_First1, const char *_Last1,
-	const char *_First2, const char *_Last2)
-	{	// order [_First1, _Last1) vs. [_First2, _Last2), for nonnegative char
-	ptrdiff_t _Num1 = _Last1 - _First1;
-	ptrdiff_t _Num2 = _Last2 - _First2;
-	int _Ans = _CSTD memcmp(_First1, _First2, _Num1 < _Num2 ? _Num1 : _Num2);
-	return (_Ans < 0 || _Ans == 0 && _Num1 < _Num2);
-	}
- #endif /* CHAR_MAX == UCHAR_MAX */
-
-template<class _InIt1,
-	class _InIt2> inline
-	bool lexicographical_compare(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2)
-	{	// order [_First1, _Last1) vs. [_First2, _Last2)
-	_DEBUG_RANGE(_First1, _Last1);
-	_DEBUG_RANGE(_First2, _Last2);
-	return (_Lexicographical_compare(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Unchecked(_Last2)));
-	}
-
 		// TEMPLATE FUNCTION lexicographical_compare WITH PRED
+template<class _Elem1,
+	class _Elem2,
+	class _FTy>
+	struct _Lex_compare_check_element_types_helper
+		: conjunction<
+			_Is_character<_Elem1>,
+			_Is_character<_Elem2>,
+			_Is_character<_FTy>,
+			is_unsigned<_FTy>
+		>::type
+	{	// checks the lex_compare unwrapped element types for memcmp safety for builtin functors (e.g. less<unsigned char>)
+	};
+
+template<class _Elem1,
+	class _Elem2>
+	struct _Lex_compare_check_element_types_helper<_Elem1, _Elem2, void>
+		: conjunction<
+			_Is_character<_Elem1>,
+			_Is_character<_Elem2>,
+			is_unsigned<_Elem1>,
+			is_unsigned<_Elem2>
+		>::type
+	{	// checks the lex_compare unwrapped element types for memcmp safety for transparent functors (e.g. less<>)
+	};
+
+template<class _Memcmp_pr>
+	struct _Lex_compare_optimize
+	{	// optimization tag for lexicographical_compare
+	};
+
+template<class _Memcmp_pr,
+	class _Obj1,
+	class _Obj2,
+	class _FTy>
+	using _Lex_compare_check_element_types = _Lex_compare_optimize<conditional_t<
+		_Lex_compare_check_element_types_helper<remove_const_t<_Obj1>, remove_const_t<_Obj2>, _FTy>::value,
+		_Memcmp_pr, void>>;	// checks the lex_compare element types for memcmp safety
+
 template<class _InIt1,
 	class _InIt2,
 	class _Pr> inline
-	bool _Lexicographical_compare(_InIt1 _First1, _InIt1 _Last1,
-		_InIt2 _First2, _InIt2 _Last2, _Pr _Pred)
-	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pred
+	_Lex_compare_optimize<void> _Lex_compare_memcmp_classify(const _InIt1&, const _InIt2&, const _Pr&)
+	{	// return lex_compare optimization category for arbitrary iterators
+		// note that overload selecting greater<_FTy> is in <xfunctional>
+	return {};
+	}
+
+template<class _Obj1,
+	class _Obj2,
+	class _FTy> inline
+	_Lex_compare_check_element_types<less<int>, _Obj1, _Obj2, _FTy>
+		_Lex_compare_memcmp_classify(_Obj1 * const&, _Obj2 * const&, const less<_FTy>&)
+	{	// return lex_compare optimization category for pointer iterators and less<_FTy>
+	return {};
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Lex_compare_unchecked1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr& _Pred, _Lex_compare_optimize<void>)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pred, no special optimization
 	for (; _First1 != _Last1 && _First2 != _Last2; ++_First1, (void)++_First2)
 		{	// something to compare, do it
 		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
@@ -3050,7 +3143,31 @@ template<class _InIt1,
 		else if (_Pred(*_First2, *_First1))
 			return (false);
 		}
+
 	return (_First1 == _Last1 && _First2 != _Last2);
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr,
+	class _Memcmp_pr> inline
+	bool _Lex_compare_unchecked1(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr&, _Lex_compare_optimize<_Memcmp_pr>)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pr, memcmp optimization
+	const size_t _Num1 = _Last1 - _First1;
+	const size_t _Num2 = _Last2 - _First2;
+	const int _Ans = _CSTD memcmp(_First1, _First2, _Num1 < _Num2 ? _Num1 : _Num2);
+	return (_Memcmp_pr{}(_Ans, 0) || _Ans == 0 && _Num1 < _Num2);
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Lex_compare_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr& _Pred)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pred, choose optimization
+	return (_Lex_compare_unchecked1(_First1, _Last1, _First2, _Last2, _Pred,
+		_Lex_compare_memcmp_classify(_First1, _First2, _Pred)));
 	}
 
 template<class _InIt1,
@@ -3062,14 +3179,23 @@ template<class _InIt1,
 	_DEBUG_RANGE(_First1, _Last1);
 	_DEBUG_RANGE(_First2, _Last2);
 	_DEBUG_POINTER_IF(_First1 != _Last1 && _First2 != _Last2, _Pred);
-	return (_Lexicographical_compare(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Lex_compare_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2), _Pred));
 	}
 
+		// TEMPLATE FUNCTION lexicographical_compare
+template<class _InIt1,
+	class _InIt2> inline
+	bool lexicographical_compare(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2)
+	return (_STD lexicographical_compare(_First1, _Last1,
+		_First2, _Last2, less<>()));
+	}
+
 		// TEMPLATE FUNCTION find
-template<class _Ty,
-	class _Ignored> inline
-	bool _Within_limits(const _Ty& _Val, true_type, true_type, _Ignored)
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, true_type, true_type, _Any_tag)
 	{	// signed _Elem, signed _Ty
 	return (SCHAR_MIN <= _Val && _Val <= SCHAR_MAX);
 	}
@@ -3086,16 +3212,14 @@ template<class _Ty> inline
 	return (_Val <= SCHAR_MAX);
 	}
 
-template<class _Ty,
-	class _Ignored> inline
-	bool _Within_limits(const _Ty& _Val, false_type, true_type, _Ignored)
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, false_type, true_type, _Any_tag)
 	{	// unsigned _Elem, signed _Ty
 	return (0 <= _Val && _Val <= UCHAR_MAX);
 	}
 
-template<class _Ty,
-	class _Ignored> inline
-	bool _Within_limits(const _Ty& _Val, false_type, false_type, _Ignored)
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, false_type, false_type, _Any_tag)
 	{	// unsigned _Elem, unsigned _Ty
 	return (_Val <= UCHAR_MAX);
 	}
@@ -3117,7 +3241,7 @@ template<class _InIt> inline
 
 template<class _InIt,
 	class _Ty> inline
-	_InIt _Find(_InIt _First, _InIt _Last, const _Ty& _Val, true_type)
+	_InIt _Find_unchecked1(_InIt _First, _InIt _Last, const _Ty& _Val, true_type)
 	{	// find first byte matching integral _Val
 	if (!_Within_limits(_First, _Val))
 		return (_Last);
@@ -3128,7 +3252,7 @@ template<class _InIt,
 
 template<class _InIt,
 	class _Ty> inline
-	_InIt _Find(_InIt _First, _InIt _Last, const _Ty& _Val, false_type)
+	_InIt _Find_unchecked1(_InIt _First, _InIt _Last, const _Ty& _Val, false_type)
 	{	// find first matching _Val
 	for (; _First != _Last; ++_First)
 		if (*_First == _Val)
@@ -3138,8 +3262,8 @@ template<class _InIt,
 
 template<class _InIt,
 	class _Ty> inline
-	_InIt _Find(_InIt _First, _InIt _Last, const _Ty& _Val)
-	{	// find first matching _Val
+	_InIt _Find_unchecked(_InIt _First, _InIt _Last, const _Ty& _Val)
+	{	// find first matching _Val; choose optimization
 	// activate optimization for pointers to (const) bytes and integral values
 	typedef integral_constant<bool,
 		(is_same<_InIt, char *>::value
@@ -3150,7 +3274,7 @@ template<class _InIt,
 		|| is_same<_InIt, const unsigned char *>::value)
 		&& is_integral<_Ty>::value
 	> _Memchr_opt;
-	return (_Find(_First, _Last, _Val, _Memchr_opt()));
+	return (_Find_unchecked1(_First, _Last, _Val, _Memchr_opt()));
 	}
 
 template<class _InIt,
@@ -3159,14 +3283,14 @@ template<class _InIt,
 	{	// find first matching _Val
 	_DEBUG_RANGE(_First, _Last);
 	return (_Rechecked(_First,
-		_Find(_Unchecked(_First), _Unchecked(_Last), _Val)));
+		_Find_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val)));
 	}
 
 		// TEMPLATE FUNCTION _Find_pr WITH PRED
 template<class _InIt,
 	class _Ty,
 	class _Pr> inline
-	_InIt _Find_pr(_InIt _First, _InIt _Last, const _Ty& _Val, _Pr _Pred)
+	_InIt _Find_pr(_InIt _First, _InIt _Last, const _Ty& _Val, _Pr& _Pred)
 	{	// find first matching _Val, using _Pred
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First, _Val))
@@ -3177,10 +3301,10 @@ template<class _InIt,
 		// TEMPLATE FUNCTION count
 template<class _InIt,
 	class _Ty> inline
-	typename iterator_traits<_InIt>::difference_type
-		_Count_np(_InIt _First, _InIt _Last, const _Ty& _Val)
+	_Iter_diff_t<_InIt>
+		_Count_unchecked(_InIt _First, _InIt _Last, const _Ty& _Val)
 	{	// count elements that match _Val
-	typename iterator_traits<_InIt>::difference_type _Count = 0;
+	_Iter_diff_t<_InIt> _Count = 0;
 
 	for (; _First != _Last; ++_First)
 		if (*_First == _Val)
@@ -3190,21 +3314,21 @@ template<class _InIt,
 
 template<class _InIt,
 	class _Ty> inline
-	typename iterator_traits<_InIt>::difference_type
+	_Iter_diff_t<_InIt>
 		count(_InIt _First, _InIt _Last, const _Ty& _Val)
 	{	// count elements that match _Val
 	_DEBUG_RANGE(_First, _Last);
-	return (_Count_np(_Unchecked(_First), _Unchecked(_Last), _Val));
+	return (_Count_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val));
 	}
 
 		// TEMPLATE FUNCTION _Count_pr WITH PRED
 template<class _InIt,
 	class _Ty,
 	class _Pr> inline
-	typename iterator_traits<_InIt>::difference_type
-		_Count_pr(_InIt _First, _InIt _Last, const _Ty& _Val, _Pr _Pred)
+	_Iter_diff_t<_InIt>
+		_Count_pr(_InIt _First, _InIt _Last, const _Ty& _Val, _Pr& _Pred)
 	{	// count elements that match _Val, using _Pred
-	typename iterator_traits<_InIt>::difference_type _Count = 0;
+	_Iter_diff_t<_InIt> _Count = 0;
 
 	for (; _First != _Last; ++_First)
 		if (_Pred(*_First, _Val))
@@ -3216,7 +3340,7 @@ template<class _InIt,
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	void _Trim_matching_suffixes(_FwdIt1&, _FwdIt2&, _Pr,
+	void _Trim_matching_suffixes(_FwdIt1&, _FwdIt2&, _Pr&,
 		forward_iterator_tag, forward_iterator_tag)
 	{	// trim matching suffixes, forward iterators (do nothing)
 	}
@@ -3224,7 +3348,7 @@ template<class _FwdIt1,
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	void _Trim_matching_suffixes(_FwdIt1& _Last1, _FwdIt2& _Last2, _Pr _Pred,
+	void _Trim_matching_suffixes(_FwdIt1& _Last1, _FwdIt2& _Last2, _Pr& _Pred,
 		bidirectional_iterator_tag, bidirectional_iterator_tag)
 	{	// trim matching suffixes, bidirectional iterators
 	// assumptions: same lengths, non-empty, !_Pred(*_First1, *_First2)
@@ -3239,23 +3363,22 @@ template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
 	bool _Check_match_counts(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred)
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred)
 	{	// test if [_First1, _Last1) == permuted [_First2, _Last2), using _Pred, same lengths
 	_Trim_matching_suffixes(_Last1, _Last2, _Pred,
-		_Iter_cat(_Last1), _Iter_cat(_Last2));
-	typedef typename iterator_traits<_FwdIt1>::difference_type _Diff1;
-	typedef typename iterator_traits<_FwdIt2>::difference_type _Diff2;
+		_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>());
 	for (_FwdIt1 _Next1 = _First1; _Next1 != _Last1; ++_Next1)
 		if (_Next1 == _Find_pr(_First1, _Next1, *_Next1, _Pred))
 			{	// new value, compare match counts
-			_Diff2 _Count2 = _Count_pr(_First2, _Last2, *_Next1, _Pred);
+			_Iter_diff_t<_FwdIt2> _Count2 = _Count_pr(_First2, _Last2, *_Next1, _Pred);
 			if (_Count2 == 0)
 				return (false);	// second range lacks value, fail
 			_FwdIt1 _Skip1 = _STD next(_Next1);
-			_Diff1 _Count1 = _Count_pr(_Skip1, _Last1, *_Next1, _Pred) + 1;
+			_Iter_diff_t<_FwdIt1> _Count1 = _Count_pr(_Skip1, _Last1, *_Next1, _Pred) + 1;
 			if (_Count2 != _Count1)
 				return (false);	// match counts differ, fail
 			}
+
 	return (true);
 	}
 
@@ -3263,8 +3386,8 @@ template<class _FwdIt1,
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	bool _Is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _Pr _Pred)
+	bool _Is_permutation_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _Pr& _Pred)
 	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
 	for (; _First1 != _Last1; ++_First1, (void)++_First2)
 		if (!_Pred(*_First1, *_First2))
@@ -3274,69 +3397,64 @@ template<class _FwdIt1,
 			return (_Check_match_counts(_First1, _Last1,
 				_First2, _Last2, _Pred));
 			}
+
 	return (true);
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _Pr _Pred)
+	bool _Is_permutation_no_deprecate1(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _Pr& _Pred, forward_iterator_tag, forward_iterator_tag)
 	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
-	return (_Is_permutation(_Unchecked(_First1), _Unchecked(_Last1),
-		_Unchecked(_First2), _Pred));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _FwdIt1,
-	class _FwdIt2,
-	class _Pr> inline
-	bool _Is_permutation2(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _Pr _Pred, true_type)
-	{	// test if [_First1, _Last1) == permuted [_First2, ...),
-		// using _Pred, checked input
-	return (_Is_permutation(_First1, _Last1,
-		_First2, _Pred));
+	return (_Is_permutation_unchecked(_First1, _Last1, _Unchecked_idl0(_First2), _Pred));
 	}
 
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-_SCL_INSECURE_DEPRECATE
-	bool _Is_permutation2(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _Pr _Pred, false_type)
-	{	// test if [_First1, _Last1) == permuted [_First2, ...),
-		// using _Pred, unchecked input
-	return (_Is_permutation(_First1, _Last1,
-		_First2, _Pred));
-	}
-
-template<class _FwdIt1,
-	class _FwdIt2,
-	class _Pr> inline
-	bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _Pr _Pred)
+	bool _Is_permutation_no_deprecate1(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _Pr& _Pred, random_access_iterator_tag, random_access_iterator_tag)
 	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
+	_CHECK_RANIT_RANGE(_First1, _Last1, _First2);
+	return (_Is_permutation_unchecked(_First1, _Last1, _Unchecked(_First2), _Pred));
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Is_permutation_no_deprecate(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _Pr& _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred, no deprecation warnings
 	_DEBUG_RANGE_PTR(_First1, _Last1, _First2);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Pred);
-	return (_Is_permutation2(_Unchecked(_First1), _Unchecked(_Last1),
-		_First2, _Pred, _Is_checked(_First2)));
+	return (_Is_permutation_no_deprecate1(_Unchecked(_First1), _Unchecked(_Last1),
+		_First2, _Pred, _Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>()));
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _Pr _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
+	_DEPRECATE_UNCHECKED(is_permutation, _First2);
+	return (_Is_permutation_no_deprecate(_First1, _Last1, _First2, _Pred));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
 template<class _FwdIt1,
 	class _InTy,
 	size_t _InSize,
-	class _Pr> inline
+	class _Pr,
+	class = enable_if_t<!is_same<_InTy *, _Pr>::value>> inline
 	bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
 		_InTy (&_First2)[_InSize], _Pr _Pred)
 	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
-	return (_STD is_permutation(_First1, _Last1,
+	return (_Is_permutation_no_deprecate(_First1, _Last1,
 		_Array_iterator<_InTy, _InSize>(_First2), _Pred));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 		// TEMPLATE FUNCTION is_permutation
 template<class _FwdIt1,
@@ -3364,8 +3482,8 @@ template<class _FwdIt1,
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	bool _Is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred,
+	bool _Is_permutation_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred,
 		forward_iterator_tag, forward_iterator_tag)
 	{	// test if [_First1, _Last1) == permuted [_First2, _Last2),
 		// using _Pred, arbitrary iterators
@@ -3380,21 +3498,22 @@ template<class _FwdIt1,
 				return (_Check_match_counts(_First1, _Last1,
 					_First2, _Last2, _Pred));
 			}
+
 	return (_First1 == _Last1 && _First2 == _Last2);
 	}
 
 template<class _FwdIt1,
 	class _FwdIt2,
 	class _Pr> inline
-	bool _Is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
-		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred,
+	bool _Is_permutation_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr& _Pred,
 		random_access_iterator_tag, random_access_iterator_tag)
 	{	// test if [_First1, _Last1) == permuted [_First2, _Last2),
 		// using _Pred, random-access iterators
 	if (_Last1 - _First1 != _Last2 - _First2)
 		return (false);
 	_DEBUG_POINTER_IF(_First1 != _Last1, _Pred);
-	return (_Is_permutation(_First1, _Last1, _First2, _Pred));
+	return (_Is_permutation_unchecked(_First1, _Last1, _First2, _Pred));
 	}
 
 template<class _FwdIt1,
@@ -3406,9 +3525,9 @@ template<class _FwdIt1,
 		// using _Pred
 	_DEBUG_RANGE(_First1, _Last1);
 	_DEBUG_RANGE(_First2, _Last2);
-	return (_Is_permutation(_Unchecked(_First1), _Unchecked(_Last1),
+	return (_Is_permutation_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
 		_Unchecked(_First2), _Unchecked(_Last2), _Pred,
-		_Iter_cat(_First1), _Iter_cat(_First2)));
+		_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>()));
 	}
 
 		// TEMPLATE FUNCTION is_permutation WITH TWO RANGES
@@ -3423,7 +3542,7 @@ template<class _FwdIt1,
 
 		// TEMPLATE FUNCTION reverse
 template<class _BidIt> inline
-	void _Reverse(_BidIt _First, _BidIt _Last, bidirectional_iterator_tag)
+	void _Reverse_unchecked(_BidIt _First, _BidIt _Last)
 	{	// reverse elements in [_First, _Last), bidirectional iterators
 	for (; _First != _Last && _First != --_Last; ++_First)
 		_STD iter_swap(_First, _Last);
@@ -3433,12 +3552,12 @@ template<class _BidIt> inline
 	void reverse(_BidIt _First, _BidIt _Last)
 	{	// reverse elements in [_First, _Last)
 	_DEBUG_RANGE(_First, _Last);
-	_Reverse(_Unchecked(_First), _Unchecked(_Last), _Iter_cat(_First));
+	_Reverse_unchecked(_Unchecked(_First), _Unchecked(_Last));
 	}
 
 		// TEMPLATE FUNCTION rotate
 template<class _FwdIt> inline
-	_FwdIt _Rotate(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
+	_FwdIt _Rotate_unchecked1(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
 		forward_iterator_tag)
 	{	// rotate [_First, _Last), forward iterators
 	for (_FwdIt _Next = _Mid, _Res = _Last; ; )
@@ -3461,7 +3580,7 @@ template<class _FwdIt> inline
 	}
 
 template<class _BidIt> inline
-	pair<_BidIt, _BidIt> _Reverse_until_sentinel(
+	pair<_BidIt, _BidIt> _Reverse_until_sentinel_unchecked(
 		_BidIt _First, _BidIt _Sentinel, _BidIt _Last)
 	{	// reverse until either _First or _Last hits _Sentinel
 	while (_First != _Sentinel && _Last != _Sentinel)
@@ -3470,24 +3589,34 @@ template<class _BidIt> inline
 	}
 
 template<class _BidIt> inline
-	_BidIt _Rotate(_BidIt _First, _BidIt _Mid, _BidIt _Last,
+	_BidIt _Rotate_unchecked1(_BidIt _First, _BidIt _Mid, _BidIt _Last,
 		bidirectional_iterator_tag)
 	{	// rotate [_First, _Last), bidirectional iterators
-	_STD reverse(_First, _Mid);
-	_STD reverse(_Mid, _Last);
-	pair<_BidIt, _BidIt> _Tmp = _Reverse_until_sentinel(_First, _Mid, _Last);
-	_STD reverse(_Tmp.first, _Tmp.second);
+	_Reverse_unchecked(_First, _Mid);
+	_Reverse_unchecked(_Mid, _Last);
+	pair<_BidIt, _BidIt> _Tmp = _Reverse_until_sentinel_unchecked(_First, _Mid, _Last);
+	_Reverse_unchecked(_Tmp.first, _Tmp.second);
 	return (_Mid != _Tmp.first ? _Tmp.first : _Tmp.second);
 	}
 
 template<class _RanIt> inline
-	_RanIt _Rotate(_RanIt _First, _RanIt _Mid, _RanIt _Last,
+	_RanIt _Rotate_unchecked1(_RanIt _First, _RanIt _Mid, _RanIt _Last,
 		random_access_iterator_tag)
 	{	// rotate [_First, _Last), random-access iterators
-	_STD reverse(_First, _Mid);
-	_STD reverse(_Mid, _Last);
-	_STD reverse(_First, _Last);
+	_Reverse_unchecked(_First, _Mid);
+	_Reverse_unchecked(_Mid, _Last);
+	_Reverse_unchecked(_First, _Last);
 	return (_First + (_Last - _Mid));
+	}
+
+template<class _FwdIt> inline
+	_FwdIt _Rotate_unchecked(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last)
+	{	// rotate [_First, _Last)
+	if (_First == _Mid)
+		return (_Last);
+	if (_Mid == _Last)
+		return (_First);
+	return (_Rotate_unchecked1(_First, _Mid, _Last, _Iter_cat_t<_FwdIt>()));
 	}
 
 template<class _FwdIt> inline
@@ -3495,13 +3624,9 @@ template<class _FwdIt> inline
 	{	// rotate [_First, _Last)
 	_DEBUG_RANGE(_First, _Mid);
 	_DEBUG_RANGE(_Mid, _Last);
-	if (_First == _Mid)
-		return (_Last);
-	if (_Mid == _Last)
-		return (_First);
-	_Rechecked(_First, _Rotate(_Unchecked(_First), _Unchecked(_Mid),
-		_Unchecked(_Last), _Iter_cat(_First)));
-	return (_First);
+	return (_Rechecked(_First,
+		_Rotate_unchecked(_Unchecked(_First), _Unchecked(_Mid),
+		_Unchecked(_Last))));
 	}
 
 	// TEMPLATE CLASS _Rng_from_urng
@@ -3637,6 +3762,7 @@ public:
 					_CSTD memcpy(_Myptr, _Right, _Count);
 				}
 			}
+
 		return (*this);
 		}
 
@@ -3705,14 +3831,14 @@ struct allocator_arg_t
 	{	// tag type for added allocator argument
 	};
 
-_CONST_DATA allocator_arg_t allocator_arg{};
+constexpr allocator_arg_t allocator_arg{};
 
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xbad_alloc());
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *));
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *));
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *));
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *));
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *));
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_alloc();
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *);
 _STD_END
 
 namespace std {
@@ -3723,6 +3849,12 @@ template<class _Ty,
 		: _Has_allocator_type<_Ty, _Alloc>::type
 	{	// determine whether _Ty has an allocator_type member type
 	};
+
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty,
+	class _Alloc>
+	constexpr bool uses_allocator_v = uses_allocator<_Ty, _Alloc>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
 }	// namespace std
  #pragma pop_macro("new")
  #pragma warning(pop)

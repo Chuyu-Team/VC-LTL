@@ -24,28 +24,28 @@ public:
 	typedef const _Elem* iterator;
 	typedef const _Elem* const_iterator;
 
-	_CONST_FUN initializer_list() _NOEXCEPT
+	constexpr initializer_list() _NOEXCEPT
 		: _First(0), _Last(0)
 		{	// empty list
 		}
 
-	_CONST_FUN initializer_list(const _Elem *_First_arg,
+	constexpr initializer_list(const _Elem *_First_arg,
 		const _Elem *_Last_arg) _NOEXCEPT
 		: _First(_First_arg), _Last(_Last_arg)
 		{	// construct with pointers
 		}
 
-	_CONST_FUN const _Elem *begin() const _NOEXCEPT
+	constexpr const _Elem *begin() const _NOEXCEPT
 		{	// get beginning of list
 		return (_First);
 		}
 
-	_CONST_FUN const _Elem *end() const _NOEXCEPT
+	constexpr const _Elem *end() const _NOEXCEPT
 		{	// get end of list
 		return (_Last);
 		}
 
-	_CONST_FUN size_t size() const _NOEXCEPT
+	constexpr size_t size() const _NOEXCEPT
 		{	// get length of list
 		return ((size_t)(_Last - _First));
 		}
@@ -57,14 +57,14 @@ private:
 
 		// TEMPLATE FUNCTION begin
 template<class _Elem> inline
-	_CONST_FUN const _Elem *begin(initializer_list<_Elem> _Ilist) _NOEXCEPT
+	constexpr const _Elem *begin(initializer_list<_Elem> _Ilist) _NOEXCEPT
 	{	// get beginning of sequence
 	return (_Ilist.begin());
 	}
 
 		// TEMPLATE FUNCTION end
 template<class _Elem> inline
-	_CONST_FUN const _Elem *end(initializer_list<_Elem> _Ilist) _NOEXCEPT
+	constexpr const _Elem *end(initializer_list<_Elem> _Ilist) _NOEXCEPT
 	{	// get end of sequence
 	return (_Ilist.end());
 	}

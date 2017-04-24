@@ -96,13 +96,13 @@ public:
 		}
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 
-	_CONST_FUN bool _Subscript(size_t _Pos) const
+	constexpr bool _Subscript(size_t _Pos) const
 		{	// subscript nonmutable sequence
 		return ((_Array[_Pos / _Bitsperword]
 			& ((_Ty)1 << _Pos % _Bitsperword)) != 0);
 		}
 
-	_CONST_FUN bool operator[](size_t _Pos) const
+	constexpr bool operator[](size_t _Pos) const
 		{	// subscript nonmutable sequence
  #if _ITERATOR_DEBUG_LEVEL == 0
 		return (_Subscript(_Pos));
@@ -120,18 +120,18 @@ public:
 		return (reference(*this, _Pos));
 		}
 
-	_CONST_FUN bitset() _NOEXCEPT
+	constexpr bitset() _NOEXCEPT
 		: _Array()
 		{	// construct with all false values
 		}
 
-	static _CONST_DATA bool _Need_mask
+	static constexpr bool _Need_mask
 		= _Bits < CHAR_BIT * sizeof (_ULonglong);
 
-	static _CONST_DATA _ULonglong _Mask
+	static constexpr _ULonglong _Mask
 		= (1ULL << (_Need_mask ? _Bits : 0)) - 1ULL;
 
-	_CONST_FUN bitset(_ULonglong _Val) _NOEXCEPT
+	constexpr bitset(_ULonglong _Val) _NOEXCEPT
 		: _Array{static_cast<_Ty>(_Need_mask ? _Val & _Mask : _Val)}
 		{	// construct from bits in unsigned long long
 		}
@@ -195,28 +195,28 @@ public:
 				set(_Num);
 		}
 
-	bitset<_Bits>& operator&=(const bitset<_Bits>& _Right) _NOEXCEPT
+	bitset& operator&=(const bitset& _Right) _NOEXCEPT
 		{	// AND in _Right
 		for (ptrdiff_t _Wpos = _Words; 0 <= _Wpos; --_Wpos)
 			_Array[_Wpos] &= _Right._Getword(_Wpos);
 		return (*this);
 		}
 
-	bitset<_Bits>& operator|=(const bitset<_Bits>& _Right) _NOEXCEPT
+	bitset& operator|=(const bitset& _Right) _NOEXCEPT
 		{	// OR in _Right
 		for (ptrdiff_t _Wpos = _Words; 0 <= _Wpos; --_Wpos)
 			_Array[_Wpos] |= _Right._Getword(_Wpos);
 		return (*this);
 		}
 
-	bitset<_Bits>& operator^=(const bitset<_Bits>& _Right) _NOEXCEPT
+	bitset& operator^=(const bitset& _Right) _NOEXCEPT
 		{	// XOR in _Right
 		for (ptrdiff_t _Wpos = _Words; 0 <= _Wpos; --_Wpos)
 			_Array[_Wpos] ^= _Right._Getword(_Wpos);
 		return (*this);
 		}
 
-	bitset<_Bits>& operator<<=(size_t _Pos) _NOEXCEPT
+	bitset& operator<<=(size_t _Pos) _NOEXCEPT
 		{	// shift left by _Pos
 		const ptrdiff_t _Wordshift = (ptrdiff_t)(_Pos / _Bitsperword);
 		if (_Wordshift != 0)
@@ -235,7 +235,7 @@ public:
 		return (*this);
 		}
 
-	bitset<_Bits>& operator>>=(size_t _Pos) _NOEXCEPT
+	bitset& operator>>=(size_t _Pos) _NOEXCEPT
 		{	// shift right by _Pos, first by words then by bits
 		const ptrdiff_t _Wordshift = (ptrdiff_t)(_Pos / _Bitsperword);
 		if (_Wordshift != 0)
@@ -253,13 +253,13 @@ public:
 		return (*this);
 		}
 
-	bitset<_Bits>& set() _NOEXCEPT
+	bitset& set() _NOEXCEPT
 		{	// set all bits true
 		_Tidy((_Ty)~0);
 		return (*this);
 		}
 
-	bitset<_Bits>& set(size_t _Pos,
+	bitset& set(size_t _Pos,
 		bool _Val = true)
 		{	// set bit at _Pos to _Val
 		if (_Bits <= _Pos)
@@ -271,23 +271,23 @@ public:
 		return (*this);
 		}
 
-	bitset<_Bits>& reset() _NOEXCEPT
+	bitset& reset() _NOEXCEPT
 		{	// set all bits false
 		_Tidy();
 		return (*this);
 		}
 
-	bitset<_Bits>& reset(size_t _Pos)
+	bitset& reset(size_t _Pos)
 		{	// set bit at _Pos to false
 		return (set(_Pos, false));
 		}
 
-	bitset<_Bits> operator~() const _NOEXCEPT
+	bitset operator~() const _NOEXCEPT
 		{	// flip all bits
-		return (bitset<_Bits>(*this).flip());
+		return (bitset(*this).flip());
 		}
 
-	bitset<_Bits>& flip() _NOEXCEPT
+	bitset& flip() _NOEXCEPT
 		{	// flip all bits
 		for (ptrdiff_t _Wpos = _Words; 0 <= _Wpos; --_Wpos)
 			_Array[_Wpos] = (_Ty)~_Array[_Wpos];
@@ -296,7 +296,7 @@ public:
 		return (*this);
 		}
 
-	bitset<_Bits>& flip(size_t _Pos)
+	bitset& flip(size_t _Pos)
 		{	// flip bit at _Pos
 		if (_Bits <= _Pos)
 			_Xran();	// _Pos off end
@@ -330,9 +330,9 @@ public:
 		return (_Val);
 		}
 
-	template<class _Elem,
-		class _Tr,
-		class _Alloc>
+	template<class _Elem = char,
+		class _Tr = char_traits<_Elem>,
+		class _Alloc = allocator<_Elem> >
 		basic_string<_Elem, _Tr, _Alloc>
 			to_string(_Elem _E0 = (_Elem)'0',
 				_Elem _E1 = (_Elem)'1') const
@@ -347,30 +347,6 @@ public:
 			else
 				_Str += _E0;
 		return (_Str);
-		}
-
-	template<class _Elem,
-		class _Tr>
-		basic_string<_Elem, _Tr, allocator<_Elem> >
-			to_string(_Elem _E0 = (_Elem)'0',
-				_Elem _E1 = (_Elem)'1') const
-		{	// convert bitset to string
-		return (to_string<_Elem, _Tr, allocator<_Elem> >(_E0, _E1));
-		}
-
-	template<class _Elem>
-		basic_string<_Elem, char_traits<_Elem>, allocator<_Elem> >
-			to_string(_Elem _E0 = (_Elem)'0',
-				_Elem _E1 = (_Elem)'1') const
-		{	// convert bitset to string
-		return (to_string<_Elem, char_traits<_Elem>,
-			allocator<_Elem> >(_E0, _E1));
-		}
-
-	string to_string(char _E0 = '0', char _E1 = '1') const
-		{	// convert bitset to string
-		return (to_string<char, char_traits<char>, allocator<char> >(
-			_E0, _E1));
 		}
 
 	size_t count() const _NOEXCEPT
@@ -401,7 +377,7 @@ public:
 		return (_Val);
 		}
 
-	_CONST_FUN size_t size() const _NOEXCEPT
+	constexpr size_t size() const _NOEXCEPT
 		{	// return size of bitset
 		return (_Bits);
 		}
@@ -412,7 +388,7 @@ public:
 			sizeof (_Array)));
 		}
 
-	bool operator==(const bitset<_Bits>& _Right) const _NOEXCEPT
+	bool operator==(const bitset& _Right) const _NOEXCEPT
 		{	// test for bitset equality
 		for (ptrdiff_t _Wpos = _Words; 0 <= _Wpos; --_Wpos)
 			if (_Array[_Wpos] != _Right._Getword(_Wpos))
@@ -420,7 +396,7 @@ public:
 		return (true);
 		}
 
-	bool operator!=(const bitset<_Bits>& _Right) const _NOEXCEPT
+	bool operator!=(const bitset& _Right) const _NOEXCEPT
 		{	// test for bitset inequality
 		return (!(*this == _Right));
 		}
@@ -450,14 +426,14 @@ public:
 		return (count() == size());
 		}
 
-	bitset<_Bits> operator<<(size_t _Pos) const _NOEXCEPT
+	bitset operator<<(size_t _Pos) const _NOEXCEPT
 		{	// return bitset shifted left by _Pos
-		return (bitset<_Bits>(*this) <<= _Pos);
+		return (bitset(*this) <<= _Pos);
 		}
 
-	bitset<_Bits> operator>>(size_t _Pos) const _NOEXCEPT
+	bitset operator>>(size_t _Pos) const _NOEXCEPT
 		{	// return bitset shifted right by _Pos
-		return (bitset<_Bits>(*this) >>= _Pos);
+		return (bitset(*this) >>= _Pos);
 		}
 
 	_Ty _Getword(size_t _Wpos) const
@@ -483,7 +459,7 @@ private:
 
 	void _Trim()
 		{	// clear any trailing bits in last word
-		_Trim_if(integral_constant<bool, _Bits % _Bitsperword != 0>());
+		_Trim_if(bool_constant<_Bits == 0 || _Bits % _Bitsperword != 0>());
 		}
 
 	void _Trim_if(true_type)
@@ -495,17 +471,17 @@ private:
 		{	// no bits to trim, do nothing
 		}
 
-	__declspec(noreturn) void _Xinv() const
+	[[noreturn]] void _Xinv() const
 		{	// report invalid string element in bitset conversion
 		_Xinvalid_argument("invalid bitset<N> char");
 		}
 
-	__declspec(noreturn) void _Xoflo() const
+	[[noreturn]] void _Xoflo() const
 		{	// report converted value too big to represent
 		_Xoverflow_error("bitset<N> overflow");
 		}
 
-	__declspec(noreturn) void _Xran() const
+	[[noreturn]] void _Xran() const
 		{	// report bit index out of range
 		_Xout_of_range("invalid bitset<N> position");
 		}
@@ -626,7 +602,7 @@ _STD_END
  #pragma warning(pop)
  #pragma pack(pop)
 #endif /* RC_INVOKED */
-#endif /* _BITSET */
+#endif /* _BITSET_ */
 
 /*
  * Copyright (c) by P.J. Plauger. All rights reserved.

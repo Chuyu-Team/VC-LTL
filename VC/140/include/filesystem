@@ -9,6 +9,7 @@
 #include <list>		// for recursive_directory_iterator stack
 #include <locale>	// for wstring_convert
 #include <memory>	// for shared_ptr
+#include <vector>	// for canonical's .. handling
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,3)
@@ -56,7 +57,8 @@ enum class copy_options {	// names for copy options
 	skip_existing = 1, overwrite_existing = 2, update_existing = 4,
 	recursive = 8,
 	copy_symlinks = 16, skip_symlinks = 32,
-	directories_only = 64, create_symlinks = 128, create_hard_links = 256
+	directories_only = 64, create_symlinks = 128, create_hard_links = 256,
+	_Unspecified_recursion_prevention_tag = 512
 	};
 
 typedef copy_options _Copy_options;
@@ -471,8 +473,10 @@ template<class _Outtraits,
 class path;
 path operator/(const path&, const path&);
 
+path _Absolute(const path&, const path&, error_code&);
 //path absolute(const path&, const path& = current_path());
 
+void _Canonicalize_string_only(path&, const path&);
 //path canonical(const path&,
 //	const path& _Base = current_path());
 path canonical(const path&,
@@ -706,7 +710,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myt& operator++()
@@ -843,7 +847,7 @@ class path
 public:
 	typedef _Pchar value_type;
 	typedef basic_string<value_type> string_type;
-	static _CONST_DATA value_type preferred_separator = _FS_PREF;
+	static constexpr value_type preferred_separator = _FS_PREF;
 
 	path()
 		{	// default construct
@@ -862,7 +866,7 @@ public:
 		path(_InIt _First, _InIt _Last)
 
 		{	// construct from [_First, _Last), given iterators
-		typedef typename iterator_traits<_InIt>::value_type _Valty;
+		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str(_First, _Last);
 		string_type _Str_out;
 		*this /= _Path_cvt<_Valty, value_type>::
@@ -875,7 +879,7 @@ public:
 		path(_InIt _First)
 
 		{	// construct from NTCTS, given iterator
-		typedef typename iterator_traits<_InIt>::value_type _Valty;
+		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str;
 		for (; *_First != _Valty(0); ++_First)
 			_Str += *_First;
@@ -903,7 +907,7 @@ public:
 			const locale& _Loc)
 
 		{	// construct from [_First, _Last), given iterators
-		typedef typename iterator_traits<_InIt>::value_type _Valty;
+		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str(_First, _Last);
 		string_type _Str_out;
 		*this /= _Path_cvt<_Valty, value_type>::
@@ -917,7 +921,7 @@ public:
 			const locale& _Loc)
 
 		{	// construct from NTCTS, given iterator
-		typedef typename iterator_traits<_InIt>::value_type _Valty;
+		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str;
 		for (; *_First != _Valty(0); ++_First)
 			_Str += *_First;
@@ -1227,12 +1231,14 @@ public:
 			_Cvt(_Str, _Mystr.c_str(), _Mystr.size()));
 		}
 
-	_STD u32string u32string() const
+	_STD u32string u32string() const = delete;	// TRANSITION
+#if 0
 		{	// return path as basic_string<char32_t> UTF32
 		_STD u32string _Str;
 		return (_Path_cvt<value_type, char32_t>::
 			_Cvt(_Str, _Mystr.c_str(), _Mystr.size()));
 		}
+#endif /* 0 */
 
 	// GENERIC FORMAT OBSERVERS
 
@@ -1288,13 +1294,15 @@ public:
 			_Cvt(_Str, _Genstr.c_str(), _Genstr.size()));
 		}
 
-	_STD u32string generic_u32string() const
+	_STD u32string generic_u32string() const = delete;	// TRANSITION
+#if 0
 		{	// return path as basic_string<char32_t> UTF32
 		_STD u32string _Str;
 		const string_type _Genstr = _Make_generic();
 		return (_Path_cvt<value_type, char32_t>::
 			_Cvt(_Str, _Genstr.c_str(), _Genstr.size()));
 		}
+#endif /* 0 */
 
 	// PATH COMPARISON
 	int compare(const path& _Path) const _NOEXCEPT
@@ -1855,7 +1863,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myt& operator++()
@@ -2074,7 +2082,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myt& operator++()
@@ -2092,7 +2100,10 @@ public:
 			|| !is_directory(_Mylist.front().first->status())
 			|| (_Options != _Directory_options::follow_directory_symlink
 				&& is_symlink(_Mylist.front().first->status())))
+			{
+			_No_push = false;
 			++_Mylist.front().first;
+			}
 		else
 			{	// push down a subdirectory
 			path _Newpath = _Mylist.front().second
@@ -2172,27 +2183,84 @@ inline recursive_directory_iterator end(
 	}
 
 		// OPERATIONAL FUNCTIONS
+inline path _Absolute(const path& _Path,
+	const path& _Base, error_code& _Code)
+	{	// make absolute path from _Path and directory _Base; errors in _Code
+	_Code = error_code();
+	bool _Path_has_root_name = _Path.has_root_name();
+	bool _Path_has_root_directory = _Path.has_root_directory();
+	if (_Path_has_root_name && _Path_has_root_directory)
+		return (_Path);	// fine as is
+
+	path _Current = current_path(_Code);
+	if (_Code != error_code())
+		return (path());
+	path _Abs_base = _Absolute(_Base, _Current, _Code);
+	if (_Code != error_code())
+		return (path());
+
+	if (_Path_has_root_name)
+		{	// insert _Base
+		return (_Path.root_name()
+			/ _Abs_base.root_directory()
+			/ _Abs_base.relative_path()
+			/ _Path.relative_path());
+		}
+	else
+		if (_Path_has_root_directory)
+			return (_Abs_base.root_name()
+				/ _Path);	// prepend root name of base
+		else
+			return (_Abs_base
+				/ _Path);	// prepend absolute name of base
+	}
+
 inline path absolute(const path& _Path,
 	const path& _Base = current_path())
 	{	// make absolute path from _Path and directory _Base
-	if (_Path.has_root_name())
-		if (_Path.has_root_directory())
-			return (_Path);	// fine as is
-		else
-			{	// insert _Base
-			path _Abs_base = absolute(_Base);
-			return (_Path.root_name()
-				/ _Abs_base.root_directory()
-				/ _Abs_base.relative_path()
-				/ _Path.relative_path());
+	error_code _Code;
+	path _Result = _Absolute(_Path, _Base, _Code);
+	if (_Code != error_code())
+		_THROW_NCEE(filesystem_error,
+			"absolute(p1, p2): current_path() couldn't get current working directory");
+	return (_Result);
+	}
+
+inline void _Canonicalize_string_only(path& _Canon_path, const path& _Abs_path)
+	{	// transform absolute path _Abs_path, removing .s, and ..s, using string
+		// manipulations (rather than platform support)
+	vector<path> _Components;
+	path::const_iterator _Abs_path_next = _Abs_path.begin();
+	const path::const_iterator _Abs_path_end = _Abs_path.end();
+	// This is safe because we have already made the path absolute
+	_Canon_path /= *_Abs_path_next; // root_name
+	++_Abs_path_next;
+	_Canon_path /= *_Abs_path_next; // root_directory
+	++_Abs_path_next;
+	for (; _Abs_path_next != _Abs_path_end; ++_Abs_path_next)
+		{
+		const auto _Cstr = _Abs_path_next->c_str();
+		if (_Cstr[0] == _FS_PERIOD)
+			{
+			if (_Cstr[1] == static_cast<path::value_type>(0))
+				continue; // consume "."
+			else if (_Cstr[1] == _FS_PERIOD
+				&& _Cstr[2] == static_cast<path::value_type>(0))
+				{
+				// If no parent is found to remove with .., ignore ..
+				// (that is, C:\..\..\..\Meow canonicalizes to C:\Meow)
+				if (!_Components.empty())
+					_Components.pop_back();
+
+				continue; // consume ".."
+				}
 			}
-	else
-		if (_Path.has_root_directory())
-			return (absolute(_Base).root_name()
-				/ _Path);	// prepend root name of base
-		else
-			return (absolute(_Base)
-				/ _Path);	// prepend absolute name of base
+
+		_Components.push_back(*_Abs_path_next);
+		}
+
+	for (const auto& _Component : _Components)
+		_Canon_path /= _Component;
 	}
 
 inline path canonical(const path& _Path,
@@ -2210,49 +2278,40 @@ inline path canonical(const path& _Path,
 inline path canonical(const path& _Path,
 	error_code& _Code)
 	{	// make absolute path from _Path with no ., .., or symlink
-	return (canonical(_Path, current_path(_Code), _Code));
+	path _Current = current_path(_Code);
+	if (_Code != error_code())
+		return (path());
+	return (canonical(_Path, _Current, _Code));
 	}
 
 inline path canonical(const path& _Path, const path& _Base,
 	error_code& _Code)
 	{	// make absolute path from _Path, _Base with no ".", "..", symlink
-	path _Abs_path = absolute(_Path, _Base);
-
 	_Code = error_code();
-	path _Real_path;
-	for (path::iterator _Next = _Abs_path.begin();
-		_Next != _Abs_path.end(); ++_Next)
-		{	// copy path elements, rewriting symlinks
-		if (is_symlink(*_Next))
-			_Real_path /= read_symlink(*_Next, _Code);
-		else
-			_Real_path /= *_Next;
+	path _Canon_path; // NRVO this variable
+	path _Abs_path = _Absolute(_Path, _Base, _Code);
+	if (_Code != error_code())
+		return (_Canon_path);
+
+	if (_Abs_path.native().size() >= _MAX_FILESYS_NAME)
+		{
+		_Code = make_error_code(errc::filename_too_long);
+		return (_Canon_path);
 		}
 
-	path _Dotless_path;
-	for (path::iterator _Next = _Real_path.begin();
-		_Next != _Real_path.end(); ++_Next)
-		{	// copy path elements, dropping "."
-		if (_Next->c_str()[0] == _FS_PERIOD
-			&& _Next->c_str()[1] == (path::value_type)0)
-			;	// drop "."
-		else
-			_Dotless_path /= *_Next;	// copy path element
-		}
-
-	path _Canon_path;
-	for (path::iterator _Next = _Dotless_path.begin();
-		_Next != _Dotless_path.end(); ++_Next)
-		{	// copy path elements, dropping "anything/.."
-		if (++_Next != _Dotless_path.end()
-			&& _Next->c_str()[0] == _FS_PERIOD
-			&& _Next->c_str()[1] == _FS_PERIOD
-			&& _Next->c_str()[2] == (path::value_type)0)
-			;	// drop path element, ".."
-		else
-			_Canon_path /= *--_Next;	// copy path element
-		}
+	_Canonicalize_string_only(_Canon_path, _Abs_path);
 	return (_Canon_path);
+	}
+
+inline bool _Copy_options_indicate_recursive_copy(_Copy_options _Opts)
+	{	// Checks a _Copy_options for whether copy should call itself recursively
+	if (_Opts == _Copy_options::none)
+		// This supports "copying a directory" as copying the directory and
+		// files therein but not subdirectories.
+		return (true);
+	if ((_Opts & _Copy_options::recursive) != _Copy_options::none)
+		return (true);
+	return (false);
 	}
 
 inline void copy(const path& _Oldpval, const path& _Newpval)
@@ -2326,18 +2385,20 @@ inline void copy(const path& _Oldpval, const path& _Newpval,
 			!= _Copy_options::none)
 			create_hard_link(_Oldpval, _Newpval, _Code);
 		else if (is_directory(_Newstat))
-			copy_file(_Oldpval, _Newpval / _Oldpval, _Opts, _Code);
+			copy_file(_Oldpval, _Newpval / _Oldpval.filename(), _Opts, _Code);
 		else
 			copy_file(_Oldpval, _Newpval, _Opts, _Code);
 	else if (is_directory(_Oldstat)
-		&& (_Opts & _Copy_options::recursive) != _Copy_options::none)
+		&& _Copy_options_indicate_recursive_copy(_Opts))
 		{	// copy directory recursively
 		if (!exists(_Newpval) && !create_directory(_Newpval, _Code) && !_Code)
 			_Code = make_error_code(errc::operation_not_permitted);
 		for (directory_iterator _Next(_Oldpval), _End;
 			_Code == error_code() && _Next != _End; ++_Next)
 			copy(_Next->path(),
-				_Newpval / _Next->path().filename(), _Opts, _Code);
+				_Newpval / _Next->path().filename(),
+				_Opts | _Copy_options::_Unspecified_recursion_prevention_tag,
+				_Code);
 		}
 	}
 

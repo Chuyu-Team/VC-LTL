@@ -23,6 +23,7 @@
 #include <allocators>
 #include <type_traits>
 #include <ppltaskscheduler.h>
+#include <utility>
 
 #define __resumable
 
@@ -31,13 +32,13 @@ namespace std
     namespace experimental
     {
         template <typename _Ty, typename... _Whatever>
-        struct coroutine_traits<concurrency::task<_Ty>, _Whatever...>
+        struct coroutine_traits< ::concurrency::task<_Ty>, _Whatever...>
         {
             struct promise_type
             {
                 auto get_return_object() const
                 {
-                    return concurrency::create_task(_M_tce);
+                    return ::concurrency::create_task(_M_tce);
                 }
 
                 bool initial_suspend() const { return (false); }
@@ -54,18 +55,18 @@ namespace std
                     _M_tce.set_exception(_Ptr);
                 }
             private:
-                concurrency::task_completion_event<_Ty> _M_tce;
+                ::concurrency::task_completion_event<_Ty> _M_tce;
             };
         };
 
         template <typename... _Whatever>
-        struct coroutine_traits<concurrency::task<void>, _Whatever...>
+        struct coroutine_traits< ::concurrency::task<void>, _Whatever...>
         {
             struct promise_type
             {
                 auto get_return_object() const
                 {
-                    return concurrency::create_task(_M_tce);
+                    return ::concurrency::create_task(_M_tce);
                 }
 
                 bool initial_suspend() const { return (false); }
@@ -82,7 +83,7 @@ namespace std
                     _M_tce.set_exception(_Ptr);
                 }
             private:
-                concurrency::task_completion_event<void> _M_tce;
+                ::concurrency::task_completion_event<void> _M_tce;
             };
         };
 
@@ -125,7 +126,7 @@ namespace std
 
                 template <typename _Ty>
                 inline std::true_type _TryAwaitable(_Ty,
-                    decltype(_TryAwaitReady(std::declval<std::decay_t<_Ty>>(), 0, 0), _TryAwaitSuspend(std::declval<std::decay_t<_Ty>>(), std::experimental::resumable_handle<>(), 0, 0), _TryAwaitResume(std::declval<std::decay_t<_Ty>>(), 0, 0), 0));
+                    decltype(_TryAwaitReady(std::declval<std::decay_t<_Ty>>(), 0, 0), _TryAwaitSuspend(std::declval<std::decay_t<_Ty>>(), std::experimental::coroutine_handle<>(), 0, 0), _TryAwaitResume(std::declval<std::decay_t<_Ty>>(), 0, 0), 0));
                 inline std::false_type _TryAwaitable(...);
 
             }
@@ -199,7 +200,6 @@ namespace Concurrency
             {
                 auto _Context = static_cast<ThreadpoolContext*>(_TpTask);
                 _Context->_M_func();
-                details::_Release_chore(&_Context->_M_chore);
             }
             std::function<void()> _M_func;
         public:
@@ -254,7 +254,7 @@ namespace Concurrency
             template <typename _Handle>
             void await_suspend(_Handle _Hnd)
             {
-                awaitable_traits<_Ty>::invoke_await_suspend(_M_awaitable, [=] {
+                std::experimental::awaitable_traits<_Ty>::invoke_await_suspend(_M_awaitable, [=] {
                     if (_M_contextPtr->_M_context == details::_ContextCallback())
                     {
                         _M_contextPtr->_M_defaultContext._CallInContext([=] {
@@ -272,7 +272,7 @@ namespace Concurrency
 
             auto await_resume()
             {
-                return awaitable_traits<_Ty>::invoke_await_resume(_M_awaitable);
+                return std::experimental::awaitable_traits<_Ty>::invoke_await_resume(_M_awaitable);
             }
         };
 
@@ -336,50 +336,64 @@ namespace Windows
         void await_suspend(IAsyncAction^ _Task, _Handle _ResumeCb)
         {
             _Task->Completed = ref new AsyncActionCompletedHandler(
-                [_ResumeCb](IAsyncAction^, AsyncStatus) { _ResumeCb(); }, CallbackContext::Same);
+                [_ResumeCb](IAsyncAction^, AsyncStatus) { _ResumeCb(); }, ::Platform::CallbackContext::Same);
         }
 
         template <typename _Ty, typename _Handle>
         void await_suspend(IAsyncOperation<_Ty>^ _Task, _Handle _ResumeCb)
         {
             _Task->Completed = ref new AsyncOperationCompletedHandler<_Ty>(
-                [_ResumeCb](IAsyncOperation<_Ty>^, AsyncStatus) { _ResumeCb(); }, CallbackContext::Same);
+                [_ResumeCb](IAsyncOperation<_Ty>^, AsyncStatus) { _ResumeCb(); }, ::Platform::CallbackContext::Same);
         }
 
         template <typename _Pr, typename _Handle>
         void await_suspend(IAsyncActionWithProgress<_Pr>^ _Task, _Handle _ResumeCb)
         {
             _Task->Completed = ref new AsyncActionWithProgressCompletedHandler<_Pr>(
-                [_ResumeCb](IAsyncActionWithProgress<_Pr>^, AsyncStatus) { _ResumeCb(); }, CallbackContext::Same);
+                [_ResumeCb](IAsyncActionWithProgress<_Pr>^, AsyncStatus) { _ResumeCb(); }, ::Platform::CallbackContext::Same);
         }
 
         template <typename _Ty, typename _Pr, typename _Handle>
         void await_suspend(IAsyncOperationWithProgress<_Ty, _Pr>^ _Task, _Handle _ResumeCb)
         {
             _Task->Completed = ref new AsyncOperationWithProgressCompletedHandler<_Ty, _Pr>(
-                [_ResumeCb](IAsyncOperationWithProgress<_Ty, _Pr>^, AsyncStatus) { _ResumeCb(); }, CallbackContext::Same);
+                [_ResumeCb](IAsyncOperationWithProgress<_Ty, _Pr>^, AsyncStatus) { _ResumeCb(); }, ::Platform::CallbackContext::Same);
+        }
+
+        // When GetResults is called for an operation in the Canceled state, an E_ILLEGAL_METHOD_CALL exception will be thrown. 
+        // We preempt that by throwing an OperationCanceled exception, which better meets caller expectations.
+        inline void _VerifyStateForResultsCall(Windows::Foundation::AsyncStatus status)
+        {
+            if (status == AsyncStatus::Canceled)
+            {
+                throw ::Platform::Exception::CreateException(E_ABORT);
+            }
         }
 
         inline void await_resume(Windows::Foundation::IAsyncAction^ _Task)
         {
+            _VerifyStateForResultsCall(_Task->Status);
             _Task->GetResults();
         }
 
         template <typename _Ty>
         _Ty await_resume(Windows::Foundation::IAsyncOperation<_Ty>^ _Task)
         {
+            _VerifyStateForResultsCall(_Task->Status);
             return _Task->GetResults();
         }
 
         template <typename _Pr>
         void await_resume(Windows::Foundation::IAsyncActionWithProgress<_Pr>^ _Task)
         {
+            _VerifyStateForResultsCall(_Task->Status);
             _Task->GetResults();
         }
 
         template <typename _Ty, typename _Pr>
         _Ty await_resume(Windows::Foundation::IAsyncOperationWithProgress<_Ty, _Pr>^ _Task)
         {
+            _VerifyStateForResultsCall(_Task->Status);
             return _Task->GetResults();
         }
     }

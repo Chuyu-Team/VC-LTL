@@ -135,7 +135,7 @@ static HRESULT CreateNormalizedObject(
 		{
 			// If the license key is present
 			// Create using IClassFactory2.
-            if (::SysStringLen(bstrLicKey) != 0)
+			if (::SysStringLen(bstrLicKey) != 0)
 			{
 				CComPtr<IClassFactory2> spClassFactory;
 				hr = CoGetClassObject(clsid, CLSCTX_INPROC_SERVER, NULL, __uuidof(IClassFactory2), (void**)&spClassFactory);
@@ -717,7 +717,7 @@ public:
 		if (m_bInPlaceActive && m_bWindowless && m_spInPlaceObjectWindowless)
 			hr = m_spInPlaceObjectWindowless->OnWindowMessage(uMsg, wParam, lParam, &lRes);
         if (FAILED(hr))
-            return 0;        
+            return 0;
 		if (hr == S_FALSE)
 			bHandled = FALSE;
 		return lRes;
@@ -817,7 +817,7 @@ public:
 		CComPtr<IUnknown> p;
 		return CreateControlLicEx(lpTricsData, hWnd, pStream, &p, IID_NULL, NULL, NULL);
 	}
-ATLPREFAST_SUPPRESS(6103)    
+ATLPREFAST_SUPPRESS(6103)
 	STDMETHOD(CreateControlEx)(
 		_In_z_ LPCOLESTR lpszTricsData,
 		_In_ HWND hWnd,
@@ -869,7 +869,7 @@ ATLPREFAST_UNSUPPRESS()
 		}
 		return hr;
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	STDMETHOD(QueryControl)(
 		_In_ REFIID riid,
@@ -891,7 +891,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	STDMETHOD(SetExternalDispatch)(_In_opt_ IDispatch* pDisp)
 	{
 		m_spExternalDispatch = pDisp;
@@ -906,7 +906,7 @@ ATLPREFAST_UNSUPPRESS()
 	}
 
 ATLPREFAST_SUPPRESS(6387)
-	
+
 	STDMETHOD(CreateControlLic)(
 		_In_z_ LPCOLESTR lpTricsData,
 		_In_ HWND hWnd,
@@ -965,7 +965,7 @@ ATLPREFAST_SUPPRESS(6387)
 			hr = CreateNormalizedObject(lpszTricsData, __uuidof(IUnknown), (void**)ppUnk, bWasHTML, bstrLic);
 
 			if (SUCCEEDED(hr))
-			{			
+			{
 				hr = ActivateAx(*ppUnk, false, pStream);
 			}
 
@@ -1056,7 +1056,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 #ifndef _ATL_NO_DOCHOSTUIHANDLER
 	// IDocHostUIHandler
 	// MSHTML requests to display its context menu
@@ -1077,7 +1077,7 @@ ATLPREFAST_UNSUPPRESS()
 				&hr);
 		return hr;
 	}
-	// Called at initialisation to find UI styles from container
+	// Called at initialization to find UI styles from container
 	STDMETHOD(GetHostInfo)(_Inout_ DOCHOSTUIINFO* pInfo)
 	{
 		if (pInfo == NULL)
@@ -1252,7 +1252,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	// Called by IE4/MSHTML to obtain the host's IDispatch interface
 	STDMETHOD(GetExternal)(_Outptr_result_maybenull_ IDispatch** ppDispatch)
@@ -1282,7 +1282,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	// Called by IE4/MSHTML to allow the host an opportunity to modify the URL to be loaded
 	STDMETHOD(TranslateUrl)(
 		DWORD dwTranslate,
@@ -1773,7 +1773,7 @@ ATLPREFAST_SUPPRESS(6387)
 			if(FAILED(hRet))
 			{
 				return hRet;
-			}		
+			}
 
 			pUIWindow->QueryInterface(__uuidof(IOleInPlaceUIWindow), (void**) &m_spInPlaceUIWindow);
 			ATLASSUME(m_spInPlaceUIWindow);
@@ -1806,7 +1806,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	STDMETHOD(Scroll)(SIZE /*scrollExtant*/)
 	{
 		ATLTRACENOTIMPL(_T("IOleInPlaceSite::Scroll"));
@@ -2101,7 +2101,7 @@ ATLPREFAST_UNSUPPRESS()
 	{
 		ATLTRACENOTIMPL(_T("CAxHostWindow::ParseDisplayName"));
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	STDMETHOD(EnumObjects)(
 		DWORD /*grfFlags*/,
@@ -2117,7 +2117,7 @@ ATLPREFAST_SUPPRESS(6014)
 		/* prefast noise VSW 489981 */
 		p = _ATL_NEW enumunk;
 ATLPREFAST_UNSUPPRESS()
-	
+
 		if(p == NULL)
 			return E_OUTOFMEMORY;
 		IUnknown* pTemp = m_spUnknown;
@@ -2130,7 +2130,7 @@ ATLPREFAST_UNSUPPRESS()
 		return hRes;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	STDMETHOD(LockContainer)(BOOL fLock)
 	{
 		m_bLocked = fLock;
@@ -2228,7 +2228,7 @@ ATLPREFAST_UNSUPPRESS()
                     return hr;
 				hr = m_spOleObject->GetExtent(DVASPECT_CONTENT, &m_hmSize);
                 if (FAILED(hr))
-                    return hr;                
+                    return hr;
 				AtlHiMetricToPixel(&m_hmSize, &m_pxSize);
 				m_rcPos.right = m_rcPos.left + m_pxSize.cx;
 				m_rcPos.bottom = m_rcPos.top + m_pxSize.cy;
@@ -2401,7 +2401,7 @@ ATLPREFAST_UNSUPPRESS()
 			if (m_bInPlaceActive && m_spInPlaceObjectWindowless)
                 if (FAILED(m_spInPlaceObjectWindowless->OnWindowMessage(OCM__BASE + uMsg, wParam, lParam, &lRes)))
                     return 0;
-                
+
 			return lRes;
 		}
 
@@ -2434,7 +2434,7 @@ ATLPREFAST_SUPPRESS(6387)
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 };
 
 static LRESULT CALLBACK AtlAxWindowProc(
@@ -2488,7 +2488,7 @@ ATLPREFAST_UNSUPPRESS()
 			USES_CONVERSION_EX;
 			CComPtr<IUnknown> spUnk;
 			LPCOLESTR lpszName = T2COLE_EX_DEF(spName);
-			ATLASSUME(lpszName);			
+			ATLASSUME(lpszName);
 			HRESULT hRet = AtlAxCreateControlLic(lpszName, hWnd, spStream, &spUnk, NULL);
 			if(FAILED(hRet))
 			{
@@ -2577,11 +2577,11 @@ ATLPREFAST_UNSUPPRESS()
 			// Format of data in lpCreateParams
 			//	int nCreateSize;	// size of Create data in bytes
 			//	WORD nMsg;			//constant used to indicate type of DLGINIT data. See _DialogSplitHelper for values.
-			//	DWORD dwLen;		// Length of data strored for control in DLGINIT format in bytes.
-			//	DWORD cchLicKey;	// Length of licence key in OLECHAR's
+			//	DWORD dwLen;		// Length of data strred for control in DLGINIT format in bytes.
+			//	DWORD cchLicKey;	// Length of license key in OLECHAR's
 			//  OLECHAR *szLicKey;	// This will be present only if cchLicKey is greater than 0. This is of variable length and will contain cchLicKey OLECHAR's that represent the licence key.
 			//	The following two fields will be present only if nMsg is WM_OCC_LOADFROMSTREAM_EX or WM_OCC_LOADFROMSTORAGE_EX. If present this information will be ignored since databinding is not supported.
-			//		ULONG cbDataBinding;	// Lenght of databinding information in bytes.
+			//		ULONG cbDataBinding;	// Length of databinding information in bytes.
 			//		BYTE *pbDataBindingInfo	// cbDataBinding bytes that contain databinding information
 			//	BYTE *pbControlData;	// Actual control data persisted by the control.
 
@@ -2612,7 +2612,7 @@ ATLPREFAST_UNSUPPRESS()
 			USES_CONVERSION_EX;
 			CComPtr<IUnknown> spUnk;
 			LPCOLESTR lpszName = T2COLE_EX_DEF(spName);
-			ATLASSUME(lpszName);			
+			ATLASSUME(lpszName);
 			hRet = AtlAxCreateControlLic(lpszName, hWnd, spStream, &spUnk, bstrLicKey);
 			if(FAILED(hRet))
 			{
@@ -2720,7 +2720,7 @@ typename Helper::ReturnType AtlAxDialogCreateT(
 	_In_ LPARAM dwInitParam)
 {
 	AtlAxWinInit();
-	Helper::ReturnType nRet = Helper::GetInvalidValue();
+	typename Helper::ReturnType nRet = Helper::GetInvalidValue();
 
 	HRSRC hDlg = AtlFindResource(hInstance, lpTemplateName, (StringType)RT_DIALOG);
 	if (hDlg != NULL)
@@ -2888,7 +2888,7 @@ ATLINLINE ATLAPI AtlAxCreateControlLicEx(
 	return hr;
 }
 ATLPREFAST_UNSUPPRESS()
-	
+
 ATLPREFAST_SUPPRESS(6387)
 ATLINLINE ATLAPI AtlAxAttachControl(
 	_Inout_ IUnknown* pControl,
@@ -3013,7 +3013,7 @@ ATLINLINE ATLAPI AtlAxGetControl(
 	return (*pp) ? S_OK : E_FAIL;
 }
 ATLPREFAST_UNSUPPRESS()
-	
+
 ATLPREFAST_SUPPRESS(6387)
 ATLINLINE ATLAPI AtlAxGetHost(
 	_In_ HWND h,

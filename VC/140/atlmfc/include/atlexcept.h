@@ -88,10 +88,10 @@ ATL_NOINLINE __declspec(noreturn) inline void WINAPI AtlThrowLastWin32()
 
 #else  // no exception handling
 
-// Throw a CAtlException with th given HRESULT
+// Throw a CAtlException with the given HRESULT
 #if !defined( _ATL_CUSTOM_THROW )  // You can define your own AtlThrow
 
-ATL_NOINLINE inline void WINAPI AtlThrowImpl(_In_ HRESULT hr)
+ATL_NOINLINE __declspec(noreturn) inline void WINAPI AtlThrowImpl(_In_ HRESULT hr)
 {
 	ATLTRACE(atlTraceException, 0, _T("AtlThrow: hr = 0x%x\n"), hr );
 	ATLASSERT( false );
@@ -109,7 +109,7 @@ ATL_NOINLINE inline void WINAPI AtlThrowImpl(_In_ HRESULT hr)
 #endif
 
 // Throw a CAtlException corresponding to the result of ::GetLastError
-ATL_NOINLINE inline void WINAPI AtlThrowLastWin32()
+ATL_NOINLINE __declspec(noreturn) inline void WINAPI AtlThrowLastWin32()
 {
 	DWORD dwError = ::GetLastError();
 	AtlThrow( HRESULT_FROM_WIN32( dwError ) );

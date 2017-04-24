@@ -17,7 +17,7 @@
 
    The comments in this file are intended to give basic understanding of
    the usage of SAL, the Microsoft Source Code Annotation Language.
-   For more details, please see http://go.microsoft.com/fwlink/?LinkID=242134
+   For more details, please see https://go.microsoft.com/fwlink/?LinkID=242134
 
    The macros are defined in 3 layers, plus the structural set:
 
@@ -164,29 +164,20 @@
 #undef _USE_ATTRIBUTES_FOR_SAL
 #define _USE_ATTRIBUTES_FOR_SAL 0
 #elif !defined(_USE_ATTRIBUTES_FOR_SAL) // ][
-#if _MSC_VER >= 1400 // [
 #define _USE_ATTRIBUTES_FOR_SAL 1
-#else // ][
-#define _USE_ATTRIBUTES_FOR_SAL 0
-#endif // ]
 #endif // ]
 
 
 #if !_USE_DECLSPECS_FOR_SAL // [
 #if !_USE_ATTRIBUTES_FOR_SAL // [
-#if _MSC_VER >= 1400 // [
 #undef _USE_ATTRIBUTES_FOR_SAL
 #define _USE_ATTRIBUTES_FOR_SAL 1
-#else // ][
-#undef _USE_DECLSPECS_FOR_SAL
-#define _USE_DECLSPECS_FOR_SAL  1
-#endif // ]
 #endif // ]
 #endif // ]
 
 #else
 
-// Disable expansion of SAL macros in non-Prefast mode to 
+// Disable expansion of SAL macros in non-Prefast mode to
 // improve compiler throughput.
 #ifndef _USE_DECLSPECS_FOR_SAL // [
 #define _USE_DECLSPECS_FOR_SAL 0
@@ -214,7 +205,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
 #endif
 
-#if defined(BUILD_WINDOWS) && !_USE_ATTRIBUTES_FOR_SAL 
+#if defined(BUILD_WINDOWS) && !_USE_ATTRIBUTES_FOR_SAL
 #define _SAL1_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "1") _GrouP_(annotes _SAL_nop_impl_)
 #define _SAL1_1_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "1.1") _GrouP_(annotes _SAL_nop_impl_)
 #define _SAL1_2_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "1.2") _GrouP_(annotes _SAL_nop_impl_)
@@ -223,7 +214,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #ifndef _SAL_L_Source_
 // Some annotations aren't officially SAL2 yet.
 #define _SAL_L_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "2") _GrouP_(annotes _SAL_nop_impl_)
-#endif 
+#endif
 #else
 #define _SAL1_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "1") _Group_(annotes _SAL_nop_impl_)
 #define _SAL1_1_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "1.1") _Group_(annotes _SAL_nop_impl_)
@@ -233,7 +224,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #ifndef _SAL_L_Source_
 // Some annotations aren't officially SAL2 yet.
 #define _SAL_L_Source_(Name, args, annotes) _SA_annotes3(SAL_name, #Name, "", "2") _Group_(annotes _SAL_nop_impl_)
-#endif 
+#endif
 #endif
 
 
@@ -442,7 +433,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Outptr_result_maybenull_z_      _SAL2_Source_(_Outptr_result_maybenull_z_, (),     _Out_impl_     _Deref_post_opt_z_)
 #define _Outptr_opt_result_maybenull_z_  _SAL2_Source_(_Outptr_opt_result_maybenull_z_, (), _Out_opt_impl_ _Deref_post_opt_z_)
 
-// Annotations for _Outptr_ parameters where the output pointer is set to NULL if the function fails. 
+// Annotations for _Outptr_ parameters where the output pointer is set to NULL if the function fails.
 
 #define _Outptr_result_nullonfailure_       _SAL2_Source_(_Outptr_result_nullonfailure_, (),     _Outptr_      _On_failure_(_Deref_post_null_))
 #define _Outptr_opt_result_nullonfailure_   _SAL2_Source_(_Outptr_opt_result_nullonfailure_, (), _Outptr_opt_  _On_failure_(_Deref_post_null_))
@@ -793,10 +784,10 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
    with _Out_. The default unit is elements. Use 'bytecap' if the size is given in bytes
    'count' describes the readable size of the buffer and is typically used with _In_.
    The default unit is elements. Use 'bytecount' if the size is given in bytes.
-   
+
    Argument syntax for cap_, bytecap_, count_, bytecount_:
    (<parameter>|return)[+n]  e.g. cch, return, cb+2
-   
+
    If the buffer size is a constant expression use the c_ postfix.
    E.g. cap_c_(20), count_c_(MAX_PATH), bytecount_c_(16)
 
@@ -917,7 +908,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Out_z_bytecap_post_bytecount_(cap,count)       _SAL1_1_Source_(_Out_z_bytecap_post_bytecount_, (cap,count), _Pre_bytecap_(cap)     _Post_valid_impl_ _Post_z_bytecount_(count))
 #define _Out_opt_z_bytecap_post_bytecount_(cap,count)   _SAL1_1_Source_(_Out_opt_z_bytecap_post_bytecount_, (cap,count), _Pre_opt_bytecap_(cap) _Post_valid_impl_ _Post_z_bytecount_(count))
 
-// only use with dereferenced arguments e.g. '*pcch' 
+// only use with dereferenced arguments e.g. '*pcch'
 #define _Out_capcount_(capcount)             _SAL1_1_Source_(_Out_capcount_, (capcount), _Pre_cap_(capcount)         _Post_valid_impl_ _Post_count_(capcount))
 #define _Out_opt_capcount_(capcount)         _SAL1_1_Source_(_Out_opt_capcount_, (capcount), _Pre_opt_cap_(capcount)     _Post_valid_impl_ _Post_count_(capcount))
 #define _Out_bytecapcount_(capcount)         _SAL1_1_Source_(_Out_bytecapcount_, (capcount), _Pre_bytecap_(capcount)     _Post_valid_impl_ _Post_bytecount_(capcount))
@@ -1086,7 +1077,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_pre_valid_bytecap_x_(size)       _SAL1_1_Source_(_Deref_pre_valid_bytecap_x_, (size), _Deref_pre1_impl_(__notnull_impl_notref)   _Deref_pre1_impl_(__bytecap_x_impl(size)) _Pre_valid_impl_)
 #define _Deref_pre_opt_valid_bytecap_x_(size)   _SAL1_1_Source_(_Deref_pre_opt_valid_bytecap_x_, (size), _Deref_pre1_impl_(__maybenull_impl_notref) _Deref_pre1_impl_(__bytecap_x_impl(size)) _Pre_valid_impl_)
 
-// e.g. void SaveMatrix( _In_count_(n) _Deref_pre_count_(n) const Elem** matrix, size_t n ); 
+// e.g. void SaveMatrix( _In_count_(n) _Deref_pre_count_(n) const Elem** matrix, size_t n );
 // valid buffer extent is described by another parameter
 #define _Deref_pre_count_(size)                 _SAL1_1_Source_(_Deref_pre_count_, (size), _Deref_pre1_impl_(__notnull_impl_notref)   _Deref_pre1_impl_(__count_impl(size))     _Pre_valid_impl_)
 #define _Deref_pre_opt_count_(size)             _SAL1_1_Source_(_Deref_pre_opt_count_, (size), _Deref_pre1_impl_(__maybenull_impl_notref) _Deref_pre1_impl_(__count_impl(size))     _Pre_valid_impl_)
@@ -1167,12 +1158,12 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_post_opt_valid_cap_(size)         _SAL1_1_Source_(_Deref_post_opt_valid_cap_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__cap_impl(size))       _Post_valid_impl_)
 #define _Deref_post_valid_bytecap_(size)         _SAL1_1_Source_(_Deref_post_valid_bytecap_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__bytecap_impl(size))   _Post_valid_impl_)
 #define _Deref_post_opt_valid_bytecap_(size)     _SAL1_1_Source_(_Deref_post_opt_valid_bytecap_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__bytecap_impl(size))   _Post_valid_impl_)
-                                                
+
 #define _Deref_post_valid_cap_c_(size)           _SAL1_1_Source_(_Deref_post_valid_cap_c_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__cap_c_impl(size))     _Post_valid_impl_)
 #define _Deref_post_opt_valid_cap_c_(size)       _SAL1_1_Source_(_Deref_post_opt_valid_cap_c_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__cap_c_impl(size))     _Post_valid_impl_)
 #define _Deref_post_valid_bytecap_c_(size)       _SAL1_1_Source_(_Deref_post_valid_bytecap_c_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__bytecap_c_impl(size)) _Post_valid_impl_)
 #define _Deref_post_opt_valid_bytecap_c_(size)   _SAL1_1_Source_(_Deref_post_opt_valid_bytecap_c_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__bytecap_c_impl(size)) _Post_valid_impl_)
-                                                
+
 #define _Deref_post_valid_cap_x_(size)           _SAL1_1_Source_(_Deref_post_valid_cap_x_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__cap_x_impl(size))     _Post_valid_impl_)
 #define _Deref_post_opt_valid_cap_x_(size)       _SAL1_1_Source_(_Deref_post_opt_valid_cap_x_, (size), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__cap_x_impl(size))     _Post_valid_impl_)
 #define _Deref_post_valid_bytecap_x_(size)       _SAL1_1_Source_(_Deref_post_valid_bytecap_x_, (size), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__bytecap_x_impl(size)) _Post_valid_impl_)
@@ -1495,7 +1486,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // not required to be a legal standalone annotation, and in the case
 // of attribute annotations, usually is not.  (In the case of some declspec
 // annotations, it might be, but it should not be assumed so.)  Those
-// symols will be used in the _PreN..., _PostN... and _RetN... annotations 
+// symols will be used in the _PreN..., _PostN... and _RetN... annotations
 // to build up more complete annotations.
 
 // A symbol ending in _impl_ is reserved to the implementation as well,
@@ -1609,7 +1600,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // Done this way so that they don't appear in the regular compiler's
 // namespace.
 #define __ANNOTATION(fun)              _SA_annotes0(SAL_annotation) void __SA_##fun
- 
+
 #define __PRIMOP(type, fun)            _SA_annotes0(SAL_primop) type __SA_##fun
 
 #define __QUALIFIER(fun)               _SA_annotes0(SAL_qualifier)  void __SA_##fun;
@@ -1625,9 +1616,9 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _SA_annotes2(n,pp1,pp2)
 #define _SA_annotes3(n,pp1,pp2,pp3)
 
-#define __ANNOTATION(fun)              
-#define __PRIMOP(type, fun)            
-#define __QUALIFIER(type, fun)            
+#define __ANNOTATION(fun)
+#define __PRIMOP(type, fun)
+#define __QUALIFIER(type, fun)
 
 #endif // ]
 
@@ -1713,23 +1704,12 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
 #define __writeaccess_impl_notref Access=SA_Write,Notref=1
 #define __allaccess_impl_notref   Access=SA_ReadWrite,Notref=1
 
-#if _MSC_VER >= 1610 // [
-
 // For SAL2, we need to expect general expressions.
 
 #define __cap_impl(size)          WritableElements="\n"#size
 #define __bytecap_impl(size)      WritableBytes="\n"#size
 #define __bytecount_impl(size)    ValidBytes="\n"#size
 #define __count_impl(size)        ValidElements="\n"#size
-
-#else // ][
-
-#define __cap_impl(size)          WritableElements=#size
-#define __bytecap_impl(size)      WritableBytes=#size
-#define __bytecount_impl(size)    ValidBytes=#size
-#define __count_impl(size)        ValidElements=#size
-
-#endif // ]
 
 #define __cap_c_impl(size)        WritableElementsConst=size
 #define __cap_c_one_notref_impl   WritableElementsConst=1,Notref=1
@@ -1894,7 +1874,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
 #define __inner_typefix(ctype)             _SA_annotes1(SAL_typefix, ctype)
 #define __inner_exceptthat                 _SA_annotes0(SAL_except)
 
-#elif defined(_MSC_EXTENSIONS) && !defined( MIDL_PASS ) && !defined(__midl) && !defined(RC_INVOKED) && defined(_PFT_VER) && _MSC_VER >= 1400 // ][
+#elif defined(_MSC_EXTENSIONS) && !defined( MIDL_PASS ) && !defined(__midl) && !defined(RC_INVOKED) && defined(_PFT_VER) // ][
 
 // minimum attribute expansion for foreground build
 
@@ -2129,15 +2109,15 @@ typedef struct __F_ __F_;
 #define _Pre3_impl_(p1,p2,p3)
 
 #define _Post_impl_
-#define _Post1_impl_(p1)       
+#define _Post1_impl_(p1)
 #define _Post2_impl_(p1,p2)
 #define _Post3_impl_(p1,p2,p3)
 
-#define _Ret1_impl_(p1)      
+#define _Ret1_impl_(p1)
 #define _Ret2_impl_(p1,p2)
 #define _Ret3_impl_(p1,p2,p3)
 
-#define _Deref_pre1_impl_(p1)       
+#define _Deref_pre1_impl_(p1)
 #define _Deref_pre2_impl_(p1,p2)
 #define _Deref_pre3_impl_(p1,p2,p3)
 
@@ -2169,7 +2149,7 @@ typedef struct __F_ __F_;
 
 // This section contains the deprecated annotations
 
-/* 
+/*
  -------------------------------------------------------------------------------
  Introduction
 
@@ -2360,7 +2340,7 @@ typedef struct __F_ __F_;
  -------------------------------------------------------------------------------
  Advanced Annotation Examples
 
- __success(return != FALSE) LWSTDAPI_(BOOL) 
+ __success(return != FALSE) LWSTDAPI_(BOOL)
  PathCanonicalizeA(__out_ecount(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
 
@@ -2396,8 +2376,8 @@ extern "C" {
 */
 
 /*
-    The helper annotations are only understood by the compiler version used by 
-    various defect detection tools. When the regular compiler is running, they 
+    The helper annotations are only understood by the compiler version used by
+    various defect detection tools. When the regular compiler is running, they
     are defined into nothing, and do not affect the compiled code.
 */
 
@@ -2416,7 +2396,7 @@ extern "C" {
      __null p
      __notnull p
      __maybenull p
-    
+
      Annotates a pointer p. States that pointer p is null. Commonly used
      in the negated form __notnull or the possibly null form __maybenull.
     */
@@ -2429,7 +2409,7 @@ extern "C" {
      __readonly l
      __notreadonly l
      __mabyereadonly l
-    
+
      Annotates a location l. States that location l is not modified after
      this point.  If the annotation is placed on the precondition state of
      a function, the restriction only applies until the postcondition state
@@ -2446,7 +2426,7 @@ extern "C" {
      __valid v
      __notvalid v
      __maybevalid v
-    
+
      Annotates any value v. States that the value satisfies all properties of
      valid values of its type. For example, for a string buffer, valid means
      that the buffer pointer is either NULL or points to a NULL-terminated string.
@@ -2458,7 +2438,7 @@ extern "C" {
 
     /*
      __readableTo(extent) p
-    
+
      Annotates a buffer pointer p.  If the buffer can be read, extent describes
      how much of the buffer is readable. For a reader of the buffer, this is
      an explicit permission to read up to that amount, rather than a restriction to
@@ -2468,24 +2448,24 @@ extern "C" {
     #define __readableTo(extent)    _SA_annotes1(SAL_readableTo, extent)
 
     /*
-    
+
      __elem_readableTo(size)
-    
+
      Annotates a buffer pointer p as being readable to size elements.
     */
 
     #define __elem_readableTo(size)   _SA_annotes1(SAL_readableTo, elementCount( size ))
-    
+
     /*
      __byte_readableTo(size)
-    
+
      Annotates a buffer pointer p as being readable to size bytes.
     */
     #define __byte_readableTo(size)   _SA_annotes1(SAL_readableTo, byteCount(size))
-    
+
     /*
      __writableTo(extent) p
-    
+
      Annotates a buffer pointer p. If the buffer can be modified, extent
      describes how much of the buffer is writable (usually the allocation
      size). For a writer of the buffer, this is an explicit permission to
@@ -2495,45 +2475,45 @@ extern "C" {
 
     /*
      __elem_writableTo(size)
-    
+
      Annotates a buffer pointer p as being writable to size elements.
     */
     #define __elem_writableTo(size)   _SA_annotes1(SAL_writableTo, elementCount( size ))
-    
+
     /*
      __byte_writableTo(size)
-    
+
      Annotates a buffer pointer p as being writable to size bytes.
     */
     #define __byte_writableTo(size)   _SA_annotes1(SAL_writableTo, byteCount( size))
 
     /*
      __deref p
-    
+
      Annotates a pointer p. The next annotation applies one dereference down
      in the type. If readableTo(p, size) then the next annotation applies to
      all elements *(p+i) for which i satisfies the size. If p is a pointer
      to a struct, the next annotation applies to all fields of the struct.
     */
     #define __deref                 _Deref_impl_
-    
+
     /*
      __pre __next_annotation
-    
+
      The next annotation applies in the precondition state
     */
     #define __pre                   _Pre_impl_
-    
+
     /*
      __post __next_annotation
-    
+
      The next annotation applies in the postcondition state
     */
     #define __post                  _Post_impl_
-    
+
     /*
      __precond(<expr>)
-    
+
      When <expr> is true, the next annotation applies in the precondition state
      (currently not enabled)
     */
@@ -2541,7 +2521,7 @@ extern "C" {
 
     /*
      __postcond(<expr>)
-    
+
      When <expr> is true, the next annotation applies in the postcondition state
      (currently not enabled)
     */
@@ -2549,26 +2529,26 @@ extern "C" {
 
     /*
      __exceptthat
-    
+
      Given a set of annotations Q containing __exceptthat maybeP, the effect of
      the except clause is to erase any P or notP annotations (explicit or
      implied) within Q at the same level of dereferencing that the except
      clause appears, and to replace it with maybeP.
-    
+
       Example 1: __valid __pre_except_maybenull on a pointer p means that the
                  pointer may be null, and is otherwise valid, thus overriding
                  the implicit notnull annotation implied by __valid on
                  pointers.
-    
+
       Example 2: __valid __deref __pre_except_maybenull on an int **p means
                  that p is not null (implied by valid), but the elements
-                 pointed to by p could be null, and are otherwise valid. 
+                 pointed to by p could be null, and are otherwise valid.
     */
     #define __exceptthat                __inner_exceptthat
- 
+
     /*
      _refparam
-    
+
      Added to all out parameter macros to indicate that they are all reference
      parameters.
     */
@@ -2576,16 +2556,16 @@ extern "C" {
 
     /*
      __inner_*
-    
+
      Helper macros that directly correspond to certain high-level annotations.
-    
+
     */
 
     /*
      Macros to classify the entrypoints and indicate their category.
-    
+
      Pre-defined control point categories include: RPC, LPC, DeviceDriver, UserToKernel, ISAPI, COM.
-    
+
     */
     #define __inner_control_entrypoint(category) _SA_annotes2(SAL_entrypoint, controlEntry, category)
 
@@ -2652,7 +2632,7 @@ extern "C" {
 
 #endif /* !defined(__midl) && defined(_PREFAST_) */ // ]
 
-/* 
+/*
 -------------------------------------------------------------------------------
 Buffer Annotation Definitions
 
@@ -2905,7 +2885,7 @@ of each annotation, see the advanced annotations section.
 #ifdef _PREFAST_ // [
 #define __analysis_assume(expr) __assume(expr)
 #else // ][
-#define __analysis_assume(expr) 
+#define __analysis_assume(expr)
 #endif // ]
 #endif // ]
 
@@ -2913,14 +2893,14 @@ of each annotation, see the advanced annotations section.
 #ifdef _PREFAST_ // [
 #define _Analysis_assume_(expr) __assume(expr)
 #else // ][
-#define _Analysis_assume_(expr) 
+#define _Analysis_assume_(expr)
 #endif // ]
 #endif // ]
 
 #define _Analysis_noreturn_    _SAL2_Source_(_Analysis_noreturn_, (), _SA_annotes0(SAL_terminates))
 
 #ifdef _PREFAST_ // [
-__inline __nothrow 
+__inline __nothrow
 void __AnalysisAssumeNullterminated(_Post_ _Null_terminated_ void *p);
 
 #define _Analysis_assume_nullterminated_(x) __AnalysisAssumeNullterminated(x)

@@ -36,13 +36,11 @@ public:
 		}
 	};
 
-template<class _Memptr> inline
-	typename enable_if<is_member_pointer<_Memptr>::value,
-		_Mem_fn<_Memptr> >::type mem_fn(_Memptr _Pm) _NOEXCEPT
+template<class _Rx,
+	class _Ty> inline
+	_Mem_fn<_Rx _Ty::*> mem_fn(_Rx _Ty::* _Pm) _NOEXCEPT
 	{	// wrap a pointer to member function/data
-		// NOTE: This template parameter differs from the Standard
-		// in order to handle arbitrary calling conventions.
-	return (_Mem_fn<_Memptr>(_Pm));
+	return (_Mem_fn<_Rx _Ty::*>(_Pm));
 	}
 
 // IMPLEMENT function
@@ -62,7 +60,7 @@ public:
 		}
 	};
 
-//_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Xbad_function_call());
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_function_call();
 
 	// TEMPLATE FUNCTION _Test_callable
 template<class _Fty>
@@ -95,6 +93,8 @@ template<class _Fty> inline
 	}
 
 	// TEMPLATE CLASS _Func_base
+ #pragma warning(push)
+ #pragma warning(disable: 4265) // non-virtual destructor in base class
 template<class _Rx,
 	class... _Types>
 	class _Func_base
@@ -125,6 +125,7 @@ public:
 private:
 	virtual const void *_Get() const _NOEXCEPT = 0;
 	};
+ #pragma warning(pop)
 
 	// TEMPLATE CLASS _Is_large
 const int _Num_ptrs = 6 + 16 / sizeof (void *);
@@ -139,11 +140,13 @@ template<class _Impl>
 	};
 
 	// TEMPLATE CLASS _Func_impl
+ #pragma warning(push)
+ #pragma warning(disable: 4265) // non-virtual destructor in base class
 template<class _Callable,
 	class _Alloc,
 	class _Rx,
 	class... _Types>
-	class _Func_impl
+	class _Func_impl final
 		: public _Func_base<_Rx, _Types...>
 	{	// derived class for specific implementation types
 public:
@@ -250,6 +253,7 @@ private:
 		return (_Mypair._Get_second());
 		}
 	};
+ #pragma warning(pop)
 
 	// TEMPLATE CLASS _Func_class
 template<class _Ret,
@@ -270,8 +274,8 @@ public:
 
 	_Ret operator()(_Types... _Args) const
 		{	// call through stored object
-		//if (_Empty())
-		//	_Xbad_function_call();
+		if (_Empty())
+			_Xbad_function_call();
 		return (_Getimpl()->_Do_call(_STD forward<_Types>(_Args)...));
 		}
 
@@ -281,6 +285,13 @@ public:
 		}
 
 protected:
+	template<class _Fx>
+		using _Result_of_invoking_t = result_of_t<_Fx(_Types...)>;
+
+	template<class _Inv_res>
+		using _Enable_if_returnable_t = enable_if_t<
+			is_convertible<_Inv_res, _Ret>::value || is_void<_Ret>::value>;
+
 	bool _Empty() const _NOEXCEPT
 		{	// return true if no stored object
 		return (_Getimpl() == 0);
@@ -290,10 +301,8 @@ protected:
 		{	// copy _Right's stored object
 		if (_Right._Empty())
 			;	// already empty
-		else if (_Right._Local())
-			_Set(_Right._Getimpl()->_Copy(_Getspace()));
 		else
-			_Set(_Right._Getimpl()->_Copy(0));
+			_Set(_Right._Getimpl()->_Copy(_Getspace()));
 		}
 
 	void _Reset_move(_Myt&& _Right)
@@ -446,7 +455,7 @@ private:
 template<class _Tx>
 	struct _Get_function_impl;
 
-#define _GET_FUNCTION_IMPL(CALL_OPT) \
+#define _GET_FUNCTION_IMPL(CALL_OPT, X1, X2) \
 template<class _Ret, \
 	class... _Types> \
 	struct _Get_function_impl<_Ret CALL_OPT (_Types...)> \
@@ -454,7 +463,7 @@ template<class _Ret, \
 	typedef _Func_class<_Ret, _Types...> type; \
 	};
 
-_NON_MEMBER_CALL(_GET_FUNCTION_IMPL)
+_NON_MEMBER_CALL(_GET_FUNCTION_IMPL, , )
 #undef _GET_FUNCTION_IMPL
 
 	// TEMPLATE CLASS function
@@ -462,6 +471,9 @@ template<class _Fty>
 	class function
 		: public _Get_function_impl<_Fty>::type
 	{	// wrapper for callable objects
+private:
+	typedef typename _Get_function_impl<_Fty>::type _Mybase;
+
 public:
 	typedef function<_Fty> _Myt;
 
@@ -478,7 +490,9 @@ public:
 		this->_Reset_copy(_Right);
 		}
 
-	template<class _Fx>
+	template<class _Fx,
+		class _Inv_res = typename _Mybase::template _Result_of_invoking_t<_Fx&>,
+		class = typename _Mybase::template _Enable_if_returnable_t<_Inv_res> >
 		function(_Fx _Func)
 		{	// construct wrapper holding copy of _Func
 		this->_Reset(_STD move(_Func));
@@ -501,7 +515,9 @@ public:
 		}
 
 	template<class _Fx,
-		class _Alloc>
+		class _Alloc,
+		class _Inv_res = typename _Mybase::template _Result_of_invoking_t<_Fx&>,
+		class = typename _Mybase::template _Enable_if_returnable_t<_Inv_res> >
 		function(allocator_arg_t, const _Alloc& _Ax, _Fx _Func)
 		{	// construct wrapper holding copy of _Func, allocator
 		this->_Reset_alloc(_STD move(_Func), _Ax);
@@ -538,19 +554,23 @@ public:
 		return (*this);
 		}
 
-	template<class _Fx>
+	template<class _Fx,
+		class _Inv_res = typename _Mybase::template _Result_of_invoking_t<decay_t<_Fx>&>,
+		class = typename _Mybase::template _Enable_if_returnable_t<_Inv_res> >
 		_Myt& operator=(_Fx&& _Func)
 		{	// assign function object _Func
 		_Myt(_STD forward<_Fx>(_Func)).swap(*this);
 		return (*this);
 		}
 
+ #if _HAS_FUNCTION_ASSIGN
 	template<class _Fx,
 		class _Alloc>
 		void assign(_Fx&& _Func, const _Alloc& _Ax)
 		{	// assign wrapper holding copy of _Func, allocator
 		_Myt(allocator_arg, _Ax, _STD forward<_Fx>(_Func)).swap(*this);
 		}
+ #endif /* _HAS_FUNCTION_ASSIGN */
 
 	_Myt& operator=(nullptr_t) _NOEXCEPT
 		{	// clear function object
@@ -668,6 +688,11 @@ template<class _Tx>
 	{	// ignore cv-qualifiers
 	};
 
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr int is_placeholder_v = is_placeholder<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
+
 	// TEMPLATE CLASS _Binder FORWARD DECLARATION
 template<class _Ret,
 	class _Fx,
@@ -706,6 +731,11 @@ template<class _Tx>
 		: is_bind_expression<_Tx>
 	{	// ignore cv-qualifiers
 	};
+
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_bind_expression_v = is_bind_expression<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
 
 	// TEMPLATE FUNCTION _Fix_arg
 template<class _Cv_TiD,
@@ -764,7 +794,7 @@ template<class _Cv_TiD,
 	static_assert(_Jx > 0, "invalid is_placeholder value");
 
 	template<class _Untuple>
-		static auto _Fix(_Cv_TiD& _Tid, _Untuple&& _Ut)
+		static auto _Fix(_Cv_TiD&, _Untuple&& _Ut)
 		-> decltype(_STD get<_Jx - 1>(_STD move(_Ut)))
 		{	// choose the Jth unbound argument (1-based indexing)
 		return (_STD get<_Jx - 1>(_STD move(_Ut)));
@@ -790,6 +820,8 @@ template<class _Ret,
 	-> decltype(_Invoke_ret(_Fr, _Obj, _Fix_arg(
 		_STD get<_Ix>(_Tpl), _STD move(_Ut))...))
 	{	// bind() and bind<R>() invocation
+	(void) _Tpl;	// TRANSITION, VSO#181496
+	(void) _Ut;
 	return (_Invoke_ret(_Fr, _Obj, _Fix_arg(
 		_STD get<_Ix>(_Tpl), _STD move(_Ut))...));
 	}
@@ -871,28 +903,29 @@ template<class _Ret,
 
 	// PLACEHOLDER ARGUMENTS
 		namespace placeholders {	// placeholders
-_CONST_DATA _Ph<1> _1{};
-_CONST_DATA _Ph<2> _2{};
-_CONST_DATA _Ph<3> _3{};
-_CONST_DATA _Ph<4> _4{};
-_CONST_DATA _Ph<5> _5{};
-_CONST_DATA _Ph<6> _6{};
-_CONST_DATA _Ph<7> _7{};
-_CONST_DATA _Ph<8> _8{};
-_CONST_DATA _Ph<9> _9{};
-_CONST_DATA _Ph<10> _10{};
-_CONST_DATA _Ph<11> _11{};
-_CONST_DATA _Ph<12> _12{};
-_CONST_DATA _Ph<13> _13{};
-_CONST_DATA _Ph<14> _14{};
-_CONST_DATA _Ph<15> _15{};
-_CONST_DATA _Ph<16> _16{};
-_CONST_DATA _Ph<17> _17{};
-_CONST_DATA _Ph<18> _18{};
-_CONST_DATA _Ph<19> _19{};
-_CONST_DATA _Ph<20> _20{};
+constexpr _Ph<1> _1{};
+constexpr _Ph<2> _2{};
+constexpr _Ph<3> _3{};
+constexpr _Ph<4> _4{};
+constexpr _Ph<5> _5{};
+constexpr _Ph<6> _6{};
+constexpr _Ph<7> _7{};
+constexpr _Ph<8> _8{};
+constexpr _Ph<9> _9{};
+constexpr _Ph<10> _10{};
+constexpr _Ph<11> _11{};
+constexpr _Ph<12> _12{};
+constexpr _Ph<13> _13{};
+constexpr _Ph<14> _14{};
+constexpr _Ph<15> _15{};
+constexpr _Ph<16> _16{};
+constexpr _Ph<17> _17{};
+constexpr _Ph<18> _18{};
+constexpr _Ph<19> _19{};
+constexpr _Ph<20> _20{};
 		}	// namespace placeholders
 
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// TR1 additions
 using _STD bad_function_call;
 using _STD bind;
@@ -906,6 +939,7 @@ namespace placeholders {
 	using namespace _STD placeholders;
 	}	// namespace placeholders
 }	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 _STD_END
 
 namespace std {

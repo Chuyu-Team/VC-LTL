@@ -234,7 +234,7 @@ public:
     /// <seealso cref="Task Parallelism"/>
     /**/
     structured_task_group(cancellation_token _CancellationToken) :
-        _M_task_collection(_CancellationToken._GetImpl() != NULL ? _CancellationToken._GetImpl() : Concurrency::details::_CancellationTokenState::_None())
+        _M_task_collection(_CancellationToken._GetImpl() != NULL ? _CancellationToken._GetImpl() : ::Concurrency::details::_CancellationTokenState::_None())
     {
     }
 
@@ -518,7 +518,7 @@ public:
     /// <seealso cref="Task Parallelism"/>
     /**/
     task_group(cancellation_token _CancellationToken) :
-        _M_task_collection(_CancellationToken._GetImpl() != NULL ? _CancellationToken._GetImpl() : Concurrency::details::_CancellationTokenState::_None())
+        _M_task_collection(_CancellationToken._GetImpl() != NULL ? _CancellationToken._GetImpl() : ::Concurrency::details::_CancellationTokenState::_None())
     {
     }
 
@@ -1629,7 +1629,7 @@ public:
     template<class _Type>
     _Type _Get_num_chunks(_Type ) const
     {
-        return static_cast<_Type>(Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors());
+        return static_cast<_Type>(::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors());
     }
 };
 
@@ -1658,7 +1658,7 @@ public:
     template<class _Type>
     _Type _Get_num_chunks(_Type ) const
     {
-        return static_cast<_Type>(Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors());
+        return static_cast<_Type>(::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors());
     }
 };
 
@@ -1751,7 +1751,7 @@ public:
     {
         if (_M_num_chunks == 0)
         {
-            _M_num_chunks = Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
+            _M_num_chunks = ::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
             _M_pChunk_locations = new location[_M_num_chunks];
         }
 
@@ -1899,7 +1899,7 @@ public:
     _Worker_proxy(_Worker_proxy *_PParent_worker = NULL) :
       _M_pHelper_range(NULL), _M_pParent_worker(_PParent_worker), _M_pWorker_range(NULL), _M_completion_count(0), _M_stop_iterating(0)
     {
-        _M_context = Concurrency::details::_Context::_CurrentContext();
+        _M_context = ::Concurrency::details::_Context::_CurrentContext();
     }
 
     ~_Worker_proxy()
@@ -2831,7 +2831,7 @@ void _Parallel_for_each_forward_impl(_Forward_iterator& _First, const _Forward_i
         _Task_group.run(
             [&_First, &_Last, &_Func, &_Task_group]
             {
-                Concurrency::_Parallel_for_each_forward_impl(_First, _Last, _Func, _Task_group);
+                ::Concurrency::_Parallel_for_each_forward_impl(_First, _Last, _Func, _Task_group);
             }
         );
     }
@@ -2984,7 +2984,7 @@ template <typename _Iterator, typename _Function, typename _Partitioner>
 void parallel_for_each(_Iterator _First, _Iterator _Last, const _Function& _Func, _Partitioner&& _Part)
 {
     _Trace_ppl_function(PPLParallelForeachEventGuid, _TRACE_LEVEL_INFORMATION, CONCRT_EVENT_START);
-    _Parallel_for_each_impl(_First, _Last, _Func, std::forward<_Partitioner>(_Part), std::_Iter_cat(_First));
+    _Parallel_for_each_impl(_First, _Last, _Func, std::forward<_Partitioner>(_Part), typename std::iterator_traits<_Iterator>::iterator_category());
     _Trace_ppl_function(PPLParallelForeachEventGuid, _TRACE_LEVEL_INFORMATION, CONCRT_EVENT_END);
 }
 
@@ -2993,123 +2993,116 @@ void parallel_for_each(_Iterator _First, _Iterator _Last, const _Function& _Func
 #pragma warning(push)
 #pragma warning(disable: 4180)
 
-/// <summary>
-///     Computes the sum of all elements in a specified range by computing successive partial sums, or computes the result of successive partial
-///     results similarly obtained from using a specified binary operation other than sum, in parallel. <c>parallel_reduce</c> is semantically similar to
-///     <c>std::accumulate</c>, except that it requires the binary operation to be associative, and requires an identity value instead of an initial value.
-/// </summary>
-/// <typeparam name="_Forward_iterator">
-///     The iterator type of input range.
-/// </typeparam>
-/// <param name="_Begin">
-///     An input iterator addressing the first element in the range to be reduced.
-/// </param>
-/// <param name="_End">
-///     An input iterator addressing the element that is one position beyond the final element in the range to be reduced.
-/// </param>
-/// <param name="_Identity">
-///     The identity value <paramref name="_Identity"/> is of the same type as the result type of the reduction and also the <c>value_type</c> of the iterator
-///     for the first and second overloads. For the third overload, the identity value must have the same type as the result type of the reduction, but can be
-///     different from the <c>value_type</c> of the iterator. It must have an appropriate value such that the range reduction operator <paramref name="_Range_fun"/>,
-///     when applied to a range of a single element of type <c>value_type</c> and the identity value, behaves like a type cast of the value from type
-///     <c>value_type</c> to the identity type.
-/// </param>
-/// <returns>
-///     The result of the reduction.
-/// </returns>
-/// <remarks>
-///     To perform a parallel reduction, the function divides the range into chunks based on the number of workers available to the underlying
-///     scheduler. The reduction takes place in two phases, the first phase performs a reduction within each chunk, and the second phase performs
-///     a reduction between the partial results from each chunk.
-///     <para>The first overload requires that the iterator's <c>value_type</c>, <c>T</c>, be the same as the identity value type as well as the reduction
-///     result type. The element type T must provide the operator <c>T T::operator + (T)</c> to reduce elements in each chunk. The same operator is
-///     used in the second phase as well.</para>
-///     <para>The second overload also requires that the iterator's <c>value_type</c> be the same as the identity value type as well as the reduction
-///     result type. The supplied binary operator <paramref name="_Sym_fun"/> is used in both reduction phases, with the identity value as the initial
-///     value for the first phase.</para>
-///     <para>For the third overload, the identity value type must be the same as the reduction result type, but the iterator's <c>value_type</c> may be
-///     different from both. The range reduction function <paramref name="_Range_fun"/> is used in the first phase with the identity
-///     value as the initial value, and the binary function <paramref name="_Sym_reduce_fun"/> is applied to sub results in the second phase.</para>
-/// </remarks>
-/**/
-template<typename _Forward_iterator>
-inline typename std::iterator_traits<_Forward_iterator>::value_type parallel_reduce(
-    _Forward_iterator _Begin, _Forward_iterator _End, const typename std::iterator_traits<_Forward_iterator>::value_type &_Identity)
-{
-    return parallel_reduce(_Begin, _End, _Identity, std::plus<typename std::iterator_traits<_Forward_iterator>::value_type>());
-}
-
-/// <summary>
-///     Computes the sum of all elements in a specified range by computing successive partial sums, or computes the result of successive partial
-///     results similarly obtained from using a specified binary operation other than sum, in parallel. <c>parallel_reduce</c> is semantically similar to
-///     <c>std::accumulate</c>, except that it requires the binary operation to be associative, and requires an identity value instead of an initial value.
-/// </summary>
-/// <typeparam name="_Forward_iterator">
-///     The iterator type of input range.
-/// </typeparam>
-/// <typeparam name="_Sym_reduce_fun">
-///     The type of the symmetric reduction function. This must be a function type with signature <c>_Reduce_type _Sym_fun(_Reduce_type, _Reduce_type)</c>, where
-///     _Reduce_type is the same as the identity type and the result type of the reduction. For the third overload, this should be consistent
-///     with the output type of <c>_Range_reduce_fun</c>.
-/// </typeparam>
-/// <param name="_Begin">
-///     An input iterator addressing the first element in the range to be reduced.
-/// </param>
-/// <param name="_End">
-///     An input iterator addressing the element that is one position beyond the final element in the range to be reduced.
-/// </param>
-/// <param name="_Identity">
-///     The identity value <paramref name="_Identity"/> is of the same type as the result type of the reduction and also the <c>value_type</c> of the iterator
-///     for the first and second overloads. For the third overload, the identity value must have the same type as the result type of the reduction, but can be
-///     different from the <c>value_type</c> of the iterator. It must have an appropriate value such that the range reduction operator <paramref name="_Range_fun"/>,
-///     when applied to a range of a single element of type <c>value_type</c> and the identity value, behaves like a type cast of the value from type
-///     <c>value_type</c> to the identity type.
-/// </param>
-/// <param name="_Sym_fun">
-///     The symmetric function that will be used in the second of the reduction. Refer to Remarks for more information.
-/// </param>
-/// <returns>
-///     The result of the reduction.
-/// </returns>
-/// <remarks>
-///     To perform a parallel reduction, the function divides the range into chunks based on the number of workers available to the underlying
-///     scheduler. The reduction takes place in two phases, the first phase performs a reduction within each chunk, and the second phase performs
-///     a reduction between the partial results from each chunk.
-///     <para>The first overload requires that the iterator's <c>value_type</c>, <c>T</c>, be the same as the identity value type as well as the reduction
-///     result type. The element type T must provide the operator <c>T T::operator + (T)</c> to reduce elements in each chunk. The same operator is
-///     used in the second phase as well.</para>
-///     <para>The second overload also requires that the iterator's <c>value_type</c> be the same as the identity value type as well as the reduction
-///     result type. The supplied binary operator <paramref name="_Sym_fun"/> is used in both reduction phases, with the identity value as the initial
-///     value for the first phase.</para>
-///     <para>For the third overload, the identity value type must be the same as the reduction result type, but the iterator's <c>value_type</c> may be
-///     different from both. The range reduction function <paramref name="_Range_fun"/> is used in the first phase with the identity
-///     value as the initial value, and the binary function <paramref name="_Sym_reduce_fun"/> is applied to sub results in the second phase.</para>
-/// </remarks>
-/**/
-template<typename _Forward_iterator, typename _Sym_reduce_fun>
-inline typename std::iterator_traits<_Forward_iterator>::value_type parallel_reduce(_Forward_iterator _Begin, _Forward_iterator _End,
-    const typename std::iterator_traits<_Forward_iterator>::value_type &_Identity, _Sym_reduce_fun _Sym_fun)
-{
-    typedef typename std::remove_cv<typename std::iterator_traits<_Forward_iterator>::value_type>::type _Reduce_type;
-
-    return parallel_reduce(_Begin, _End, _Identity,
-        [_Sym_fun](_Forward_iterator _Begin, _Forward_iterator _End, _Reduce_type _Init)->_Reduce_type
-        {
-            while (_Begin != _End)
-            {
-                _Init = _Sym_fun(_Init, *_Begin++);
-            }
-
-            return _Init;
-        },
-        _Sym_fun);
-}
-
+// Helper function assemble all functors
 template <typename _Reduce_type, typename _Sub_function, typename _Combinable_type>
-struct _Reduce_functor_helper;
+struct _Reduce_functor_helper
+{
+    const _Sub_function &_Sub_fun;
+    const _Reduce_type &_Identity_value;
 
+    _Combinable_type &_Combinable;
+
+    typedef _Reduce_type _Reduce_type;
+    typedef typename _Combinable_type::_Bucket _Bucket_type;
+
+    _Reduce_functor_helper(const _Reduce_type &_Identity, const _Sub_function &_Sub_fun, _Combinable_type &&_Comb):
+        _Sub_fun(_Sub_fun), _Combinable(_Comb), _Identity_value(_Identity)
+    {
+    }
+
+private:
+    _Reduce_functor_helper &operator =(const _Reduce_functor_helper &_Other);
+};
+
+// Ordered serial combinable object
 template<typename _Ty, typename _Sym_fun>
-class _Order_combinable;
+class _Order_combinable
+{
+public:
+    // Only write once, limited contention will be caused
+    struct _Bucket
+    {
+        // Allocate enough space in the Bucket to hold a value
+        char _Value[(sizeof(_Ty) / sizeof(char))];
+        _Bucket * _Next;
+
+        _Bucket(_Bucket *_N)
+        {
+            _Next = _N;
+        }
+
+        void _Insert(_Bucket *_Item)
+        {
+            // No need to lock, only one thread will insert
+            _Item->_Next = _Next;
+            _Next = _Item;
+        }
+
+        // Construct value in bucket
+        void _Put(const _Ty &_Cur)
+        {
+            new(reinterpret_cast<_Ty *>(&_Value)) _Ty(_Cur);
+        }
+    };
+
+private:
+    const _Sym_fun &_M_fun;
+    size_t _M_number;
+    _Bucket *_M_root;
+    _Order_combinable &operator =(const _Order_combinable &_Other);
+
+public:
+    _Bucket *_Construct(_Bucket *_Par = 0)
+    {
+        _Bucket * _Ret = static_cast<_Bucket *>(::Concurrency::Alloc(sizeof(_Bucket)));
+        return new(_Ret)_Bucket(_Par);
+    }
+
+    _Order_combinable(const _Sym_fun &_Fun): _M_fun(_Fun)
+    {
+        _M_root = 0;
+        _M_number = 0;
+    }
+
+    ~_Order_combinable()
+    {
+        while (_M_root)
+        {
+            _Bucket *_Cur = _M_root;
+            _M_root = _M_root->_Next;
+            reinterpret_cast<_Ty &>(_Cur->_Value).~_Ty();
+            ::Concurrency::Free(_Cur);
+        }
+    }
+
+    // Serially combine and release the list, return result
+    _Ty _Serial_combine_release()
+    {
+        _Ty _Ret(reinterpret_cast<_Ty &>(_M_root->_Value));
+        _Bucket *_Cur = _M_root;
+        _M_root = _M_root->_Next;
+
+        while (_M_root)
+        {
+            reinterpret_cast<_Ty &>(_Cur->_Value).~_Ty();
+            ::Concurrency::Free(_Cur);
+            _Cur = _M_root;
+            _Ret = _M_fun(reinterpret_cast <_Ty &> (_Cur->_Value), _Ret);
+            _M_root = _M_root->_Next;
+        }
+
+        reinterpret_cast<_Ty &>(_Cur->_Value).~_Ty();
+        ::Concurrency::Free(_Cur);
+
+        return _Ret;
+    }
+
+    // allocate a bucket and push back to the list
+    _Bucket *_Unsafe_push_back()
+    {
+        return _M_root = _Construct(_M_root);
+    }
+};
 
 /// <summary>
 ///     Computes the sum of all elements in a specified range by computing successive partial sums, or computes the result of successive partial
@@ -3185,95 +3178,117 @@ inline _Reduce_type parallel_reduce(_Forward_iterator _Begin, _Forward_iterator 
         typename std::iterator_traits<_Forward_iterator>::iterator_category());
 }
 
-// Ordered serial combinable object
-template<typename _Ty, typename _Sym_fun>
-class _Order_combinable
+/// <summary>
+///     Computes the sum of all elements in a specified range by computing successive partial sums, or computes the result of successive partial
+///     results similarly obtained from using a specified binary operation other than sum, in parallel. <c>parallel_reduce</c> is semantically similar to
+///     <c>std::accumulate</c>, except that it requires the binary operation to be associative, and requires an identity value instead of an initial value.
+/// </summary>
+/// <typeparam name="_Forward_iterator">
+///     The iterator type of input range.
+/// </typeparam>
+/// <typeparam name="_Sym_reduce_fun">
+///     The type of the symmetric reduction function. This must be a function type with signature <c>_Reduce_type _Sym_fun(_Reduce_type, _Reduce_type)</c>, where
+///     _Reduce_type is the same as the identity type and the result type of the reduction. For the third overload, this should be consistent
+///     with the output type of <c>_Range_reduce_fun</c>.
+/// </typeparam>
+/// <param name="_Begin">
+///     An input iterator addressing the first element in the range to be reduced.
+/// </param>
+/// <param name="_End">
+///     An input iterator addressing the element that is one position beyond the final element in the range to be reduced.
+/// </param>
+/// <param name="_Identity">
+///     The identity value <paramref name="_Identity"/> is of the same type as the result type of the reduction and also the <c>value_type</c> of the iterator
+///     for the first and second overloads. For the third overload, the identity value must have the same type as the result type of the reduction, but can be
+///     different from the <c>value_type</c> of the iterator. It must have an appropriate value such that the range reduction operator <paramref name="_Range_fun"/>,
+///     when applied to a range of a single element of type <c>value_type</c> and the identity value, behaves like a type cast of the value from type
+///     <c>value_type</c> to the identity type.
+/// </param>
+/// <param name="_Sym_fun">
+///     The symmetric function that will be used in the second of the reduction. Refer to Remarks for more information.
+/// </param>
+/// <returns>
+///     The result of the reduction.
+/// </returns>
+/// <remarks>
+///     To perform a parallel reduction, the function divides the range into chunks based on the number of workers available to the underlying
+///     scheduler. The reduction takes place in two phases, the first phase performs a reduction within each chunk, and the second phase performs
+///     a reduction between the partial results from each chunk.
+///     <para>The first overload requires that the iterator's <c>value_type</c>, <c>T</c>, be the same as the identity value type as well as the reduction
+///     result type. The element type T must provide the operator <c>T T::operator + (T)</c> to reduce elements in each chunk. The same operator is
+///     used in the second phase as well.</para>
+///     <para>The second overload also requires that the iterator's <c>value_type</c> be the same as the identity value type as well as the reduction
+///     result type. The supplied binary operator <paramref name="_Sym_fun"/> is used in both reduction phases, with the identity value as the initial
+///     value for the first phase.</para>
+///     <para>For the third overload, the identity value type must be the same as the reduction result type, but the iterator's <c>value_type</c> may be
+///     different from both. The range reduction function <paramref name="_Range_fun"/> is used in the first phase with the identity
+///     value as the initial value, and the binary function <paramref name="_Sym_reduce_fun"/> is applied to sub results in the second phase.</para>
+/// </remarks>
+/**/
+template<typename _Forward_iterator, typename _Sym_reduce_fun>
+inline typename std::iterator_traits<_Forward_iterator>::value_type parallel_reduce(_Forward_iterator _Begin, _Forward_iterator _End,
+    const typename std::iterator_traits<_Forward_iterator>::value_type &_Identity, _Sym_reduce_fun _Sym_fun)
 {
-public:
-    // Only write once, limited contention will be caused
-    struct _Bucket
-    {
-        // Allocate enough space in the Bucket to hold a value
-        char _Value[(sizeof(_Ty) / sizeof(char))];
-        _Bucket * _Next;
+    typedef typename std::remove_cv<typename std::iterator_traits<_Forward_iterator>::value_type>::type _Reduce_type;
 
-        _Bucket(_Bucket *_N)
+    return parallel_reduce(_Begin, _End, _Identity,
+        [_Sym_fun](_Forward_iterator _Begin, _Forward_iterator _End, _Reduce_type _Init)->_Reduce_type
         {
-            _Next = _N;
-        }
+            while (_Begin != _End)
+            {
+                _Init = _Sym_fun(_Init, *_Begin++);
+            }
 
-        void _Insert(_Bucket *_Item)
-        {
-            // No need to lock, only one thread will insert
-            _Item->_Next = _Next;
-            _Next = _Item;
-        }
+            return _Init;
+        },
+        _Sym_fun);
+}
 
-        // Construct value in bucket
-        void _Put(const _Ty &_Cur)
-        {
-            new(reinterpret_cast<_Ty *>(&_Value)) _Ty(_Cur);
-        }
-    };
-
-private:
-    const _Sym_fun &_M_fun;
-    size_t _M_number;
-    _Bucket *_M_root;
-    _Order_combinable &operator =(const _Order_combinable &_Other);
-
-public:
-    _Bucket *_Construct(_Bucket *_Par = 0)
-    {
-        _Bucket * _Ret = static_cast<_Bucket *>(Concurrency::Alloc(sizeof(_Bucket)));
-        return new(_Ret)_Bucket(_Par);
-    }
-
-    _Order_combinable(const _Sym_fun &_Fun): _M_fun(_Fun)
-    {
-        _M_root = 0;
-        _M_number = 0;
-    }
-
-    ~_Order_combinable()
-    {
-        while (_M_root)
-        {
-            _Bucket *_Cur = _M_root;
-            _M_root = _M_root->_Next;
-            reinterpret_cast<_Ty &>(_Cur->_Value).~_Ty();
-            Concurrency::Free(_Cur);
-        }
-    }
-
-    // Serially combine and release the list, return result
-    _Ty _Serial_combine_release()
-    {
-        _Ty _Ret(reinterpret_cast<_Ty &>(_M_root->_Value));
-        _Bucket *_Cur = _M_root;
-        _M_root = _M_root->_Next;
-
-        while (_M_root)
-        {
-            reinterpret_cast<_Ty &>(_Cur->_Value).~_Ty();
-            Concurrency::Free(_Cur);
-            _Cur = _M_root;
-            _Ret = _M_fun(reinterpret_cast <_Ty &> (_Cur->_Value), _Ret);
-            _M_root = _M_root->_Next;
-        }
-
-        reinterpret_cast<_Ty &>(_Cur->_Value).~_Ty();
-        Concurrency::Free(_Cur);
-
-        return _Ret;
-    }
-
-    // allocate a bucket and push back to the list
-    _Bucket *_Unsafe_push_back()
-    {
-        return _M_root = _Construct(_M_root);
-    }
-};
+/// <summary>
+///     Computes the sum of all elements in a specified range by computing successive partial sums, or computes the result of successive partial
+///     results similarly obtained from using a specified binary operation other than sum, in parallel. <c>parallel_reduce</c> is semantically similar to
+///     <c>std::accumulate</c>, except that it requires the binary operation to be associative, and requires an identity value instead of an initial value.
+/// </summary>
+/// <typeparam name="_Forward_iterator">
+///     The iterator type of input range.
+/// </typeparam>
+/// <param name="_Begin">
+///     An input iterator addressing the first element in the range to be reduced.
+/// </param>
+/// <param name="_End">
+///     An input iterator addressing the element that is one position beyond the final element in the range to be reduced.
+/// </param>
+/// <param name="_Identity">
+///     The identity value <paramref name="_Identity"/> is of the same type as the result type of the reduction and also the <c>value_type</c> of the iterator
+///     for the first and second overloads. For the third overload, the identity value must have the same type as the result type of the reduction, but can be
+///     different from the <c>value_type</c> of the iterator. It must have an appropriate value such that the range reduction operator <paramref name="_Range_fun"/>,
+///     when applied to a range of a single element of type <c>value_type</c> and the identity value, behaves like a type cast of the value from type
+///     <c>value_type</c> to the identity type.
+/// </param>
+/// <returns>
+///     The result of the reduction.
+/// </returns>
+/// <remarks>
+///     To perform a parallel reduction, the function divides the range into chunks based on the number of workers available to the underlying
+///     scheduler. The reduction takes place in two phases, the first phase performs a reduction within each chunk, and the second phase performs
+///     a reduction between the partial results from each chunk.
+///     <para>The first overload requires that the iterator's <c>value_type</c>, <c>T</c>, be the same as the identity value type as well as the reduction
+///     result type. The element type T must provide the operator <c>T T::operator + (T)</c> to reduce elements in each chunk. The same operator is
+///     used in the second phase as well.</para>
+///     <para>The second overload also requires that the iterator's <c>value_type</c> be the same as the identity value type as well as the reduction
+///     result type. The supplied binary operator <paramref name="_Sym_fun"/> is used in both reduction phases, with the identity value as the initial
+///     value for the first phase.</para>
+///     <para>For the third overload, the identity value type must be the same as the reduction result type, but the iterator's <c>value_type</c> may be
+///     different from both. The range reduction function <paramref name="_Range_fun"/> is used in the first phase with the identity
+///     value as the initial value, and the binary function <paramref name="_Sym_reduce_fun"/> is applied to sub results in the second phase.</para>
+/// </remarks>
+/**/
+template<typename _Forward_iterator>
+inline typename std::iterator_traits<_Forward_iterator>::value_type parallel_reduce(
+    _Forward_iterator _Begin, _Forward_iterator _End, const typename std::iterator_traits<_Forward_iterator>::value_type &_Identity)
+{
+    return parallel_reduce(_Begin, _End, _Identity, std::plus<typename std::iterator_traits<_Forward_iterator>::value_type>());
+}
 
 // Implementation for the parallel reduce
 template <typename _Forward_iterator, typename _Function>
@@ -3295,8 +3310,28 @@ typename _Function::_Reduce_type _Parallel_reduce_impl(_Forward_iterator _First,
     }
 }
 
+// All the code below is the worker without range stealing
 template<typename _Forward_iterator, typename _Functor>
-class _Parallel_reduce_fixed_worker;
+class _Parallel_reduce_fixed_worker
+{
+public:
+    // The bucket allocation order will depend on the worker construction order
+    _Parallel_reduce_fixed_worker(_Forward_iterator _Begin, _Forward_iterator _End, const _Functor &_Fun):
+        _M_begin(_Begin), _M_end(_End), _M_fun(_Fun), _M_bucket(_M_fun._Combinable._Unsafe_push_back())
+    {
+    }
+
+    void operator ()() const
+    {
+        _M_bucket->_Put(_M_fun._Sub_fun(_M_begin, _M_end, _M_fun._Identity_value));
+    }
+
+private:
+    const _Functor &_M_fun;
+    const _Forward_iterator _M_begin, _M_end;
+    typename _Functor::_Bucket_type * const _M_bucket;
+    _Parallel_reduce_fixed_worker &operator =(const _Parallel_reduce_fixed_worker &_Other);
+};
 
 template <typename _Worker, typename _Random_iterator, typename _Function>
 void _Parallel_reduce_random_executor(_Random_iterator _Begin, _Random_iterator _End, const _Function& _Fun);
@@ -3326,60 +3361,16 @@ typename _Function::_Reduce_type _Parallel_reduce_impl(_Random_iterator _First, 
     }
 }
 
-// Helper function assemble all functors
-template <typename _Reduce_type, typename _Sub_function, typename _Combinable_type>
-struct _Reduce_functor_helper
-{
-    const _Sub_function &_Sub_fun;
-    const _Reduce_type &_Identity_value;
-
-    _Combinable_type &_Combinable;
-
-    typedef _Reduce_type _Reduce_type;
-    typedef typename _Combinable_type::_Bucket _Bucket_type;
-
-    _Reduce_functor_helper(const _Reduce_type &_Identity, const _Sub_function &_Sub_fun, _Combinable_type &&_Comb):
-        _Sub_fun(_Sub_fun), _Combinable(_Comb), _Identity_value(_Identity)
-    {
-    }
-
-private:
-    _Reduce_functor_helper &operator =(const _Reduce_functor_helper &_Other);
-};
-
-// All the code below is the worker without range stealing
-template<typename _Forward_iterator, typename _Functor>
-class _Parallel_reduce_fixed_worker
-{
-public:
-    // The bucket allocation order will depend on the worker construction order
-    _Parallel_reduce_fixed_worker(_Forward_iterator _Begin, _Forward_iterator _End, const _Functor &_Fun):
-        _M_begin(_Begin), _M_end(_End), _M_fun(_Fun), _M_bucket(_M_fun._Combinable._Unsafe_push_back())
-    {
-    }
-
-    void operator ()() const
-    {
-        _M_bucket->_Put(_M_fun._Sub_fun(_M_begin, _M_end, _M_fun._Identity_value));
-    }
-
-private:
-    const _Functor &_M_fun;
-    const _Forward_iterator _M_begin, _M_end;
-    typename _Functor::_Bucket_type * const _M_bucket;
-    _Parallel_reduce_fixed_worker &operator =(const _Parallel_reduce_fixed_worker &_Other);
-};
-
 // the parallel worker executor for fixed iterator
 // it will divide fixed number of chunks
 // almost same as fixed parallel for, except keep the chunk dividing order
 template <typename _Worker, typename _Random_iterator, typename _Function>
 void _Parallel_reduce_random_executor(_Random_iterator _Begin, _Random_iterator _End, const _Function& _Fun)
 {
-    size_t _Cpu_num = static_cast<size_t>(Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors()), _Size = _End - _Begin;
+    size_t _Cpu_num = static_cast<size_t>(::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors()), _Size = _End - _Begin;
 
     structured_task_group _Tg;
-    Concurrency::details::_MallocaArrayHolder<task_handle<_Worker>> _Holder;
+    ::Concurrency::details::_MallocaArrayHolder<task_handle<_Worker>> _Holder;
     task_handle<_Worker> *_Tasks = _Holder._InitOnRawMalloca(_malloca(sizeof(task_handle<_Worker>) * (_Cpu_num - 1)));
 
     size_t _Begin_index = 0;
@@ -3420,7 +3411,7 @@ struct _Parallel_reduce_forward_executor_helper
     int _Worker_size;
 
     _Parallel_reduce_forward_executor_helper(_Forward_iterator &_First, _Forward_iterator _Last, const _Function& _Func):
-        _Workers(static_cast<task_handle<_Worker_class> *>(Concurrency::Alloc(sizeof(task_handle<_Worker_class>) * _Default_worker_size)))
+        _Workers(static_cast<task_handle<_Worker_class> *>(::Concurrency::Alloc(sizeof(task_handle<_Worker_class>) * _Default_worker_size)))
     {
         _Worker_size = 0;
         while (_Worker_size < _Default_worker_size && _First != _Last)
@@ -3462,7 +3453,7 @@ struct _Parallel_reduce_forward_executor_helper
             {
                 _Workers.get()[_I].~task_handle<_Worker_class>();
             }
-            Concurrency::Free(_Workers.release());
+            ::Concurrency::Free(_Workers.release());
         }
     }
 };
@@ -3474,7 +3465,7 @@ void _Parallel_reduce_forward_executor(_Forward_iterator _First, _Forward_iterat
     typedef _Parallel_reduce_fixed_worker<_Forward_iterator, _Function> _Worker_class;
 
     structured_task_group _Worker_group;
-    Concurrency::details::_MallocaArrayHolder<task_handle<_Worker_class>> _Holder;
+    ::Concurrency::details::_MallocaArrayHolder<task_handle<_Worker_class>> _Holder;
     task_handle<_Worker_class>* _Workers = _Holder._InitOnRawMalloca(_malloca(_Internal_worker_number * sizeof(task_handle<_Worker_class>)));
 
     // Start execution first
@@ -3538,7 +3529,7 @@ struct _Unary_transform_impl_helper<std::random_access_iterator_tag, std::random
     {
         if (_Begin < _End)
         {
-            Concurrency::_Parallel_for_impl(static_cast<size_t>(0), static_cast<size_t>(_End - _Begin), static_cast<size_t>(1),
+            ::Concurrency::_Parallel_for_impl(static_cast<size_t>(0), static_cast<size_t>(_End - _Begin), static_cast<size_t>(1),
                 [_Begin, &_Result, &_Unary_op](size_t _Index)
                 {
                     _Result[_Index] = _Unary_op(_Begin[_Index]);
@@ -3572,7 +3563,7 @@ struct _Binary_transform_impl_helper<std::random_access_iterator_tag, std::rando
     {
         if (_Begin1 < _End1)
         {
-            Concurrency::_Parallel_for_impl(static_cast<size_t>(0), static_cast<size_t>(_End1 - _Begin1), static_cast<size_t>(1),
+            ::Concurrency::_Parallel_for_impl(static_cast<size_t>(0), static_cast<size_t>(_End1 - _Begin1), static_cast<size_t>(1),
                 [_Begin1, _Begin2, &_Result, &_Binary_op](size_t _Index)
                 {
                     _Result[_Index] = _Binary_op(_Begin1[_Index], _Begin2[_Index]);
@@ -3702,7 +3693,7 @@ public:
         void operator()() const
         {
             // Invoke parallel_for on the batched up array of elements
-            Concurrency::_Parallel_for_impl(static_cast<size_t>(0), _M_len, static_cast<size_t>(1),
+            ::Concurrency::_Parallel_for_impl(static_cast<size_t>(0), _M_len, static_cast<size_t>(1),
                 [this] (size_t _Index)
                 {
                     _M_output_helper._Store(_M_binary_op(_M_input_helper1._Load(_Index), _M_input_helper2._Load(_Index)), _Index);
@@ -3755,7 +3746,7 @@ public:
         void operator()() const
         {
             // Invoke parallel_for on the batched up array of elements
-            Concurrency::_Parallel_for_impl(static_cast<size_t>(0), _M_len, static_cast<size_t>(1),
+            ::Concurrency::_Parallel_for_impl(static_cast<size_t>(0), _M_len, static_cast<size_t>(1),
                 [this] (size_t _Index)
                 {
                     _M_output_helper._Store(_M_unary_op(_M_input_helper._Load(_Index)), _Index);
@@ -4317,7 +4308,7 @@ public:
     /**/
     _Ty& local()
     {
-        unsigned long _Key = Concurrency::details::platform::GetCurrentThreadId();
+        unsigned long _Key = ::Concurrency::details::platform::GetCurrentThreadId();
         size_t _Index;
         _Node* _ExistingNode = _FindLocalItem(_Key, &_Index);
         if (_ExistingNode == NULL)
@@ -4344,7 +4335,7 @@ public:
     /**/
     _Ty& local(bool& _Exists)
     {
-        unsigned long _Key = Concurrency::details::platform::GetCurrentThreadId();
+        unsigned long _Key = ::Concurrency::details::platform::GetCurrentThreadId();
         size_t _Index;
         _Node* _ExistingNode = _FindLocalItem(_Key, &_Index);
         if (_ExistingNode == NULL)
@@ -4466,7 +4457,7 @@ public:
 private:
     void _InitNew()
     {
-        _M_size = Concurrency::details::_GetCombinableSize();
+        _M_size = ::Concurrency::details::_GetCombinableSize();
         _M_buckets = new _Node*[_M_size];
         memset((void*)_M_buckets, 0, _M_size * sizeof _M_buckets[0]);
     }
@@ -4685,11 +4676,11 @@ void _Merge_chunks(_Random_iterator _Begin1, const _Random_iterator &_End1, _Ran
 
     if (_Begin1 != _End1)
     {
-        std::_Move(_Begin1, _End1, _Output);
+        std::_Move_no_deprecate(_Begin1, _End1, _Output);
     }
     else if (_Begin2 != _End2)
     {
-        std::_Move(_Begin2, _End2, _Output);
+        std::_Move_no_deprecate(_Begin2, _End2, _Output);
     }
 }
 
@@ -4786,11 +4777,11 @@ void _Integer_radix_sort(const _Random_iterator &_Begin, size_t _Size, const _Ra
     {
         if (_Radix + 1 & 1)
         {
-            std::_Move(_Output, _Output + _Size, _Begin);
+            std::_Move_no_deprecate(_Output, _Output + _Size, _Begin);
         }
         else
         {
-            std::_Move(_Begin, _Begin + _Size, _Output);
+            std::_Move_no_deprecate(_Begin, _Begin + _Size, _Output);
         }
     }
 }
@@ -4807,12 +4798,12 @@ void _Parallel_integer_radix_sort(const _Random_iterator &_Begin, size_t _Size, 
         return _Integer_radix_sort(_Begin, _Size, _Output, _Radix, _Proj_func, _Deep);
     }
 
-    size_t _Threads_num = Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
+    size_t _Threads_num = ::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
     size_t _Buffer_size = sizeof(size_t) * 256 * _Threads_num;
     size_t _Step = _Size / _Threads_num;
     size_t _Remain = _Size % _Threads_num;
 
-    Concurrency::details::_MallocaArrayHolder<size_t [256]> _Holder;
+    ::Concurrency::details::_MallocaArrayHolder<size_t [256]> _Holder;
     size_t (*_Chunks)[256] = _Holder._InitOnRawMalloca(_malloca(_Buffer_size));
 
     memset(_Chunks, 0, _Buffer_size);
@@ -4860,7 +4851,7 @@ void _Parallel_integer_radix_sort(const _Random_iterator &_Begin, size_t _Size, 
     //         on these threads' chunk size counters.
 
     // Count in parallel and separately save their local results without reducing
-    Concurrency::parallel_for(static_cast<size_t>(0), _Threads_num, [=](size_t _Index)
+    ::Concurrency::parallel_for(static_cast<size_t>(0), _Threads_num, [=](size_t _Index)
     {
         size_t _Beg_index, _End_index;
 
@@ -4909,7 +4900,7 @@ void _Parallel_integer_radix_sort(const _Random_iterator &_Begin, size_t _Size, 
     if (_Count > 1)
     {
         // Move the elements in parallel into each chunk
-        Concurrency::parallel_for(static_cast<size_t>(0), _Threads_num, [=](size_t _Index)
+        ::Concurrency::parallel_for(static_cast<size_t>(0), _Threads_num, [=](size_t _Index)
         {
             size_t _Beg_index, _End_index;
 
@@ -4939,7 +4930,7 @@ void _Parallel_integer_radix_sort(const _Random_iterator &_Begin, size_t _Size, 
         });
 
         // Invoke _parallel_integer_radix_sort in parallel for each chunk
-        Concurrency::parallel_for(static_cast<size_t>(0), static_cast<size_t>(256), [=](size_t _Index)
+        ::Concurrency::parallel_for(static_cast<size_t>(0), static_cast<size_t>(256), [=](size_t _Index)
         {
             if (_Index < 256 - 1)
             {
@@ -4973,7 +4964,7 @@ void _Parallel_integer_sort_asc(const _Random_iterator &_Begin, size_t _Size, co
     typedef typename std::remove_const<typename std::remove_reference<decltype(_Proj_func(*_Begin))>::type>::type _Integer_type;
 
     // Find out the max value, which will be used to determine the highest differing byte (the radix position)
-    _Integer_type _Max_val = Concurrency::parallel_reduce(_Begin, _Begin + _Size, _Proj_func(*_Begin),
+    _Integer_type _Max_val = ::Concurrency::parallel_reduce(_Begin, _Begin + _Size, _Proj_func(*_Begin),
         [=](_Random_iterator _Begin, _Random_iterator _End, _Integer_type _Init) -> _Integer_type
         {
             while (_Begin != _End)
@@ -5250,34 +5241,6 @@ private:
 /// <typeparam name="_Random_iterator">
 ///     The iterator type of the input range.
 /// </typeparam>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <remarks>
-///     The first overload uses the binary comparator <c>std::less</c>.
-///     <para>The second overloaded uses the supplied binary comparator that should have the signature <c>bool _Func(T, T)</c> where <c>T</c>
-///     is the type of the elements in the input range.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Random_iterator>
-inline void parallel_sort(const _Random_iterator &_Begin, const _Random_iterator &_End)
-{
-    parallel_sort(_Begin, _End, std::less<typename std::iterator_traits<_Random_iterator>::value_type>());
-}
-
-/// <summary>
-///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
-///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort.
-/// </summary>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
 /// <typeparam name="_Function">
 ///     The type of the binary comparison functor.
 /// </typeparam>
@@ -5313,7 +5276,7 @@ inline void parallel_sort(const _Random_iterator &_Begin, const _Random_iterator
     interruption_point();
 
     size_t _Size = _End - _Begin;
-    size_t _Core_num = Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
+    size_t _Core_num = ::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
 
     if (_Size <= _Chunk_size || _Core_num < 2)
     {
@@ -5321,6 +5284,228 @@ inline void parallel_sort(const _Random_iterator &_Begin, const _Random_iterator
     }
 
     _Parallel_quicksort_impl(_Begin, _Size, _Func, _Core_num * _MAX_NUM_TASKS_PER_CORE, _Chunk_size, 0);
+}
+
+/// <summary>
+///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
+///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort.
+/// </summary>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <remarks>
+///     The first overload uses the binary comparator <c>std::less</c>.
+///     <para>The second overloaded uses the supplied binary comparator that should have the signature <c>bool _Func(T, T)</c> where <c>T</c>
+///     is the type of the elements in the input range.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Random_iterator>
+inline void parallel_sort(const _Random_iterator &_Begin, const _Random_iterator &_End)
+{
+    parallel_sort(_Begin, _End, std::less<typename std::iterator_traits<_Random_iterator>::value_type>());
+}
+
+/// <summary>
+///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
+///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort except that
+///     it needs <c>O(n)</c> additional space, and requires default initialization for the elements being sorted.
+/// </summary>
+/// <typeparam name="_Allocator">
+///     The type of an STL compatible memory allocator.
+/// </typeparam>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <typeparam name="_Function">
+///     The type of the binary comparator.
+/// </typeparam>
+/// <param name="_Alloc">
+///     An instance of an STL compatible memory allocator.
+/// </param>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <param name="_Func">
+///     A user-defined predicate function object that defines the comparison criterion to be satisfied by successive elements in the ordering.
+///     A binary predicate takes two arguments and returns <c>true</c> when satisfied and <c>false</c> when not satisfied. This comparator function
+///     must impose a strict weak ordering on pairs of elements from the sequence.
+/// </param>
+/// <param name="_Chunk_size">
+///     The minimum size of a chunk that will be split into two for parallel execution.
+/// </param>
+/// <remarks>
+///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
+///     In most cases parallel_buffered_sort will show an improvement in performance over <see cref="parallel_sort Function">parallel_sort</see>, and you should
+///     use it over parallel_sort if you have the memory available.
+///     <para>If you do not supply a binary comparator <c>std::less</c> is used as the default, which requires the element type to provide the
+///     operator <c>operator&lt;()</c>.</para>
+///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Allocator, typename _Random_iterator, typename _Function>
+inline void parallel_buffered_sort(const _Allocator& _Alloc, const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Func, const size_t _Chunk_size = 2048)
+{
+    _CONCRT_ASSERT(_Chunk_size > 0);
+
+    // Check cancellation before the algorithm starts.
+    interruption_point();
+
+    size_t _Size = _End - _Begin;
+    size_t _Core_num = ::Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
+
+    if (_Size <= _Chunk_size || _Core_num < 2)
+    {
+        return std::sort(_Begin, _End, _Func);
+    }
+    const static size_t _CORE_NUM_MASK = 0x55555555;
+
+    _AllocatedBufferHolder<_Allocator> _Holder(_Size, _Alloc);
+
+    // Prevent cancellation from happening during the algorithm in case it leaves buffers in unknown state.
+    run_with_cancellation_token([&]() {
+        // This buffered sort algorithm will divide chunks and apply parallel quicksort on each chunk. In the end, it will
+        // apply parallel merge to these sorted chunks.
+        //
+        // We need to decide on the number of chunks to divide the input buffer into. If we divide it into n chunks, log(n)
+        // merges will be needed to get the final sorted result. In this algorithm, we have two buffers for each merge
+        // operation, let's say buffer A and B. Buffer A is the original input array, buffer B is the additional allocated
+        // buffer. Each turn's merge will put the merge result into the other buffer; for example, if we decided to split
+        // into 8 chunks in buffer A at very beginning, after one pass of merging, there will be 4 chunks in buffer B.
+        // If we apply one more pass of merging, there will be 2 chunks in buffer A again.
+        //
+        // The problem is we want to the final merge pass to put the result back in buffer A, so that we don't need
+        // one extra copy to put the sorted data back to buffer A.
+        // To make sure the final result is in buffer A (original input array), we need an even number of merge passes,
+        // which means log(n) must be an even number. Thus n must be a number power(2, even number). For example, when the
+        // even number is 2, n is power(2, 2) = 4, when even number is 4, n is power(2, 4) = 16. When we divide chunks
+        // into these numbers, the final merge result will be in the original input array. Now we need to decide the chunk(split)
+        // number based on this property and the number of cores.
+        //
+        // We want to get a chunk (split) number close to the core number (or a little more than the number of cores),
+        // and it also needs to satisfy above property. For a 8 core machine, the best chunk number should be 16, because it's
+        // the smallest number that satisfies the above property and is bigger than the core number (so that we can utilize all
+        // cores, a little more than core number is OK, we need to split more tasks anyway).
+        //
+        // In this algorithm, we will make this alignment by bit operations (it's easy and clear). For a binary representation,
+        // all the numbers that satisfy power(2, even number) will be 1, 100, 10000, 1000000, 100000000 ...
+        // After OR-ing these numbers together, we will get a mask (... 0101 0101 0101) which is all possible combinations of
+        // power(2, even number). We use _Core_num & _CORE_NUM_MASK | _Core_num << 1 & _CORE_NUM_MASK, a bit-wise operation to align
+        // _Core_num's highest bit into a power(2, even number).
+        //
+        // It means if _Core_num = 8, the highest bit in binary is bin(1000) which is not power(2, even number). After this
+        // bit-wise operation, it will align to bin(10000) = 16 which is power(2, even number). If the _Core_num = 16, after
+        // alignment it still returns 16. The trick is to make sure the highest bit of _Core_num will align to the "1" bit of the
+        // mask bin(... 0101 0101 0101) We don't care about the other bits on the aligned result except the highest bit, because they
+        // will be ignored in the function.
+        _Parallel_buffered_sort_impl(_Begin, _Size, stdext::make_unchecked_array_iterator(_Holder._Get_buffer()),
+            _Func, _Core_num & _CORE_NUM_MASK | _Core_num << 1 & _CORE_NUM_MASK, _Chunk_size);
+    }, cancellation_token::none());
+
+}
+
+/// <summary>
+///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
+///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort except that
+///     it needs <c>O(n)</c> additional space, and requires default initialization for the elements being sorted.
+/// </summary>
+/// <typeparam name="_Allocator">
+///     The type of an STL compatible memory allocator.
+/// </typeparam>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <typeparam name="_Function">
+///     The type of the binary comparator.
+/// </typeparam>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <param name="_Func">
+///     A user-defined predicate function object that defines the comparison criterion to be satisfied by successive elements in the ordering.
+///     A binary predicate takes two arguments and returns <c>true</c> when satisfied and <c>false</c> when not satisfied. This comparator function
+///     must impose a strict weak ordering on pairs of elements from the sequence.
+/// </param>
+/// <param name="_Chunk_size">
+///     The minimum size of a chunk that will be split into two for parallel execution.
+/// </param>
+/// <remarks>
+///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
+///     In most cases parallel_buffered_sort will show an improvement in performance over <see cref="parallel_sort Function">parallel_sort</see>, and you should
+///     use it over parallel_sort if you have the memory available.
+///     <para>If you do not supply a binary comparator <c>std::less</c> is used as the default, which requires the element type to provide the
+///     operator <c>operator&lt;()</c>.</para>
+///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Allocator, typename _Random_iterator, typename _Function>
+inline void parallel_buffered_sort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Func, const size_t _Chunk_size = 2048)
+{
+    _Allocator _Alloc;
+    return parallel_buffered_sort<_Allocator, _Random_iterator, _Function>(_Alloc, _Begin, _End, _Func, _Chunk_size);
+}
+
+/// <summary>
+///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
+///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort except that
+///     it needs <c>O(n)</c> additional space, and requires default initialization for the elements being sorted.
+/// </summary>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <typeparam name="_Function">
+///     The type of the binary comparator.
+/// </typeparam>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <param name="_Func">
+///     A user-defined predicate function object that defines the comparison criterion to be satisfied by successive elements in the ordering.
+///     A binary predicate takes two arguments and returns <c>true</c> when satisfied and <c>false</c> when not satisfied. This comparator function
+///     must impose a strict weak ordering on pairs of elements from the sequence.
+/// </param>
+/// <param name="_Chunk_size">
+///     The minimum size of a chunk that will be split into two for parallel execution.
+/// </param>
+/// <remarks>
+///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
+///     In most cases parallel_buffered_sort will show an improvement in performance over <see cref="parallel_sort Function">parallel_sort</see>, and you should
+///     use it over parallel_sort if you have the memory available.
+///     <para>If you do not supply a binary comparator <c>std::less</c> is used as the default, which requires the element type to provide the
+///     operator <c>operator&lt;()</c>.</para>
+///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Random_iterator, typename _Function>
+inline void parallel_buffered_sort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Func, const size_t _Chunk_size = 2048)
+{
+    parallel_buffered_sort<std::allocator<typename std::iterator_traits<_Random_iterator>::value_type>>(_Begin, _End, _Func, _Chunk_size);
 }
 
 /// <summary>
@@ -5430,200 +5615,6 @@ inline void parallel_buffered_sort(const _Allocator& _Alloc, const _Random_itera
     parallel_buffered_sort<_Allocator>(_Alloc, _Begin, _End, std::less<typename std::iterator_traits<_Random_iterator>::value_type>());
 }
 
-/// <summary>
-///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
-///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort except that
-///     it needs <c>O(n)</c> additional space, and requires default initialization for the elements being sorted.
-/// </summary>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
-/// <typeparam name="_Function">
-///     The type of the binary comparator.
-/// </typeparam>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <param name="_Func">
-///     A user-defined predicate function object that defines the comparison criterion to be satisfied by successive elements in the ordering.
-///     A binary predicate takes two arguments and returns <c>true</c> when satisfied and <c>false</c> when not satisfied. This comparator function
-///     must impose a strict weak ordering on pairs of elements from the sequence.
-/// </param>
-/// <param name="_Chunk_size">
-///     The minimum size of a chunk that will be split into two for parallel execution.
-/// </param>
-/// <remarks>
-///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     In most cases parallel_buffered_sort will show an improvement in performance over <see cref="parallel_sort Function">parallel_sort</see>, and you should
-///     use it over parallel_sort if you have the memory available.
-///     <para>If you do not supply a binary comparator <c>std::less</c> is used as the default, which requires the element type to provide the
-///     operator <c>operator&lt;()</c>.</para>
-///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Random_iterator, typename _Function>
-inline void parallel_buffered_sort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Func, const size_t _Chunk_size = 2048)
-{
-    parallel_buffered_sort<std::allocator<typename std::iterator_traits<_Random_iterator>::value_type>>(_Begin, _End, _Func, _Chunk_size);
-}
-
-/// <summary>
-///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
-///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort except that
-///     it needs <c>O(n)</c> additional space, and requires default initialization for the elements being sorted.
-/// </summary>
-/// <typeparam name="_Allocator">
-///     The type of an STL compatible memory allocator.
-/// </typeparam>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
-/// <typeparam name="_Function">
-///     The type of the binary comparator.
-/// </typeparam>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <param name="_Func">
-///     A user-defined predicate function object that defines the comparison criterion to be satisfied by successive elements in the ordering.
-///     A binary predicate takes two arguments and returns <c>true</c> when satisfied and <c>false</c> when not satisfied. This comparator function
-///     must impose a strict weak ordering on pairs of elements from the sequence.
-/// </param>
-/// <param name="_Chunk_size">
-///     The minimum size of a chunk that will be split into two for parallel execution.
-/// </param>
-/// <remarks>
-///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     In most cases parallel_buffered_sort will show an improvement in performance over <see cref="parallel_sort Function">parallel_sort</see>, and you should
-///     use it over parallel_sort if you have the memory available.
-///     <para>If you do not supply a binary comparator <c>std::less</c> is used as the default, which requires the element type to provide the
-///     operator <c>operator&lt;()</c>.</para>
-///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Allocator, typename _Random_iterator, typename _Function>
-inline void parallel_buffered_sort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Func, const size_t _Chunk_size = 2048)
-{
-    _Allocator _Alloc;
-    return parallel_buffered_sort<_Allocator, _Random_iterator, _Function>(_Alloc, _Begin, _End, _Func, _Chunk_size);
-}
-
-/// <summary>
-///     Arranges the elements in a specified range into a nondescending order, or according to an ordering criterion specified by a binary predicate,
-///     in parallel. This function is semantically similar to <c>std::sort</c> in that it is a compare-based, unstable, in-place sort except that
-///     it needs <c>O(n)</c> additional space, and requires default initialization for the elements being sorted.
-/// </summary>
-/// <typeparam name="_Allocator">
-///     The type of an STL compatible memory allocator.
-/// </typeparam>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
-/// <typeparam name="_Function">
-///     The type of the binary comparator.
-/// </typeparam>
-/// <param name="_Alloc">
-///     An instance of an STL compatible memory allocator.
-/// </param>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <param name="_Func">
-///     A user-defined predicate function object that defines the comparison criterion to be satisfied by successive elements in the ordering.
-///     A binary predicate takes two arguments and returns <c>true</c> when satisfied and <c>false</c> when not satisfied. This comparator function
-///     must impose a strict weak ordering on pairs of elements from the sequence.
-/// </param>
-/// <param name="_Chunk_size">
-///     The minimum size of a chunk that will be split into two for parallel execution.
-/// </param>
-/// <remarks>
-///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     In most cases parallel_buffered_sort will show an improvement in performance over <see cref="parallel_sort Function">parallel_sort</see>, and you should
-///     use it over parallel_sort if you have the memory available.
-///     <para>If you do not supply a binary comparator <c>std::less</c> is used as the default, which requires the element type to provide the
-///     operator <c>operator&lt;()</c>.</para>
-///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Allocator, typename _Random_iterator, typename _Function>
-inline void parallel_buffered_sort(const _Allocator& _Alloc, const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Func, const size_t _Chunk_size = 2048)
-{
-    _CONCRT_ASSERT(_Chunk_size > 0);
-
-    // Check cancellation before the algorithm starts.
-    interruption_point();
-
-    size_t _Size = _End - _Begin;
-    size_t _Core_num = Concurrency::details::_CurrentScheduler::_GetNumberOfVirtualProcessors();
-
-    if (_Size <= _Chunk_size || _Core_num < 2)
-    {
-        return std::sort(_Begin, _End, _Func);
-    }
-    const static size_t _CORE_NUM_MASK = 0x55555555;
-
-    _AllocatedBufferHolder<_Allocator> _Holder(_Size, _Alloc);
-
-    // Prevent cancellation from happening during the algorithm in case it leaves buffers in unknown state.
-    run_with_cancellation_token([&]() {
-        // This buffered sort algorithm will divide chunks and apply parallel quicksort on each chunk. In the end, it will
-        // apply parallel merge to these sorted chunks.
-        //
-        // We need to decide on the number of chunks to divide the input buffer into. If we divide it into n chunks, log(n)
-        // merges will be needed to get the final sorted result. In this algorithm, we have two buffers for each merge
-        // operation, let's say buffer A and B. Buffer A is the original input array, buffer B is the additional allocated
-        // buffer. Each turn's merge will put the merge result into the other buffer; for example, if we decided to split
-        // into 8 chunks in buffer A at very beginning, after one pass of merging, there will be 4 chunks in buffer B.
-        // If we apply one more pass of merging, there will be 2 chunks in buffer A again.
-        //
-        // The problem is we want to the final merge pass to put the result back in buffer A, so that we don't need
-        // one extra copy to put the sorted data back to buffer A.
-        // To make sure the final result is in buffer A (original input array), we need an even number of merge passes,
-        // which means log(n) must be an even number. Thus n must be a number power(2, even number). For example, when the
-        // even number is 2, n is power(2, 2) = 4, when even number is 4, n is power(2, 4) = 16. When we divide chunks
-        // into these numbers, the final merge result will be in the original input array. Now we need to decide the chunk(split)
-        // number based on this property and the number of cores.
-        //
-        // We want to get a chunk (split) number close to the core number (or a little more than the number of cores),
-        // and it also needs to satisfy above property. For a 8 core machine, the best chunk number should be 16, because it's
-        // the smallest number that satisfies the above property and is bigger than the core number (so that we can utilize all
-        // cores, a little more than core number is OK, we need to split more tasks anyway).
-        //
-        // In this algorithm, we will make this alignment by bit operations (it's easy and clear). For a binary representation,
-        // all the numbers that satisfy power(2, even number) will be 1, 100, 10000, 1000000, 100000000 ...
-        // After OR-ing these numbers together, we will get a mask (... 0101 0101 0101) which is all possible combinations of
-        // power(2, even number). We use _Core_num & _CORE_NUM_MASK | _Core_num << 1 & _CORE_NUM_MASK, a bit-wise operation to align
-        // _Core_num's highest bit into a power(2, even number).
-        //
-        // It means if _Core_num = 8, the highest bit in binary is bin(1000) which is not power(2, even number). After this
-        // bit-wise operation, it will align to bin(10000) = 16 which is power(2, even number). If the _Core_num = 16, after
-        // alignment it still returns 16. The trick is to make sure the highest bit of _Core_num will align to the "1" bit of the
-        // mask bin(... 0101 0101 0101) We don't care about the other bits on the aligned result except the highest bit, because they
-        // will be ignored in the function.
-        _Parallel_buffered_sort_impl(_Begin, _Size, stdext::make_unchecked_array_iterator(_Holder._Get_buffer()),
-            _Func, _Core_num & _CORE_NUM_MASK | _Core_num << 1 & _CORE_NUM_MASK, _Chunk_size);
-    }, cancellation_token::none());
-
-}
-
 #pragma warning(push)
 #pragma warning (disable: 4127)
 //
@@ -5642,7 +5633,7 @@ struct _Radix_sort_default_function
         // In addition, with compilers that provide them, an integral type can be one of long long, unsigned long long, __int64, and
         // unsigned __int64
         static_assert(std::is_integral<_DataType>::value,
-            "Type should be integral to use default radix function. For more information on integral types, please refer to http://msdn.microsoft.com/en-us/library/bb983099.aspx.");
+            "Type should be integral to use default radix function. For more information on integral types, please refer to https://msdn.microsoft.com/en-us/library/bb983099.aspx.");
         static_assert((sizeof(_DataType) <= sizeof(size_t)), "Passed Type is bigger than size_t.");
 
         if (std::is_unsigned<_DataType>::value)
@@ -5675,7 +5666,7 @@ struct _Radix_sort_default_function
 /// </param>
 /// <remarks>
 ///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     An unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
+///     A unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
 ///     type and <c>I</c> is an unsigned integer-like type.
 ///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
 ///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
@@ -5705,6 +5696,9 @@ inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_ite
 /// <typeparam name="_Random_iterator">
 ///     The iterator type of the input range.
 /// </typeparam>
+/// <param name="_Alloc">
+///     An instance of an STL compatible memory allocator.
+/// </param>
 /// <param name="_Begin">
 ///     A random-access iterator addressing the position of the first element in the range to be sorted.
 /// </param>
@@ -5713,7 +5707,45 @@ inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_ite
 /// </param>
 /// <remarks>
 ///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     An unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
+///     A unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
+///     type and <c>I</c> is an unsigned integer-like type.
+///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
+///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
+///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Allocator, typename _Random_iterator>
+inline void parallel_radixsort(const _Allocator& _Alloc, const _Random_iterator &_Begin, const _Random_iterator &_End)
+{
+    typedef typename std::iterator_traits<_Random_iterator>::value_type _DataType;
+
+    _Radix_sort_default_function<_DataType> _Proj_func;
+
+    parallel_radixsort<_Allocator>(_Alloc, _Begin, _End, _Proj_func);
+}
+
+/// <summary>
+///     Arranges elements in a specified range into an non descending order using a radix sorting algorithm. This is a stable sort function which requires a
+///     projection function that can project elements to be sorted into unsigned integer-like keys. Default initialization is required for the elements being sorted.
+/// </summary>
+/// <typeparam name="_Allocator">
+///     The type of an STL compatible memory allocator.
+/// </typeparam>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <remarks>
+///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
+///     A unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
 ///     type and <c>I</c> is an unsigned integer-like type.
 ///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
 ///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
@@ -5740,132 +5772,6 @@ inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_ite
 /// <typeparam name="_Random_iterator">
 ///     The iterator type of the input range.
 /// </typeparam>
-/// <param name="_Alloc">
-///     An instance of an STL compatible memory allocator.
-/// </param>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <remarks>
-///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     An unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
-///     type and <c>I</c> is an unsigned integer-like type.
-///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
-///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
-///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Allocator, typename _Random_iterator>
-inline void parallel_radixsort(const _Allocator& _Alloc, const _Random_iterator &_Begin, const _Random_iterator &_End)
-{
-    typedef typename std::iterator_traits<_Random_iterator>::value_type _DataType;
-
-    _Radix_sort_default_function<_DataType> _Proj_func;
-
-    parallel_radixsort<_Allocator>(_Alloc, _Begin, _End, _Proj_func);
-}
-
-/// <summary>
-///     Arranges elements in a specified range into an non descending order using a radix sorting algorithm. This is a stable sort function which requires a
-///     projection function that can project elements to be sorted into unsigned integer-like keys. Default initialization is required for the elements being sorted.
-/// </summary>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
-/// <typeparam name="_Function">
-///     The type of the projection function.
-/// </typeparam>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <param name="_Proj_func">
-///     A user-defined projection function object that converts an element into an integral value.
-/// </param>
-/// <param name="_Chunk_size">
-///     The minimum size of a chunk that will be split into two for parallel execution.
-/// </param>
-/// <remarks>
-///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     An unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
-///     type and <c>I</c> is an unsigned integer-like type.
-///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
-///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
-///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Random_iterator, typename _Function>
-inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Proj_func, const size_t _Chunk_size = 256 * 256)
-{
-    parallel_radixsort<std::allocator<typename std::iterator_traits<_Random_iterator>::value_type>>(
-        _Begin, _End, _Proj_func, _Chunk_size);
-}
-
-/// <summary>
-///     Arranges elements in a specified range into an non descending order using a radix sorting algorithm. This is a stable sort function which requires a
-///     projection function that can project elements to be sorted into unsigned integer-like keys. Default initialization is required for the elements being sorted.
-/// </summary>
-/// <typeparam name="_Allocator">
-///     The type of an STL compatible memory allocator.
-/// </typeparam>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
-/// <typeparam name="_Function">
-///     The type of the projection function.
-/// </typeparam>
-/// <param name="_Begin">
-///     A random-access iterator addressing the position of the first element in the range to be sorted.
-/// </param>
-/// <param name="_End">
-///     A random-access iterator addressing the position one past the final element in the range to be sorted.
-/// </param>
-/// <param name="_Proj_func">
-///     A user-defined projection function object that converts an element into an integral value.
-/// </param>
-/// <param name="_Chunk_size">
-///     The minimum size of a chunk that will be split into two for parallel execution.
-/// </param>
-/// <remarks>
-///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     An unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
-///     type and <c>I</c> is an unsigned integer-like type.
-///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
-///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
-///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
-///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
-///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
-///     serially.</para>
-/// </remarks>
-/**/
-template<typename _Allocator, typename _Random_iterator, typename _Function>
-inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Proj_func, const size_t _Chunk_size = 256 * 256)
-{
-    _Allocator _Alloc;
-    return parallel_radixsort<_Allocator, _Random_iterator, _Function>(_Alloc, _Begin, _End, _Proj_func, _Chunk_size);
-}
-
-/// <summary>
-///     Arranges elements in a specified range into an non descending order using a radix sorting algorithm. This is a stable sort function which requires a
-///     projection function that can project elements to be sorted into unsigned integer-like keys. Default initialization is required for the elements being sorted.
-/// </summary>
-/// <typeparam name="_Allocator">
-///     The type of an STL compatible memory allocator.
-/// </typeparam>
-/// <typeparam name="_Random_iterator">
-///     The iterator type of the input range.
-/// </typeparam>
 /// <typeparam name="_Function">
 ///     The type of the projection function.
 /// </typeparam>
@@ -5886,7 +5792,7 @@ inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_ite
 /// </param>
 /// <remarks>
 ///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
-///     An unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
+///     A unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
 ///     type and <c>I</c> is an unsigned integer-like type.
 ///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
 ///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
@@ -5920,12 +5826,97 @@ inline void parallel_radixsort(const _Allocator& _Alloc, const _Random_iterator 
     }, cancellation_token::none());
 }
 
+/// <summary>
+///     Arranges elements in a specified range into an non descending order using a radix sorting algorithm. This is a stable sort function which requires a
+///     projection function that can project elements to be sorted into unsigned integer-like keys. Default initialization is required for the elements being sorted.
+/// </summary>
+/// <typeparam name="_Allocator">
+///     The type of an STL compatible memory allocator.
+/// </typeparam>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <typeparam name="_Function">
+///     The type of the projection function.
+/// </typeparam>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <param name="_Proj_func">
+///     A user-defined projection function object that converts an element into an integral value.
+/// </param>
+/// <param name="_Chunk_size">
+///     The minimum size of a chunk that will be split into two for parallel execution.
+/// </param>
+/// <remarks>
+///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
+///     A unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
+///     type and <c>I</c> is an unsigned integer-like type.
+///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
+///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
+///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Allocator, typename _Random_iterator, typename _Function>
+inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Proj_func, const size_t _Chunk_size = 256 * 256)
+{
+    _Allocator _Alloc;
+    return parallel_radixsort<_Allocator, _Random_iterator, _Function>(_Alloc, _Begin, _End, _Proj_func, _Chunk_size);
+}
+
+/// <summary>
+///     Arranges elements in a specified range into an non descending order using a radix sorting algorithm. This is a stable sort function which requires a
+///     projection function that can project elements to be sorted into unsigned integer-like keys. Default initialization is required for the elements being sorted.
+/// </summary>
+/// <typeparam name="_Random_iterator">
+///     The iterator type of the input range.
+/// </typeparam>
+/// <typeparam name="_Function">
+///     The type of the projection function.
+/// </typeparam>
+/// <param name="_Begin">
+///     A random-access iterator addressing the position of the first element in the range to be sorted.
+/// </param>
+/// <param name="_End">
+///     A random-access iterator addressing the position one past the final element in the range to be sorted.
+/// </param>
+/// <param name="_Proj_func">
+///     A user-defined projection function object that converts an element into an integral value.
+/// </param>
+/// <param name="_Chunk_size">
+///     The minimum size of a chunk that will be split into two for parallel execution.
+/// </param>
+/// <remarks>
+///     All overloads require <c>n * sizeof(T)</c> additional space, where <c>n</c> is the number of elements to be sorted, and <c>T</c> is the element type.
+///     A unary projection functor with the signature<c>I _Proj_func(T)</c> is required to return a key when given an element, where <c>T</c> is the element
+///     type and <c>I</c> is an unsigned integer-like type.
+///     <para>If you do not supply a projection function, a default projection function which simply returns the element is used for integral types. The function
+///     will fail to compile if the element is not an integral type in the absence of a projection function.</para>
+///     <para>If you do not supply an allocator type or instance, the STL memory allocator <c>std::allocator&lt;T&gt;</c> is used to allocate the buffer.</para>
+///     <para>The algorithm divides the input range into two chunks and successively divides each chunk into two sub-chunks for execution in parallel. The optional
+///     argument <paramref name="_Chunk_size"/> can be used to indicate to the algorithm that it should handles chunks of size &lt; <paramref name="_Chunk_size"/>
+///     serially.</para>
+/// </remarks>
+/**/
+template<typename _Random_iterator, typename _Function>
+inline void parallel_radixsort(const _Random_iterator &_Begin, const _Random_iterator &_End, const _Function &_Proj_func, const size_t _Chunk_size = 256 * 256)
+{
+    parallel_radixsort<std::allocator<typename std::iterator_traits<_Random_iterator>::value_type>>(
+        _Begin, _End, _Proj_func, _Chunk_size);
+}
+
 #pragma pop_macro("_SORT_MAX_RECURSION_DEPTH")
 #pragma pop_macro("_MAX_NUM_TASKS_PER_CORE")
 #pragma pop_macro("_FINE_GRAIN_CHUNK_SIZE")
 }
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pop_macro("new")
 #pragma pack(pop)

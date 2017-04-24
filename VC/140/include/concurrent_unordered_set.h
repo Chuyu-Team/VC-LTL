@@ -287,7 +287,7 @@ public:
         this->rehash(_Number_of_buckets);
         for (; _First != _Last; ++_First)
         {
-            _Insert(*_First);
+            this->_Insert(*_First);
         }
     }
 
@@ -418,7 +418,7 @@ public:
     /**/
     std::pair<iterator, bool> insert(const value_type& _Value)
     {
-        return _Insert(_Value);
+        return this->_Insert(_Value);
     }
 
     /// <summary>
@@ -450,7 +450,7 @@ public:
     iterator insert(const_iterator _Where, const value_type& _Value)
     {
         // Current implementation ignores the hint. The method is provided for compatibility with unordered_set.
-        return _Insert(_Value).first;
+        return this->_Insert(_Value).first;
     }
 
     /// <summary>
@@ -481,7 +481,7 @@ public:
     template<class _Iterator>
     void insert(_Iterator _First, _Iterator _Last)
     {
-        _Insert(_First, _Last);
+        this->_Insert(_First, _Last);
     }
 
     /// <summary>
@@ -512,7 +512,7 @@ public:
     template<class _Valty>
     std::pair<iterator, bool> insert(_Valty&& _Value)
     {
-        return _Insert(std::forward<_Valty>(_Value));
+        return this->_Insert(std::forward<_Valty>(_Value));
     }
 
     /// <summary>
@@ -550,7 +550,7 @@ public:
     insert(const_iterator _Where, _Valty&& _Value)
     {
         // Current implementation ignores the hint. The method is provided for compatibility with unordered_set.
-        return _Insert(std::forward<_Valty>(_Value)).first;
+        return this->_Insert(std::forward<_Valty>(_Value)).first;
     }
 
     /// <summary>
@@ -646,7 +646,7 @@ public:
     /**/
     hasher hash_function() const
     {
-        return _M_comparator._M_hash_object;
+        return this->_M_comparator._M_hash_object;
     }
 
     /// <summary>
@@ -658,7 +658,7 @@ public:
     /**/
     key_equal key_eq() const
     {
-        return _M_comparator._M_key_compare_object;
+        return this->_M_comparator._M_key_compare_object;
     }
 };
 
@@ -881,7 +881,7 @@ public:
         this->rehash(_Number_of_buckets);
         for (; _First != _Last; ++_First)
         {
-            _Insert(*_First);
+            this->_Insert(*_First);
         }
     }
 
@@ -1010,7 +1010,7 @@ public:
     /**/
     iterator insert(const value_type& _Value)
     {
-        return _Insert(_Value).first;
+        return this->_Insert(_Value).first;
     }
 
     /// <summary>
@@ -1039,7 +1039,7 @@ public:
     iterator insert(const_iterator _Where, const value_type& _Value)
     {
         // Current implementation ignores the hint. The method is provided for compatibility with unordered_multiset.
-        return _Insert(_Value).first;
+        return this->_Insert(_Value).first;
     }
 
     /// <summary>
@@ -1068,7 +1068,7 @@ public:
     template<class _Iterator>
     void insert(_Iterator _First, _Iterator _Last)
     {
-        _Insert(_First, _Last);
+        this->_Insert(_First, _Last);
     }
 
     /// <summary>
@@ -1097,7 +1097,7 @@ public:
     template<class _Valty>
     iterator insert(_Valty&& _Value)
     {
-        return _Insert(std::forward<_Valty>(_Value)).first;
+        return this->_Insert(std::forward<_Valty>(_Value)).first;
     }
 
     /// <summary>
@@ -1132,7 +1132,7 @@ public:
     insert(const_iterator _Where, _Valty&& _Value)
     {
         // Current implementation ignores the hint. The method is provided for compatibility with unordered_multiset.
-        return _Insert(std::forward<_Valty>(_Value)).first;
+        return this->_Insert(std::forward<_Valty>(_Value)).first;
     }
 
     /// <summary>
@@ -1229,7 +1229,7 @@ public:
     /**/
     hasher hash_function() const
     {
-        return _M_comparator._M_hash_object;
+        return this->_M_comparator._M_hash_object;
     }
 
     /// <summary>
@@ -1241,12 +1241,12 @@ public:
     /**/
     key_equal key_eq() const
     {
-        return _M_comparator._M_key_compare_object;
+        return this->_M_comparator._M_key_compare_object;
     }
 };
 } // namespace Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma warning(pop)
 #pragma pack(pop)

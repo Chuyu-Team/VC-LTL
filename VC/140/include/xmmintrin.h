@@ -267,17 +267,23 @@ extern int _mm_ucomineq_ss(__m128 _A, __m128 _B);
  */
 
 extern int _mm_cvt_ss2si(__m128 _A);
-extern __m64 _mm_cvt_ps2pi(__m128 _A);
 extern int _mm_cvtt_ss2si(__m128 _A);
-extern __m64 _mm_cvtt_ps2pi(__m128 _A);
 extern __m128 _mm_cvt_si2ss(__m128, int);
-extern __m128 _mm_cvt_pi2ps(__m128, __m64);
 extern float _mm_cvtss_f32(__m128 _A);
 
+#if defined(_M_IX86)
 /*
- * Support for 64-bit extension intrinsics
+ * Support for MMX extension intrinsics
  */
+extern __m64 _mm_cvt_ps2pi(__m128 _A);
+extern __m64 _mm_cvtt_ps2pi(__m128 _A);
+extern __m128 _mm_cvt_pi2ps(__m128, __m64);
+#endif
+
 #if defined (_M_X64)
+/*
+ * Support for 64-bit intrinsics
+ */
 extern __int64 _mm_cvtss_si64(__m128 _A);
 extern __int64 _mm_cvttss_si64(__m128 _A);
 extern __m128  _mm_cvtsi64_ss(__m128 _A, __int64 _B);
@@ -299,8 +305,9 @@ extern void _mm_storel_pi(__m64 *, __m128);
 extern int _mm_movemask_ps(__m128 _A);
 
 
+#if defined(_M_IX86)
 /*
- * Integer extensions
+ * Integer (MMX) extensions
  */
 extern int _m_pextrw(__m64, int);
 extern __m64 _m_pinsrw(__m64, int, int);
@@ -315,6 +322,7 @@ extern void _m_maskmovq(__m64, __m64, char *);
 extern __m64 _m_pavgb(__m64, __m64);
 extern __m64 _m_pavgw(__m64, __m64);
 extern __m64 _m_psadbw(__m64, __m64);
+#endif
 
 /*
  * memory & initialization
@@ -336,7 +344,9 @@ extern void _mm_store_ps(float *_V, __m128 _A);
 extern void _mm_storer_ps(float *_V, __m128 _A);
 extern void _mm_storeu_ps(float *_V, __m128 _A);
 extern void _mm_prefetch(char const*_A, int _Sel);
+#if defined(_M_IX86)
 extern void _mm_stream_pi(__m64 *, __m64);
+#endif
 extern void _mm_stream_ps(float *, __m128);
 extern __m128 _mm_move_ss(__m128 _A, __m128 _B);
 
@@ -350,11 +360,9 @@ extern void __cdecl _mm_free(void *_P);
 #endif  /* __ICL */
 
 /* Alternate intrinsic names definition */
-#define _mm_cvtss_si32    _mm_cvt_ss2si
+#if defined(_M_IX86)
 #define _mm_cvtps_pi32    _mm_cvt_ps2pi
-#define _mm_cvttss_si32   _mm_cvtt_ss2si
 #define _mm_cvttps_pi32   _mm_cvtt_ps2pi
-#define _mm_cvtsi32_ss    _mm_cvt_si2ss
 #define _mm_cvtpi32_ps    _mm_cvt_pi2ps
 #define _mm_extract_pi16  _m_pextrw
 #define _mm_insert_pi16   _m_pinsrw
@@ -369,6 +377,10 @@ extern void __cdecl _mm_free(void *_P);
 #define _mm_avg_pu8       _m_pavgb
 #define _mm_avg_pu16      _m_pavgw
 #define _mm_sad_pu8       _m_psadbw
+#endif
+#define _mm_cvtss_si32    _mm_cvt_ss2si
+#define _mm_cvttss_si32   _mm_cvtt_ss2si
+#define _mm_cvtsi32_ss    _mm_cvt_si2ss
 #define _mm_set1_ps       _mm_set_ps1
 #define _mm_load1_ps      _mm_load_ps1
 #define _mm_store1_ps     _mm_store_ps1
@@ -377,6 +389,7 @@ extern void __cdecl _mm_free(void *_P);
  /* UTILITY INTRINSICS FUNCTION DEFINITIONS START HERE */
  /******************************************************/
 
+#if defined(_M_IX86)
  /*********************************************************/
  /*  NAME : _mm_cvtpi16_ps                                */
  /*  DESCRIPTION : Convert 4 16-bit signed integer values */
@@ -489,6 +502,7 @@ __inline __m128 _mm_cvtpi32x2_ps(__m64 _A, __m64 _B)
   return _mm_movelh_ps(_mm_cvt_pi2ps(_mm_setzero_ps(), _A),
                        _mm_cvt_pi2ps(_mm_setzero_ps(), _B));
 }
+#endif // _M_IX86
 
 
 #if defined __cplusplus

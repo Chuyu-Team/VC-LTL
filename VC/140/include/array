@@ -36,23 +36,16 @@ public:
 	typedef _STD reverse_iterator<iterator> reverse_iterator;
 	typedef _STD reverse_iterator<const_iterator> const_reverse_iterator;
 
+#if _HAS_TR1_NAMESPACE
 	void assign(const _Ty& _Value)
 		{	// assign value to all elements
-		_Fill_n(_Elems, _Size, _Value);
+		_Fill_n_unchecked(_Elems, _Size, _Value);
 		}
+#endif /* _HAS_TR1_NAMESPACE */
 
 	void fill(const _Ty& _Value)
 		{	// assign value to all elements
-		_Fill_n(_Elems, _Size, _Value);
-		}
-
-	void swap(_Myt& _Other)
-		_NOEXCEPT_OP(
-			_NOEXCEPT_OP(_Swap_adl(this->_Elems[0], _Other._Elems[0])))
-		{	// swap contents with _Other
-		_Swap_ranges(_STD addressof(_Elems[0]),
-			_STD addressof(_Elems[0]) + _Size,
-			_STD addressof(_Other._Elems[0]));
+		_Fill_n_unchecked(_Elems, _Size, _Value);
 		}
 
 	iterator begin() _NOEXCEPT
@@ -115,17 +108,17 @@ public:
 		return (rend());
 		}
 
-	_CONST_FUN size_type size() const _NOEXCEPT
+	constexpr size_type size() const _NOEXCEPT
 		{	// return length of sequence
 		return (_Size);
 		}
 
-	_CONST_FUN size_type max_size() const _NOEXCEPT
+	constexpr size_type max_size() const _NOEXCEPT
 		{	// return maximum possible length of sequence
 		return (_Size);
 		}
 
-	_CONST_FUN bool empty() const _NOEXCEPT
+	constexpr bool empty() const _NOEXCEPT
 		{	// test if sequence is empty
 		return (false);
 		}
@@ -137,7 +130,7 @@ public:
 		return (_Elems[_Pos]);
 		}
 
-	_CONST_FUN const_reference at(size_type _Pos) const
+	constexpr const_reference at(size_type _Pos) const
 		{	// subscript nonmutable sequence with checking
 		return (_Size <= _Pos
 			? (_Xran(), _Elems[_Pos])
@@ -169,7 +162,7 @@ public:
  #endif /* _ITERATOR_DEBUG_LEVEL */
 		}
 
-	_CONST_FUN const_reference operator[](size_type _Pos) const
+	constexpr const_reference operator[](size_type _Pos) const
 		{	// subscript nonmutable sequence
  #if _ITERATOR_DEBUG_LEVEL == 0
 		return (_Elems[_Pos]);
@@ -186,7 +179,7 @@ public:
 		return (_Elems[0]);
 		}
 
-	_CONST_FUN const_reference front() const
+	constexpr const_reference front() const
 		{	// return first element of nonmutable sequence
 		return (_Elems[0]);
 		}
@@ -196,7 +189,7 @@ public:
 		return (_Elems[_Size - 1]);
 		}
 
-	_CONST_FUN const_reference back() const
+	constexpr const_reference back() const
 		{	// return last element of nonmutable sequence
 		return (_Elems[_Size - 1]);
 		}
@@ -211,12 +204,20 @@ public:
 		return (_Elems);
 		}
 
-	//__declspec(noreturn) void _Xran() const
-	//	{	// report an out_of_range error
-	//	_Xout_of_range("invalid array<T, N> subscript");
-	//	}
+	[[noreturn]] void _Xran() const
+		{	// report an out_of_range error
+		_Xout_of_range("invalid array<T, N> subscript");
+		}
 
 	_Ty _Elems[_Size];
+
+	void swap(_Myt& _Other)
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Ty>::value)
+		{	// swap contents with _Other
+		_Swap_ranges_unchecked(_STD addressof(_Elems[0]),
+			_STD addressof(_Elems[0]) + _Size,
+			_STD addressof(_Other._Elems[0]));
+		}
 	};
 
 template<class _Ty>
@@ -237,9 +238,11 @@ public:
 	typedef _STD reverse_iterator<iterator> reverse_iterator;
 	typedef _STD reverse_iterator<const_iterator> const_reverse_iterator;
 
+#if _HAS_TR1_NAMESPACE
 	void assign(const _Ty&)
 		{	// assign value to all elements
 		}
+#endif /* _HAS_TR1_NAMESPACE */
 
 	void fill(const _Ty&)
 		{	// assign value to all elements
@@ -309,37 +312,29 @@ public:
 		return (rend());
 		}
 
-	_CONST_FUN size_type size() const
+	constexpr size_type size() const
 		{	// return length of sequence
 		return (0);
 		}
 
-	_CONST_FUN size_type max_size() const
+	constexpr size_type max_size() const
 		{	// return maximum possible length of sequence
 		return (0);
 		}
 
-	_CONST_FUN bool empty() const
+	constexpr bool empty() const
 		{	// test if sequence is empty
 		return (true);
 		}
 
-	reference at(size_type)
+	[[noreturn]] reference at(size_type)
 		{	// subscript mutable sequence with checking
-		static int _Zero = 0;
-
-		if (_Zero == 0)	// to quiet diagnostics
-			_Xran();
-		return (_Elems[0]);
+		_Xran();
 		}
 
-	const_reference at(size_type) const
+	[[noreturn]] const_reference at(size_type) const
 		{	// subscript nonmutable sequence with checking
-		static int _Zero = 0;
-
-		if (_Zero == 0)	// to quiet diagnostics
-			_Xran();
-		return (_Elems[0]);
+		_Xran();
 		}
 
 	reference operator[](size_type)
@@ -424,7 +419,7 @@ public:
 		return (_Elems);
 		}
 
-	__declspec(noreturn) void _Xran() const
+	[[noreturn]] void _Xran() const
 		{	// report an out_of_range error
 		_Xout_of_range("invalid array<T, 0> subscript");
 		}
@@ -433,7 +428,8 @@ public:
 	};
 
 template<class _Ty,
-	size_t _Size>
+	size_t _Size,
+	class = enable_if_t<_Size == 0 || _Is_swappable<_Ty>::value>>
 	void swap(array<_Ty,_Size>& _Left,
 		array<_Ty,_Size>& _Right)
 			_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
@@ -494,7 +490,7 @@ template<class _Ty,
 template<size_t _Idx,
 	class _Ty,
 	size_t _Size>
-	_CONST_FUN _Ty& get(array<_Ty, _Size>& _Arr) _NOEXCEPT
+	constexpr _Ty& get(array<_Ty, _Size>& _Arr) _NOEXCEPT
 	{	// return element at _Idx in array _Arr
 	static_assert(_Idx < _Size, "array index out of bounds");
 	return (_Arr._Elems[_Idx]);
@@ -503,7 +499,7 @@ template<size_t _Idx,
 template<size_t _Idx,
 	class _Ty,
 	size_t _Size>
-	_CONST_FUN const _Ty& get(const array<_Ty, _Size>& _Arr) _NOEXCEPT
+	constexpr const _Ty& get(const array<_Ty, _Size>& _Arr) _NOEXCEPT
 	{	// return element at _Idx in array _Arr
 	static_assert(_Idx < _Size, "array index out of bounds");
 	return (_Arr._Elems[_Idx]);
@@ -512,16 +508,18 @@ template<size_t _Idx,
 template<size_t _Idx,
 	class _Ty,
 	size_t _Size>
-	_CONST_FUN _Ty&& get(array<_Ty, _Size>&& _Arr) _NOEXCEPT
+	constexpr _Ty&& get(array<_Ty, _Size>&& _Arr) _NOEXCEPT
 	{	// return element at _Idx in array _Arr
 	static_assert(_Idx < _Size, "array index out of bounds");
 	return (_STD move(_Arr._Elems[_Idx]));
 	}
 
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// TR1 ADDITIONS
 using _STD array;
 using _STD get;
 	} // namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 _STD_END
 
  #pragma pop_macro("new")

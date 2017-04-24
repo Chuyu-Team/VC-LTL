@@ -3,8 +3,8 @@
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
-*Purpose: Library support of stackless resumable functions. generator class
-*         http://isocpp.org/files/papers/N4134.pdf
+*       Purpose: Library support of coroutines. generator class
+*       http://open-std.org/JTC1/SC22/WG21/docs/papers/2015/p0057r0.pdf
 *
 *       [Public]
 *
@@ -15,12 +15,12 @@
 #ifndef RC_INVOKED
 
 #ifndef _RESUMABLE_FUNCTIONS_SUPPORTED
- #error <experimental/generator> requires /await compiler option
+#error <experimental/generator> requires /await compiler option
 #endif /* _RESUMABLE_FUNCTIONS_SUPPORTED */
 
 #include <experimental/resumable>
 
-#pragma pack(push,_CRT_PACKING)
+#pragma pack(push, _CRT_PACKING)
 #pragma push_macro("new")
 #undef new
 
@@ -28,14 +28,14 @@ _STD_BEGIN
 
 namespace experimental {
 
-	template <typename _Ty, typename _Alloc = allocator<char> >
+	template <typename _Ty, typename _Alloc = allocator<char>>
 	struct generator
 	{
 		struct promise_type
 		{
-			_Ty const * _CurrentValue;
+			_Ty const *_CurrentValue;
 
-			promise_type& get_return_object()
+			promise_type &get_return_object()
 			{
 				return *this;
 			}
@@ -50,28 +50,49 @@ namespace experimental {
 				return (true);
 			}
 
-			void yield_value(_Ty const & _Value)
+			void yield_value(_Ty const &_Value)
 			{
 				_CurrentValue = _STD addressof(_Value);
 			}
+
+			template <typename _Uty>
+			_Uty && await_transform(_Uty &&_Whatever)
+			{
+				static_assert(_Always_false<_Uty>::value,
+					"co_await is not supported in coroutines of type std::experiemental::generator");
+				return _STD forward<_Uty>(_Whatever);
+			}
+
+			using _Alloc_traits = allocator_traits<_Alloc>;
+			using _Alloc_of_char_type =
+				typename _Alloc_traits::template rebind_alloc<char>;
+
+			void *operator new(size_t _Size)
+			{
+				_Alloc_of_char_type _Al;
+				return _Al.allocate(_Size);
+			}
+
+			void operator delete(void *_Ptr, size_t _Size)_NOEXCEPT
+			{
+				_Alloc_of_char_type _Al;
+				return _Al.deallocate(static_cast<char *>(_Ptr), _Size);
+			}
 		};
 
-		struct iterator
-			: _STD iterator<input_iterator_tag, _Ty>
+		struct iterator : _STD iterator<input_iterator_tag, _Ty>
 		{
 			coroutine_handle<promise_type> _Coro;
 
-			iterator(nullptr_t)
-				: _Coro(nullptr)
+			iterator(nullptr_t) : _Coro(nullptr)
 			{
 			}
 
-			iterator(coroutine_handle<promise_type> _CoroArg)
-				: _Coro(_CoroArg)
+			iterator(coroutine_handle<promise_type> _CoroArg) : _Coro(_CoroArg)
 			{
 			}
 
-			iterator& operator++()
+			iterator &operator++()
 			{
 				_Coro.resume();
 				if (_Coro.done())
@@ -90,32 +111,30 @@ namespace experimental {
 			//	return _Result;
 			//}
 
-			bool operator==(iterator const& _Right) const
+			bool operator==(iterator const &_Right) const
 			{
 				return _Coro == _Right._Coro;
 			}
 
-			bool operator!=(iterator const& _Right) const
+			bool operator!=(iterator const &_Right) const
 			{
 				return !(*this == _Right);
 			}
 
-			_Ty const& operator*() const
+			_Ty const &operator*() const
 			{
 				return *_Coro.promise()._CurrentValue;
 			}
 
-			_Ty const* operator->() const
+			_Ty const *operator->() const
 			{
 				return _STD addressof(operator*());
 			}
-
 		};
 
 		iterator begin()
 		{
-			if (_Coro)
-			{
+			if (_Coro) {
 				_Coro.resume();
 				if (_Coro.done())
 					return {nullptr};
@@ -129,52 +148,41 @@ namespace experimental {
 			return {nullptr};
 		}
 
-		explicit generator(promise_type& _Prom)
-			: _Coro(coroutine_handle<promise_type>::from_promise(_STD addressof(_Prom)))
+		explicit generator(promise_type &_Prom)
+			: _Coro(coroutine_handle<promise_type>::from_promise(
+				  _Prom))
 		{
 		}
 
 		generator() = default;
 
-		generator(generator const&) = delete;
+		generator(generator const &) = delete;
 
-		generator& operator = (generator const&) = delete;
+		generator &operator=(generator const &) = delete;
 
-		generator(generator && _Right)
-			: _Coro(_Right._Coro)
+		generator(generator &&_Right) : _Coro(_Right._Coro)
 		{
 			_Right._Coro = nullptr;
 		}
 
-		generator& operator = (generator && _Right)
+		generator &operator=(generator &&_Right)
 		{
-			if (&_Right != this)
-			{
+			if (&_Right != this) {
 				_Coro = _Right._Coro;
 				_Right._Coro = nullptr;
 			}
+			return *this;
 		}
 
 		~generator()
 		{
-			if (_Coro)
-			{
+			if (_Coro) {
 				_Coro.destroy();
 			}
 		}
+
 	private:
 		coroutine_handle<promise_type> _Coro = nullptr;
-	};
-
-	template <typename _Ty, typename _Alloc, typename... _Ts>
-	struct coroutine_traits<generator<_Ty, _Alloc>, _Ts...>
-	{
-		template <typename... _Us>
-		static auto get_allocator(_Us&&...)
-		{
-			return _Alloc{};
-		}
-		using promise_type = typename generator<_Ty, _Alloc>::promise_type;
 	};
 
 } // namespace experimental

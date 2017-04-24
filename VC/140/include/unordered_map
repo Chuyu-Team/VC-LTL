@@ -31,7 +31,7 @@ public:
 		{	// make multi parameter visible as an enum constant
 		_Multi = _Mfl};
 
-	static const bool _Standard = true;
+	static constexpr bool _Standard = true;
 
 	_Umap_traits(const _Tr& _Traits = _Tr())
 		: _Tr(_Traits)
@@ -124,11 +124,8 @@ public:
 		}
 
 	unordered_map(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._List._Getal().select_on_container_copy_construction())
-
-
 		{	// construct map by copying _Right
 		}
 
@@ -167,7 +164,7 @@ public:
 		unordered_map(_Iter _First, _Iter _Last)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from sequence, defaults
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -176,7 +173,7 @@ public:
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from sequence, ignore initial size
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -185,7 +182,7 @@ public:
 		: _Mybase(key_compare(_Hasharg), allocator_type())
 		{	// construct map from sequence, comparator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -195,7 +192,7 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), allocator_type())
 		{	// construct map from sequence, comparator, and allocator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -205,7 +202,7 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), _Al)
 		{	// construct map from sequence, comparator, and allocator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -215,7 +212,7 @@ public:
 		}
 
 	unordered_map(_Myt&& _Right)
-		: _Mybase(_STD move(_Right), _STD move(_Right._List._Getal()))
+		: _Mybase(_STD move(_Right))
 		{	// construct map by moving _Right
 		}
 
@@ -235,23 +232,31 @@ public:
 
 	mapped_type& operator[](key_type&& _Keyval)
 		{	// find element matching _Keyval or insert with default mapped
-		iterator _Where = _Mybase::lower_bound(_Keyval);
-		if (_Where == _Mybase::end())
-			_Where = _Mybase::emplace(
-				piecewise_construct,
-				_STD forward_as_tuple(_STD move(_Keyval)),
-				tuple<>()).first;
-		return (_Where->second);
+		return (try_emplace(_STD move(_Keyval)).first->second);
 		}
 
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _NOEXCEPT_OP(_Swap_adl(_STD declval<_Hasher&>(),
-				_STD declval<_Hasher&>()))
-			&& _NOEXCEPT_OP(_Swap_adl(_STD declval<_Keyeq&>(),
-				_STD declval<_Keyeq&>())))
+			&& _Is_nothrow_swappable<_Hasher>::value
+			&& _Is_nothrow_swappable<_Keyeq>::value)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
+		}
+
+	using _Mybase::insert;
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		_Pairib insert(_Valty&& _Val)
+		{	// insert _Val
+		return (this->emplace(_STD forward<_Valty>(_Val)));
+		}
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		iterator insert(const_iterator _Where, _Valty&& _Val)
+		{	// insert _Val with hint
+		return (this->emplace_hint(_Where, _STD forward<_Valty>(_Val)));
 		}
 
 	template<class _Keyty,
@@ -352,7 +357,7 @@ public:
 	unordered_map(_XSTD initializer_list<value_type> _Ilist)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from initializer_list, defaults
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_map(_XSTD initializer_list<value_type> _Ilist,
@@ -360,7 +365,7 @@ public:
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from initializer_list
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_map(_XSTD initializer_list<value_type> _Ilist,
@@ -368,7 +373,7 @@ public:
 		: _Mybase(key_compare(_Hasharg), allocator_type())
 		{	// construct map from initializer_list, hasher
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_map(_XSTD initializer_list<value_type> _Ilist,
@@ -377,7 +382,7 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), allocator_type())
 		{	// construct map from initializer_list, comparator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_map(_XSTD initializer_list<value_type> _Ilist,
@@ -386,20 +391,15 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), _Al)
 		{	// construct map from initializer_list, allocator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		_Mybase::clear();
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		return (*this);
 		}
-
-//	void insert(_XSTD initializer_list<value_type> _Ilist)
-//		{	// insert initializer_list
-//		_Mybase::insert(_Ilist.begin(), _Ilist.end());
-//		}
 
 	hasher hash_function() const
 		{	// return hasher object
@@ -413,15 +413,7 @@ public:
 
 	mapped_type& operator[](const key_type& _Keyval)
 		{	// find element matching _Keyval or insert with default mapped
-		iterator _Where = _Mybase::lower_bound(_Keyval);
-		if (_Where == _Mybase::end())
-
-			_Where = _Mybase::emplace(
-				piecewise_construct,
-				_STD forward_as_tuple(_Keyval),
-				tuple<>()).first;
-
-		return (_Where->second);
+		return (try_emplace(_Keyval).first->second);
 		}
 
 	mapped_type& at(const key_type& _Keyval)
@@ -526,11 +518,8 @@ public:
 		}
 
 	unordered_multimap(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._List._Getal().select_on_container_copy_construction())
-
-
 		{	// construct map by copying _Right
 		}
 
@@ -569,7 +558,7 @@ public:
 		unordered_multimap(_Iter _First, _Iter _Last)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from sequence, defaults
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -578,7 +567,7 @@ public:
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from sequence, defaults, ignore initial size
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -587,7 +576,7 @@ public:
 		: _Mybase(key_compare(_Hasharg), allocator_type())
 		{	// construct map from sequence, comparator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -597,7 +586,7 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), allocator_type())
 		{	// construct map from sequence, comparator, and allocator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -607,7 +596,7 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), _Al)
 		{	// construct map from sequence, comparator, and allocator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_First, _Last);
+		insert(_First, _Last);
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -617,7 +606,7 @@ public:
 		}
 
 	unordered_multimap(_Myt&& _Right)
-		: _Mybase(_STD move(_Right), _STD move(_Right._List._Getal()))
+		: _Mybase(_STD move(_Right))
 		{	// construct map by moving _Right
 		}
 
@@ -635,43 +624,40 @@ public:
 		return (*this);
 		}
 
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			iterator>::type
-		insert(_Valty&& _Val)
-		{	// insert a {key, mapped} value
-		return (_Mybase::insert(_STD forward<_Valty>(_Val)).first);
-		}
-
-	template<class _Valty>
-		typename enable_if<is_convertible<_Valty, value_type>::value,
-			iterator>::type
-		insert(const_iterator _Where, _Valty&& _Val)
-		{	// insert a {key, mapped} value, with hint
-		return (_Mybase::insert(_Where, _STD forward<_Valty>(_Val)));
-		}
-
 	template<class... _Valty>
 		iterator emplace(_Valty&&... _Val)
 		{	// try to insert value_type(_Val...), favoring right side
 		return (_Mybase::emplace(_STD forward<_Valty>(_Val)...).first);
 		}
 
-
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _NOEXCEPT_OP(_Swap_adl(_STD declval<_Hasher&>(),
-				_STD declval<_Hasher&>()))
-			&& _NOEXCEPT_OP(_Swap_adl(_STD declval<_Keyeq&>(),
-				_STD declval<_Keyeq&>())))
+			&& _Is_nothrow_swappable<_Hasher>::value
+			&& _Is_nothrow_swappable<_Keyeq>::value)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
+		}
+
+	using _Mybase::insert;
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		iterator insert(_Valty&& _Val)
+		{	// insert _Val
+		return (this->emplace(_STD forward<_Valty>(_Val)));
+		}
+
+	template<class _Valty,
+		class = enable_if_t<is_constructible<value_type, _Valty>::value> >
+		iterator insert(const_iterator _Where, _Valty&& _Val)
+		{	// insert _Val with hint
+		return (this->emplace_hint(_Where, _STD forward<_Valty>(_Val)));
 		}
 
 	unordered_multimap(_XSTD initializer_list<value_type> _Ilist)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from initializer_list, defaults
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_multimap(_XSTD initializer_list<value_type> _Ilist,
@@ -679,7 +665,7 @@ public:
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct map from initializer_list
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_multimap(_XSTD initializer_list<value_type> _Ilist,
@@ -687,7 +673,7 @@ public:
 		: _Mybase(key_compare(_Hasharg), allocator_type())
 		{	// construct map from initializer_list, hasher
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_multimap(_XSTD initializer_list<value_type> _Ilist,
@@ -696,7 +682,7 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), allocator_type())
 		{	// construct map from initializer_list, comparator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	unordered_multimap(_XSTD initializer_list<value_type> _Ilist,
@@ -705,19 +691,14 @@ public:
 		: _Mybase(key_compare(_Hasharg, _Keyeqarg), _Al)
 		{	// construct map from initializer_list, allocator
 		_Mybase::rehash(_Buckets);
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		_Mybase::clear();
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
+		insert(_Ilist);
 		return (*this);
-		}
-
-	void insert(_XSTD initializer_list<value_type> _Ilist)
-		{	// insert initializer_list
-		_Mybase::insert(_Ilist.begin(), _Ilist.end());
 		}
 
 	hasher hash_function() const
@@ -728,22 +709,6 @@ public:
 	key_equal key_eq() const
 		{	// return equality comparator object
 		return (_Mybase::_Traitsobj._Getkeyeq());
-		}
-
-	iterator insert(const value_type& _Val)
-		{	// insert a {key, mapped} value
-		return (_Mybase::insert(_Val).first);
-		}
-
-	iterator insert(const_iterator _Where, const value_type& _Val)
-		{	// insert a {key, mapped} value, with hint
-		return (_Mybase::insert(_Where, _Val));
-		}
-
-	template<class _Iter>
-		void insert(_Iter _First, _Iter _Last)
-		{	// insert [_First, _Last), arbitrary iterators
-		_Mybase::insert(_First, _Last);
 		}
 	};
 
@@ -783,10 +748,12 @@ template<class _Kty,
 	return (!(_Left == _Right));
 	}
 
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// TR1 IMPORTS
 using _STD unordered_map;
 using _STD unordered_multimap;
 }	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

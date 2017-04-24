@@ -1,7 +1,7 @@
 // xtr1common internal header
 #pragma once
-#ifndef _TR1_COMMON_
-#define _TR1_COMMON_
+#ifndef _XTR1COMMON_
+#define _XTR1COMMON_
 #ifndef RC_INVOKED
 #include <cstdlib>
 
@@ -21,17 +21,17 @@ template<class _Ty,
 	_Ty _Val>
 	struct integral_constant
 	{	// convenient template for integral constant types
-	static _CONST_DATA _Ty value = _Val;
+	static constexpr _Ty value = _Val;
 
 	typedef _Ty value_type;
 	typedef integral_constant<_Ty, _Val> type;
 
-	_CONST_FUN operator value_type() const _NOEXCEPT
+	constexpr operator value_type() const _NOEXCEPT
 		{	// return stored value
 		return (value);
 		}
 
-	_CONST_FUN value_type operator()() const _NOEXCEPT
+	constexpr value_type operator()() const _NOEXCEPT
 		{	// return stored value
 		return (value);
 		}
@@ -94,6 +94,12 @@ template<class _Ty1>
 	{	// determine whether _Ty1 and _Ty2 are the same type
 	};
 
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty,
+	class _Uty>
+	constexpr bool is_same_v = is_same<_Ty, _Uty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
+
 	// TEMPLATE CLASS remove_const
 template<class _Ty>
 	struct remove_const
@@ -107,18 +113,6 @@ template<class _Ty>
 	typedef _Ty type;
 	};
 
-template<class _Ty>
-	struct remove_const<const _Ty[]>
-	{	// remove top level const qualifier
-	typedef _Ty type[];
-	};
-
-template<class _Ty, size_t _Nx>
-	struct remove_const<const _Ty[_Nx]>
-	{	// remove top level const qualifier
-	typedef _Ty type[_Nx];
-	};
-
 	// TEMPLATE CLASS remove_volatile
 template<class _Ty>
 	struct remove_volatile
@@ -130,18 +124,6 @@ template<class _Ty>
 	struct remove_volatile<volatile _Ty>
 	{	// remove top level volatile qualifier
 	typedef _Ty type;
-	};
-
-template<class _Ty>
-	struct remove_volatile<volatile _Ty[]>
-	{	// remove top level volatile qualifier
-	typedef _Ty type[];
-	};
-
-template<class _Ty, size_t _Nx>
-	struct remove_volatile<volatile _Ty[_Nx]>
-	{	// remove top level volatile qualifier
-	typedef _Ty type[_Nx];
 	};
 
 	// TEMPLATE CLASS remove_cv
@@ -239,7 +221,6 @@ template<>
 	{	// determine whether _Ty is integral
 	};
 
- #ifdef _LONGLONG
 template<>
 	struct _Is_integral<_LONGLONG>
 		: true_type
@@ -251,7 +232,6 @@ template<>
 		: true_type
 	{	// determine whether _Ty is integral
 	};
- #endif /* _LONGLONG */
 
 	// TEMPLATE CLASS is_integral
 template<class _Ty>
@@ -259,6 +239,11 @@ template<class _Ty>
 		: _Is_integral<typename remove_cv<_Ty>::type>
 	{	// determine whether _Ty is integral
 	};
+
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_integral_v = is_integral<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
 
 	// TEMPLATE CLASS _Is_floating_point
 template<class _Ty>
@@ -292,6 +277,11 @@ template<class _Ty>
 	{	// determine whether _Ty is floating point
 	};
 
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_floating_point_v = is_floating_point<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
+
 	// TEMPLATE CLASS is_arithmetic
 template<class _Ty>
 	struct is_arithmetic
@@ -299,6 +289,11 @@ template<class _Ty>
 			|| is_floating_point<_Ty>::value>
 	{	// determine whether _Ty is an arithmetic type
 	};
+
+ #if _HAS_VARIABLE_TEMPLATES
+template<class _Ty>
+	constexpr bool is_arithmetic_v = is_arithmetic<_Ty>::value;
+ #endif /* _HAS_VARIABLE_TEMPLATES */
 
 	// TEMPLATE CLASS remove_reference
 template<class _Ty>
@@ -351,7 +346,7 @@ _STD_END
  #pragma warning(pop)
  #pragma pack(pop)
 #endif /* RC_INVOKED */
-#endif /* _TR1_COMMON_ */
+#endif /* _XTR1COMMON_ */
 
 /*
  * Copyright (c) by P.J. Plauger. All rights reserved.

@@ -33,8 +33,8 @@ class bad_weak_ptr
 	: public _XSTD exception
 	{	// exception type for invalid use of expired weak_ptr object
 public:
-	explicit bad_weak_ptr(const char * = 0) _NOEXCEPT
-		{	// construct with ignored message
+	bad_weak_ptr() _NOEXCEPT
+		{	// default construct
 		}
 
 	virtual const char *__CLR_OR_THIS_CALL what() const throw()
@@ -70,7 +70,7 @@ public:
 		{	// increment use count if not zero, return true if successful
 		for (; ; )
 			{	// loop until state is known
- #if defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE)
+ #if _USE_INTERLOCKED_REFCOUNTING
 			_Atomic_integral_t _Count =
 				static_cast<volatile _Atomic_counter_t&>(_Uses);
 
@@ -82,7 +82,7 @@ public:
 					_Count + 1, _Count)) == _Count)
 				return (true);
 
- #else /* defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE) */
+ #else /* _USE_INTERLOCKED_REFCOUNTING */
 			_Atomic_integral_t _Count =
 				_Load_atomic_counter(_Uses);
 
@@ -91,23 +91,23 @@ public:
 
 			if (_Compare_increment_atomic_counter(_Uses, _Count))
 				return (true);
- #endif /* defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE) */
+ #endif /* _USE_INTERLOCKED_REFCOUNTING */
 			}
 		}
 
 	void _Incref()
 		{	// increment use count
-		_MT_INCR(_Mtx, _Uses);
+		_MT_INCR(_Uses);
 		}
 
 	void _Incwref()
 		{	// increment weak reference count
-		_MT_INCR(_Mtx, _Weaks);
+		_MT_INCR(_Weaks);
 		}
 
 	void _Decref()
 		{	// decrement use count
-		if (_MT_DECR(_Mtx, _Uses) == 0)
+		if (_MT_DECR(_Uses) == 0)
 			{	// destroy managed resource, decrement weak reference count
 			_Destroy();
 			_Decwref();
@@ -116,7 +116,7 @@ public:
 
 	void _Decwref()
 		{	// decrement weak reference count
-		if (_MT_DECR(_Mtx, _Weaks) == 0)
+		if (_MT_DECR(_Weaks) == 0)
 			_Delete_this();
 		}
 
@@ -269,7 +269,7 @@ public:
 	typedef _Ptr_base<_Ty> _Myt;
 	typedef _Ty element_type;
 
-	_CONST_FUN _Ptr_base() _NOEXCEPT
+	constexpr _Ptr_base() _NOEXCEPT
 		: _Ptr(0), _Rep(0)
 		{	// construct
 		}
@@ -386,7 +386,7 @@ public:
 		if (_Other_rep && _Other_rep->_Incref_nz())
 			_Reset0(_Other_ptr, _Other_rep);
 		else if (_Throw)
-			_THROW_NCEE(bad_weak_ptr, 0);
+			_THROW_NCEE(bad_weak_ptr, _EMPTY_ARGUMENT);
 		}
 
 	void _Reset0(_Ty *_Other_ptr, _Ref_count_base *_Other_rep)
@@ -415,12 +415,6 @@ public:
 		}
 
 	template<class _Ty2>
-		void _Resetw(const _Ty2 *_Other_ptr, _Ref_count_base *_Other_rep)
-		{	// point to _Other_ptr through _Other_rep
-		_Resetw(const_cast<_Ty2*>(_Other_ptr), _Other_rep);
-		}
-
-	template<class _Ty2>
 		void _Resetw(_Ty2 *_Other_ptr, _Ref_count_base *_Other_rep)
 		{	// point to _Other_ptr through _Other_rep
 		if (_Other_rep)
@@ -428,7 +422,7 @@ public:
 		if (_Rep != 0)
 			_Rep->_Decwref();
 		_Rep = _Other_rep;
-		_Ptr = _Other_ptr;
+		_Ptr = const_cast<remove_cv_t<_Ty2> *>(_Other_ptr);
 		}
 
 private:
@@ -447,7 +441,7 @@ public:
 	typedef shared_ptr<_Ty> _Myt;
 	typedef _Ptr_base<_Ty> _Mybase;
 
-	_CONST_FUN shared_ptr() _NOEXCEPT
+	constexpr shared_ptr() _NOEXCEPT
 		{	// construct empty shared_ptr
 		}
 
@@ -464,7 +458,7 @@ public:
 		_Resetp(_Px, _Dt);
 		}
 
-	_CONST_FUN shared_ptr(nullptr_t) _NOEXCEPT
+	constexpr shared_ptr(nullptr_t) _NOEXCEPT
 		{	// construct empty shared_ptr
 		}
 
@@ -1016,7 +1010,7 @@ public:
 	typedef weak_ptr<_Ty> _Myt;
 	typedef _Ptr_base<_Ty> _Mybase;
 
-	_CONST_FUN weak_ptr() _NOEXCEPT
+	constexpr weak_ptr() _NOEXCEPT
 		{	// construct empty weak_ptr object
 		}
 
@@ -1138,7 +1132,7 @@ public:
 		}
 
 protected:
-	_CONST_FUN enable_shared_from_this() _NOEXCEPT
+	constexpr enable_shared_from_this() _NOEXCEPT
 		{	// construct (do nothing)
 		}
 
@@ -1185,7 +1179,7 @@ _STD_BEGIN
 template<class _Ty>
 	struct default_delete
 	{	// default deleter for unique_ptr
-	_CONST_FUN default_delete() _NOEXCEPT = default;
+	constexpr default_delete() _NOEXCEPT = default;
 
 	template<class _Ty2,
 		class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value,
@@ -1205,7 +1199,7 @@ template<class _Ty>
 template<class _Ty>
 	struct default_delete<_Ty[]>
 	{	// default deleter for unique_ptr to array of unknown size
-	_CONST_FUN default_delete() _NOEXCEPT = default;
+	constexpr default_delete() _NOEXCEPT = default;
 
 	template<class _Uty,
 		class = typename enable_if<is_convertible<_Uty(*)[], _Ty(*)[]>::value,
@@ -1249,7 +1243,7 @@ public:
 		}
 
 	template<class _Ptr2>
-		_CONST_FUN _Unique_ptr_base(_Ptr2 _Ptr)
+		constexpr _Unique_ptr_base(_Ptr2 _Ptr)
 		: _Mypair(_Zero_then_variadic_args_t(), _Ptr)
 		{	// construct with compatible pointer
 		}
@@ -1292,14 +1286,14 @@ public:
 
 	using _Mybase::get_deleter;
 
-	_CONST_FUN unique_ptr() _NOEXCEPT
+	constexpr unique_ptr() _NOEXCEPT
 		: _Mybase(pointer())
 		{	// default construct
 		static_assert(!is_pointer<_Dx>::value,
 			"unique_ptr constructed with null deleter pointer");
 		}
 
-	_CONST_FUN unique_ptr(nullptr_t) _NOEXCEPT
+	constexpr unique_ptr(nullptr_t) _NOEXCEPT
 		: _Mybase(pointer())
 		{	// null pointer construct
 		static_assert(!is_pointer<_Dx>::value,
@@ -1410,7 +1404,7 @@ public:
 
 	pointer operator->() const _NOEXCEPT
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	pointer get() const _NOEXCEPT
@@ -1457,7 +1451,7 @@ public:
 
 	using _Mybase::get_deleter;
 
-	_CONST_FUN unique_ptr() _NOEXCEPT
+	constexpr unique_ptr() _NOEXCEPT
 		: _Mybase(pointer())
 		{	// default construct
 		static_assert(!is_pointer<_Dx>::value,
@@ -1553,7 +1547,7 @@ public:
 		return (*this);
 		}
 
-	_CONST_FUN unique_ptr(nullptr_t) _NOEXCEPT
+	constexpr unique_ptr(nullptr_t) _NOEXCEPT
 		: _Mybase(pointer())
 		{	// null pointer construct
 		static_assert(!is_pointer<_Dx>::value,
@@ -1566,7 +1560,7 @@ public:
 		return (*this);
 		}
 
-	void reset(nullptr_t = nullptr_t()) _NOEXCEPT
+	void reset(nullptr_t = nullptr_t{}) _NOEXCEPT
 		{	// establish new null pointer
 		reset(pointer());
 		}
@@ -1651,7 +1645,8 @@ template<class _Ty,
 
 
 template<class _Ty,
-	class _Dx>
+	class _Dx,
+	class = enable_if_t<_Is_swappable<_Dx>::value>>
 	void swap(unique_ptr<_Ty, _Dx>& _Left,
 		unique_ptr<_Ty, _Dx>& _Right) _NOEXCEPT
 	{	// swap _Left with _Right
@@ -1853,6 +1848,7 @@ inline _Pointer_safety get_pointer_safety() _NOEXCEPT
 	return (pointer_safety::relaxed);
 	}
 
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// TR1 additions
 using _STD allocate_shared;
 using _STD bad_weak_ptr;
@@ -1866,9 +1862,10 @@ using _STD static_pointer_cast;
 using _STD swap;
 using _STD weak_ptr;
 }	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 
 		// TEMPLATE STRUCT owner_less
-template<class _Ty>
+template<class _Ty = void>
 	struct owner_less;	// not defined
 
 template<class _Ty>
@@ -1918,6 +1915,40 @@ template<class _Ty>
 
 	bool operator()(const shared_ptr<_Ty>& _Left,
 		const weak_ptr<_Ty>& _Right) const
+		{	// apply owner_before to operands
+		return (_Left.owner_before(_Right));
+		}
+	};
+
+template<>
+	struct owner_less<void>
+	{	// functor for owner_before
+	typedef int is_transparent;
+
+	template<class _Ty,
+		class _Uty>
+		bool operator()(const shared_ptr<_Ty>& _Left, const shared_ptr<_Uty>& _Right) const
+		{	// apply owner_before to operands
+		return (_Left.owner_before(_Right));
+		}
+
+	template<class _Ty,
+		class _Uty>
+		bool operator()(const shared_ptr<_Ty>& _Left, const weak_ptr<_Uty>& _Right) const
+		{	// apply owner_before to operands
+		return (_Left.owner_before(_Right));
+		}
+
+	template<class _Ty,
+		class _Uty>
+		bool operator()(const weak_ptr<_Ty>& _Left, const shared_ptr<_Uty>& _Right) const
+		{	// apply owner_before to operands
+		return (_Left.owner_before(_Right));
+		}
+
+	template<class _Ty,
+		class _Uty>
+		bool operator()(const weak_ptr<_Ty>& _Left, const weak_ptr<_Uty>& _Right) const
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
@@ -1999,7 +2030,7 @@ template<class _Ty> inline
 template<class _Ty> inline
 	shared_ptr<_Ty> atomic_load(const shared_ptr<_Ty> *_Ptr)
 	{	// load *_Ptr atomically
-	return (atomic_load_explicit(_Ptr, memory_order_seq_cst));
+	return (_STD atomic_load_explicit(_Ptr, memory_order_seq_cst));
 	}
 
 template<class _Ty> inline
@@ -2013,7 +2044,7 @@ template<class _Ty> inline
 template<class _Ty> inline
 	void atomic_store(shared_ptr<_Ty> *_Ptr, shared_ptr<_Ty> _Other)
 	{	// store _Other to *_Ptr atomically
-	atomic_store_explicit(_Ptr, _Other, memory_order_seq_cst);
+	_STD atomic_store_explicit(_Ptr, _STD move(_Other), memory_order_seq_cst);
 	}
 
 template<class _Ty> inline
@@ -2030,7 +2061,7 @@ template<class _Ty> inline
 	shared_ptr<_Ty> atomic_exchange(
 		shared_ptr<_Ty> *_Ptr, shared_ptr<_Ty> _Other)
 	{	// copy _Other to *_Ptr and return previous value of *_Ptr atomically
-	return (atomic_exchange_explicit(_Ptr, _Other, memory_order_seq_cst));
+	return (_STD atomic_exchange_explicit(_Ptr, _STD move(_Other), memory_order_seq_cst));
 	}
 
 template<class _Ty> inline
@@ -2058,7 +2089,7 @@ template<class _Ty> inline
 		shared_ptr<_Ty> *_Ptr, shared_ptr<_Ty> *_Exp,
 			shared_ptr<_Ty> _Value)
 	{	// atomically compare and exchange
-	return (atomic_compare_exchange_weak_explicit(_Ptr, _Exp, _Value,
+	return (_STD atomic_compare_exchange_weak_explicit(_Ptr, _Exp, _STD move(_Value),
 		memory_order_seq_cst, memory_order_seq_cst));
 	}
 
@@ -2067,7 +2098,7 @@ template<class _Ty> inline
 		shared_ptr<_Ty> *_Ptr, shared_ptr<_Ty> *_Exp, shared_ptr<_Ty> _Value,
 		memory_order, memory_order)
 	{	// atomically compare and exchange
-	return (atomic_compare_exchange_weak_explicit(_Ptr, _Exp, _Value,
+	return (_STD atomic_compare_exchange_weak_explicit(_Ptr, _Exp, _STD move(_Value),
 		memory_order_seq_cst, memory_order_seq_cst));
 	}
 
@@ -2076,7 +2107,7 @@ template<class _Ty> inline
 	shared_ptr<_Ty> *_Ptr, shared_ptr<_Ty> *_Exp,
 		shared_ptr<_Ty> _Value)
 	{	// atomically compare and exchange
-	return (atomic_compare_exchange_strong_explicit(_Ptr, _Exp, _Value,
+	return (_STD atomic_compare_exchange_strong_explicit(_Ptr, _Exp, _STD move(_Value),
 		memory_order_seq_cst, memory_order_seq_cst));
 	}
 _STD_END

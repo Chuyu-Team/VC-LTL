@@ -38,7 +38,6 @@ typedef _Uint4_t _Atomic_integral_t;
 
   #if defined(_WIN64)
    #define _ADDR_SIZE	8
-
   #else /* defined(_WIN64) */
    #define _ADDR_SIZE	4
   #endif /* defined(_WIN64) */
@@ -48,21 +47,10 @@ typedef _Uint4_t _Atomic_integral_t;
 typedef long _Atomic_flag_t;
 
   #define _ATOMIC_MAXBYTES_LOCK_FREE	8
-  #define _ATOMIC_FLAG_USES_LOCK		0
-  #define _ATOMIC_FENCE_USES_LOCK		0
 
-		/* DECLARATIONS NEEDED FOR ATOMIC REFERENCE COUNTING */
-inline _Uint4_t _Atomic_load_4(volatile _Uint4_t *, memory_order);
-inline int _Atomic_compare_exchange_weak_4(
-	volatile _Uint4_t *, _Uint4_t *, _Uint4_t, memory_order, memory_order);
-inline _Uint4_t _Atomic_fetch_add_4(
-	volatile _Uint4_t *, _Uint4_t, memory_order);
-inline _Uint4_t _Atomic_fetch_sub_4(
-	volatile _Uint4_t *, _Uint4_t, memory_order);
-
+		/* ATOMIC REFERENCE COUNTING */
 typedef _Atomic_integral_t _Atomic_counter_t;
 
-  #if defined(__cplusplus)
 inline _Atomic_integral_t
 	_Get_atomic_count(const _Atomic_counter_t& _Counter)
 	{	// get counter
@@ -75,88 +63,13 @@ inline void _Init_atomic_counter(_Atomic_counter_t& _Counter,
 	_Counter = _Value;
 	}
 
-inline _Atomic_integral_t _Inc_atomic_counter_explicit(
-	_Atomic_counter_t& _Counter, memory_order _Order)
-	{	// atomically increment counter and return result
-	return (_Atomic_fetch_add_4(&_Counter, 1, _Order) + 1);
-	}
-
-inline _Atomic_integral_t _Inc_atomic_counter(_Atomic_counter_t& _Counter)
-	{	// atomically increment counter and return result
-	return (_Inc_atomic_counter_explicit(_Counter, memory_order_seq_cst));
-	}
-
-inline _Atomic_integral_t _Dec_atomic_counter_explicit(
-	_Atomic_counter_t& _Counter, memory_order _Order)
-	{	// atomically decrement counter and return result
-	return (_Atomic_fetch_sub_4(&_Counter, 1, _Order) - 1);
-	}
-
-inline _Atomic_integral_t _Dec_atomic_counter(_Atomic_counter_t& _Counter)
-	{	// atomically decrement counter and return result
-	return (_Dec_atomic_counter_explicit(_Counter, memory_order_seq_cst));
-	}
-
-inline _Atomic_integral_t _Load_atomic_counter_explicit(
-	_Atomic_counter_t& _Counter, memory_order _Order)
-	{	// atomically load counter and return result
-	return (_Atomic_load_4(&_Counter, _Order));
-	}
-
-inline _Atomic_integral_t _Load_atomic_counter(_Atomic_counter_t& _Counter)
-	{	// atomically load counter and return result
-	return (_Load_atomic_counter_explicit(_Counter, memory_order_seq_cst));
-	}
-
-inline _Atomic_integral_t _Compare_increment_atomic_counter_explicit(
-	_Atomic_counter_t& _Counter,
-	_Atomic_integral_t _Expected,
-	memory_order _Order)
-	{	// atomically compare and increment counter and return result
-	return (_Atomic_compare_exchange_weak_4(
-		&_Counter, &_Expected, _Expected + 1,
-		_Order, _Order));
-	}
-
-inline _Atomic_integral_t _Compare_increment_atomic_counter(
-	_Atomic_counter_t& _Counter, _Atomic_integral_t _Expected)
-	{	// atomically compare and increment counter and return result
-	return (_Compare_increment_atomic_counter_explicit(
-		_Counter, _Expected, memory_order_seq_cst));
-	}
-
-  #else /* defined(__cplusplus) */
-#define _Get_atomic_count(_Counter)	_Counter
-
-#define _Init_atomic_counter(_Counter, _Value)	\
-	_Counter = _Value
-
-#define _Inc_atomic_counter_explicit(_Counter, _Order)	\
-	(_Atomic_fetch_add_4(&_Counter, 1, _Order) + 1)
-
-#define _Inc_atomic_counter(_Counter)	\
-	(_Inc_atomic_counter_explicit(_Counter, memory_order_seq_cst))
-
-#define _Dec_atomic_counter_explicit(_Counter, _Order)	\
-	(_Atomic_fetch_sub_4(&_Counter, 1, _Order) - 1)
-
-#define _Dec_atomic_counter(_Counter)	\
-	(_Dec_atomic_counter_explicit(_Counter, memory_order_seq_cst))
-
-#define _Load_atomic_counter_explicit(_Counter, _Order)	\
-	_Atomic_load_4(&_Counter, _Order)
-
-#define _Load_atomic_counter(_Counter)	\
-	_Load_atomic_counter_explicit(_Counter, memory_order_seq_cst)
-
-#define _Compare_increment_atomic_counter_explicit(_Counter, _Expected, _Order)	\
-	_Atomic_compare_exchange_weak_4(&_Counter, &_Expected, _Expected + 1, \
-	_Order, _Order)
-
-#define _Compare_increment_atomic_counter(_Counter, _Expected)	\
-	_Compare_increment_atomic_counter_explicit( \
-		_Counter, _Expected, memory_order_seq_cst)
-  #endif /* defined(__cplusplus) */
+ #ifndef _USE_INTERLOCKED_REFCOUNTING
+  #if defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE)
+   #define _USE_INTERLOCKED_REFCOUNTING	1
+  #else /* defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE) */
+   #define _USE_INTERLOCKED_REFCOUNTING	0
+  #endif /* defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE) */
+ #endif /* _USE_INTERLOCKED_REFCOUNTING */
 
 		/* SPIN LOCKS */
 _EXTERN_C

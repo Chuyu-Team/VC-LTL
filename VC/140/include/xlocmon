@@ -422,7 +422,7 @@ protected:
 			char *_Ep;
 			int _Errno = 0;
 			const long double _Ans =
-				_CSTD _Stoldx(_Eb, &_Ep, 0, &_Errno);	// convert
+				_Stodx_v2(_Eb, &_Ep, 0, &_Errno);	// convert and "widen" double to long double
 
 			if (_Ep == _Eb || _Errno != 0)
 				_State |= ios_base::failbit;
@@ -474,7 +474,7 @@ private:
 		const money_base::pattern _Pattern = _Ppunct_fac->neg_format();
 		string _Val;
 		size_t _Idx;
-		static const char _Src[] = {"0123456789-"};
+		static const char _Src[] = {"0123456789-"};	// TRANSITION, VSO#202551
 		const ctype<_Elem>& _Ctype_fac =
 			_USE(_Iosbase.getloc(), ctype<_Elem>);
 		_Ctype_fac.widen(&_Src[0], &_Src[sizeof (_Src)], _Atoms);
@@ -496,7 +496,7 @@ private:
 
 				for (_Source = _Symbol.begin();
 					_First != _Last && _Source != _Symbol.end()
-						&& *_First == *_Source; ++_Source, ++_First)
+						&& *_First == *_Source; ++_Source, (void)++_First)
 					;	// still matching currency symbol
 
 				if (_Source != _Symbol.end())
@@ -741,7 +741,7 @@ protected:
 		bool _Intl, ios_base& _Iosbase, _Elem _Fill,
 			const string_type& _Val) const
 		{	// put string_type to _Dest
-		static const char _Src[] = {"0123456789-"};
+		static const char _Src[] = {"0123456789-"};	// TRANSITION, VSO#202551
 		_Elem _Atoms[sizeof (_Src)];
 		const ctype<_Elem>& _Ctype_fac =
 			_USE(_Iosbase.getloc(), ctype<_Elem>);
@@ -915,7 +915,7 @@ private:
 	static _OutIt _Put(_OutIt _Dest,
 		typename string_type::const_iterator _Source, size_t _Count)
 		{	// put [_Source, _Source + _Count) to _Dest
-		for (; 0 < _Count; --_Count, ++_Dest, ++_Source)
+		for (; 0 < _Count; --_Count, (void)++_Dest, ++_Source)
 			*_Dest = *_Source;
 		return (_Dest);
 		}
@@ -923,7 +923,7 @@ private:
 	static _OutIt _Rep(_OutIt _Dest,
 		_Elem _Ch, size_t _Count)
 		{	// put _Count * _Ch to _Dest
-		for (; 0 < _Count; --_Count, ++_Dest)
+		for (; 0 < _Count; --_Count, (void)++_Dest)
 			*_Dest = _Ch;
 		return (_Dest);
 		}

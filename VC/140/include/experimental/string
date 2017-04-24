@@ -4,8 +4,8 @@
 #define _EXPERIMENTAL_STRING_
 #ifndef RC_INVOKED
 
-#include <algorithm>
 #include <string>
+#include <experimental/xutility>
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,3)
@@ -23,8 +23,7 @@ template<class _Elem,
 	class _Pr> inline
 	void erase_if(basic_string<_Elem, _Traits, _Alloc>& _Cont, _Pr _Pred)
 	{	// erase each element satisfying _Pred
-	_Cont.erase(_STD remove_if(_Cont.begin(), _Cont.end(), _Pred),
-		_Cont.end());
+	_Erase_remove_if(_Cont, _Pred);
 	}
 
 	// TEMPLATE FUNCTION erase
@@ -34,7 +33,7 @@ template<class _Elem,
 	class _Uty> inline
 	void erase(basic_string<_Elem, _Traits, _Alloc>& _Cont, const _Uty& _Val)
 	{	// erase each element matching _Val
-	_Cont.erase(_STD remove(_Cont.begin(), _Cont.end(), _Val), _Cont.end());
+	_Erase_remove(_Cont, _Val);
 	}
 
 	}	// inline namespace fundamentals_v2

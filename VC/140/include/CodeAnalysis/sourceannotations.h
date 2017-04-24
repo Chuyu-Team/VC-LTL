@@ -8,8 +8,6 @@
 *
 ****/
 
-#if _MSC_VER >= 1400   
-
 #pragma once
 
 #ifndef _M_CEE_SAFE
@@ -462,6 +460,3 @@ typedef struct ContextAttribute      SAL_context;
 #endif  /* CODE_ANALYSIS */
 
 #endif  /* _MANAGED */
-
-#endif  /* _MSC_VER >= 1400    */
-

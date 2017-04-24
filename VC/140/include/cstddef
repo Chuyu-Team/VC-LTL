@@ -23,6 +23,8 @@ _STD_END
 _STD_BEGIN
 typedef double max_align_t;	// most aligned type
 _STD_END
+
+using _STD max_align_t;	// intentional, for historical reasons
  #endif /* !defined(RC_INVOKED) */
 #endif /* _CSTDDEF_ */
 

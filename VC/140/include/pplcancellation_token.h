@@ -16,7 +16,7 @@
 * ==--==
 * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 *
-* pplxcancellation_token.h
+* pplcancellation_token.h
 *
 * Parallel Patterns Library : cancellation_token
 *

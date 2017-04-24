@@ -5,9 +5,10 @@
 #ifndef RC_INVOKED
 
  #ifdef _M_CEE
- #error <shared_mutex> is not supported when compiling with /clr or /clr:pure.
+ static_assert(false, "<shared_mutex> is not supported when compiling with /clr or /clr:pure.");
  #endif /* _M_CEE */
 
+#include <thr/xthreads.h>
 #include <mutex>
 #include <condition_variable>
 
@@ -16,12 +17,78 @@
  #pragma push_macro("new")
  #undef new
 
+ #ifndef _HAS_SHARED_MUTEX
+  #ifdef _USING_V110_SDK71_
+   #define _HAS_SHARED_MUTEX	0
+  #else /* _USING_V110_SDK71_ */
+   #define _HAS_SHARED_MUTEX	1
+  #endif /* _USING_V110_SDK71_ */
+ #endif /* _HAS_SHARED_MUTEX */
+
 _STD_BEGIN
+#if _HAS_SHARED_MUTEX
+	// CLASS shared_mutex
+class shared_mutex
+	{	// class for mutual exclusion shared across threads
+public:
+	typedef _Smtx_t * native_handle_type;
+
+	shared_mutex() _NOEXCEPT
+		: _Myhandle(0)
+		{	// default construct
+		}
+
+	~shared_mutex() _NOEXCEPT
+		{	// destroy the object
+		}
+
+	void lock() _NOEXCEPT
+		{	// lock exclusive
+		_Smtx_lock_exclusive(&_Myhandle);
+		}
+
+	bool try_lock() _NOEXCEPT
+		{	// try to lock exclusive
+		return (_Smtx_try_lock_exclusive(&_Myhandle) != 0);
+		}
+
+	void unlock() _NOEXCEPT
+		{	// unlock exclusive
+		_Smtx_unlock_exclusive(&_Myhandle);
+		}
+
+	void lock_shared() _NOEXCEPT
+		{	// lock non-exclusive
+		_Smtx_lock_shared(&_Myhandle);
+		}
+
+	bool try_lock_shared() _NOEXCEPT
+		{	// try to lock non-exclusive
+		return (_Smtx_try_lock_shared(&_Myhandle) != 0);
+		}
+
+	void unlock_shared() _NOEXCEPT
+		{	// unlock non-exclusive
+		_Smtx_unlock_shared(&_Myhandle);
+		}
+
+	native_handle_type native_handle() _NOEXCEPT
+		{	// get native handle
+		return (&_Myhandle);
+		}
+
+	shared_mutex(const shared_mutex&) = delete;
+	shared_mutex& operator=(const shared_mutex&) = delete;
+private:
+	_Smtx_t _Myhandle;
+	};
+#endif /* _HAS_SHARED_MUTEX */
+
 	// CLASS shared_timed_mutex
 class shared_timed_mutex
 	{	// class for mutual exclusion shared across threads
 	typedef unsigned int _Read_cnt_t;
-	static const _Read_cnt_t _Max_readers = _Read_cnt_t(-1);
+	static constexpr _Read_cnt_t _Max_readers = _Read_cnt_t(-1);
 
 public:
 	shared_timed_mutex() _NOEXCEPT

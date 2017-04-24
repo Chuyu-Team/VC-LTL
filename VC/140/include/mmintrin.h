@@ -1,5 +1,5 @@
 /***
-*** Copyright (C) 1985-1999 Intel Corporation.  All rights reserved.
+*** Copyright (C) 1985-2015 Intel Corporation.  All rights reserved.
 ***
 *** The information and source code contained herein is the exclusive
 *** property of Intel Corporation and may not be disclosed, examined
@@ -44,6 +44,7 @@ typedef union __declspec(intrin_type) __declspec(align(8)) __m64
     unsigned __int32    m64_u32[2];
 } __m64;
 
+#if defined(_M_IX86)
 /* General support intrinsics */
 void  _m_empty(void);
 __m64 _m_from_int(int _I);
@@ -179,7 +180,7 @@ __m64 _mm_setr_pi8(char _B7, char _B6, char _B5, char _B4,
 #define _mm_cmpgt_pi8     _m_pcmpgtb
 #define _mm_cmpgt_pi16    _m_pcmpgtw
 #define _mm_cmpgt_pi32    _m_pcmpgtd
-
+#endif // defined(_M_IX86)
 
 #if defined __cplusplus
 }; /* End "C" */

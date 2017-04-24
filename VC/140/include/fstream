@@ -279,10 +279,12 @@ public:
 		return (open(_Str.c_str(), _Mode, _Prot));
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	_Myt *open(const char *_Filename, ios_base::open_mode _Mode)
 		{	// open a C stream with specified mode (old style)
 		return (open(_Filename, (ios_base::openmode)_Mode));
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	_Myt *open(const wchar_t *_Filename,
 		ios_base::openmode _Mode,
@@ -304,11 +306,13 @@ public:
 		return (open(_Str.c_str(), _Mode, _Prot));
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	_Myt *open(const wchar_t *_Filename,
 		ios_base::open_mode _Mode)
 		{	// open a wide-named C stream (old style) -- EXTENSION
 		return (open(_Filename, (ios_base::openmode)_Mode));
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
 	_Myt *open(const unsigned short *_Filename,
@@ -324,11 +328,13 @@ public:
 		return (this);	// open succeeded
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	_Myt *open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
 		{	// open a wide-named C stream (old style) -- EXTENSION
 		return (open(_Filename, (ios_base::openmode)_Mode));
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
  #endif /* _NATIVE_WCHAR_T_DEFINED */
 
 	_Myt *close()
@@ -842,10 +848,12 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const wchar_t *_Filename, ios_base::open_mode _Mode)
 		{	// open wide-named file (old style) -- EXTENSION
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
 	void open(const unsigned short *_Filename,
@@ -858,11 +866,13 @@ public:
 			_Myios::clear();	// added with C++11
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
 		{	// open wide-named file (old style) -- EXTENSION
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
  #endif /* _NATIVE_WCHAR_T_DEFINED */
 
 	virtual __CLR_OR_THIS_CALL ~basic_ifstream() _NOEXCEPT
@@ -896,10 +906,12 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const char *_Filename, ios_base::open_mode _Mode)
 		{	// open named file with specified mode (old style)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	void close()
 		{	// close the C stream
@@ -1040,10 +1052,12 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const wchar_t *_Filename, ios_base::open_mode _Mode)
 		{	// open a wide-named C stream (old style) -- EXTENSION
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
 	void open(const unsigned short *_Filename,
@@ -1056,11 +1070,13 @@ public:
 			_Myios::clear();	// added with C++11
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
 		{	// open a wide-named C stream (old style) -- EXTENSION
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
  #endif /* _NATIVE_WCHAR_T_DEFINED */
 
 	virtual __CLR_OR_THIS_CALL ~basic_ofstream() _NOEXCEPT
@@ -1094,10 +1110,12 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const char *_Filename, ios_base::open_mode _Mode)
 		{	// open a C stream with specified mode (old style)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	void close()
 		{	// close the C stream
@@ -1243,10 +1261,12 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const wchar_t *_Filename, ios_base::open_mode _Mode)
 		{	// open a wide-named C stream (old style) -- EXTENSION
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
 	void open(const unsigned short *_Filename,
@@ -1259,11 +1279,13 @@ public:
 			_Myios::clear();	// added with C++11
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
 		{	// open a wide-named C stream (old style) -- EXTENSION
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
  #endif /* _NATIVE_WCHAR_T_DEFINED */
 
 	virtual __CLR_OR_THIS_CALL ~basic_fstream() _NOEXCEPT
@@ -1297,10 +1319,12 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const char *_Filename, ios_base::open_mode _Mode)
 		{	// open a C stream with specified mode (old style)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	void close()
 		{	// close the C stream

@@ -18,7 +18,7 @@
 #error ERROR: msclr libraries are not compatible with /clr:oldSyntax
 #endif  /* __cplusplus_cli */
 
-#include <msclr\safebool.h>
+#include <msclr/safebool.h>
 #if !defined (_M_CEE_SAFE)
 #include <vcclr.h>
 #endif  /* !defined (_M_CEE_SAFE) */

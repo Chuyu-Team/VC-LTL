@@ -18,7 +18,7 @@
 #define _TYPEINFO_
 #ifndef RC_INVOKED
 #include <xstddef>
-#include <string.h>	// for type_info::hash_code()
+#include <exception>	// for std::exception
 
 #pragma pack(push,_CRT_PACKING)
 #pragma warning(push,3)

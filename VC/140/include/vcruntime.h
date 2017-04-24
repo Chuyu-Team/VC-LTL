@@ -159,7 +159,7 @@ _CRT_BEGIN_C_HEADER
 #define _VCRT_NOALIAS __declspec(noalias)
 #define _VCRT_RESTRICT __declspec(restrict)
 
-#if _MSC_VER >= 1900 && !defined __EDG__ && !defined _VCRT_BUILD
+#if !defined _MSC_VER || _MSC_VER >= 1900
     #define _VCRT_ALLOCATOR __declspec(allocator)
 #else
     #define _VCRT_ALLOCATOR
@@ -200,6 +200,16 @@ _CRT_BEGIN_C_HEADER
     typedef int              intptr_t;
 #endif
 
+#if defined __cplusplus
+    typedef bool  __vcrt_bool;
+#elif defined __midl
+    // MIDL understands neither bool nor _Bool.  Use char as a best-fit
+    // replacement (the differences won't matter in practice).
+    typedef char __vcrt_bool;
+#else
+    typedef _Bool __vcrt_bool;
+#endif
+
 // Indicate that these common types are defined
 #ifndef _SIZE_T_DEFINED
     #define _SIZE_T_DEFINED
@@ -238,7 +248,7 @@ _CRT_BEGIN_C_HEADER
     {
         template <typename _CountofType, size_t _SizeOfArray>
         char (*__countof_helper(_UNALIGNED _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
-            
+
         #define __crt_countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
     }
 #else
@@ -295,9 +305,9 @@ _CRT_BEGIN_C_HEADER
         __declspec(noreturn) void __cdecl __report_gsfailure(_In_ uintptr_t _StackCookie);
     #endif
 #endif
-        
+
 extern uintptr_t __security_cookie;
- 
+
 #ifndef _VCRT_BUILD
     #define __vcrt_malloc_normal(_Size) malloc(_Size)
     #define __vcrt_calloc_normal(_Count, _Size) calloc(_Count, _Size)

@@ -75,7 +75,7 @@ public:
 		_In_ int flags,						// 0 or combination of AI_PASSIVE, AI_CANONNAME or AI_NUMERICHOST
 		_In_ int addr_family,				// Address family (such as PF_INET)
 		_In_ int sock_type,					// Socket type (such as SOCK_STREAM)
-		_In_ int ai_proto);					// Protocol (such as IPPROTO_IP or IPPROTO_IPV6)
+		_In_ int ai_proto) throw();			// Protocol (such as IPPROTO_IP or IPPROTO_IPV6)
 
 	int FindAddr(
 		_In_z_ LPCTSTR szHost, 			// Host name or dotted IP address
@@ -107,7 +107,7 @@ private:
 
 
 ////////////////////////////////////////////////////////////////////////////
-// CSocketAddr implmenetation.
+// CSocketAddr implementation.
 ////////////////////////////////////////////////////////////////////////////
 
 inline CSocketAddr::CSocketAddr() throw()

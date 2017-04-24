@@ -48,7 +48,7 @@ public:
 		{	// make multi parameter visible as an enum constant
 		_Multi = _Mfl};
 
-	static const bool _Standard = false;
+	static constexpr bool _Standard = false;
 
 	_Hset_traits(const _Tr& _Traits = _Tr())
 		: _Tr(_Traits), _Max_buckets(0.0F)
@@ -92,7 +92,6 @@ public:
 	typedef _Hash<_Hset_traits<_Kty, _Tr, _Alloc, false> > _Mybase;
 	typedef _Kty key_type;
 	typedef _Tr key_compare;
-	typedef typename _Mybase::_Pairib _Pairib;
 	typedef typename _Mybase::value_compare value_compare;
 	typedef typename _Mybase::allocator_type allocator_type;
 	typedef typename _Mybase::size_type size_type;
@@ -116,11 +115,8 @@ public:
 		}
 
 	hash_set(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._List._Getal().select_on_container_copy_construction())
-
-
 		{	// construct set by copying _Right
 		}
 
@@ -143,7 +139,7 @@ public:
 		hash_set(_Iter _First, _Iter _Last)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct set from sequence, defaults
-		_Mybase::insert(_First, _Last);
+		this->insert(_First, _Last);
 		}
 
 	template<class _Iter>
@@ -151,14 +147,15 @@ public:
 			const key_compare& _Traits)
 		: _Mybase(_Traits, allocator_type())
 		{	// construct set from sequence, comparator
-		_Mybase::insert(_First, _Last);
+		this->insert(_First, _Last);
 		}
+
 	template<class _Iter>
 		hash_set(_Iter _First, _Iter _Last,
 			const key_compare& _Traits, const allocator_type& _Al)
 		: _Mybase(_Traits, _Al)
 		{	// construct set from sequence, comparator, and allocator
-		_Mybase::insert(_First, _Last);
+		this->insert(_First, _Last);
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -168,7 +165,7 @@ public:
 		}
 
 	hash_set(_Myt&& _Right)
-		: _Mybase(_STD move(_Right), _STD move(_Right._List._Getal()))
+		: _Mybase(_STD move(_Right))
 		{	// construct set by moving _Right
 		}
 
@@ -183,16 +180,6 @@ public:
 		return (*this);
 		}
 
-	_Pairib insert(value_type&& _Val)
-		{	// insert a {key, mapped} value
-		return (_Mybase::insert(_STD forward<value_type>(_Val)));
-		}
-
-	iterator insert(const_iterator _Where, value_type&& _Val)
-		{	// insert a {key, mapped} value, with hint
-		return (_Mybase::insert(_Where, _STD forward<value_type>(_Val)));
-		}
-
 	void swap(_Myt& _Right)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
@@ -201,49 +188,28 @@ public:
 	hash_set(_XSTD initializer_list<value_type> _Ilist)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct from initializer_list, defaults
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	hash_set(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred)
 		: _Mybase(_Pred, allocator_type())
 		{	// construct from initializer_list, comparator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	hash_set(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct from initializer_list, comparator, and allocator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		return (*this);
-		}
-
-	void insert(_XSTD initializer_list<value_type> _Ilist)
-		{	// insert initializer_list
-		this->insert(_Ilist.begin(), _Ilist.end());
-		}
-
-	_Pairib insert(const value_type& _Val)
-		{	// insert a key value
-		return (_Mybase::insert(_Val));
-		}
-
-	iterator insert(const_iterator _Where, const value_type& _Val)
-		{	// insert a key value, with hint
-		return (_Mybase::insert(_Where, _Val));
-		}
-
-	template<class _Iter>
-		void insert(_Iter _First, _Iter _Last)
-		{	// insert [_First, _Last), arbitrary iterators
-		_Mybase::insert(_First, _Last);
 		}
 
 	typedef _STD reverse_iterator<iterator> reverse_iterator;
@@ -344,11 +310,8 @@ public:
 		}
 
 	hash_multiset(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._List._Getal().select_on_container_copy_construction())
-
-
 		{	// construct set by copying _Right
 		}
 
@@ -372,21 +335,23 @@ public:
 		hash_multiset(_Iter _First, _Iter _Last)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct from sequence, defaults
-		_Mybase::insert(_First, _Last);
+		this->insert(_First, _Last);
 		}
+
 	template<class _Iter>
 		hash_multiset(_Iter _First, _Iter _Last,
 			const key_compare& _Traits)
 		: _Mybase(_Traits, allocator_type())
 		{	// construct from sequence, comparator
-		_Mybase::insert(_First, _Last);
+		this->insert(_First, _Last);
 		}
+
 	template<class _Iter>
 		hash_multiset(_Iter _First, _Iter _Last,
 			const key_compare& _Traits, const allocator_type& _Al)
 		: _Mybase(_Traits, _Al)
 		{	// construct from sequence, comparator, and allocator
-		_Mybase::insert(_First, _Last);
+		this->insert(_First, _Last);
 		}
 
 	_Myt& operator=(const _Myt& _Right)
@@ -396,7 +361,7 @@ public:
 		}
 
 	hash_multiset(_Myt&& _Right)
-		: _Mybase(_STD move(_Right), _STD move(_Right._List._Getal()))
+		: _Mybase(_STD move(_Right))
 		{	// construct set by moving _Right
 		}
 
@@ -411,16 +376,6 @@ public:
 		return (*this);
 		}
 
-	iterator insert(value_type&& _Val)
-		{	// insert a {key, mapped} value
-		return (_Mybase::insert(_STD forward<value_type>(_Val)).first);
-		}
-
-	iterator insert(const_iterator _Where, value_type&& _Val)
-		{	// insert a {key, mapped} value, with hint
-		return (_Mybase::insert(_Where, _STD forward<value_type>(_Val)));
-		}
-
 	void swap(_Myt& _Right)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
@@ -429,49 +384,28 @@ public:
 	hash_multiset(_XSTD initializer_list<value_type> _Ilist)
 		: _Mybase(key_compare(), allocator_type())
 		{	// construct from initializer_list, defaults
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	hash_multiset(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred)
 		: _Mybase(_Pred, allocator_type())
 		{	// construct from initializer_list, comparator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	hash_multiset(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct from initializer_list, comparator, and allocator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		return (*this);
-		}
-
-	void insert(_XSTD initializer_list<value_type> _Ilist)
-		{	// insert initializer_list
-		this->insert(_Ilist.begin(), _Ilist.end());
-		}
-
-	iterator insert(const value_type& _Val)
-		{	// insert a key value
-		return (_Mybase::insert(_Val).first);
-		}
-
-	iterator insert(const_iterator _Where, const value_type& _Val)
-		{	// insert a key value, with hint
-		return (_Mybase::insert(_Where, _Val));
-		}
-
-	template<class _Iter>
-		void insert(_Iter _First, _Iter _Last)
-		{	// insert [_First, _Last), arbitrary iterators
-		_Mybase::insert(_First, _Last);
 		}
 
 	typedef _STD reverse_iterator<iterator> reverse_iterator;

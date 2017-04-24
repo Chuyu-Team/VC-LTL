@@ -46,10 +46,12 @@ public:
 			? (int)_State | (int)badbit : (int)_State), _Reraise);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void __CLR_OR_THIS_CALL clear(io_state _State)
 		{	// set state to _State
 		clear((iostate)_State);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	void __CLR_OR_THIS_CALL setstate(iostate _State,
 		bool _Reraise = false)
@@ -58,10 +60,12 @@ public:
 			clear((iostate)((int)rdstate() | (int)_State), _Reraise);
 		}
 
+ #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void __CLR_OR_THIS_CALL setstate(io_state _State)
 		{	// merge _State into state
 		setstate((iostate)_State);
 		}
+ #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
 
 	_Myt& __CLR_OR_THIS_CALL copyfmt(const _Myt& _Right)
 		{	// copy format parameters
@@ -242,9 +246,11 @@ inline ios_base& __CLRCALL_OR_CDECL hexfloat(ios_base& _Iosbase)
 	return (_Iosbase);
 	}
 
+#if _HAS_TR1_NAMESPACE
 namespace tr1 {	// tr1 additions
 using _STD hexfloat;
 }	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 
 inline ios_base& __CLRCALL_OR_CDECL internal(ios_base& _Iosbase)
 	{	// set adjustfield to internal

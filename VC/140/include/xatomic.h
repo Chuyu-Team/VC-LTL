@@ -202,7 +202,7 @@ inline memory_order _Memory_order_upper_bound(memory_order _Order1,
 
 		*/
 
-	static const memory_order _Upper[6][6] = {	/* combined upper bounds */
+	static const memory_order _Upper[6][6] = {	/* combined upper bounds */	// TRANSITION, VSO#202551
 		{ memory_order_relaxed, memory_order_consume, memory_order_acquire,
 		memory_order_release, memory_order_acq_rel, memory_order_seq_cst },
 		{ memory_order_consume, memory_order_consume, memory_order_acquire,
@@ -2489,6 +2489,59 @@ inline int _Atomic_is_lock_free_8(void)
 	{	/* return true if 8-byte atomic values are lock-free */
 	return (8 <= _ATOMIC_MAXBYTES_LOCK_FREE);
 	}
+
+ #if _USE_INTERLOCKED_REFCOUNTING == 0
+		/* ATOMIC REFERENCE COUNTING */
+inline _Atomic_integral_t _Inc_atomic_counter_explicit(
+	_Atomic_counter_t& _Counter, memory_order _Order)
+	{	// atomically increment counter and return result
+	return (_Atomic_fetch_add_4(&_Counter, 1, _Order) + 1);
+	}
+
+inline _Atomic_integral_t _Inc_atomic_counter(_Atomic_counter_t& _Counter)
+	{	// atomically increment counter and return result
+	return (_Inc_atomic_counter_explicit(_Counter, memory_order_seq_cst));
+	}
+
+inline _Atomic_integral_t _Dec_atomic_counter_explicit(
+	_Atomic_counter_t& _Counter, memory_order _Order)
+	{	// atomically decrement counter and return result
+	return (_Atomic_fetch_sub_4(&_Counter, 1, _Order) - 1);
+	}
+
+inline _Atomic_integral_t _Dec_atomic_counter(_Atomic_counter_t& _Counter)
+	{	// atomically decrement counter and return result
+	return (_Dec_atomic_counter_explicit(_Counter, memory_order_seq_cst));
+	}
+
+inline _Atomic_integral_t _Load_atomic_counter_explicit(
+	_Atomic_counter_t& _Counter, memory_order _Order)
+	{	// atomically load counter and return result
+	return (_Atomic_load_4(&_Counter, _Order));
+	}
+
+inline _Atomic_integral_t _Load_atomic_counter(_Atomic_counter_t& _Counter)
+	{	// atomically load counter and return result
+	return (_Load_atomic_counter_explicit(_Counter, memory_order_seq_cst));
+	}
+
+inline _Atomic_integral_t _Compare_increment_atomic_counter_explicit(
+	_Atomic_counter_t& _Counter,
+	_Atomic_integral_t _Expected,
+	memory_order _Order)
+	{	// atomically compare and increment counter and return result
+	return (_Atomic_compare_exchange_weak_4(
+		&_Counter, &_Expected, _Expected + 1,
+		_Order, _Order));
+	}
+
+inline _Atomic_integral_t _Compare_increment_atomic_counter(
+	_Atomic_counter_t& _Counter, _Atomic_integral_t _Expected)
+	{	// atomically compare and increment counter and return result
+	return (_Compare_increment_atomic_counter_explicit(
+		_Counter, _Expected, memory_order_seq_cst));
+	}
+ #endif /* _USE_INTERLOCKED_REFCOUNTING == 0 */
 _STD_END
 
  #if defined(_M_IX86)

@@ -30,8 +30,6 @@
 
  #pragma warning(disable: 4482 4521 4522)
 
-
-
 _STD_BEGIN
 		// ENUM future_errc
 
@@ -51,25 +49,25 @@ enum class launch {	// names for launch options passed to async
 	deferred = 0x2
 	};
 
-inline _CONST_FUN launch operator&(launch _Left, launch _Right)
+inline constexpr launch operator&(launch _Left, launch _Right)
 	{	/* return _Left&_Right */
 	return (static_cast<launch>(static_cast<unsigned int>(_Left)
 		& static_cast<unsigned int>(_Right)));
 	}
 
-inline _CONST_FUN launch operator|(launch _Left, launch _Right)
+inline constexpr launch operator|(launch _Left, launch _Right)
 	{	/* return _Left|_Right */
 	return (static_cast<launch>(static_cast<unsigned int>(_Left)
 		| static_cast<unsigned int>(_Right)));
 	}
 
-inline _CONST_FUN launch operator^(launch _Left, launch _Right)
+inline constexpr launch operator^(launch _Left, launch _Right)
 	{	/* return _Left^_Right */
 	return (static_cast<launch>(static_cast<unsigned int>(_Left)
 		^ static_cast<unsigned int>(_Right)));
 	}
 
-inline _CONST_FUN launch operator~(launch _Left)
+inline constexpr launch operator~(launch _Left)
 	{	/* return ~_Left */
 	return (static_cast<launch>(~static_cast<unsigned int>(_Left)));
 	}
@@ -105,10 +103,10 @@ enum class future_status {	// names for timed wait function returns
 typedef future_status _Future_status;
 
 		// HELPER FUNCTIONS
-_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Throw_future_error(
-	const error_code& _Code));
-_CRTIMP2_PURE _NO_RETURN(__CLRCALL_PURE_OR_CDECL _Rethrow_future_exception(
-	_XSTD exception_ptr _Ptr));
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Throw_future_error(
+	const error_code& _Code);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Rethrow_future_exception(
+	_XSTD exception_ptr _Ptr);
 
 		// TEMPLATE CLASS SPECIALIZATION is_error_code_enum
 template<>
@@ -278,12 +276,12 @@ public:
 
 	void _Retain()
 		{	// increment reference count
-		_MT_INCR(_Mtx0, _Refs);
+		_MT_INCR(_Refs);
 		}
 
 	void _Release()
 		{	// decrement reference count and destroy when zero
-		if (_MT_DECR(_Mtx0, _Refs) == 0)
+		if (_MT_DECR(_Refs) == 0)
 			_Delete_this();
 		}
 
@@ -476,6 +474,7 @@ protected:
 			}
 		}
 
+public:
 	_Ty _Result;
 	_XSTD exception_ptr _Exception;
 	mutex _Mtx;
@@ -1598,6 +1597,12 @@ public:
 
 	~promise() _NOEXCEPT
 		{	// destroy
+		if (_MyPromise._Is_valid() && !_MyPromise._Is_ready())
+			{	// exception if destroyed before function object returns
+			future_error _Fut(make_error_code(future_errc::broken_promise));
+			_MyPromise._Get_state()
+				._Set_exception(_XSTD make_exception_ptr(_Fut), false);
+			}
 		}
 
 	void swap(promise& _Other) _NOEXCEPT
@@ -1666,6 +1671,12 @@ public:
 
 	~promise() _NOEXCEPT
 		{	// destroy
+		if (_MyPromise._Is_valid() && !_MyPromise._Is_ready())
+			{	// exception if destroyed before function object returns
+			future_error _Fut(make_error_code(future_errc::broken_promise));
+			_MyPromise._Get_state()
+				._Set_exception(_XSTD make_exception_ptr(_Fut), false);
+			}
 		}
 
 	void swap(promise& _Other) _NOEXCEPT
@@ -1715,19 +1726,19 @@ template<class _Ty> inline
 	// TEMPLATE CLASS packaged_task
 template<class _Fret>
 	struct _P_arg_type
-	{	// type for function
+	{	// type for functions returning T
 	typedef _Fret type;
 	};
 
 template<class _Fret>
 	struct _P_arg_type<_Fret&>
-	{	// type for ref to function
+	{	// type for functions returning reference to T
 	typedef _Fret *type;
 	};
 
 template<>
 	struct _P_arg_type<void>
-	{	// type for void function
+	{	// type for functions returning void
 	typedef int type;
 	};
 
@@ -1849,17 +1860,38 @@ template<class _Ty> inline
 	_Left.swap(_Right);
 	}
 
-		// HELPERS FOR async
-template<class _Fty>
-	struct _Is_launch_type
-		: false_type
-	{	// tests for _Launch_type argument
-	};
+		// TEMPLATE FUNCTION async
+template<class... _Types>
+	class _Fake_no_copy_callable_adapter
+	{	// async() is built on packaged_task internals which incorrectly use std::function, which requires that things
+		// be copyable. We can't fix this in an update, so this adapter turns copies into terminate(). When VSO#153581
+		// is fixed, remove this adapter.
+	typedef _Fake_no_copy_callable_adapter<_Types...> _Myt;
+	typedef tuple<decay_t<_Types>...> _Storaget;
 
-template<>
-	struct _Is_launch_type<_Launch_type>
-		: true_type
-	{	// tests for _Launch_type argument
+public:
+	explicit _Fake_no_copy_callable_adapter(_Types&&... _Vals)
+		: _Storage(_STD forward<_Types>(_Vals)...)
+		{	// Initializes _Fake_no_copy_callable_adapter with a decayed callable object and arguments
+		}
+
+	_Fake_no_copy_callable_adapter(const _Myt& _Other)
+		: _Storage(_STD move(_Other._Storage))
+		{	// Very Bad Things^TM
+		_STD terminate();
+		}
+
+	_Fake_no_copy_callable_adapter(_Myt&& _Other) = default;
+	_Myt& operator=(const _Myt&) = delete;
+	_Myt& operator=(_Myt&&) = delete;
+
+	auto operator()() -> decltype(_Invoke_stored(_STD move(_STD declval<_Storaget&>())))
+		{	// Invokes stored callable object
+		return (_Invoke_stored(_STD move(_Storage)));
+		}
+
+private:
+	mutable _Storaget _Storage;
 	};
 
 template<class _Ret,
@@ -1871,63 +1903,44 @@ template<class _Ret,
 		{	// select launch type
 	case launch::async:
 		return (new _Task_async_state<_Ret, false>(
-			_STD forward<_Fty >(_Fnarg)));
-
+			_STD forward<_Fty>(_Fnarg)));
 	case launch::deferred:
 		return (new _Deferred_async_state<_Ret>(
-			_STD forward<_Fty >(_Fnarg)));
+			_STD forward<_Fty>(_Fnarg)));
 	default:
 		return (new _Task_async_state<_Ret, true>(
-			_STD forward<_Fty >(_Fnarg)));
+			_STD forward<_Fty>(_Fnarg)));
 		}
 	}
 
-		// TEMPLATE FUNCTION _Async
 template<class _Fty,
 	class... _ArgTypes> inline
-	future<typename result_of<_Fty(_ArgTypes...)>::type>
-	_Async(_Launch_type _Policy, _Fty&& _Fnarg,
-		_ArgTypes&&... _Args)
+	future<result_of_t<decay_t<_Fty>(decay_t<_ArgTypes>...)>>
+		async(launch _Policy, _Fty&& _Fnarg, _ArgTypes&&... _Args)
 	{	// return a future object whose associated asynchronous state
-		// manages a function object
-	typedef typename result_of<_Fty(_ArgTypes...)>::type _Ret;
+		// manages a callable object launched with supplied policy
+	typedef result_of_t<decay_t<_Fty>(decay_t<_ArgTypes>...)> _Ret;
 	typedef typename _P_arg_type<_Ret>::type _Ptype;
 	_Promise<_Ptype> _Pr(_Get_associated_state<_Ret>(_Policy,
-		_STD bind(_STD forward<_Fty>(_Fnarg),
-			_STD forward<_ArgTypes>(_Args)...)));
+		_Fake_no_copy_callable_adapter<_Fty, _ArgTypes...>(
+			_STD forward<_Fty>(_Fnarg),
+			_STD forward<_ArgTypes>(_Args)...
+		)));
+
 	return (future<_Ret>(_Pr._Get_state_for_future(), _Nil()));
 	}
 
-		// TEMPLATE FUNCTION async
 template<class _Fty,
 	class... _ArgTypes> inline
-	future<typename result_of<
-		typename enable_if<!_Is_launch_type<
-			typename decay<_Fty>::type>::value, _Fty>
-				::type(_ArgTypes...)>::type>
-	async(_Fty&& _Fnarg, _ArgTypes&&... _Args)
+	future<result_of_t<decay_t<_Fty>(decay_t<_ArgTypes>...)>>
+		async(_Fty&& _Fnarg, _ArgTypes&&... _Args)
 	{	// return a future object whose associated asynchronous state
-		// manages a function object
-	return (_Async(launch::async | launch::deferred,
-		_Decay_copy(_STD forward<_Fty>(_Fnarg)),
-		_Decay_copy(_STD forward<_ArgTypes>(_Args))...));
+		// manages a callable object launched with default policy
+	return (_STD async(launch::async | launch::deferred,
+		_STD forward<_Fty>(_Fnarg),
+		_STD forward<_ArgTypes>(_Args)...
+		));
 	}
-
-template<class _Policy_type,
-	class _Fty,
-	class... _ArgTypes> inline
-	future<typename result_of<
-		typename enable_if<_Is_launch_type<
-			_Policy_type>::value, _Fty>
-				::type(_ArgTypes...)>::type>
-		async(_Policy_type _Policy, _Fty&& _Fnarg,
-		_ArgTypes&&... _Args)
-	{	// return a future object whose associated asynchronous state
-		// manages a function object
-	return (_Async(_Policy, _Decay_copy(_STD forward<_Fty>(_Fnarg)),
-		_Decay_copy(_STD forward<_ArgTypes>(_Args))...));
-	}
-
 
  #ifdef _RESUMABLE_FUNCTIONS_SUPPORTED
 namespace experimental {

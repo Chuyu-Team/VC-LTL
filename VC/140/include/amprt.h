@@ -44,7 +44,7 @@
 
 #define __GPU      restrict(amp,cpu)
 #define __GPU_ONLY restrict(amp)
-#define __CPU_ONLY
+#define __CPU_ONLY restrict(cpu)
 
 #else
 
@@ -591,7 +591,8 @@ namespace details
         }
 
         // Constructor for the interop texture
-        _Texture_descriptor(_In_ _Texture * _Texture_ptr) : _M_data_ptr(NULL), _M_texture_ptr(NULL), _M_most_detailed_mipmap_level(0) __CPU_ONLY
+        _Texture_descriptor(_In_ _Texture * _Texture_ptr) __CPU_ONLY
+            : _M_data_ptr(NULL), _M_texture_ptr(NULL), _M_most_detailed_mipmap_level(0)
         {
             _Set_texture_ptr(_Texture_ptr);
 

@@ -52,64 +52,65 @@ public:
 
 	_Myiter& _Rechecked(_Unchecked_type _Right)
 		{	// reset from unchecked iterator
-		this->_Ptr = (_Tptr)_Right;
+		_Ptr = _Const_cast(_Right);
 		return (*this);
 		}
 
 	_Unchecked_type _Unchecked() const
 		{	// make an unchecked iterator
-		return (_Unchecked_type(this->_Ptr));
+		return (_Ptr);
 		}
 
 	reference operator*() const
 		{	// return designated object
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr < ((_Myvec *)this->_Getcont())->_Myfirst
-			|| ((_Myvec *)this->_Getcont())->_Mylast <= this->_Ptr)
+		const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+		if (_Mycont == 0
+			|| _Ptr == _Tptr()
+			|| _Ptr < _Mycont->_Myfirst
+			|| _Mycont->_Mylast <= _Ptr)
 			{	// report error
 			_DEBUG_ERROR("vector iterator not dereferencable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			this->_Ptr != _Tptr()
-			&& ((_Myvec *)this->_Getcont())->_Myfirst <= this->_Ptr
-			&& this->_Ptr < ((_Myvec *)this->_Getcont())->_Mylast);
+		_SCL_SECURE_VALIDATE(_Ptr != _Tptr());
+		const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myfirst <= _Ptr && _Ptr < _Mycont->_Mylast);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		_Analysis_assume_(this->_Ptr != _Tptr());
+		_Analysis_assume_(_Ptr != _Tptr());
 
-		return (*this->_Ptr);
+		return (*_Ptr);
 		}
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| ((_Myvec *)this->_Getcont())->_Mylast <= this->_Ptr)
+		const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+		if (_Mycont == 0
+			|| _Ptr == nullptr_t{}
+			|| _Mycont->_Mylast <= _Ptr)
 			{	// report error
 			_DEBUG_ERROR("vector iterator not incrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			this->_Ptr != _Tptr()
-			&& this->_Ptr < ((_Myvec *)this->_Getcont())->_Mylast);
+		_SCL_SECURE_VALIDATE(_Ptr != _Tptr());
+		const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Ptr < _Mycont->_Mylast);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		++this->_Ptr;
+		++_Ptr;
 		return (*this);
 		}
 
@@ -123,22 +124,23 @@ public:
 	_Myiter& operator--()
 		{	// predecrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr <= ((_Myvec *)this->_Getcont())->_Myfirst)
+		const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+		if (_Mycont == 0
+			|| _Ptr == nullptr_t{}
+			|| _Ptr <= _Mycont->_Myfirst)
 			{	// report error
 			_DEBUG_ERROR("vector iterator not decrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			this->_Ptr != _Tptr()
-			&& ((_Myvec *)this->_Getcont())->_Myfirst < this->_Ptr);
+		_SCL_SECURE_VALIDATE(_Ptr != _Tptr());
+		const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myfirst < _Ptr);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
-		--this->_Ptr;
+		--_Ptr;
 		return (*this);
 		}
 
@@ -152,19 +154,26 @@ public:
 	_Myiter& operator+=(difference_type _Off)
 		{	// increment by integer
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr + _Off < ((_Myvec *)this->_Getcont())->_Myfirst
-			|| ((_Myvec *)this->_Getcont())->_Mylast < this->_Ptr + _Off)
-			{	// report error
-			_DEBUG_ERROR("vector iterator + offset out of range");
-			_SCL_SECURE_OUT_OF_RANGE;
+		if (_Off != 0)
+			{
+			const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+			if (_Mycont == 0
+				|| _Ptr + _Off < _Mycont->_Myfirst
+				|| _Mycont->_Mylast < _Ptr + _Off)
+				{
+				_DEBUG_ERROR("vector iterator + offset out of range");
+				_SCL_SECURE_OUT_OF_RANGE;
+				}
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
-		_SCL_SECURE_VALIDATE_RANGE(
-			((_Myvec *)this->_Getcont())->_Myfirst <= this->_Ptr + _Off
-			&& this->_Ptr + _Off <= ((_Myvec *)this->_Getcont())->_Mylast);
+		if (_Off != 0)
+			{
+			const auto _Mycont = static_cast<const _Myvec *>(this->_Getcont());
+			_SCL_SECURE_VALIDATE(_Mycont != 0);
+			_SCL_SECURE_VALIDATE_RANGE(_Mycont->_Myfirst <= _Ptr + _Off
+				&& _Ptr + _Off <= _Mycont->_Mylast);
+			}
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		_Ptr += _Off;
@@ -191,7 +200,7 @@ public:
 	difference_type operator-(const _Myiter& _Right) const
 		{	// return difference of iterators
 		_Compat(_Right);
-		return (this->_Ptr - _Right._Ptr);
+		return (_Ptr - _Right._Ptr);
 		}
 
 	reference operator[](difference_type _Off) const
@@ -201,9 +210,8 @@ public:
 
 	bool operator==(const _Myiter& _Right) const
 		{	// test for iterator equality
-		if (this->_Getcont() != _Right._Getcont())
-			_Compat(_Right);
-		return (this->_Ptr == _Right._Ptr);
+		_Compat(_Right);
+		return (_Ptr == _Right._Ptr);
 		}
 
 	bool operator!=(const _Myiter& _Right) const
@@ -214,7 +222,7 @@ public:
 	bool operator<(const _Myiter& _Right) const
 		{	// test if this < _Right
 		_Compat(_Right);
-		return (this->_Ptr < _Right._Ptr);
+		return (_Ptr < _Right._Ptr);
 		}
 
 	bool operator>(const _Myiter& _Right) const
@@ -235,9 +243,8 @@ public:
  #if _ITERATOR_DEBUG_LEVEL == 2
 	void _Compat(const _Myiter& _Right) const
 		{	// test for compatible iterator pair
-		if (this->_Getcont() == 0
-			|| this->_Getcont() != _Right._Getcont())
-			{	// report error
+		if (this->_Getcont() != _Right._Getcont())
+			{
 			_DEBUG_ERROR("vector iterators incompatible");
 			_SCL_SECURE_INVALID_ARGUMENT;
 			}
@@ -246,7 +253,6 @@ public:
  #elif _ITERATOR_DEBUG_LEVEL == 1
 	void _Compat(const _Myiter& _Right) const
 		{	// test for compatible iterator pair
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
 		_SCL_SECURE_VALIDATE_RANGE(this->_Getcont() == _Right._Getcont());
 		}
 
@@ -317,7 +323,7 @@ public:
 
 	_Unchecked_type _Unchecked() const
 		{	// make an unchecked iterator
-		return (_Unchecked_type(this->_Ptr));
+		return (this->_Ptr);
 		}
 
 	reference operator*() const
@@ -327,7 +333,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -476,10 +482,10 @@ public:
 	typedef _Vector_const_iterator<_Myt> const_iterator;
 
 	_Vector_val()
+		: _Myfirst(),
+		_Mylast(),
+		_Myend()
 		{	// initialize values
-		_Myfirst = pointer();
-		_Mylast = pointer();
-		_Myend = pointer();
 		}
 
 	pointer _Myfirst;	// pointer to beginning of array
@@ -509,13 +515,16 @@ public:
 	typedef _Vector_const_iterator<_Vector_val<_Val_types> > const_iterator;
 
  #if _ITERATOR_DEBUG_LEVEL == 0
-	_Vector_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct allocator from _Al
+	_Vector_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
 		}
 
-	_Vector_alloc(_Alloc&& _Al)
-		: _Mypair(_One_then_variadic_args_t(), _STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_Vector_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct allocator from _Al
 		}
 
@@ -529,20 +538,18 @@ public:
 		_Pocma(_Getal(), _Al);
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-	_Vector_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct allocator from _Al
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	_Vector_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
 		_Alloc_proxy();
 		}
 
-	_Vector_alloc(_Alloc&& _Al)
-		: _Mypair(_One_then_variadic_args_t(), _STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_Vector_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct allocator from _Al
 		_Alloc_proxy();
 		}
@@ -566,17 +573,11 @@ public:
 		_Alloc_proxy();
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		_Swap_adl(_Myproxy(), _Right._Myproxy());
-		}
-
 	void _Alloc_proxy()
 		{	// construct proxy
 		typename _Alty::template rebind<_Container_proxy>::other
 			_Alproxy(_Getal());
-		_Myproxy() = _Alproxy.allocate(1);
+		_Myproxy() = _Unfancy(_Alproxy.allocate(1));
 		_Alproxy.construct(_Myproxy(), _Container_proxy());
 		_Myproxy()->_Mycont = &_Get_data();
 		}
@@ -587,7 +588,7 @@ public:
 			_Alproxy(_Getal());
 		_Orphan_all();
 		_Alproxy.destroy(_Myproxy());
-		_Alproxy.deallocate(_Myproxy(), 1);
+		_Alproxy.deallocate(_Alproxy.address(*_Myproxy()), 1);
 		_Myproxy() = 0;
 		}
 
@@ -701,7 +702,7 @@ public:
 	typedef _STD reverse_iterator<iterator> reverse_iterator;
 	typedef _STD reverse_iterator<const_iterator> const_reverse_iterator;
 
-	vector() _NOEXCEPT
+	vector() _NOEXCEPT_OP(is_nothrow_default_constructible<_Alloc>::value)
 		: _Mybase()
 		{	// construct empty vector
 		}
@@ -789,7 +790,7 @@ public:
 	template<class _Iter>
 		void _Construct(_Iter _First, _Iter _Last)
 		{	// initialize with [_First, _Last)
-		_Construct(_First, _Last, _Iter_cat(_First));
+		_Construct(_First, _Last, _Iter_cat_t<_Iter>());
 		}
 
 	template<class _Iter>
@@ -895,11 +896,11 @@ public:
 		{	// insert by moving into element at end
 		if (_Inside(_STD addressof(_Val)))
 			{	// push back an element
-			size_type _Idx = _STD addressof(_Val) - this->_Myfirst();
+			size_type _Idx = _STD addressof(_Val) - _Unfancy(this->_Myfirst());
 			if (this->_Mylast() == this->_Myend())
 				_Reserve(1);
 			_Orphan_range(this->_Mylast(), this->_Mylast());
-			this->_Getal().construct(this->_Mylast(),
+			this->_Getal().construct(_Unfancy(this->_Mylast()),
 				_STD forward<value_type>(this->_Myfirst()[_Idx]));
 			++this->_Mylast();
 			}
@@ -908,7 +909,7 @@ public:
 			if (this->_Mylast() == this->_Myend())
 				_Reserve(1);
 			_Orphan_range(this->_Mylast(), this->_Mylast());
-			this->_Getal().construct(this->_Mylast(),
+			this->_Getal().construct(_Unfancy(this->_Mylast()),
 				_STD forward<value_type>(_Val));
 			++this->_Mylast();
 			}
@@ -925,7 +926,7 @@ public:
 		if (this->_Mylast() == this->_Myend())
 			_Reserve(1);
 		_Orphan_range(this->_Mylast(), this->_Mylast());
-		this->_Getal().construct(this->_Mylast(),
+		this->_Getal().construct(_Unfancy(this->_Mylast()),
 			_STD forward<_Valty>(_Val)...);
 		++this->_Mylast();
 		}
@@ -992,7 +993,7 @@ public:
 				clear();	// new sequence empty, erase existing sequence
 			else if (_Right.size() <= size())
 				{	// enough elements, copy new and destroy old
-				pointer _Ptr = _Copy_impl(_Right._Myfirst(),
+				pointer _Ptr = _Copy_unchecked(_Right._Myfirst(),
 					_Right._Mylast(), this->_Myfirst());	// copy new
 				_Destroy(_Ptr, this->_Mylast());	// destroy old
 				this->_Mylast() = this->_Myfirst() + _Right.size();
@@ -1000,7 +1001,7 @@ public:
 			else if (_Right.size() <= capacity())
 				{	// enough room, copy and construct new
 				pointer _Ptr = _Right._Myfirst() + size();
-				_Copy_impl(_Right._Myfirst(),
+				_Copy_unchecked(_Right._Myfirst(),
 					_Ptr, this->_Myfirst());
 				this->_Mylast() = _Ucopy(_Ptr, _Right._Mylast(),
 					this->_Mylast());
@@ -1031,8 +1032,8 @@ public:
 		{	// determine new minimum length of allocated storage
 		if (capacity() < _Count)
 			{	// something to do, check and reallocate
-			//if (max_size() < _Count)
-			//	_Xlen();
+			if (max_size() < _Count)
+				_Xlen();
 			_Reallocate(_Count);
 			}
 		}
@@ -1157,9 +1158,9 @@ public:
 			if (_Inside(_Ptr))
 				{	// padding is inside vector, recompute _Ptr after reserve
 				const difference_type _Idx = _Ptr
-					- _STD addressof(*this->_Myfirst());
+					- _Unfancy(this->_Myfirst());
 				_Reserve(_Newsize - size());
-				_Ptr = _STD addressof(*this->_Myfirst()) + _Idx;
+				_Ptr = _Unfancy(this->_Myfirst()) + _Idx;
 				}
 			else
 				_Reserve(_Newsize - size());
@@ -1191,7 +1192,8 @@ public:
 
 	_Alloc get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (this->_Getal());
+		_Alloc _Ret(this->_Getal());
+		return (_Ret);
 		}
 
 	const_reference at(size_type _Pos) const
@@ -1240,14 +1242,14 @@ public:
 		return (*(this->_Myfirst() + _Pos));
 		}
 
-	pointer data() _NOEXCEPT
+	_Ty * data() _NOEXCEPT
 		{	// return address of first element
-		return (this->_Myfirst());
+		return (_Unfancy(this->_Myfirst()));
 		}
 
-	const_pointer data() const _NOEXCEPT
+	const _Ty * data() const _NOEXCEPT
 		{	// return address of first element
-		return (this->_Myfirst());
+		return (_Unfancy(this->_Myfirst()));
 		}
 
 	reference front()
@@ -1274,11 +1276,11 @@ public:
 		{	// insert element at end
 		if (_Inside(_STD addressof(_Val)))
 			{	// push back an element
-			size_type _Idx = _STD addressof(_Val) - this->_Myfirst();
+			size_type _Idx = _STD addressof(_Val) - _Unfancy(this->_Myfirst());
 			if (this->_Mylast() == this->_Myend())
 				_Reserve(1);
 			_Orphan_range(this->_Mylast(), this->_Mylast());
-			this->_Getal().construct(this->_Mylast(),
+			this->_Getal().construct(_Unfancy(this->_Mylast()),
 				this->_Myfirst()[_Idx]);
 			++this->_Mylast();
 			}
@@ -1287,7 +1289,7 @@ public:
 			if (this->_Mylast() == this->_Myend())
 				_Reserve(1);
 			_Orphan_range(this->_Mylast(), this->_Mylast());
-			this->_Getal().construct(this->_Mylast(),
+			this->_Getal().construct(_Unfancy(this->_Mylast()),
 				_Val);
 			++this->_Mylast();
 			}
@@ -1301,7 +1303,7 @@ public:
 		else
 			{	// erase last element
 			_Orphan_range(this->_Mylast() - 1, this->_Mylast());
-			this->_Getal().destroy(this->_Mylast() - 1);
+			this->_Getal().destroy(_Unfancy(this->_Mylast() - 1));
 			--this->_Mylast();
 			}
 		}
@@ -1309,7 +1311,7 @@ public:
  #else /* _ITERATOR_DEBUG_LEVEL == 2 */
 	void pop_back()
 		{	// erase element at end
-		this->_Getal().destroy(this->_Mylast() - 1);
+		this->_Getal().destroy(_Unfancy(this->_Mylast() - 1));
 		--this->_Mylast();
 		}
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
@@ -1320,7 +1322,7 @@ public:
 		assign(_Iter _First, _Iter _Last)
 		{	// assign [_First, _Last)
 		clear();
-		_Assign(_First, _Last, _Iter_cat(_First));
+		_Assign(_First, _Last, _Iter_cat_t<_Iter>());
 		}
 
 	template<class _Iter>
@@ -1370,7 +1372,7 @@ public:
 		insert(const_iterator _Where, _Iter _First, _Iter _Last)
 		{	// insert [_First, _Last) at _Where
 		size_type _Off = _VIPTR(_Where) - this->_Myfirst();
-		_Insert(_Where, _First, _Last, _Iter_cat(_First));
+		_Insert(_Where, _First, _Last, _Iter_cat_t<_Iter>());
 		return (begin() + _Off);
 		}
 
@@ -1416,15 +1418,13 @@ public:
 		_DEBUG_RANGE(_First, _Last);
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 
-		size_type _Count = 0;
-		_Distance(_First, _Last, _Count);
-
+		size_type _Count = _STD distance(_First, _Last);
 		if (_Count == 0)
 			;
 		else if (_Unused_capacity() < _Count)
 			{	// not enough room, reallocate
-			//if (max_size() - size() < _Count)
-			//	_Xlen();	// result too long
+			if (max_size() - size() < _Count)
+				_Xlen();	// result too long
 
 			size_type _Capacity = _Grow_to(size() + _Count);
 			pointer _Newvec = this->_Getal().allocate(_Capacity);
@@ -1472,7 +1472,7 @@ public:
 			|| _VIPTR(_Where) < this->_Myfirst()
 			|| this->_Mylast() <= _VIPTR(_Where))
 			_DEBUG_ERROR("vector erase iterator outside range");
-		_Move(_VIPTR(_Where) + 1, this->_Mylast(), _VIPTR(_Where));
+		_Move_unchecked(_VIPTR(_Where) + 1, this->_Mylast(), _VIPTR(_Where));
 		_Destroy(this->_Mylast() - 1, this->_Mylast());
 		_Orphan_range(_VIPTR(_Where), this->_Mylast());
 		--this->_Mylast();
@@ -1482,7 +1482,7 @@ public:
  #else /* _ITERATOR_DEBUG_LEVEL == 2 */
 	iterator erase(const_iterator _Where)
 		{	// erase element at where
-		_Move(_VIPTR(_Where) + 1, this->_Mylast(),
+		_Move_unchecked(_VIPTR(_Where) + 1, this->_Mylast(),
 			_VIPTR(_Where));
 		_Destroy(this->_Mylast() - 1, this->_Mylast());
 		--this->_Mylast();
@@ -1507,12 +1507,12 @@ public:
 					|| _VIPTR(_First) < this->_Myfirst()
 					|| this->_Mylast() < _VIPTR(_Last))
 					_DEBUG_ERROR("vector erase iterator outside range");
-				pointer _Ptr = _Move(_VIPTR(_Last), this->_Mylast(),
+				pointer _Ptr = _Move_unchecked(_VIPTR(_Last), this->_Mylast(),
 					_VIPTR(_First));
 				_Orphan_range(_VIPTR(_First), this->_Mylast());
 
  #else /* _ITERATOR_DEBUG_LEVEL == 2 */
-				pointer _Ptr = _Move(_VIPTR(_Last), this->_Mylast(),
+				pointer _Ptr = _Move_unchecked(_VIPTR(_Last), this->_Mylast(),
 					_VIPTR(_First));
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 
@@ -1546,32 +1546,13 @@ public:
 		_NOEXCEPT_OP(_Alty::propagate_on_container_swap::value
 			|| _Alty::is_always_equal::value)
 		{	// exchange contents with _Right
-		if (this == &_Right)
-			;	// same object, do nothing
-		else if (this->_Getal() == _Right._Getal())
-			{	// same allocator, swap control information
+		if (this != &_Right)
+			{	// (maybe) swap allocators, swap control information
+			_Pocs(this->_Getal(), _Right._Getal());
 			this->_Swap_all(_Right);
 			_Swap_adl(this->_Myfirst(), _Right._Myfirst());
 			_Swap_adl(this->_Mylast(), _Right._Mylast());
 			_Swap_adl(this->_Myend(), _Right._Myend());
-			}
-
-		else if (_Alty::propagate_on_container_swap::value)
-			{	// swap allocators and control information
-			this->_Swap_alloc(_Right);
-			_Swap_adl(this->_Myfirst(), _Right._Myfirst());
-			_Swap_adl(this->_Mylast(), _Right._Mylast());
-			_Swap_adl(this->_Myend(), _Right._Myend());
-			}
-
-		else
-			{	// containers are incompatible
- #if _ITERATOR_DEBUG_LEVEL == 2
-			_DEBUG_ERROR("vector containers incompatible for swap");
-
- #else /* ITERATOR_DEBUG_LEVEL == 2 */
-			_XSTD terminate();
- #endif /* ITERATOR_DEBUG_LEVEL == 2 */
 			}
 		}
 
@@ -1584,8 +1565,8 @@ protected:
 
 		if (_Capacity == 0)
 			return (false);
-		//else if (max_size() < _Capacity)
-		//	_Xlen();	// result too long
+		else if (max_size() < _Capacity)
+			_Xlen();	// result too long
 		else
 			{	// nonempty array, allocate storage
 			this->_Myfirst() = this->_Getal().allocate(_Capacity);
@@ -1613,7 +1594,7 @@ protected:
 
 	bool _Inside(const value_type *_Ptr) const
 		{	// test if _Ptr points inside vector
-		return (_Ptr < this->_Mylast() && this->_Myfirst() <= _Ptr);
+		return (_Ptr < _Unfancy(this->_Mylast()) && _Unfancy(this->_Myfirst()) <= _Ptr);
 		}
 
 	void _Reallocate(size_type _Count)
@@ -1645,8 +1626,8 @@ protected:
 		{	// ensure room for _Count new elements, grow exponentially
 		if (_Unused_capacity() < _Count)
 			{	// need more room, try to get it
-			//if (max_size() - size() < _Count)
-			//	_Xlen();
+			if (max_size() - size() < _Count)
+				_Xlen();
 			_Reallocate(_Grow_to(size() + _Count));
 			}
 		}
@@ -1694,8 +1675,8 @@ protected:
 			;
 		else if (_Unused_capacity() < _Count)
 			{	// not enough room, reallocate
-			//if (max_size() - size() < _Count)
-			//	_Xlen();	// result too long
+			if (max_size() - size() < _Count)
+				_Xlen();	// result too long
 
 			size_type _Capacity = _Grow_to(size() + _Count);
 			pointer _Newvec = this->_Getal().allocate(_Capacity);
@@ -1765,7 +1746,7 @@ protected:
 				this->_Mylast());	// copy suffix
 
 			_Orphan_range(_VIPTR(_Where), this->_Mylast());
-			_Move_backward(_VIPTR(_Where), _Oldend - _Count,
+			_Move_backward_unchecked(_VIPTR(_Where), _Oldend - _Count,
 				_Oldend);	// copy hole
 			_STD fill(_VIPTR(_Where),
 				_VIPTR(_Where) + _Count, _Tmp);	// insert into hole
@@ -1779,15 +1760,15 @@ protected:
 		return (_Ptr + _Count);
 		}
 
-	//__declspec(noreturn) void _Xlen() const
-	//	{	// report a length_error
-	//	_Xlength_error("vector<T> too long");
-	//	}
+	[[noreturn]] void _Xlen() const
+		{	// report a length_error
+		_Xlength_error("vector<T> too long");
+		}
 
-	//__declspec(noreturn) void _Xran() const
-	//	{	// report an out_of_range error
-	//	_Xout_of_range("invalid vector<T> subscript");
-	//	}
+	[[noreturn]] void _Xran() const
+		{	// report an out_of_range error
+		_Xout_of_range("invalid vector<T> subscript");
+		}
 
  #if _VECTOR_ORPHAN_RANGE
 	void _Orphan_range(pointer _First, pointer _Last) const
@@ -1916,15 +1897,15 @@ public:
 	int _Valid(_Sizet _Inc) const
 		{	// test for valid incremented offset
  #if _ITERATOR_DEBUG_LEVEL == 2
-		_Sizet _Mysize = ((_Mycont *)this->_Getcont())->_Mysize;
+		const auto _Cont = static_cast<const _Mycont *>(this->_Getcont());
+		_Sizet _Mysize = _Cont->_Mysize;
 
 		_Inc += _Myoff;
-		_Inc += _VBITS * (_Myptr
-			- (((_Mycont *)this->_Getcont())->_Myvec)._Myfirst());
+		_Inc += _VBITS * (_Myptr - _Cont->_Myvec.data());
 		return (_Inc < _Mysize ? -1 : _Inc == _Mysize ? 0 : +1);
 
  #else /* _ITERATOR_DEBUG_LEVEL == 2 */
-
+		(void) _Inc;
 		return (-1);
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 		}
@@ -2119,8 +2100,7 @@ public:
 
 	bool operator==(const _Mytype& _Right) const
 		{	// test for iterator equality
-		if (this->_Getcont() != _Right._Getcont())
-			_Compat(_Right);
+		_Compat(_Right);
 		return (this->_Myptr == _Right._Myptr
 			&& this->_Myoff == _Right._Myoff);
 		}
@@ -2156,15 +2136,13 @@ public:
  #if _ITERATOR_DEBUG_LEVEL == 2
 	void _Compat(const _Mytype& _Right) const
 		{	// test for compatible iterator pair
-		if (this->_Getcont() == 0
-			|| this->_Getcont() != _Right._Getcont())
+		if (this->_Getcont() != _Right._Getcont())
 			_DEBUG_ERROR("vector<bool> iterators incompatible");
 		}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
 	void _Compat(const _Mytype& _Right) const
 		{	// test for compatible iterator pair
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0);
 		_SCL_SECURE_VALIDATE_RANGE(this->_Getcont() == _Right._Getcont());
 		}
 
@@ -2351,7 +2329,14 @@ public:
 	typedef typename _Vectype::_Alty _Alty;
 	typedef typename _Alty::size_type size_type;
 
-	_Vb_val(size_type _Count, const bool& _Val, const _Alloc& _Al = _Alloc())
+	_Vb_val(size_type _Count, const bool& _Val)
+		: _Myvec(_Nw(_Count), (_Vbase) (_Val ? -1 : 0))
+		{	// construct _Count * _Val elements
+		_Alloc_proxy();
+		_Mysize = 0;
+		}
+
+	_Vb_val(size_type _Count, const bool& _Val, const _Alloc& _Al)
 		: _Myvec(_Nw(_Count), (_Vbase)(_Val ? -1 : 0), _Al)
 		{	// construct _Count * _Val elements with allocator _Al
 		_Alloc_proxy();
@@ -2394,10 +2379,6 @@ public:
 		}
 
  #if _ITERATOR_DEBUG_LEVEL == 0
-	void _Swap_alloc(_Vb_val&)
-		{	// do nothing
-		}
-
 	void _Alloc_proxy()
 		{	// do nothing
 		}
@@ -2407,16 +2388,11 @@ public:
 		}
 
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-	void _Swap_alloc(_Vb_val& _Right)
-		{	// swap proxies to follow allocators in vector
-		_Swap_adl(this->_Myproxy, _Right._Myproxy);
-		}
-
 	void _Alloc_proxy()
 		{	// allocate a proxy
 		typename _Alty::template rebind<_Container_proxy>::other
-			_Alproxy(_Myvec.get_allocator());
-		this->_Myproxy = _Alproxy.allocate(1);
+			_Alproxy(_Myvec._Getal());
+		this->_Myproxy = _Unfancy(_Alproxy.allocate(1));
 		_Alproxy.construct(this->_Myproxy, _Container_proxy());
 		this->_Myproxy->_Mycont = this;
 		}
@@ -2424,10 +2400,10 @@ public:
 	void _Free_proxy()
 		{	// destroy proxy
 		typename _Alty::template rebind<_Container_proxy>::other
-			_Alproxy(_Myvec.get_allocator());
+			_Alproxy(_Myvec._Getal());
 		this->_Orphan_all();
 		_Alproxy.destroy(this->_Myproxy);
-		_Alproxy.deallocate(this->_Myproxy, 1);
+		_Alproxy.deallocate(_Alproxy.address(*this->_Myproxy), 1);
 		this->_Myproxy = 0;
 		}
  #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
@@ -2615,12 +2591,12 @@ public:
 
 	iterator begin() _NOEXCEPT
 		{	// return iterator for beginning of mutable sequence
-		return (iterator((_Vbase *)this->_Myvec._Myfirst(), this));
+		return (iterator(this->_Myvec.data(), this));
 		}
 
 	const_iterator begin() const _NOEXCEPT
 		{	// return iterator for beginning of nonmutable sequence
-		return (const_iterator((_Vbase *)this->_Myvec._Myfirst(), this));
+		return (const_iterator(this->_Myvec.data(), this));
 		}
 
 	iterator end() _NOEXCEPT
@@ -2723,7 +2699,8 @@ public:
 
 	_Alloc get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (this->_Myvec.get_allocator());
+		_Alloc _Ret(this->_Myvec.get_allocator());
+		return (_Ret);
 		}
 
 	const_reference at(size_type _Off) const
@@ -2816,7 +2793,7 @@ public:
 		insert(const_iterator _Where, _Iter _First, _Iter _Last)
 		{	// insert [_First, _Last) at _Where
 		size_type _Off = _Where - begin();
-		_Insert(_Where, _First, _Last, _Iter_cat(_First));
+		_Insert(_Where, _First, _Last, _Iter_cat_t<_Iter>());
 		return (begin() + _Off);
 		}
 
@@ -2837,9 +2814,7 @@ public:
 			forward_iterator_tag)
 		{	// insert [_First, _Last) at _Where, forward iterators
 		_DEBUG_RANGE(_First, _Last);
-		size_type _Count = 0;
-		_Distance(_First, _Last, _Count);
-
+		size_type _Count = _STD distance(_First, _Last);
 		size_type _Off = _Insert_x(_Where, _Count);
 		_STD copy(_First, _Last, begin() + _Off);
 		}
@@ -2902,31 +2877,12 @@ public:
 		}
 
 	void swap(_Myt& _Right)
-		{	// exchange contents with right
-		if (this == &_Right)
-			;	// same object, do nothing
-		else if (this->get_allocator() == _Right.get_allocator())
-			{	// same allocator, swap control information
+		{	// exchange contents with _Right
+		if (this != &_Right)
+			{	// (maybe) swap allocators, swap control information
 			this->_Swap_all(_Right);
 			this->_Myvec.swap(_Right._Myvec);
 			_STD swap(this->_Mysize, _Right._Mysize);
-			}
-
-		else if (_Alty::propagate_on_container_swap::value)
-			{	// swap allocators and control information
-			this->_Swap_alloc(_Right);
-			this->_Myvec.swap(_Right._Myvec);
-			_STD swap(this->_Mysize, _Right._Mysize);
-			}
-
-		else
-			{	// containers are incompatible
- #if _ITERATOR_DEBUG_LEVEL == 2
-			_DEBUG_ERROR("vector<bool> containers incompatible for swap");
-
- #else /* ITERATOR_DEBUG_LEVEL == 2 */
-			_XSTD terminate();
- #endif /* ITERATOR_DEBUG_LEVEL == 2 */
 			}
 		}
 
@@ -2964,8 +2920,8 @@ public:
 
 		if (_Count == 0)
 			;
-		//else if (max_size() - size() < _Count)
-		//	_Xlen();	// result too long
+		else if (max_size() - size() < _Count)
+			_Xlen();	// result too long
 		else
 			{	// worth doing
 			this->_Myvec.resize(this->_Nw(size() + _Count), 0);
@@ -2991,7 +2947,7 @@ public:
 		typedef _Vb_iter_base<_Alty> _Myiterbase;
 
 		_Lockit _Lock(_LOCK_DEBUG);
-		_Vbase *_Base = (_Vbase *)this->_Myvec._Myfirst();
+		auto _Base = const_cast<_Vbase *>(this->_Myvec.data());
 
 		const_iterator **_Pnext = (const_iterator **)this->_Getpfirst();
 		if (_Pnext != 0)
@@ -3017,8 +2973,8 @@ public:
 
 	void _Trim(size_type _Size)
 		{	// trim base vector to exact length in bits
-		//if (max_size() < _Size)
-		//	_Xlen();	// result too long
+		if (max_size() < _Size)
+			_Xlen();	// result too long
 		size_type _Words = this->_Nw(_Size);
 
 		if (_Words < this->_Myvec.size())
@@ -3030,15 +2986,15 @@ public:
 			this->_Myvec[_Words - 1] &= ((_Vbase)(1) << _Size) - 1;
 		}
 
-	//__declspec(noreturn) void _Xlen() const
-	//	{	// report a length_error
-	//	_Xlength_error("vector<bool> too long");
-	//	}
+	[[noreturn]] void _Xlen() const
+		{	// report a length_error
+		_Xlength_error("vector<bool> too long");
+		}
 
-	//__declspec(noreturn) void _Xran() const
-	//	{	// report an out_of_range error
-	//	_Xout_of_range("invalid vector<bool> subscript");
-	//	}
+	[[noreturn]] void _Xran() const
+		{	// report an out_of_range error
+		_Xout_of_range("invalid vector<bool> subscript");
+		}
 	};
 
 template<class _Alloc> inline

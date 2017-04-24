@@ -631,9 +631,9 @@ inline _Success_(return != false) bool CTime::GetAsSystemTime(_Out_ SYSTEMTIME& 
 	struct tm* ptm;
 
 	ptm = GetLocalTm(&ttm);
-	if(!ptm) 
-	{ 
-		return false; 
+	if(!ptm)
+	{
+		return false;
 	}
 
 	timeDest.wYear = (WORD) (1900 + ptm->tm_year);
@@ -653,7 +653,7 @@ inline __time64_t CTime::GetTime() const throw()
 	return( m_time );
 }
 
-inline int CTime::GetYear() const
+inline int CTime::GetYear() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;
@@ -662,7 +662,7 @@ inline int CTime::GetYear() const
 	return ptm ? (ptm->tm_year) + 1900 : 0 ;
 }
 
-inline int CTime::GetMonth() const
+inline int CTime::GetMonth() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;
@@ -671,7 +671,7 @@ inline int CTime::GetMonth() const
 	return ptm ? ptm->tm_mon + 1 : 0;
 }
 
-inline int CTime::GetDay() const
+inline int CTime::GetDay() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;
@@ -680,7 +680,7 @@ inline int CTime::GetDay() const
 	return ptm ? ptm->tm_mday : 0 ;
 }
 
-inline int CTime::GetHour() const
+inline int CTime::GetHour() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;
@@ -689,7 +689,7 @@ inline int CTime::GetHour() const
 	return ptm ? ptm->tm_hour : -1 ;
 }
 
-inline int CTime::GetMinute() const
+inline int CTime::GetMinute() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;
@@ -698,7 +698,7 @@ inline int CTime::GetMinute() const
 	return ptm ? ptm->tm_min : -1 ;
 }
 
-inline int CTime::GetSecond() const
+inline int CTime::GetSecond() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;
@@ -707,7 +707,7 @@ inline int CTime::GetSecond() const
 	return ptm ? ptm->tm_sec : -1 ;
 }
 
-inline int CTime::GetDayOfWeek() const
+inline int CTime::GetDayOfWeek() const throw()
 {
 	struct tm ttm;
 	struct tm * ptm;

@@ -54,9 +54,7 @@
 #endif  /* NDEBUG */
 #endif  /* _VEC_ASSERT */
 
-#ifdef _MSC_VER
 #pragma pack(push,_CRT_PACKING)
-#endif  /* _MSC_VER */
 
 /* Define _ENABLE_VEC_DEBUG to enable std::ostream inserters for debug output */
 #if defined (_ENABLE_VEC_DEBUG)
@@ -105,7 +103,7 @@ class I128vec1;         /* 1 element, a __m128i data type */
 #pragma warning(disable : 4640)
 inline const __m128i get_mask128()
 {
-    static const __m128i _Mask128 = _mm_set1_epi64(M64(0xffffffffffffffffi64));
+    static const __m128i _Mask128 = _mm_set1_epi64x(0xffffffffffffffffi64);
     return _Mask128;
 }
 #pragma warning(pop)
@@ -1620,9 +1618,7 @@ inline F32vec4 F64vec4ToF32vec8(const F64vec4 &_A){
 #undef DVEC_DEFINE_OUTPUT_OPERATORS
 #undef DVEC_STD
 
-#ifdef _MSC_VER
 #pragma pack(pop)
-#endif  /* _MSC_VER */
 
 #endif  /* defined (_M_CEE_PURE) */
 

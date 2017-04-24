@@ -25,8 +25,6 @@
 
  #pragma warning(disable: 4521 4522 4800)
 
-#define __STDCPP_THR__	1	/* nonzero if threads supported */
-
 _STD_BEGIN
 class thread
 	{	// class for observing and managing threads
@@ -97,8 +95,7 @@ public:
 
 	static unsigned int hardware_concurrency() _NOEXCEPT
 		{	// return number of hardware thread contexts
-		static const unsigned int _Cnt = _Thrd_hardware_concurrency();
-		return (_Cnt);
+		return (_Thrd_hardware_concurrency());
 		}
 
 	native_handle_type native_handle()
@@ -132,25 +129,20 @@ inline void sleep_until(const stdext::threads::xtime *_Abs_time)
 	_Thrd_sleep(_Abs_time);
 	}
 
-template<class _Clock,
-	class _Duration> inline
-	void sleep_until(
-		const chrono::time_point<_Clock, _Duration>& _Abs_time)
-	{	// sleep until time point
-	stdext::threads::xtime _Tgt;
-	_Tgt.sec = chrono::duration_cast<chrono::seconds>(
-		_Abs_time.time_since_epoch()).count();
-	_Tgt.nsec = (long)chrono::duration_cast<chrono::nanoseconds>(
-		_Abs_time.time_since_epoch() - chrono::seconds(_Tgt.sec)).count();
-	sleep_until(&_Tgt);
-	}
-
 template<class _Rep,
 	class _Period> inline
 	void sleep_for(const chrono::duration<_Rep, _Period>& _Rel_time)
 	{	// sleep for duration
 	stdext::threads::xtime _Tgt = _To_xtime(_Rel_time);
-	sleep_until(&_Tgt);
+	this_thread::sleep_until(&_Tgt);
+	}
+
+template<class _Clock,
+	class _Duration> inline
+	void sleep_until(
+		const chrono::time_point<_Clock, _Duration>& _Abs_time)
+	{	// sleep until time point
+	this_thread::sleep_for(_Abs_time.time_since_epoch() - _Clock::now().time_since_epoch());
 	}
 	}	// namespace this_thread
 
@@ -194,7 +186,8 @@ inline void thread::join()
 	{	// join thread
 	if (!joinable())
 		_Throw_Cpp_error(_INVALID_ARGUMENT);
-	if (_Thr_is_null(_Thr))
+	const bool _Is_null = _Thr_is_null(_Thr);	// Avoid Clang -Wparentheses-equality
+	if (_Is_null)
 		_Throw_Cpp_error(_INVALID_ARGUMENT);
 	if (get_id() == _STD this_thread::get_id())
 		_Throw_Cpp_error(_RESOURCE_DEADLOCK_WOULD_OCCUR);

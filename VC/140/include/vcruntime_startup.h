@@ -8,7 +8,6 @@
 #pragma once
 
 #include <vcruntime.h>
-#include <stdbool.h>
 
 _CRT_BEGIN_C_HEADER
 
@@ -38,14 +37,14 @@ extern _crt_exit_return_mode __current_exit_return_mode;
 
 
 
-bool __cdecl __vcrt_initialize(void);
-bool __cdecl __vcrt_uninitialize(_In_ bool _Terminating);
-bool __cdecl __vcrt_uninitialize_critical(void);
-bool __cdecl __vcrt_thread_attach(void);
-bool __cdecl __vcrt_thread_detach(void);
+__vcrt_bool __cdecl __vcrt_initialize(void);
+__vcrt_bool __cdecl __vcrt_uninitialize(_In_ __vcrt_bool _Terminating);
+__vcrt_bool __cdecl __vcrt_uninitialize_critical(void);
+__vcrt_bool __cdecl __vcrt_thread_attach(void);
+__vcrt_bool __cdecl __vcrt_thread_detach(void);
 
 int __cdecl __isa_available_init(void);
-_crt_argv_mode __CRTDECL _get_startup_argv_mode(void); 
+_crt_argv_mode __CRTDECL _get_startup_argv_mode(void);
 
 
 

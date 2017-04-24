@@ -6,7 +6,7 @@
 * ==--==
 * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 *
-* taskscheduler.h
+* ppltaskscheduler.h
 *
 * Parallel Patterns Library - Internal threadpool
 *

@@ -2,6 +2,7 @@
 
 #if NDEBUG&&_DLL
 
+//关闭常用的pintf系列函数的内联操作，因为老版本没有__stdio_common_vswscanf系列函数
 #define _NO_CRT_STDIO_INLINE
 
 #include <corecrt.h>

@@ -301,6 +301,8 @@ unsigned __int64 _blci_u64(unsigned __int64);
 void _mm_monitorx(void const *, unsigned int, unsigned int);
 void _mm_mwaitx(unsigned int, unsigned int, unsigned int);
 
+void _mm_clzero(void const *);
+
 #if defined __cplusplus
 }; /* End "C" */
 #endif  /* defined __cplusplus */

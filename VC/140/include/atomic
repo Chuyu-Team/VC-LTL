@@ -262,7 +262,9 @@ inline void atomic_flag_clear_explicit(
 template<unsigned _Bytes>
 	struct _Atomic_impl
 	{	// struct for managing locks around operations on atomic types
-	_CONST_FUN _Atomic_impl() _NOEXCEPT
+	typedef _Uint1_t _My_int;	// "1 byte" means "no alignment required"
+
+	constexpr _Atomic_impl() _NOEXCEPT
 		: _My_flag(0)
 		{	// default constructor
 		}
@@ -500,7 +502,10 @@ template<class _Ty,
 	struct _Atomic_base
 		: _Atomic_impl<_Bytes>
 	{	// struct that defines most member functions of std::atomic
-	_CONST_FUN _Atomic_base(_Ty _Val) _NOEXCEPT
+	typedef _Atomic_impl<_Bytes> _Mybase;
+	typedef typename _Mybase::_My_int _My_int;
+
+	constexpr _Atomic_base(_Ty _Val) _NOEXCEPT
 		: _My_val(_Val)
 		{	// construct from _Val, initialization is not an atomic operation
 		}
@@ -512,15 +517,13 @@ template<class _Ty,
 
 	_Ty operator=(_Ty _Right) volatile _NOEXCEPT
 		{	// assign from _Right
-		this->_Exchange((void *)&_My_val, (void *)&_Right,
-			memory_order_seq_cst);
+		this->_Store((void *)&_My_val, &_Right, memory_order_seq_cst);
 		return (_Right);
 		}
 
 	_Ty operator=(_Ty _Right) _NOEXCEPT
 		{	// assign from _Right
-		this->_Exchange((void *)&_My_val, (void *)&_Right,
-			memory_order_seq_cst);
+		this->_Store((void *)&_My_val, &_Right, memory_order_seq_cst);
 		return (_Right);
 		}
 
@@ -646,7 +649,17 @@ template<class _Ty,
 			_Exp, _Value, _Order, _Get_memory_order(_Order)));
 		}
 
-	_Ty _My_val;
+#ifndef _ENABLE_ATOMIC_ALIGNMENT_FIX
+	static_assert(alignof(_Ty) >= sizeof(_My_int),
+		"You've instantiated std::atomic<T> with sizeof(T) equal to 2/4/8 and alignof(T) < sizeof(T). "
+		"Before VS 2015 Update 2, this would have misbehaved at runtime. "
+		"VS 2015 Update 2 was fixed to handle this correctly, "
+		"but the fix inherently changes layout and breaks binary compatibility. "
+		"Please define _ENABLE_ATOMIC_ALIGNMENT_FIX to acknowledge that you understand this, "
+		"and that everything you're linking has been compiled with VS 2015 Update 2 (or later).");
+#endif /* _ENABLE_ATOMIC_ALIGNMENT_FIX */
+
+	alignas(sizeof(_My_int)) alignas(_Ty) _Ty _My_val;
 	};
 
 		// TEMPLATE CLASS atomic
@@ -664,7 +677,7 @@ template<class _Ty>
 	atomic& operator=(const atomic&) = delete;
 	atomic& operator=(const atomic&) volatile = delete;
 
-	_CONST_FUN atomic(_Ty _Val) _NOEXCEPT
+	constexpr atomic(_Ty _Val) _NOEXCEPT
 		: _My_base(_Val)
 		{	// construct from _Val
 		}

@@ -40,7 +40,7 @@ public:
 	{
 		delete [] m_pvarRestrictions;
 	}
-	
+
 ATLPREFAST_SUPPRESS(6387)
 	HRESULT GetRowset(
 		_Inout_ const CSession& session,
@@ -58,7 +58,7 @@ ATLPREFAST_SUPPRESS(6387)
 			m_pvarRestrictions, __uuidof(IRowset), 0, NULL, (IUnknown**)ppRowset);
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	CComVariant* m_pvarRestrictions;
 };
 
@@ -78,13 +78,13 @@ ATLPREFAST_SUPPRESS(6387)
 		HRESULT hr = session.m_spOpenRowset->QueryInterface(__uuidof(IDBSchemaRowset), (void**)&spSchemaRowset);
 		if (FAILED(hr))
 			return hr;
-		
+
 		return spSchemaRowset->GetRowset(NULL, guidSchema, 0,
 			NULL, __uuidof(IRowset), 0, NULL, (IUnknown**)ppRowset);
 	}
 ATLPREFAST_UNSUPPRESS()
 };
-	
+
 ///////////////////////////////////////////////////////////////////////////
 // class CSchemaRowset
 template <class T, short nRestrictions, template <typename T> class TRowset = CRowset>
@@ -99,9 +99,9 @@ public:
 		_In_ const GUID& guidSchema,
 		_In_ bool bBind = true)
 	{
-		HRESULT hr = GetRowset(session, guidSchema, &m_spRowset);
+		HRESULT hr = GetRowset(session, guidSchema, &this->m_spRowset);
 		if ( SUCCEEDED(hr) && bBind )
-			hr = Bind();
+			hr = this->Bind();
 
 		return hr;
 	}
@@ -111,7 +111,7 @@ public:
 // class CRestrictions
 
 template <class T, short nRestrictions, const GUID* pguid>
-class CRestrictions : 
+class CRestrictions :
 	public CSchemaRowset<T, nRestrictions>
 {
 public:
@@ -129,20 +129,20 @@ public:
 		USES_CONVERSION_EX;
 		CComVariant* pVariant;
 
-		if (m_pvarRestrictions == NULL)
+		if (this->m_pvarRestrictions == NULL)
 			return E_OUTOFMEMORY;
 
 		if (lpszParam1 != NULL)
 		{
-			m_pvarRestrictions->vt = VT_BSTR;
-			m_pvarRestrictions->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam1));
-			if (m_pvarRestrictions->bstrVal == NULL)
+			this->m_pvarRestrictions->vt = VT_BSTR;
+			this->m_pvarRestrictions->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam1));
+			if (this->m_pvarRestrictions->bstrVal == NULL)
 				return E_OUTOFMEMORY;
 		}
 
 		if (lpszParam2 != NULL)
 		{
-			pVariant = m_pvarRestrictions + 1;
+			pVariant = this->m_pvarRestrictions + 1;
 			pVariant->vt = VT_BSTR;
 			pVariant->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam2));
 			if (pVariant->bstrVal == NULL)
@@ -151,7 +151,7 @@ public:
 
 		if (lpszParam3 != NULL)
 		{
-			pVariant = m_pvarRestrictions + 2;
+			pVariant = this->m_pvarRestrictions + 2;
 			pVariant->vt = VT_BSTR;
 			pVariant->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam3));
 			if (pVariant->bstrVal == NULL)
@@ -160,7 +160,7 @@ public:
 
 		if (lpszParam4 != NULL)
 		{
-			pVariant = m_pvarRestrictions + 3;
+			pVariant = this->m_pvarRestrictions + 3;
 			pVariant->vt = VT_BSTR;
 			pVariant->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam4));
 			if (pVariant->bstrVal == NULL)
@@ -169,7 +169,7 @@ public:
 
 		if (lpszParam5 != NULL)
 		{
-			pVariant = m_pvarRestrictions + 4;
+			pVariant = this->m_pvarRestrictions + 4;
 			pVariant->vt = VT_BSTR;
 			pVariant->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam5));
 			if (pVariant->bstrVal == NULL)
@@ -178,7 +178,7 @@ public:
 
 		if (lpszParam6 != NULL)
 		{
-			pVariant = m_pvarRestrictions + 5;
+			pVariant = this->m_pvarRestrictions + 5;
 			pVariant->vt = VT_BSTR;
 			pVariant->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam6));
 			if (pVariant->bstrVal == NULL)
@@ -187,7 +187,7 @@ public:
 
 		if (lpszParam7 != NULL)
 		{
-			pVariant = m_pvarRestrictions + 6;
+			pVariant = this->m_pvarRestrictions + 6;
 			pVariant->vt = VT_BSTR;
 			pVariant->bstrVal = ::SysAllocString(T2COLE_EX_DEF(lpszParam7));
 			if (pVariant->bstrVal == NULL)

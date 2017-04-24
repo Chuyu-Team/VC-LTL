@@ -35,7 +35,7 @@ public:
 	typedef typename _Mylist::const_reference reference;
 
 	_List_unchecked_const_iterator()
-		: _Ptr(0)
+		: _Ptr()
 		{	// construct with null node pointer
 		}
 
@@ -52,7 +52,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -131,7 +131,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -197,24 +197,26 @@ public:
 
 	_Unchecked_type _Unchecked() const
 		{	// make an unchecked iterator
-		return (_Unchecked_type(this->_Ptr, (_Mylist *)this->_Getcont()));
+		return (_Unchecked_type(this->_Ptr, static_cast<const _Mylist *>(this->_Getcont())));
 		}
 
 	reference operator*() const
 		{	// return designated value
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr == ((_Mylist *)this->_Getcont())->_Myhead)
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		if (_Mycont == 0
+			|| this->_Ptr == nullptr_t{}
+			|| this->_Ptr == _Mycont->_Myhead)
 			{	// report error
 			_DEBUG_ERROR("list iterator not dereferencable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr !=
-			((_Mylist *)this->_Getcont())->_Myhead);
+		_SCL_SECURE_VALIDATE(this->_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr != _Mycont->_Myhead);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		return (_Mylist::_Myval(this->_Ptr));
@@ -223,18 +225,20 @@ public:
 	_Myiter& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| this->_Ptr == ((_Mylist *)this->_Getcont())->_Myhead)
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		if (_Mycont == 0
+			|| this->_Ptr == nullptr_t{}
+			|| this->_Ptr == _Mycont->_Myhead)
 			{	// report error
 			_DEBUG_ERROR("list iterator not incrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
-		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr !=
-			((_Mylist *)this->_Getcont())->_Myhead);
+		_SCL_SECURE_VALIDATE(this->_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
+		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr != _Mycont->_Myhead);
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
 		this->_Ptr = _Mylist::_Nextnode(this->_Ptr);
@@ -251,20 +255,21 @@ public:
 	_Myiter& operator--()
 		{	// predecrement
  #if _ITERATOR_DEBUG_LEVEL == 2
-		if (this->_Getcont() == 0
-			|| this->_Ptr == 0
-			|| (this->_Ptr = _Mylist::_Prevnode(this->_Ptr))
-				== ((_Mylist *)this->_Getcont())->_Myhead)
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		if (_Mycont == 0
+			|| this->_Ptr == nullptr_t{}
+			|| (this->_Ptr = _Mylist::_Prevnode(this->_Ptr)) == _Mycont->_Myhead)
 			{	// report error
 			_DEBUG_ERROR("list iterator not decrementable");
 			_SCL_SECURE_OUT_OF_RANGE;
 			}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-		_SCL_SECURE_VALIDATE(this->_Getcont() != 0 && this->_Ptr != 0);
+		_SCL_SECURE_VALIDATE(this->_Ptr != nullptr_t{});
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		_SCL_SECURE_VALIDATE(_Mycont != 0);
 		this->_Ptr = _Mylist::_Prevnode(this->_Ptr);
-		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr !=
-			((_Mylist *)this->_Getcont())->_Myhead);
+		_SCL_SECURE_VALIDATE_RANGE(this->_Ptr != _Mycont->_Myhead);
 
  #else /* _ITERATOR_DEBUG_LEVEL */
 		this->_Ptr = _Mylist::_Prevnode(this->_Ptr);
@@ -363,7 +368,7 @@ public:
 
 	pointer operator->() const
 		{	// return pointer to class object
-		return (_STD pointer_traits<pointer>::pointer_to(**this));
+		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
 	_Myiter& operator++()
@@ -521,9 +526,9 @@ public:
 	typedef _List_unchecked_iterator<_Myt> _Unchecked_iterator;
 
 	_List_val()
+		: _Myhead(),
+		_Mysize(0)
 		{	// initialize data
-		this->_Myhead = 0;
-		this->_Mysize = 0;
 		}
 
 	static _Nodepref _Nextnode(_Nodeptr _Pnode)
@@ -592,14 +597,17 @@ public:
 		}
 
  #if _ITERATOR_DEBUG_LEVEL == 0
-	_List_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct head node, allocator from _Al
+	_List_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct head node
 		_Myhead() = _Buyheadnode();
 		}
 
-	_List_alloc(_Alloc&& _Al)
-		: _Mypair(_One_then_variadic_args_t(), _STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_List_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct head node, allocator from _Al
 		_Myhead() = _Buyheadnode();
 		}
@@ -619,15 +627,10 @@ public:
 		_Pocma(_Getal(), _Al);
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		}
-
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-	_List_alloc(const _Alloc& _Al = _Alloc())
-		: _Mypair(_One_then_variadic_args_t(), _Al)
-		{	// construct head node, allocator from _Al
+	_List_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct head node
 		_Myhead() = _Buyheadnode();
 		_TRY_BEGIN
 		_Alloc_proxy();
@@ -637,8 +640,11 @@ public:
 		_CATCH_END
 		}
 
-	_List_alloc(_Alloc&& _Al)
-		: _Mypair(_One_then_variadic_args_t(), _STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_List_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
 		{	// construct head node, allocator from _Al
 		_Myhead() = _Buyheadnode();
 		_TRY_BEGIN
@@ -669,17 +675,11 @@ public:
 		_Alloc_proxy();
 		}
 
-	void _Swap_alloc(_Myt& _Right)
-		{	// swap allocators
-		_Pocs(_Getal(), _Right._Getal());
-		_Swap_adl(_Myproxy(), _Right._Myproxy());
-		}
-
 	void _Alloc_proxy()
 		{	// construct proxy
 		typename _Alty::template rebind<_Container_proxy>::other
 			_Alproxy(_Getal());
-		_Myproxy() = _Alproxy.allocate(1);
+		_Myproxy() = _Unfancy(_Alproxy.allocate(1));
 		_Alproxy.construct(_Myproxy(), _Container_proxy());
 		_Myproxy()->_Mycont = &_Get_data();
 		}
@@ -690,7 +690,7 @@ public:
 			_Alproxy(_Getal());
 		_Orphan_all();
 		_Alproxy.destroy(_Myproxy());
-		_Alproxy.deallocate(_Myproxy(), 1);
+		_Alproxy.deallocate(_Alproxy.address(*_Myproxy()), 1);
 		_Myproxy() = 0;
 		}
 
@@ -808,17 +808,20 @@ template<class _Ty,
 		: public _List_alloc<_List_base_types<_Ty, _Alloc> >
 	{	// base class for list to hold buynode/freenode functions
 public:
+	typedef _List_buy<_Ty, _Alloc> _Myt;
 	typedef _List_alloc<_List_base_types<_Ty, _Alloc> > _Mybase;
 	typedef typename _Mybase::_Alty _Alty;
 	typedef typename _Mybase::_Nodeptr _Nodeptr;
 
-	_List_buy(const _Alloc& _Al = _Alloc())
-		: _Mybase(_Al)
-		{	// construct from allocator
+	_List_buy()
+		: _Mybase()
+		{	// default construct
 		}
 
-	_List_buy(_Alloc&& _Al)
-		: _Mybase(_STD move(_Al))
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same<decay_t<_Any_alloc>, _Myt>::value> >
+		_List_buy(_Any_alloc&& _Al)
+		: _Mybase(_STD forward<_Any_alloc>(_Al))
 		{	// construct from allocator
 		}
 
@@ -1251,7 +1254,8 @@ public:
 
 	allocator_type get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		return (this->_Getal());
+		allocator_type _Ret(this->_Getal());
+		return (_Ret);
 		}
 
 	reference front()
@@ -1385,14 +1389,14 @@ public:
 		if (_Prev == begin())
 			{	// insert sequence at beginning
 			_Insert_range(_Where._Unchecked(), _First, _Last,
-				_Iter_cat(_First));
+				_Iter_cat_t<_Iter>());
 			return (begin());
 			}
 		else
 			{	// insert sequence not at beginning
 			--_Prev;
 			_Insert_range(_Where._Unchecked(), _First, _Last,
-				_Iter_cat(_First));
+				_Iter_cat_t<_Iter>());
 			return (++_Prev);
 			}
 		}
@@ -1513,30 +1517,13 @@ public:
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value)
 		{	// exchange contents with _Right
-		if (this == &_Right)
-			;	// same object, do nothing
-		else if (this->_Getal() == _Right._Getal())
-			{	// same allocator, swap control information
+		if (this != &_Right)
+			{	// (maybe) swap allocators, swap control information
+			_Pocs(this->_Getal(), _Right._Getal());
 			this->_Swap_all(_Right);
 			_Swap_adl(this->_Myhead(), _Right._Myhead());
 			_STD swap(this->_Mysize(), _Right._Mysize());
 			}
-
-		else if (_Alty::propagate_on_container_swap::value)
-			{	// swap allocators and control information
-			this->_Swap_alloc(_Right);
-			_Swap_adl(this->_Myhead(), _Right._Myhead());
-			_STD swap(this->_Mysize(), _Right._Mysize());
-			}
-
-		else	// containers are incompatible
-
- #if _ITERATOR_DEBUG_LEVEL == 2
-			_DEBUG_ERROR("list containers incompatible for swap");
-
- #else /* ITERATOR_DEBUG_LEVEL == 2 */
-			_XSTD terminate();
- #endif /* ITERATOR_DEBUG_LEVEL == 2 */
 		}
 
 	void splice(const_iterator _Where, _Myt& _Right)
@@ -1595,9 +1582,9 @@ public:
 				{	// count nodes and check for knot
 				const_iterator _Next = _First;
 
-				for (; _Next != _Last; ++_Next, (void)++_Count);
-					//if (_Next == _Right.end())
-					//	_Xlength_error("list<T> bad splice");
+				for (; _Next != _Last; ++_Next, (void)++_Count)
+					if (_Next == _Right.end())
+						_Xlength_error("list<T> bad splice");
 				}
 			_Splice(_Where, _Right, _First, _Last, _Count);
 			}
@@ -1628,6 +1615,12 @@ public:
 
 	template<class _Pr1>
 		void remove_if(_Pr1 _Pred)
+		{	// erase each element satisfying _Pred
+		_Remove_if(_Pred);
+		}
+
+	template<class _Pr1>
+		void _Remove_if(_Pr1& _Pred)
 		{	// erase each element satisfying _Pred
 		for (iterator _First = begin(); _First != end(); )
 			if (_Pred(*_First))
@@ -1669,16 +1662,28 @@ public:
 
 	void merge(_Myt& _Right)
 		{	// merge in elements from _Right, both ordered by operator<
-		merge(_Right, less<>());
+		_Merge1(_Right, less<>());
 		}
 
 	void merge(_Myt&& _Right)
 		{	// merge in elements from _Right, both ordered by operator<
-		merge((_Myt&)_Right);
+		_Merge1(_Right, less<>());
 		}
 
 	template<class _Pr2>
 		void merge(_Myt& _Right, _Pr2 _Pred)
+		{	// merge in elements from _Right, both ordered by _Pred
+		_Merge1(_Right, _Pred);
+		}
+
+	template<class _Pr2>
+		void merge(_Myt&& _Right, _Pr2 _Pred)
+		{	// merge in elements from _Right, both ordered by _Pred
+		_Merge1(_Right, _Pred);
+		}
+
+	template<class _Pr2>
+		void _Merge1(_Myt& _Right, _Pr2&& _Pred)
 		{	// merge in elements from _Right, both ordered by _Pred
 		if (&_Right != this)
 			{	// safe to merge, do it
@@ -1703,12 +1708,6 @@ public:
 			}
 		}
 
-	template<class _Pr2>
-		void merge(_Myt&& _Right, _Pr2 _Pred)
-		{	// merge in elements from _Right, both ordered by _Pred
-		merge((_Myt&)_Right, _Pred);
-		}
-
 	void sort()
 		{	// order sequence, using operator<
 		sort(less<>());
@@ -1721,7 +1720,7 @@ public:
 		}
 
 	template<class _Pr2>
-		iterator _Sort(iterator _First, iterator _Last, _Pr2 _Pred,
+		iterator _Sort(iterator _First, iterator _Last, _Pr2& _Pred,
 			size_type _Size)
 		{	// order [_First, _Last), using _Pred, return new first
 			// _Size must be distance from _First to _Last
@@ -1793,7 +1792,7 @@ public:
 				for (_Nodeptr _Ptr = _First._Ptr; _Ptr != _Last._Ptr;
 					_Ptr = this->_Nextnode(_Ptr))
 					{	// mark _Prev pointers
-					this->_Prevnode(_Ptr) = 0;
+					this->_Prevnode(_Ptr) = nullptr_t{};
 					}
 
 			const_iterator **_Pnext = (const_iterator **)_Right._Getpfirst();
@@ -1807,7 +1806,7 @@ public:
 
 				if ((_One && _Iter._Ptr == _First._Ptr)
 					|| (_All && _Iter._Ptr != _Right._Myhead())
-					|| (_Some && this->_Prevnode(_Iter._Ptr) == 0))
+					|| (_Some && this->_Prevnode(_Iter._Ptr) == nullptr_t{}))
 					{	// adopt the iterator
 					*_Pnext = (const_iterator *)_Iter._Mynextiter;
 					_Iter._Myproxy = this->_Myproxy();
@@ -1905,8 +1904,8 @@ public:
 
 	void _Incsize(size_type _Count)
 		{	// alter element count, with checking
-		//if (max_size() - this->_Mysize() - 1 < _Count)
-		//	_Xlength_error("list<T> too long");
+		if (max_size() - this->_Mysize() - 1 < _Count)
+			_Xlength_error("list<T> too long");
 		this->_Mysize() += _Count;
 		}
 
@@ -1919,7 +1918,7 @@ public:
 			while (*_Pnext != 0)
 				{	// test an iterator
 				if ((*_Pnext)->_Ptr == this->_Myhead()
-					|| (_Ptr != 0 && (*_Pnext)->_Ptr != _Ptr))
+					|| (_Ptr != nullptr_t{} && (*_Pnext)->_Ptr != _Ptr))
 					_Pnext = (const_iterator **)(*_Pnext)->_Getpnext();
 				else
 					{	// orphan the iterator

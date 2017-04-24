@@ -1254,7 +1254,7 @@ protected:
 				}
 				else										// Do work
 				{
-					Worker::RequestType request = (Worker::RequestType) dwCompletionKey;
+					typename Worker::RequestType request = (typename Worker::RequestType) dwCompletionKey;
 
 					// Process the request.  Notice the following:
 					// (1) It is the worker's responsibility to free any memory associated
@@ -3560,7 +3560,7 @@ inline BOOL CopyCString(
 		return FALSE;
 	}
 
-	StringType::PCXSTR szBuffer = str;
+	typename StringType::PCXSTR szBuffer = str;
 	if (szBuffer)
 	{
 		Checked::memcpy_s(szDest, *pdwDestLen * sizeof(StringType::XCHAR),
@@ -3589,7 +3589,7 @@ inline void SystemTimeToHttpDate(
 		"May", "Jun", "Jul", "Aug", "Sep",
 		"Oct", "Nov", "Dec" };
 
-	strTime.Format("%s, %02ud %s %ud %02ud:%02ud:%02ud GMT",
+	strTime.Format("%s, %02u %s %u %02u:%02u:%02u GMT",
 		szDays[st.wDayOfWeek], st.wDay, szMonth[st.wMonth-1], st.wYear,
 		st.wHour, st.wMinute, st.wSecond);
 }

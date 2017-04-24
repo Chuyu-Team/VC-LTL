@@ -16,9 +16,7 @@ _STD_BEGIN
 		// TEMPLATE FUNCTION get_temporary_buffer
 template<class _Ty> inline
 	pair<_Ty *, ptrdiff_t>
-
 		get_temporary_buffer(ptrdiff_t _Count) _NOEXCEPT
-
 	{	// get raw temporary buffer of up to _Count elements
 	_Ty *_Pbuf;
 
@@ -41,303 +39,59 @@ template<class _Ty> inline
 	operator delete(_Pbuf);
 	}
 
-		// TEMPLATE FUNCTION uninitialized_copy_n
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, input_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), input iterators
-	_FwdIt _Next = _Dest;
-
-	_TRY_BEGIN
-	_Construct(_STD addressof(*_Dest),
-		*_First);	// 0 < _Count has been guaranteed
-	while (0 < --_Count)
-		_Construct(_STD addressof(*++_Dest), *++_First);
-	_CATCH_ALL
-	for (; _Next != _Dest; ++_Next)
-		_Destroy(_STD addressof(*_Next));
-	_RERAISE;
-	_CATCH_END
-	return (++_Dest);
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, forward_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), forward iterators
-	_FwdIt _Next = _Dest;
-
-	_TRY_BEGIN
-	for (; 0 < _Count; --_Count, (void)++_Dest, ++_First)
-		_Construct(_STD addressof(*_Dest), *_First);
-	_CATCH_ALL
-	for (; _Next != _Dest; ++_Next)
-		_Destroy(_STD addressof(*_Next));
-	_RERAISE;
-	_CATCH_END
-	return (_Dest);
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, _Nonscalar_ptr_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), arbitrary iterators
-	return (_Uninitialized_copy_n(_First, _Count,
-		_Dest, _Iter_cat(_First)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), pointers to scalars
-	_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest + _Count);
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), unchecked
-	return (_Uninitialized_copy_n(_First, _Count,
-		_Dest, _Ptr_cat(_First, _Dest)));
-	}
-
- #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest)
-	{	// copy [_First, _First + _Count) to [_Dest, ...)
-	if (_Count <= 0)
-		return (_Dest);
-	else
-		return (_Rechecked(_Dest,
-			_Uninitialized_copy_n(_Unchecked(_First), _Count,
-				_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n2(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, _Mutable_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), arbitrary dest
-	return (_Uninitialized_copy_n(_First, _Count,
-		_Dest));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n2(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, random_access_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), random-access dest
-	_FwdIt _Ans = _Dest + _Count;	// also checks range
-	_Uninitialized_copy_n(_First, _Count,
-		_Unchecked(_Dest));
-	return (_Ans);
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n1(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, input_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), arbitrary input
-	return (_Uninitialized_copy_n2(_First, _Count,
-		_Dest, _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n1(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, random_access_iterator_tag)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), random-access input
-	_InIt _Last = _First + _Count;	// also checks range
-	_Last = _Last;	// to quiet diagnostics
-	return (_Uninitialized_copy_n2(_Unchecked(_First), _Count,
-		_Dest, _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, true_type)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), checked dest
-	return (_Uninitialized_copy_n1(_First, _Count,
-		_Dest, _Iter_cat(_First)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-_SCL_INSECURE_DEPRECATE
-	_FwdIt _Uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest, false_type)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), unchecked dest
-	return (_Uninitialized_copy_n1(_First, _Count,
-		_Dest, _Iter_cat(_First)));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_FwdIt _Dest)
-	{	// copy [_First, _First + _Count) to [_Dest, ...)
-	if (_Count <= 0)
-		return (_Dest);
-	else
-		{	// validate _First/_Dest and copy
-		_DEBUG_POINTER(_First);
-		_DEBUG_POINTER(_Dest);
-		return (_Uninitialized_copy_n(_First,
-			_Count, _Dest, _Is_checked(_Dest)));
-		}
-	}
-
- #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
-template<class _InTy,
-	size_t _InSize,
-	class _Diff,
-	class _FwdIt> inline
-	_FwdIt uninitialized_copy_n(_InTy (&_First)[_InSize], _Diff _Count,
-		_FwdIt _Dest)
-	{	// copy [_First, _First + _Count) to [_Dest, ...), array input
-	return (_STD uninitialized_copy_n(_Array_iterator<_InTy, _InSize>(_First),
-		_Count, _Dest));
-	}
-
-template<class _InIt,
-	class _Diff,
-	class _OutTy,
-	size_t _OutSize> inline
-	_OutTy *uninitialized_copy_n(_InIt _First, _Diff _Count,
-		_OutTy (&_Dest)[_OutSize])
-	{	// copy [_First, _First + _Count) to [_Dest, ...), array dest
-	return (_Unchecked(
-		_STD uninitialized_copy_n(_First,
-			_Count, _Array_iterator<_OutTy, _OutSize>(_Dest))));
-	}
-
-template<class _InTy,
-	size_t _InSize,
-	class _Diff,
-	class _OutTy,
-	size_t _OutSize> inline
-	_OutTy *uninitialized_copy_n(_InTy (&_First)[_InSize], _Diff _Count,
-		_OutTy (&_Dest)[_OutSize])
-	{	// copy [_First, _First + _Count) to [_Dest, ...), array input/dest
-	return (_Unchecked(
-		_STD uninitialized_copy_n(_Array_iterator<_InTy, _InSize>(_First),
-			_Count, _Array_iterator<_OutTy, _OutSize>(_Dest))));
-	}
- #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
-
 		// TEMPLATE FUNCTION uninitialized_copy
 template<class _InIt,
 	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
-		_FwdIt _Dest, _Nonscalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) to raw [_Dest, ...), arbitrary iterators
+	_FwdIt _Uninitialized_copy_unchecked1(_InIt _First, _InIt _Last,
+		_FwdIt _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _Last) to raw [_Dest, ...), no special optimization
 	_FwdIt _Next = _Dest;
 
 	_TRY_BEGIN
 	for (; _First != _Last; ++_Dest, (void)++_First)
-		_Construct(_STD addressof(*_Dest), *_First);
+		_Construct(_Unfancy(_Dest), *_First);
 	_CATCH_ALL
-	for (; _Next != _Dest; ++_Next)
-		_Destroy(_STD addressof(*_Next));
+	_Destroy_range(_Next, _Dest);
 	_RERAISE;
 	_CATCH_END
+
 	return (_Dest);
 	}
 
 template<class _InIt,
 	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
-		_FwdIt _Dest, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) to raw [_Dest, ...), pointers to scalars
-	ptrdiff_t _Count = _Last - _First;
-	_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First));
-	return (_Dest + _Count);
+	_FwdIt _Uninitialized_copy_unchecked1(_InIt _First, _InIt _Last,
+		_FwdIt _Dest, _Really_trivial_ptr_iterator_tag)
+	{	// copy [_First, _Last) to raw [_Dest, ...), memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
 	}
 
 template<class _InIt,
 	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
+	_FwdIt _Uninitialized_copy_unchecked(_InIt _First, _InIt _Last,
 		_FwdIt _Dest)
-	{	// copy [_First, _Last) to raw [_Dest, ...)
-	return (_Uninitialized_copy0(_First, _Last,
-		_Dest, _Ptr_cat(_First, _Dest)));
+	{	// copy [_First, _Last) to raw [_Dest, ...), choose optimization
+	return (_Uninitialized_copy_unchecked1(_First, _Last,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
 	}
 
- #if _ITERATOR_DEBUG_LEVEL == 0
 template<class _InIt,
 	class _FwdIt> inline
-	_FwdIt uninitialized_copy(_InIt _First, _InIt _Last,
-		_FwdIt _Dest)
-	{	// copy [_First, _Last) to raw [_Dest, ...)
-	return (_Rechecked(_Dest,
-		_Uninitialized_copy0(_Unchecked(_First), _Unchecked(_Last),
-			_Unchecked(_Dest))));
-	}
-
- #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-template<class _InIt,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
+	_FwdIt _Uninitialized_copy1(_InIt _First, _InIt _Last,
 		_FwdIt _Dest, input_iterator_tag, forward_iterator_tag)
 	{	// copy [_First, _Last) to raw [_Dest, ...), arbitrary iterators
-	return (_Uninitialized_copy0(_First, _Last,
-		_Dest));
+	return (_Rechecked(_Dest,
+		_Uninitialized_copy_unchecked(_First, _Last, _Unchecked_idl0(_Dest))));
 	}
 
 template<class _InIt,
 	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
+	_FwdIt _Uninitialized_copy1(_InIt _First, _InIt _Last,
 		_FwdIt _Dest, random_access_iterator_tag, random_access_iterator_tag)
 	{	// copy [_First, _Last) to raw [_Dest, ...), random-access iterators
-	_FwdIt _Ans = _Dest + (_Last - _First);	// also checks range
-	_Uninitialized_copy0(_First, _Last,
-		_Unchecked(_Dest));
-	return (_Ans);
-	}
-
-template<class _InIt,
-	class _FwdIt> inline
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
-		_FwdIt _Dest, true_type)
-	{	// copy [_First, _Last) to raw [_Dest, ...), checked dest
-	return (_Uninitialized_copy0(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
-	}
-
-template<class _InIt,
-	class _FwdIt> inline
-_SCL_INSECURE_DEPRECATE
-	_FwdIt _Uninitialized_copy0(_InIt _First, _InIt _Last,
-		_FwdIt _Dest, false_type)
-	{	// copy [_First, _Last) to raw [_Dest, ...), unchecked dest
-	return (_Uninitialized_copy0(_First, _Last,
-		_Dest, _Iter_cat(_First), _Iter_cat(_Dest)));
+	_CHECK_RANIT_RANGE(_First, _Last, _Dest);
+	return (_Rechecked(_Dest,
+		_Uninitialized_copy_unchecked(_First, _Last, _Unchecked(_Dest))));
 	}
 
 template<class _InIt,
@@ -345,9 +99,10 @@ template<class _InIt,
 	_FwdIt uninitialized_copy(_InIt _First, _InIt _Last,
 		_FwdIt _Dest)
 	{	// copy [_First, _Last) to raw [_Dest, ...)
+	_DEPRECATE_UNCHECKED(uninitialized_copy, _Dest);
 	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	return (_Uninitialized_copy0(_Unchecked(_First), _Unchecked(_Last),
-		_Dest, _Is_checked(_Dest)));
+	return (_Uninitialized_copy1(_Unchecked(_First), _Unchecked(_Last),
+		_Dest, _Iter_cat_t<_InIt>(), _Iter_cat_t<_FwdIt>()));
 	}
 
  #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
@@ -362,204 +117,284 @@ template<class _InIt,
 			_Array_iterator<_OutTy, _OutSize>(_Dest))));
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
- #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+
+		// TEMPLATE FUNCTION uninitialized_copy_n
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_copy_n_unchecked1(_InIt _First, _Diff _Count,
+		_FwdIt _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), no special optimization
+	_FwdIt _Next = _Dest;
+
+	_TRY_BEGIN
+	for (; 0 < _Count; --_Count, (void)++_Dest, ++_First)
+		_Construct(_Unfancy(_Dest), *_First);
+	_CATCH_ALL
+	_Destroy_range(_Next, _Dest);
+	_RERAISE;
+	_CATCH_END
+
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_copy_n_unchecked1(_InIt _First, _Diff _Count,
+		_FwdIt _Dest, _Really_trivial_ptr_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), memmove optimization
+	if (0 < _Count)
+		return (_Copy_memmove(_First, _First + _Count, _Dest));
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_copy_n_unchecked(_InIt _First, _Diff _Count,
+		_FwdIt _Dest)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), choose optimization
+	return (_Uninitialized_copy_n_unchecked1(_First, _Count,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	_FwdIt uninitialized_copy_n(_InIt _First, _Diff _Count,
+		_FwdIt _Dest)
+	{	// copy [_First, _First + _Count) to [_Dest, ...)
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	_DEPRECATE_UNCHECKED(uninitialized_copy_n, _Dest);
+	return (_Rechecked(_Dest,
+		_Uninitialized_copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Unchecked_n(_Dest, _Count))));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InTy,
+	size_t _InSize,
+	class _Diff,
+	class _FwdIt> inline
+	_FwdIt uninitialized_copy_n(_InTy (&_First)[_InSize], _Diff _Count,
+		_FwdIt _Dest)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array input
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	_DEPRECATE_UNCHECKED(uninitialized_copy_n, _Dest);
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	return (_Rechecked(_Dest,
+		_Uninitialized_copy_n_unchecked(_First, _Count, _Unchecked_n(_Dest, _Count))));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutTy,
+	size_t _OutSize> inline
+	_OutTy *uninitialized_copy_n(_InIt _First, _Diff _Count,
+		_OutTy (&_Dest)[_OutSize])
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array dest
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Uninitialized_copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Dest));
+	}
+
+template<class _InTy,
+	size_t _InSize,
+	class _Diff,
+	class _OutTy,
+	size_t _OutSize> inline
+	_OutTy *uninitialized_copy_n(_InTy (&_First)[_InSize], _Diff _Count,
+		_OutTy (&_Dest)[_OutSize])
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array input/dest
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Uninitialized_copy_n_unchecked(_First, _Count, _Dest));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
 
 		// TEMPLATE FUNCTION _Uninitialized_copy WITH ALLOCATOR
 template<class _InIt,
 	class _FwdIt,
 	class _Alloc> inline
-	_FwdIt _Uninit_copy(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Wrap_alloc<_Alloc>& _Al, _Nonscalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) to raw _Dest, using _Al, arbitrary type
-	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
+	_FwdIt _Uninitialized_copy_al_unchecked1(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al, _General_ptr_iterator_tag, _Any_tag)
+	{	// copy [_First, _Last) to raw _Dest, using _Al, no special optimization
 	_FwdIt _Next = _Dest;
 
 	_TRY_BEGIN
 	for (; _First != _Last; ++_Dest, (void)++_First)
-		_Al.construct(_Dest, *_First);
+		_Al.construct(_Unfancy(_Dest), *_First);
 	_CATCH_ALL
-	for (; _Next != _Dest; ++_Next)
-		_Al.destroy(_Next);
+	_Destroy_range(_Next, _Dest, _Al);
 	_RERAISE;
 	_CATCH_END
+
 	return (_Dest);
 	}
 
-template<class _InIt,
-	class _FwdIt,
-	class _Alloc> inline
-	_FwdIt _Uninit_copy(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Wrap_alloc<_Alloc>& _Al, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) to raw _Dest, using _Al, scalar type
-	return (_Uninit_copy(_First, _Last, _Dest,
-		_Al, _Nonscalar_ptr_iterator_tag()));
-	}
-
 template<class _Ty1,
-	class _Ty2> inline
-	_Ty2 *_Uninit_copy(_Ty1 *_First, _Ty1 *_Last, _Ty2 *_Dest,
-		_Wrap_alloc<allocator<_Ty2> >&, _Scalar_ptr_iterator_tag)
-	{	// copy [_First, _Last) to raw _Dest, scalar type
-	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	size_t _Count = (size_t)(_Last - _First);
-	return ((_Ty2 *)_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First)) + _Count);	// NB: non-overlapping move
+	class _Ty2,
+	class _Alloc> inline
+	_Ty2 *_Uninitialized_copy_al_unchecked1(_Ty1 *_First, _Ty1 *_Last, _Ty2 *_Dest,
+		_Wrap_alloc<_Alloc>&, _Really_trivial_ptr_iterator_tag, true_type)
+	{	// copy [_First, _Last) to raw _Dest, using default _Alloc construct, memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
 	}
 
 template<class _InIt,
 	class _FwdIt,
 	class _Alloc> inline
-	_FwdIt _Uninit_copy(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Alloc& _Al)
-	{	// copy [_First, _Last) to raw _Dest, using _Al
-	return (_Uninit_copy(_First, _Last, _Dest, _Al,
-		_Ptr_cat(_First, _Dest)));
+	_FwdIt _Uninitialized_copy_al_unchecked(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al)
+	{	// copy [_First, _Last) to raw _Dest, using _Al, choose optimization
+	return (_Uninitialized_copy_al_unchecked1(_First, _Last, _Dest, _Al,
+		_Ptr_copy_cat(_First, _Dest),
+		_Uses_default_construct_t<_Alloc, decltype(_Unfancy(_Dest)), decltype(*_First)>()));
 	}
 
 template<class _InIt,
 	class _FwdIt,
 	class _Alloc> inline
 	_FwdIt _Uninitialized_copy(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Alloc& _Al)
+		_Wrap_alloc<_Alloc>& _Al)
 	{	// copy [_First, _Last) to raw _Dest, using _Al
+		// note: only called internally from elsewhere in the STL, debug checks
+		// and deprecation warnings omitted
 	return (_Rechecked(_Dest,
-		_Uninit_copy(_Unchecked(_First), _Unchecked(_Last),
+		_Uninitialized_copy_al_unchecked(_Unchecked(_First), _Unchecked(_Last),
 			_Unchecked(_Dest), _Al)));
 	}
 
 		// TEMPLATE FUNCTION _Uninitialized_move WITH ALLOCATOR
 template<class _InIt,
 	class _FwdIt,
-	class _Alloc,
-	class _Valty> inline
-	_FwdIt _Uninit_move(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Wrap_alloc<_Alloc>& _Al, _Valty *, _Nonscalar_ptr_iterator_tag)
-	{	// move [_First, _Last) to raw _Dest, using _Al, arbitrary type
-	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
+	class _Alloc> inline
+	_FwdIt _Uninitialized_move_al_unchecked1(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al, _General_ptr_iterator_tag, _Any_tag)
+	{	// move [_First, _Last) to raw _Dest, using _Al, no special optimization
 	_FwdIt _Next = _Dest;
 
 	_TRY_BEGIN
 	for (; _First != _Last; ++_Dest, (void)++_First)
-		_Al.construct(_Dest, (_Valty&&)*_First);
+		_Al.construct(_Unfancy(_Dest), _STD move(*_First));
 	_CATCH_ALL
-	for (; _Next != _Dest; ++_Next)
-		_Al.destroy(_Next);
+	_Destroy_range(_Next, _Dest, _Al);
 	_RERAISE;
 	_CATCH_END
-	return (_Dest);
-	}
 
-template<class _InIt,
-	class _FwdIt,
-	class _Alloc,
-	class _Valty> inline
-	_FwdIt _Uninit_move(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Wrap_alloc<_Alloc>& _Al, _Valty *, _Scalar_ptr_iterator_tag)
-	{	// move [_First, _Last) to raw _Dest, using _Al, scalar type
-	return (_Uninit_move(_First, _Last, _Dest,
-		_Al, (_Valty *)0, _Nonscalar_ptr_iterator_tag()));
+	return (_Dest);
 	}
 
 template<class _Ty1,
 	class _Ty2,
-	class _Valty> inline
-	_Ty2 *_Uninit_move(_Ty1 *_First, _Ty1 *_Last, _Ty2 *_Dest,
-		_Wrap_alloc<allocator<_Ty2> >&, _Valty *, _Scalar_ptr_iterator_tag)
-	{	// move [_First, _Last) to raw _Dest, scalar type
-	_DEBUG_RANGE_PTR(_First, _Last, _Dest);
-	size_t _Count = (size_t)(_Last - _First);
-	return ((_Ty2 *)_CSTD memmove(&*_Dest, &*_First,
-		_Count * sizeof (*_First)) + _Count);	// NB: non-overlapping move
+	class _Alloc> inline
+	_Ty2 *_Uninitialized_move_al_unchecked1(_Ty1 *_First, _Ty1 *_Last, _Ty2 *_Dest,
+		_Wrap_alloc<_Alloc>&, _Really_trivial_ptr_iterator_tag, true_type)
+	{	// move [_First, _Last) to raw _Dest, using default _Alloc construct, memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
 	}
 
 template<class _InIt,
 	class _FwdIt,
 	class _Alloc> inline
-	_FwdIt _Uninit_move(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Alloc& _Al)
-	{	// move [_First, _Last) to raw _Dest, using _Al
-	return (_Uninit_move(_First, _Last, _Dest, _Al,
-		_Val_type(_First), _Ptr_cat(_First, _Dest)));
+	_FwdIt _Uninitialized_move_al_unchecked(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al)
+	{	// move [_First, _Last) to raw _Dest, using _Al, choose optimization
+	typedef decltype(_STD move(*_First)) _Src_type; // TRANSITION MODULES VSO#222794
+	return (_Uninitialized_move_al_unchecked1(_First, _Last, _Dest, _Al,
+		_Ptr_move_cat(_First, _Dest),
+		_Uses_default_construct_t<_Alloc, decltype(_Unfancy(_Dest)), _Src_type>()));
 	}
 
 template<class _InIt,
 	class _FwdIt,
 	class _Alloc> inline
 	_FwdIt _Uninitialized_move(_InIt _First, _InIt _Last, _FwdIt _Dest,
-		_Alloc& _Al)
+		_Wrap_alloc<_Alloc>& _Al)
 	{	// move [_First, _Last) to raw _Dest, using _Al
+		// note: only called internally from elsewhere in the STL, debug checks
+		// and deprecation warnings omitted
 	return (_Rechecked(_Dest,
-		_Uninit_move(_Unchecked(_First), _Unchecked(_Last),
+		_Uninitialized_move_al_unchecked(_Unchecked(_First), _Unchecked(_Last),
 			_Unchecked(_Dest), _Al)));
 	}
 
 		// TEMPLATE FUNCTION uninitialized_fill
 template<class _FwdIt,
 	class _Tval> inline
-	void _Uninit_fill(_FwdIt _First, _FwdIt _Last, const _Tval& _Val,
-		_Nonscalar_ptr_iterator_tag)
-	{	// copy _Val throughout raw [_First, _Last), arbitrary type
-	_DEBUG_RANGE(_First, _Last);
+	void _Uninitialized_fill_unchecked1(_FwdIt _First, _FwdIt _Last, const _Tval& _Val, false_type)
+	{	// copy _Val throughout raw [_First, _Last), no special optimization
 	_FwdIt _Next = _First;
 
 	_TRY_BEGIN
 	for (; _First != _Last; ++_First)
-		_Construct(_STD addressof(*_First), _Val);
+		_Construct(_Unfancy(_First), _Val);
 	_CATCH_ALL
-	for (; _Next != _First; ++_Next)
-		_Destroy(_STD addressof(*_Next));
+	_Destroy_range(_Next, _First);
 	_RERAISE;
 	_CATCH_END
 	}
 
-template<class _Ty,
+template<class _FwdIt,
 	class _Tval> inline
-	void _Uninit_fill(_Ty *_First, _Ty *_Last, const _Tval& _Val,
-		_Scalar_ptr_iterator_tag)
-	{	// copy _Val throughout raw [_First, _Last), scalar type
-	_STD fill(_First, _Last, _Val);
+	void _Uninitialized_fill_unchecked1(_FwdIt _First, _FwdIt _Last, const _Tval& _Val, true_type)
+	{	// copy _Val throughout raw [_First, _Last), memset optimization
+	_CSTD memset(_First, _Val, _Last - _First);
+	}
+
+template<class _FwdIt,
+	class _Tval> inline
+	void _Uninitialized_fill_unchecked(_FwdIt _First, _FwdIt _Last, const _Tval& _Val)
+	{	// copy _Val throughout raw [_First, _Last), choose optimization
+	_Uninitialized_fill_unchecked1(_First, _Last, _Val, _Fill_memset_is_safe(_First, _Val));
 	}
 
 template<class _FwdIt,
 	class _Tval> inline
 	void uninitialized_fill(_FwdIt _First, _FwdIt _Last, const _Tval& _Val)
 	{	// copy _Val throughout raw [_First, _Last)
-	_Uninit_fill(_First, _Last, _Val, _Ptr_cat(_First, _First));
+	_DEBUG_RANGE(_First, _Last);
+	_Uninitialized_fill_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val);
 	}
 
 		// TEMPLATE FUNCTION uninitialized_fill_n
 template<class _FwdIt,
 	class _Diff,
 	class _Tval> inline
-	_FwdIt _Uninit_fill_n(_FwdIt _First, _Diff _Count, const _Tval& _Val,
-		_Nonscalar_ptr_iterator_tag)
-	{	// copy _Count *_Val to raw _First, arbitrary type
- #if _ITERATOR_DEBUG_LEVEL == 2
-//	if (_Count < 0)
-//		_DEBUG_ERROR("negative count in uninitialized fill");
- #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
-
+	_FwdIt _Uninitialized_fill_n_unchecked1(_FwdIt _First, _Diff _Count, const _Tval& _Val, false_type)
+	{	// copy _Count copies of _Val to raw _First, no special optimization
 	_FwdIt _Next = _First;
 
 	_TRY_BEGIN
 	for (; 0 < _Count; --_Count, (void)++_First)
-		_Construct(_STD addressof(*_First), _Val);
+		_Construct(_Unfancy(_First), _Val);
 	_CATCH_ALL
-	for (; _Next != _First; ++_Next)
-		_Destroy(_STD addressof(*_Next));
+	_Destroy_range(_Next, _First);
 	_RERAISE;
 	_CATCH_END
 
 	return (_First);
 	}
 
-template<class _Ty,
+template<class _FwdIt,
 	class _Diff,
 	class _Tval> inline
-	_Ty *_Uninit_fill_n(_Ty *_First, _Diff _Count, const _Tval& _Val,
-		_Scalar_ptr_iterator_tag)
-	{	// copy _Count *_Val to raw _First, scalar type
-	return (_Fill_n(_First, _Count, _Val));
+	_FwdIt _Uninitialized_fill_n_unchecked1(_FwdIt _First, _Diff _Count, const _Tval& _Val, true_type)
+	{	// copy _Count copies of _Val to raw _First, memset optimization
+	if (0 < _Count)
+		{
+		_CSTD memset(_First, _Val, _Count);
+		return (_First + _Count);
+		}
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Tval> inline
+	_FwdIt _Uninitialized_fill_n_unchecked(_FwdIt _First, _Diff _Count, const _Tval& _Val)
+	{	// copy _Count copies of _Val to raw _First, choose optimization
+	return (_Uninitialized_fill_n_unchecked1(_First, _Count, _Val, _Fill_memset_is_safe(_First, _Val)));
 	}
 
 template<class _FwdIt,
@@ -567,127 +402,89 @@ template<class _FwdIt,
 	class _Tval> inline
 	_FwdIt uninitialized_fill_n(_FwdIt _First, _Diff _Count,
 		const _Tval& _Val)
-	{	// copy _Count *_Val to raw _First
-	return (_Uninit_fill_n(_First, _Count, _Val, _Ptr_cat(_First, _First)));
+	{	// copy _Count copies of _Val to raw _First
+	return (_Rechecked(_First,
+		_Uninitialized_fill_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Val)));
 	}
 
 		// TEMPLATE FUNCTION _Uninitialized_fill_n WITH ALLOCATOR
 template<class _FwdIt,
 	class _Diff,
-	class _Tval,
-	class _Alloc,
-	class _Valty> inline
-	void _Uninit_fill_n(_FwdIt _First, _Diff _Count,
-		const _Tval *_Pval, _Wrap_alloc<_Alloc>& _Al,
-			_Valty *, _Nonscalar_ptr_iterator_tag)
-	{	// copy _Count * *_Pval to raw _First, using _Al, arbitrary type
- #if _ITERATOR_DEBUG_LEVEL == 2
-//	if (_Count < 0)
-//		_DEBUG_ERROR("negative count in uninitialized fill");
- #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
-
+	class _Alloc> inline
+	void _Uninit_alloc_fill_n1(_FwdIt _First, _Diff _Count, const _Iter_value_t<_FwdIt> * _Pval,
+		_Wrap_alloc<_Alloc>& _Al, false_type)
+	{	// copy _Count copies of *_Pval to raw _First, using _Al, no special optimization
 	_FwdIt _Next = _First;
 
 	_TRY_BEGIN
 	for (; 0 < _Count; --_Count, (void)++_First)
-		_Al.construct(_First, *_Pval);
+		_Al.construct(_Unfancy(_First), *_Pval);
 	_CATCH_ALL
-	for (; _Next != _First; ++_Next)
-		_Al.destroy(_Next);
+	_Destroy_range(_Next, _First, _Al);
 	_RERAISE;
 	_CATCH_END
 	}
 
 template<class _FwdIt,
 	class _Diff,
-	class _Tval,
-	class _Alloc,
-	class _Valty> inline
-	void _Uninit_fill_n(_FwdIt _First, _Diff _Count,
-		const _Tval *_Pval, _Wrap_alloc<_Alloc>& _Al,
-			_Valty *, _Scalar_ptr_iterator_tag)
-	{	// copy _Count * *_Pval to raw _First, using _Al, arbitrary type
-	_Uninit_fill_n(_First, _Count,
-		_Pval, _Al, (_Valty *)0, _Nonscalar_ptr_iterator_tag());
-	}
-
-template<class _Ty,
-	class _Diff,
-	class _Tval,
-	class _Valty> inline
-	void _Uninit_fill_n(_Ty *_First, _Diff _Count,
-		const _Tval *_Pval, _Wrap_alloc<allocator<_Ty> >&,
-			_Valty *, _Scalar_ptr_iterator_tag)
-	{	// copy _Count * *_Pval to raw _First, using _Al, scalar type
-	_Fill_n(_First, _Count, *_Pval);
+	class _Alloc> inline
+	void _Uninit_alloc_fill_n1(_FwdIt _First, _Diff _Count, const _Iter_value_t<_FwdIt> * _Pval,
+		_Wrap_alloc<_Alloc>&, true_type)
+	{	// copy _Count copies of *_Pval to raw _First, using default _Alloc construct, memset optimization
+	_CSTD memset(_First, *_Pval, _Count);
 	}
 
 template<class _FwdIt,
 	class _Diff,
-	class _Tval,
 	class _Alloc> inline
 	void _Uninitialized_fill_n(_FwdIt _First, _Diff _Count,
-		const _Tval *_Pval, _Alloc& _Al)
-	{	// copy _Count * *_Pval to raw _First, using _Al
-	_Uninit_fill_n(_First, _Count, _Pval, _Al,
-		_Val_type(_First), _Ptr_cat(_First, _First));
+		const _Iter_value_t<_FwdIt> * _Pval, _Wrap_alloc<_Alloc>& _Al)
+	{	// copy _Count copies of *_Pval to raw _First, using _Al
+	_Uninit_alloc_fill_n1(_First, _Count, _Pval, _Al,
+		typename conjunction<decltype(_Fill_memset_is_safe(_First, *_Pval)),
+			_Uses_default_construct<_Alloc, decltype(_Unfancy(_First)), decltype(*_Pval)>>::type());
 	}
 
-		// TEMPLATE FUNCTION _Uninitialized_default_fill_n WITH ALLOCATOR
 template<class _FwdIt,
 	class _Diff,
-	class _Alloc,
-	class _Valty> inline
-	void _Uninit_def_fill_n(_FwdIt _First, _Diff _Count,
-		_Wrap_alloc<_Alloc>& _Al, _Valty *, _Nonscalar_ptr_iterator_tag)
-	{	// copy _Count * _Valty() to raw _First, using _Al, arbitrary type
- #if _ITERATOR_DEBUG_LEVEL == 2
-//	if (_Count < 0)
-//		_DEBUG_ERROR("negative count in uninitialized fill");
- #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
-
+	class _Alloc> inline
+	void _Uninitialized_default_fill_n1(_FwdIt _First, _Diff _Count,
+		_Wrap_alloc<_Alloc>& _Al, false_type)
+	{	// value-initialize _Count objects to raw _First, using _Al, no special optimization
 	_FwdIt _Next = _First;
 
 	_TRY_BEGIN
 	for (; 0 < _Count; --_Count, (void)++_First)
-
-		_Al.construct(_First);
-
+		_Al.construct(_Unfancy(_First));
 	_CATCH_ALL
-	for (; _Next != _First; ++_Next)
-		_Al.destroy(_Next);
+	_Destroy_range(_Next, _First, _Al);
 	_RERAISE;
 	_CATCH_END
 	}
 
 template<class _FwdIt,
 	class _Diff,
-	class _Alloc,
-	class _Valty> inline
-	void _Uninit_def_fill_n(_FwdIt _First, _Diff _Count,
-		_Wrap_alloc<_Alloc>& _Al, _Valty *, _Scalar_ptr_iterator_tag)
-	{	// copy _Count * _Valty() to raw _First, using _Al, arbitrary type
-	_Uninit_def_fill_n(_First, _Count,
-		_Al, (_Valty *)0, _Nonscalar_ptr_iterator_tag());
-	}
-
-template<class _Ty,
-	class _Diff,
-	class _Valty> inline
-	void _Uninit_def_fill_n(_Ty *_First, _Diff _Count,
-		_Wrap_alloc<allocator<_Ty> >&, _Valty *, _Scalar_ptr_iterator_tag)
-	{	// copy _Count * _Valty() to raw _First, using _Al, scalar type
-	_Fill_n(_First, _Count, (_Valty)0);
+	class _Alloc> inline
+	void _Uninitialized_default_fill_n1(_FwdIt _First, _Diff _Count,
+		_Wrap_alloc<_Alloc>&, true_type)
+	{	// value-initialize _Count objects to raw _First, using default _Alloc construct, all-bits-zero type
+	_CSTD memset(_First, 0, _Count * sizeof(_Iter_value_t<_FwdIt>));
 	}
 
 template<class _FwdIt,
 	class _Diff,
 	class _Alloc> inline
 	void _Uninitialized_default_fill_n(_FwdIt _First, _Diff _Count,
-		_Alloc& _Al)
-	{	// copy _Count * _Val_type(_First)() to raw _First, using _Al
-	_Uninit_def_fill_n(_First, _Count, _Al,
-		_Val_type(_First), _Ptr_cat(_First, _First));
+		_Wrap_alloc<_Alloc>& _Al)
+	{	// value-initialize _Count objects to raw _First, using _Al
+	typedef _Iter_value_t<_FwdIt> _Ty;
+	_Uninitialized_default_fill_n1(_First, _Count, _Al,
+		typename conjunction<
+			is_pointer<_FwdIt>,
+			is_scalar<_Ty>,
+			negation<is_volatile<_Ty>>,
+			negation<is_member_pointer<_Ty>>,
+			_Uses_default_construct<_Alloc, decltype(_Unfancy(_First))>>::type());
 	}
 
 		// TEMPLATE CLASS raw_storage_iterator
@@ -702,26 +499,32 @@ public:
 		{	// construct with iterator
 		}
 
-	raw_storage_iterator<_OutIt, _Ty>& operator*()
+	raw_storage_iterator& operator*()
 		{	// pretend to return designated value
 		return (*this);
 		}
 
-	raw_storage_iterator<_OutIt, _Ty>& operator=(const _Ty& _Val)
+	raw_storage_iterator& operator=(const _Ty& _Val)
 		{	// construct value designated by stored iterator
-		_Construct(_STD addressof(*_Next), _Val);
+		_Construct(_Unfancy(_Next), _Val);
 		return (*this);
 		}
 
-	raw_storage_iterator<_OutIt, _Ty>& operator++()
+	raw_storage_iterator& operator=(_Ty&& _Val)
+		{	// construct value designated by stored iterator
+		_Construct(_Unfancy(_Next), _STD move(_Val));
+		return (*this);
+		}
+
+	raw_storage_iterator& operator++()
 		{	// preincrement
 		++_Next;
 		return (*this);
 		}
 
-	raw_storage_iterator<_OutIt, _Ty> operator++(int)
+	raw_storage_iterator operator++(int)
 		{	// postincrement
-		raw_storage_iterator<_OutIt, _Ty> _Ans = *this;
+		raw_storage_iterator _Ans = *this;
 		++_Next;
 		return (_Ans);
 		}
@@ -752,7 +555,7 @@ public:
 		_Pbuf = &_Buf;
 		}
 
-	_Temp_iterator(const _Temp_iterator<_Ty>& _Right)
+	_Temp_iterator(const _Temp_iterator& _Right)
 		{	// construct from _Right (share active buffer)
 		_Buf._Begin = 0;	// clear stored buffer, for safe destruction
 		_Buf._Current = 0;
@@ -772,13 +575,13 @@ public:
 			}
 		}
 
-	_Temp_iterator<_Ty>& operator=(const _Temp_iterator<_Ty>& _Right)
+	_Temp_iterator& operator=(const _Temp_iterator& _Right)
 		{	// assign _Right (share active buffer)
 		_Pbuf = _Right._Pbuf;
 		return (*this);
 		}
 
-	_Temp_iterator<_Ty>& operator=(const _Ty& _Val)
+	_Temp_iterator& operator=(const _Ty& _Val)
 		{	// assign or construct value into active buffer, and increment
 		if (_Pbuf->_Current < _Pbuf->_Hiwater)
 			*_Pbuf->_Current++ = _Val;	// below high water mark, assign
@@ -788,10 +591,11 @@ public:
 			_Construct(_Ptr, _Val);
 			_Pbuf->_Hiwater = ++_Pbuf->_Current;
 			}
+
 		return (*this);
 		}
 
-	_Temp_iterator<_Ty>& operator=(_Ty&& _Val)
+	_Temp_iterator& operator=(_Ty&& _Val)
 		{	// move or construct value into active buffer, and increment
 		if (_Pbuf->_Current < _Pbuf->_Hiwater)
 			*_Pbuf->_Current++ =
@@ -802,25 +606,26 @@ public:
 			_Construct(_Ptr, _STD forward<_Ty>(_Val));
 			_Pbuf->_Hiwater = ++_Pbuf->_Current;
 			}
+
 		return (*this);
 		}
 
-	_Temp_iterator<_Ty>& operator*()
+	_Temp_iterator& operator*()
 		{	// pretend to return designated value
 		return (*this);
 		}
 
-	_Temp_iterator<_Ty>& operator++()
+	_Temp_iterator& operator++()
 		{	// pretend to preincrement
 		return (*this);
 		}
 
-	_Temp_iterator<_Ty>& operator++(int)
+	_Temp_iterator& operator++(int)
 		{	// pretend to postincrement
 		return (*this);
 		}
 
-	_Temp_iterator<_Ty>& _Init()
+	_Temp_iterator& _Init()
 		{	// set pointer at beginning of buffer
 		_Pbuf->_Current = _Pbuf->_Begin;
 		return (*this);
@@ -849,6 +654,7 @@ public:
 			_Pbuf->_Hiwater = _Pair.first;
 			_Pbuf->_Size = _Pair.second;
 			}
+
 		return (_Pbuf->_Size);
 		}
 

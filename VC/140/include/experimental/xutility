@@ -5,6 +5,7 @@
 #ifndef RC_INVOKED
 
 #include <xutility>
+#include <algorithm>
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,3)
@@ -18,7 +19,7 @@ namespace experimental {
 	// TEMPLATE FUNCTION _Erase_nodes_if
 template<class _Container,
 	class _Pr> inline
-	void _Erase_nodes_if(_Container& _Cont, _Pr _Pred)
+	void _Erase_nodes_if(_Container& _Cont, _Pr& _Pred)
 	{	// erase each element satisfying _Pred
 	auto _First = _Cont.begin();
 	auto _Last = _Cont.end();
@@ -28,6 +29,29 @@ template<class _Container,
 			_First = _Cont.erase(_First);
 		else
 			++_First;
+	}
+
+
+	// TEMPLATE FUNCTION _Erase_remove_if
+template<class _Container,
+	class _Pr> inline
+	void _Erase_remove_if(_Container& _Cont, _Pr& _Pred)
+	{	// erase each element satisfying _Pred
+	auto _First = _Cont.begin();
+	auto _Last = _Cont.end();
+	_Cont.erase(_Rechecked(_First,
+		_Remove_if_unchecked(_Unchecked(_First), _Unchecked(_Last), _Pred)), _Last);
+	}
+
+	// TEMPLATE FUNCTION _Erase_remove
+template<class _Container,
+	class _Uty> inline
+	void _Erase_remove(_Container& _Cont, const _Uty& _Val)
+	{	// erase each element matching _Val
+	auto _First = _Cont.begin();
+	auto _Last = _Cont.end();
+	_Cont.erase(_Rechecked(_First,
+		_Remove_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val)), _Last);
 	}
 
 	}	// inline namespace fundamentals_v2

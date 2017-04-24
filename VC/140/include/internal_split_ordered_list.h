@@ -52,13 +52,13 @@ public:
 
     _Myiter& _Rechecked(_Unchecked_type _Right)
     {
-        _Ptr = _Right._Ptr;
+        this->_Ptr = _Right._Ptr;
         return (*this);
     }
 
     _Unchecked_type _Unchecked() const
     {
-        return (_Unchecked_type(_Ptr, (_Mylist *)_Getcont()));
+        return (_Unchecked_type(this->_Ptr, (_Mylist *)this->_Getcont()));
     }
 
     reference operator*() const
@@ -77,7 +77,7 @@ public:
         {
             ++(*(_Mybase *)this);
         }
-        while (_Mynode() != NULL && _Mynode()->_Is_dummy());
+        while (this->_Mynode() != NULL && this->_Mynode()->_Is_dummy());
 
         return (*this);
     }
@@ -89,7 +89,7 @@ public:
         {
             ++*this;
         }
-        while (_Mynode() != NULL && _Mynode()->_Is_dummy());
+        while (this->_Mynode() != NULL && this->_Mynode()->_Is_dummy());
 
         return (_Tmp);
     }
@@ -134,13 +134,13 @@ public:
 
     _Myiter& _Rechecked(_Unchecked_type _Right)
     {
-        _Ptr = _Right._Ptr;
+        this->_Ptr = _Right._Ptr;
         return (*this);
     }
 
     _Unchecked_type _Unchecked() const
     {
-        return (_Unchecked_type(_Ptr, (_Mylist *)_Getcont()));
+        return (_Unchecked_type(this->_Ptr, (_Mylist *)this->_Getcont()));
     }
 
     reference operator*() const
@@ -159,7 +159,7 @@ public:
         {
             ++(*(_Mybase *)this);
         }
-        while (_Mynode() != NULL && _Mynode()->_Is_dummy());
+        while (this->_Mynode() != NULL && this->_Mynode()->_Is_dummy());
 
         return (*this);
     }
@@ -171,7 +171,7 @@ public:
         {
             ++*this;
         }
-        while (_Mynode() != NULL && _Mynode()->_Is_dummy());
+        while (this->_Mynode() != NULL && this->_Mynode()->_Is_dummy());
 
         return (_Tmp);
     }
@@ -278,6 +278,12 @@ public:
     }
 #endif  /* _ITERATOR_DEBUG_LEVEL == 0 */
 
+    _Nodeptr _Before_head() const _NOEXCEPT
+    {
+        // return pointer to the "before begin" pseudo node
+        return &(reinterpret_cast<_Node&>(const_cast<_Nodeptr&>(_Myhead)));
+    }
+
     _Nodeptr                                                _Myhead;            // pointer to head node
     typename _Allocator_type::template rebind<_Node>::other _M_node_allocator;  // allocator object for nodes
     _Allocator_type                                         _M_value_allocator; // allocator object for element values
@@ -304,7 +310,7 @@ public:
     {
         // Immediately allocate a dummy node with order key of 0. This node
         // will always be the head of the list.
-        _Myhead = _Buynode(0);
+        this->_Myhead = _Buynode(0);
     }
 
     ~_Split_order_list_value()
@@ -315,16 +321,16 @@ public:
     template<typename _ValTy>
     _Nodeptr _Buynode(_Split_order_key _Order_key, _ValTy&& _Value)
     {
-        _Nodeptr _Pnode = _M_node_allocator.allocate(1);
+        _Nodeptr _Pnode = this->_M_node_allocator.allocate(1);
 
         try
         {
-            _M_value_allocator.construct(std::addressof(_Myval(_Pnode)), std::forward<_ValTy>(_Value));
+            this->_M_value_allocator.construct(std::addressof(_Myval(_Pnode)), std::forward<_ValTy>(_Value));
             _Pnode->_Init(_Order_key);
         }
         catch(...)
         {
-            _M_node_allocator.deallocate(_Pnode, 1);
+            this->_M_node_allocator.deallocate(_Pnode, 1);
             throw;
         }
 
@@ -334,7 +340,7 @@ public:
     // Allocate a new node with the given order key; used to allocate dummy nodes
     _Nodeptr _Buynode(_Split_order_key _Order_key)
     {
-        _Nodeptr _Pnode = _M_node_allocator.allocate(1);
+        _Nodeptr _Pnode = this->_M_node_allocator.allocate(1);
         _Pnode->_Init(_Order_key);
 
         return (_Pnode);
@@ -388,10 +394,10 @@ public:
         clear();
 
         // Remove the head element which is not cleared by clear()
-        _Nodeptr _Pnode = _Myhead;
-        _Myhead = NULL;
+        _Nodeptr _Pnode = this->_Myhead;
+        this->_Myhead = NULL;
 
-        _ASSERT_EXPR(_Pnode != NULL && _Nextnode(_Pnode) == NULL, L"Invalid head list node");
+        _ASSERT_EXPR(_Pnode != NULL && this->_Nextnode(_Pnode) == NULL, L"Invalid head list node");
 
         _Erase(_Pnode);
     }
@@ -400,7 +406,7 @@ public:
 
     allocator_type get_allocator() const
     {
-        return (_M_value_allocator);
+        return (this->_M_value_allocator);
     }
 
     void clear()
@@ -410,16 +416,16 @@ public:
 #endif  /* _ITERATOR_DEBUG_LEVEL == 2 */
 
         _Nodeptr _Pnext;
-        _Nodeptr _Pnode = _Myhead;
+        _Nodeptr _Pnode = this->_Myhead;
 
-        _ASSERT_EXPR(_Myhead != NULL, L"Invalid head list node");
-        _Pnext = _Nextnode(_Pnode);
+        _ASSERT_EXPR(this->_Myhead != NULL, L"Invalid head list node");
+        _Pnext = this->_Nextnode(_Pnode);
         _Pnode->_M_next = NULL;
         _Pnode = _Pnext;
 
         while (_Pnode != NULL)
         {
-            _Pnext = _Nextnode(_Pnode);
+            _Pnext = this->_Nextnode(_Pnode);
             _Erase(_Pnode);
             _Pnode = _Pnext;
         }
@@ -476,7 +482,7 @@ public:
     // Returns the maximum size of the list, determined by the allocator
     size_type max_size() const
     {
-        return _M_value_allocator.max_size();
+        return this->_M_value_allocator.max_size();
     }
 
     // Swaps 'this' list with the passed in one
@@ -488,10 +494,10 @@ public:
             return;
         }
 
-        if (_M_value_allocator == _Right._M_value_allocator)
+        if (this->_M_value_allocator == _Right._M_value_allocator)
         {
-            _Swap_all(_Right);
-            std::swap(_Myhead, _Right._Myhead);
+            this->_Swap_all(_Right);
+            std::swap(this->_Myhead, _Right._Myhead);
             std::swap(_M_element_count, _Right._M_element_count);
         }
         else
@@ -508,13 +514,13 @@ public:
     // Returns a first element in the SOL, which is always a dummy
     _Full_iterator _Begin()
     {
-        return _Full_iterator(_Myhead, this);
+        return _Full_iterator(this->_Myhead, this);
     }
 
     // Returns a first element in the SOL, which is always a dummy
     _Full_const_iterator _Begin() const
     {
-        return _Full_const_iterator(_Myhead, this);
+        return _Full_const_iterator(this->_Myhead, this);
     }
 
     _Full_iterator _End()
@@ -592,9 +598,9 @@ public:
         if (!_Delete_node->_Is_dummy())
         {
             // Dummy nodes have nothing constructed, thus should not be destroyed.
-            _M_node_allocator.destroy(_Delete_node);
+            this->_M_node_allocator.destroy(_Delete_node);
         }
-        _M_node_allocator.deallocate(_Delete_node, 1);
+        this->_M_node_allocator.deallocate(_Delete_node, 1);
     }
 
     // Try to insert a new element in the list. If insert fails, return the node that
@@ -685,7 +691,7 @@ public:
     void _Erase(_Full_iterator _Previous, _Full_const_iterator& _Where)
     {
 #if _ITERATOR_DEBUG_LEVEL == 2
-        if (_Where._Getcont() != this || _Where._Ptr == _Myhead)
+        if (_Where._Getcont() != this || _Where._Ptr == this->_Myhead)
         {
             std::_DEBUG_ERROR("list erase iterator outside range");
         }
@@ -723,7 +729,7 @@ public:
             return;
         }
 
-        _Nodeptr _Previous_node = _Myhead;
+        _Nodeptr _Previous_node = this->_Myhead;
         _Full_const_iterator _Begin_iterator = _First++;
 
         // Move all elements one by one, including dummy ones
@@ -731,7 +737,7 @@ public:
         {
             _Nodeptr _Node = _Iterator._Mynode();
 
-            _Nodeptr _Dummy_node = _Node->_Is_dummy() ? _Buynode(_Node->_Get_order_key()) : _Buynode(_Node->_Get_order_key(), _Myval(_Node));
+            _Nodeptr _Dummy_node = _Node->_Is_dummy() ? _Buynode(_Node->_Get_order_key()) : _Buynode(_Node->_Get_order_key(), this->_Myval(_Node));
             _Previous_node = _Insert(_Previous_node, _Dummy_node, NULL);
             _ASSERT_EXPR(_Previous_node != NULL, L"Insertion must succeed");
             _Full_const_iterator _Where = _Iterator++;
@@ -764,7 +770,7 @@ private:
         {
             while (*_Pnext != 0)
             {
-                if ((*_Pnext)->_Ptr == (_Nodeptr)&_Myhead || _Ptr != 0 && (*_Pnext)->_Ptr != _Ptr)
+                if ((*_Pnext)->_Ptr == (_Nodeptr)&this->_Myhead || _Ptr != 0 && (*_Pnext)->_Ptr != _Ptr)
                 {
                     _Pnext = (const_iterator **)(*_Pnext)->_Getpnext();
                 }
@@ -784,7 +790,7 @@ private:
 } // namespace details;
 } // namespace Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma warning (push)
 #pragma pack(pop)

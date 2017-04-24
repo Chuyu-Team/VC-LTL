@@ -157,7 +157,19 @@ typedef struct _ATOMIC_ITYPE
 	_ITYPE operator-=(ptrdiff_t) _NOEXCEPT;
  #endif /* _ATOMIC_IS_ADDRESS_TYPE */
 
+
+// x86's stack is 4-aligned, but atomic<int64_t> needs to be 8-aligned.
+// Don't change this setting unless you know exactly what you're doing.
+
+ #ifndef _HAS_CORRECTLY_ALIGNED_ATOMIC_SPECIALIZATIONS
+  #define _HAS_CORRECTLY_ALIGNED_ATOMIC_SPECIALIZATIONS	1
+ #endif /* _HAS_CORRECTLY_ALIGNED_ATOMIC_SPECIALIZATIONS */
+
+ #if _HAS_CORRECTLY_ALIGNED_ATOMIC_SPECIALIZATIONS && !defined(_ATOMIC_IS_ADDRESS_TYPE) /* TRANSITION, VSO#221845 */
+	alignas(sizeof(_ATOMIC_UINT)) _ATOMIC_UINT _My_val;
+ #else /* _HAS_CORRECTLY_ALIGNED_ATOMIC_SPECIALIZATIONS && !defined(_ATOMIC_IS_ADDRESS_TYPE) */
 	_ATOMIC_UINT _My_val;
+ #endif /* _HAS_CORRECTLY_ALIGNED_ATOMIC_SPECIALIZATIONS && !defined(_ATOMIC_IS_ADDRESS_TYPE) */
 
 	} _ATOMIC_ITYPE;
 
@@ -170,7 +182,7 @@ template<>
 			values of _ITYPE atomically */
 	atomic() _NOEXCEPT = default;
 
-	_CONST_FUN atomic(_ITYPE _Val) _NOEXCEPT
+	constexpr atomic(_ITYPE _Val) _NOEXCEPT
 		: _ATOMIC_ITYPE{(_ATOMIC_UINT)_Val}
 		{	// construct from _Val, initialization is not atomic
 		}
@@ -203,19 +215,21 @@ template<class _Ty>
 
 	atomic() _NOEXCEPT = default;
 
-	_CONST_FUN atomic(_Ty *_Right) _NOEXCEPT
+	constexpr atomic(_Ty *_Right) _NOEXCEPT
 		: _Atomic_address{(_ATOMIC_UINT)_Right}
 		{	// construct from _Right, initialization is not atomic
 		}
 
 	_Ty *operator=(_Ty *_Right) volatile _NOEXCEPT
 		{	// assign from _Right
-		return (static_cast<_Ty *>(_Atomic_address::operator=((void *)_Right)));
+		return (reinterpret_cast<_Ty *>(
+			_Atomic_address::operator=((void *)_Right)));
 		}
 
 	_Ty *operator=(_Ty *_Right) _NOEXCEPT
 		{	// assign from _Right
-		return (static_cast<_Ty *>(_Atomic_address::operator=((void *)_Right)));
+		return (reinterpret_cast<_Ty *>(
+			_Atomic_address::operator=((void *)_Right)));
 		}
 
 	void store(_Ty *_Value,
@@ -233,36 +247,36 @@ template<class _Ty>
 	_Ty *load(memory_order _Order = memory_order_seq_cst)
 		const volatile _NOEXCEPT
 		{	// return value held in *this
-		return (static_cast<_Ty *>(_Atomic_address::load(_Order)));
+		return (reinterpret_cast<_Ty *>(_Atomic_address::load(_Order)));
 		}
 
 	_Ty *load(memory_order _Order = memory_order_seq_cst)
 		const _NOEXCEPT
 		{	// return value held in *this
-		return (static_cast<_Ty *>(_Atomic_address::load(_Order)));
+		return (reinterpret_cast<_Ty *>(_Atomic_address::load(_Order)));
 		}
 
 	operator _Ty *() const volatile _NOEXCEPT
 		{	// return value held in *this
-		return (static_cast<_Ty *>(_Atomic_address::operator void *()));
+		return (reinterpret_cast<_Ty *>(_Atomic_address::operator void *()));
 		}
 
 	operator _Ty *() const _NOEXCEPT
 		{	// return value held in *this
-		return (static_cast<_Ty *>(_Atomic_address::operator void *()));
+		return (reinterpret_cast<_Ty *>(_Atomic_address::operator void *()));
 		}
 
 	_Ty *exchange(_Ty *_Value,
 		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
 		{	// exchange value stored in *this with _Value
-		return (static_cast<_Ty *>(_Atomic_address::exchange(
+		return (reinterpret_cast<_Ty *>(_Atomic_address::exchange(
 			(void *)_Value, _Order)));
 		}
 
 	_Ty *exchange(_Ty *_Value,
 		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
 		{	// exchange value stored in *this with _Value
-		return (static_cast<_Ty *>(_Atomic_address::exchange(
+		return (reinterpret_cast<_Ty *>(_Atomic_address::exchange(
 			(void *)_Value, _Order)));
 		}
 
@@ -337,28 +351,28 @@ template<class _Ty>
 	_Ty *fetch_add(ptrdiff_t _Value,
 		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
 		{	// add _Value to value stored in *this
-		return (static_cast<_Ty *>(
+		return (reinterpret_cast<_Ty *>(
 			_Atomic_address::fetch_add(_Value * sizeof (_Obj), _Order)));
 		}
 
 	_Ty *fetch_add(ptrdiff_t _Value,
 		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
 		{	// add _Value to value stored in *this
-		return (static_cast<_Ty *>(
+		return (reinterpret_cast<_Ty *>(
 			_Atomic_address::fetch_add(_Value * sizeof (_Obj), _Order)));
 		}
 
 	_Ty *fetch_sub(ptrdiff_t _Value,
 		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
 		{	// subtract _Value from value stored in *this
-		return (static_cast<_Ty *>(
+		return (reinterpret_cast<_Ty *>(
 			_Atomic_address::fetch_sub(_Value * sizeof (_Obj), _Order)));
 		}
 
 	_Ty *fetch_sub(ptrdiff_t _Value,
 		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
 		{	// subtract _Value from value stored in *this
-		return (static_cast<_Ty *>(
+		return (reinterpret_cast<_Ty *>(
 			_Atomic_address::fetch_sub(_Value * sizeof (_Obj), _Order)));
 		}
 

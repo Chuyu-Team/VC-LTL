@@ -49,6 +49,41 @@ _END_C_LIB_DECL
  #endif /* !defined(MRTDLL) etc. */
 
 _STD_BEGIN
+
+	// FUNCTION _Stodx_v2
+inline double _Stodx_v2(const char *_Str, char **_Endptr, int _Pten, int *_Perr)
+	{	// convert string to double
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
+	const int _Orig = _Errno_ref;
+
+	_Errno_ref = 0;
+	double _Val = _CSTD strtod(_Str, _Endptr);
+	*_Perr = _Errno_ref;
+	_Errno_ref = _Orig;
+
+	if (_Pten != 0)
+		_Val *= _CSTD pow(10.0, static_cast<double>(_Pten));
+
+	return (_Val);
+	}
+
+	// FUNCTION _Stofx_v2
+inline float _Stofx_v2(const char *_Str, char **_Endptr, int _Pten, int *_Perr)
+	{	// convert string to float
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
+	const int _Orig = _Errno_ref;
+
+	_Errno_ref = 0;
+	float _Val = _CSTD strtof(_Str, _Endptr);
+	*_Perr = _Errno_ref;
+	_Errno_ref = _Orig;
+
+	if (_Pten != 0)
+		_Val *= _CSTD powf(10.0f, static_cast<float>(_Pten));
+
+	return (_Val);
+	}
+
 // TEMPLATE FUNCTION _Find_elem
 template<class _Elem> inline
 	size_t _Find_elem(_Elem *_Base, _Elem _Ch)
@@ -66,8 +101,8 @@ inline wchar_t *_Maklocwcs(const wchar_t *_Ptr)
 	wchar_t *_Ptrdest = (wchar_t *)_calloc_dbg(_Count, sizeof (wchar_t),
 		_CRT_BLOCK, __FILE__, __LINE__);
 
-	//if (!_Ptrdest)
-	//	_Xbad_alloc();
+	if (!_Ptrdest)
+		_Xbad_alloc();
 	_CSTD wmemcpy(_Ptrdest, _Ptr, _Count);
 	return (_Ptrdest);
 	}
@@ -342,7 +377,6 @@ public:
 		return (do_get(_First, _Last, _Iosbase, _State, _Val));
 		}
 
- #ifdef _LONGLONG
 	_InIt __CLR_OR_THIS_CALL get(_InIt _First, _InIt _Last,
 		ios_base& _Iosbase, ios_base::iostate& _State,
 			_LONGLONG& _Val) const
@@ -356,7 +390,6 @@ public:
 		{	// get unsigned long long from [_First, _Last) into _Val
 		return (do_get(_First, _Last, _Iosbase, _State, _Val));
 		}
- #endif /* _LONGLONG */
 
 	_InIt __CLR_OR_THIS_CALL get(_InIt _First, _InIt _Last,
 		ios_base& _Iosbase, ios_base::iostate& _State,
@@ -509,7 +542,6 @@ protected:
 		return (_First);
 		}
 
- #ifdef _LONGLONG
 	virtual _InIt __CLR_OR_THIS_CALL do_get(_InIt _First, _InIt _Last,
 		ios_base& _Iosbase, ios_base::iostate& _State,
 			_LONGLONG& _Val) const
@@ -549,21 +581,26 @@ protected:
 			_Val = _Ans;	// deliver value
 		return (_First);
 		}
- #endif /* _LONGLONG */
+
+// Sentinel value used by num_get::do_get() to enable correct "V2" behavior in _Getffld() and _Getffldx()
+#define _ENABLE_V2_BEHAVIOR	1000000000
+
+// Size of char buffer used by num_get::do_get() for float/double/long double
+#define _FLOATING_BUFFER_SIZE	(_MAX_EXP_DIG + _MAX_SIG_DIG_V2 + 16)
 
 	virtual _InIt __CLR_OR_THIS_CALL do_get(_InIt _First, _InIt _Last,
 		ios_base& _Iosbase, ios_base::iostate& _State,
 			float& _Val) const
 		{	// get float from [_First, _Last) into _Val
 		_DEBUG_RANGE(_First, _Last);
-		char _Ac[_MAX_EXP_DIG + _MAX_SIG_DIG + 16], *_Ep;
+		char _Ac[_FLOATING_BUFFER_SIZE], *_Ep;
 		int _Errno = 0;
-		int _Hexexp = 0;
-		float _Ans = _CSTD _Stofx(_Ac, &_Ep,
+		int _Hexexp = _ENABLE_V2_BEHAVIOR;
+		float _Ans = _Stofx_v2(_Ac, &_Ep,
 			_Getffld(_Ac, _First, _Last,
 				_Iosbase, &_Hexexp), &_Errno);	// gather field, convert
 
-		if (_Hexexp != 0)
+		if (_Hexexp != _ENABLE_V2_BEHAVIOR && _Hexexp != 0)
 			_Ans = _CSTD ldexpf(_Ans, 4 * _Hexexp);
 
 		if (_First == _Last)
@@ -580,14 +617,14 @@ protected:
 			double& _Val) const
 		{	// get double from [_First, _Last) into _Val
 		_DEBUG_RANGE(_First, _Last);
-		char _Ac[_MAX_EXP_DIG + _MAX_SIG_DIG + 16], *_Ep;
+		char _Ac[_FLOATING_BUFFER_SIZE], *_Ep;
 		int _Errno = 0;
-		int _Hexexp = 0;
-		double _Ans = _CSTD _Stodx(_Ac, &_Ep,
+		int _Hexexp = _ENABLE_V2_BEHAVIOR;
+		double _Ans = _Stodx_v2(_Ac, &_Ep,
 			_Getffld(_Ac, _First, _Last,
 				_Iosbase, &_Hexexp), &_Errno);	// gather field, convert
 
-		if (_Hexexp != 0)
+		if (_Hexexp != _ENABLE_V2_BEHAVIOR && _Hexexp != 0)
 			_Ans = _CSTD ldexp(_Ans, 4 * _Hexexp);
 
 		if (_First == _Last)
@@ -604,14 +641,14 @@ protected:
 			long double& _Val) const
 		{	// get long double from [_First, _Last) into _Val
 		_DEBUG_RANGE(_First, _Last);
-		char _Ac[_MAX_EXP_DIG + _MAX_SIG_DIG + 16], *_Ep;
+		char _Ac[_FLOATING_BUFFER_SIZE], *_Ep;
 		int _Errno = 0;
-		int _Hexexp = 0;
-		long double _Ans = _CSTD _Stoldx(_Ac, &_Ep,
+		int _Hexexp = _ENABLE_V2_BEHAVIOR;
+		long double _Ans = _Stodx_v2(_Ac, &_Ep,
 			_Getffld(_Ac, _First, _Last,
-				_Iosbase, &_Hexexp), &_Errno);	// gather field, convert
+				_Iosbase, &_Hexexp), &_Errno);	// gather field, convert, "widen" double to long double
 
-		if (_Hexexp != 0)
+		if (_Hexexp != _ENABLE_V2_BEHAVIOR && _Hexexp != 0)
 			_Ans = _CSTD ldexpl(_Ans, 4 * _Hexexp);
 
 		if (_First == _Last)
@@ -623,6 +660,8 @@ protected:
 		return (_First);
 		}
 
+#undef _FLOATING_BUFFER_SIZE
+
 	virtual _InIt __CLR_OR_THIS_CALL do_get(_InIt _First, _InIt _Last,
 		ios_base& _Iosbase, ios_base::iostate& _State,
 			void *& _Val) const
@@ -631,19 +670,12 @@ protected:
 		char _Ac[_MAX_INT_DIG], *_Ep;
 		int _Errno = 0;
 
- #ifdef _LONGLONG
 		int _Base = _Getifld(_Ac, _First, _Last, ios_base::hex,
 			_Iosbase.getloc());	// gather field
 		const _ULONGLONG _Ans =
 			(sizeof (void *) == sizeof (unsigned long))
 				? (_ULONGLONG)_CSTD _Stoulx(_Ac, &_Ep, _Base, &_Errno)
 				: _CSTD _Stoullx(_Ac, &_Ep, _Base, &_Errno);
-
- #else /* _LONGLONG */
-		const unsigned long _Ans = _CSTD _Stoulx(_Ac, &_Ep,
-			_Getifld(_Ac, _First, _Last, ios_base::hex,
-				_Iosbase.getloc()), &_Errno);	// gather field, convert
- #endif /* _LONGLONG */
 
 		if (_First == _Last)
 			_State |= ios_base::eofbit;
@@ -667,7 +699,7 @@ private:
 		enum {
 			_NUMGET_SIGNOFF = 22,
 			_NUMGET_XOFF = 24};
-		static const char _Src[] = {"0123456789ABCDEFabcdef-+Xx"};
+		static const char _Src[] = {"0123456789ABCDEFabcdef-+Xx"};	// TRANSITION, VSO#202551
 		_Elem _Atoms[sizeof (_Src)];
 		const ctype<_Elem>& _Ctype_fac =
 			_USE(_Loc, ctype<_Elem>);
@@ -771,7 +803,7 @@ private:
 		enum {
 			_NUMGET_SIGNOFF = 10,
 			_NUMGET_EOFF = 12};
-		static const char _Src[] = {"0123456789-+Ee"};
+		static const char _Src[] = {"0123456789-+Ee"};	// TRANSITION, VSO#202551
 		_Elem _Atoms[sizeof (_Src)];
 		const ctype<_Elem>& _Ctype_fac =
 			_USE(_Iosbase.getloc(), ctype<_Elem>);
@@ -792,12 +824,14 @@ private:
 		int _Pten = 0;	// power of 10 multiplier
 		size_t _Idx;
 
+		const int _Max_sig_dig = (*_Phexexp == _ENABLE_V2_BEHAVIOR ? _MAX_SIG_DIG_V2 : _MAX_SIG_DIG_V1);
+
 		const char *_Pg = &_Grouping[0];
 		if (*_Pg == CHAR_MAX || *_Pg <= '\0')
 			for (; _First != _Last
 				&& (_Idx = _Find_elem(_Atoms, *_First)) < 10;
 					_Seendigit = true, ++_First)
-				if (_MAX_SIG_DIG <= _Significant)
+				if (_Max_sig_dig <= _Significant)
 					{	// enough digits, scale by 10 and update _Sticky
 					++_Pten;
 					if (0 < _Idx)
@@ -821,7 +855,7 @@ private:
 				if ((_Idx = _Find_elem(_Atoms, *_First)) < 10)
 					{	// got a digit, add to group size
 					_Seendigit = true;
-					if (_MAX_SIG_DIG <= _Significant)
+					if (_Max_sig_dig <= _Significant)
 						{	// enough digits, scale by 10 and update _Sticky
 						++_Pten;
 						if (0 < _Idx)
@@ -866,7 +900,7 @@ private:
 		if (_First != _Last && *_First == _Punct_fac.decimal_point())
 			*_Ptr++ = localeconv()->decimal_point[0], ++_First;	// add .
 
-		if (_Significant == 0)
+		if (*_Phexexp != _ENABLE_V2_BEHAVIOR && _Significant == 0)
 			{	// 0000. so far
 			for (; _First != _Last && *_First == _Atoms[0];
 				_Seendigit = true, ++_First)
@@ -878,7 +912,7 @@ private:
 		for (; _First != _Last
 				&& (_Idx = _Find_elem(_Atoms, *_First)) < 10;
 				_Seendigit = true, ++_First)
-			if (_Significant < _MAX_SIG_DIG)
+			if (_Significant < _Max_sig_dig)
 				{	// save a significant fraction digit
 				*_Ptr++ = _Src[_Idx];
 				++_Significant;
@@ -953,7 +987,7 @@ private:
 			_NUMGET_SIGNOFF = 22,
 			_NUMGET_XOFF = 24,
 			_NUMGET_POFF = 26};
-		static const char _Src[] = {"0123456789ABCDEFabcdef-+XxPp"};
+		static const char _Src[] = {"0123456789ABCDEFabcdef-+XxPp"};	// TRANSITION, VSO#202551
 		_Elem _Atoms[sizeof (_Src)];
 		const ctype<_Elem>& _Ctype_fac =
 			_USE(_Iosbase.getloc(), ctype<_Elem>);
@@ -986,12 +1020,14 @@ private:
 		else
 			_Seendigit = true;	// '0' not followed by 'x' or 'X'
 
+		const int _Max_sig_dig = (*_Phexexp == _ENABLE_V2_BEHAVIOR ? _MAX_SIG_DIG_V2 : _MAX_SIG_DIG_V1);
+
 		const char *_Pg = &_Grouping[0];
 		if (*_Pg == CHAR_MAX || *_Pg <= '\0')
 			for (; _First != _Last
 				&& (_Idx = _Find_elem(_Atoms, *_First)) < _NUMGET_SIGNOFF;
 					_Seendigit = true, ++_First)
-				if (_MAX_SIG_DIG <= _Significant)
+				if (_Max_sig_dig <= _Significant)
 					++_Phex;	// just scale by 10
 				else if (_Idx == 0 && _Significant == 0)
 					;	// drop leading zeros
@@ -1011,7 +1047,7 @@ private:
 				if ((_Idx = _Find_elem(_Atoms, *_First)) < _NUMGET_SIGNOFF)
 					{	// got a digit, add to group size
 					_Seendigit = true;
-					if (_MAX_SIG_DIG <= _Significant)
+					if (_Max_sig_dig <= _Significant)
 						++_Phex;	// just scale by 10
 					else if (_Idx == 0 && _Significant == 0)
 						;	// drop leading zeros
@@ -1067,7 +1103,7 @@ private:
 		for (; _First != _Last
 				&& (_Idx = _Find_elem(_Atoms, *_First)) < _NUMGET_SIGNOFF;
 				_Seendigit = true, ++_First)
-			if (_Significant < _MAX_SIG_DIG)
+			if (_Significant < _Max_sig_dig)
 				{	// save a significant fraction digit
 				*_Ptr++ = _Src[_Idx];
 				++_Significant;
@@ -1106,6 +1142,9 @@ private:
 		*_Phexexp = _Phex;	// power of 16 multiplier
 		return (0);	// power of 10 multiplier
 		}
+
+#undef _ENABLE_V2_BEHAVIOR
+
 	};
 
 		// STATIC num_get::id OBJECT
@@ -1180,7 +1219,6 @@ public:
 		return (do_put(_Dest, _Iosbase, _Fill, _Val));
 		}
 
- #ifdef _LONGLONG
 	_OutIt __CLR_OR_THIS_CALL put(_OutIt _Dest,
 		ios_base& _Iosbase, _Elem _Fill, _LONGLONG _Val) const
 		{	// put formatted long long to _Dest
@@ -1192,7 +1230,6 @@ public:
 		{	// put formatted unsigned long long to _Dest
 		return (do_put(_Dest, _Iosbase, _Fill, _Val));
 		}
- #endif /* _LONGLONG */
 
 	_OutIt __CLR_OR_THIS_CALL put(_OutIt _Dest,
 		ios_base& _Iosbase, _Elem _Fill, double _Val) const
@@ -1263,7 +1300,6 @@ protected:
 				_Iosbase.flags()), _Val)));
 		}
 
- #ifdef _LONGLONG
 	virtual _OutIt __CLR_OR_THIS_CALL do_put(_OutIt _Dest,
 		ios_base& _Iosbase, _Elem _Fill, _LONGLONG _Val) const
 		{	// put formatted long long to _Dest
@@ -1283,7 +1319,6 @@ protected:
 			_CSTD sprintf_s(_Buf, sizeof (_Buf), _Ifmt(_Fmt, "Lu",
 				_Iosbase.flags()), _Val)));
 		}
- #endif /* _LONGLONG */
 
 	virtual _OutIt __CLR_OR_THIS_CALL do_put(_OutIt _Dest,
 		ios_base& _Iosbase, _Elem _Fill, double _Val) const
@@ -1538,7 +1573,7 @@ private:
 	_OutIt __CLRCALL_OR_CDECL _Put(_OutIt _Dest,
 		const _Elem *_Ptr, size_t _Count) const
 		{	// put [_Ptr, _Ptr + _Count) to _Dest
-		for (; 0 < _Count; --_Count, ++_Dest, ++_Ptr)
+		for (; 0 < _Count; --_Count, (void)++_Dest, ++_Ptr)
 			*_Dest = *_Ptr;
 		return (_Dest);
 		}
@@ -1546,7 +1581,7 @@ private:
 	_OutIt __CLRCALL_OR_CDECL _Rep(_OutIt _Dest,
 		_Elem _Ch, size_t _Count) const
 		{	// put _Count * _Ch to _Dest
-		for (; 0 < _Count; --_Count, ++_Dest)
+		for (; 0 < _Count; --_Count, (void)++_Dest)
 			*_Dest = _Ch;
 		return (_Dest);
 		}

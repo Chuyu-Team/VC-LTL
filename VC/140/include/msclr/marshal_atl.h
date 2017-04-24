@@ -20,7 +20,7 @@
 #include <vcclr.h>
 #include <atlcomcli.h>
 
-#include <msclr\marshal.h>
+#include <msclr/marshal.h>
 
 namespace msclr{
         namespace interop{

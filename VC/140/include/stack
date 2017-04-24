@@ -150,19 +150,21 @@ public:
 		return (c);
 		}
 
+protected:
+	_Container c;	// the underlying container
+
+public:
 	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Swap_adl(this->c, _Right.c)))
+		_NOEXCEPT_OP(_Is_nothrow_swappable<_Container>::value)
 		{	// exchange contents with _Right
 		_Swap_adl(c, _Right.c);
 		}
-
-protected:
-	_Container c;	// the underlying container
 	};
 
 		// stack TEMPLATE FUNCTIONS
 template<class _Ty,
-	class _Container> inline
+	class _Container,
+	class = enable_if_t<_Is_swappable<_Container>::value>> inline
 	void swap(stack<_Ty, _Container>& _Left,
 		stack<_Ty, _Container>& _Right)
 			_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))

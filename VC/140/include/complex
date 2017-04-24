@@ -85,7 +85,7 @@ public:
 
 	static _Ty _Infv(_Ty)
 		{	// return infinity
-		return (_CSTD _Inf._Double);
+		return (numeric_limits<double>::infinity());
 		}
 
 	static bool _Isinf(_Ty _Left)
@@ -102,7 +102,7 @@ public:
 
 	static _Ty _Nanv(_Ty)
 		{	// return NaN
-		return (_CSTD _Nan._Double);
+		return (numeric_limits<double>::quiet_NaN());
 		}
 
 	static _Ty _Sinh(_Ty _Left, _Ty _Right)
@@ -112,7 +112,7 @@ public:
 
 	static _Ty asinh(_Ty _Left)
 		{	// return asinh(_Left)
-		static const _Ty _Ln2 = 0.69314718055994530941723212145817658L;
+		constexpr _Ty _Ln2 = 0.69314718055994530941723212145817658L;
 
 		bool _Neg = _Left < 0;
 		_Ty _Ans;
@@ -215,7 +215,7 @@ public:
 
 	static _Ty _Infv(_Ty)
 		{	// return infinity
-		return (_CSTD _LInf._Long_double);
+		return (numeric_limits<long double>::infinity());
 		}
 
 	static bool _Isinf(_Ty _Left)
@@ -230,7 +230,7 @@ public:
 
 	static _Ty _Nanv(_Ty)
 		{	// return NaN
-		return (_CSTD _LNan._Long_double);
+		return (numeric_limits<long double>::quiet_NaN());
 		}
 
 	static _Ty _Sinh(_Ty _Left, _Ty _Right)
@@ -240,7 +240,7 @@ public:
 
 	static _Ty asinh(_Ty _Left)
 		{	// return asinh(_Left)
-		static const _Ty _Ln2 = 0.69314718055994530941723212145817658L;
+		constexpr _Ty _Ln2 = 0.69314718055994530941723212145817658L;
 
 		bool _Neg = _Left < 0;
 		_Ty _Ans;
@@ -343,7 +343,7 @@ public:
 
 	static _Ty _Infv(_Ty)
 		{	// return infinity
-		return (_CSTD _Inf._Double);
+		return (numeric_limits<double>::infinity());
 		}
 
 	static bool _Isinf(_Ty _Left)
@@ -358,7 +358,7 @@ public:
 
 	static _Ty _Nanv(_Ty)
 		{	// return NaN
-		return (_CSTD _Nan._Double);
+		return (numeric_limits<double>::quiet_NaN());
 		}
 
 	static _Ty _Sinh(_Ty _Left, _Ty _Right)
@@ -479,7 +479,7 @@ public:
 
 	static _Ty _Infv(_Ty)
 		{	// return infinity
-		return (_CSTD _FInf._Float);
+		return (numeric_limits<float>::infinity());
 		}
 
 	static bool _Isinf(_Ty _Left)
@@ -494,7 +494,7 @@ public:
 
 	static _Ty _Nanv(_Ty)
 		{	// return NaN
-		return (_CSTD _FNan._Float);
+		return (numeric_limits<float>::quiet_NaN());
 		}
 
 	static _Ty _Sinh(_Ty _Left, _Ty _Right)
@@ -504,7 +504,7 @@ public:
 
 	static _Ty asinh(_Ty _Left)
 		{	// return asinh(_Left)
-		static const _Ty _Ln2 = 0.69314718055994530941723212145817658F;
+		constexpr _Ty _Ln2 = 0.69314718055994530941723212145817658F;
 
 		bool _Neg = _Left < 0;
 		_Ty _Ans;
@@ -597,7 +597,7 @@ public:
 	typedef _Complex_base<_Ty, _Valbase> _Myt;
 	typedef _Ty value_type;
 
-	_CONST_FUN _Complex_base(const _Ty& _Realval, const _Ty& _Imagval)
+	constexpr _Complex_base(const _Ty& _Realval, const _Ty& _Imagval)
 		: _Valbase{{_Realval, _Imagval}}
 		{	// construct from components of same type
 		}
@@ -612,12 +612,12 @@ public:
 		return (this->_Val[_IM] = _Right);
 		}
 
-	_CONST_FUN _Ty real() const
+	constexpr _Ty real() const
 		{	// return real component
 		return (this->_Val[_RE]);
 		}
 
-	_CONST_FUN _Ty imag() const
+	constexpr _Ty imag() const
 		{	// return imaginary component
 		return (this->_Val[_IM]);
 		}
@@ -717,30 +717,30 @@ public:
 	typedef float _Ty;
 	typedef complex<_Ty> _Myt;
 
-	_CONST_FUN explicit complex(
+	constexpr explicit complex(
 		const complex<double>&);	// defined below
-	_CONST_FUN explicit complex(
+	constexpr explicit complex(
 		const complex<long double>&);	// defined below
 
-	_CONST_FUN complex(const _Ty& _Realval = 0,
+	constexpr complex(const _Ty& _Realval = 0,
 		const _Ty& _Imagval = 0)
 		: _Complex_base<float, _Fcomplex_value>(_Realval, _Imagval)
 		{	// construct from float components
 		}
 
-	_CONST_FUN complex(const _Fcomplex_value& _Right)
+	constexpr complex(const _Fcomplex_value& _Right)
 		: _Complex_base<float, _Fcomplex_value>(_Right._Val[_RE],
 			_Right._Val[_IM])
 		{	// construct from float complex value
 		}
 
-	_CONST_FUN complex(const _Dcomplex_value& _Right)
+	constexpr complex(const _Dcomplex_value& _Right)
 		: _Complex_base<float, _Fcomplex_value>(_Right._Val[_RE],
 			_Right._Val[_IM])
 		{	// construct from double complex value
 		}
 
-	_CONST_FUN complex(const _Lcomplex_value& _Right)
+	constexpr complex(const _Lcomplex_value& _Right)
 		: _Complex_base<float, _Fcomplex_value>(_Right._Val[_RE],
 			_Right._Val[_IM])
 		{	// construct from long double complex value
@@ -849,24 +849,24 @@ public:
 	typedef double _Ty;
 	typedef complex<_Ty> _Myt;
 
-	_CONST_FUN complex(
+	constexpr complex(
 		const complex<float>&);	// defined below
-	_CONST_FUN explicit complex(
+	constexpr explicit complex(
 		const complex<long double>&);	// defined below
 
-	_CONST_FUN complex(const _Ty& _Realval = 0,
+	constexpr complex(const _Ty& _Realval = 0,
 		const _Ty& _Imagval = 0)
 		: _Complex_base<double, _Dcomplex_value>(_Realval, _Imagval)
 		{	// construct from double components
 		}
 
-	_CONST_FUN complex(const _Dcomplex_value& _Right)
+	constexpr complex(const _Dcomplex_value& _Right)
 		: _Complex_base<double, _Dcomplex_value>(_Right._Val[_RE],
 			_Right._Val[_IM])
 		{	// construct from double complex value
 		}
 
-	_CONST_FUN complex(const _Lcomplex_value& _Right)
+	constexpr complex(const _Lcomplex_value& _Right)
 		: _Complex_base<double, _Dcomplex_value>(_Right._Val[_RE],
 			_Right._Val[_IM])
 		{	// construct from long double complex value
@@ -975,18 +975,18 @@ public:
 	typedef long double _Ty;
 	typedef complex<_Ty> _Myt;
 
-	_CONST_FUN complex(
+	constexpr complex(
 		const complex<float>&);	// defined below
-	_CONST_FUN complex(
+	constexpr complex(
 		const complex<double>&);	// defined below
 
-	_CONST_FUN complex(const _Ty& _Realval = 0,
+	constexpr complex(const _Ty& _Realval = 0,
 		const _Ty& _Imagval = 0)
 		: _Complex_base<long double, _Lcomplex_value>(_Realval, _Imagval)
 		{	// construct from long double components
 		}
 
-	_CONST_FUN complex(const _Lcomplex_value& _Right)
+	constexpr complex(const _Lcomplex_value& _Right)
 		: _Complex_base<long double, _Lcomplex_value>(_Right._Val[_RE],
 			_Right._Val[_IM])
 		{	// construct from long double complex value
@@ -1087,42 +1087,42 @@ public:
 	};
 
 		// CONSTRUCTORS FOR complex SPECIALIZATIONS
-inline _CONST_FUN complex<float>::complex(
+inline constexpr complex<float>::complex(
 	const complex<double>& _Right)
 		: _Complex_base<float, _Fcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<float> from complex<double>
 	}
 
-inline _CONST_FUN complex<float>::complex(
+inline constexpr complex<float>::complex(
 	const complex<long double>& _Right)
 		: _Complex_base<float, _Fcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<float> from complex<long double>
 	}
 
-inline _CONST_FUN complex<double>::complex(
+inline constexpr complex<double>::complex(
 	const complex<float>& _Right)
 		: _Complex_base<double, _Dcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<double> from complex<float>
 	}
 
-inline _CONST_FUN complex<double>::complex(
+inline constexpr complex<double>::complex(
 	const complex<long double>& _Right)
 		: _Complex_base<double, _Dcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<double> from complex<long double>
 	}
 
-inline _CONST_FUN complex<long double>::complex(
+inline constexpr complex<long double>::complex(
 	const complex<float>& _Right)
 		: _Complex_base<long double, _Lcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<long double> from complex<float>
 	}
 
-inline _CONST_FUN complex<long double>::complex(
+inline constexpr complex<long double>::complex(
 	const complex<double>& _Right)
 		: _Complex_base<long double, _Lcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
@@ -1138,7 +1138,7 @@ public:
 	typedef complex<_Ty> _Myt;
 	typedef _Complex_base<_Ty, _Complex_value<_Ty> > _Mybase;
 
-	_CONST_FUN complex(const _Ty& _Realval = _Ty(),
+	constexpr complex(const _Ty& _Realval = _Ty(),
 		const _Ty& _Imagval = _Ty())
 		: _Mybase(_Realval, _Imagval)
 		{	// construct from components of same type
@@ -1152,7 +1152,7 @@ public:
 		}
 
 	template<class _Other>
-		_CONST_FUN complex(const complex<_Other>& _Right)
+		constexpr complex(const complex<_Other>& _Right)
 		: _Mybase((_Ty)_Right.real(), (_Ty)_Right.imag())
 		{	// construct from other complex type
 		}
@@ -1312,39 +1312,49 @@ template<class _Ty,
 	}
 
 	// complex LITERALS
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wuser-defined-literals"
+#endif /* __clang__ */
+
 inline namespace literals {
 inline namespace complex_literals {
-inline _CONST_FUN complex<long double> operator""il(long double _Val)
+inline constexpr complex<long double> operator""il(long double _Val)
 	{	// return imaginary _Val
 	return (complex<long double>(0.0L, static_cast<long double>(_Val)));
 	}
 
-inline _CONST_FUN complex<long double> operator""il(unsigned long long _Val)
+inline constexpr complex<long double> operator""il(unsigned long long _Val)
 	{	// return imaginary _Val
 	return (complex<long double>(0.0L, static_cast<long double>(_Val)));
 	}
 
-inline _CONST_FUN complex<double> operator""i(long double _Val)
+inline constexpr complex<double> operator""i(long double _Val)
 	{	// return imaginary _Val
 	return (complex<double>(0.0, static_cast<double>(_Val)));
 	}
 
-inline _CONST_FUN complex<double> operator""i(unsigned long long _Val)
+inline constexpr complex<double> operator""i(unsigned long long _Val)
 	{	// return imaginary _Val
 	return (complex<double>(0.0, static_cast<double>(_Val)));
 	}
 
-inline _CONST_FUN complex<float> operator""if(long double _Val)
+inline constexpr complex<float> operator""if(long double _Val)
 	{	// return imaginary _Val
 	return (complex<float>(0.0f, static_cast<float>(_Val)));
 	}
 
-inline _CONST_FUN complex<float> operator""if(unsigned long long _Val)
+inline constexpr complex<float> operator""if(unsigned long long _Val)
 	{	// return imaginary _Val
 	return (complex<float>(0.0f, static_cast<float>(_Val)));
 	}
 }	// inline namespace complex_literals
 }	// inline namespace literals
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
+
 _STD_END
 
  #pragma pop_macro("new")

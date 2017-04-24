@@ -34,7 +34,7 @@
 #undef new
 
 #pragma warning(push)
-#pragma warning(disable:4458)
+#pragma warning(disable:4263 4264 4458)
 
 ATLPREFAST_SUPPRESS(6385)
 #include <gdiplus.h>
@@ -1203,7 +1203,7 @@ inline HRESULT CImage::GetImporterFilterString(
 	status = Gdiplus::GetImageDecodersSize( &nCodecs, &nSize );
     if (status != Gdiplus::Ok)
         return( E_FAIL );
-    
+
 	USES_ATL_SAFE_ALLOCA;
 	pCodecs = static_cast< Gdiplus::ImageCodecInfo* >( _ATL_SAFE_ALLOCA(nSize, _ATL_SAFE_ALLOCA_DEF_THRESHOLD) );
 

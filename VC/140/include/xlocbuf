@@ -33,31 +33,24 @@ public:
 	typedef typename _Codecvt::state_type state_type;
 
 	explicit wbuffer_convert(_Mysb *_Strbuf = 0)
-		: _Pcvt(new _Codecvt),
+		: _State(), _Pcvt(new _Codecvt),
 			_Mystrbuf(_Strbuf), _Status(_Unused), _Nback(0)
 		{	// construct with byte stream buffer pointer
-		static state_type _State0;
-
-		_State = _State0;
 		_Loc = locale(_Loc, _Pcvt);
 		}
 
 	wbuffer_convert(_Mysb *_Strbuf, const _Codecvt *_Pcvt_arg)
-		: _Pcvt(_Pcvt_arg),
+		: _State(), _Pcvt(_Pcvt_arg),
 			_Mystrbuf(_Strbuf), _Status(_Unused), _Nback(0)
 		{	// construct with byte stream buffer pointer and codecvt
-		static state_type _State0;
-
-		_State = _State0;
 		_Loc = locale(_Loc, _Pcvt);
 		}
 
 	wbuffer_convert(_Mysb *_Strbuf,
 		const _Codecvt *_Pcvt_arg, state_type _State_arg)
-		: _Pcvt(_Pcvt_arg),
+		: _State(_State_arg), _Pcvt(_Pcvt_arg),
 			_Mystrbuf(_Strbuf), _Status(_Unused), _Nback(0)
 		{	// construct with byte stream buffer pointer, codecvt, and state
-		_State = _State_arg;
 		_Loc = locale(_Loc, _Pcvt);
 		}
 
@@ -315,8 +308,7 @@ template<class _Codecvt,
 	enum {_BUF_INC = 8, _BUF_MAX = 16};
 	void _Init(const _Codecvt *_Pcvt_arg = new _Codecvt)
 		{	// initialize the object
-		static state_type _State0;
-		_State = _State0;
+		_State = state_type{};
 		_Pcvt = _Pcvt_arg;
 		_Loc = locale(_Loc, _Pcvt);
 		_Nconv = 0;
@@ -394,12 +386,11 @@ public:
 
 	wide_string from_bytes(const char *_First, const char *_Last)
 		{	// convert byte sequence [_First, _Last) to a wide string
-		static state_type _State0;
 		wide_string _Wbuf, _Wstr;
 		const char *_First_sav = _First;
 
 		if (!_Has_state)
-			_State = _State0;	// reset state if not remembered
+			_State = state_type{};	// reset state if not remembered
 		_Wbuf.append((_CSTD size_t)_BUF_INC, (_Elem)'\0');
 		for (_Nconv = 0; _First != _Last; _Nconv = _First - _First_sav)
 			{	// convert one or more bytes
@@ -459,12 +450,11 @@ public:
 
 	byte_string to_bytes(const _Elem *_First, const _Elem *_Last)
 		{	// convert wide sequence [_First, _Last) to a byte string
-		static state_type _State0;
 		byte_string _Bbuf, _Bstr;
 		const _Elem *_First_sav = _First;
 
 		if (!_Has_state)
-			_State = _State0;	// reset state if not remembered
+			_State = state_type{};	// reset state if not remembered
 		_Bbuf.append((_CSTD size_t)_BUF_INC, '\0');
 		for (_Nconv = 0; _First != _Last; _Nconv = _First - _First_sav)
 			{	// convert one or more wide chars

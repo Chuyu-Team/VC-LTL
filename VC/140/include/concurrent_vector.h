@@ -390,7 +390,12 @@ namespace details
             rebind<_Ty>::other _Allocator_type;
         _Allocator_type _My_allocator;
 
-        _Allocator_base(const _Allocator_type &_Al = _Allocator_type() )
+        _Allocator_base()
+            : _My_allocator()
+        {
+        }
+
+        _Allocator_base(const _Allocator_type &_Al)
             : _My_allocator(_Al)
         {
         }
@@ -1961,7 +1966,7 @@ inline void swap(concurrent_vector<_Ty, _Ax> &_A, concurrent_vector<_Ty, _Ax> &_
 
 } // namespace Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma pop_macro("new")
 #pragma warning (pop)

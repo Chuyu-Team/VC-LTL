@@ -33,6 +33,7 @@ using _CSTD uint_fast32_t; using _CSTD uint_fast64_t;
 using _CSTD intmax_t; using _CSTD intptr_t;
 using _CSTD uintmax_t; using _CSTD uintptr_t;
 
+#if _HAS_TR1_NAMESPACE
 	namespace tr1 {
 using _CSTD int8_t; using _CSTD int16_t;
 using _CSTD int32_t; using _CSTD int64_t;
@@ -52,6 +53,7 @@ using _CSTD uint_fast32_t; using _CSTD uint_fast64_t;
 using _CSTD intmax_t; using _CSTD intptr_t;
 using _CSTD uintmax_t; using _CSTD uintptr_t;
 	}	// namespace tr1
+#endif /* _HAS_TR1_NAMESPACE */
 _STD_END
  #endif /* _GLOBAL_USING */
 

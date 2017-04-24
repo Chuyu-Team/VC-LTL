@@ -111,13 +111,13 @@ public:
 		_Out_writes_all_(nElements) T* pDest,
 		_In_reads_(nElements) const T* pSrc,
 		_In_ size_t nElements)
-	{		
+	{
 		for( size_t iElement = 0; iElement < nElements; iElement++ )
 		{
 			pDest[iElement] = pSrc[iElement];
 		}
 	}
-	
+
 	static void RelocateElements(
 		_Out_writes_all_(nElements) T* pDest,
 		_In_reads_(nElements) T* pSrc,
@@ -332,8 +332,8 @@ public:
 	typedef ATL::CAutoPtr< T >& INARGTYPE;
 	typedef T*& OUTARGTYPE;
 
-    // Specialise copy elements to allow non-const since we transfer ownership on assignment
-    static void CopyElements(
+	// Specialize copy elements to allow non-const since we transfer ownership on assignment
+	static void CopyElements(
 		_Out_writes_(nElements) ::ATL::CAutoPtr< T >* pDest,
 		_In_reads_(nElements) ::ATL::CAutoPtr< T >* pSrc,
 		_In_ size_t nElements)
@@ -353,8 +353,8 @@ public:
 	typedef ATL::CAutoVectorPtr< T >& INARGTYPE;
 	typedef T*& OUTARGTYPE;
 
-    // Specialise copy elements to allow non-const since we transfer ownership on assignment
-    static void CopyElements(
+	// Specialize copy elements to allow non-const since we transfer ownership on assignment
+	static void CopyElements(
 		_Out_writes_(nElements) ::ATL::CAutoVectorPtr< T >* pDest,
 		_In_reads_(nElements) ::ATL::CAutoVectorPtr< T >* pSrc,
 		_In_ size_t nElements)
@@ -422,7 +422,7 @@ public:
 	{
 		ULONG nHash = 0;
 
-		const T::XCHAR* pch = str;
+		const typename T::XCHAR* pch = str;
 
 		ATLENSURE( pch != NULL );
 
@@ -455,11 +455,13 @@ class CStringRefElementTraits :
 	public CElementTraitsBase< T >
 {
 public:
+	using typename CElementTraitsBase<T>::INARGTYPE;
+
 	static ULONG Hash(_In_ INARGTYPE str)
 	{
 		ULONG nHash = 0;
 
-		const T::XCHAR* pch = str;
+		const typename T::XCHAR* pch = str;
 
 		ATLENSURE( pch != NULL );
 
@@ -810,13 +812,13 @@ bool CAtlArray< E, ETraits >::GrowBuffer(_In_ size_t nNewSize)
 			size_t nGrowBy = m_nGrowBy;
 			if( nGrowBy == 0 )
 			{
-				// use 1.5 ratio for growing buffers				
+				// use 1.5 ratio for growing buffers
 				nGrowBy = m_nMaxSize / 2;
-				
+
 				if ((nNewSize - m_nMaxSize) > nGrowBy)
 				{
 					nGrowBy = nNewSize - m_nMaxSize;
-				}				
+				}
 			}
 			size_t nNewMax;
 			if( nNewSize < (m_nMaxSize+nGrowBy) )
@@ -1029,7 +1031,7 @@ void CAtlArray< E, ETraits >::InsertAt(
 		{
 			AtlThrow( E_OUTOFMEMORY );
 		}
-		// destroy intial data before copying over it
+		// destroy initial data before copying over it
 		CallDestructors( m_pData+nOldSize, nElements );
 		// shift old data up to fill gap
 		ETraits::RelocateElements( m_pData+(iElement+nElements), m_pData+iElement,
@@ -1154,7 +1156,7 @@ void CAtlArray< E, ETraits >::CallDestructors(
 	_In_ size_t nElements) throw()
 {
 	(pElements);
-	
+
 	for( size_t iElement = 0; iElement < nElements; iElement++ )
 	{
 		pElements[iElement].~E();
@@ -1470,7 +1472,7 @@ CAtlList< E, ETraits >::CAtlList(_In_ UINT nBlockSize) throw() :
 }
 
 template< typename E, class ETraits >
-void CAtlList< E, ETraits >::RemoveAll()
+void CAtlList< E, ETraits >::RemoveAll() throw()
 {
 	while( m_nElements > 0 )
 	{
@@ -1710,7 +1712,7 @@ E CAtlList< E, ETraits >::RemoveHead()
 }
 
 template< typename E, class ETraits >
-void CAtlList< E, ETraits >::RemoveHeadNoReturn()
+void CAtlList< E, ETraits >::RemoveHeadNoReturn() throw()
 {
 	ATLENSURE( m_pHead != NULL );
 
@@ -1752,7 +1754,7 @@ E CAtlList< E, ETraits >::RemoveTail()
 }
 
 template< typename E, class ETraits >
-void CAtlList< E, ETraits >::RemoveTailNoReturn()
+void CAtlList< E, ETraits >::RemoveTailNoReturn() throw()
 {
 	ATLENSURE( m_pTail != NULL );
 
@@ -1829,7 +1831,7 @@ POSITION CAtlList< E, ETraits >::InsertAfter(
 }
 
 template< typename E, class ETraits >
-void CAtlList< E, ETraits >::RemoveAt(_In_ POSITION pos)
+void CAtlList< E, ETraits >::RemoveAt(_In_ POSITION pos) throw()
 {
 	ATLASSERT_VALID(this);
 	ATLENSURE( pos != NULL );
@@ -2866,7 +2868,7 @@ bool CAtlMap< K, V, KTraits, VTraits >::RemoveKey(/* _In_ */ KINARGTYPE key) thr
 template< typename K, typename V, class KTraits, class VTraits >
 void CAtlMap< K, V, KTraits, VTraits >::RemoveNode(
 	_In_ CNode* pNode,
-	_In_opt_ CNode* pPrev)
+	_In_opt_ CNode* pPrev) throw()
 {
 	ATLENSURE( pNode != NULL );
 
@@ -2886,7 +2888,7 @@ void CAtlMap< K, V, KTraits, VTraits >::RemoveNode(
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
-void CAtlMap< K, V, KTraits, VTraits >::RemoveAtPos(_In_ POSITION pos)
+void CAtlMap< K, V, KTraits, VTraits >::RemoveAtPos(_In_ POSITION pos) throw()
 {
 	ATLENSURE( pos != NULL );
 
@@ -3127,7 +3129,7 @@ void CAtlMap< K, V, KTraits, VTraits >::AssertValid() const
 #undef new
 
 //
-// The red-black tree code is based on the the descriptions in
+// The red-black tree code is based on the descriptions in
 // "Introduction to Algorithms", by Cormen, Leiserson, and Rivest
 //
 template< typename K, typename V, class KTraits = CElementTraits< K >, class VTraits = CElementTraits< V > >
@@ -3306,7 +3308,7 @@ inline bool CRBTree< K, V, KTraits, VTraits >::IsNil(_In_ CNode *p) const throw(
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
-inline void CRBTree< K, V, KTraits, VTraits >::SetNil(_Outptr_ CNode **p)
+inline void CRBTree< K, V, KTraits, VTraits >::SetNil(_Outptr_ CNode **p) throw()
 {
 	ATLENSURE( p != NULL );
 	*p = m_pNil;
@@ -3584,7 +3586,7 @@ typename CRBTree< K, V, KTraits, VTraits >::CNode* CRBTree< K, V, KTraits, VTrai
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
-void CRBTree< K, V, KTraits, VTraits >::FreeNode(_Inout_ CNode* pNode)
+void CRBTree< K, V, KTraits, VTraits >::FreeNode(_Inout_ CNode* pNode) throw()
 {
 	ATLENSURE( pNode != NULL );
 	pNode->~CNode();
@@ -3775,7 +3777,7 @@ typename CRBTree< K, V, KTraits, VTraits >::CNode* CRBTree< K, V, KTraits, VTrai
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
-void CRBTree< K, V, KTraits, VTraits >::SwapNode(_Out_ CNode* pDest, _Inout_ CNode* pSrc)
+void CRBTree< K, V, KTraits, VTraits >::SwapNode(_Out_ CNode* pDest, _Inout_ CNode* pSrc) throw()
 {
 	ATLENSURE( pDest != NULL );
 	ATLENSURE( pSrc != NULL );
@@ -3835,7 +3837,7 @@ typename CRBTree< K, V, KTraits, VTraits >::CNode* CRBTree< K, V, KTraits, VTrai
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
-void CRBTree< K, V, KTraits, VTraits >::RBDeleteFixup(_In_ CNode* pNode)
+void CRBTree< K, V, KTraits, VTraits >::RBDeleteFixup(_In_ CNode* pNode) throw()
 {
 	ATLENSURE( pNode != NULL );
 
@@ -4185,6 +4187,11 @@ class CRBMap :
 	public CRBTree< K, V, KTraits, VTraits >
 {
 public:
+	using typename CRBTree<K, V, KTraits, VTraits>::KINARGTYPE;
+	using typename CRBTree<K, V, KTraits, VTraits>::VINARGTYPE;
+	using typename CRBTree<K, V, KTraits, VTraits>::VOUTARGTYPE;
+	typedef typename CRBTree<K, V, KTraits, VTraits>::CPair CPair;
+
 	explicit CRBMap(_In_ size_t nBlockSize = 10) throw();
 	~CRBMap() throw();
 
@@ -4261,7 +4268,7 @@ bool CRBMap< K, V, KTraits, VTraits >::RemoveKey(/* _In_ */ KINARGTYPE key) thro
 	POSITION pos = Lookup( key );
 	if( pos != NULL )
 	{
-		RemoveAt( pos );
+		this->RemoveAt( pos );
 
 		return( true );
 	}
@@ -4276,6 +4283,10 @@ class CRBMultiMap :
 	public CRBTree< K, V, KTraits, VTraits >
 {
 public:
+	using typename CRBTree<K, V, KTraits, VTraits>::KINARGTYPE;
+	using typename CRBTree<K, V, KTraits, VTraits>::VINARGTYPE;
+	typedef typename CRBTree<K, V, KTraits, VTraits>::CPair CPair;
+
 	explicit CRBMultiMap(_In_ size_t nBlockSize = 10) throw();
 	~CRBMultiMap() throw();
 
@@ -4329,7 +4340,7 @@ size_t CRBMultiMap< K, V, KTraits, VTraits >::RemoveKey(
 	{
 		POSITION posDelete = pos;
 		GetNextWithKey( pos, key );
-		RemoveAt( posDelete );
+		this->RemoveAt( posDelete );
 		nElementsDeleted++;
 	}
 
@@ -4349,7 +4360,7 @@ const typename CRBMultiMap< K, V, KTraits, VTraits >::CPair* CRBMultiMap< K, V, 
 	/* _In_ */ KINARGTYPE key) const throw()
 {
 	ATLASSERT( pos != NULL );
-	const CPair* pNode = GetNext( pos );
+	const CPair* pNode = this->GetNext( pos );
 	if( (pos == NULL) || !KTraits::CompareElements( static_cast< CPair* >( pos )->m_key, key ) )
 	{
 		pos = NULL;
@@ -4364,7 +4375,7 @@ typename CRBMultiMap< K, V, KTraits, VTraits >::CPair* CRBMultiMap< K, V, KTrait
 	/* _In_ */ KINARGTYPE key) throw()
 {
 	ATLASSERT( pos != NULL );
-	CPair* pNode = GetNext( pos );
+	CPair* pNode = this->GetNext( pos );
 	if( (pos == NULL) || !KTraits::CompareElements( static_cast< CPair* >( pos )->m_key, key ) )
 	{
 		pos = NULL;

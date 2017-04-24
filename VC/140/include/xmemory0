@@ -15,13 +15,7 @@
  #undef new
 
  #if !defined(_DECLSPEC_ALLOCATOR)
-
-  #if 1900 <= _MSC_VER && !defined(__EDG__)
-   #define _DECLSPEC_ALLOCATOR	__declspec(allocator)
-
-  #else /* 1900 <= _MSC_VER, etc. */
-   #define _DECLSPEC_ALLOCATOR
-  #endif /* 1900 <= _MSC_VER, etc. */
+  #define _DECLSPEC_ALLOCATOR	__declspec(allocator)
  #endif /* !defined(_DECLSPEC_ALLOCATOR) */
 
  #pragma warning(disable: 4100)
@@ -47,30 +41,30 @@ _STD_BEGIN
   #endif /* defined(_WIN64) */
  #endif /* _DEBUG */
 
-		// TEMPLATE FUNCTION _Allocate
-template<class _Ty> inline
-	_DECLSPEC_ALLOCATOR _Ty *_Allocate(size_t _Count, _Ty *,
+		// FUNCTION _Allocate
+inline
+	_DECLSPEC_ALLOCATOR void *_Allocate(size_t _Count, size_t _Sz,
 		bool _Try_aligned_allocation = true)
-	{	// allocate storage for _Count elements of type _Ty
+	{	// allocate storage for _Count elements of size _Sz
 	void *_Ptr = 0;
 
 	if (_Count == 0)
-		return (static_cast<_Ty *>(_Ptr));
+		return (_Ptr);
 
 	// check overflow of multiply
-	//if ((size_t)(-1) / sizeof (_Ty) < _Count)
-	//	_Xbad_alloc();	// report no memory
-	const size_t _User_size = _Count * sizeof (_Ty);
+	if ((size_t)(-1) / _Sz < _Count)
+		_Xbad_alloc();	// report no memory
+	const size_t _User_size = _Count * _Sz;
 
  #if defined(_M_IX86) || defined(_M_X64)
 	if (_Try_aligned_allocation
 		&& _BIG_ALLOCATION_THRESHOLD <= _User_size)
 		{	// allocate large block
-		//static_assert(sizeof (void *) < _BIG_ALLOCATION_ALIGNMENT,
-		//	"Big allocations should at least match vector register size");
+		static_assert(sizeof (void *) < _BIG_ALLOCATION_ALIGNMENT,
+			"Big allocations should at least match vector register size");
 		const size_t _Block_size = _NON_USER_SIZE + _User_size;
-		//if (_Block_size <= _User_size)
-		//	_Xbad_alloc();	// report no memory
+		if (_Block_size <= _User_size)
+			_Xbad_alloc();	// report no memory
 		const uintptr_t _Ptr_container =
 			reinterpret_cast<uintptr_t>(::operator new(_Block_size));
 		_SCL_SECURE_ALWAYS_VALIDATE(_Ptr_container != 0);
@@ -89,16 +83,16 @@ template<class _Ty> inline
 		_Ptr = ::operator new(_User_size);
 		_SCL_SECURE_ALWAYS_VALIDATE(_Ptr != 0);
 		}
-	return (static_cast<_Ty *>(_Ptr));
+	return (_Ptr);
 	}
 
-		// TEMPLATE FUNCTION _Deallocate
-template<class _Ty> inline
-	void _Deallocate(_Ty * _Ptr, size_t _Count)
-	{	// deallocate storage for _Count elements of type _Ty
+		// FUNCTION _Deallocate
+inline
+	void _Deallocate(void * _Ptr, size_t _Count, size_t _Sz)
+	{	// deallocate storage for _Count elements of size _Sz
  #if defined(_M_IX86) || defined(_M_X64)
-	_SCL_SECURE_ALWAYS_VALIDATE(_Count <= (size_t)(-1) / sizeof (_Ty));
-	const size_t _User_size = _Count * sizeof (_Ty);
+	_SCL_SECURE_ALWAYS_VALIDATE(_Count <= (size_t)(-1) / _Sz);
+	const size_t _User_size = _Count * _Sz;
 	if (_BIG_ALLOCATION_THRESHOLD <= _User_size)
 		{	// deallocate large block
 		const uintptr_t _Ptr_user = reinterpret_cast<uintptr_t>(_Ptr);
@@ -131,7 +125,7 @@ template<class _Ty> inline
 		_SCL_SECURE_ALWAYS_VALIDATE(_Ptr_user - _Ptr_container
 			<= _NON_USER_SIZE);
 
-		_Ptr = reinterpret_cast<_Ty *>(_Ptr_container);
+		_Ptr = reinterpret_cast<void *>(_Ptr_container);
 		}
  #endif /* defined(_M_IX86) || defined(_M_X64) */
 
@@ -153,37 +147,6 @@ template<class _Ty1> inline
 	void *_Vptr = _Ptr;
 
 	::new (_Vptr) _Ty1();
-	}
-
-		// TEMPLATE FUNCTION _Destroy
-template<class _Ty> inline
-	void _Destroy(_Ty *_Ptr)
-	{	// destroy object at _Ptr
-	_Ptr->~_Ty();
-	}
-
-		// TEMPLATE FUNCTION _Destroy_range
-template<class _Alloc> inline
-	void _Destroy_range(typename _Alloc::pointer _First,
-		typename _Alloc::pointer _Last, _Alloc& _Al,
-		_Nonscalar_ptr_iterator_tag)
-	{	// destroy [_First, _Last), arbitrary type
-	for (; _First != _Last; ++_First)
-		_Al.destroy(_STD addressof(*_First));
-	}
-
-template<class _Alloc> inline
-	void _Destroy_range(typename _Alloc::pointer _First,
-		typename _Alloc::pointer _Last, _Alloc& _Al,
-		_Scalar_ptr_iterator_tag)
-	{	// destroy [_First, _Last), scalar type (do nothing)
-	}
-
-template<class _Alloc> inline
-	void _Destroy_range(typename _Alloc::pointer _First,
-		typename _Alloc::pointer _Last, _Alloc& _Al)
-	{	// destroy [_First, _Last)
-	_Destroy_range(_First, _Last, _Al, _Ptr_cat(_First, _Last));
 	}
 
 		// TEMPLATE CLASS _Is_simple_alloc
@@ -318,6 +281,33 @@ template<class _Ty>
 		}
 	};
 
+
+		// TEMPLATE FUNCTION _Destroy
+template<class _Ptrty> inline
+	void _Destroy(_Ptrty _Ptr)
+	{	// destroy object at _Ptr
+	typedef typename pointer_traits<_Ptrty>::element_type _Ty;
+	_Ptr->~_Ty();
+	}
+
+		// FUNCTION TEMPLATE _Const_cast
+template<class _Ptrty> inline
+	auto _Const_cast(_Ptrty _Ptr)
+	{	// remove constness from a fancy pointer
+	using _Elem = typename pointer_traits<_Ptrty>::element_type;
+	using _Modifiable = remove_const_t<_Elem>;
+	using _Dest = typename pointer_traits<_Ptrty>::template rebind<_Modifiable>;
+
+	return (pointer_traits<_Dest>::pointer_to(const_cast<_Modifiable&>(*_Ptr)));
+	}
+
+template<class _Ty> inline
+	auto _Const_cast(_Ty * _Ptr)
+	{	// remove constness from a plain pointer
+	return (const_cast<remove_const_t<_Ty> *>(_Ptr));
+	}
+
+
 		// TEMPLATE STRUCT _Get_pointer_type
 template<class _Ty>
 	struct _Get_pointer_type
@@ -383,6 +373,44 @@ template<class _Ty>
 	_GET_TYPE_OR_DEFAULT(is_always_equal,
 		typename is_empty<_Ty>::type);
 
+		// STRUCT TEMPLATE _Unwrap_alloc
+template<class _Ty>
+	class allocator;
+template<class _Alloc>
+	struct _Wrap_alloc;
+
+template<class _Alloc>
+	struct _Unwrap_alloc
+	{	// extracts a wrapped allocator type if it is wrapped; otherwise, passes it through unchanged
+	typedef _Alloc type;
+	};
+
+template<class _Alloc>
+	struct _Unwrap_alloc<_Wrap_alloc<_Alloc>>
+	{	// extracts a wrapped allocator type if it is wrapped; otherwise, passes it through unchanged
+	typedef _Alloc type;
+	};
+
+
+		// ALIAS TEMPLATE _Unwrap_alloc_t
+template<class _Alloc>
+	using _Unwrap_alloc_t = typename _Unwrap_alloc<_Alloc>::type;
+
+
+		// STRUCT TEMPLATE _Is_default_allocator
+template<class _Alloc,
+	class = void>
+	struct _Is_default_allocator
+		: false_type
+	{	// tests whether _Alloc is non-specialized default allocator (N4582 20.9.9 [default.allocator])
+	};
+
+template<class _Ty>
+	struct _Is_default_allocator<allocator<_Ty>, typename allocator<_Ty>::_Not_user_specialized>
+		: true_type
+	{	// tests whether _Alloc is non-specialized default allocator (N4582 20.9.9 [default.allocator])
+	};
+
 		// STRUCT _Alloc_allocate
 struct _Alloc_allocate
 	{	// determines allocator_traits<_Alloc>
@@ -411,54 +439,75 @@ struct _Alloc_allocate
 		}
 	};
 
-		// STRUCT _Alloc_construct
-struct _Alloc_construct
-	{	// determines allocator_traits<_Ty>
-		// ::construct(_Ty&, _Objty *, _Types...)
-
-	template<class _Ty,
-		class _Objty,
-		class... _Types>
-		static auto _Fn(int, _Ty& _Al, _Objty *_Ptr,
-			_Types&&... _Args)
-			-> decltype(
-				_Al.construct(_Ptr, _STD forward<_Types>(_Args)...))
-		{	// call allocator supplied version
-		_Al.construct(_Ptr, _STD forward<_Types>(_Args)...);
-		}
-
-	template<class _Ty,
-		class _Objty,
-		class... _Types>
-		static auto _Fn(_Wrap_int, _Ty&, _Objty *_Ptr,
-			_Types&&... _Args)
-			-> void
-		{	// call default version
-		::new (static_cast<void *>(_Ptr))
-			_Objty(_STD forward<_Types>(_Args)...);
-		}
-
+		// ALIAS TEMPLATES _Uses_default_construct AND _Uses_default_construct_t
+struct _Has_no_alloc_construct_tag
+	{	// TRANSITION, C1XX
 	};
 
-		// STRUCT _Alloc_destroy
-struct _Alloc_destroy
-	{	// determines allocator_traits<_Ty>::destroy(_Ty&, _Objty *)
-	template<class _Ty,
-		class _Objty>
-		static auto _Fn(int, _Ty& _Al, _Objty *_Ptr)
-			-> decltype(_Al.destroy(_Ptr))
-		{	// call allocator supplied version
-		_Al.destroy(_Ptr);
-		}
-
-	template<class _Ty,
-		class _Objty>
-		static auto _Fn(_Wrap_int, _Ty&, _Objty *_Ptr)
-			-> void
-		{	// call default version
-		_Ptr->~_Objty();
-		}
+template<class _Void,
+	class... _Types>
+	struct _Has_no_alloc_construct
+		: true_type
+	{	// determines whether _Alloc has no construct
 	};
+
+template<class _Alloc,
+	class _Ptr,
+	class... _Args>
+	struct _Has_no_alloc_construct<
+		void_t<
+			_Has_no_alloc_construct_tag,	// TRANSITION, C1XX
+			decltype(_STD declval<_Alloc&>().construct(_STD declval<_Ptr>(), _STD declval<_Args>()...))>,
+		_Alloc, _Ptr, _Args...>
+		: false_type
+	{	// determines whether _Alloc has no construct
+	};
+
+template<class _Alloc,
+	class _Ptr,
+	class... _Args>
+	using _Uses_default_construct = disjunction<
+		_Is_default_allocator<_Alloc>,
+		_Has_no_alloc_construct<void, _Alloc, _Ptr, _Args...>>;
+
+template<class _Alloc,
+	class _Ptr,
+	class... _Args>
+	using _Uses_default_construct_t = typename _Uses_default_construct<_Alloc, _Ptr, _Args...>::type;
+
+
+		// ALIAS TEMPLATE _Uses_default_destroy AND _Uses_default_destroy_t
+struct _Has_no_alloc_destroy_tag
+	{	// TRANSITION, C1XX
+	};
+
+template<class _Alloc,
+	class _Ptr,
+	class = void>
+	struct _Has_no_alloc_destroy
+		: true_type
+	{	// determines whether _Alloc has no destroy
+	};
+
+template<class _Alloc,
+	class _Ptr>
+	struct _Has_no_alloc_destroy<_Alloc, _Ptr, void_t<
+			_Has_no_alloc_destroy_tag,	// TRANSITION, C1XX
+			decltype(_STD declval<_Alloc&>().destroy(_STD declval<_Ptr>()))>>
+		: false_type
+	{	// determines whether _Alloc has no destroy
+	};
+
+template<class _Alloc,
+	class _Ptr>
+	using _Uses_default_destroy = disjunction<
+		_Is_default_allocator<_Alloc>,
+		_Has_no_alloc_destroy<_Alloc, _Ptr>>;
+
+template<class _Alloc,
+	class _Ptr>
+	using _Uses_default_destroy_t = typename _Uses_default_destroy<_Alloc, _Ptr>::type;
+
 
 		// STRUCT _Alloc_max_size
 struct _Alloc_max_size
@@ -474,7 +523,8 @@ struct _Alloc_max_size
 		static auto _Fn(_Wrap_int, const _Ty&) _NOEXCEPT
 			-> typename _Get_size_type<_Ty>::type
 		{	// call default version
-		return ((numeric_limits<typename _Get_size_type<_Ty>::type>::max)());
+		return ((numeric_limits<typename _Get_size_type<_Ty>::type>::max)()
+			/ sizeof(typename _Ty::value_type));
 		}
 	};
 
@@ -551,18 +601,46 @@ template<class _Alloc>
 
 	template<class _Ty,
 		class... _Types>
+		static void _Construct1(true_type, _Alloc&, _Ty *_Ptr,
+			_Types&&... _Args)
+		{	// construct _Ty(_Types...) at _Ptr, default version
+		::new (static_cast<void *>(_Ptr))
+			_Ty(_STD forward<_Types>(_Args)...);
+		}
+
+	template<class _Ty,
+		class... _Types>
+		static void _Construct1(false_type, _Alloc& _Al, _Ty *_Ptr,
+			_Types&&... _Args)
+		{	// construct _Ty(_Types...) at _Ptr, allocator-supplied version
+		_Al.construct(_Ptr, _STD forward<_Types>(_Args)...);
+		}
+
+	template<class _Ty,
+		class... _Types>
 		static void construct(_Alloc& _Al, _Ty *_Ptr,
 			_Types&&... _Args)
 		{	// construct _Ty(_Types...) at _Ptr
-		_Alloc_construct::_Fn(0, _Al, _Ptr,
-			_STD forward<_Types>(_Args)...);
+		_Construct1(_Uses_default_construct_t<_Unwrap_alloc_t<_Alloc>, _Ty *, _Types...>(),
+			_Al, _Ptr, _STD forward<_Types>(_Args)...);
 		}
 
+	template<class _Ty>
+		static void _Destroy1(_Alloc&, _Ty *_Ptr, true_type)
+		{	// destroy object at _Ptr, default version
+		_Ptr->~_Ty();
+		}
+
+	template<class _Ty>
+		static void _Destroy1(_Alloc& _Al, _Ty *_Ptr, false_type)
+		{	// destroy object at _Ptr, allocator-supplied version
+		_Al.destroy(_Ptr);
+		}
 
 	template<class _Ty>
 		static void destroy(_Alloc& _Al, _Ty *_Ptr)
 		{	// destroy object at _Ptr
-		_Alloc_destroy::_Fn(0, _Al, _Ptr);
+		_Destroy1(_Al, _Ptr, _Uses_default_destroy_t<_Unwrap_alloc_t<_Alloc>, _Ty *>());
 		}
 
 	static size_type max_size(const _Alloc& _Al) _NOEXCEPT
@@ -585,6 +663,8 @@ public:
 	static_assert(!is_const<_Ty>::value,
 		"The C++ Standard forbids containers of const elements "
 		"because allocator<const T> is ill-formed.");
+
+	typedef void _Not_user_specialized;
 
 	typedef _Ty value_type;
 
@@ -637,12 +717,12 @@ public:
 
 	void deallocate(pointer _Ptr, size_type _Count)
 		{	// deallocate object at _Ptr
-		_Deallocate(_Ptr, _Count);
+		_Deallocate(_Ptr, _Count, sizeof (_Ty));
 		}
 
 	_DECLSPEC_ALLOCATOR pointer allocate(size_type _Count)
 		{	// allocate array of _Count elements
-		return (_Allocate(_Count, (pointer)0));
+		return (static_cast<pointer>(_Allocate(_Count, sizeof (_Ty))));
 		}
 
 	_DECLSPEC_ALLOCATOR pointer allocate(size_type _Count, const void *)
@@ -675,6 +755,8 @@ template<>
 	class allocator<void>
 	{	// generic allocator for type void
 public:
+	typedef void _Not_user_specialized;
+
 	typedef void value_type;
 
 	typedef void *pointer;
@@ -841,22 +923,17 @@ template<class _Alloc>
 
 	pointer address(reference _Val) const
 		{	// return address of mutable _Val
-		return (_STD addressof(_Val));
+		return (pointer_traits<pointer>::pointer_to(_Val));
 		}
 
 	const_pointer address(const_reference _Val) const
 		{	// return address of nonmutable _Val
-		return (_STD addressof(_Val));
+		return (pointer_traits<const_pointer>::pointer_to(_Val));
 		}
 
-	_Wrap_alloc() _THROW0()
+	_Wrap_alloc() _NOEXCEPT_OP(is_nothrow_default_constructible<_Alloc>::value)
 		: _Mybase()
 		{	// construct default allocator (do nothing)
-		}
-
-	_Wrap_alloc(const _Mybase& _Right) _THROW0()
-		: _Mybase(_Right)
-		{	// construct by copying base
 		}
 
 	_Wrap_alloc(const _Wrap_alloc& _Right) _THROW0()
@@ -864,34 +941,33 @@ template<class _Alloc>
 		{	// construct by copying
 		}
 
-	template<class _Other>
-		_Wrap_alloc(const _Other& _Right) _THROW0()
-		: _Mybase(_Right)
-		{	// construct from a related allocator
+	_Wrap_alloc(_Wrap_alloc&& _Right) _THROW0()
+		: _Mybase(_STD move(_Right))
+		{	// construct by moving
 		}
 
 	template<class _Other>
-		_Wrap_alloc(_Other& _Right) _THROW0()
-		: _Mybase(_Right)
+		_Wrap_alloc(_Other&& _Right) _THROW0()
+		: _Mybase(_STD forward<_Other>(_Right))
 		{	// construct from a related allocator
-		}
-
-	_Wrap_alloc& operator=(const _Mybase& _Right)
-		{	// construct by copying base
-		_Mybase::operator=(_Right);
-		return (*this);
 		}
 
 	_Wrap_alloc& operator=(const _Wrap_alloc& _Right)
-		{	// construct by copying
+		{	// assign by copying
 		_Mybase::operator=(_Right);
 		return (*this);
 		}
 
+	_Wrap_alloc& operator=(_Wrap_alloc&& _Right)
+		{	// assign by moving
+		_Mybase::operator=(_STD move(_Right));
+		return (*this);
+		}
+
 	template<class _Other>
-		_Wrap_alloc& operator=(const _Other& _Right)
+		_Wrap_alloc& operator=(_Other&& _Right)
 		{	// assign from a related allocator
-		_Mybase::operator=(_Right);
+		_Mybase::operator=(_STD forward<_Other>(_Right));
 		return (*this);
 		}
 
@@ -996,8 +1072,16 @@ template<class _Alty> inline
 	}
 
 template<class _Alty> inline
-	void _Pocs(_Alty&, _Alty&, false_type) _NOEXCEPT
+	void _Pocs(_Alty& _Left, _Alty& _Right, false_type) _NOEXCEPT
 	{	// (don't) propagate on container swap
+	if (_Left != _Right)
+		{	// containers are incompatible
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		_DEBUG_ERROR("containers incompatible for swap");
+ #else /* ITERATOR_DEBUG_LEVEL == 2 */
+		_XSTD terminate();
+ #endif /* ITERATOR_DEBUG_LEVEL == 2 */
+		}
 	}
 
 template<class _Alty> inline
@@ -1006,27 +1090,79 @@ template<class _Alty> inline
 	typename _Alty::propagate_on_container_swap _Tag;
 	_Pocs(_Left, _Right, _Tag);
 	}
+
+
+		// TEMPLATE FUNCTION _Destroy_range WITH ALLOC
+template<class _Alloc,
+	class _Ptr = typename _Wrap_alloc<_Alloc>::pointer> inline
+	void _Destroy_range1(_Ptr _First, _Ptr _Last, _Wrap_alloc<_Alloc>& _Al, false_type)
+	{	// destroy [_First, _Last), no special optimization
+	for (; _First != _Last; ++_First)
+		_Al.destroy(_Unfancy(_First));
+	}
+
+template<class _Alloc,
+	class _Ptr = typename _Wrap_alloc<_Alloc>::pointer> inline
+	void _Destroy_range1(_Ptr, _Ptr, _Wrap_alloc<_Alloc>&, true_type)
+	{	// destroy [_First, _Last), trivially destructible and default destroy
+		// nothing to do
+	}
+
+template<class _Alloc,
+	class _Ptr = typename _Wrap_alloc<_Alloc>::pointer> inline
+	void _Destroy_range(_Ptr _First, _Ptr _Last, _Wrap_alloc<_Alloc>& _Al)
+	{	// destroy [_First, _Last), choose optimization
+		// note that this is an optimization for debug mode codegen;
+		// in release mode the BE removes all of this
+	typedef typename _Alloc::value_type _Val;
+	_Destroy_range1(_First, _Last, _Al, typename conjunction<
+		is_trivially_destructible<_Val>,
+		_Uses_default_destroy<_Alloc, _Val *>>::type());
+	}
+
+
+		// TEMPLATE FUNCTION _Destroy_range
+template<class _FwdIt> inline
+	void _Destroy_range1(_FwdIt _First, _FwdIt _Last, false_type)
+	{	// destroy [_First, _Last), no special optimization
+	for (; _First != _Last; ++_First)
+		_Destroy(_First);
+	}
+
+template<class _FwdIt> inline
+	void _Destroy_range1(_FwdIt, _FwdIt, true_type)
+	{	// destroy [_First, _Last), trivially destructible
+		// nothing to do
+	}
+
+template<class _FwdIt> inline
+	void _Destroy_range(_FwdIt _First, _FwdIt _Last)
+	{	// destroy [_First, _Last), choose optimization
+		// note that this is an optimization for debug mode codegen;
+		// in release mode the BE removes all of this
+	_Destroy_range1(_First, _Last, is_trivially_destructible<_Iter_value_t<_FwdIt>>());
+	}
 _STD_END
 
 		// ATOMIC REFERENCE COUNTING PRIMITIVES
+  #include <xatomic0.h>
 
-  #if defined(_M_IX86) || defined(_M_X64) || defined(_M_CEE_PURE)
-   #include <xatomic0.h>
+  #if _USE_INTERLOCKED_REFCOUNTING
    #include <intrin.h>
 
-   #define _MT_INCR(mtx, x) \
+   #define _MT_INCR(x) \
 	_InterlockedIncrement(reinterpret_cast<volatile long *>(&x))
-   #define _MT_DECR(mtx, x) \
+   #define _MT_DECR(x) \
 	_InterlockedDecrement(reinterpret_cast<volatile long *>(&x))
 
-  #else /* defined(_M_IX86) etc. */
+  #else /* _USE_INTERLOCKED_REFCOUNTING */
    #include <xatomic.h>
 
-   #define _MT_INCR(mtx, x) \
+   #define _MT_INCR(x) \
 	_Inc_atomic_counter_explicit(x, memory_order_relaxed)
-   #define _MT_DECR(mtx, x) \
+   #define _MT_DECR(x) \
 	_Dec_atomic_counter_explicit(x, memory_order_acq_rel)
-  #endif /* defined(_M_IX86) etc. */
+  #endif /* _USE_INTERLOCKED_REFCOUNTING */
 
  #pragma pop_macro("new")
  #pragma warning(pop)

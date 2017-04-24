@@ -21,7 +21,7 @@ template<class _Ty,
 	class _Pr> inline
 	void erase_if(list<_Ty, _Alloc>& _Cont, _Pr _Pred)
 	{	// erase each element satisfying _Pred
-	_Cont.remove_if(_Pred);
+	_Cont._Remove_if(_Pred);
 	}
 
 	// TEMPLATE FUNCTION erase

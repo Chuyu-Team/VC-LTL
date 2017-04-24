@@ -554,7 +554,7 @@ __declspec(non_user_code) inline void __abi_winrt_throw_on_disposed(bool isDispo
 }
 
 
-// Function decleration for types we use from Windows and CRT
+// Function declaration for types we use from Windows and CRT
 // This prevents pulling in the headers
 #if !defined(VCWINRT_DLL)
 extern "C" long __stdcall __Platform_CoCreateFreeThreadedMarshaler(::Platform::Object^, ::Platform::Object^*);
@@ -742,12 +742,12 @@ public:
 			__pUnkMarshal->__abi_Release();
 			__pUnkMarshal = nullptr;
 		}
-		
+
 		if (__abi_module != nullptr)
 		{
 			__abi_module->__abi_DecrementObjectCount();
 		}
-		
+
 		__weakRefSource->DecrementStrongReference();
 		ReleaseControlBlock();
 	}
@@ -780,7 +780,7 @@ public:
 
 			// When destructing objects at the end of the program, we might be freeing
 			// objects across dlls, and the dll this object is in might have already freed its module object.
-			if (__abi_module != nullptr) 
+			if (__abi_module != nullptr)
 			{
 				__abi_module->__abi_DecrementObjectCount();
 			}
@@ -892,7 +892,7 @@ namespace Platform { namespace Details
 
 #pragma initialize_winrt_types_phase2
 
-namespace Platform 
+namespace Platform
 {
 	template <typename __TArg, unsigned int __dimension = 1>
 	class ArrayReference;
@@ -942,7 +942,7 @@ namespace Platform
 
 		static __TArg* AllocateAndZeroInitialize(unsigned int __countArg);
 		static __TArg* AllocateAndCopyElements(const __TArg* __srcArg, unsigned int __countArg);
-		
+
 #if defined(_PREFIX_) || defined(_PREFAST_)
 	internal:
 		__TArg& operator[](unsigned int __indexArg) const;
@@ -1115,13 +1115,13 @@ __declspec(noreturn) inline void __stdcall __abi_WinRTraiseException(long __hrAr
 
 	case 0x8001010EL: // RPC_E_WRONG_THREAD
 		__abi_WinRTraiseWrongThreadException();
-		
+
 	case 0x80010108L: // RPC_E_DISCONNECTED
 		__abi_WinRTraiseDisconnectedException();
 
 	case 0x80000013L: // RO_E_CLOSED
 		__abi_WinRTraiseObjectDisposedException();
-		
+
 	default:
 		__abi_WinRTraiseCOMException(__hrArg);
 		break;
@@ -1404,7 +1404,7 @@ namespace Platform
         __declspec(dllexport) void* __stdcall GetIBoxVtable(void*);
 
         template<typename T>
-        ref class 
+        ref class
             __declspec(no_empty_identity_interface)
         CustomBox sealed :
         public [::Windows::Foundation::Metadata::Default] [::Platform::Metadata::RuntimeClassName] ::Platform::IBox<T>,
@@ -1484,7 +1484,7 @@ namespace Platform
 		{
 			typedef __TArg Type;
 		};
-		
+
 		template<typename __TArg>
 		struct RemoveVolatile
 		{
@@ -1496,7 +1496,7 @@ namespace Platform
 		{
 			typedef __TArg Type;
 		};
-		
+
 		template<typename __TArg>
 		struct RemoveCV
 		{
@@ -1510,11 +1510,11 @@ namespace Platform
 		__declspec(layout_as_external)
 		__declspec(no_empty_identity_interface)
 		Box abstract :
-	public ::Platform::IBox<typename ::Platform::Details::RemoveCV<__TArg>::Type>,    
-		public Details::BoxValueType<__is_enum(__TArg)>::Type   
+	public ::Platform::IBox<typename ::Platform::Details::RemoveCV<__TArg>::Type>,
+		public Details::BoxValueType<__is_enum(__TArg)>::Type
 	{
 		static_assert(__is_enum(__TArg) || __is_value_class(__TArg) || __is_trivial(__TArg), "__TArg type of Box<__TArg> must be either value type or enum type");
-		
+
 		typedef typename ::Platform::Details::RemoveCV<__TArg>::Type __TBoxValue;
 	internal:
 		Box(__TBoxValue __valueArg)
@@ -1628,27 +1628,27 @@ namespace Platform
 	{
 		return !(__aArg == __bArg);
 	}
-	
+
 	inline bool ::Platform::Guid::operator<(::Platform::Guid __aArg, ::Platform::Guid __bArg)
 	{
 		auto __al = reinterpret_cast<const unsigned long*>(&__aArg);
 		auto __bl = reinterpret_cast<const unsigned long*>(&__bArg);
-		
+
 		if (__al[0] != __bl[0])
 		{
 			return __al[0] < __bl[0];
 		}
-		
+
 		if (__al[1] != __bl[1])
 		{
 			return __al[1] < __bl[1];
 		}
-		
+
 		if (__al[2] != __bl[2])
 		{
 			return __al[2] < __bl[2];
 		}
-		
+
 		if (__al[3] != __bl[3])
 		{
 			return __al[3] < __bl[3];
@@ -1657,8 +1657,8 @@ namespace Platform
 		return false;
 	}
 
-	inline Guid::Guid(unsigned int __aArg, unsigned short __bArg, unsigned short __cArg, unsigned __int8 __dArg, 
-		unsigned __int8 __eArg, unsigned __int8 __fArg, unsigned __int8 __gArg, unsigned __int8 __hArg, 
+	inline Guid::Guid(unsigned int __aArg, unsigned short __bArg, unsigned short __cArg, unsigned __int8 __dArg,
+		unsigned __int8 __eArg, unsigned __int8 __fArg, unsigned __int8 __gArg, unsigned __int8 __hArg,
 		unsigned __int8 __iArg, unsigned __int8 __jArg, unsigned __int8 __kArg) :
 	__a(__aArg), __b(__bArg), __c(__cArg), __d(__dArg), __e(__eArg), __f(__fArg), __g(__gArg), __h(__hArg), __i(__iArg), __j(__jArg), __k(__kArg)
 	{
@@ -1769,7 +1769,7 @@ inline long __stdcall __abi_FTMWeakRefData::__abi_QueryInterface(::Platform::Gui
 
 inline long __stdcall ::Platform::Details::ControlBlock::__abi_QueryInterface(::Platform::Guid& __riid, void** __ppvObject)
 {
-	if (__riid.Equals(__uuidof(__abi_IUnknown)) || 
+	if (__riid.Equals(__uuidof(__abi_IUnknown)) ||
 		__riid.Equals(__uuidof(__abi_IWeakReference)))
 	{
 		__abi_AddRef();
@@ -1990,9 +1990,9 @@ inline __declspec(no_refcount) __declspec(no_release_return) ::Platform::String^
 
 #pragma region Array
 
-namespace Platform 
-{ 
-	namespace Details 
+namespace Platform
+{
+	namespace Details
 	{
 		// Attach to the external buffer
 		template <typename __HighLevelType, unsigned int __dimension>
@@ -2072,7 +2072,7 @@ namespace Platform
 				}
 				__Platform_CoTaskMemFree(__srcArg);
 			}
-		};    
+		};
 	} // namespace Details
 
 	template <typename __TArg>
@@ -2302,30 +2302,30 @@ namespace Platform
 
 #pragma region ::Platform::Array
 	template <typename __TArg>
-	inline Array<__TArg, 1>::Array() : WriteOnlyArray()
+	inline Array<__TArg, 1>::Array() : WriteOnlyArray<__TArg, 1>()
 	{
-		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) = 
-			Details::GetIBoxArrayVtable(reinterpret_cast<void*>(static_cast< ::Platform::IBoxArray<__TArg>^ >(this)));                
+		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) =
+			Details::GetIBoxArrayVtable(reinterpret_cast<void*>(static_cast< ::Platform::IBoxArray<__TArg>^ >(this)));
 	}
 
 	template <typename __TArg>
-	inline Array<__TArg, 1>::Array(const Array<__TArg, 1>^ __source) : WriteOnlyArray(__source ? __source->Data : nullptr, __source ? __source->Length : 0)
+	inline Array<__TArg, 1>::Array(const Array<__TArg, 1>^ __source) : WriteOnlyArray<__TArg, 1>(__source ? __source->Data : nullptr, __source ? __source->Length : 0)
 	{
-		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) = 
+		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) =
 			Details::GetIBoxArrayVtable(reinterpret_cast<void*>(static_cast< ::Platform::IBoxArray<__TArg>^ >(this)));
     }
 
 	template <typename __TArg>
-	inline Array<__TArg, 1>::Array(unsigned int __sizeArg) : WriteOnlyArray(__sizeArg)
+	inline Array<__TArg, 1>::Array(unsigned int __sizeArg) : WriteOnlyArray<__TArg, 1>(__sizeArg)
 	{
-		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) = 
+		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) =
 			Details::GetIBoxArrayVtable(reinterpret_cast<void*>(static_cast< ::Platform::IBoxArray<__TArg>^ >(this)));
 	}
 
 	template <typename __TArg>
-	inline Array<__TArg, 1>::Array(__TArg* __dataArg, unsigned int __sizeArg) : WriteOnlyArray(__dataArg, __sizeArg)
+	inline Array<__TArg, 1>::Array(__TArg* __dataArg, unsigned int __sizeArg) : WriteOnlyArray<__TArg, 1>(__dataArg, __sizeArg)
 	{
-		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) = 
+		*reinterpret_cast<void**>(static_cast< ::Platform::IValueType^ >(this)) =
 			Details::GetIBoxArrayVtable(reinterpret_cast<void*>(static_cast< ::Platform::IBoxArray<__TArg>^>(this)));
 	}
 
@@ -2409,28 +2409,28 @@ namespace Platform
 			__abi_WinRTraiseNullReferenceException();
 		}
 
-		if (__size == 0)
+		if (this->__size == 0)
 		{
 			*__destArg = nullptr;
 			*__sizeArg = 0;
 			return;
 		}
 
-		if(__data == nullptr)
+		if(this->__data == nullptr)
 		{
 			__abi_WinRTraiseFailureException();
 		}
 
-		if (!__fastpassflag && __abi_reference_count.Get() == 1)
+		if (!this->__fastpassflag && this->__abi_reference_count.Get() == 1)
 		{
-			*__destArg = __data;
-			*__sizeArg = __size;
-			Clear();
+			*__destArg = this->__data;
+			*__sizeArg = this->__size;
+			this->Clear();
 		}
-		else if (__fastpassflag || __abi_reference_count.Get() > 1)
+		else if (this->__fastpassflag || this->__abi_reference_count.Get() > 1)
 		{
-			*__sizeArg = __size;
-			*__destArg = AllocateAndCopyElements(__data, __size);
+			*__destArg = this->AllocateAndCopyElements(this->__data, this->__size);
+			*__sizeArg = this->__size;
 		}
 		else
 		{
@@ -2456,9 +2456,9 @@ namespace Platform
 } // namespace Platform {
 #pragma endregion
 
-namespace Platform 
+namespace Platform
 {
-	namespace Details 
+	namespace Details
 	{
 #if !defined(VCWINRT_DLL)
 		__declspec(dllimport) void __stdcall EventSourceInitialize(void**);
@@ -2539,8 +2539,8 @@ namespace Platform
 					{
 						__TDelegate^ __element;
 						*reinterpret_cast<void**>(&__element) = Details::EventSourceGetTargetArrayEvent(
-								reinterpret_cast<void*>(__targetsLoc), 
-								__index, 
+								reinterpret_cast<void*>(__targetsLoc),
+								__index,
 								reinterpret_cast<const void*>(&__uuidof(__TDelegate^)),
 								&__token.Value
 							);
@@ -2550,9 +2550,9 @@ namespace Platform
 					catch(::Platform::Exception^ e)
 					{
 						int __hr = e->HResult;
-						if (__hr == 0x800706BA /* HRESULT_FROM_WIN32(RPC_S_SERVER_UNAVAILABLE) */ 
+						if (__hr == 0x800706BA /* HRESULT_FROM_WIN32(RPC_S_SERVER_UNAVAILABLE) */
 								|| __hr == 0x80010108 /* RPC_E_DISCONNECTED */
-									|| __hr == 0x89020001 /* JSCRIPT_E_CANTEXECUTE */) 
+									|| __hr == 0x89020001 /* JSCRIPT_E_CANTEXECUTE */)
 						{
 							Details::EventSourceRemove(&__targets, __lockArg, __token);
 						}
@@ -2598,8 +2598,8 @@ namespace Platform
 					{
 						__TDelegate^ __element;
 						*reinterpret_cast<void**>(&__element) = Details::EventSourceGetTargetArrayEvent(
-								reinterpret_cast<void*>(__targetsLoc), 
-								__index, 
+								reinterpret_cast<void*>(__targetsLoc),
+								__index,
 								reinterpret_cast<const void*>(&__uuidof(__TDelegate^)),
 								&__token.Value
 							);
@@ -2609,7 +2609,7 @@ namespace Platform
 					catch(::Platform::Exception^ e)
 					{
 						int __hr = e->HResult;
-						if (__hr == 0x800706BA /* HRESULT_FROM_WIN32(RPC_S_SERVER_UNAVAILABLE) */ 
+						if (__hr == 0x800706BA /* HRESULT_FROM_WIN32(RPC_S_SERVER_UNAVAILABLE) */
 								|| __hr == 0x80010108 /* RPC_E_DISCONNECTED */
 									|| __hr == 0x89020001 /* JSCRIPT_E_CANTEXECUTE */)
 						{
@@ -2649,6 +2649,7 @@ namespace Platform
 		static void __stdcall RunServer(const ::default::char16* __serverName = nullptr);
 		static ::Platform::Details::IActivationFactory^ __stdcall GetActivationFactory(::Platform::String^);
 		static bool __stdcall CanUnloadNow();
+		static void __stdcall FlushFactoryCache();
 	};
 
 	inline ::default::int32 Exception::HResult::get()
@@ -2832,9 +2833,9 @@ namespace Windows { namespace Foundation
 		Height = __heightArg;
 	}
 
-	inline bool Size::IsEmpty::get() 
-	{ 
-		return Width < 0; 
+	inline bool Size::IsEmpty::get()
+	{
+		return Width < 0;
 	}
 
 	inline bool Size::operator ==(Size __size1Arg, Size __size2Arg)
@@ -2860,19 +2861,19 @@ namespace Windows { namespace Foundation
 		Height = __heightArg;
 	}
 
-	inline bool Rect::IsEmpty::get() 
-	{ 
-		return Width < 0; 
+	inline bool Rect::IsEmpty::get()
+	{
+		return Width < 0;
 	}
 
-	inline float Rect::Left::get() 
-	{ 
-		return X; 
+	inline float Rect::Left::get()
+	{
+		return X;
 	}
 
-	inline float Rect::Top::get() 
-	{ 
-		return Y; 
+	inline float Rect::Top::get()
+	{
+		return Y;
 	}
 
 	inline bool Rect::operator ==(Rect __rect1Arg, Rect __rect2Arg)
@@ -2889,7 +2890,7 @@ namespace Windows { namespace Foundation
 	}
 } } // namespace Windows::Foundation
 
-namespace Windows { namespace UI { namespace Xaml 
+namespace Windows { namespace UI { namespace Xaml
 {
 	inline Thickness::Thickness(double __uniformLengthArg)
 	{
@@ -2945,19 +2946,19 @@ namespace Windows { namespace UI { namespace Xaml
 
 	namespace Media
 	{
-		inline Matrix Matrix::Identity::get() 
-		{ 
-			return Matrix(1, 0, 0, 1, 0, 0); 
+		inline Matrix Matrix::Identity::get()
+		{
+			return Matrix(1, 0, 0, 1, 0, 0);
 		}
 
-		inline bool Matrix::IsIdentity::get() 
-		{ 
+		inline bool Matrix::IsIdentity::get()
+		{
 			return M11 == 1 &&
 				M12 == 0 &&
 				M21 == 0 &&
 				M22 == 1 &&
 				OffsetX == 0 &&
-				OffsetY == 0; 
+				OffsetY == 0;
 		}
 
 		inline Windows::Foundation::Point Matrix::Transform(Windows::Foundation::Point __pointArg)
@@ -2985,13 +2986,13 @@ namespace Windows { namespace UI { namespace Xaml
 
 		inline bool Matrix::operator==(Matrix __matrix1Arg, Matrix __matrix2Arg)
 		{
-			return 
+			return
 				__matrix1Arg.M11 == __matrix2Arg.M11 &&
 				__matrix1Arg.M12 == __matrix2Arg.M12 &&
 				__matrix1Arg.M21 == __matrix2Arg.M21 &&
 				__matrix1Arg.M22 == __matrix2Arg.M22 &&
 				__matrix1Arg.OffsetX == __matrix2Arg.OffsetX &&
-				__matrix1Arg.OffsetY == __matrix2Arg.OffsetY; 
+				__matrix1Arg.OffsetY == __matrix2Arg.OffsetY;
 		}
 
 		inline bool Matrix::operator!=(Matrix __matrix1Arg, Matrix __matrix2Arg)
@@ -3001,25 +3002,25 @@ namespace Windows { namespace UI { namespace Xaml
 
 		namespace Media3D
 		{
-			inline Matrix3D Matrix3D::Identity::get() 
-			{ 
+			inline Matrix3D Matrix3D::Identity::get()
+			{
 				return Matrix3D(1, 0, 0, 0,
 					0, 1, 0, 0,
 					0, 0, 1, 0,
-					0, 0, 0, 1); 
+					0, 0, 0, 1);
 			}
 
-			inline bool Matrix3D::IsIdentity::get() 
-			{ 
+			inline bool Matrix3D::IsIdentity::get()
+			{
 				return M11 == 1 && M12 == 0 && M13 == 0 && M14 == 0 &&
 					M21 == 0 && M22 == 1 && M23 == 0 && M24 == 0 &&
 					M31 == 0 && M32 == 0 && M33 == 1 && M34 == 0 &&
-					OffsetX == 0 && OffsetY == 0 && OffsetZ == 0 && M44 == 1; 
+					OffsetX == 0 && OffsetY == 0 && OffsetZ == 0 && M44 == 1;
 			}
 
-			inline Matrix3D::Matrix3D(double __m11Arg, double __m12Arg, double __m13Arg, double __m14Arg, 
-				double __m21Arg, double __m22Arg, double __m23Arg, double __m24Arg, 
-				double __m31Arg, double __m32Arg, double __m33Arg, double __m34Arg, 
+			inline Matrix3D::Matrix3D(double __m11Arg, double __m12Arg, double __m13Arg, double __m14Arg,
+				double __m21Arg, double __m22Arg, double __m23Arg, double __m24Arg,
+				double __m31Arg, double __m32Arg, double __m33Arg, double __m34Arg,
 				double __offsetXArg, double __offsetYArg, double __offsetZArg, double __m44Arg)
 			{
 				M11 = __m11Arg;
@@ -3042,7 +3043,7 @@ namespace Windows { namespace UI { namespace Xaml
 
 			inline bool Matrix3D::operator==(Matrix3D __matrix1Arg, Matrix3D __matrix2Arg)
 			{
-				return 
+				return
 					__matrix1Arg.M11 == __matrix2Arg.M11 &&
 					__matrix1Arg.M12 == __matrix2Arg.M12 &&
 					__matrix1Arg.M13 == __matrix2Arg.M13 &&
@@ -3241,34 +3242,34 @@ namespace Windows { namespace UI { namespace Xaml
 		*this = GridLength(__pixelsArg, Windows::UI::Xaml::GridUnitType::Pixel);
 	}
 
-	inline double GridLength::Value::get() 
-	{ 
-		return (__unitType == Windows::UI::Xaml::GridUnitType::Auto ) ? GridLength(1.0, Windows::UI::Xaml::GridUnitType::Auto).__unitValue : __unitValue; 
+	inline double GridLength::Value::get()
+	{
+		return (__unitType == Windows::UI::Xaml::GridUnitType::Auto ) ? GridLength(1.0, Windows::UI::Xaml::GridUnitType::Auto).__unitValue : __unitValue;
 	}
 
 	inline Windows::UI::Xaml::GridUnitType GridLength::GridUnitType::get()
-	{ 
-		return (__unitType); 
-	} 
+	{
+		return (__unitType);
+	}
 
 	inline bool GridLength::IsAbsolute::get()
-	{ 
-		return (__unitType == Windows::UI::Xaml::GridUnitType::Pixel); 
-	} 
+	{
+		return (__unitType == Windows::UI::Xaml::GridUnitType::Pixel);
+	}
 
-	inline bool GridLength::IsAuto::get() 
-	{ 
-		return (__unitType == Windows::UI::Xaml::GridUnitType::Auto); 
-	} 
+	inline bool GridLength::IsAuto::get()
+	{
+		return (__unitType == Windows::UI::Xaml::GridUnitType::Auto);
+	}
 
-	inline bool GridLength::IsStar::get() 
-	{ 
-		return (__unitType == Windows::UI::Xaml::GridUnitType::Star) ; 
-	} 
+	inline bool GridLength::IsStar::get()
+	{
+		return (__unitType == Windows::UI::Xaml::GridUnitType::Star) ;
+	}
 
 	inline GridLength GridLength::Auto::get()
-	{ 
-		return ( GridLength(1.0, Windows::UI::Xaml::GridUnitType::Auto)); 
+	{
+		return ( GridLength(1.0, Windows::UI::Xaml::GridUnitType::Auto));
 	}
 
 	inline bool GridLength::operator ==(GridLength __gridLength1Arg, GridLength __gridLength2Arg)

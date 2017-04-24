@@ -818,7 +818,7 @@ public:
 
 } // namespace Concurrency
 
-namespace concurrency = Concurrency;
+namespace concurrency = ::Concurrency;
 
 #pragma warning (pop)
 #pragma pack(pop)

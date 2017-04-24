@@ -47,7 +47,6 @@ public:
 	typedef _Tree<_Tset_traits<_Kty, _Pr, _Alloc, false> > _Mybase;
 	typedef _Kty key_type;
 	typedef _Pr key_compare;
-	typedef typename _Mybase::_Pairib _Pairib;
 	typedef typename _Mybase::value_compare value_compare;
 	typedef typename _Mybase::allocator_type allocator_type;
 	typedef typename _Mybase::size_type size_type;
@@ -66,7 +65,7 @@ public:
 	typedef typename _Mybase::_Alty _Alty;
 
 	set()
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct empty set from defaults
 		}
 
@@ -76,11 +75,8 @@ public:
 		}
 
 	set(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._Getal().select_on_container_copy_construction())
-
-
 		{	// construct set by copying _Right
 		}
 
@@ -90,7 +86,7 @@ public:
 		}
 
 	explicit set(const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct empty set from comparator
 		}
 
@@ -101,7 +97,7 @@ public:
 
 	template<class _Iter>
 		set(_Iter _First, _Iter _Last)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct set from [_First, _Last), defaults
 		this->insert(_First, _Last);
 		}
@@ -109,7 +105,7 @@ public:
 	template<class _Iter>
 		set(_Iter _First, _Iter _Last,
 			const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct set from [_First, _Last), comparator
 		this->insert(_First, _Last);
 		}
@@ -146,73 +142,38 @@ public:
 		return (*this);
 		}
 
-	_Pairib insert(value_type&& _Val)
-		{	// insert a key value
-		return (_Mybase::insert(_STD forward<value_type>(_Val)));
-		}
-
-	iterator insert(const_iterator _Where, value_type&& _Val)
-		{	// insert a key value, with hint
-		return (_Mybase::insert(_Where, _STD forward<value_type>(_Val)));
-		}
-
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _NOEXCEPT_OP(_Swap_adl(_STD declval<_Pr&>(),
-				_STD declval<_Pr&>())))
+			&& _Is_nothrow_swappable<_Pr>::value)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
 
 	set(_XSTD initializer_list<value_type> _Ilist)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct from initializer_list, defaults
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	set(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct from initializer_list, comparator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	set(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct from initializer_list, comparator, and allocator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		return (*this);
-		}
-
-	void insert(_XSTD initializer_list<value_type> _Ilist)
-		{	// insert initializer_list
-		this->insert(_Ilist.begin(), _Ilist.end());
-		}
-
-	_Pairib insert(const value_type& _Val)
-		{	// insert a key value
-		return (_Mybase::insert(_Val));
-		}
-
-	iterator insert(const_iterator _Where, const value_type& _Val)
-		{	// insert a key value, with hint
-		return (_Mybase::insert(_Where, _Val));
-		}
-
-	template<class _Iter>
-		void insert(_Iter _First, _Iter _Last)
-		{	// insert [_First, _Last)
-		_DEBUG_RANGE(_First, _Last);
-		for (; _First != _Last; ++_First)
-
-			this->emplace(*_First);
 		}
 	};
 
@@ -256,7 +217,7 @@ public:
 	typedef typename _Mybase::_Alty _Alty;
 
 	multiset()
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct empty set from defaults
 		}
 
@@ -266,11 +227,8 @@ public:
 		}
 
 	multiset(const _Myt& _Right)
-
 		: _Mybase(_Right,
 			_Right._Getal().select_on_container_copy_construction())
-
-
 		{	// construct set by copying _Right
 		}
 
@@ -280,7 +238,7 @@ public:
 		}
 
 	explicit multiset(const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct empty set from comparator
 		}
 
@@ -291,7 +249,7 @@ public:
 
 	template<class _Iter>
 		multiset(_Iter _First, _Iter _Last)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct set from [_First, _Last)
 		this->insert(_First, _Last);
 		}
@@ -299,7 +257,7 @@ public:
 	template<class _Iter>
 		multiset(_Iter _First, _Iter _Last,
 			const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct set from [_First, _Last), comparator
 		this->insert(_First, _Last);
 		}
@@ -336,80 +294,44 @@ public:
 		return (*this);
 		}
 
-	iterator insert(value_type&& _Val)
-		{	// insert a key value
-		return (_Mybase::insert(_STD forward<value_type>(_Val)).first);
-		}
-
-	iterator insert(const_iterator _Where, value_type&& _Val)
-		{	// insert a key value, with hint
-		return (_Mybase::insert(_Where, _STD forward<value_type>(_Val)));
-		}
-
 	template<class... _Valty>
 		iterator emplace(_Valty&&... _Val)
 		{	// try to insert value_type(_Val...), favoring right side
 		return (_Mybase::emplace(_STD forward<_Valty>(_Val)...).first);
 		}
 
-
 	void swap(_Myt& _Right)
 		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _NOEXCEPT_OP(_Swap_adl(_STD declval<_Pr&>(),
-				_STD declval<_Pr&>())))
+			&& _Is_nothrow_swappable<_Pr>::value)
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
 
 	multiset(_XSTD initializer_list<value_type> _Ilist)
-		: _Mybase(key_compare(), allocator_type())
+		: _Mybase(key_compare())
 		{	// construct from initializer_list, defaults
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	multiset(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred)
-		: _Mybase(_Pred, allocator_type())
+		: _Mybase(_Pred)
 		{	// construct from initializer_list, comparator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	multiset(_XSTD initializer_list<value_type> _Ilist,
 			const key_compare& _Pred, const allocator_type& _Al)
 		: _Mybase(_Pred, _Al)
 		{	// construct from initializer_list, comparator, and allocator
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		}
 
 	_Myt& operator=(_XSTD initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
-		this->insert(_Ilist.begin(), _Ilist.end());
+		this->insert(_Ilist);
 		return (*this);
-		}
-
-	void insert(_XSTD initializer_list<value_type> _Ilist)
-		{	// insert initializer_list
-		this->insert(_Ilist.begin(), _Ilist.end());
-		}
-
-	iterator insert(const value_type& _Val)
-		{	// insert a key value
-		return (_Mybase::insert(_Val).first);
-		}
-
-	iterator insert(const_iterator _Where, const value_type& _Val)
-		{	// insert a key value, with hint
-		return (_Mybase::insert(_Where, _Val));
-		}
-
-	template<class _Iter>
-		void insert(_Iter _First, _Iter _Last)
-		{	// insert [_First, _Last)
-		_DEBUG_RANGE(_First, _Last);
-		for (; _First != _Last; ++_First)
-
-			this->emplace(*_First);
 		}
 	};
 
