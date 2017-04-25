@@ -14,7 +14,7 @@
 
     typedef unsigned short _ino_t; // inode number (unused on Windows)
 
-    #if !__STDC__
+    #if (defined _CRT_DECLARE_NONSTDC_NAMES && _CRT_DECLARE_NONSTDC_NAMES) || (!defined _CRT_DECLARE_NONSTDC_NAMES && !__STDC__)
         typedef _ino_t ino_t;
     #endif
 #endif
@@ -26,7 +26,7 @@
 
     typedef unsigned int _dev_t; // device code
 
-    #if !__STDC__
+    #if (defined _CRT_DECLARE_NONSTDC_NAMES && _CRT_DECLARE_NONSTDC_NAMES) || (!defined _CRT_DECLARE_NONSTDC_NAMES && !__STDC__)
         typedef _dev_t dev_t;
     #endif
 #endif
@@ -38,7 +38,7 @@
 
     typedef long _off_t; // file offset value
 
-    #if !__STDC__
+    #if (defined _CRT_DECLARE_NONSTDC_NAMES && _CRT_DECLARE_NONSTDC_NAMES) || (!defined _CRT_DECLARE_NONSTDC_NAMES && !__STDC__)
         typedef _off_t off_t;
     #endif
 #endif

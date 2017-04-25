@@ -56,6 +56,8 @@ struct lconv
     wchar_t* _W_negative_sign;
 };
 
+struct tm;
+
 // ANSI: char lconv members default is CHAR_MAX which is compile time dependent.
 // Defining and using __do_unsigned_char_lconv_initialization here causes CRT
 // startup code to initialize lconv members properly
@@ -76,98 +78,99 @@ struct lconv
 #define _ENABLE_PER_THREAD_LOCALE_NEW     0x0100
 #define _DISABLE_PER_THREAD_LOCALE_NEW    0x0200
 
-_ACRTIMP void __cdecl _lock_locales(void);
-_ACRTIMP void __cdecl _unlock_locales(void);
+#if _CRT_FUNCTIONS_REQUIRED
 
-_Check_return_opt_
-_ACRTIMP int __cdecl _configthreadlocale(
-    _In_ int _Flag
-    );
+    _ACRTIMP void __cdecl _lock_locales(void);
+    _ACRTIMP void __cdecl _unlock_locales(void);
 
-_Check_return_opt_
-_ACRTIMP char* __cdecl setlocale(
-    _In_       int         _Category,
-    _In_opt_z_ char const* _Locale
-    );
+    _Check_return_opt_
+    _ACRTIMP int __cdecl _configthreadlocale(
+        _In_ int _Flag
+        );
 
-_Check_return_opt_
-_ACRTIMP struct lconv* __cdecl localeconv(void);
+    _Check_return_opt_
+    _ACRTIMP char* __cdecl setlocale(
+        _In_       int         _Category,
+        _In_opt_z_ char const* _Locale
+        );
 
-_Check_return_opt_
-_ACRTIMP _locale_t __cdecl _get_current_locale(void);
+    _Check_return_opt_
+    _ACRTIMP struct lconv* __cdecl localeconv(void);
 
-_Check_return_opt_
-_ACRTIMP _locale_t __cdecl _create_locale(
-    _In_   int         _Category,
-    _In_z_ char const* _Locale
-    );
+    _Check_return_opt_
+    _ACRTIMP _locale_t __cdecl _get_current_locale(void);
 
-_ACRTIMP void __cdecl _free_locale(
-    _In_opt_ _locale_t _Locale
-    );
+    _Check_return_opt_
+    _ACRTIMP _locale_t __cdecl _create_locale(
+        _In_   int         _Category,
+        _In_z_ char const* _Locale
+        );
 
-// Also declared in <wchar.h>
-_Check_return_opt_
-_ACRTIMP wchar_t* __cdecl _wsetlocale(
-    _In_       int            _Category,
-    _In_opt_z_ wchar_t const* _Locale
-    );
+    _ACRTIMP void __cdecl _free_locale(
+        _In_opt_ _locale_t _Locale
+        );
 
-_Check_return_opt_
-_ACRTIMP _locale_t __cdecl _wcreate_locale(
-    _In_   int            _Category,
-    _In_z_ wchar_t const* _Locale
-    );
+    // Also declared in <wchar.h>
+    _Check_return_opt_
+    _ACRTIMP wchar_t* __cdecl _wsetlocale(
+        _In_       int            _Category,
+        _In_opt_z_ wchar_t const* _Locale
+        );
 
-
-
-_ACRTIMP wchar_t**    __cdecl ___lc_locale_name_func(void);
-_ACRTIMP unsigned int __cdecl ___lc_codepage_func   (void);
-_ACRTIMP unsigned int __cdecl ___lc_collate_cp_func (void);
+    _Check_return_opt_
+    _ACRTIMP _locale_t __cdecl _wcreate_locale(
+        _In_   int            _Category,
+        _In_z_ wchar_t const* _Locale
+        );
 
 
 
+    _ACRTIMP wchar_t**    __cdecl ___lc_locale_name_func(void);
+    _ACRTIMP unsigned int __cdecl ___lc_codepage_func   (void);
+    _ACRTIMP unsigned int __cdecl ___lc_collate_cp_func (void);
 
-// Time-related functions
-_Success_(return != 0)
-_Ret_z_
-_ACRTIMP char*    __cdecl _Getdays(void);
 
-_Success_(return != 0)
-_Ret_z_
-_ACRTIMP char*    __cdecl _Getmonths(void);
 
-_ACRTIMP void*    __cdecl _Gettnames(void);
 
-_Success_(return != 0)
-_Ret_z_
-_ACRTIMP wchar_t* __cdecl _W_Getdays(void);
+    // Time-related functions
+    _Success_(return != 0)
+    _Ret_z_
+    _ACRTIMP char*    __cdecl _Getdays(void);
 
-_Success_(return != 0)
-_Ret_z_
-_ACRTIMP wchar_t* __cdecl _W_Getmonths(void);
+    _Success_(return != 0)
+    _Ret_z_
+    _ACRTIMP char*    __cdecl _Getmonths(void);
 
-_ACRTIMP void*    __cdecl _W_Gettnames(void);
+    _ACRTIMP void*    __cdecl _Gettnames(void);
 
-struct tm;
+    _Success_(return != 0)
+    _Ret_z_
+    _ACRTIMP wchar_t* __cdecl _W_Getdays(void);
 
-_Success_(return > 0)
-_ACRTIMP size_t __cdecl _Strftime(
-    _Out_writes_z_(_Max_size) char*           _Buffer,
-    _In_                     size_t           _Max_size,
-    _In_z_                   char const*      _Format,
-    _In_                     struct tm const* _Timeptr,
-    _In_opt_                 void*            _Lc_time_arg);
+    _Success_(return != 0)
+    _Ret_z_
+    _ACRTIMP wchar_t* __cdecl _W_Getmonths(void);
 
-_Success_(return > 0)
-_ACRTIMP size_t __cdecl _Wcsftime(
-    _Out_writes_z_(_Max_size) wchar_t*        _Buffer,
-    _In_                     size_t           _Max_size,
-    _In_z_                   wchar_t const*   _Format,
-    _In_                     struct tm const* _Timeptr,
-    _In_opt_                 void*            _Lc_time_arg
-    );
+    _ACRTIMP void*    __cdecl _W_Gettnames(void);
 
+    _Success_(return > 0)
+    _ACRTIMP size_t __cdecl _Strftime(
+        _Out_writes_z_(_Max_size) char*           _Buffer,
+        _In_                     size_t           _Max_size,
+        _In_z_                   char const*      _Format,
+        _In_                     struct tm const* _Timeptr,
+        _In_opt_                 void*            _Lc_time_arg);
+
+    _Success_(return > 0)
+    _ACRTIMP size_t __cdecl _Wcsftime(
+        _Out_writes_z_(_Max_size) wchar_t*        _Buffer,
+        _In_                     size_t           _Max_size,
+        _In_z_                   wchar_t const*   _Format,
+        _In_                     struct tm const* _Timeptr,
+        _In_opt_                 void*            _Lc_time_arg
+        );
+
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 
 _CRT_END_C_HEADER

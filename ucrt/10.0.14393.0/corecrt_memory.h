@@ -73,7 +73,8 @@ _ACRTIMP int __cdecl _memicmp_l(
 
 
 
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
+
     _CRT_NONSTDC_DEPRECATE(_memccpy)
     _ACRTIMP void* __cdecl memccpy(
         _Out_writes_bytes_opt_(_Size) void*       _Dst,
@@ -88,11 +89,13 @@ _ACRTIMP int __cdecl _memicmp_l(
         _In_reads_bytes_opt_(_Size) void const* _Buf2,
         _In_                        size_t      _Size
         );
-#endif
+
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 
 #if defined __cplusplus
+
     extern "C++" _Check_return_
     inline void* __CRTDECL memchr(
         _In_reads_bytes_opt_(_N) void*  _Pv,
@@ -103,6 +106,7 @@ _ACRTIMP int __cdecl _memicmp_l(
         void const* const _Pvc = _Pv;
         return const_cast<void*>(memchr(_Pvc, _C, _N));
     }
+
 #endif
 
 

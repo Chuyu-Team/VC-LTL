@@ -436,7 +436,7 @@ _ACRTIMP int __cdecl _timespec64_get(
             _In_  int              const _Base
             )
         {
-            return _timespec32_get((struct _timespec32*)_Ts, _Base); 
+            return _timespec32_get((struct _timespec32*)_Ts, _Base);
         }
 
         #if __STDC_WANT_SECURE_LIB__
@@ -461,7 +461,7 @@ _ACRTIMP int __cdecl _timespec64_get(
 
             _Check_return_wat_
             static __inline errno_t __CRTDECL localtime_s(
-                _Out_ struct tm*    const _Tm, 
+                _Out_ struct tm*    const _Tm,
                 _In_  time_t const* const _Time
                 )
             {
@@ -541,7 +541,7 @@ _ACRTIMP int __cdecl _timespec64_get(
             _In_  int              const _Base
             )
         {
-            return _timespec64_get((struct _timespec64*)_Ts, _Base); 
+            return _timespec64_get((struct _timespec64*)_Ts, _Base);
         }
 
         #if __STDC_WANT_SECURE_LIB__
@@ -585,7 +585,7 @@ _ACRTIMP int __cdecl _timespec64_get(
 // Non-ANSI Names for Compatibility
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
 
     #define CLK_TCK CLOCKS_PER_SEC
 
@@ -593,7 +593,7 @@ _ACRTIMP int __cdecl _timespec64_get(
         _CRT_NONSTDC_DEPRECATE(_tzset) _ACRTIMP void __cdecl tzset(void);
     #endif
 
-#endif // !__STDC__
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 

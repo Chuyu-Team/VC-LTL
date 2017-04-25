@@ -100,6 +100,12 @@ void* __cdecl malloc(
 
 _Check_return_
 _ACRTIMP
+size_t __cdecl _msize_base(
+    _Pre_notnull_ void* _Block
+    );
+
+_Check_return_
+_ACRTIMP
 size_t __cdecl _msize(
     _Pre_notnull_ void* _Block
     );
@@ -116,6 +122,14 @@ _ACRTIMP _CRTALLOCATOR _CRTRESTRICT
 void* __cdecl realloc(
     _Pre_maybenull_ _Post_invalid_ void*  _Block,
     _In_ _CRT_GUARDOVERFLOW        size_t _Size
+    );
+
+_Success_(return != 0) _Check_return_ _Ret_maybenull_ _Post_writable_byte_size_(_Count * _Size)
+_ACRTIMP _CRTALLOCATOR _CRTRESTRICT
+void* __cdecl _recalloc_base(
+    _Pre_maybenull_ _Post_invalid_ void*  _Block,
+    _In_                           size_t _Count,
+    _In_                           size_t _Size
     );
 
 _Success_(return != 0) _Check_return_ _Ret_maybenull_ _Post_writable_byte_size_(_Count * _Size)

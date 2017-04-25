@@ -9,10 +9,11 @@
 
 #include <corecrt.h>
 
-#if !defined __midl && !defined RC_INVOKED
-
 _CRT_BEGIN_C_HEADER
 
+#if !defined _NO_CRT_STDIO_INLINE && !_CRT_FUNCTIONS_REQUIRED
+    #define _NO_CRT_STDIO_INLINE
+#endif
 
 #if defined _NO_CRT_STDIO_INLINE
     #undef _CRT_STDIO_INLINE
@@ -21,12 +22,14 @@ _CRT_BEGIN_C_HEADER
     #define _CRT_STDIO_INLINE __inline
 #endif
 
-#if defined _M_IX86
-    #define _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "_"
-#elif defined _M_X64 || defined _M_ARM || defined _M_ARM64
-    #define _CRT_INTERNAL_STDIO_SYMBOL_PREFIX ""
-#else
-    #error Unsupported architecture
+#if !defined RC_INVOKED // RC has no target architecture
+    #if defined _M_IX86
+        #define _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "_"
+    #elif defined _M_X64 || defined _M_ARM || defined _M_ARM64
+        #define _CRT_INTERNAL_STDIO_SYMBOL_PREFIX ""
+    #else
+        #error Unsupported architecture
+    #endif
 #endif
 
 
@@ -41,28 +44,29 @@ _CRT_BEGIN_C_HEADER
 // not use these format specifiers without a length modifier and thus can be
 // used with either the legacy (default) or the conforming mode.  (This option
 // is intended for use by static libraries).
+#if !defined RC_INVOKED // _CRT_STDIO_LEGACY_WIDE_SPECIFIERS et al. are too long for rc
+    #if defined _CRT_STDIO_ISO_WIDE_SPECIFIERS
+        #if defined _CRT_STDIO_LEGACY_WIDE_SPECIFIERS
+            #error _CRT_STDIO_ISO_WIDE_SPECIFIERS and _CRT_STDIO_LEGACY_WIDE_SPECIFIERS cannot be defined together.
+        #endif
 
-#if defined _CRT_STDIO_ISO_WIDE_SPECIFIERS
-    #if defined _CRT_STDIO_LEGACY_WIDE_SPECIFIERS
-        #error _CRT_STDIO_ISO_WIDE_SPECIFIERS and _CRT_STDIO_LEGACY_WIDE_SPECIFIERS cannot be defined together.  
+        #if !defined _M_CEE_PURE
+            #pragma comment(lib, "iso_stdio_wide_specifiers")
+            #pragma comment(linker, "/include:" _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "__PLEASE_LINK_WITH_iso_stdio_wide_specifiers.lib")
+        #endif
+    #elif defined _CRT_STDIO_LEGACY_WIDE_SPECIFIERS
+        #if !defined _M_CEE_PURE
+            #pragma comment(lib, "legacy_stdio_wide_specifiers")
+            #pragma comment(linker, "/include:" _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "__PLEASE_LINK_WITH_legacy_stdio_wide_specifiers.lib")
+        #endif
     #endif
 
-    #if !defined _M_CEE_PURE
-        #pragma comment(lib, "iso_stdio_wide_specifiers")
-        #pragma comment(linker, "/include:" _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "__PLEASE_LINK_WITH_iso_stdio_wide_specifiers.lib")
-    #endif
-#elif defined _CRT_STDIO_LEGACY_WIDE_SPECIFIERS
-    #if !defined _M_CEE_PURE
-        #pragma comment(lib, "legacy_stdio_wide_specifiers")
-        #pragma comment(linker, "/include:" _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "__PLEASE_LINK_WITH_legacy_stdio_wide_specifiers.lib")
-    #endif
-#endif
-
-#if defined __cplusplus && !defined _CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS
-    #ifdef _CRT_STDIO_ISO_WIDE_SPECIFIERS
-        #pragma detect_mismatch("_CRT_STDIO_ISO_WIDE_SPECIFIERS", "1")
-    #else
-        #pragma detect_mismatch("_CRT_STDIO_ISO_WIDE_SPECIFIERS", "0")
+    #if defined __cplusplus && !defined _CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS
+        #ifdef _CRT_STDIO_ISO_WIDE_SPECIFIERS
+            #pragma detect_mismatch("_CRT_STDIO_ISO_WIDE_SPECIFIERS", "1")
+        #else
+            #pragma detect_mismatch("_CRT_STDIO_ISO_WIDE_SPECIFIERS", "0")
+        #endif
     #endif
 #endif
 
@@ -73,23 +77,25 @@ _CRT_BEGIN_C_HEADER
     #pragma managed(push, off)
 #endif
 
-// This function must not be inlined into callers to avoid ODR violations.  The
-// static local variable has different names in C and in C++ translation units.
-_Check_return_ _Ret_notnull_
-__declspec(noinline) __inline unsigned __int64* __CRTDECL __local_stdio_printf_options(void)
-{
-    static unsigned __int64 _OptionsStorage;
-    return &_OptionsStorage;
-}
+#if _CRT_FUNCTIONS_REQUIRED
+    // This function must not be inlined into callers to avoid ODR violations.  The
+    // static local variable has different names in C and in C++ translation units.
+    _Check_return_ _Ret_notnull_
+    __declspec(noinline) __inline unsigned __int64* __CRTDECL __local_stdio_printf_options(void)
+    {
+        static unsigned __int64 _OptionsStorage;
+        return &_OptionsStorage;
+    }
 
-// This function must not be inlined into callers to avoid ODR violations.  The
-// static local variable has different names in C and in C++ translation units.
-_Check_return_ _Ret_notnull_
-__declspec(noinline) __inline unsigned __int64* __CRTDECL __local_stdio_scanf_options(void)
-{
-    static unsigned __int64 _OptionsStorage;
-    return &_OptionsStorage;
-}
+    // This function must not be inlined into callers to avoid ODR violations.  The
+    // static local variable has different names in C and in C++ translation units.
+    _Check_return_ _Ret_notnull_
+    __declspec(noinline) __inline unsigned __int64* __CRTDECL __local_stdio_scanf_options(void)
+    {
+        static unsigned __int64 _OptionsStorage;
+        return &_OptionsStorage;
+    }
+#endif
 
 #if defined _M_CEE && !defined _M_CEE_PURE
     #pragma managed(pop)
@@ -114,5 +120,3 @@ __declspec(noinline) __inline unsigned __int64* __CRTDECL __local_stdio_scanf_op
 
 
 _CRT_END_C_HEADER
-
-#endif // !defined __midl && !defined RC_INVOKED

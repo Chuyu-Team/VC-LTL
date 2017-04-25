@@ -40,7 +40,7 @@
 
 
 
-#if !__STDC__
+#if (defined _CRT_DECLARE_NONSTDC_NAMES && _CRT_DECLARE_NONSTDC_NAMES) || (!defined _CRT_DECLARE_NONSTDC_NAMES && !__STDC__)
     #define O_RDONLY     _O_RDONLY
     #define O_WRONLY     _O_WRONLY
     #define O_RDWR       _O_RDWR

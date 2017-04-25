@@ -119,7 +119,14 @@ typedef void (__cdecl* _PVFI)(int);
         );
 #endif
 
-typedef int (__CRTDECL* _onexit_t)(void);
+#ifndef _CRT_ONEXIT_T_DEFINED
+    #define _CRT_ONEXIT_T_DEFINED
+
+    typedef int (__CRTDECL* _onexit_t)(void);
+    #ifdef _M_CEE
+        typedef int (__clrcall* _onexit_m_t)(void);
+    #endif
+#endif
 
 typedef struct _onexit_table_t
 {
@@ -156,24 +163,28 @@ _ACRTIMP int __cdecl _crt_at_quick_exit(
 // Static CRT Initialization Support
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-_Success_(return != 0)
-__crt_bool __cdecl __acrt_initialize(void);
+#if _CRT_FUNCTIONS_REQUIRED
 
-_Success_(return != 0)
-__crt_bool __cdecl __acrt_uninitialize(
-    _In_ __crt_bool _Terminating
-    );
+    _Success_(return != 0)
+    __crt_bool __cdecl __acrt_initialize(void);
 
-_Success_(return != 0)
-__crt_bool __cdecl __acrt_uninitialize_critical(
-    _In_ __crt_bool _Terminating
-    );
+    _Success_(return != 0)
+    __crt_bool __cdecl __acrt_uninitialize(
+        _In_ __crt_bool _Terminating
+        );
 
-_Success_(return != 0)
-__crt_bool __cdecl __acrt_thread_attach(void);
+    _Success_(return != 0)
+    __crt_bool __cdecl __acrt_uninitialize_critical(
+        _In_ __crt_bool _Terminating
+        );
 
-_Success_(return != 0)
-__crt_bool __cdecl __acrt_thread_detach(void);
+    _Success_(return != 0)
+    __crt_bool __cdecl __acrt_thread_attach(void);
+
+    _Success_(return != 0)
+    __crt_bool __cdecl __acrt_thread_detach(void);
+
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 
 

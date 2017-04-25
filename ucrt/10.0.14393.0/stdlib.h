@@ -47,11 +47,13 @@ _ACRTIMP void __cdecl _swab(
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
-_ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl abort(void);
+#if _CRT_FUNCTIONS_REQUIRED
+    _ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl abort(void);
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 // Argument values for _set_abort_behavior().
 #define _WRITE_ABORT_MSG  0x1 // debug only, has no effect in release
@@ -64,18 +66,16 @@ _ACRTIMP unsigned int __cdecl _set_abort_behavior(
 
 
 
-#ifndef _M_CEE_PURE
-    typedef int (__cdecl* _onexit_t)(void);
-#else
-    typedef int (__clrcall* _onexit_t)(void);
-    typedef _onexit_t _onexit_m_t;
+#ifndef _CRT_ONEXIT_T_DEFINED
+    #define _CRT_ONEXIT_T_DEFINED
+
+    typedef int (__CRTDECL* _onexit_t)(void);
+    #ifdef _M_CEE
+        typedef int (__clrcall* _onexit_m_t)(void);
+    #endif
 #endif
 
-#ifdef _M_CEE_MIXED
-    typedef int (__clrcall* _onexit_m_t)(void);
-#endif
-
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
     // Non-ANSI name for compatibility
     #define onexit_t _onexit_t
 #endif
@@ -157,7 +157,7 @@ int __cdecl at_quick_exit(void (__cdecl*)(void));
     typedef void (__cdecl* _invalid_parameter_handler)(
         wchar_t const*,
         wchar_t const*,
-        wchar_t const*, 
+        wchar_t const*,
         unsigned int,
         uintptr_t
         );
@@ -208,26 +208,28 @@ _Check_return_opt_ _ACRTIMP int __cdecl _set_error_mode(_In_ int _Mode);
 
 
 
-_ACRTIMP int* __cdecl _errno(void);
-#define errno (*_errno())
+#if _CRT_FUNCTIONS_REQUIRED
+    _ACRTIMP int* __cdecl _errno(void);
+    #define errno (*_errno())
 
-_ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
-_ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
+    _ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
+    _ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 
-_ACRTIMP unsigned long* __cdecl __doserrno(void);
-#define _doserrno (*__doserrno())
+    _ACRTIMP unsigned long* __cdecl __doserrno(void);
+    #define _doserrno (*__doserrno())
 
-_ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-_ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+    _ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+    _ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
-// This is non-const for backwards compatibility; do not modify it.
-_ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void);
-#define _sys_errlist (__sys_errlist())
+    // This is non-const for backwards compatibility; do not modify it.
+    _ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void);
+    #define _sys_errlist (__sys_errlist())
 
-_ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) int * __cdecl __sys_nerr(void);
-#define _sys_nerr (*__sys_nerr())
+    _ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) int * __cdecl __sys_nerr(void);
+    #define _sys_nerr (*__sys_nerr())
 
-_ACRTIMP void __cdecl perror(_In_opt_z_ char const* _ErrMsg);
+    _ACRTIMP void __cdecl perror(_In_opt_z_ char const* _ErrMsg);
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 
 
@@ -299,7 +301,7 @@ _Check_return_ _ACRTIMP lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ lo
 // These functions have declspecs in their declarations in the Windows headers,
 // which cause PREfast to fire 6540.
 #pragma warning (push)
-#pragma warning (disable:6540) 
+#pragma warning (disable:6540)
 
 unsigned int __cdecl _rotl(
     _In_ unsigned int _Value,
@@ -847,7 +849,7 @@ _ACRTIMP int __cdecl mblen(
     _In_                                        size_t      _MaxCount
     );
 
-_Check_return_ 
+_Check_return_
 _ACRTIMP int __cdecl _mblen_l(
     _In_reads_bytes_opt_(_MaxCount) _Pre_opt_z_ char const* _Ch,
     _In_                                        size_t      _MaxCount,
@@ -863,7 +865,7 @@ _ACRTIMP size_t __cdecl _mbstrlen(
 _Check_return_
 _Post_satisfies_(return <= _String_length_(_String) || return == (size_t)-1)
 _ACRTIMP size_t __cdecl _mbstrlen_l(
-    _In_z_   char const* _String, 
+    _In_z_   char const* _String,
     _In_opt_ _locale_t   _Locale
     );
 
@@ -982,7 +984,7 @@ _ACRTIMP errno_t __cdecl _wctomb_s_l(
     _Out_opt_                        int*     _SizeConverted,
     _Out_writes_opt_z_(_SizeInBytes) char*     _MbCh,
     _In_                             size_t    _SizeInBytes,
-    _In_                             wchar_t   _WCh, 
+    _In_                             wchar_t   _WCh,
     _In_opt_                         _locale_t _Locale);
 
 _Check_return_wat_
@@ -1137,7 +1139,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         _In_                             rsize_t     _BufferCount,
         _In_z_                           char const* _VarName
         );
-    
+
     #endif // __STDC_WANT_SECURE_LIB__
 
 
@@ -1156,14 +1158,14 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
         #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
     #endif
-    
+
     _DCRTIMP char***    __cdecl __p__environ (void);
     _DCRTIMP wchar_t*** __cdecl __p__wenviron(void);
 
     #ifndef _CRT_BEST_PRACTICES_USAGE
         #define _CRT_V12_LEGACY_FUNCTIONALITY
     #endif
-    
+
     #ifndef _CRT_V12_LEGACY_FUNCTIONALITY
         // Deprecated symbol: Do not expose environment global pointers unless
         // legacy access is specifically requested
@@ -1180,94 +1182,97 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
     #define _MAX_ENV 32767
 
 
+    #if _CRT_FUNCTIONS_REQUIRED
 
-    _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s) 
-    _DCRTIMP char* __cdecl getenv(
-        _In_z_ char const* _VarName
-        );
+        _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+        _DCRTIMP char* __cdecl getenv(
+            _In_z_ char const* _VarName
+            );
 
-    __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_1(
-        errno_t, getenv_s,
-        _Out_  size_t*,     _RequiredCount,
-               char,        _Buffer,
-        _In_z_ char const*, _VarName
-        )
+        __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_1(
+            errno_t, getenv_s,
+            _Out_  size_t*,     _RequiredCount,
+                   char,        _Buffer,
+            _In_z_ char const*, _VarName
+            )
 
-    #if defined (_DEBUG) && defined (_CRTDBG_MAP_ALLOC)
-        #pragma push_macro("_dupenv_s")
-        #undef _dupenv_s
-    #endif
+        #if defined (_DEBUG) && defined (_CRTDBG_MAP_ALLOC)
+            #pragma push_macro("_dupenv_s")
+            #undef _dupenv_s
+        #endif
 
-    _Check_return_opt_
-    _DCRTIMP errno_t __cdecl _dupenv_s(
-        _Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ char**      _Buffer,
-        _Out_opt_                                                                   size_t*     _BufferCount,
-        _In_z_                                                                      char const* _VarName
-        );
+        _Check_return_opt_
+        _DCRTIMP errno_t __cdecl _dupenv_s(
+            _Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ char**      _Buffer,
+            _Out_opt_                                                                   size_t*     _BufferCount,
+            _In_z_                                                                      char const* _VarName
+            );
 
-    #if defined (_DEBUG) && defined (_CRTDBG_MAP_ALLOC)
-        #pragma pop_macro("_dupenv_s")
-    #endif
+        #if defined (_DEBUG) && defined (_CRTDBG_MAP_ALLOC)
+            #pragma pop_macro("_dupenv_s")
+        #endif
 
-    _DCRTIMP int __cdecl system(
-        _In_opt_z_ char const* _Command
-        );
+        _DCRTIMP int __cdecl system(
+            _In_opt_z_ char const* _Command
+            );
 
-    // The functions below have declspecs in their declarations in the Windows
-    // headers, causing PREfast to fire 6540 here
-    #pragma warning (push)
-    #pragma warning (disable:6540)
+        // The functions below have declspecs in their declarations in the Windows
+        // headers, causing PREfast to fire 6540 here
+        #pragma warning (push)
+        #pragma warning (disable:6540)
 
-    _Check_return_
-    _DCRTIMP int __cdecl _putenv(
-        _In_z_ char const* _EnvString
-        );
+        _Check_return_
+        _DCRTIMP int __cdecl _putenv(
+            _In_z_ char const* _EnvString
+            );
 
-    _Check_return_wat_
-    _DCRTIMP errno_t __cdecl _putenv_s(
-        _In_z_ char const* _Name,
-        _In_z_ char const* _Value
-        );
+        _Check_return_wat_
+        _DCRTIMP errno_t __cdecl _putenv_s(
+            _In_z_ char const* _Name,
+            _In_z_ char const* _Value
+            );
 
-    #pragma warning (pop)
+        #pragma warning (pop)
 
-    _DCRTIMP errno_t __cdecl _searchenv_s(
-        _In_z_                       char const* _Filename,
-        _In_z_                       char const* _VarName,
-        _Out_writes_z_(_BufferCount) char*       _Buffer,
-        _In_                         size_t      _BufferCount
-        );
+        _DCRTIMP errno_t __cdecl _searchenv_s(
+            _In_z_                       char const* _Filename,
+            _In_z_                       char const* _VarName,
+            _Out_writes_z_(_BufferCount) char*       _Buffer,
+            _In_                         size_t      _BufferCount
+            );
 
-    __DEFINE_CPP_OVERLOAD_SECURE_FUNC_2_0(
-        errno_t, _searchenv_s,
-        _In_z_ char const*, _Filename,
-        _In_z_ char const*, _VarName,
-               char,        _Buffer
-        )
+        __DEFINE_CPP_OVERLOAD_SECURE_FUNC_2_0(
+            errno_t, _searchenv_s,
+            _In_z_ char const*, _Filename,
+            _In_z_ char const*, _VarName,
+                   char,        _Buffer
+            )
 
-    __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_2_0(
-        void, __RETURN_POLICY_VOID, _DCRTIMP, _searchenv,
-        _In_z_                  char const*, _Filename,
-        _In_z_                  char const*, _VarName,
-        _Pre_notnull_ _Post_z_, char,        _Buffer
-        )
+        __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_2_0(
+            void, __RETURN_POLICY_VOID, _DCRTIMP, _searchenv,
+            _In_z_                  char const*, _Filename,
+            _In_z_                  char const*, _VarName,
+            _Pre_notnull_ _Post_z_, char,        _Buffer
+            )
 
-    // The Win32 API SetErrorMode, Beep and Sleep should be used instead.
-    _CRT_OBSOLETE(SetErrorMode)
-    _DCRTIMP void __cdecl _seterrormode(
-        _In_ int _Mode
-        );
+        // The Win32 API SetErrorMode, Beep and Sleep should be used instead.
+        _CRT_OBSOLETE(SetErrorMode)
+        _DCRTIMP void __cdecl _seterrormode(
+            _In_ int _Mode
+            );
 
-    _CRT_OBSOLETE(Beep)
-    _DCRTIMP void __cdecl _beep(
-        _In_ unsigned _Frequency,
-        _In_ unsigned _Duration
-        );
+        _CRT_OBSOLETE(Beep)
+        _DCRTIMP void __cdecl _beep(
+            _In_ unsigned _Frequency,
+            _In_ unsigned _Duration
+            );
 
-    _CRT_OBSOLETE(Sleep)
-    _DCRTIMP void __cdecl _sleep(
-        _In_ unsigned long _Duration
-        );
+        _CRT_OBSOLETE(Sleep)
+        _DCRTIMP void __cdecl _sleep(
+            _In_ unsigned long _Duration
+            );
+
+    #endif // _CRT_FUNCTIONS_REQUIRED
 
 #endif // _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
 
@@ -1278,7 +1283,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 // Non-ANSI Names for Compatibility
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
 
     #ifndef __cplusplus
         #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -1313,14 +1318,14 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         _In_                   int    _DigitCount,
         _Pre_notnull_ _Post_z_ char*  _DstBuf
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_itoa) _CRT_INSECURE_DEPRECATE(_itoa_s)
     _ACRTIMP char* __cdecl itoa(
         _In_                   int   _Value,
         _Pre_notnull_ _Post_z_ char* _Buffer,
         _In_                   int   _Radix
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_ltoa) _CRT_INSECURE_DEPRECATE(_ltoa_s)
     _ACRTIMP char* __cdecl ltoa(
         _In_                   long  _Value,
@@ -1358,7 +1363,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 
     onexit_t __cdecl onexit(_In_opt_ onexit_t _Func);
 
-#endif // !__STDC__
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 

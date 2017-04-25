@@ -14,10 +14,8 @@
 _CRT_BEGIN_C_HEADER
 
 
-#if _MSC_VER >= 1200
 #pragma warning(push)
 #pragma warning(disable:4820) /* padding added after data member */
-#endif
 
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -269,9 +267,7 @@ _ACRTIMP errno_t __cdecl _wsopen_dispatch(
 #endif
 
 
-#if _MSC_VER >= 1200
 #pragma warning(pop)
-#endif
 
 
 _CRT_END_C_HEADER

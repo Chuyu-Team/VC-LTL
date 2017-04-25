@@ -78,7 +78,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #ifndef _CTYPE_DISABLE_MACROS
- 
+
     // Maximum number of bytes in multi-byte character in the current locale
     // (also defined in stdlib.h).
     #ifndef MB_CUR_MAX
@@ -164,7 +164,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
         {
             return __acrt_get_locale_data_prefix(_Locale)->_locale_pctype[_C] & _Mask;
         }
-            
+
         return __chvalidchk(_C, _Mask);
         #endif
     }
@@ -220,8 +220,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
 #endif // _CTYPE_DISABLE_MACROS
 
 
-#if !__STDC__
-    // Non-ANSI names for compatibility
+#if _CRT_INTERNAL_NONSTDC_NAMES
     #define isascii __isascii
     #define toascii __toascii
     #define iscsymf __iscsymf

@@ -1,6 +1,6 @@
 #pragma once
 
-#if NDEBUG&&_DLL
+#if defined(NDEBUG)&&defined(_DLL)
 
 
 #ifndef _VCRUNTIME_H

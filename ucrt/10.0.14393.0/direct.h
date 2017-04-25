@@ -28,19 +28,22 @@ _CRT_BEGIN_C_HEADER
         };
     #endif
 
-    _Success_(return == 0)
-    _Check_return_
-    _DCRTIMP unsigned __cdecl _getdiskfree(
-        _In_  unsigned            _Drive,
-        _Out_ struct _diskfree_t* _DiskFree
-        );
+    #if _CRT_FUNCTIONS_REQUIRED
 
-    _Check_return_ _DCRTIMP int __cdecl _chdrive(_In_ int _Drive);
+        _Success_(return == 0)
+        _Check_return_
+        _DCRTIMP unsigned __cdecl _getdiskfree(
+            _In_  unsigned            _Drive,
+            _Out_ struct _diskfree_t* _DiskFree
+            );
 
-    _Check_return_ _DCRTIMP int __cdecl _getdrive(void);
+        _Check_return_ _DCRTIMP int __cdecl _chdrive(_In_ int _Drive);
 
-    _Check_return_ _DCRTIMP unsigned long __cdecl _getdrives(void);
+        _Check_return_ _DCRTIMP int __cdecl _getdrive(void);
 
+        _Check_return_ _DCRTIMP unsigned long __cdecl _getdrives(void);
+
+    #endif // _CRT_FUNCTIONS_REQUIRED
 #endif // _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
 
 
@@ -78,8 +81,7 @@ _Check_return_ _ACRTIMP int __cdecl _rmdir(_In_z_ char const* _Path);
 
 
 
-#if !__STDC__
-    // Non-ANSI names for compatibility
+#if _CRT_INTERNAL_NONSTDC_NAMES
 
     #ifdef _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
 
@@ -114,7 +116,7 @@ _Check_return_ _ACRTIMP int __cdecl _rmdir(_In_z_ char const* _Path);
         _In_z_ char const* _Path
         );
 
-#endif // !__STDC__
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 

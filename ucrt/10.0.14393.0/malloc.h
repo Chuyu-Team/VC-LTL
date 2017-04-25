@@ -70,7 +70,7 @@ void* __cdecl _alloca(_In_ size_t _Size);
         _Check_return_ _DCRTIMP int __cdecl _heapchk(void);
         _DCRTIMP int __cdecl _resetstkoflw(void);
     #endif
-     
+
     #define _ALLOCA_S_THRESHOLD     1024
     #define _ALLOCA_S_STACK_MARKER  0xCCCC
     #define _ALLOCA_S_HEAP_MARKER   0xDDDD
@@ -157,7 +157,7 @@ void* __cdecl _alloca(_In_ size_t _Size);
             #ifdef _ASSERTE
             else if (_Marker != _ALLOCA_S_STACK_MARKER)
             {
-                _ASSERTE(("Corrupted pointer passed to _freea", 0));
+                _ASSERTE(("Corrupted pointer passed to _freea" && 0));
             }
             #endif
         }
@@ -168,7 +168,7 @@ void* __cdecl _alloca(_In_ size_t _Size);
 
 
 
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
     #define alloca _alloca
 #endif
 

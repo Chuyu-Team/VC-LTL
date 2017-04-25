@@ -15,7 +15,7 @@
 #define _LK_RLCK   3  // lock for writing
 #define _LK_NBRLCK 4  // non-blocking lock for writing
 
-#if !__STDC__
+#if (defined _CRT_DECLARE_NONSTDC_NAMES && _CRT_DECLARE_NONSTDC_NAMES) || (!defined _CRT_DECLARE_NONSTDC_NAMES && !__STDC__)
     #define LK_UNLCK  _LK_UNLCK
     #define LK_LOCK   _LK_LOCK
     #define LK_NBLCK  _LK_NBLCK

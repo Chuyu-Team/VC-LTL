@@ -37,7 +37,7 @@ _CRT_BEGIN_C_HEADER
         _In_ rsize_t _SizeInWords,
         _In_z_ wchar_t const* _Source
         );
-    
+
     _Check_return_wat_
     _ACRTIMP errno_t __cdecl wcsncat_s(
         _Inout_updates_z_(_SizeInWords) wchar_t*       _Destination,
@@ -45,7 +45,7 @@ _CRT_BEGIN_C_HEADER
         _In_reads_or_z_(_MaxCount)      wchar_t const* _Source,
         _In_                            rsize_t        _MaxCount
         );
-    
+
     _Check_return_wat_
     _ACRTIMP errno_t __cdecl wcsncpy_s(
         _Out_writes_z_(_SizeInWords) wchar_t*       _Destination,
@@ -53,7 +53,7 @@ _CRT_BEGIN_C_HEADER
         _In_reads_or_z_(_MaxCount)   wchar_t const* _Source,
         _In_                         rsize_t        _MaxCount
         );
-    
+
     _Check_return_
     _ACRTIMP wchar_t* __cdecl wcstok_s(
         _Inout_opt_z_                 wchar_t*       _String,
@@ -250,7 +250,7 @@ _ACRTIMP wchar_t* __cdecl wcstok(
     #endif
 
     #if defined __cplusplus && !defined _CRT_NO_INLINE_DEPRECATED_WCSTOK
-        extern "C++" _Check_return_ _WCSTOK_DEPRECATED 
+        extern "C++" _Check_return_ _WCSTOK_DEPRECATED
         inline wchar_t* __CRTDECL wcstok(
             _Inout_opt_z_ wchar_t*       _String,
             _In_z_        wchar_t const* _Delimiter
@@ -563,7 +563,7 @@ extern "C++" {
 // Non-Standard Names
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
     #if defined _DEBUG && defined _CRTDBG_MAP_ALLOC
         #pragma push_macro("wcsdup")
         #undef wcsdup
@@ -586,14 +586,14 @@ extern "C++" {
         _In_z_ wchar_t const* _String1,
         _In_z_ wchar_t const* _String2
         );
-    
+
     _Check_return_ _CRT_NONSTDC_DEPRECATE(_wcsnicmp)
     _ACRTIMP int __cdecl wcsnicmp(
         _In_reads_or_z_(_MaxCount) wchar_t const* _String1,
         _In_reads_or_z_(_MaxCount) wchar_t const* _String2,
         _In_                       size_t         _MaxCount
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_wcsnset)
     _Ret_z_
     _ACRTIMP wchar_t* __cdecl wcsnset(
@@ -601,39 +601,39 @@ extern "C++" {
         _In_                         wchar_t  _Value,
         _In_                         size_t   _MaxCount
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_wcsrev)
     _Ret_z_
     _ACRTIMP wchar_t* __cdecl wcsrev(
         _Inout_z_ wchar_t* _String
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_wcsset)
     _Ret_z_
     _ACRTIMP wchar_t* __cdecl wcsset(
         _Inout_z_ wchar_t* _String,
         _In_      wchar_t  _Value
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_wcslwr)
     _Ret_z_
     _ACRTIMP wchar_t* __cdecl wcslwr(
         _Inout_z_ wchar_t* _String
         );
-    
+
     _CRT_NONSTDC_DEPRECATE(_wcsupr)
     _Ret_z_
     _ACRTIMP wchar_t* __cdecl wcsupr(
         _Inout_z_ wchar_t* _String
         );
-    
+
     _Check_return_ _CRT_NONSTDC_DEPRECATE(_wcsicoll)
     _ACRTIMP int __cdecl wcsicoll(
         _In_z_ wchar_t const* _String1,
         _In_z_ wchar_t const* _String2
         );
 
-#endif // !__STDC__
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 

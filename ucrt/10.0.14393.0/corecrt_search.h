@@ -63,7 +63,7 @@ _ACRTIMP void* __cdecl _lfind_s(
     _In_reads_bytes_((*_NumOfElements) * _SizeOfElements) void const*   _Base,
     _Inout_                                               unsigned int* _NumOfElements,
     _In_                                                  size_t        _SizeOfElements,
-    _In_ int (__cdecl* _PtFuncCompare)(void*, void const*, void const*), 
+    _In_ int (__cdecl* _PtFuncCompare)(void*, void const*, void const*),
     _In_                                                  void*         _Context
     );
 
@@ -179,7 +179,7 @@ extern "C++"
 
 
 
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
 
     _Check_return_ _CRT_NONSTDC_DEPRECATE(_lfind)
     _ACRTIMP void* __cdecl lfind(
@@ -199,7 +199,7 @@ extern "C++"
         _In_ int (__cdecl* _PtFuncCompare)(void const*, void const*)
         );
 
-#endif // !__STDC__
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 

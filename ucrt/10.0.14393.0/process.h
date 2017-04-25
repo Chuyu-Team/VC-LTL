@@ -32,19 +32,23 @@ _CRT_BEGIN_C_HEADER
 
 
 
-_ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl abort(void);
+#if _CRT_FUNCTIONS_REQUIRED
 
-_DCRTIMP int __cdecl system(_In_opt_z_ char const* _Command);
+    _ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
+    _ACRTIMP __declspec(noreturn) void __cdecl abort(void);
 
-_ACRTIMP void __cdecl _cexit(void);
-_ACRTIMP void __cdecl _c_exit(void);
+    _DCRTIMP int __cdecl system(_In_opt_z_ char const* _Command);
 
-typedef void (__stdcall *_tls_callback_type)(void *, unsigned long, void *);
-_ACRTIMP void __cdecl _register_thread_local_exe_atexit_callback(_In_ _tls_callback_type _Callback);
+    _ACRTIMP void __cdecl _cexit(void);
+    _ACRTIMP void __cdecl _c_exit(void);
+
+    typedef void (__stdcall *_tls_callback_type)(void *, unsigned long, void *);
+    _ACRTIMP void __cdecl _register_thread_local_exe_atexit_callback(_In_ _tls_callback_type _Callback);
+
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 // Declare DLL notification (initialization/termination) routines.  The preferred
 // method is for the CRT client to define DllMain(), which will automatically be
@@ -108,92 +112,92 @@ _ACRTIMP void __cdecl _endthreadex(
         _In_      intptr_t _ProcHandle,
         _In_      int      _Action
         );
-    
+
     _DCRTIMP intptr_t __cdecl _execl(
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _execle(
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _execlp(
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _execlpe(
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _execv(
         _In_z_ char const*        _FileName,
         _In_z_ char const* const* _Arguments
         );
-    
+
     _DCRTIMP intptr_t __cdecl _execve(
         _In_z_     char const*        _FileName,
         _In_z_     char const* const* _Arguments,
         _In_opt_z_ char const* const* _Environment
         );
-    
+
     _DCRTIMP intptr_t __cdecl _execvp(
         _In_z_ char const*        _FileName,
         _In_z_ char const* const* _Arguments
         );
-    
+
     _DCRTIMP intptr_t __cdecl _execvpe(
         _In_z_     char const*        _FileName,
         _In_z_     char const* const* _Arguments,
         _In_opt_z_ char const* const* _Environment
         );
-    
+
     _DCRTIMP intptr_t __cdecl _spawnl(
         _In_   int         _Mode,
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _spawnle(
         _In_   int         _Mode,
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _spawnlp(
         _In_   int         _Mode,
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _spawnlpe(
         _In_   int         _Mode,
         _In_z_ char const* _FileName,
         _In_z_ char const* _Arguments,
         ...);
-    
+
     _DCRTIMP intptr_t __cdecl _spawnv(
         _In_   int                _Mode,
         _In_z_ char const*        _FileName,
         _In_z_ char const* const* _Arguments
         );
-    
+
     _DCRTIMP intptr_t __cdecl _spawnve(
         _In_       int                _Mode,
         _In_z_     char const*        _FileName,
         _In_z_     char const* const* _Arguments,
         _In_opt_z_ char const* const* _Environment
         );
-    
+
     _DCRTIMP intptr_t __cdecl _spawnvp(
         _In_   int                _Mode,
         _In_z_ char const*        _FileName,
         _In_z_ char const* const* _Arguments
         );
-    
+
     _DCRTIMP intptr_t __cdecl _spawnvpe(
         _In_       int                _Mode,
         _In_z_     char const*        _FileName,
@@ -222,7 +226,7 @@ _ACRTIMP void __cdecl _endthreadex(
 
 
 
-#if !__STDC__
+#if _CRT_INTERNAL_NONSTDC_NAMES
 
     #define P_WAIT          _P_WAIT
     #define P_NOWAIT        _P_NOWAIT
@@ -241,91 +245,91 @@ _ACRTIMP void __cdecl _endthreadex(
             _In_      intptr_t _ProcHandle,
             _In_      int      _Action
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_execl)
         _DCRTIMP intptr_t __cdecl execl(
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_execle)
         _DCRTIMP intptr_t __cdecl execle(
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_execlp)
         _DCRTIMP intptr_t __cdecl execlp(
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_execlpe)
         _DCRTIMP intptr_t __cdecl execlpe(
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_execv)
         _DCRTIMP intptr_t __cdecl execv(
             _In_z_ char const*        _FileName,
             _In_z_ char const* const* _Arguments
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_execve)
         _DCRTIMP intptr_t __cdecl execve(
             _In_z_     char const*        _FileName,
             _In_z_     char const* const* _Arguments,
             _In_opt_z_ char const* const* _Environment
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_execvp)
         _DCRTIMP intptr_t __cdecl execvp(
             _In_z_ char const*        _FileName,
             _In_z_ char const* const* _Arguments
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_execvpe)
         _DCRTIMP intptr_t __cdecl execvpe(
             _In_z_     char const*        _FileName,
             _In_z_     char const* const* _Arguments,
             _In_opt_z_ char const* const* _Environment
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnl)
         _DCRTIMP intptr_t __cdecl spawnl(
             _In_   int         _Mode,
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnle)
         _DCRTIMP intptr_t __cdecl spawnle(
             _In_   int         _Mode,
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnlp)
         _DCRTIMP intptr_t __cdecl spawnlp(
             _In_   int         _Mode,
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnlpe)
         _DCRTIMP intptr_t __cdecl spawnlpe(
             _In_   int         _Mode,
             _In_z_ char const* _FileName,
             _In_z_ char const* _Arguments,
             ...);
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnv)
         _DCRTIMP intptr_t __cdecl spawnv(
             _In_   int                _Mode,
             _In_z_ char const*        _FileName,
             _In_z_ char const* const* _Arguments);
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnve)
         _DCRTIMP intptr_t __cdecl spawnve(
             _In_       int                _Mode,
@@ -333,14 +337,14 @@ _ACRTIMP void __cdecl _endthreadex(
             _In_z_     char const* const* _Arguments,
             _In_opt_z_ char const* const* _Environment
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnvp)
         _DCRTIMP intptr_t __cdecl spawnvp(
             _In_   int                _Mode,
             _In_z_ char const*        _FileName,
             _In_z_ char const* const* _Arguments
             );
-        
+
         _CRT_NONSTDC_DEPRECATE(_spawnvpe)
         _DCRTIMP intptr_t __cdecl spawnvpe(
             _In_       int                _Mode,
@@ -354,7 +358,7 @@ _ACRTIMP void __cdecl _endthreadex(
 
     #endif // _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
 
-#endif // !__STDC__
+#endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 
 

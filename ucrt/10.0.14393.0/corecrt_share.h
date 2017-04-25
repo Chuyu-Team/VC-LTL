@@ -18,7 +18,7 @@
 
 
 
-#if !__STDC__
+#if (defined _CRT_DECLARE_NONSTDC_NAMES && _CRT_DECLARE_NONSTDC_NAMES) || (!defined _CRT_DECLARE_NONSTDC_NAMES && !__STDC__)
     #define SH_DENYRW _SH_DENYRW
     #define SH_DENYWR _SH_DENYWR
     #define SH_DENYRD _SH_DENYRD

@@ -29,6 +29,7 @@ _CRT_BEGIN_C_HEADER
 
     #ifndef _DISKFREE_T_DEFINED
         #define _DISKFREE_T_DEFINED
+
         struct _diskfree_t
         {
             unsigned total_clusters;
@@ -38,14 +39,16 @@ _CRT_BEGIN_C_HEADER
         };
     #endif
 
-    _Success_(return == 0)
-    _Check_return_
-    _DCRTIMP unsigned __cdecl _getdiskfree(
-        _In_  unsigned            _Drive,
-        _Out_ struct _diskfree_t* _DiskFree
-        );
+    #if _CRT_FUNCTIONS_REQUIRED
+        _Success_(return == 0)
+        _Check_return_
+        _DCRTIMP unsigned __cdecl _getdiskfree(
+            _In_  unsigned            _Drive,
+            _Out_ struct _diskfree_t* _DiskFree
+            );
+    #endif
 
-    #if !__STDC__
+    #if _CRT_INTERNAL_NONSTDC_NAMES
         #define diskfree_t _diskfree_t
     #endif
 

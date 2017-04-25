@@ -17,7 +17,7 @@ _CRT_BEGIN_C_HEADER
 typedef unsigned short _Char16_t;
 typedef unsigned int _Char32_t;
 
-#if !defined __cplusplus || _MSC_VER < 1900
+#if !defined __cplusplus || (defined _MSC_VER && _MSC_VER < 1900)
     typedef unsigned short char16_t;
     typedef unsigned int char32_t;
 #endif

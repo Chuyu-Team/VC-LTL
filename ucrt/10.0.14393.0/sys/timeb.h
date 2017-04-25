@@ -34,7 +34,7 @@ struct __timeb64
     short          dstflag;
 };
 
-#if !__STDC__  && !defined _CRT_NO_TIME_T
+#if _CRT_INTERNAL_NONSTDC_NAMES  && !defined _CRT_NO_TIME_T
     struct timeb
     {
         time_t         time;
@@ -83,7 +83,7 @@ _ACRTIMP errno_t __cdecl _ftime64_s(
 
 
 
-#if !defined RC_INVOKED && !defined __midl && !__STDC__ && !defined _CRT_NO_TIME_T
+#if !defined RC_INVOKED && !defined __midl && _CRT_INTERNAL_NONSTDC_NAMES && !defined _CRT_NO_TIME_T
 
     #pragma warning(push)
     #pragma warning(disable:4996)

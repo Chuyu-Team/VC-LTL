@@ -257,7 +257,7 @@ _CRT_BEGIN_C_HEADER
         return _Result;
     }
 #endif
-    
+
 
     //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     //
@@ -426,7 +426,7 @@ _CRT_BEGIN_C_HEADER
     _Check_return_opt_ _DCRTIMP int __cdecl _putch_nolock  (_In_ int _Ch);
     _Check_return_opt_ _DCRTIMP int __cdecl _ungetch_nolock(_In_ int _Ch);
 
-    #if !__STDC__
+    #if _CRT_INTERNAL_NONSTDC_NAMES
 
         // Suppress double-deprecation warnings:
         #pragma warning(push)
@@ -506,7 +506,7 @@ _CRT_BEGIN_C_HEADER
         }
 #endif
 
-    #endif // !__STDC__
+    #endif // _CRT_INTERNAL_NONSTDC_NAMES
 
 #endif // _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
 

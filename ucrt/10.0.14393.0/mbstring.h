@@ -604,17 +604,17 @@ _CRT_BEGIN_C_HEADER
 
     _Check_return_
     _DCRTIMP int __cdecl _mbsncmp(
-        _In_z_ unsigned char const* _Str1,
-        _In_z_ unsigned char const* _Str2,
-        _In_   size_t               _MaxCount
+        _In_reads_or_z_(_MaxCount) unsigned char const* _Str1,
+        _In_z_                     unsigned char const* _Str2,
+        _In_                       size_t               _MaxCount
         );
 
     _Check_return_
     _DCRTIMP int __cdecl _mbsncmp_l(
-        _In_z_   unsigned char const* _Str1,
-        _In_z_   unsigned char const* _Str2,
-        _In_     size_t               _MaxCount,
-        _In_opt_ _locale_t            _Locale
+        _In_reads_or_z_(_MaxCount) unsigned char const* _Str1,
+        _In_z_                     unsigned char const* _Str2,
+        _In_                       size_t               _MaxCount,
+        _In_opt_                   _locale_t            _Locale
         );
 
     _Check_return_
@@ -1183,41 +1183,41 @@ _CRT_BEGIN_C_HEADER
 
 
 
-// BEGIN _MBLEADTRAIL_DEFINED
-_When_(_Ch == 0, _Post_equal_to_(0))
-_Check_return_ _DCRTIMP int __cdecl _ismbblead (_In_ unsigned int _Ch);
-_Check_return_ _DCRTIMP int __cdecl _ismbbtrail(_In_ unsigned int _Ch);
+#if _CRT_FUNCTIONS_REQUIRED
+    _When_(_Ch == 0, _Post_equal_to_(0))
+    _Check_return_ _DCRTIMP int __cdecl _ismbblead (_In_ unsigned int _Ch);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbtrail(_In_ unsigned int _Ch);
 
-_When_(_Ch == 0, _Post_equal_to_(0))
-_Check_return_ _DCRTIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
-_Check_return_ _DCRTIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+    _When_(_Ch == 0, _Post_equal_to_(0))
+    _Check_return_ _DCRTIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
 
-_Check_return_
-_DCRTIMP int __cdecl _ismbslead(
-    _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
-    _In_z_                           unsigned char const* _Pos
-    );
+    _Check_return_
+    _DCRTIMP int __cdecl _ismbslead(
+        _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
+        _In_z_                           unsigned char const* _Pos
+        );
 
-_Check_return_
-_DCRTIMP int __cdecl _ismbslead_l(
-    _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
-    _In_z_                           unsigned char const* _Pos,
-    _In_opt_                         _locale_t            _Locale
-    );
+    _Check_return_
+    _DCRTIMP int __cdecl _ismbslead_l(
+        _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
+        _In_z_                           unsigned char const* _Pos,
+        _In_opt_                         _locale_t            _Locale
+        );
 
-_Check_return_
-_ACRTIMP int __cdecl _ismbstrail(
-    _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
-    _In_z_                           unsigned char const* _Pos
-    );
+    _Check_return_
+    _ACRTIMP int __cdecl _ismbstrail(
+        _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
+        _In_z_                           unsigned char const* _Pos
+        );
 
-_Check_return_
-_ACRTIMP int __cdecl _ismbstrail_l(
-    _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
-    _In_z_                           unsigned char const* _Pos,
-    _In_opt_                         _locale_t            _Locale
-    );
-// END _MBLEADTRAIL_DEFINED
+    _Check_return_
+    _ACRTIMP int __cdecl _ismbstrail_l(
+        _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
+        _In_z_                           unsigned char const* _Pos,
+        _In_opt_                         _locale_t            _Locale
+        );
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 
 

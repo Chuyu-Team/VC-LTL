@@ -14,19 +14,19 @@ _CRT_BEGIN_C_HEADER
 
 
 
-_ACRTIMP extern int* __cdecl _errno(void);
-#define errno (*_errno())
+#if _CRT_FUNCTIONS_REQUIRED
+    _ACRTIMP int* __cdecl _errno(void);
+    #define errno (*_errno())
 
-_ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
-_ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
+    _ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
+    _ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 
+    _ACRTIMP unsigned long* __cdecl __doserrno(void);
+    #define _doserrno (*__doserrno())
 
-
-_ACRTIMP unsigned long* __cdecl __doserrno(void);
-#define _doserrno (*__doserrno())
-
-_ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-_ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+    _ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+    _ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+#endif // _CRT_FUNCTIONS_REQUIRED
 
 
 

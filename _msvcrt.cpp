@@ -1,6 +1,6 @@
 #pragma once
 
-#if NDEBUG&&_DLL&&__NO_LTL_LIB
+#if defined(NDEBUG)&&defined(_DLL)&&defined(__NO_LTL_LIB)
 //#include <vcruntime_new.h>
 #include <corecrt_terminate.h>
 #include <stdlib.h>
@@ -207,6 +207,43 @@ extern "C"
 		data->_DoFree = false;
 		data->_What = nullptr;
 	}
+
+	void __cdecl _invalid_parameter(
+		_In_opt_z_ wchar_t const*,
+		_In_opt_z_ wchar_t const*,
+		_In_opt_z_ wchar_t const*,
+		_In_       unsigned int,
+		_In_       uintptr_t
+	);
+
+	inline void __cdecl _invalid_parameter_noinfo_noreturn(void)
+	{
+		_invalid_parameter(nullptr, nullptr, nullptr, 0, 0);
+		_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
+
+		__debugbreak();
+	}
+
+	inline errno_t __CRTDECL wmemcpy_s(
+		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
+		_In_                         rsize_t        _N1,
+		_In_reads_opt_(_N)           wchar_t const* _S2,
+		_In_                         rsize_t        _N
+	)
+	{
+		return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
+	}
+
+	inline errno_t __CRTDECL wmemmove_s(
+			_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
+			_In_                         rsize_t        _N1,
+			_In_reads_opt_(_N)           wchar_t const* _S2,
+			_In_                         rsize_t        _N
+		)
+	{
+		return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
+	}
+
 
 //	int __cdecl __stdio_common_vswprintf(
 //		_In_                                    unsigned __int64 _Options,

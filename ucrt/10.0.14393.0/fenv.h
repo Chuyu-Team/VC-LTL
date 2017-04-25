@@ -15,12 +15,12 @@ _CRT_BEGIN_C_HEADER
 
 
 
-#define FE_TONEAREST  0x0000
-#define FE_UPWARD     0x0100
-#define FE_DOWNWARD   0x0200
-#define FE_TOWARDZERO 0x0300
+#define FE_TONEAREST  _RC_NEAR
+#define FE_UPWARD     _RC_UP
+#define FE_DOWNWARD   _RC_DOWN
+#define FE_TOWARDZERO _RC_CHOP
 
-#define FE_ROUND_MASK 0x0300
+#define FE_ROUND_MASK _MCW_RC
 
 _ACRTIMP int __cdecl fegetround(void);
 _ACRTIMP int __cdecl fesetround(_In_ int);
@@ -54,7 +54,9 @@ _ACRTIMP int __cdecl fesetround(_In_ int);
     _ACRTIMP int __cdecl fegetexceptflag(_Out_ fexcept_t*, _In_ int);
     _ACRTIMP int __cdecl fesetexceptflag(_In_ fexcept_t const*, _In_ int);
 
-    __declspec(selectany) extern const fenv_t _Fenv0 = { 0, 0 };
+    #if !defined __midl // MIDL does not support compound initializers
+        __declspec(selectany) extern const fenv_t _Fenv0 = { 0, 0 };
+    #endif
 
     #define FE_DFL_ENV (&_Fenv0)
 
@@ -67,62 +69,72 @@ _ACRTIMP int __cdecl fesetround(_In_ int);
     // doesn't have side effects.
     //
     // feupdateenv is inline because it calls feraiseexcept.
-    #pragma optimize( "", off )
-    __inline int __CRTDECL feraiseexcept(_In_ int _Except)
-    {
-        static struct
+    #if _CRT_FUNCTIONS_REQUIRED
+        #if !defined(_BEGIN_PRAGMA_OPTIMIZE_DISABLE)
+            #define _BEGIN_PRAGMA_OPTIMIZE_DISABLE(flags, bug, reason) \
+                __pragma(optimize(flags, off))
+            #define _BEGIN_PRAGMA_OPTIMIZE_ENABLE(flags, bug, reason) \
+                __pragma(optimize(flags, on))
+            #define _END_PRAGMA_OPTIMIZE() \
+                __pragma(optimize("", on))
+        #endif
+        _BEGIN_PRAGMA_OPTIMIZE_DISABLE("", MSFT:4499495, "If optimizations are on, the floating-point exception might not get triggered (because the compiler optimizes it out), breaking the function.")
+        __inline int __CRTDECL feraiseexcept(_In_ int _Except)
         {
-            int    _Except_Val;
-            double _Num;
-            double _Denom;
-        } const _Table[] = 
-        {  // Raise exception by evaluating num / denom:
-            {FE_INVALID,   0.0,    0.0    },
-            {FE_DIVBYZERO, 1.0,    0.0    },
-            {FE_OVERFLOW,  1e+300, 1e-300 },
-            {FE_UNDERFLOW, 1e-300, 1e+300 },
-            {FE_INEXACT,   2.0,    3.0    }
-        };
+            static struct
+            {
+                int    _Except_Val;
+                double _Num;
+                double _Denom;
+            } const _Table[] =
+            {  // Raise exception by evaluating num / denom:
+                {FE_INVALID,   0.0,    0.0    },
+                {FE_DIVBYZERO, 1.0,    0.0    },
+                {FE_OVERFLOW,  1e+300, 1e-300 },
+                {FE_UNDERFLOW, 1e-300, 1e+300 },
+                {FE_INEXACT,   2.0,    3.0    }
+            };
 
-        double _Ans = 0.0;
-        int _N;
+            double _Ans = 0.0;
+            int _N;
 
-        if ((_Except &= FE_ALL_EXCEPT) == 0)
-        {
+            if ((_Except &= FE_ALL_EXCEPT) == 0)
+            {
+                return 0;
+            }
+
+            // Raise the exceptions not masked:
+            for (_N = 0; _N < sizeof(_Table) / sizeof(_Table[0]); ++_N)
+            {
+                if ((_Except & _Table[_N]._Except_Val) != 0)
+                {
+                    _Ans = _Table[_N]._Num / _Table[_N]._Denom;
+
+                    // x87 exceptions are raised immediately before execution of the
+                    // next floating point instruction.  If we're using /arch:IA32,
+                    // force the exception to be raised immediately:
+                    #if defined _M_IX86 && _M_IX86_FP == 0
+                    __asm fwait;
+                    #endif
+                }
+            }
+
             return 0;
         }
+        _END_PRAGMA_OPTIMIZE()
 
-        // Raise the exceptions not masked:
-        for (_N = 0; _N < sizeof(_Table) / sizeof(_Table[0]); ++_N)
+        __inline int __CRTDECL feupdateenv(_In_ const fenv_t *_Penv)
         {
-            if ((_Except & _Table[_N]._Except_Val) != 0)
+            int _Except = fetestexcept(FE_ALL_EXCEPT);
+
+            if (fesetenv(_Penv) != 0 || feraiseexcept(_Except) != 0)
             {
-                _Ans = _Table[_N]._Num / _Table[_N]._Denom;
-
-                // x87 exceptions are raised immediately before execution of the
-                // next floating point instruction.  If we're using /arch:IA32,
-                // force the exception to be raised immediately:
-                #if defined _M_IX86 && _M_IX86_FP == 0
-                __asm fwait;
-                #endif
+                return 1;
             }
+
+            return 0;
         }
-
-        return 0;
-    }
-    #pragma optimize( "", on )
-
-    __inline int __CRTDECL feupdateenv(_In_ const fenv_t *_Penv)
-    {
-        int _Except = fetestexcept(FE_ALL_EXCEPT);
-
-        if (fesetenv(_Penv) != 0 || feraiseexcept(_Except) != 0)
-        {
-            return 1;
-        }
-
-        return 0;
-    }
+    #endif // _CRT_FUNCTIONS_REQUIRED
 
 #endif // !defined _M_CEE && !defined _CORECRT_BUILD
 

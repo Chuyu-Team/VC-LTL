@@ -260,7 +260,7 @@ typedef struct _CrtMemState
 
     #define _freea_dbg(p, t)         _freea(p)
     #define _malloca_dbg(s, t, f, l) _malloca(s)
-    
+
     #define _dupenv_s_dbg(ps1, size, s2, t, f, l)  _dupenv_s(ps1, size, s2)
     #define _fullpath_dbg(s1, s2, le, t, f, l)     _fullpath(s1, s2, le)
     #define _getcwd_dbg(s, le, t, f, l)            _getcwd(s, le)
@@ -315,7 +315,7 @@ typedef struct _CrtMemState
         #define _wgetdcwd(d, s, le)       _wgetdcwd_dbg(d, s, le, _NORMAL_BLOCK, __FILE__, __LINE__)
         #define _wtempnam(s1, s2)         _wtempnam_dbg(s1, s2, _NORMAL_BLOCK, __FILE__, __LINE__)
 
-        #if !__STDC__
+        #if _CRT_INTERNAL_NONSTDC_NAMES
             #define   strdup(s)          _strdup_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
             #define   wcsdup(s)          _wcsdup_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
             #define   tempnam(s1, s2)    _tempnam_dbg(s1, s2, _NORMAL_BLOCK, __FILE__, __LINE__)
@@ -537,7 +537,7 @@ typedef struct _CrtMemState
         _In_opt_z_                       char const*    _FileName,
         _In_                             int            _LineNumber
         );
-    
+
     _Success_(return != 0)
     _Check_return_ _Ret_maybenull_z_
     _DCRTIMP _CRTALLOCATOR wchar_t* __cdecl _wgetcwd_dbg(
