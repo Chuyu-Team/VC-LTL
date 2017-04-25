@@ -9,6 +9,8 @@
 
 #include <vcruntime.h>
 
+#include "..\..\_msvcrt.h"
+
 _CRT_BEGIN_C_HEADER
 
 
@@ -245,7 +247,7 @@ extern "C++"
 #endif
 
 _ACRTIMP_ALT void __cdecl _invalid_parameter_noinfo(void);
-_ACRTIMP __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(void);
+extern __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(void);
 
 __declspec(noreturn)
 _ACRTIMP void __cdecl _invoke_watson(
