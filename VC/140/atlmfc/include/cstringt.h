@@ -688,7 +688,7 @@ public:
 #pragma warning(suppress : 4996)
 #pragma warning(suppress : 6386)
 #pragma warning(suppress : 28719)
-		return _vscwprintf(pszBuffer, pszFormat, args);
+		return _vswprintf(pszBuffer, pszFormat, args);
 	}
 	static int __cdecl Format(
 		_Out_writes_(nLength) LPWSTR pszBuffer,

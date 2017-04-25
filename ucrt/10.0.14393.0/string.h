@@ -24,7 +24,7 @@ _CRT_BEGIN_C_HEADER
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_ 
-    _ACRTIMP errno_t __cdecl strcpy_s(
+	_ACRTXPIMP errno_t __cdecl strcpy_s(
         _Out_writes_z_(_SizeInBytes) char*       _Destination,
         _In_                         rsize_t     _SizeInBytes,
         _In_z_                       char const* _Source

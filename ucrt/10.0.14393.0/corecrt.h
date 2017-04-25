@@ -9,6 +9,8 @@
 
 #include <vcruntime.h>
 
+#include "..\..\_msvcrt.h"
+
 _CRT_BEGIN_C_HEADER
 
 

@@ -1,10 +1,15 @@
 #pragma once
 
-#if NDEBUG&&_DLL
+#if NDEBUG&&_DLL&&__NO_LTL_LIB
 //#include <vcruntime_new.h>
 #include <corecrt_terminate.h>
 #include <stdlib.h>
-//#include <corecrt_wstdio.h>
+#include <corecrt_wstdio.h>
+#include <Windows.h>
+#include <winnt.h>
+#include <intrin.h>  
+#include <vcruntime_exception.h>
+#include <crtdbg.h>
 
 /*#ifdef __NOTHROW_T_DEFINED
 
@@ -36,9 +41,9 @@ extern "C"
 		terminate();
 	}
 
-	_ACRTIMP struct FILE* __cdecl __iob_func(unsigned);
+	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
 
-	struct FILE* __cdecl __acrt_iob_func(unsigned in)
+	FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
 		return __iob_func(in);
 	}
@@ -51,16 +56,18 @@ extern "C"
 	{
 		return _wcstoui64(_String, _EndPtr, _Radix);
 	}
-#ifdef _ATL_XP_TARGETING
 	BOOL __cdecl __vcrt_InitializeCriticalSectionEx(
 		LPCRITICAL_SECTION const critical_section,
 		DWORD              const spin_count,
 		DWORD              const flags
 	)
 	{
+#ifdef _ATL_XP_TARGETING
 		return InitializeCriticalSectionAndSpinCount(critical_section, spin_count);
-	}
+#else
+		return InitializeCriticalSectionEx(critical_section, spin_count, flags);
 #endif
+	}
 	int __scrt_debugger_hook_flag = 0;
 
 	void __fastcall _CRT_DEBUGGER_HOOK(int const reserved)
@@ -233,35 +240,35 @@ extern "C++"
 #ifndef VCLTL_Not_Overload_New
 
 
-	extern void* __CRTDECL operator new(
+	void* __CRTDECL operator new(
 		size_t _Size
 		)
 	{
 		return malloc(_Size);
 	}
 
-		extern void* __CRTDECL operator new[](
+	void* __CRTDECL operator new[](
 			size_t _Size
 			)
 	{
 		return malloc(_Size);
 	}
 
-		void __CRTDECL operator delete(
+	void __CRTDECL operator delete(
 			void* _Block
 			) throw()
 	{
 		free(_Block);
 	}
 
-	extern void __CRTDECL operator delete[](
+	void __CRTDECL operator delete[](
 		void* _Block
 		)
 	{
 		free(_Block);
 	}
 
-		extern void __CRTDECL operator delete(
+	void __CRTDECL operator delete(
 			void*  _Block,
 			size_t _Size
 			)
@@ -269,7 +276,7 @@ extern "C++"
 		free(_Block);
 	}
 
-	extern void __CRTDECL operator delete[](
+	void __CRTDECL operator delete[](
 		void* _Block,
 		size_t _Size
 		)
@@ -279,6 +286,8 @@ extern "C++"
 
 #endif // !VCLTL_Not_Overload_New
 
+	#include <functional>
+	#include <regex>
 
 	_STD_BEGIN
 	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xbad_alloc()
@@ -312,28 +321,18 @@ extern "C++"
 	{	// report a runtime_error
 		_THROW_NCEE(runtime_error, _Message);
 	}
-	_STD_END
 
-#include <functional>
-
-	_STD_BEGIN
 	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xbad_function_call()
 	{	// report a bad_function_call error
 		_THROW_NCEE(bad_function_call, _EMPTY_ARGUMENT);
 	}
-	_STD_END
 
-#if _HAS_EXCEPTIONS
-#include <regex>
-
-	_STD_BEGIN
 	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xregex_error(regex_constants::error_type _Code)
 	{	// report a regex_error
 		_THROW_NCEE(regex_error, _Code);
 	}
 	_STD_END
-#endif /* _HAS_EXCEPTIONS */
 }
 #endif // !__cplusplus
 
-#endif
+#endif //NDEBUG&&_DLL&&__NO_LTL_LIB

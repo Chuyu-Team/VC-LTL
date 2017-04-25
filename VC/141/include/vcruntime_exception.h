@@ -24,12 +24,12 @@ struct __std_exception_data
     bool        _DoFree;
 };
 
-_VCRTIMP void __cdecl __std_exception_copy(
+extern void __cdecl __std_exception_copy(
     _In_  __std_exception_data const* _From,
     _Out_ __std_exception_data*       _To
     );
 
-_VCRTIMP void __cdecl __std_exception_destroy(
+extern void __cdecl __std_exception_destroy(
     _Inout_ __std_exception_data* _Data
     );
 

@@ -619,12 +619,20 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)x64\ltl140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\ltl140xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\ltl141.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\ltl141xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc140xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc141xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\ltl140.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\ltl140xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\ltl141.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\ltl141xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib" />
