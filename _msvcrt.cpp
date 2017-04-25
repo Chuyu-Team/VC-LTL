@@ -216,7 +216,7 @@ extern "C"
 		_In_       uintptr_t
 	);
 
-	inline void __cdecl _invalid_parameter_noinfo_noreturn(void)
+	void __cdecl _invalid_parameter_noinfo_noreturn(void)
 	{
 		_invalid_parameter(nullptr, nullptr, nullptr, 0, 0);
 		_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
@@ -224,7 +224,7 @@ extern "C"
 		__debugbreak();
 	}
 
-	inline errno_t __CRTDECL wmemcpy_s(
+	errno_t __CRTDECL wmemcpy_s(
 		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 		_In_                         rsize_t        _N1,
 		_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -234,7 +234,7 @@ extern "C"
 		return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
 
-	inline errno_t __CRTDECL wmemmove_s(
+	errno_t __CRTDECL wmemmove_s(
 			_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 			_In_                         rsize_t        _N1,
 			_In_reads_opt_(_N)           wchar_t const* _S2,
