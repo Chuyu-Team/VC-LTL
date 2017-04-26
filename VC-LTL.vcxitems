@@ -707,6 +707,7 @@
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afx.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn2.inl" />

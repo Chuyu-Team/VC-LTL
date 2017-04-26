@@ -2829,6 +2829,7 @@
     <None Include="$(MSBuildThisFileDirectory)x86\helper.asm">
       <Filter>Libx86</Filter>
     </None>
+    <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc">

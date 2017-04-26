@@ -17,22 +17,29 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 
 
 ## 使用方法：
-1 将内容解压到工程目录VC-LTL
-
-2 修改含目录，在最开始设置为以下内容
-* $(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\include
-* $(SolutionDir)\VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include
-* $(SolutionDir)\VC-LTL\ucrt\$(TargetUniversalCRTVersion)
-
-3 在库目录增加：
-* $(SolutionDir)VC-LTL\$(PlatformShortName)
+### 1. 将内容解压到工程目录VC-LTL
+比如你的Sln文件在 D:\MySln\MySln.sln，这时你把VC-LTL整个目录复制到D:\MySln\VC-LTL即可。
 
 
-4 在工程属性 C++ - 所有选项：
+### 2. 重定向C/C++库到VC LTL
+我将相关库引用设置封装在了`VC-LTL\ltlvcrt.props`，你可以打开属性管理器（视图 - 属性管理器），然后Relese配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
+
+如果你不希望使用ltlvcrt.props属性表，那么可以手动在Release配置中添加以下设置
+#### 2.1 在包含目录（include）的最上方添加以下内容：
+$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\include
+
+$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include
+
+$(SolutionDir)VC-LTL\ucrt\$(TargetUniversalCRTVersion)
+#### 2.2 在库目录（library）增加：
+$(SolutionDir)VC-LTL\$(PlatformShortName)
+
+### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
 * 【目标平台】调整为【Windows 10 14393】或者【Windows 10 15063】
 
-5 重新编译你的应用程序（Release），是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC LTL。
+### 4. 重新编译你的应用程序（Release）
+现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC LTL。
 
 
 ## Changes：
