@@ -24,15 +24,15 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 ### 2. 重定向C/C++库到VC LTL
 我将相关库引用设置封装在了`VC-LTL\ltlvcrt.props`，你可以打开属性管理器（视图 - 属性管理器），然后Relese配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
 
-如果你不希望使用ltlvcrt.props属性表，那么可以手动在Release配置中添加以下设置
+如果你不希望使用ltlvcrt.props属性表，那么可以手动在Release配置中添加以下设置（2.1以及2.2）
+
 #### 2.1 在包含目录（include）的最上方添加以下内容：
-$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\include
+* $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\include
+* $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\atlmfc\include
+* $(SolutionDir)VC-LTL\ucrt\\$(TargetUniversalCRTVersion)
 
-$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include
-
-$(SolutionDir)VC-LTL\ucrt\$(TargetUniversalCRTVersion)
 #### 2.2 在库目录（library）增加：
-$(SolutionDir)VC-LTL\$(PlatformShortName)
+* $(SolutionDir)VC-LTL\\$(PlatformShortName)
 
 ### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
