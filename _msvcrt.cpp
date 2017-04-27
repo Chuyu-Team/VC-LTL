@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #if defined(NDEBUG)&&defined(_DLL)&&defined(__NO_LTL_LIB)
 //#include <vcruntime_new.h>
@@ -30,7 +30,7 @@ extern "C"
 	{
 	}*/
 
-	//ÇĞ»»µ½ÏµÍ³µÄmsvrctºóÎŞĞè³õÊ¼»¯onexit_table£¬msvcrt.dllÄÚ²¿»á³õÊ¼»¯
+	//åˆ‡æ¢åˆ°ç³»ç»Ÿçš„msvrctåæ— éœ€åˆå§‹åŒ–onexit_tableï¼Œmsvcrt.dllå†…éƒ¨ä¼šåˆå§‹åŒ–
 	bool __cdecl __scrt_initialize_onexit_tables(int const module_type)
 	{
 		return true;
@@ -273,7 +273,7 @@ extern "C"
 #ifdef __cplusplus
 extern "C++"
 {
-//Èç¹ûÄãĞèÒª½ûÓÃÖØÔØ£¬ÇëÏÈ¶¨Òå VCLTL_Not_Overload_New
+//å¦‚æœä½ éœ€è¦ç¦ç”¨é‡è½½ï¼Œè¯·å…ˆå®šä¹‰ VCLTL_Not_Overload_New
 #ifndef VCLTL_Not_Overload_New
 
 

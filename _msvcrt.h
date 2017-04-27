@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #if defined(NDEBUG)&&defined(_DLL)
 
@@ -8,7 +8,7 @@
 #define __NO_LTL_LIB
 #endif
 
-//¹Ø±Õ³£ÓÃµÄpintfÏµÁĞº¯ÊıµÄÄÚÁª²Ù×÷£¬ÒòÎªÀÏ°æ±¾Ã»ÓĞ__stdio_common_vswscanfÏµÁĞº¯Êı
+//å…³é—­å¸¸ç”¨çš„pintfç³»åˆ—å‡½æ•°çš„å†…è”æ“ä½œï¼Œå› ä¸ºè€ç‰ˆæœ¬æ²¡æœ‰__stdio_common_vswscanfç³»åˆ—å‡½æ•°
 #define _NO_CRT_STDIO_INLINE
 
 
@@ -23,11 +23,14 @@
 #endif
 
 #ifdef _ATL_XP_TARGETING
-//XPÄ£Ê½£¬´ËÄ£Ê½ºÜ¶à±àÒëÆ÷ÌØĞÔ²ÉÓÃÊÂ¼şÊµÏÖ£¬²¢½«XP²»Ö§³ÖµÄÒ»Ğ©º¯Êı¾²Ì¬µ¼Èë
+//XPæ¨¡å¼ï¼Œæ­¤æ¨¡å¼å¾ˆå¤šç¼–è¯‘å™¨ç‰¹æ€§é‡‡ç”¨äº‹ä»¶å®ç°ï¼Œå¹¶å°†XPä¸æ”¯æŒçš„ä¸€äº›å‡½æ•°é™æ€å¯¼å…¥
 #define __ltlversionxp "xp"
 #define _ACRTXPIMP extern
+
+#pragma message("å‘ç°å½“å‰ç¼–è¯‘é€‰é¡¹éœ€è¦æ”¯æŒXP/2003ï¼Œå»ºè®®ã€C/C++ - å‘½ä»¤è¡Œã€‘è¾“å…¥\"/Zc:threadSafeInit-\" ä»¥ç¦ç”¨çº¿ç¨‹å®‰å…¨é™æ€åˆå§‹åŒ–ï¼Œè¿™æ˜¯ç¼–è¯‘å™¨æœ¬èº«çš„BUGï¼Œå¦åˆ™åœ¨å…¨å±€å˜é‡ä¸­ä½¿ç”¨é™æ€å˜é‡ä¼šå¯¼è‡´ç¨‹åºå´©æºƒã€‚")
+
 #else //_ATL_XP_TARGETING else
-//Ä¬ÈÏÄ£Ê½£¬´ËÄ£Ê½±àÒëÆ÷ĞÂÌØĞÔ½«Ê¹ÓÃVistaĞÂAPIÊµÏÖ£¬ĞÔÄÜ¸ü¼Ñ
+//é»˜è®¤æ¨¡å¼ï¼Œæ­¤æ¨¡å¼ç¼–è¯‘å™¨æ–°ç‰¹æ€§å°†ä½¿ç”¨Vistaæ–°APIå®ç°ï¼Œæ€§èƒ½æ›´ä½³
 #define __ltlversionxp
 #define _ACRTXPIMP __declspec(dllimport)
 #endif //_ATL_XP_TARGETING
@@ -38,15 +41,19 @@
 
 #ifndef __NO_LTL_LIB
 /*
-__NO_LTL_LIB ºê£¬¿ÉÒÔÈ¡Ïû¶ÔltlXXX.libµÄÒıÓÃ£¬È¡ÏûÒıÓÃºó³ÌĞòÌå»ı¿ÉÒÔ±äµÃ¸üĞ¡£¬µ«ÊÇ±ØĞëÊÖ¶¯ÔÚcpp include _msvcrt.cpp£¬·ñÔò½«±àÒëÊ§°Ü
-ltlXXX.libÊÇ_msvcrt.cppµÄ¾²Ì¬¿â Èç¹ûÄãÏ£ÍûÊÖ¶¯ÒıÓÃ_msvcrt.cpp£¬ÄÇÃ´ÇëÔÚ¶¥¼¶.hµÄ×î¿ªÊ¼ include <_msvcrt.h> »òÕß Ö±½ÓÔÚ¹¤³Ì¶¨Òå __NO_LTL_LIB ºê
+__NO_LTL_LIB å®ï¼Œå¯ä»¥å–æ¶ˆå¯¹ltlXXX.libçš„å¼•ç”¨ï¼Œå–æ¶ˆå¼•ç”¨åç¨‹åºä½“ç§¯å¯ä»¥å˜å¾—æ›´å°ï¼Œä½†æ˜¯å¿…é¡»æ‰‹åŠ¨åœ¨cpp include _msvcrt.cppï¼Œå¦åˆ™å°†ç¼–è¯‘å¤±è´¥
+ltlXXX.libæ˜¯_msvcrt.cppçš„é™æ€åº“ å¦‚æœä½ å¸Œæœ›æ‰‹åŠ¨å¼•ç”¨_msvcrt.cppï¼Œé‚£ä¹ˆè¯·åœ¨é¡¶çº§.hçš„æœ€å¼€å§‹ include <_msvcrt.h> æˆ–è€… ç›´æ¥åœ¨å·¥ç¨‹å®šä¹‰ __NO_LTL_LIB å®
 */
 #pragma comment(lib,"ltl" __ltlversion __ltlversionxp ".lib")
+
+#pragma message("è¿›å…¥ltlæ™®é€šæ¨¡å¼ï¼Œå·²å‡†å¤‡å¯¹" "ltl" __ltlversion __ltlversionxp ".lib" "çš„å¼•ç”¨")
+#else
+#pragma message("è¿›å…¥ltlè¶…è¶Šæ¨¡å¼ï¼Œå·²å–æ¶ˆå¯¹" "ltl" __ltlversion __ltlversionxp ".lib" "çš„å¼•ç”¨")
 #endif //__NO_LTL_LIB
 
 #endif //__ltlversion
 
-//µ¼ÈëWindows Vista ¶¯Ì¬¿â msvcrt.dll
+//å¯¼å…¥Windows Vista åŠ¨æ€åº“ msvcrt.dll
 #pragma comment(lib,"msvcrt_base.lib")
 
 #endif //NDEBUG&&_DLL
