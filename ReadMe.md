@@ -11,9 +11,23 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 ## 原理：
 使用 VC LTL后可以将程序动态链接到系统自带的msvcrt.dll中，来减少程序体积。一般来说一些C/C++的Win32应用程序都可以使用。但是MFC工程不能使用，因为MFC类库太复杂了。
 
-## 支持平台：
+## 亮点
+* 无缝使用最新C/C++库以及最新编译器，无需使用陈旧的类库或者编译器，尽情的使用最新规范！
+* 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
+* 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧~
+
+## 支持平台
+### 支持的IDE：
 * Vistual Studio 2015
 * Vistual Studio 2017
+
+### 支持的操作系统：
+* Windows XP, Windows XP 64, Windows 2003（平台工具集需要调整为 XP mode）
+* Windows Vista, Windows 2008
+* Windows 7, Windows 2008 R2
+* Windows 8, Windows 2012
+* Windows 8.1, Windows 2012 R2
+* Windows 10, Windows 2016
 
 
 ## 使用方法：
