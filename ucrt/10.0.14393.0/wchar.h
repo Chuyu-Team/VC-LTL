@@ -159,20 +159,26 @@ typedef wchar_t _Wint_t;
     #if __STDC_WANT_SECURE_LIB__
 
         _Success_(return == 0)
-        errno_t __CRTDECL wmemcpy_s(
+        __inline errno_t __CRTDECL wmemcpy_s(
             _Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
             _In_                         rsize_t        _N1,
             _In_reads_opt_(_N)           wchar_t const* _S2,
             _In_                         rsize_t        _N
-            );
+            )
+		{
+			return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
+		}
 
         _Success_(return == 0)
-        errno_t __CRTDECL wmemmove_s(
+        __inline errno_t __CRTDECL wmemmove_s(
             _Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
             _In_                         rsize_t        _N1,
             _In_reads_opt_(_N)           wchar_t const* _S2,
             _In_                         rsize_t        _N
-            );
+            )
+		{
+			return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
+		}
 
     #endif // __STDC_WANT_SECURE_LIB__
 

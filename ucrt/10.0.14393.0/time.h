@@ -231,10 +231,29 @@ _ACRTIMP struct tm* __cdecl _localtime64(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _localtime64_s(
+_ACRTXPINLINE errno_t __cdecl _localtime64_s(
     _Out_ struct tm*        _Tm,
     _In_  __time64_t const* _Time
-    );
+    )
+#ifndef _ATL_XP_TARGETING
+	;
+#else
+	{
+		const tm* t = _localtime64(_Time);
+		if (!t)
+			return 1;
+
+		void* __cdecl memcpy(
+			_Out_writes_bytes_all_(_Size) void* _Dst,
+			_In_reads_bytes_(_Size)       void const* _Src,
+			_In_                          size_t      _Size
+		);
+
+		memcpy(_Tm, t, sizeof(tm));
+
+		return 0;
+	}
+#endif
 
 _Check_return_
 _ACRTIMP __time32_t __cdecl _mkgmtime32(
@@ -298,22 +317,50 @@ _ACRTIMP errno_t __cdecl _strtime_s(
     );
 
 __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_0(
-    errno_t, _strtime_s,
-    _Post_readable_size_(9) char, _Buffer
-    )
+	errno_t, _strtime_s,
+	_Post_readable_size_(9) char, _Buffer
+)
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
-    char*, __RETURN_POLICY_DST, _ACRTIMP, _strtime,
-    _Out_writes_z_(9), char, _Buffer
-    )
+	char*, __RETURN_POLICY_DST, _ACRTIMP, _strtime,
+	_Out_writes_z_(9), char, _Buffer
+)
 
-_ACRTIMP __time32_t __cdecl _time32(
+
+_ACRTXPINLINE __time32_t __cdecl _time32(
     _Out_opt_ __time32_t* _Time
-    );
+    )
+#ifndef _ATL_XP_TARGETING
+	;
+#else
+{
+	__time64_t gettime();
 
-_ACRTIMP __time64_t __cdecl _time64(
+	__time32_t tmp = gettime();
+
+	if (_Time)
+		*_Time = tmp;
+
+	return tmp;
+}
+#endif
+
+_ACRTXPINLINE __time64_t __cdecl _time64(
     _Out_opt_ __time64_t* _Time
-    );
+    )
+#ifndef _ATL_XP_TARGETING
+	;
+#else
+{
+	__time64_t gettime();
+
+	__time64_t tmp = gettime();
+	if (_Time)
+		*_Time = tmp;
+
+	return tmp;
+}
+#endif
 
 _Success_(return != 0)
 _Check_return_

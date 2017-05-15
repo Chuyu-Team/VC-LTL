@@ -28,7 +28,11 @@ _CRT_BEGIN_C_HEADER
     } FILE;
 #endif
 
-extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
+__inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
+{
+	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
+	return __iob_func(in);
+}
 
 #define stdin  (__acrt_iob_func(0))
 #define stdout (__acrt_iob_func(1))

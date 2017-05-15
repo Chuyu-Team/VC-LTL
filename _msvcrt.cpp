@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #if defined(NDEBUG)&&defined(_DLL)&&defined(__NO_LTL_LIB)
-//#include <vcruntime_new.h>
+#include <vcruntime_new.h>
 #include <corecrt_terminate.h>
 #include <stdlib.h>
 #include <corecrt_wstdio.h>
@@ -11,7 +11,7 @@
 #include <vcruntime_exception.h>
 #include <crtdbg.h>
 
-/*#ifdef __NOTHROW_T_DEFINED
+#ifdef __NOTHROW_T_DEFINED
 
 #ifdef __cplusplus
 extern "C++"
@@ -22,7 +22,7 @@ extern "C++"
 	}
 }
 #endif
-#endif*/
+#endif
 
 extern "C"
 {
@@ -41,21 +41,39 @@ extern "C"
 		terminate();
 	}
 
-	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
+	/*_ACRTIMP FILE* __cdecl __iob_func(unsigned);
 
 	FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
 		return __iob_func(in);
-	}
+	}*/
 
-	unsigned long long __cdecl wcstoull(
+	/*unsigned long long __cdecl wcstoull(
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
 		_In_                     int            _Radix
 		)
 	{
 		return _wcstoui64(_String, _EndPtr, _Radix);
-	}
+	}*/
+
+	//系统自带有double，用此将其转换为float
+	/*float __cdecl strtof(
+		_In_z_                   char const* _String,
+		_Out_opt_ _Deref_post_z_ char**      _EndPtr
+	)
+	{
+		return strtod(_String, _EndPtr);
+	}*/
+
+	/*float __cdecl wcstof(
+		_In_z_                   wchar_t const* _String,
+		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr
+	)
+	{
+		return wcstod(_String, _EndPtr);
+	}*/
+
 	BOOL __cdecl __vcrt_InitializeCriticalSectionEx(
 		LPCRITICAL_SECTION const critical_section,
 		DWORD              const spin_count,
@@ -68,16 +86,17 @@ extern "C"
 		return InitializeCriticalSectionEx(critical_section, spin_count, flags);
 #endif
 	}
-	int __scrt_debugger_hook_flag = 0;
+	//int __scrt_debugger_hook_flag = 0;
 
-	void __fastcall _CRT_DEBUGGER_HOOK(int const reserved)
-	{
-		UNREFERENCED_PARAMETER(reserved);
+	//void __cdecl _CRT_DEBUGGER_HOOK(int const reserved)
+	//{
+	//	UNREFERENCED_PARAMETER(reserved);
 
-		// We assign zero to the debugger hook flag so that this function is not
-		// folded when optimized.  The flag is not otherwise used.
-		__scrt_debugger_hook_flag = 0;
-	}
+	//	// We assign zero to the debugger hook flag so that this function is not
+	//	// folded when optimized.  The flag is not otherwise used.
+	//	__scrt_debugger_hook_flag = 0;
+	//}
+#define _CRT_DEBUGGER_HOOK(a) (0)
 
 	void __cdecl __scrt_fastfail(unsigned const code)
 	{
@@ -224,7 +243,7 @@ extern "C"
 		__debugbreak();
 	}
 
-	errno_t __CRTDECL wmemcpy_s(
+	/*errno_t __CRTDECL wmemcpy_s(
 		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 		_In_                         rsize_t        _N1,
 		_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -242,7 +261,7 @@ extern "C"
 		)
 	{
 		return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
-	}
+	}*/
 
 
 //	int __cdecl __stdio_common_vswprintf(
@@ -268,6 +287,19 @@ extern "C"
 //	{
 //		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_s_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
 //	}
+
+	__time64_t gettime()
+	{
+		FILETIME FileTime;
+
+		GetSystemTimeAsFileTime(&FileTime);
+
+		__time64_t tmp = ((__time64_t)FileTime.dwHighDateTime << 32) | FileTime.dwLowDateTime;
+
+		tmp = (tmp - 116444736000000000) / 10000000;
+
+		return tmp;
+	}
 }
 
 #ifdef __cplusplus

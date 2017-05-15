@@ -481,10 +481,17 @@ _ACRTIMP int __cdecl _atoldbl_l(
     );
 
 _Check_return_
-_ACRTIMP float __cdecl strtof(
+__inline float __cdecl strtof(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
-    );
+    )
+{
+	_ACRTIMP double __cdecl strtod(
+		_In_z_                   char const* _String,
+		_Out_opt_ _Deref_post_z_ char**      _EndPtr
+	);
+	return strtod(_String, _EndPtr);
+}
 
 _Check_return_
 _ACRTIMP float __cdecl _strtof_l(

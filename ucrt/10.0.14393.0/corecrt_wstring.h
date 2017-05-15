@@ -25,21 +25,21 @@ _CRT_BEGIN_C_HEADER
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl wcscat_s(
+	_ACRTXPIMP errno_t __cdecl wcscat_s(
         _Inout_updates_z_(_SizeInWords) wchar_t* _Destination,
         _In_ rsize_t _SizeInWords,
         _In_z_ wchar_t const* _Source
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl wcscpy_s(
+    _ACRTXPIMP errno_t __cdecl wcscpy_s(
         _Out_writes_z_(_SizeInWords) wchar_t* _Destination,
         _In_ rsize_t _SizeInWords,
         _In_z_ wchar_t const* _Source
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl wcsncat_s(
+    _ACRTXPIMP errno_t __cdecl wcsncat_s(
         _Inout_updates_z_(_SizeInWords) wchar_t*       _Destination,
         _In_                            rsize_t        _SizeInWords,
         _In_reads_or_z_(_MaxCount)      wchar_t const* _Source,
@@ -47,7 +47,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl wcsncpy_s(
+    _ACRTXPIMP errno_t __cdecl wcsncpy_s(
         _Out_writes_z_(_SizeInWords) wchar_t*       _Destination,
         _In_                         rsize_t        _SizeInWords,
         _In_reads_or_z_(_MaxCount)   wchar_t const* _Source,
@@ -55,7 +55,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTIMP wchar_t* __cdecl wcstok_s(
+    _ACRTXPIMP wchar_t* __cdecl wcstok_s(
         _Inout_opt_z_                 wchar_t*       _String,
         _In_z_                        wchar_t const* _Delimiter,
         _Inout_ _Deref_prepost_opt_z_ wchar_t**      _Context
