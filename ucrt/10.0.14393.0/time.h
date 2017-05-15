@@ -239,7 +239,7 @@ _ACRTXPINLINE errno_t __cdecl _localtime64_s(
 	;
 #else
 	{
-		const tm* t = _localtime64(_Time);
+		const struct tm* t = _localtime64(_Time);
 		if (!t)
 			return 1;
 
@@ -249,7 +249,7 @@ _ACRTXPINLINE errno_t __cdecl _localtime64_s(
 			_In_                          size_t      _Size
 		);
 
-		memcpy(_Tm, t, sizeof(tm));
+		memcpy(_Tm, t, sizeof(struct tm));
 
 		return 0;
 	}
