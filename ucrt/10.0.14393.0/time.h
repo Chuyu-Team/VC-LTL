@@ -243,11 +243,7 @@ _ACRTXPINLINE errno_t __cdecl _localtime64_s(
 		if (!t)
 			return 1;
 
-		void* __cdecl memcpy(
-			_Out_writes_bytes_all_(_Size) void* _Dst,
-			_In_reads_bytes_(_Size)       void const* _Src,
-			_In_                          size_t      _Size
-		);
+		#include "vcruntime_string.h"
 
 		memcpy(_Tm, t, sizeof(struct tm));
 
