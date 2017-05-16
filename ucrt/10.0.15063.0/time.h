@@ -10,6 +10,7 @@
 
 #include <corecrt.h>
 #include <corecrt_wtime.h>
+#include <vcruntime_string.h>
 
 _CRT_BEGIN_C_HEADER
 
@@ -242,8 +243,6 @@ _ACRTXPINLINE errno_t __cdecl _localtime64_s(
 		const struct tm* t = _localtime64(_Time);
 		if (!t)
 			return 1;
-
-		#include "vcruntime_string.h"
 
 		memcpy(_Tm, t, sizeof(struct tm));
 
