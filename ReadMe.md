@@ -58,11 +58,22 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC LTL。
 
 
+### 5. 文件说明
+* ltl140.lib/ltl141.lib VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
+* ltl140xp.lib/ltl141xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
+* msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了helper.asm转发函数）
+* msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取）
+* ucrt_14393.lib/ucrt_15063.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
+* vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
+* vc140xp.lib/vc141xp.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合（支持 XP）。
+
 ## Changes：
 1.0.0.9 初步版
 * 改进Windows XP支持
 * 优化库结构裁剪ltl库体积
 * 解决使用自定义异常导致程序编译不通过问题
+* 调整*_p系列函数定义，以免使用*_p系列函数时编译不通过
+* 解决使用浮点除法时导致编译不通过问题
 
 1.0.0.8 2017-04-25 20:37
 * 简化库引用方式

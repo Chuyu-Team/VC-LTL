@@ -1691,17 +1691,13 @@ typedef __int64 fpos_t;
     #endif
 
     _Check_return_
-    _CRT_STDIO_INLINE int __CRTDECL _vscprintf_p(
+    __inline int __CRTDECL _vscprintf_p(
         _In_z_ _Printf_format_string_ char const* const _Format,
                                       va_list           _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
         return _vscprintf_p_l(_Format, NULL, _ArgList);
     }
-    #endif
 
     _Check_return_opt_
     _CRT_STDIO_INLINE int __CRTDECL _vsnprintf_c_l(

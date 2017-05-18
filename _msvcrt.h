@@ -47,6 +47,7 @@
 #endif //_ATL_XP_TARGETING
 
 #pragma comment(lib,"vc" __ltlversion __ltlversionxp ".lib")
+#pragma comment(lib,"ucrt_" _CRT_STRINGIZE(_UCRT_VERISON) ".lib")
 
 #if defined(__NO_LTL_LIB) || defined(__Build_LTL)
 
