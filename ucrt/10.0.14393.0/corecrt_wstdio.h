@@ -1239,19 +1239,26 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned in)
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL vswprintf(
+    __inline int __CRTDECL vswprintf(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_                                              size_t         const _BufferCount,
         _In_z_ _Printf_format_string_params_(1)           wchar_t const* const _Format,
                                                           va_list              _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
+#ifdef _ATL_XP_TARGETING
+		_CRT_STDIO_INLINE int __CRTDECL vswprintf_s(
+			_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
+			_In_                                          size_t         const _BufferCount,
+			_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
+			va_list              _ArgList
+		);
+
+		return vswprintf_s(_Buffer, _BufferCount, _Format, _ArgList);
+#else
         return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
+#endif
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
