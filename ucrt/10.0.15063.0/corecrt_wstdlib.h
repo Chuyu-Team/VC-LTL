@@ -176,7 +176,7 @@ _CRT_BEGIN_C_HEADER
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_                     int            _Radix
-        );
+        )
 	{
 		_ACRTIMP unsigned __int64 __cdecl _wcstoui64(
 			_In_z_                   wchar_t const* _String,
