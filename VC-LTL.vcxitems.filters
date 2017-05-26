@@ -2311,6 +2311,12 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_15063.lib">
       <Filter>Libx86</Filter>
     </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_10240.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_10240.lib">
+      <Filter>Libx86</Filter>
+    </Library>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)VC\140\include\algorithm">
