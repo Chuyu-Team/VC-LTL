@@ -31,7 +31,7 @@ _CRT_BEGIN_C_HEADER
 __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
 {
 	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
-	return __iob_func(in);
+	return __iob_func(_Ix);
 }
 
 #define stdin  (__acrt_iob_func(0))
@@ -1239,13 +1239,13 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
 
     _Success_(return >= 0)
     _Check_return_opt_
-    __inline int __CRTDECL vswprintf(
-        _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
-        _In_                                              size_t         const _BufferCount,
-        _In_z_ _Printf_format_string_params_(1)           wchar_t const* const _Format,
-                                                          va_list              _ArgList
-        )
-    {
+		__inline int __CRTDECL vswprintf(
+			_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
+			_In_                                              size_t         const _BufferCount,
+			_In_z_ _Printf_format_string_params_(1)           wchar_t const* const _Format,
+			va_list              _ArgList
+		)
+	{
 #ifdef _ATL_XP_TARGETING
 		_CRT_STDIO_INLINE int __CRTDECL vswprintf_s(
 			_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
@@ -1256,9 +1256,9 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
 
 		return vswprintf_s(_Buffer, _BufferCount, _Format, _ArgList);
 #else
-        return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
+		return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 #endif
-    }
+	}
 
     _Success_(return >= 0)
     _Check_return_opt_
@@ -1331,15 +1331,15 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
 
     _Success_(return >= 0)
     _Check_return_opt_
-    __inline int __CRTDECL _vswprintf_p(
-        _Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
-        _In_                                          size_t         const _BufferCount,
-        _In_z_ _Printf_format_string_                 wchar_t const* const _Format,
-                                                      va_list              _ArgList
-        )
-    {
-        return _vswprintf_p_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
-    }
+		__inline int __CRTDECL _vswprintf_p(
+			_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
+			_In_                                          size_t         const _BufferCount,
+			_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
+			va_list              _ArgList
+		)
+	{
+		return _vswprintf_p_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
+	}
 
     _Success_(return >= 0)
     _Check_return_
@@ -1395,29 +1395,29 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
 
     _Success_(return >= 0)
     _Check_return_
-    __inline int __CRTDECL _vscwprintf_p(
-        _In_z_ _Printf_format_string_ wchar_t const* const _Format,
-                                      va_list              _ArgList
-        )
-    {
-        return _vscwprintf_p_l(_Format, NULL, _ArgList);
-    }
+		__inline int __CRTDECL _vscwprintf_p(
+			_In_z_ _Printf_format_string_ wchar_t const* const _Format,
+			va_list              _ArgList
+		)
+	{
+		return _vscwprintf_p_l(_Format, NULL, _ArgList);
+	}
 
     _Success_(return >= 0)
     _Check_return_opt_
-    __inline int __CRTDECL __swprintf_l(
-        _Pre_notnull_ _Always_(_Post_z_)        wchar_t*       const _Buffer,
-        _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
-        _In_opt_                                _locale_t      const _Locale,
-        ...)
-    {
-        int _Result;
-        va_list _ArgList;
-        __crt_va_start(_ArgList, _Locale);
-        _Result = __vswprintf_l(_Buffer, _Format, _Locale, _ArgList);
-        __crt_va_end(_ArgList);
-        return _Result;
-    }
+		__inline int __CRTDECL __swprintf_l(
+			_Pre_notnull_ _Always_(_Post_z_)        wchar_t*       const _Buffer,
+			_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
+			_In_opt_                                _locale_t      const _Locale,
+			...)
+	{
+		int _Result;
+		va_list _ArgList;
+		__crt_va_start(_ArgList, _Locale);
+		_Result = __vswprintf_l(_Buffer, _Format, _Locale, _ArgList);
+		__crt_va_end(_ArgList);
+		return _Result;
+	}
 
     _Success_(return >= 0)
     _Check_return_opt_
@@ -1810,7 +1810,71 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
     }
     #endif
 
-    #if defined _CRT_NON_CONFORMING_SWPRINTFS
+
+    #if !defined RC_INVOKED && !defined __midl && !defined _INC_SWPRINTF_INL_
+        #pragma warning(push)
+        #pragma warning(disable: 4141 4412 4793 4996 6054)
+
+        #ifdef __cplusplus
+
+            extern "C++" _SWPRINTFS_DEPRECATED _CRT_INSECURE_DEPRECATE(swprintf_s)
+            inline int swprintf(
+                _Pre_notnull_ _Post_z_        wchar_t*       const _Buffer,
+                _In_z_ _Printf_format_string_ wchar_t const* const _Format,
+                ...) throw()
+            {
+                int _Result;
+                va_list _ArgList;
+                __crt_va_start(_ArgList, _Format);
+                #pragma warning(suppress: 28719)
+                _Result = vswprintf(_Buffer, _CRT_INT_MAX, _Format, _ArgList);
+                __crt_va_end(_ArgList);
+                return _Result;
+            }
+
+            extern "C++" _SWPRINTFS_DEPRECATED _CRT_INSECURE_DEPRECATE(vswprintf_s)
+            inline int __CRTDECL vswprintf(
+                _Pre_notnull_ _Post_z_        wchar_t*       const _Buffer,
+                _In_z_ _Printf_format_string_ wchar_t const* const _Format,
+                                              va_list              _ArgList
+                ) throw()
+            {
+                #pragma warning(suppress: 28719)
+                return vswprintf(_Buffer, _CRT_INT_MAX, _Format, _ArgList);
+            }
+
+            extern "C++" _SWPRINTFS_DEPRECATED _CRT_INSECURE_DEPRECATE(_swprintf_s_l)
+            inline int _swprintf_l(
+                _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
+                _In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
+                _In_opt_                                _locale_t      const _Locale,
+                ...) throw()
+            {
+                int _Result;
+                va_list _ArgList;
+                __crt_va_start(_ArgList, _Locale);
+                _Result = _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+                __crt_va_end(_ArgList);
+                return _Result;
+            }
+
+            extern "C++" _SWPRINTFS_DEPRECATED _CRT_INSECURE_DEPRECATE(_vswprintf_s_l)
+            inline int __CRTDECL _vswprintf_l(
+                _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
+                _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
+                _In_opt_                                _locale_t      const _Locale,
+                                                        va_list              _ArgList
+                ) throw()
+            {
+                return _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+            }
+
+        #endif  // __cplusplus
+
+        #pragma warning(pop)
+    #endif  // !_INC_SWPRINTF_INL_
+
+    #if defined _CRT_NON_CONFORMING_SWPRINTFS && !defined __cplusplus
         #define swprintf     _swprintf
         #define vswprintf    _vswprintf
         #define _swprintf_l  __swprintf_l
