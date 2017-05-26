@@ -28,7 +28,11 @@ _CRT_BEGIN_C_HEADER
     } FILE;
 #endif
 
-_ACRTIMP_ALT FILE* __cdecl __acrt_iob_func(unsigned);
+__inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
+{
+	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
+	return __iob_func(_Ix);
+}
 
 #define stdin  (__acrt_iob_func(0))
 #define stdout (__acrt_iob_func(1))
@@ -1233,19 +1237,26 @@ _CRT_STDIO_INLINE int __CRTDECL _vswprintf(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE int __CRTDECL vswprintf(
+__inline int __CRTDECL vswprintf(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_                                    size_t         const _BufferCount,
     _In_z_ _Printf_format_string_params_(1) wchar_t const* const _Format,
                                             va_list              _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
 {
+#ifdef _ATL_XP_TARGETING
+	_CRT_STDIO_INLINE int __CRTDECL vswprintf_s(
+		_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
+		_In_                                          size_t         const _BufferCount,
+		_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
+		va_list              _ArgList
+	);
+
+	return vswprintf_s(_Buffer, _BufferCount, _Format, _ArgList);
+#else
     return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
-}
 #endif
+}
 
 _Success_(return >= 0)
 _Check_return_opt_
@@ -1318,19 +1329,15 @@ _CRT_STDIO_INLINE int __CRTDECL _vswprintf_p_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE int __CRTDECL _vswprintf_p(
+__inline int __CRTDECL _vswprintf_p(
     _Out_writes_z_(_BufferCount)  wchar_t*       const _Buffer,
     _In_                          size_t         const _BufferCount,
     _In_z_ _Printf_format_string_ wchar_t const* const _Format,
                                   va_list              _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
 {
     return _vswprintf_p_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 }
-#endif
 
 _Success_(return >= 0)
 _Check_return_
@@ -1386,28 +1393,21 @@ _CRT_STDIO_INLINE int __CRTDECL _vscwprintf_p_l(
 
 _Success_(return >= 0)
 _Check_return_
-_CRT_STDIO_INLINE int __CRTDECL _vscwprintf_p(
+__inline int __CRTDECL _vscwprintf_p(
     _In_z_ _Printf_format_string_ wchar_t const* const _Format, 
                                   va_list              _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
 {
     return _vscwprintf_p_l(_Format, NULL, _ArgList);
 }
-#endif
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE int __CRTDECL __swprintf_l(
+__inline int __CRTDECL __swprintf_l(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
     _In_opt_                                _locale_t      const _Locale,
     ...)
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
 {
     int _Result;
     va_list _ArgList;
@@ -1416,7 +1416,6 @@ _CRT_STDIO_INLINE int __CRTDECL __swprintf_l(
     __crt_va_end(_ArgList);
     return _Result;
 }
-#endif
 
 _Success_(return >= 0)
 _Check_return_opt_
