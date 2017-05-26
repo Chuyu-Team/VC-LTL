@@ -36,7 +36,7 @@
 #define _ACRTXPIMP extern
 #define _ACRTXPINLINE __inline
 
-#pragma message(_ltlfilelen "info: 发现当前编译选项需要支持XP/2003，建议【C/C++ - 命令行】输入\"/Zc:threadSafeInit-\" 以禁用线程安全静态初始化，这是编译器本身的BUG，否则在全局变量中使用静态变量会导致程序崩溃。")
+#pragma message(_ltlfilelen "warning: 发现当前编译选项需要支持XP/2003，建议【C/C++ - 命令行】输入\"/Zc:threadSafeInit-\" 以禁用线程安全静态初始化，这是编译器本身的BUG，否则在全局变量中使用静态变量会导致程序崩溃。")
 
 #else //_ATL_XP_TARGETING else
 //默认模式，此模式编译器新特性将使用Vista新API实现，性能更佳
@@ -45,6 +45,23 @@
 #define _ACRTXPINLINE __declspec(dllimport)
 
 #endif //_ATL_XP_TARGETING
+
+#ifndef _UCRT_VERISON
+#error "vc-ltl 并不支持当前目标平台，请切换目标平台版本至 10240/14393/15063（推荐）。切换目标平台仅仅是切换了Windows SDK/UCRT版本，这并不影响你兼容老版本Windows（包括Windows XP）。"
+#elif _UCRT_VERISON == 10240
+
+#ifdef _ATL_XP_TARGETING
+#pragma message(_ltlfilelen "warning: 由于Windows XP工具集强制使用陈旧的10240 UCRT，推荐手动定义 _ATL_XP_TARGETING 宏并调整最小系统支持为5.01，然后迁徙目标平台到Windows 10 15063，从而使用最新15063 UCRT。此过程并不影响你兼容XP。")
+#else
+#pragma message(_ltlfilelen "warning: 10240 ucrt 存在的目的仅用于兼容Windows XP工具集正常编译，而你的程序并未采用XP兼容，强烈建议你迁徙目标平台到Windows 10 15063。")
+#endif
+
+#elif _UCRT_VERISON == 14393
+#pragma message(_ltlfilelen "warning: 14393 ucrt 即将在下个Windows 10 SDK发布时删除，请尽快迁徙目标平台到Windows 10 15063。")
+#elif _UCRT_VERISON != 15063
+#pragma message(_ltlfilelen "warning: 无法识别此版本是URCT，强烈建议升级到最新VC-LTL然后继续。")
+#endif
+
 
 #pragma comment(lib,"vc" __ltlversion __ltlversionxp ".lib")
 #pragma comment(lib,"ucrt_" _CRT_STRINGIZE(_UCRT_VERISON) ".lib")

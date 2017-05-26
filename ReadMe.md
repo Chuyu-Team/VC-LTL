@@ -17,18 +17,27 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 * 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧~
 
 ## 支持平台
-### 支持的IDE：
+### 支持的IDE
 * Vistual Studio 2015
 * Vistual Studio 2017
 
-### 支持的操作系统：
-* Windows XP, Windows XP 64, Windows 2003（平台工具集需要调整为 XP mode）
+### 支持的目标平台（UCRT版本）
+* Windows XP平台工具集（Windows 7.0 SDK & Windows 10 10240 UCRT）
+* Windows 10 10240目标平台
+* Windows 10 14393目标平台（强烈建议使用15063，下个Windows SDK发布时将删除对14393的支持！）
+* Windows 10 15063目标平台（推荐使用）
+
+> 目标平台并不影响你的程序兼容老版本Windows（比如Windows XP），一般我们都推荐大家使用高版本目标平台。
+
+### 支持的操作系统
+* Windows XP, Windows XP 64, Windows 2003（平台工具集需要调整为 Windows XP平台工具集）
 * Windows Vista, Windows 2008
 * Windows 7, Windows 2008 R2
 * Windows 8, Windows 2012
 * Windows 8.1, Windows 2012 R2
 * Windows 10, Windows 2016
 
+> 由此所见，采用VC-LTL编译后的程序能兼容Windows XP以上所有操作系统。
 
 ## 使用方法：
 ### 1. 将内容解压到工程目录VC-LTL
@@ -50,7 +59,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 
 ### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
-* 【目标平台】调整为【Windows 10 14393】或者【Windows 10 15063】
+* 【目标平台】调整为【Windows 10 10240/14393/15063（推荐）】（从中选择任意SDK版本，但是尽量不要选择14393，因为在不久会删除14393 SDK 支持）
 
 > 如果你的程序需要支持XP或者2003，那么建议【C/C++ - 命令行】输入`/Zc:threadSafeInit-`以禁用线程安全静态初始化，这是编译器本身的BUG，否则在全局变量中使用静态变量会导致程序崩溃。
 
@@ -68,7 +77,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 * vc140xp.lib/vc141xp.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合（支持 XP）。
 
 ## Changes：
-1.0.0.9 初步版
+1.0.0.9 2017-05-26 14:46
 * 改进Windows XP支持
 * 优化库结构裁剪ltl库体积
 * 解决使用自定义异常导致程序编译不通过问题
