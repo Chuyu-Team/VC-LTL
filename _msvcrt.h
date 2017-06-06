@@ -35,6 +35,8 @@
 #define __ltlversionxp "xp"
 #define _ACRTXPIMP extern
 #define _ACRTXPINLINE __inline
+//XP以及以下系统外部导入
+#define _ACRTXPIMPINLINE extern
 
 #pragma message(_ltlfilelen "warning: 发现当前编译选项需要支持XP/2003，建议【C/C++ - 命令行】输入\"/Zc:threadSafeInit-\" 以禁用线程安全静态初始化，这是编译器本身的BUG，否则在全局变量中使用静态变量会导致程序崩溃。")
 
@@ -43,6 +45,8 @@
 #define __ltlversionxp
 #define _ACRTXPIMP __declspec(dllimport)
 #define _ACRTXPINLINE __declspec(dllimport)
+//XP以上系统inline以减少导入数量
+#define _ACRTXPIMPINLINE __inline
 
 #endif //_ATL_XP_TARGETING
 

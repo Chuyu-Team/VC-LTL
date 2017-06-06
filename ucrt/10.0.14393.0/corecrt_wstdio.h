@@ -1123,13 +1123,13 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned in)
 
     _Success_(return >= 0)
     _Check_return_opt_ _CRT_INSECURE_DEPRECATE(_vsnwprintf_s)
-    _CRT_STDIO_INLINE int __CRTDECL _vsnwprintf(
+    _ACRTXPIMPINLINE int __CRTDECL _vsnwprintf(
         _Out_writes_opt_(_BufferCount) _Post_maybez_ wchar_t*       _Buffer,
         _In_                                         size_t         _BufferCount,
         _In_z_ _Printf_format_string_                wchar_t const* _Format,
                                                      va_list        _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
+    #if defined _ATL_XP_TARGETING
     ;
     #else
     {
@@ -1172,70 +1172,62 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned in)
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL _vswprintf_c(
+    __inline int __CRTDECL _vswprintf_c(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_                                              size_t         const _BufferCount,
         _In_z_ _Printf_format_string_                     wchar_t const* const _Format,
                                                           va_list              _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
+#ifdef _ATL_XP_TARGETING
+		return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
+#else
         return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
+#endif
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL _vswprintf_l(
+    __inline int __CRTDECL _vswprintf_l(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_                                              size_t         const _BufferCount,
         _In_z_ _Printf_format_string_params_(2)           wchar_t const* const _Format,
         _In_opt_                                          _locale_t      const _Locale,
                                                           va_list              _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
         #pragma warning(push)
         #pragma warning(disable: 4996) // Deprecation
         return _vswprintf_c_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
         #pragma warning(pop)
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL __vswprintf_l(
+    __inline int __CRTDECL __vswprintf_l(
         _Pre_notnull_ _Always_(_Post_z_)        wchar_t*       const _Buffer,
         _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
         _In_opt_                                _locale_t      const _Locale,
                                                 va_list              _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
         return _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL _vswprintf(
+    __inline int __CRTDECL _vswprintf(
         _Pre_notnull_ _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_z_ _Printf_format_string_    wchar_t const* const _Format,
                                          va_list              _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
+#ifdef _ATL_XP_TARGETING
+		return _vsnwprintf(_Buffer, -1, _Format, _ArgList);
+#else
         return _vswprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
+#endif
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
@@ -1247,14 +1239,7 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned in)
         )
 	{
 #ifdef _ATL_XP_TARGETING
-		_CRT_STDIO_INLINE int __CRTDECL vswprintf_s(
-			_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
-			_In_                                          size_t         const _BufferCount,
-			_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
-			va_list              _ArgList
-		);
-
-		return vswprintf_s(_Buffer, _BufferCount, _Format, _ArgList);
+		return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
 #else
 		return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 #endif
@@ -1421,15 +1406,12 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned in)
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL _swprintf_l(
+    __inline int __CRTDECL _swprintf_l(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_                                              size_t         const _BufferCount,
         _In_z_ _Printf_format_string_params_(0)           wchar_t const* const _Format,
         _In_opt_                                          _locale_t      const _Locale,
         ...)
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
         int _Result;
         va_list _ArgList;
@@ -1438,46 +1420,55 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned in)
         __crt_va_end(_ArgList);
         return _Result;
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL _swprintf(
+    __inline int __CRTDECL _swprintf(
         _Pre_notnull_ _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_z_ _Printf_format_string_    wchar_t const* const _Format,
         ...)
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
+#ifdef _ATL_XP_TARGETING
+		int _Result;
+		va_list _ArgList;
+		__crt_va_start(_ArgList, _Format);
+		_Result = _vsnwprintf(_Buffer, -1, _Format, _ArgList);
+		__crt_va_end(_ArgList);
+		return _Result;
+#else
         int _Result;
         va_list _ArgList;
         __crt_va_start(_ArgList, _Format);
         _Result = __vswprintf_l(_Buffer, _Format, NULL, _ArgList);
         __crt_va_end(_ArgList);
         return _Result;
+#endif
     }
-    #endif
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL swprintf(
+    __inline int __CRTDECL swprintf(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
         _In_                                              size_t         const _BufferCount,
         _In_z_ _Printf_format_string_                     wchar_t const* const _Format,
         ...)
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
+#ifdef _ATL_XP_TARGETING
+		int _Result;
+		va_list _ArgList;
+		__crt_va_start(_ArgList, _Format);
+		_Result = _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
+		__crt_va_end(_ArgList);
+		return _Result;
+#else
         int _Result;
         va_list _ArgList;
         __crt_va_start(_ArgList, _Format);
         _Result = _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
         __crt_va_end(_ArgList);
         return _Result;
+#endif
     }
-    #endif
 
     #pragma warning(push)
     // Warning 4793: The compiler cannot compile function into managed code, even though the /clr compiler option is specified.
