@@ -1,14 +1,13 @@
-;VC-LTL汇编部分
+;VC-LTL amd64汇编部分
 
 
 
 _TEXT	SEGMENT
-extern ?terminate@@YAXXZ:near
-;定义此函数是因为新版本中terminate规范变成了C，此代码用于解决terminate命名冲突问题
 
+;定义此函数是因为新版本中terminate规范变成了C，此代码用于解决terminate命名冲突问题
+extern ?terminate@@YAXXZ:qword
 terminate PROC
-call ?terminate@@YAXXZ
-ret
+jmp ?terminate@@YAXXZ
 terminate ENDP
 
 _TEXT	ENDS
