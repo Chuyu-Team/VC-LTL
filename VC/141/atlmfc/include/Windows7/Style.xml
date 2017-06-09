@@ -1,0 +1,274 @@
+<STYLE>
+	<VERSION>
+		<NUMBER>2007</NUMBER>
+		<TYPE>20</TYPE>
+		<ID_PREFIX>WINDOWS7_</ID_PREFIX>
+	</VERSION>
+	<DESCRIPTION>
+		<NAME>Windows7</NAME>
+	</DESCRIPTION>
+	<MENU>
+		<ItemBack>
+			<SIZE>20, 20</SIZE>
+			<CORNERS>2, 2, 2, 2</CORNERS>
+		</ItemBack>
+		<ItemCheck>
+			<SIZE>10, 14</SIZE>
+		</ItemCheck>
+		<ItemRadio>
+			<SIZE>10, 14</SIZE>
+		</ItemRadio>
+		<Highlighted>
+			<SIZE>55, 22</SIZE>
+			<CORNERS>3, 2, 3, 2</CORNERS>
+		</Highlighted>
+		<HighlightedDisabled>
+			<SIZE>55, 22</SIZE>
+			<CORNERS>2, 2, 2, 2</CORNERS>
+		</HighlightedDisabled>
+		<BorderSize>2</BorderSize>
+	</MENU>
+	<BARS>
+		<RIBBONBAR>
+			<Bkgnd>243, 247, 252</Bkgnd>
+			<GradientLight>223, 233, 245</GradientLight>
+			<GradientDark>223, 233, 245</GradientDark>
+		</RIBBONBAR>
+	</BARS>
+	<RIBBON>
+		<PANEL>
+			<BACK>
+				<FULL>
+					<SIZE>50, 89</SIZE>
+					<CORNERS>4, 5, 4, 5</CORNERS>
+				</FULL>
+				<SEPARATOR>
+					<SIZE>3, 61</SIZE>
+					<CORNERS>1, 10, 1, 8</CORNERS>
+				</SEPARATOR>
+			</BACK>
+			<CAPTION>
+				<LAUNCH_BTN>
+					<SIZE>15, 14</SIZE>
+					<CORNERS>2, 2, 2, 2</CORNERS>
+				</LAUNCH_BTN>
+				<LAUNCH_ICON>
+					<SIZE>8, 8</SIZE>
+				</LAUNCH_ICON>
+				<TextNormal>115, 131, 153</TextNormal>
+				<TextHighlighted>115, 131, 153</TextHighlighted>
+			</CAPTION>
+			<BUTTONS>
+				<BUTTON_GROUP_F>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_GROUP_F>
+				<BUTTON_GROUP_M>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>1, 3, 3, 2</CORNERS>
+				</BUTTON_GROUP_M>
+				<BUTTON_GROUP_L>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>1, 3, 3, 2</CORNERS>
+				</BUTTON_GROUP_L>
+				<BUTTON_GROUP_S>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_GROUP_S>
+				<BUTTON_GROUPMENU_F_C>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_GROUPMENU_F_C>
+				<BUTTON_GROUPMENU_F_M>
+					<SIZE>10, 22</SIZE>
+					<CORNERS>1, 3, 2, 2</CORNERS>
+				</BUTTON_GROUPMENU_F_M>
+				<BUTTON_GROUPMENU_M_C>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>1, 3, 3, 2</CORNERS>
+				</BUTTON_GROUPMENU_M_C>
+				<BUTTON_GROUPMENU_M_M>
+					<SIZE>10, 22</SIZE>
+					<CORNERS>1, 3, 2, 2</CORNERS>
+				</BUTTON_GROUPMENU_M_M>
+				<BUTTON_GROUPMENU_L_C>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>1, 3, 3, 2</CORNERS>
+				</BUTTON_GROUPMENU_L_C>
+				<BUTTON_GROUPMENU_L_M>
+					<SIZE>11, 22</SIZE>
+					<CORNERS>1, 3, 2, 2</CORNERS>
+				</BUTTON_GROUPMENU_L_M>
+				<BUTTON_NORMAL_S>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_NORMAL_S>
+				<BUTTON_NORMAL_B>
+					<SIZE>42, 66</SIZE>
+					<CORNERS>3, 3, 3, 3</CORNERS>
+				</BUTTON_NORMAL_B>
+				<BUTTON_DEFAULT>
+					<SIZE>42, 87</SIZE>
+					<CORNERS>3, 34, 3, 2</CORNERS>
+				</BUTTON_DEFAULT>
+				<BUTTON_DEFAULT_ICON>
+					<SIZE>38, 38</SIZE>
+					<CORNERS>6, 6, 6, 6</CORNERS>
+				</BUTTON_DEFAULT_ICON>
+				<BUTTON_DEFAULT_IMAGE>
+					<SIZE>15, 16</SIZE>
+				</BUTTON_DEFAULT_IMAGE>
+				<BUTTON_DEFAULT_QAT>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>3, 3, 3, 3</CORNERS>
+				</BUTTON_DEFAULT_QAT>
+				<BUTTON_MENU_H_C>
+					<SIZE>22, 22</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_MENU_H_C>
+				<BUTTON_MENU_H_M>
+					<SIZE>11, 22</SIZE>
+					<CORNERS>1, 3, 3, 2</CORNERS>
+				</BUTTON_MENU_H_M>
+				<BUTTON_MENU_V_C>
+					<SIZE>42, 38</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_MENU_V_C>
+				<BUTTON_MENU_V_M>
+					<SIZE>42, 28</SIZE>
+					<CORNERS>3, 1, 3, 2</CORNERS>
+				</BUTTON_MENU_V_M>
+				<BUTTON_GROUP>
+					<SIZE>7, 7</SIZE>
+					<CORNERS>3, 3, 3, 3</CORNERS>
+					<SIDES>2, 2, 2, 2</SIDES>
+				</BUTTON_GROUP>
+				<BUTTON_PNL_T>
+					<SIZE>15, 21</SIZE>
+					<CORNERS>3, 3, 3, 2</CORNERS>
+				</BUTTON_PNL_T>
+				<BUTTON_PNL_M>
+					<SIZE>15, 19</SIZE>
+					<CORNERS>3, 3, 3, 1</CORNERS>
+				</BUTTON_PNL_M>
+				<BUTTON_PNL_B>
+					<SIZE>15, 20</SIZE>
+					<CORNERS>3, 2, 3, 2</CORNERS>
+				</BUTTON_PNL_B>
+			</BUTTONS>
+			<EDIT>
+				<Normal>243, 247, 252</Normal>
+				<BorderNormal>170, 187, 210</BorderNormal>
+				<BorderHighlighted>170, 187, 210</BorderHighlighted>
+				<BorderDisabled>170, 187, 210</BorderDisabled>
+				<BorderPressed>170, 187, 210</BorderPressed>
+				<BUTTON>
+					<IMAGE>
+						<SIZE>12, 22</SIZE>
+						<CORNERS>2, 3, 2, 2</CORNERS>
+					</IMAGE>
+				</BUTTON>
+			</EDIT>
+		</PANEL>
+		<CATEGORY>
+			<BACK>
+				<SIZE>3, 92</SIZE>
+				<CORNERS>1, 2, 1, 5</CORNERS>
+			</BACK>
+			<TAB>
+				<BUTTON>
+					<SIZE>13, 24</SIZE>
+					<CORNERS>4, 4, 4, 2</CORNERS>
+				</BUTTON>
+			</TAB>
+			<TAB_SEPARATOR>
+				<SIZE>1, 23</SIZE>
+			</TAB_SEPARATOR>
+			<BUTTON_PAGE_L>
+				<SIZE>14, 92</SIZE>
+				<CORNERS>3, 37, 3, 5</CORNERS>
+			</BUTTON_PAGE_L>
+			<BUTTON_PAGE_R>
+				<SIZE>14, 92</SIZE>
+				<CORNERS>3, 37, 3, 5</CORNERS>
+			</BUTTON_PAGE_R>
+		</CATEGORY>
+		<CONTEXT>
+			<CATEGORY>
+				<BACK>
+					<SIZE>3, 92</SIZE>
+					<CORNERS>1, 2, 1, 5</CORNERS>
+				</BACK>
+				<TAB>
+					<BUTTON>
+						<SIZE>13, 24</SIZE>
+						<CORNERS>4, 4, 4, 2</CORNERS>
+					</BUTTON>
+				</TAB>
+				<CAPTION>
+					<BACK>
+						<SIZE>80, 19</SIZE>
+						<CORNERS>1, 1, 1, 2</CORNERS>
+					</BACK>
+				</CAPTION>
+			</CATEGORY>
+			<SEPARATOR>
+				<SIZE>3, 26</SIZE>
+				<CORNERS>1, 1, 1, 1</CORNERS>
+			</SEPARATOR>
+		</CONTEXT>
+		<CAPTION>
+			<QA>
+				<SIZE>32, 26</SIZE>
+				<CORNERS>14, 11, 14, 11</CORNERS>
+			</QA>
+		</CAPTION>
+		<MAIN_BUTTON>
+			<SIZE>56, 23</SIZE>
+			<CORNERS>2, 4, 3, 2</CORNERS>
+		</MAIN_BUTTON>
+		<MAIN>
+			<BACK>
+				<SIZE>9, 51</SIZE>
+				<CORNERS>1, 24, 1, 17</CORNERS>
+			</BACK>
+			<BUTTON>
+				<SIZE>54, 23</SIZE>
+				<CORNERS>3, 3, 3, 2</CORNERS>
+			</BUTTON>
+		</MAIN>
+		<STATUS>
+			<PANE_BUTTON>
+				<SIZE>22, 22</SIZE>
+				<CORNERS>3, 3, 3, 2</CORNERS>
+			</PANE_BUTTON>
+			<SLIDER>
+				<PLUS>
+					<SIZE>18, 18</SIZE>
+					<CORNERS>0, 0, 0, 0</CORNERS>
+				</PLUS>
+				<MINUS>
+					<SIZE>18, 18</SIZE>
+					<CORNERS>0, 0, 0, 0</CORNERS>
+				</MINUS>
+			</SLIDER>
+		</STATUS>
+		<BORDERS>
+			<QAT>
+				<SIZE>7, 7</SIZE>
+				<CORNERS>3, 3, 3, 3</CORNERS>
+				<SIDES>2, 2, 2, 2</SIDES>
+			</QAT>
+			<FLOATY>
+				<SIZE>7, 7</SIZE>
+				<CORNERS>3, 3, 3, 3</CORNERS>
+				<SIDES>2, 2, 2, 2</SIDES>
+			</FLOATY>
+			<PANEL>
+				<SIZE>5, 5</SIZE>
+				<CORNERS>2, 2, 2, 2</CORNERS>
+				<SIDES>1, 1, 1, 1</SIDES>
+			</PANEL>
+		</BORDERS>
+	</RIBBON>
+</STYLE>

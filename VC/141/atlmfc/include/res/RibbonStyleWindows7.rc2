@@ -1,0 +1,88 @@
+//
+// STYLE.RC2 - resources Microsoft Visual C++ does not edit directly
+//
+
+#ifdef APSTUDIO_INVOKED
+	#error this file is not editable by Microsoft Visual C++
+#endif //APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Style
+//
+
+WINDOWS7_IDX_STYLE STYLE_XML "Windows7\\Style.xml"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+WINDOWS7_IDB_COMBOBOX_BTN                      PNG DISCARDABLE  "Windows7\\ComboBox\\Btn.png"
+WINDOWS7_IDB_RIBBON_CATEGORY_BACK              PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Back.png"
+WINDOWS7_IDB_RIBBON_CATEGORY_TAB               PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Tab.png"
+WINDOWS7_IDB_RIBBON_CATEGORY_TAB_SEP           PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Tab_Sep.png"
+WINDOWS7_IDB_RIBBON_PANEL_BACK                 PNG DISCARDABLE  "Windows7\\Ribbon\\Panel_Back.png"
+WINDOWS7_IDB_RIBBON_PANEL_BACK_SEP             PNG DISCARDABLE  "Windows7\\Ribbon\\Panel_Back_Sep.png"
+WINDOWS7_IDB_MENU_BTN                          PNG DISCARDABLE  "Windows7\\PopupBar\\MenuHighlight.png"
+WINDOWS7_IDB_MENU_BTN_DISABLED                 PNG DISCARDABLE  "Windows7\\PopupBar\\MenuHighlightDisabled.png"
+WINDOWS7_IDB_MENU_ITEM_BACK                    PNG DISCARDABLE  "Windows7\\PopupBar\\Item_Back.png"
+WINDOWS7_IDB_MENU_ITEM_MARKER_C                PNG DISCARDABLE  "Windows7\\PopupBar\\Item_Marker_C.png"
+WINDOWS7_IDB_MENU_ITEM_MARKER_R                PNG DISCARDABLE  "Windows7\\PopupBar\\Item_Marker_R.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUP_F                PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Group_F.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUP_M                PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Group_M.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUP_L                PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Group_L.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUP_S                PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Group_S.png"
+WINDOWS7_IDB_RIBBON_BTN_NORMAL_S               PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Normal_S.png"
+WINDOWS7_IDB_RIBBON_BTN_NORMAL_B               PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Normal_B.png"
+WINDOWS7_IDB_RIBBON_BTN_LAUNCH                 PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Launch.png"
+WINDOWS7_IDB_RIBBON_BTN_LAUNCH_ICON            PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Launch_Icon.png"
+WINDOWS7_IDB_RIBBON_PANEL_MAIN                 PNG DISCARDABLE  "Windows7\\Ribbon\\Panel_Main.png"
+WINDOWS7_IDB_RIBBON_BTN_MAIN                   PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Main.png"
+WINDOWS7_IDB_RIBBON_BTN_DEFAULT                PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Default.png"
+WINDOWS7_IDB_RIBBON_BTN_DEFAULT_ICON           PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Default_Icon.png"
+WINDOWS7_IDB_RIBBON_BTN_DEFAULT_IMAGE          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Default_Image.png"
+WINDOWS7_IDB_RIBBON_BTN_MENU_H_C               PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Menu_H_C.png"
+WINDOWS7_IDB_RIBBON_BTN_MENU_H_M               PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Menu_H_M.png"
+WINDOWS7_IDB_RIBBON_BTN_MENU_V_C               PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Menu_V_C.png"
+WINDOWS7_IDB_RIBBON_BTN_MENU_V_M               PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Menu_V_M.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUPMENU_F_C          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\GroupMenu_F_C.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUPMENU_F_M          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\GroupMenu_F_M.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUPMENU_M_C          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\GroupMenu_M_C.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUPMENU_M_M          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\GroupMenu_M_M.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUPMENU_L_C          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\GroupMenu_L_C.png"
+WINDOWS7_IDB_RIBBON_BTN_GROUPMENU_L_M          PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\GroupMenu_L_M.png"
+WINDOWS7_IDB_RIBBON_BTN_PALETTE_T              PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Palette_T.png"
+WINDOWS7_IDB_RIBBON_BTN_PALETTE_M              PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Palette_M.png"
+WINDOWS7_IDB_RIBBON_BTN_PALETTE_B              PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Palette_B.png"
+WINDOWS7_IDB_RIBBON_BTN_STATUS_PANE            PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\StatusPane.png"
+WINDOWS7_IDB_RIBBON_SLIDER_BTN_PLUS            PNG DISCARDABLE  "Windows7\\Ribbon\\Slider\\Plus.png"
+WINDOWS7_IDB_RIBBON_SLIDER_BTN_MINUS           PNG DISCARDABLE  "Windows7\\Ribbon\\Slider\\Minus.png"
+WINDOWS7_IDB_RIBBON_BTN_DEFAULT_QAT            PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Default_QAT.png"
+WINDOWS7_IDB_RIBBON_BTN_PAGE_L                 PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Page_L.png"
+WINDOWS7_IDB_RIBBON_BTN_PAGE_R                 PNG DISCARDABLE  "Windows7\\Ribbon\\Buttons\\Page_R.png"
+WINDOWS7_IDB_RIBBON_BORDER_QAT                 PNG DISCARDABLE  "Windows7\\Ribbon\\Border_QAT.png"
+WINDOWS7_IDB_RIBBON_BORDER_PANEL               PNG DISCARDABLE  "Windows7\\Ribbon\\Border_Panel.png"
+WINDOWS7_IDB_RIBBON_CAPTION_QA                 PNG DISCARDABLE  "Windows7\\Ribbon\\Caption_QA.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_SEPARATOR          PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Separator.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_R_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Red\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_R_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Red\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_R_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Red\\Back.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_O_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Orange\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_O_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Orange\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_O_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Orange\\Back.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_Y_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Yellow\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_Y_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Yellow\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_Y_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Yellow\\Back.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_G_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Green\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_G_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Green\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_G_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Green\\Back.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_B_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Blue\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_B_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Blue\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_B_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Blue\\Back.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_I_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Indigo\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_I_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Indigo\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_I_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Indigo\\Back.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_V_CATEGORY_TAB     PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Violet\\Tab.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_V_CATEGORY_CAPTION PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Violet\\Caption.png"
+WINDOWS7_IDB_RIBBON_CONTEXT_V_CATEGORY_BACK    PNG DISCARDABLE  "Windows7\\Ribbon\\Category_Context\\Violet\\Back.png"

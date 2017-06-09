@@ -2226,6 +2226,723 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\sys\utime.h">
       <Filter>源代码\ucrt\10.0.10240.0\sys</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afx.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxacceleratorkey.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxacceleratorkeyassignctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxaccessibility.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxadv.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxanimationcontroller.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxanimationhelper.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxautohidebar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxautohidebutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxautohidedocksite.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxbasepane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxbaseribbonelement.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxbasetabbedpane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxbasetabctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxbasetoolbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcaptionbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcaptionbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcaptionmenubutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcmdusagecount.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcmn.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcoll.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolorbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolorbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolordialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolormenubutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolorpickerctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolorpopupmenu.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcolorpropertysheet.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcom_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcommandmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcontextmenumanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcontrolbarimpl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcontrolbars.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcontrolbarutil.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcontrolrenderer.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxconv.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxctl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxctrlcontainer.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcustomcolorspropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcustomizebutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcustomizemenubutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcview.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdao.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdatarecovery.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdb.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdb_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdd_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdesktopalertdialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdesktopalertwnd.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdhtml.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdialogex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdialogimpl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdisp.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdlgs.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdll_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdllx.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdockablepane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdockablepaneadapter.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdockingmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdockingpanesrow.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdocksite.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdocob.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdragframeimpl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdrawmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdropdownlistbox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdropdowntoolbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdtctl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxeditbrowsectrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxext.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxfontcombobox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxframeimpl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxframewndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxfullscreenimpl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxglobals.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxglobalutils.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxheaderctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxhh.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxhtml.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afximageeditordialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afximagepaintarea.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxinet.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxkeyboardmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxkeymapdialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxlayout.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxlinkctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxlistctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmaskededit.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmdichildwndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmdiclientareawnd.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmdiframewndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmenubar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmenubutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmenuhash.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmenuimages.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmenutearoffmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmousemanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmousepropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmsg_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmt.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmultidoctemplateex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmultipaneframewnd.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxocc.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxodlgs.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxole.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxolecntrframewndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoledb.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoledocipframewndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoleipframewndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoleserverdocex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoutlookbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoutlookbarpane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoutlookbarpaneadapter.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoutlookbarpanebutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxoutlookbartabctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpanecontainer.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpanecontainermanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpanedialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpanedivider.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpaneframewnd.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxplex_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpopupmenu.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpopupmenubar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpreviewviewex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpriv.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpriv2.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpropertygridctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpropertygridtooltipctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxpropertysheet.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxrebar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxrebarstate.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxrecentdocksiteinfo.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxregpath.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxrendertarget.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxres.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonbuttonsgroup.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncategory.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncheckbox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncollector.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncolorbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncombobox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncommandslistbox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonconstructor.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboncustomizedialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonedit.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboninfo.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribboninfoloader.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonkeyboardcustomizedialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonkeytip.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonlabel.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonlinkctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonmainpanel.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonminitoolbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonpalettegallery.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonpanel.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonpanelmenu.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonprogressbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonquickaccesstoolbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonres.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonslider.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonstatusbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonstatusbarpane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbonundobutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxrich.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsettingsstore.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxshelllistctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxshellmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxshelltreectrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxshowallbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsmartdockingguide.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsmartdockinghighlighterwnd.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsmartdockingmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsock.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsound.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxspinbuttonctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsplitterwndex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxstandardcolorspropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxstat_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxstatusbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxstr.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtabbedpane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtabctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtabview.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtagmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtaskdialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtaskspane.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtaskspaneframewnd.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtempl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtls_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbar.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarbuttoncustomizedialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarbuttonslistbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarcomboboxbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbardatetimectrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbardropsource.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbardroptarget.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbareditboxbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarfontcombobox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarimages.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarmenubutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarmenubuttonsbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarnamedialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarscommandslistbox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarscustomizedialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarskeyboardpropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarslistcheckbox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarslistpropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarsmenupropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarsoptionspropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarspineditboxbutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarstoolspropertypage.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtoolbarsystemmenubutton.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtooltipctrl.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxtooltipmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxusertool.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxusertoolsmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxv_cfg.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxv_dll.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxv_w32.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxver_.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanager.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanageroffice2003.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanageroffice2007.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanagerofficexp.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanagervs2005.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanagervs2008.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanagerwindows.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvisualmanagerwindows7.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxvslistbox.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwin.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwinappex.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwindowsmanagerdialog.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwinforms.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwinverapi.h">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)_msvcrt.cpp">
@@ -3037,6 +3754,78 @@
       <Filter>Libx86</Filter>
     </None>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afx.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcmn.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcmn2.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcmn3.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcoll.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxctl.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxcview.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdao.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdb.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdlgs.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdtctl.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxext.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxhelp.hm">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxhtml.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxinet.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxmt.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxole.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxrich.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxsock.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwin1.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwin2.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwin3.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwin4.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwinforms.inl">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc">
@@ -3070,6 +3859,33 @@
       <Filter>源代码\VC\140\atlmfc\include</Filter>
     </ResourceCompile>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\atlres.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\about_.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxctl.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxdb.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxolecl.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxolesv.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxprint.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxres.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxribbon.rc">
+      <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\ver_.rc">
       <Filter>源代码\VC\141\atlmfc\include</Filter>
     </ResourceCompile>
   </ItemGroup>
