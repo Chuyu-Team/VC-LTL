@@ -1432,7 +1432,7 @@ __inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
 		int _Result;
 		va_list _ArgList;
 		__crt_va_start(_ArgList, _Format);
-		_Result = _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
+		_Result = _vsnwprintf(_Buffer, -1, _Format, _ArgList);
 		__crt_va_end(_ArgList);
 		return _Result;
 #else
