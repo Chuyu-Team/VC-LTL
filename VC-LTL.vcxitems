@@ -1301,4 +1301,8 @@
     <Midl Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\atliface.idl" />
     <Midl Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\atliface.idl" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="$(MSBuildThisFileDirectory)x64\msvcrt_win2003.obj" />
+    <Object Include="$(MSBuildThisFileDirectory)x86\msvcrt_winxp.obj" />
+  </ItemGroup>
 </Project>

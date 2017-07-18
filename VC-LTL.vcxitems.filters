@@ -3889,4 +3889,12 @@
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="$(MSBuildThisFileDirectory)x64\msvcrt_win2003.obj">
+      <Filter>Libx64</Filter>
+    </Object>
+    <Object Include="$(MSBuildThisFileDirectory)x86\msvcrt_winxp.obj">
+      <Filter>Libx86</Filter>
+    </Object>
+  </ItemGroup>
 </Project>
