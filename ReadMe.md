@@ -46,8 +46,9 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 
 ### 2. 重定向C/C++库到VC LTL
 我将相关库引用设置封装在了`VC-LTL\ltlvcrt.props`，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
+PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 
-如果你不希望使用ltlvcrt.props属性表，那么可以手动在Release配置中添加以下设置（2.1以及2.2）
+如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.4）
 
 #### 2.1 在包含目录（include）的最上方添加以下内容：
 * $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\include
@@ -57,11 +58,17 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 #### 2.2 在库目录（library）增加：
 * $(SolutionDir)VC-LTL\\$(PlatformShortName)
 
+#### 2.3 在 C/C++ - 命令行 增加：
+（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）
+`/Zc:threadSafeInit-` 禁用线程安全静态初始化，这是编译器本身的BUG，否则Windows XP在全局变量中使用静态变量会导致程序崩溃。
+
+#### 2.4 在链接器 - 输入 - 附加依赖项 增加：
+（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）
+msvcrt_winxp.obj（32位环境）/msvcrt_win2003.obj（64位环境）
+
 ### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
 * 【目标平台】调整为【Windows 10 10240/14393/15063（推荐）】（从中选择任意SDK版本，但是尽量不要选择14393，因为在不久会删除14393 SDK 支持）
-
-> 如果你的程序需要支持XP或者2003，那么建议【C/C++ - 命令行】输入`/Zc:threadSafeInit-`以禁用线程安全静态初始化，这是编译器本身的BUG，否则在全局变量中使用静态变量会导致程序崩溃。
 
 ### 4. 重新编译你的应用程序（Release）
 现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC LTL。
