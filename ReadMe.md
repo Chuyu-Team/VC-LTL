@@ -48,7 +48,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 我将相关库引用设置封装在了`VC-LTL\ltlvcrt.props`，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
 PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 
-如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.4）
+如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.5）
 
 #### 2.1 在包含目录（include）的最上方添加以下内容：
 * $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\include
@@ -58,13 +58,17 @@ PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 #### 2.2 在库目录（library）增加：
 * $(SolutionDir)VC-LTL\\$(PlatformShortName)
 
-#### 2.3 在 C/C++ - 命令行 增加：
-（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）
+#### 2.3 在 C/C++ - 预处理器 增加：
+（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
+_ATL_XP_TARGETING
+
+#### 2.4 在 C/C++ - 命令行 增加：
+（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
 `/Zc:threadSafeInit-` 禁用线程安全静态初始化，这是编译器本身的BUG，否则Windows XP在全局变量中使用静态变量会导致程序崩溃。
 
-#### 2.4 在链接器 - 输入 - 附加依赖项 增加：
-（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）
-msvcrt_winxp.obj（32位环境）/msvcrt_win2003.obj（64位环境）
+#### 2.5 在链接器 - 输入 - 附加依赖项 增加：
+（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
+msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 
 ### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
@@ -81,7 +85,6 @@ msvcrt_winxp.obj（32位环境）/msvcrt_win2003.obj（64位环境）
 * msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取）
 * ucrt_14393.lib/ucrt_15063.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
 * vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
-* vc140xp.lib/vc141xp.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合（支持 XP）。
 
 ## Changes：
 1.0.0.9 2017-05-26 14:46
