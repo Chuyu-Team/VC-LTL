@@ -48,7 +48,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 我将相关库引用设置封装在了`VC-LTL\ltlvcrt.props`，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
 PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 
-如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.5）
+如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.6）
 
 #### 2.1 在包含目录（include）的最上方添加以下内容：
 * $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\include
@@ -69,6 +69,10 @@ _ATL_XP_TARGETING
 #### 2.5 在链接器 - 输入 - 附加依赖项 增加：
 （仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
 msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
+
+#### 2.6 在链接器 - 系统 - 所需的最低版本 增加：
+（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
+5.01
 
 ### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
