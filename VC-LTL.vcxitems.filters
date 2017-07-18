@@ -2968,28 +2968,16 @@
     <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib">
       <Filter>Libx64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc140xp.lib">
-      <Filter>Libx64</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib">
       <Filter>Libx86</Filter>
     </Library>
     <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib">
       <Filter>Libx86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc140xp.lib">
-      <Filter>Libx86</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib">
       <Filter>Libx64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc141xp.lib">
-      <Filter>Libx64</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib">
-      <Filter>Libx86</Filter>
-    </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc141xp.lib">
       <Filter>Libx86</Filter>
     </Library>
     <Library Include="$(MSBuildThisFileDirectory)x64\ltl140.lib">
@@ -3826,6 +3814,7 @@
     <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwinforms.inl">
       <Filter>源代码\VC\141\atlmfc\include</Filter>
     </None>
+    <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc">

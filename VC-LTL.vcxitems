@@ -992,9 +992,7 @@
     <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_14393.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_15063.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc140xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc141xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl140.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl140xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl141.lib" />
@@ -1005,15 +1003,14 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_14393.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_15063.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc140xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc141xp.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
+    <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afx.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn2.inl" />

@@ -21,6 +21,14 @@
 #pragma comment(linker, "/nodefaultlib:msvcrt.lib")
 #pragma comment(linker, "/nodefaultlib:msvcprt.lib")
 
+//解决某些环境不会添加 XP Mode问题
+#ifndef _ATL_XP_TARGETING
+#ifdef _USING_V110_SDK71_
+#define _ATL_XP_TARGETING
+#endif
+#endif
+
+
 
 #if _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==0
 #define __ltlversion "140"
@@ -38,8 +46,6 @@
 //XP以及以下系统外部导入
 #define _ACRTXPIMPINLINE extern
 
-#pragma message(_ltlfilelen "warning: 发现当前编译选项需要支持XP/2003，建议【C/C++ - 命令行】输入\"/Zc:threadSafeInit-\" 以禁用线程安全静态初始化，这是编译器本身的BUG，否则在全局变量中使用静态变量会导致程序崩溃。")
-
 #else //_ATL_XP_TARGETING else
 //默认模式，此模式编译器新特性将使用Vista新API实现，性能更佳
 #define __ltlversionxp
@@ -54,8 +60,8 @@
 #error "vc-ltl 并不支持当前目标平台，请切换目标平台版本至 10240/14393/15063（推荐）。切换目标平台仅仅是切换了Windows SDK/UCRT版本，这并不影响你兼容老版本Windows（包括Windows XP）。"
 #elif _UCRT_VERISON == 10240
 
-#ifdef _ATL_XP_TARGETING
-#pragma message(_ltlfilelen "warning: 由于Windows XP工具集强制使用陈旧的10240 UCRT，推荐手动定义 _ATL_XP_TARGETING 宏并调整最小系统支持为5.01，然后迁徙目标平台到Windows 10 15063，从而使用最新15063 UCRT。此过程并不影响你兼容XP。")
+#ifdef _USING_V110_SDK71_
+#pragma message(_ltlfilelen "warning: 由于Windows XP工具集强制使用陈旧的10240 UCRT，推荐使用ltlvcrtWinXp.props属性，然后迁徙目标平台到Windows 10 15063，从而使用最新15063 UCRT。此过程并不影响你兼容XP。")
 #else
 #pragma message(_ltlfilelen "warning: 10240 ucrt 存在的目的仅用于兼容Windows XP工具集正常编译，而你的程序并未采用XP兼容，强烈建议你迁徙目标平台到Windows 10 15063。")
 #endif
@@ -67,7 +73,7 @@
 #endif
 
 
-#pragma comment(lib,"vc" __ltlversion __ltlversionxp ".lib")
+#pragma comment(lib,"vc" __ltlversion ".lib")
 #pragma comment(lib,"ucrt_" _CRT_STRINGIZE(_UCRT_VERISON) ".lib")
 
 #if defined(__NO_LTL_LIB) || defined(__Build_LTL)
