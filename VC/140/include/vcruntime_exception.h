@@ -35,7 +35,7 @@ extern void __cdecl __std_exception_destroy(
 
 _CRT_END_C_HEADER
 
-class _CRTIMP exception
+class exception
 {
 public:
 
@@ -43,7 +43,15 @@ public:
 
 	explicit exception(char const* const& _Message) throw();
 
-	exception(char const* const& _Message, int) throw();
+	exception(char const* const& _Message, int) throw()
+#ifndef _ATL_XP_TARGETING
+		;
+#else
+		:_Data{ _Message,0}
+	{
+
+	}
+#endif
 
 	exception(exception const& _Other) throw();
 

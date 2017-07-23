@@ -152,7 +152,42 @@ typedef _Return_type_success_(return==ERROR_SUCCESS) LONG LSTATUS;
 
 namespace ATL
 {
+#ifdef _ATL_XP_TARGETING
+	//WinXP SP2 才支持 EncodePointer 以及 DecodePointer
+	//为
+	enum : int
+	{
+		_maximum_pointer_shift = sizeof(uintptr_t) * 8
+	};
 
+	inline unsigned int _rotate_pointer_value(unsigned int const value, int const shift) throw()
+	{
+		return RotateRight32(value, shift);
+	}
+
+	inline unsigned __int64 _rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
+	{
+		return RotateRight64(value, shift);
+	}
+
+	__inline PVOID __fastcall EncodePointerDownlevel(
+		__in_opt PVOID Ptr
+	)
+	{
+
+		return reinterpret_cast<PVOID>(_rotate_pointer_value(reinterpret_cast<uintptr_t>(Ptr), _maximum_pointer_shift - (__security_cookie% _maximum_pointer_shift)) ^ __security_cookie);
+	}
+
+	__inline PVOID __fastcall DecodePointerDownlevel(
+		__in_opt PVOID Ptr
+	)
+	{
+		return reinterpret_cast<PVOID>(_rotate_pointer_value(reinterpret_cast<uintptr_t>(Ptr) ^ __security_cookie, __security_cookie %_maximum_pointer_shift));
+	}
+#else
+#define EncodePointerDownlevel ::EncodePointer
+#define DecodePointerDownlevel ::DecodePointer
+#endif
 struct _ATL_CATMAP_ENTRY
 {
    int iType;
@@ -2630,7 +2665,7 @@ public:
 				if (pCache->pCF != NULL)
 				{
 					// Decode factory pointer if it's not null
-					IUnknown *factory = reinterpret_cast<IUnknown*>(::DecodePointer(pCache->pCF));
+					IUnknown *factory = reinterpret_cast<IUnknown*>(DecodePointerDownlevel(pCache->pCF));
 					_Analysis_assume_(factory != nullptr);
 					factory->Release();
 					pCache->pCF = NULL;
@@ -8161,7 +8196,7 @@ ATLINLINE ATLAPI AtlComModuleGetClassObject(
 						hr = pEntry->pfnGetClassObject(pEntry->pfnCreateInstance, __uuidof(IUnknown), reinterpret_cast<void**>(&factory));
 						if (SUCCEEDED(hr))
 						{
-							pCache->pCF = reinterpret_cast<IUnknown*>(::EncodePointer(factory));
+							pCache->pCF = reinterpret_cast<IUnknown*>(EncodePointerDownlevel(factory));
 						}
 					}
 				}
@@ -8169,7 +8204,7 @@ ATLINLINE ATLAPI AtlComModuleGetClassObject(
 				if (pCache->pCF != NULL)
 				{
 					// Decode factory pointer
-					IUnknown* factory = reinterpret_cast<IUnknown*>(::DecodePointer(pCache->pCF));
+					IUnknown* factory = reinterpret_cast<IUnknown*>(DecodePointerDownlevel(pCache->pCF));
 					_Analysis_assume_(factory != nullptr);
 					hr = factory->QueryInterface(riid, ppv);
 				}
