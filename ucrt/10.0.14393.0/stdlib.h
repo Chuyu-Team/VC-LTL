@@ -1159,13 +1159,25 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
     #endif // __STDC_WANT_SECURE_LIB__
 
 
+	_ACRTIMP extern int       __argc;
+	_ACRTIMP extern char**    __argv;
+	_ACRTIMP extern wchar_t** __wargv;
 
 
-    _ACRTIMP int*       __cdecl __p___argc (void);
-    _ACRTIMP char***    __cdecl __p___argv (void);
-    _ACRTIMP wchar_t*** __cdecl __p___wargv(void);
+	__inline int*       __cdecl __p___argc(void)
+	{
+		return &__argc;
+	}
+	__inline char***    __cdecl __p___argv(void)
+	{
+		return &__argv;
+	}
+	__inline wchar_t*** __cdecl __p___wargv(void)
+	{
+		return &__wargv;
+	}
 
-    #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+    /*#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
         extern int       __argc;
         extern char**    __argv;
         extern wchar_t** __wargv;
@@ -1173,16 +1185,25 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         #define __argc  (*__p___argc())  // Pointer to number of command line arguments
         #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
         #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
-    #endif
+    #endif*/
 
-    _DCRTIMP char***    __cdecl __p__environ (void);
-    _DCRTIMP wchar_t*** __cdecl __p__wenviron(void);
+	_ACRTIMP extern char **    _environ;
+	_ACRTIMP extern wchar_t ** _wenviron;
+
+	__inline char***    __cdecl __p__environ(void)
+	{
+		return &_environ;
+	}
+	__inline wchar_t*** __cdecl __p__wenviron(void)
+	{
+		return &_wenviron;
+	}
 
     #ifndef _CRT_BEST_PRACTICES_USAGE
         #define _CRT_V12_LEGACY_FUNCTIONALITY
     #endif
 
-    #ifndef _CRT_V12_LEGACY_FUNCTIONALITY
+    /*#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
         // Deprecated symbol: Do not expose environment global pointers unless
         // legacy access is specifically requested
         #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
@@ -1190,7 +1211,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
     #else
         #define _environ  (*__p__environ())  // Pointer to narrow environment table
         #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
-    #endif
+    #endif*/
 
 
 

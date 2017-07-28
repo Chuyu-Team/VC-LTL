@@ -94,5 +94,7 @@
 
 //导入Windows Vista 动态库 msvcrt.dll
 #pragma comment(lib,"msvcrt_base.lib")
+//导入msvcrt补充库
+#pragma comment(lib,"msvcrtp.lib")
 
 #endif //NDEBUG&&_DLL

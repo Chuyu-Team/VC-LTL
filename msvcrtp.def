@@ -1,0 +1,5 @@
+LIBRARY msvcrt.dll
+
+EXPORTS
+_environ
+_wenviron

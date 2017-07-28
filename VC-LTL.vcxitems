@@ -986,6 +986,7 @@
     <Library Include="$(MSBuildThisFileDirectory)x64\ltl140xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\ltl141.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\ltl141xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrtp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_10240.lib" />
@@ -997,6 +998,7 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl140xp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl141.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl141xp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrtp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_10240.lib" />
@@ -1011,6 +1013,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
     <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
+    <None Include="$(MSBuildThisFileDirectory)msvcrtp.def" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afx.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn2.inl" />

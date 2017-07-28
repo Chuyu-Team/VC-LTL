@@ -87,10 +87,18 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 * ltl140xp.lib/ltl141xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
 * msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了helper.asm转发函数）
 * msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取）
+* msvcrtp.lib 微软在msvcrt中导出的函数，但是并未在msvcrt.lib中提供的函数。
 * ucrt_14393.lib/ucrt_15063.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
 * vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
 
 ## Changes：
+1.0.0.10 2017-07-28 20:28
+* 解决BUG 9，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
+* 解决BUG 8，修复typeid功能无法使用问题（感谢 HwangBae）
+* 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积
+* 解决BUG，修复无法使用__argc、__argv、__wargv、_environ、_wenviron全局变量问题（感谢 亮叔叔）
+* 解决微软BUG，修复使用ATL库的程序不支持XP RTM问题
+
 1.0.0.9 2017-05-26 14:46
 * 改进Windows XP支持
 * 优化库结构裁剪ltl库体积

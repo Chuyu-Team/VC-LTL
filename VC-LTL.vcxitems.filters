@@ -3022,6 +3022,12 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_10240.lib">
       <Filter>Libx86</Filter>
     </Library>
+    <Library Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\x64\msvcrtp.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\x86\msvcrtp.lib">
+      <Filter>Libx86</Filter>
+    </Library>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)VC\140\include\algorithm">
@@ -3815,6 +3821,9 @@
       <Filter>源代码\VC\141\atlmfc\include</Filter>
     </None>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
+    <None Include="D:\用户数据\Documents\Visual Studio 2015\Projects\VC-LTL\msvcrtp.def">
+      <Filter>源代码</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc">
