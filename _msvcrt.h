@@ -74,7 +74,10 @@
 
 
 #pragma comment(lib,"vc" __ltlversion ".lib")
+
+#ifndef _LIB
 #pragma comment(lib,"ucrt_" _CRT_STRINGIZE(_UCRT_VERISON) ".lib")
+#endif
 
 #if defined(__NO_LTL_LIB) || defined(__Build_LTL)
 
