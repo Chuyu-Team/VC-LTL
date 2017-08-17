@@ -184,10 +184,18 @@ _ACRTIMP double __cdecl _difftime32(
     );
 
 _Check_return_
-_ACRTIMP double __cdecl _difftime64(
+_ACRTXPINLINE double __cdecl _difftime64(
     _In_ __time64_t _Time1,
     _In_ __time64_t _Time2
-    );
+    )
+{
+	if (!(_Time2 >= 0 && _Time1 >= 0))
+	{
+		errno = EINVAL;
+		return 0;
+	}
+	return static_cast<double>(_Time1 - _Time2);
+}
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_gmtime32_s)
