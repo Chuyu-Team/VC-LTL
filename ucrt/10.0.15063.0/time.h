@@ -11,6 +11,9 @@
 #include <corecrt.h>
 #include <corecrt_wtime.h>
 #include <vcruntime_string.h>
+#ifdef _ATL_XP_TARGETING
+#include <errno.h>
+#endif
 
 _CRT_BEGIN_C_HEADER
 
@@ -188,6 +191,9 @@ _ACRTXPINLINE double __cdecl _difftime64(
     _In_ __time64_t _Time1,
     _In_ __time64_t _Time2
     )
+#ifndef _ATL_XP_TARGETING
+	;
+#else
 {
 	if (!(_Time2 >= 0 && _Time1 >= 0))
 	{
@@ -196,6 +202,7 @@ _ACRTXPINLINE double __cdecl _difftime64(
 	}
 	return static_cast<double>(_Time1 - _Time2);
 }
+#endif
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_gmtime32_s)
