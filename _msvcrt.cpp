@@ -187,45 +187,45 @@ extern "C"
 			_CRT_DEBUGGER_HOOK(0);
 	}
 
-	void __cdecl __std_exception_copy(
-		__std_exception_data const* const from,
-		__std_exception_data*       const to
-	)
-	{
-		_ASSERTE(to->_What == nullptr && to->_DoFree == false);
+	//void __cdecl __std_exception_copy(
+	//	__std_exception_data const* const from,
+	//	__std_exception_data*       const to
+	//)
+	//{
+	//	_ASSERTE(to->_What == nullptr && to->_DoFree == false);
 
-		if (!from->_DoFree || !from->_What)
-		{
-			to->_What = from->_What;
-			to->_DoFree = false;
-			return;
-		}
+	//	if (!from->_DoFree || !from->_What)
+	//	{
+	//		to->_What = from->_What;
+	//		to->_DoFree = false;
+	//		return;
+	//	}
 
-		size_t const buffer_count = strlen(from->_What) + 1;
+	//	size_t const buffer_count = strlen(from->_What) + 1;
 
-		auto buffer=static_cast<char*>(malloc(buffer_count));
-		if (!buffer)
-		{
-			return;
-		}
+	//	auto buffer=static_cast<char*>(malloc(buffer_count));
+	//	if (!buffer)
+	//	{
+	//		return;
+	//	}
 
-		strcpy_s(buffer, buffer_count, from->_What);
-		to->_What = buffer;
-		to->_DoFree = true;
-	}
+	//	strcpy_s(buffer, buffer_count, from->_What);
+	//	to->_What = buffer;
+	//	to->_DoFree = true;
+	//}
 
-	void __cdecl __std_exception_destroy(
-		__std_exception_data* const data
-	)
-	{
-		if (data->_DoFree)
-		{
-			free(const_cast<char*>(data->_What));
-		}
+	//void __cdecl __std_exception_destroy(
+	//	__std_exception_data* const data
+	//)
+	//{
+	//	if (data->_DoFree)
+	//	{
+	//		free(const_cast<char*>(data->_What));
+	//	}
 
-		data->_DoFree = false;
-		data->_What = nullptr;
-	}
+	//	data->_DoFree = false;
+	//	data->_What = nullptr;
+	//}
 
 	void __cdecl _invalid_parameter(
 		_In_opt_z_ wchar_t const*,
