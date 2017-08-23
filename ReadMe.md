@@ -92,6 +92,11 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 * vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
 
 ## Changes：
+1.0.0.11 2017-08-23 19:00
+* 解决BUG，使用_difftime64时Windows XP无法运行。
+* 解决BUG，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）
+* 更新VC141头文件以及实现，全部同步到最新14.11
+
 1.0.0.10 2017-07-28 20:28
 * 解决BUG 9，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
 * 解决BUG 8，修复typeid功能无法使用问题（感谢 HwangBae）
