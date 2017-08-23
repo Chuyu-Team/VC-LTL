@@ -32,7 +32,7 @@
 
 #if _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==0
 #define __ltlversion "140"
-#elif _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION== 10
+#elif _VC_CRT_MAJOR_VERSION ==14 && (_VC_CRT_MINOR_VERSION== 10||_VC_CRT_MINOR_VERSION==11)
 #define __ltlversion "141"
 #else
 #error "暂不支持此版本的CRT库"

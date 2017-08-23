@@ -152,7 +152,42 @@ typedef _Return_type_success_(return==ERROR_SUCCESS) LONG LSTATUS;
 
 namespace ATL
 {
+#ifdef _ATL_XP_TARGETING
+	//WinXP SP2 才支持 EncodePointer 以及 DecodePointer
+	//为
+	enum : int
+	{
+		_maximum_pointer_shift = sizeof(uintptr_t) * 8
+	};
 
+	inline unsigned int _rotate_pointer_value(unsigned int const value, int const shift) throw()
+	{
+		return RotateRight32(value, shift);
+	}
+
+	inline unsigned __int64 _rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
+	{
+		return RotateRight64(value, shift);
+	}
+
+	__inline PVOID __fastcall EncodePointerDownlevel(
+		__in_opt PVOID Ptr
+	)
+	{
+
+		return reinterpret_cast<PVOID>(_rotate_pointer_value(reinterpret_cast<uintptr_t>(Ptr), _maximum_pointer_shift - (__security_cookie% _maximum_pointer_shift)) ^ __security_cookie);
+	}
+
+	__inline PVOID __fastcall DecodePointerDownlevel(
+		__in_opt PVOID Ptr
+	)
+	{
+		return reinterpret_cast<PVOID>(_rotate_pointer_value(reinterpret_cast<uintptr_t>(Ptr) ^ __security_cookie, __security_cookie %_maximum_pointer_shift));
+	}
+#else
+#define EncodePointerDownlevel ::EncodePointer
+#define DecodePointerDownlevel ::DecodePointer
+#endif
 struct _ATL_CATMAP_ENTRY
 {
    int iType;
@@ -2628,7 +2663,7 @@ public:
 				if (pCache->pCF != NULL)
 				{
 					// Decode factory pointer if it's not null
-					IUnknown *factory = reinterpret_cast<IUnknown*>(::DecodePointer(pCache->pCF));
+					IUnknown *factory = reinterpret_cast<IUnknown*>(DecodePointerDownlevel(pCache->pCF));
 					_Analysis_assume_(factory != nullptr);
 					factory->Release();
 					pCache->pCF = NULL;
@@ -4854,6 +4889,8 @@ public :
 
 	void Term() throw();
 
+#ifndef _ATL_NO_COM_SUPPORT
+
 	HRESULT GetClassObject(
 		_In_ REFCLSID rclsid,
 		_In_ REFIID riid,
@@ -4978,6 +5015,7 @@ public :
 		_In_opt_z_ LPCTSTR lpszProgID,
 		_In_opt_z_ LPCTSTR lpszVerIndProgID);
 #endif // _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
+#endif //_ATL_NO_COM_SUPPORT
 
 #ifndef _ATL_NO_WIN_SUPPORT
 	void AddCreateWndData(
@@ -5037,6 +5075,7 @@ public :
 		return TRUE;    // ok
 	}
 
+#ifndef _ATL_NO_COM_SUPPORT
 	HRESULT DllCanUnloadNow()  throw()
 	{
 		return (GetLockCount()==0) ? S_OK : S_FALSE;
@@ -5056,6 +5095,7 @@ private:
 		_In_opt_z_ LPCTSTR lpszCurVerProgID,
 		_In_z_ LPCTSTR lpszUserDesc,
 		_In_ BOOL bIsVerIndProgID);
+#endif
 };
 
 #pragma managed(push, off)
@@ -6367,7 +6407,7 @@ inline LSTATUS CRegKey::RecurseDeleteKey(_In_z_ LPCTSTR lpszKey) throw()
 	return DeleteSubKey(lpszKey);
 }
 
-#ifndef _ATL_NO_COMMODULE
+#if !defined(_ATL_NO_COMMODULE) && !defined(_ATL_NO_COM_SUPPORT)
 
 inline HRESULT CComModule::RegisterProgIDHelper(
 	_In_z_ LPCTSTR lpszCLSID,
@@ -6722,7 +6762,7 @@ inline HRESULT WINAPI CAtlModule::UpdateRegistryFromResource(
 }
 #endif // _ATL_STATIC_LIB_IMPL
 
-#ifndef _ATL_NO_COMMODULE
+#if !defined(_ATL_NO_COMMODULE) && !defined(_ATL_NO_COM_SUPPORT)
 
 #pragma warning( push )  // disable 4996
 #pragma warning( disable: 4996 )  // Disable "deprecated symbol" warning
@@ -7815,6 +7855,7 @@ inline void CComModule::Term() throw()
 	CAtlModuleT<CComModule>::Term();
 }
 
+#ifndef _ATL_NO_COM_SUPPORT
 inline HRESULT CComModule::GetClassObject(
 	_In_ REFCLSID rclsid,
 	_In_ REFIID riid,
@@ -7865,8 +7906,9 @@ inline HRESULT CComModule::GetClassObject(
 
 	return hr;
 }
+#endif //_ATL_NO_COM_SUPPORT
 
-#ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
+#if defined(_ATL_USE_WINAPI_FAMILY_DESKTOP_APP) && !defined(_ATL_NO_COM_SUPPORT)
 // Register/Revoke All Class Factories with the OS (EXE only)
 inline HRESULT CComModule::RegisterClassObjects(
 	_In_ DWORD dwClsContext,
@@ -8153,7 +8195,7 @@ ATLINLINE ATLAPI AtlComModuleGetClassObject(
 						hr = pEntry->pfnGetClassObject(pEntry->pfnCreateInstance, __uuidof(IUnknown), reinterpret_cast<void**>(&factory));
 						if (SUCCEEDED(hr))
 						{
-							pCache->pCF = reinterpret_cast<IUnknown*>(::EncodePointer(factory));
+							pCache->pCF = reinterpret_cast<IUnknown*>(EncodePointerDownlevel(factory));
 						}
 					}
 				}
@@ -8161,7 +8203,7 @@ ATLINLINE ATLAPI AtlComModuleGetClassObject(
 				if (pCache->pCF != NULL)
 				{
 					// Decode factory pointer
-					IUnknown* factory = reinterpret_cast<IUnknown*>(::DecodePointer(pCache->pCF));
+					IUnknown* factory = reinterpret_cast<IUnknown*>(DecodePointerDownlevel(pCache->pCF));
 					_Analysis_assume_(factory != nullptr);
 					hr = factory->QueryInterface(riid, ppv);
 				}
