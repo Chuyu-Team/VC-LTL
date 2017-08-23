@@ -66,7 +66,7 @@ public:
             if (_Schedule_chore(&_M_Chore) != 0)
             {
                 delete this;
-                _THROW_NCEE(::std::runtime_error, "Fail to schedule the chore!");
+                _THROW(::std::runtime_error, "Fail to schedule the chore!");
             }
         }
     };

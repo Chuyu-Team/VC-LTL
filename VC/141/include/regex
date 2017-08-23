@@ -152,7 +152,7 @@ enum error_type
 	};
 	}	// namespace regex_constants
 
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xregex_error(
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xregex_error(
 	regex_constants::error_type _Code);
 
 	// TEMPLATE CLASS regex_traits
@@ -260,7 +260,7 @@ template<class _Elem>
 	: public _Regex_traits_base
 	{	// base class for regular expression traits
 public:
-	typedef typename make_unsigned<_Elem>::type _Uelem;
+	typedef make_unsigned_t<_Elem> _Uelem;
 	typedef _Regex_traits<_Elem> _Myt;
 	typedef _Elem char_type;
 	typedef size_t size_type;
@@ -316,10 +316,10 @@ public:
 			{	// non-empty string, transform it
 			vector<_Elem> _Temp(_First, _Last);
 
-			_Getctype()->tolower(&*_Temp.begin(),
-				&*_Temp.begin() + _Temp.size());
-			_Res = _Getcoll()->transform(&*_Temp.begin(),
-				&*_Temp.begin() + _Temp.size());
+			_Getctype()->tolower(_Temp.data(),
+				_Temp.data() + _Temp.size());
+			_Res = _Getcoll()->transform(_Temp.data(),
+				_Temp.data() + _Temp.size());
 			}
 		return (_Res);
 		}
@@ -356,7 +356,7 @@ public:
 			_REGEX_CHAR_CLASS_NAME("upper", _Ch_upper),
 			_REGEX_CHAR_CLASS_NAME("w", (ctype_base::mask)(-1)),
 			_REGEX_CHAR_CLASS_NAME("xdigit", _Ch_xdigit),
-			{0, 0, 0},
+			{nullptr, nullptr, 0, 0},
 			};
   #undef _REGEX_CHAR_CLASS_NAME
 
@@ -1176,7 +1176,6 @@ template<class _BidIt,
 	class match_results
 	{	// class to hold contents of all capture groups
 public:
-	typedef match_results<_BidIt, _Alloc> _Myt;
 	typedef sub_match<_BidIt> _Elem;
 	typedef vector<_Elem, _Alloc> _MyCont;
 	typedef allocator_traits<_Alloc> _Mytraits;
@@ -1193,57 +1192,16 @@ public:
 	typedef basic_string<char_type> string_type;
 
 	match_results()
-		: _Ready(false)
+		: _Org(),
+			_Ready(false)
 		{	// construct empty match_results
 		}
 
 	explicit match_results(const _Alloc& _Al)
-		: _Ready(false),
+		: _Org(),
+			_Ready(false),
 			_Matches(_Al)
 		{	// construct empty match_results with allocator
-		}
-
-	match_results(const _Myt& _Right)
-		: _Ready(_Right._Ready),
-			_Org(_Right._Org),
-			_Matches(_Right._Matches),
-			_Prefix(_Right._Prefix),
-			_Suffix(_Right._Suffix)
-		{	// construct by copying
-		}
-
-	_Myt& operator=(const _Myt& _Right)
-		{	// assign
-		_Ready = _Right._Ready;
-		_Org = _Right._Org;
-		_Matches = _Right._Matches;
-		_Prefix = _Right._Prefix;
-		_Suffix = _Right._Suffix;
-		return (*this);
-		}
-
-	match_results(_Myt&& _Right)
-		: _Ready(_Right._Ready),
-			_Org(_Right._Org),
-			_Matches(_STD move(_Right._Matches)),
-			_Prefix(_Right._Prefix),
-			_Suffix(_Right._Suffix),
-			_Null_elem(_Right._Null_elem)
-		{	// construct by moving _Right
-		}
-
-	_Myt& operator=(_Myt&& _Right) _NOEXCEPT
-		{	// assign by moving _Right
-		if (this != _STD addressof(_Right))
-			{	// clear this and steal from _Right
-			_Ready = _Right._Ready;
-			_Org = _Right._Org;
-			_Matches = _STD move(_Right._Matches);
-			_Prefix = _Right._Prefix;
-			_Suffix = _Right._Suffix;
-			_Null_elem = _Right._Null_elem;
-			}
-		return (*this);
 		}
 
 	bool ready() const
@@ -1314,6 +1272,16 @@ public:
 	const_iterator cend() const
 		{	// return iterator for end of sequence of submatches
 		return (_Matches.end());
+		}
+
+	const _Elem * _Unchecked_begin() const _NOEXCEPT
+		{	// return pointer for beginning of sequence of submatches
+		return (_Matches._Unchecked_begin());
+		}
+
+	const _Elem * _Unchecked_end() const _NOEXCEPT
+		{	// return pointer for end of sequence of submatches
+		return (_Matches._Unchecked_end());
 		}
 
 	template<class _OutIt>
@@ -1410,8 +1378,7 @@ public:
 
 	allocator_type get_allocator() const
 		{	// return allocator object for submatches
-		allocator_type _Ret(_Matches.get_allocator());
-		return (_Ret);
+		return (static_cast<allocator_type>(_Matches.get_allocator()));
 		}
 
 	void swap(match_results& _Right)
@@ -1565,7 +1532,7 @@ template<class _Elem>
 
 	~_Buf() _NOEXCEPT
 		{	// destroy
-		free(_Chrs);
+		_CSTD free(_Chrs);
 		}
 
 	unsigned int _Size() const
@@ -1614,7 +1581,7 @@ template<class _Elem>
 private:
 	void _Expand(unsigned int _Len)
 		{	// expand buffer to hold _Len characters
-		_Elem *_Tmp = (_Elem *)realloc(_Chrs, _Len * sizeof (_Elem));
+		_Elem *_Tmp = static_cast<_Elem *>(_CSTD realloc(_Chrs, _Len * sizeof (_Elem)));
 		if (!_Tmp)
 			_Xbad_alloc();
 		_Chrs = _Tmp;
@@ -2025,11 +1992,15 @@ public:
 		_Root_node *_Re, unsigned int _Nx,
 		regex_constants::syntax_option_type _Sf,
 		regex_constants::match_flag_type _Mf)
-			: _First(_Pfirst), _End(_Plast), _Traits(_Tr), _Rep(_Re),
-				_Sflags(_Sf), _Mflags(_Mf), _Matched(false),
-				_Ncap(static_cast<int>(_Nx)),
-				_Longest((_Re->_Flags & _Fl_longest)
-					&& !(_Mf & regex_constants::match_any))
+			: _End(_Plast),
+			_First(_Pfirst),
+			_Rep(_Re),
+			_Sflags(_Sf),
+			_Mflags(_Mf),
+			_Matched(false),
+			_Ncap(static_cast<int>(_Nx)),
+			_Longest((_Re->_Flags & _Fl_longest) && !(_Mf & regex_constants::match_any)),
+			_Traits(_Tr)
 		{	// construct
 		_Loop_vals.resize(_Re->_Loops);
 		_DEBUG_RANGE(_Pfirst, _Plast);
@@ -2518,7 +2489,7 @@ public:
 		return (_Traits.getloc());
 		}
 
-	void swap(_Myt& _Right) _THROW0()
+	void swap(_Myt& _Right) _NOEXCEPT
 		{	// exchange contents with _Right
 		_STD swap(_Rep, _Right._Rep);
 
@@ -2594,7 +2565,7 @@ private:
 template<class _Elem,
 	class _RxTraits>
 	void swap(basic_regex<_Elem, _RxTraits>& _Left,
-		basic_regex<_Elem, _RxTraits>& _Right) _THROW0()
+		basic_regex<_Elem, _RxTraits>& _Right) _NOEXCEPT
 	{	// exchange contents of _Left with _Right
 	_Left.swap(_Right);
 	}
@@ -2602,7 +2573,7 @@ template<class _Elem,
 template<class _BidIt,
 	class _Alloc>
 	void swap(match_results<_BidIt, _Alloc>& _Left,
-		match_results<_BidIt, _Alloc>& _Right) _THROW0()
+		match_results<_BidIt, _Alloc>& _Right) _NOEXCEPT
 	{	// exchange contents of _Left with _Right
 	_Left.swap(_Right);
 	}
@@ -2768,7 +2739,7 @@ template<class _BidIt,
 	{	// try to match regular expression to target text
 	_DEBUG_RANGE(_First, _Last);
 	return (_Regex_match1(_Unchecked(_First), _Unchecked(_Last),
-		static_cast<match_results<decltype(_Unchecked(_First))> *>(0), _Re,
+		static_cast<match_results<_Unchecked_t<_BidIt>> *>(0), _Re,
 			_Flgs | regex_constants::match_any, true));
 	}
 
@@ -2842,7 +2813,7 @@ template<class _StTraits,
 	typedef typename basic_string<_Elem, _StTraits, _StAlloc>
 		::const_iterator _Iter;
 	return (_Regex_match1(_Unchecked(_Str.begin()), _Unchecked(_Str.end()),
-		static_cast<match_results<decltype(_Unchecked(_Str.begin()))> *>(0), _Re,
+		static_cast<match_results<_Unchecked_t<_Iter>> *>(0), _Re,
 			_Flgs | regex_constants::match_any, true));
 	}
 
@@ -2919,7 +2890,7 @@ template<class _BidIt,
 	{	// search for regular expression match in target text
 	_DEBUG_RANGE(_First, _Last);
 	return (_Regex_search1(_Unchecked(_First), _Unchecked(_Last),
-		static_cast<match_results<decltype(_Unchecked(_First))> *>(0), _Re,
+		static_cast<match_results<_Unchecked_t<_BidIt>> *>(0), _Re,
 			_Flgs | regex_constants::match_any, _Unchecked(_First)));
 	}
 
@@ -3196,12 +3167,7 @@ template<class _BidIt,
 	class _Elem = _Iter_value_t<_BidIt>,
 	class _RxTraits = regex_traits<_Elem> >
 	class regex_iterator
-		: public _Iterator012<forward_iterator_tag,
-			match_results<_BidIt>,
-			ptrdiff_t,
-			match_results<_BidIt> *,
-			match_results<_BidIt>&,
-			_Iterator_base>
+		: public _Iterator_base
 	{	// iterator for full regular expression matches
 public:
 	typedef regex_iterator<_BidIt, _Elem, _RxTraits> _Myt;
@@ -3446,8 +3412,7 @@ public:
 			regex_constants::match_default) = delete;
 
 	regex_token_iterator(const regex_token_iterator& _Right)
-		: _Pos(_Right._Pos), _Cur(_Right._Cur),
-			_Suffix(_Right._Suffix), _Subs(_Right._Subs)
+		: _Pos(_Right._Pos), _Suffix(_Right._Suffix), _Cur(_Right._Cur), _Subs(_Right._Subs)
 		{	// construct copy of _Right
 		if (_Right._Res == 0)
 			_Res = 0;
@@ -4365,7 +4330,7 @@ template<class _BidIt1,
 template<class _Elem> inline
 	bool _Lookup_range(unsigned int _Ch, const _Buf<_Elem> *_Bufptr)
 	{	// check whether _Ch is in _Buf
-	typedef typename make_unsigned<_Elem>::type _Uelem;
+	typedef make_unsigned_t<_Elem> _Uelem;
 	for (unsigned int _Ix = 0; _Ix < _Bufptr->_Size(); _Ix += 2)
 		{	// check current position
 		if ((_Uelem)_Bufptr->_At(_Ix) <= _Ch
@@ -4710,6 +4675,7 @@ template<class _BidIt,
 				_Nx = 0;
 				break;
 
+			case _N_none:
 			default:
 				_Xregex_error(regex_constants::error_parse);
 			}
@@ -4759,9 +4725,6 @@ template<class _BidIt,
 
 			case _N_eol:
 				return (_STD find(_First_arg, _Last, _Meta_nl));
-
-//			case _N_wbound:
-//			case _N_dot:
 
 			case _N_str:
 				{	// check for string match
@@ -4829,9 +4792,6 @@ template<class _BidIt,
 			case _N_end_group:
 				break;
 
-//			case _N_neg_assert:
-//			case _N_assert:
-
 			case _N_end_assert:
 				_Nx = 0;
 				break;
@@ -4841,8 +4801,6 @@ template<class _BidIt,
 
 			case _N_end_capture:
 				break;
-
-//			case _N_back:
 
 			case _N_if:
 				{	// check for soonest string match
@@ -4854,10 +4812,6 @@ template<class _BidIt,
 				return (_Last);
 				}
 
-//			case _N_endif:
-//			case _N_rep:
-//			case _N_end_rep:
-
 			case _N_begin:
 				break;
 
@@ -4865,6 +4819,8 @@ template<class _BidIt,
 				_Nx = 0;
 				break;
 
+			case _N_none: case _N_wbound: case _N_dot: case _N_assert: case _N_neg_assert:
+			case _N_back: case _N_endif: case _N_rep: case _N_end_rep:
 			default:
 				return (_First_arg);
 			}
@@ -5691,6 +5647,9 @@ inline void _Calculate_loop_simplicity(_Node_base *_Nx, _Node_base *_Ne, _Node_r
 					_Outer_rep = 0;
 					}
 				break;
+			case _N_none: case _N_nop: case _N_bol: case _N_eol: case _N_wbound: case _N_dot: case _N_str:
+			case _N_class: case _N_group: case _N_end_group: case _N_end_assert: case _N_capture:
+			case _N_end_capture: case _N_back: case _N_endif: case _N_begin: case _N_end:
 			default:
 				break;
 			}

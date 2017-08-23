@@ -906,18 +906,18 @@ template<> inline
 	}
   #endif /* _NATIVE_WCHAR_T_DEFINED */
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE basic_istream<char, char_traits<char> >;
-template class _CRTIMP2_PURE basic_istream<wchar_t, char_traits<wchar_t> >;
+template class _CRTIMP2_PURE_IMPORT basic_istream<char, char_traits<char> >;
+template class _CRTIMP2_PURE_IMPORT basic_istream<wchar_t, char_traits<wchar_t> >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
-template class _CRTIMP2_PURE basic_istream<unsigned short,
+template class _CRTIMP2_PURE_IMPORT basic_istream<unsigned short,
 	char_traits<unsigned short> >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 
 		// TEMPLATE CLASS basic_iostream
 template<class _Elem,
@@ -975,18 +975,18 @@ public:
 
 	// basic_iostream TEMPLATE OPERATORS
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE basic_iostream<char, char_traits<char> >;
-template class _CRTIMP2_PURE basic_iostream<wchar_t, char_traits<wchar_t> >;
+template class _CRTIMP2_PURE_IMPORT basic_iostream<char, char_traits<char> >;
+template class _CRTIMP2_PURE_IMPORT basic_iostream<wchar_t, char_traits<wchar_t> >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
-template class _CRTIMP2_PURE basic_iostream<unsigned short,
+template class _CRTIMP2_PURE_IMPORT basic_iostream<unsigned short,
 	char_traits<unsigned short> >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 
 		// EXTRACTORS
 

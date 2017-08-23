@@ -46,7 +46,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double *);
 _CRTIMP2_PURE double __CLRCALL_PURE_OR_CDECL _Sinh(double, double);
 
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Exp(double *, double, short);
-extern _CRTIMP2_PURE /* const */ _Dconst _Denorm, _Hugeval, _Inf,
+extern _CRTIMP2_PURE_IMPORT /* const */ _Dconst _Denorm, _Hugeval, _Inf,
 	_Nan, _Snan;
 
 		/* float DECLARATIONS */
@@ -55,7 +55,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _FDtest(float *);
 _CRTIMP2_PURE float __CLRCALL_PURE_OR_CDECL _FSinh(float, float);
 
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _FExp(float *, float, short);
-extern _CRTIMP2_PURE /* const */ _Dconst _FDenorm, _FInf, _FNan, _FSnan;
+extern _CRTIMP2_PURE_IMPORT /* const */ _Dconst _FDenorm, _FInf, _FNan, _FSnan;
 
 		/* long double DECLARATIONS */
 _CRTIMP2_PURE long double __CLRCALL_PURE_OR_CDECL _LCosh(long double, long double);
@@ -63,7 +63,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _LDtest(long double *);
 _CRTIMP2_PURE long double __CLRCALL_PURE_OR_CDECL _LSinh(long double, long double);
 
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _LExp(long double *, long double, short);
-extern _CRTIMP2_PURE /* const */ _Dconst _LDenorm, _LInf, _LNan, _LSnan;
+extern _CRTIMP2_PURE_IMPORT /* const */ _Dconst _LDenorm, _LInf, _LNan, _LSnan;
 
  #if !defined(MRTDLL) || !defined(_CRTBLD)
  #ifndef _M_CEE_PURE

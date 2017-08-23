@@ -285,7 +285,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Inout_defensive_(annotes)  _Pre_defensive_ _Post_defensive_ _Group_(annotes)
 
 //============================================================================
-//   _In_\_Out_ Layer:
+//   _In_/_Out_ Layer:
 //============================================================================
 
 // Reserved pointer parameters, must always be NULL.
@@ -606,7 +606,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Field_range_(min,max)                     _SAL2_Source_(_Field_range_, (min,max), _Field_range_impl_(min,max))
 
 //============================================================================
-//   _Pre_\_Post_ Layer:
+//   _Pre_/_Post_ Layer:
 //============================================================================
 
 //
@@ -716,16 +716,16 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
    The macros are defined in 3 layers:
 
-   _In_\_Out_ Layer:
+   _In_/_Out_ Layer:
    ----------------
    This layer provides the highest abstraction and its macros should be used
    in most cases. Its macros start with _In_, _Out_ or _Inout_. For the
    typical case they provide the most concise annotations.
 
-   _Pre_\_Post_ Layer:
+   _Pre_/_Post_ Layer:
    ------------------
    The macros of this layer only should be used when there is no suitable macro
-   in the _In_\_Out_ layer. Its macros start with _Pre_, _Post_, _Ret_,
+   in the _In_/_Out_ layer. Its macros start with _Pre_, _Post_, _Ret_,
    _Deref_pre_ _Deref_post_ and _Deref_ret_. This layer provides the most
    flexibility for annotations.
 
@@ -773,7 +773,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
    Extent Syntax:
    |------|---------------|---------------|
-   | Unit | Writ\Readable | Argument Type |
+   | Unit | Writ/Readable | Argument Type |
    |------|---------------|---------------|
    |  <>  | cap_          | <>            |
    | byte | count_        | c_            |
@@ -1558,7 +1558,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 
 // Using attributes for sal
 
-#include "codeanalysis\sourceannotations.h"
+#include "CodeAnalysis/sourceannotations.h"
 
 
 #define _SA_annotes0(n)                [SAL_annotes(Name=#n)]
@@ -2967,5 +2967,5 @@ __PRIMOP(int, _In_function_class_(__In_impl_ char*);)
 }
 #endif // ]
 
-#include <ConcurrencySal.h>
+#include <concurrencysal.h>
 

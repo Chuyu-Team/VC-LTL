@@ -15,6 +15,11 @@
 
 _STD_BEGIN
 		// MACRO _DEBUG_ERROR
+ #ifdef _DEBUG
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Debug_message(const wchar_t *,
+	const wchar_t *, unsigned int);
+ #endif /* _DEBUG */
+
  #if _ITERATOR_DEBUG_LEVEL == 2
   #define _DEBUG_ERROR(mesg)	\
 	_DEBUG_ERROR2(mesg, __FILEW__, __LINE__)
@@ -23,12 +28,8 @@ _STD_BEGIN
 	_STD _Debug_message(L ## mesg, file, line),	\
 	_SCL_SECURE_INVALID_PARAMETER(mesg)
 
-typedef const wchar_t *_Dbfile_t;
-typedef unsigned int _Dbline_t;
-
-_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Debug_message(const wchar_t *,
-	const wchar_t *, unsigned int);
-
+using _Dbfile_t = const wchar_t *;
+using _Dbline_t = unsigned int;
  #else /* _ITERATOR_DEBUG_LEVEL == 2 */
   #define _DEBUG_ERROR(mesg)
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
@@ -59,22 +60,22 @@ struct _Iterator_base12;
 
 struct _Container_base0
 	{	// base of all containers
-	void _Orphan_all()
+	void _Orphan_all() _NOEXCEPT
 		{	// orphan all iterators
 		}
 
-	void _Swap_all(_Container_base0&)
+	void _Swap_all(_Container_base0&) _NOEXCEPT
 		{	// swap all iterators
 		}
 	};
 
 struct _Iterator_base0
 	{	// base of all iterators
-	void _Adopt(const void *)
+	void _Adopt(const void *) _NOEXCEPT
 		{	// adopt this iterator by parent
 		}
 
-	const _Container_base0 *_Getcont() const
+	const _Container_base0 *_Getcont() const _NOEXCEPT
 		{	// get owning container
 		return (0);
 		}
@@ -83,7 +84,7 @@ struct _Iterator_base0
 		// CLASS _Container_proxy
 struct _Container_proxy
 	{	// store head of iterator chain and back pointer
-	_Container_proxy()
+	_Container_proxy() _NOEXCEPT
 		: _Mycont(0), _Myfirstiter(0)
 		{	// construct from pointers
 		}
@@ -100,12 +101,12 @@ public:
 		{	// construct childless container
 		}
 
-	_Container_base12(const _Container_base12&)
+	_Container_base12(const _Container_base12&) _NOEXCEPT
 		: _Myproxy(0)
 		{	// copy a container
 		}
 
-	_Container_base12& operator=(const _Container_base12&)
+	_Container_base12& operator=(const _Container_base12&) _NOEXCEPT
 		{	// assign a container
 		return (*this);
 		}
@@ -115,13 +116,13 @@ public:
 		_Orphan_all();
 		}
 
-	_Iterator_base12 **_Getpfirst() const
+	_Iterator_base12 **_Getpfirst() const _NOEXCEPT
 		{	// get address of iterator chain
 		return (_Myproxy == 0 ? 0 : &_Myproxy->_Myfirstiter);
 		}
 
-	void _Orphan_all();	// orphan all iterators
-	void _Swap_all(_Container_base12&);	// swap all iterators
+	void _Orphan_all() _NOEXCEPT;	// orphan all iterators
+	void _Swap_all(_Container_base12&) _NOEXCEPT;	// swap all iterators
 
 	_Container_proxy *_Myproxy;
 	};
@@ -129,18 +130,18 @@ public:
 struct _Iterator_base12
 	{	// store links to container proxy, next iterator
 public:
-	_Iterator_base12()
+	_Iterator_base12() _NOEXCEPT
 		: _Myproxy(0), _Mynextiter(0)
 		{	// construct orphaned iterator
 		}
 
-	_Iterator_base12(const _Iterator_base12& _Right)
+	_Iterator_base12(const _Iterator_base12& _Right) _NOEXCEPT
 		: _Myproxy(0), _Mynextiter(0)
 		{	// copy an iterator
 		*this = _Right;
 		}
 
-	_Iterator_base12& operator=(const _Iterator_base12& _Right)
+	_Iterator_base12& operator=(const _Iterator_base12& _Right) _NOEXCEPT
 		{	// assign an iterator
 		if (_Myproxy == _Right._Myproxy)
 			;
@@ -165,7 +166,7 @@ public:
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 		}
 
-	void _Adopt(const _Container_base12 *_Parent)
+	void _Adopt(const _Container_base12 *_Parent) _NOEXCEPT
 		{	// adopt this iterator by parent
 		if (_Parent == 0)
 			{	// no future parent, just disown current parent
@@ -194,22 +195,22 @@ public:
 			}
 		}
 
-	void _Clrcont()
+	void _Clrcont() _NOEXCEPT
 		{	// disown owning container
 		_Myproxy = 0;
 		}
 
-	const _Container_base12 *_Getcont() const
+	const _Container_base12 *_Getcont() const _NOEXCEPT
 		{	// get owning container
 		return (_Myproxy == 0 ? 0 : _Myproxy->_Mycont);
 		}
 
-	_Iterator_base12 **_Getpnext()
+	_Iterator_base12 **_Getpnext() _NOEXCEPT
 		{	// get address of remaining iterator chain
 		return (&_Mynextiter);
 		}
 
-	void _Orphan_me()
+	void _Orphan_me() _NOEXCEPT
 		{	// cut ties with parent
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Myproxy != 0)
@@ -234,7 +235,7 @@ public:
 	};
 
 		// MEMBER FUNCTIONS FOR _Container_base12
-inline void _Container_base12::_Orphan_all()
+inline void _Container_base12::_Orphan_all() _NOEXCEPT
 	{	// orphan all iterators
  #if _ITERATOR_DEBUG_LEVEL == 2
 	if (_Myproxy != 0)
@@ -249,7 +250,7 @@ inline void _Container_base12::_Orphan_all()
  #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
 	}
 
-inline void _Container_base12::_Swap_all(_Container_base12& _Right)
+inline void _Container_base12::_Swap_all(_Container_base12& _Right) _NOEXCEPT
 	{	// swap all iterators
  #if _ITERATOR_DEBUG_LEVEL == 2
 	_Lockit _Lock(_LOCK_DEBUG);
@@ -266,12 +267,12 @@ inline void _Container_base12::_Swap_all(_Container_base12& _Right)
 	}
 
  #if _ITERATOR_DEBUG_LEVEL == 0
-typedef _Container_base0 _Container_base;
-typedef _Iterator_base0 _Iterator_base;
+using _Container_base = _Container_base0;
+using _Iterator_base = _Iterator_base0;
 
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-typedef _Container_base12 _Container_base;
-typedef _Iterator_base12 _Iterator_base;
+using _Container_base = _Container_base12;
+using _Iterator_base = _Iterator_base12;
  #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 
 	// TEMPLATE CLASS _Compressed_pair
@@ -288,12 +289,11 @@ template<class _Ty1,
 	bool = is_empty<_Ty1>::value && !is_final<_Ty1>::value>
 	class _Compressed_pair final
 		: private _Ty1
-
 	{	// store a pair of values, deriving from empty first
 private:
 	_Ty2 _Myval2;
 
-	typedef _Ty1 _Mybase;	// for visualization
+	using _Mybase = _Ty1;	// for visualization
 
 public:
 	template<class... _Other2>
@@ -357,7 +357,6 @@ public:
 template<class _Ty1,
 	class _Ty2>
 	class _Compressed_pair<_Ty1, _Ty2, false> final
-
 	{	// store a pair of values, not deriving from first
 private:
 	_Ty1 _Myval1;
@@ -432,7 +431,7 @@ template<class _Ty,
 
 template<class _Ty>
 	struct _Is_checked_helper<_Ty, void_t<
-		typename _Ty::_Unchecked_type> >
+		typename _Ty::_Unchecked_type>>
 		: true_type
 	{	// defined if _Ty::_Unchecked_type exists
 	};
@@ -451,14 +450,15 @@ template<class _Iter>
 	return (_Src);
 	}
 
- #define _UNCHECKED_TYPE(_Iter) \
-	decltype(_Unchecked(_STD declval<_Iter>()))
+		// ALIAS TEMPLATE _Unchecked_t
+template<class _Iter>
+	using _Unchecked_t = decltype(_Unchecked(_STD declval<_Iter>()));
 
 		// FUNCTION TEMPLATE _Unchecked_idl0
  #if _ITERATOR_DEBUG_LEVEL == 0
 
 template<class _Iter> inline
-	_UNCHECKED_TYPE(_Iter) _Unchecked_idl0(_Iter _Src)
+	_Unchecked_t<_Iter> _Unchecked_idl0(_Iter _Src)
 	{	// uncheck _Src in IDL == 0 only
 	return (_Unchecked(_Src));
 	}
@@ -476,7 +476,7 @@ template<class _Iter> inline
 		// TEMPLATE FUNCTION _Rechecked
 template<class _Iter,
 	class _UIter>
-	_CONSTEXPR14 _Iter& _Rechecked(_Iter& _Dest, _UIter _Src)
+	constexpr _Iter& _Rechecked(_Iter& _Dest, _UIter _Src)
 	{	// reset checked from unchecked, generic
 	_Dest = _Src;
 	return (_Dest);
@@ -509,17 +509,12 @@ struct input_iterator_tag
 	{	// identifying tag for input iterators
 	};
 
-struct _Mutable_iterator_tag	// TRANSITION, remove for Dev15
-	{	// identifying tag for mutable iterators
-	};
-
 struct output_iterator_tag
-	: _Mutable_iterator_tag
 	{	// identifying tag for output iterators
 	};
 
 struct forward_iterator_tag
-	: input_iterator_tag, _Mutable_iterator_tag
+	: input_iterator_tag
 	{	// identifying tag for forward iterators
 	};
 
@@ -548,13 +543,20 @@ struct _Really_trivial_ptr_iterator_tag
 	{	// iterator is a pointer to a trivial type
 	};
 
-	// STRUCT _Any_tag
-struct _Any_tag
-	{	// generic fallback/default/"other" target for tag dispatch
-	constexpr _Any_tag() _NOEXCEPT = default;
+		// STRUCT _Unused_parameter
+struct _Unused_parameter
+	{	// generic unused parameter struct
+	constexpr _Unused_parameter() _NOEXCEPT = default;
 	template<class _Ty>
-		constexpr _Any_tag(_Ty&&) _NOEXCEPT {}
+		constexpr _Unused_parameter(_Ty&&) _NOEXCEPT {}
 	};
+
+		// ALIAS _Any_tag
+using _Any_tag = _Unused_parameter; // generic fallback/default/"other" target for tag dispatch
+
+		// ALIAS TEMPLATE _Algorithm_int_t
+template<class _Ty>
+	using _Algorithm_int_t = conditional_t<is_integral<_Ty>::value, _Ty, ptrdiff_t>;
 
 		// TEMPLATE CLASS iterator
 template<class _Category,
@@ -564,33 +566,13 @@ template<class _Category,
 	class _Reference = _Ty&>
 	struct iterator
 	{	// base type for iterator classes
-	typedef _Category iterator_category;
-	typedef _Ty value_type;
-	typedef _Diff difference_type;
+	using iterator_category = _Category;
+	using value_type = _Ty;
+	using difference_type = _Diff;
 
-	typedef _Pointer pointer;
-	typedef _Reference reference;
+	using pointer = _Pointer;
+	using reference = _Reference;
 	};
-
-template<class _Category,
-	class _Ty,
-	class _Diff,
-	class _Pointer,
-	class _Reference,
-	class _Base>
-	struct _Iterator012
-		: public _Base
-	{	// base type for debugging iterator classes
-	typedef _Category iterator_category;
-	typedef _Ty value_type;
-	typedef _Diff difference_type;
-
-	typedef _Pointer pointer;
-	typedef _Reference reference;
-	};
-
-// base for output iterators
-typedef iterator<output_iterator_tag, void, void, void, void> _Outit;
 
 		// TEMPLATE CLASS iterator_traits
 template<class,
@@ -606,14 +588,32 @@ template<class _Iter>
 		typename _Iter::difference_type,
 		typename _Iter::pointer,
 		typename _Iter::reference
-		> >
+		>>
 	{	// defined if _Iter::* types exist
-	typedef typename _Iter::iterator_category iterator_category;
-	typedef typename _Iter::value_type value_type;
-	typedef typename _Iter::difference_type difference_type;
+	using iterator_category = typename _Iter::iterator_category;
+	using value_type = typename _Iter::value_type;
+	using difference_type = typename _Iter::difference_type;
 
-	typedef typename _Iter::pointer pointer;
-	typedef typename _Iter::reference reference;
+	using pointer = typename _Iter::pointer;
+	using reference = typename _Iter::reference;
+	};
+
+template<class _Ty,
+	bool = is_object<_Ty>::value>
+	struct _Iterator_traits_pointer_base
+	{	// iterator properties for pointers to object
+	using iterator_category = random_access_iterator_tag;
+	using value_type = remove_cv_t<_Ty>;
+	using difference_type = ptrdiff_t;
+
+	using pointer = _Ty *;
+	using reference = _Ty&;
+	};
+
+template<class _Ty>
+	struct _Iterator_traits_pointer_base<_Ty, false>
+	{	// iterator properties for pointers to non-object
+		// not actually iterators, as no arithmetic is possible -> no members
 	};
 
 template<class _Iter>
@@ -624,24 +624,8 @@ template<class _Iter>
 
 template<class _Ty>
 	struct iterator_traits<_Ty *>
-	{	// get traits from pointer
-	typedef random_access_iterator_tag iterator_category;
-	typedef _Ty value_type;
-	typedef ptrdiff_t difference_type;
-
-	typedef _Ty *pointer;
-	typedef _Ty& reference;
-	};
-
-template<class _Ty>
-	struct iterator_traits<const _Ty *>
-	{	// get traits from const pointer
-	typedef random_access_iterator_tag iterator_category;
-	typedef _Ty value_type;
-	typedef ptrdiff_t difference_type;
-
-	typedef const _Ty *pointer;
-	typedef const _Ty& reference;
+		: _Iterator_traits_pointer_base<_Ty>
+	{	// get traits from pointer, if possible
 	};
 
 		// ALIAS TEMPLATE _Iter_value_t
@@ -667,7 +651,7 @@ template<class _Ty,
 template<class _Ty>
 	struct _Is_iterator<_Ty, void_t<
 		typename iterator_traits<_Ty>::iterator_category
-		> >
+		>>
 		: true_type
 	{	// defined if iterator_category is provided by iterator_traits<_Ty>
 	};
@@ -677,28 +661,32 @@ template<class _Ty>
 struct _Distance_unknown {};
 
  #if _ITERATOR_DEBUG_LEVEL == 0
-template<class _Iter> inline
+template<class _Checked,
+	class _Iter> inline
 	_Distance_unknown _Idl_distance(const _Iter&, const _Iter&)
 	{	// always give up under IDL0 because _Unchecked_n blindly unwraps there
 	return {};
 	}
  #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
-template<class _Iter> inline
+template<class _Checked,
+	class _Iter> inline
 	_Distance_unknown _Idl_distance1(const _Iter&, const _Iter&, input_iterator_tag)
 	{	// _Idl_distance for non-random-access iterators
 	return {};
 	}
 
-template<class _Iter> inline
-	_Iter_diff_t<_Iter> _Idl_distance1(const _Iter& _First, const _Iter& _Last, random_access_iterator_tag)
+template<class _Checked,
+	class _Iter> inline
+	_Iter_diff_t<_Checked> _Idl_distance1(const _Iter& _First, const _Iter& _Last, random_access_iterator_tag)
 	{	// _Idl_distance for random-access iterators
-	return (_Last - _First);
+	return (static_cast<_Iter_diff_t<_Checked>>(_Last - _First));
 	}
 
-template<class _Iter> inline
+template<class _Checked,
+	class _Iter> inline
 	auto _Idl_distance(const _Iter& _First, const _Iter& _Last)
 	{	// tries to get the distance between _First and _Last if they are random-access iterators
-	return (_Idl_distance1(_First, _Last, _Iter_cat_t<_Iter>()));
+	return (_Idl_distance1<_Checked>(_First, _Last, _Iter_cat_t<_Iter>()));
 	}
  #endif /* _ITERATOR_DEBUG_LEVEL */
 
@@ -804,13 +792,13 @@ template<class _Elem,
 	bool _Is_enum = is_enum<_Elem>::value>
 	struct _Unwrap_enum
 	{	// if _Elem is an enum, gets its underlying type; otherwise leaves _Elem unchanged
-	typedef underlying_type_t<_Elem> type;
+	using type = underlying_type_t<_Elem>;
 	};
 
 template<class _Elem>
 	struct _Unwrap_enum<_Elem, false>
 	{	// passthrough non-enum type
-	typedef _Elem type;
+	using type = _Elem;
 	};
 
 		// STRUCT TEMPLATE _Both_or_neither_bool
@@ -826,37 +814,45 @@ template<class _Source,
 	class _Dest>
 	struct _Ptr_cat_helper
 	{	// determines _Ptr_cat's result in the most general case
-	typedef typename _Unwrap_enum<_Source>::type _USource;
-	typedef typename _Unwrap_enum<_Dest>::type _UDest;
-	typedef conditional_t<
-		conjunction<
+	using _USource = typename _Unwrap_enum<_Source>::type;
+	using _UDest = typename _Unwrap_enum<_Dest>::type;
+	using type = conditional_t<conjunction<
 			_Is_same_size<_USource, _UDest>,
 			is_integral<_USource>,
 			is_integral<_UDest>,
-			_Both_or_neither_bool<_USource, _UDest>,
-			// note: _Unwrap_enum strips volatile so we must check the type directly
-			negation<is_volatile<_Source>>,
-			negation<is_volatile<_Dest>>
+			_Both_or_neither_bool<_USource, _UDest>
 		>::value,
 		_Really_trivial_ptr_iterator_tag,
-		_General_ptr_iterator_tag> type;
+		_General_ptr_iterator_tag>;
 	};
 
 template<class _Elem>
 	struct _Ptr_cat_helper<_Elem, _Elem>
 	{	// determines _Ptr_cat's result when the types are the same
-	typedef conditional_t<
+	using type = conditional_t<
 		is_trivially_copyable<_Elem>::value,
 		conditional_t<is_trivial<_Elem>::value,
 			_Really_trivial_ptr_iterator_tag,
 			_Trivially_copyable_ptr_iterator_tag>,
-		_General_ptr_iterator_tag> type;
+		_General_ptr_iterator_tag>;
 	};
 
 template<class _Anything>
 	struct _Ptr_cat_helper<_Anything *, const _Anything *>
 	{	// determines _Ptr_cat's result when all we do is add const to a pointer
-	typedef _Really_trivial_ptr_iterator_tag type;
+	using type = _Really_trivial_ptr_iterator_tag;
+	};
+
+template<class _Anything>
+	struct _Ptr_cat_helper<_Anything *, volatile _Anything *>
+	{	// determines _Ptr_cat's result when all we do is add volatile to a pointer
+	using type = _Really_trivial_ptr_iterator_tag;
+	};
+
+template<class _Anything>
+	struct _Ptr_cat_helper<_Anything *, const volatile _Anything *>
+	{	// determines _Ptr_cat's result when all we do is add cv to a pointer
+	using type = _Really_trivial_ptr_iterator_tag;
 	};
 
 template<class _Source,
@@ -869,7 +865,7 @@ template<class _Source,
 template<class _Source,
 	class _Dest> inline
 	conditional_t<is_trivially_assignable<_Dest&, _Source&>::value,
-		typename _Ptr_cat_helper<remove_const_t<_Source>, _Dest>::type,
+		typename _Ptr_cat_helper<remove_cv_t<_Source>, remove_cv_t<_Dest>>::type,
 		_General_ptr_iterator_tag>
 		_Ptr_copy_cat(_Source * const&, _Dest * const&)
 	{	// return pointer copy optimization category for pointers
@@ -886,7 +882,7 @@ template<class _Source,
 template<class _Source,
 	class _Dest> inline
 	conditional_t<is_trivially_assignable<_Dest&, _Source>::value,
-		typename _Ptr_cat_helper<remove_const_t<_Source>, _Dest>::type,
+		typename _Ptr_cat_helper<remove_cv_t<_Source>, remove_cv_t<_Dest>>::type,
 		_General_ptr_iterator_tag>
 		_Ptr_move_cat(_Source * const&, _Dest * const&)
 	{	// return pointer move optimization category for pointers
@@ -939,11 +935,11 @@ template<class _Source,
 		// TEMPLATE FUNCTION _Debug_lt_pred
 template<class _Pr,
 	class _Ty1,
-	class _Ty2> inline
+	class _Ty2>
 	constexpr bool _Debug_lt_pred(_Pr&& _Pred,
 		_Ty1&& _Left, _Ty2&& _Right,
 		_Dbfile_t _File, _Dbline_t _Line)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Pred(_Left, _Right)) && _NOEXCEPT_OP(_Pred(_Right, _Left)))
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Pred(_Left, _Right)) && _NOEXCEPT_OPER(_Pred(_Right, _Left)))
 	{	// test if _Pred(_Left, _Right) and _Pred is strict weak ordering
 	return (_Pred(_Left, _Right)
 		? (_Pred(_Right, _Left)
@@ -954,10 +950,10 @@ template<class _Pr,
 
 		// TEMPLATE FUNCTION _Debug_lt
 template<class _Ty1,
-	class _Ty2> inline
+	class _Ty2>
 	constexpr bool _Debug_lt(_Ty1&& _Left, _Ty2&& _Right,
 		_Dbfile_t _File, _Dbline_t _Line)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Left < _Right) && _NOEXCEPT_OP(_Right < _Left))
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left < _Right) && _NOEXCEPT_OPER(_Right < _Left))
 	{	// test if _Left < _Right and operator< is strict weak ordering
 	return (_Debug_lt_pred(less<>(),
 		_STD forward<_Ty1>(_Left), _STD forward<_Ty2>(_Right), _File, _Line));
@@ -965,14 +961,14 @@ template<class _Ty1,
 
 		// TEMPLATE FUNCTION _Debug_range
 template<class _InIt>
-	_CONSTEXPR14 void _Debug_range2(_InIt _First, _InIt _Last,
+	constexpr void _Debug_range2(_InIt _First, _InIt _Last,
 		_Dbfile_t, _Dbline_t, input_iterator_tag)
 	{	// test iterator pair for valid range, arbitrary iterators
 	static_cast<void>(_First == _Last);	// make sure they're comparable
 	}
 
 template<class _RanIt>
-	_CONSTEXPR14 void _Debug_range2(_RanIt _First, _RanIt _Last,
+	constexpr void _Debug_range2(_RanIt _First, _RanIt _Last,
 		_Dbfile_t _File, _Dbline_t _Line, random_access_iterator_tag)
 	{	// test iterator pair for valid range, random-access iterators
 	if (_Last < _First)
@@ -982,7 +978,7 @@ template<class _RanIt>
 	}
 
 template<class _InIt>
-	_CONSTEXPR14 void _Debug_range(_InIt _First, _InIt _Last,
+	constexpr void _Debug_range(_InIt _First, _InIt _Last,
 		_Dbfile_t _File, _Dbline_t _Line)
 	{	// test iterator pair for valid range
 	_Debug_range2(_First, _Last, _File, _Line, _Iter_cat_t<_InIt>());
@@ -1047,8 +1043,8 @@ template<class _Ty,
 		// MORE ITERATOR STUFF (from <iterator>)
 		// TEMPLATE FUNCTION advance
 template<class _InIt,
-	class _Diff> inline
-	void _Advance1(_InIt& _Where, _Diff _Off, input_iterator_tag)
+	class _Diff>
+	_CONSTEXPR17 void _Advance1(_InIt& _Where, _Diff _Off, input_iterator_tag)
 	{	// increment iterator by offset, input iterators
  #if _ITERATOR_DEBUG_LEVEL == 2
 	if (_Off < 0)
@@ -1063,8 +1059,8 @@ template<class _InIt,
 	}
 
 template<class _BidIt,
-	class _Diff> inline
-	void _Advance1(_BidIt& _Where, _Diff _Off, bidirectional_iterator_tag)
+	class _Diff>
+	_CONSTEXPR17 void _Advance1(_BidIt& _Where, _Diff _Off, bidirectional_iterator_tag)
 	{	// increment iterator by offset, bidirectional iterators
 	for (; 0 < _Off; --_Off)
 		++_Where;
@@ -1073,24 +1069,23 @@ template<class _BidIt,
 	}
 
 template<class _RanIt,
-	class _Diff> inline
-	void _Advance1(_RanIt& _Where, _Diff _Off, random_access_iterator_tag)
+	class _Diff>
+	_CONSTEXPR17 void _Advance1(_RanIt& _Where, _Diff _Off, random_access_iterator_tag)
 	{	// increment iterator by offset, random-access iterators
 	_Where += _Off;
 	}
 
 template<class _InIt,
-	class _Diff> inline
-	void advance(_InIt& _Where, _Diff _Off)
+	class _Diff>
+	_CONSTEXPR17 void advance(_InIt& _Where, _Diff _Off)
 	{	// increment iterator by offset, arbitrary iterators
 		// we remove_const_t before _Iter_cat_t for better diagnostics if the user passes an iterator that is const
 	_Advance1(_Where, _Off, _Iter_cat_t<remove_const_t<_InIt>>());
 	}
 
 		// TEMPLATE FUNCTION distance
-template<class _InIt> inline
-	_Iter_diff_t<_InIt>
-		_Distance1(_InIt _First, _InIt _Last, input_iterator_tag)
+template<class _InIt>
+	_CONSTEXPR17 _Iter_diff_t<_InIt> _Distance1(_InIt _First, _InIt _Last, input_iterator_tag)
 	{	// return distance between iterators; input
 	_Iter_diff_t<_InIt> _Off = 0;
 	for (; _First != _Last; ++_First)
@@ -1099,23 +1094,21 @@ template<class _InIt> inline
 	return (_Off);
 	}
 
-template<class _RanIt> inline
-	_Iter_diff_t<_RanIt>
-		_Distance1(_RanIt _First, _RanIt _Last, random_access_iterator_tag)
+template<class _RanIt>
+	_CONSTEXPR17 _Iter_diff_t<_RanIt> _Distance1(_RanIt _First, _RanIt _Last, random_access_iterator_tag)
 	{	// return distance between iterators; random-access
 	return (_Last - _First);
 	}
 
-template<class _InIt> inline
-	_Iter_diff_t<_InIt>
-		distance(_InIt _First, _InIt _Last)
+template<class _InIt>
+	_CONSTEXPR17 _Iter_diff_t<_InIt> distance(_InIt _First, _InIt _Last)
 	{	// return distance between iterators
 	return (_Distance1(_First, _Last, _Iter_cat_t<_InIt>()));
 	}
 
 		// TEMPLATE FUNCTION next
-template<class _InIt> inline
-	_InIt next(_InIt _First, _Iter_diff_t<_InIt> _Off = 1)
+template<class _InIt>
+	_CONSTEXPR17 _InIt next(_InIt _First, _Iter_diff_t<_InIt> _Off = 1)
 	{	// increment iterator
 	static_assert(is_base_of<input_iterator_tag, _Iter_cat_t<_InIt>>::value,
 		"next requires input iterator");
@@ -1125,8 +1118,8 @@ template<class _InIt> inline
 	}
 
 		// TEMPLATE FUNCTION prev
-template<class _BidIt> inline
-	_BidIt prev(_BidIt _First, _Iter_diff_t<_BidIt> _Off = 1)
+template<class _BidIt>
+	_CONSTEXPR17 _BidIt prev(_BidIt _First, _Iter_diff_t<_BidIt> _Off = 1)
 	{	// decrement iterator
 	static_assert(is_base_of<bidirectional_iterator_tag, _Iter_cat_t<_BidIt>>::value,
 		"prev requires bidirectional iterator");
@@ -1153,113 +1146,108 @@ template<class _Iterator>
 
 template<class _RanIt>
 	class reverse_iterator
-		: public iterator<
-			typename iterator_traits<_RanIt>::iterator_category,
-			typename iterator_traits<_RanIt>::value_type,
-			typename iterator_traits<_RanIt>::difference_type,
-			typename iterator_traits<_RanIt>::pointer,
-			typename iterator_traits<_RanIt>::reference>
 	{	// wrap iterator to run it backwards
-	typedef reverse_iterator<_RanIt> _Myt;
-
 public:
-	typedef typename iterator_traits<_RanIt>::difference_type difference_type;
-	typedef typename iterator_traits<_RanIt>::pointer pointer;
-	typedef typename iterator_traits<_RanIt>::reference reference;
-	typedef _RanIt iterator_type;
+	using iterator_category = typename iterator_traits<_RanIt>::iterator_category;
+	using value_type = typename iterator_traits<_RanIt>::value_type;
+	using difference_type = typename iterator_traits<_RanIt>::difference_type;
+	using pointer = typename iterator_traits<_RanIt>::pointer;
+	using reference = typename iterator_traits<_RanIt>::reference;
 
-	_CONSTEXPR17_11 reverse_iterator()
+	using iterator_type = _RanIt;
+
+	_CONSTEXPR17 reverse_iterator()
 		: current()
 		{	// construct with value-initialized wrapped iterator
 		}
 
-	_CONSTEXPR17_11 explicit reverse_iterator(_RanIt _Right)
+	_CONSTEXPR17 explicit reverse_iterator(_RanIt _Right)
 		: current(_Right)
 		{	// construct wrapped iterator from _Right
 		}
 
 	template<class _Other>
-		_CONSTEXPR17_11 reverse_iterator(const reverse_iterator<_Other>& _Right)
+		_CONSTEXPR17 reverse_iterator(const reverse_iterator<_Other>& _Right)
 		: current(_Right.base())
 		{	// initialize with compatible base
 		}
 
 	template<class _Other>
-		_CONSTEXPR17_14 _Myt& operator=(const reverse_iterator<_Other>& _Right)
+		_CONSTEXPR17 reverse_iterator& operator=(const reverse_iterator<_Other>& _Right)
 		{	// assign from compatible base
 		current = _Right.base();
 		return (*this);
 		}
 
-	_CONSTEXPR17_11 _RanIt base() const
+	_CONSTEXPR17 _RanIt base() const
 		{	// return wrapped iterator
 		return (current);
 		}
 
-	_CONSTEXPR17_14 reference operator*() const
+	_CONSTEXPR17 reference operator*() const
 		{	// return designated value
 		_RanIt _Tmp = current;
 		return (*--_Tmp);
 		}
 
-	_CONSTEXPR17_14 pointer operator->() const
+	_CONSTEXPR17 pointer operator->() const
 		{	// return pointer to class object
 		_RanIt _Tmp = current;
 		--_Tmp;
 		return (_Operator_arrow(_Tmp, is_pointer<_RanIt>()));
 		}
 
-	_CONSTEXPR17_14 _Myt& operator++()
+	_CONSTEXPR17 reverse_iterator& operator++()
 		{	// preincrement
 		--current;
 		return (*this);
 		}
 
-	_CONSTEXPR17_14 _Myt operator++(int)
+	_CONSTEXPR17 reverse_iterator operator++(int)
 		{	// postincrement
-		_Myt _Tmp = *this;
+		reverse_iterator _Tmp = *this;
 		--current;
 		return (_Tmp);
 		}
 
-	_CONSTEXPR17_14 _Myt& operator--()
+	_CONSTEXPR17 reverse_iterator& operator--()
 		{	// predecrement
 		++current;
 		return (*this);
 		}
 
-	_CONSTEXPR17_14 _Myt operator--(int)
+	_CONSTEXPR17 reverse_iterator operator--(int)
 		{	// postdecrement
-		_Myt _Tmp = *this;
+		reverse_iterator _Tmp = *this;
 		++current;
 		return (_Tmp);
 		}
 
 // N.B. functions valid for random-access iterators only beyond this point
 
-	_CONSTEXPR17_14 _Myt& operator+=(difference_type _Off)
+	_CONSTEXPR17 reverse_iterator& operator+=(difference_type _Off)
 		{	// increment by integer
 		current -= _Off;
 		return (*this);
 		}
 
-	_CONSTEXPR17_11 _Myt operator+(difference_type _Off) const
+	_CONSTEXPR17 reverse_iterator operator+(difference_type _Off) const
 		{	// return this + integer
-		return (_Myt(current - _Off));
+		return (reverse_iterator(current - _Off));
 		}
 
-	_CONSTEXPR17_14 _Myt& operator-=(difference_type _Off)
+	_CONSTEXPR17 reverse_iterator& operator-=(difference_type _Off)
 		{	// decrement by integer
 		current += _Off;
 		return (*this);
 		}
 
-	_CONSTEXPR17_11 _Myt operator-(difference_type _Off) const
+	_CONSTEXPR17 reverse_iterator operator-(difference_type _Off) const
 		{	// return this - integer
-		return (_Myt(current + _Off));
+		return (reverse_iterator(current + _Off));
 		}
 
-	_CONSTEXPR17_14 reference operator[](difference_type _Off) const
+	_CONSTEXPR17 reference operator[](difference_type _Off) const
 		{	// subscript
 		return (*(*this + _Off));
 		}
@@ -1269,14 +1257,14 @@ protected:
 	};
 
 template<class _RanIt>
-	struct _Is_checked_helper<reverse_iterator<_RanIt> >
+	struct _Is_checked_helper<reverse_iterator<_RanIt>>
 		: public _Is_checked_helper<_RanIt>
 	{	// mark reverse_iterator as checked if its wrapped iterator is checked
 	};
 
 		// reverse_iterator TEMPLATE OPERATORS
 template<class _RanIt>
-	_CONSTEXPR17_11 reverse_iterator<_RanIt> operator+(
+	_CONSTEXPR17 reverse_iterator<_RanIt> operator+(
 		typename reverse_iterator<_RanIt>::difference_type _Off,
 		const reverse_iterator<_RanIt>& _Right)
 	{	// return reverse_iterator + integer
@@ -1285,7 +1273,7 @@ template<class _RanIt>
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 auto operator-(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 auto operator-(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 			-> decltype(_Right.base() - _Left.base())
 	{	// return difference of reverse_iterators
@@ -1294,7 +1282,7 @@ template<class _RanIt1,
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 bool operator==(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 bool operator==(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 	{	// test for reverse_iterator equality
 	return (_Left.base() == _Right.base());
@@ -1302,7 +1290,7 @@ template<class _RanIt1,
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 bool operator!=(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 bool operator!=(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 	{	// test for reverse_iterator inequality
 	return (!(_Left == _Right));
@@ -1310,7 +1298,7 @@ template<class _RanIt1,
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 bool operator<(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 bool operator<(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 	{	// test for reverse_iterator < reverse_iterator
 	return (_Right.base() < _Left.base());
@@ -1318,7 +1306,7 @@ template<class _RanIt1,
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 bool operator>(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 bool operator>(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 	{	// test for reverse_iterator > reverse_iterator
 	return (_Right < _Left);
@@ -1326,7 +1314,7 @@ template<class _RanIt1,
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 bool operator<=(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 bool operator<=(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 	{	// test for reverse_iterator <= reverse_iterator
 	return (!(_Right < _Left));
@@ -1334,7 +1322,7 @@ template<class _RanIt1,
 
 template<class _RanIt1,
 	class _RanIt2>
-	_CONSTEXPR17_11 bool operator>=(const reverse_iterator<_RanIt1>& _Left,
+	_CONSTEXPR17 bool operator>=(const reverse_iterator<_RanIt1>& _Left,
 		const reverse_iterator<_RanIt2>& _Right)
 	{	// test for reverse_iterator >= reverse_iterator
 	return (!(_Left < _Right));
@@ -1342,46 +1330,45 @@ template<class _RanIt1,
 
 		// TEMPLATE FUNCTION make_reverse_iterator
 template<class _RanIt>
-	_CONSTEXPR17_11 reverse_iterator<_RanIt> make_reverse_iterator(_RanIt _Iter)
+	_CONSTEXPR17 reverse_iterator<_RanIt> make_reverse_iterator(_RanIt _Iter)
 	{	// make reverse_iterator from iterator
 	return (reverse_iterator<_RanIt>(_Iter));
 	}
 
 		// TEMPLATE FUNCTIONS begin AND end
-
 template<class _Container>
-	auto inline begin(_Container& _Cont) -> decltype(_Cont.begin())
+	_CONSTEXPR17 auto begin(_Container& _Cont) -> decltype(_Cont.begin())
 	{	// get beginning of sequence
 	return (_Cont.begin());
 	}
 
 template<class _Container>
-	auto inline begin(const _Container& _Cont) -> decltype(_Cont.begin())
+	_CONSTEXPR17 auto begin(const _Container& _Cont) -> decltype(_Cont.begin())
 	{	// get beginning of sequence
 	return (_Cont.begin());
 	}
 
 template<class _Container>
-	auto inline end(_Container& _Cont) -> decltype(_Cont.end())
+	_CONSTEXPR17 auto end(_Container& _Cont) -> decltype(_Cont.end())
 	{	// get end of sequence
 	return (_Cont.end());
 	}
 
 template<class _Container>
-	auto inline end(const _Container& _Cont) -> decltype(_Cont.end())
+	_CONSTEXPR17 auto end(const _Container& _Cont) -> decltype(_Cont.end())
 	{	// get end of sequence
 	return (_Cont.end());
 	}
 
 template<class _Ty,
-	size_t _Size> inline
+	size_t _Size>
 	constexpr _Ty *begin(_Ty (&_Array)[_Size]) _NOEXCEPT
 	{	// get beginning of array
 	return (_Array);
 	}
 
 template<class _Ty,
-	size_t _Size> inline
+	size_t _Size>
 	constexpr _Ty *end(_Ty (&_Array)[_Size]) _NOEXCEPT
 	{	// get end of array
 	return (_Array + _Size);
@@ -1389,16 +1376,16 @@ template<class _Ty,
 
 		// TEMPLATE FUNCTIONS cbegin AND cend
 template<class _Container>
-	constexpr auto inline cbegin(const _Container& _Cont)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_STD begin(_Cont)))
+	constexpr auto cbegin(const _Container& _Cont)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_STD begin(_Cont)))
 		-> decltype(_STD begin(_Cont))
 	{	// get beginning of sequence
 	return (_STD begin(_Cont));
 	}
 
 template<class _Container>
-	constexpr auto inline cend(const _Container& _Cont)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_STD end(_Cont)))
+	constexpr auto cend(const _Container& _Cont)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_STD end(_Cont)))
 		-> decltype(_STD end(_Cont))
 	{	// get end of sequence
 	return (_STD end(_Cont));
@@ -1406,52 +1393,52 @@ template<class _Container>
 
 		// TEMPLATE FUNCTIONS rbegin AND rend
 template<class _Container>
-	auto inline rbegin(_Container& _Cont) -> decltype(_Cont.rbegin())
+	_CONSTEXPR17 auto rbegin(_Container& _Cont) -> decltype(_Cont.rbegin())
 	{	// get beginning of reversed sequence
 	return (_Cont.rbegin());
 	}
 
 template<class _Container>
-	auto inline rbegin(const _Container& _Cont) -> decltype(_Cont.rbegin())
+	_CONSTEXPR17 auto rbegin(const _Container& _Cont) -> decltype(_Cont.rbegin())
 	{	// get beginning of reversed sequence
 	return (_Cont.rbegin());
 	}
 
 template<class _Container>
-	auto inline rend(_Container& _Cont) -> decltype(_Cont.rend())
+	_CONSTEXPR17 auto rend(_Container& _Cont) -> decltype(_Cont.rend())
 	{	// get end of reversed sequence
 	return (_Cont.rend());
 	}
 
 template<class _Container>
-	auto inline rend(const _Container& _Cont) -> decltype(_Cont.rend())
+	_CONSTEXPR17 auto rend(const _Container& _Cont) -> decltype(_Cont.rend())
 	{	// get end of reversed sequence
 	return (_Cont.rend());
 	}
 
 template<class _Ty,
-	size_t _Size> inline
-	reverse_iterator<_Ty *> rbegin(_Ty (&_Array)[_Size])
+	size_t _Size>
+	_CONSTEXPR17 reverse_iterator<_Ty *> rbegin(_Ty (&_Array)[_Size])
 	{	// get beginning of reversed array
 	return (reverse_iterator<_Ty *>(_Array + _Size));
 	}
 
 template<class _Ty,
-	size_t _Size> inline
-	reverse_iterator<_Ty *> rend(_Ty (&_Array)[_Size])
+	size_t _Size>
+	_CONSTEXPR17 reverse_iterator<_Ty *> rend(_Ty (&_Array)[_Size])
 	{	// get end of reversed array
 	return (reverse_iterator<_Ty *>(_Array));
 	}
 
-template<class _Elem> inline
-	reverse_iterator<const _Elem *>
+template<class _Elem>
+	_CONSTEXPR17 reverse_iterator<const _Elem *>
 		rbegin(initializer_list<_Elem> _Ilist)
 	{	// get beginning of reversed sequence
 	return (reverse_iterator<const _Elem *>(_Ilist.end()));
 	}
 
-template<class _Elem> inline
-	reverse_iterator<const _Elem *>
+template<class _Elem>
+	_CONSTEXPR17 reverse_iterator<const _Elem *>
 		rend(initializer_list<_Elem> _Ilist)
 	{	// get end of reversed sequence
 	return (reverse_iterator<const _Elem *>(_Ilist.begin()));
@@ -1459,14 +1446,14 @@ template<class _Elem> inline
 
 		// TEMPLATE FUNCTIONS crbegin AND crend
 template<class _Container>
-	auto inline crbegin(const _Container& _Cont)
+	_CONSTEXPR17 auto crbegin(const _Container& _Cont)
 		-> decltype(_STD rbegin(_Cont))
 	{	// get beginning of reversed sequence
 	return (_STD rbegin(_Cont));
 	}
 
 template<class _Container>
-	auto inline crend(const _Container& _Cont)
+	_CONSTEXPR17 auto crend(const _Container& _Cont)
 		-> decltype(_STD rend(_Cont))
 	{	// get end of reversed sequence
 	return (_STD rend(_Cont));
@@ -1474,34 +1461,34 @@ template<class _Container>
 
 
 template<class _Container>
-	constexpr auto inline size(const _Container& _Cont)
+	constexpr auto size(const _Container& _Cont)
 		-> decltype(_Cont.size())
 	{	// get size() for container
 	return (_Cont.size());
 	}
 
 template<class _Ty,
-	size_t _Size> inline
+	size_t _Size>
 	constexpr size_t size(const _Ty(&)[_Size]) _NOEXCEPT
 	{	// get dimension for array
 	return (_Size);
 	}
 
 template<class _Container>
-	constexpr auto inline empty(const _Container& _Cont)
+	constexpr auto empty(const _Container& _Cont)
 		-> decltype(_Cont.empty())
 	{	// get empty() for container
 	return (_Cont.empty());
 	}
 
 template<class _Ty,
-	size_t _Size> inline
+	size_t _Size>
 	constexpr bool empty(const _Ty(&)[_Size]) _NOEXCEPT
 	{	// get dimension==0 for array (can't happen)
 	return (false);
 	}
 
-template<class _Elem> inline
+template<class _Elem>
 	constexpr bool empty(
 		initializer_list<_Elem> _Ilist) _NOEXCEPT
 	{	// get dimension==0 for initializer_list
@@ -1509,173 +1496,166 @@ template<class _Elem> inline
 	}
 
 template<class _Container>
-	constexpr auto inline data(_Container& _Cont)
+	constexpr auto data(_Container& _Cont)
 		-> decltype(_Cont.data())
 	{	// get data() for container
 	return (_Cont.data());
 	}
 
 template<class _Container>
-	constexpr auto inline data(const _Container& _Cont)
+	constexpr auto data(const _Container& _Cont)
 		-> decltype(_Cont.data())
 	{	// get pointer to data of const container
 	return (_Cont.data());
 	}
 
 template<class _Ty,
-	size_t _Size> inline
+	size_t _Size>
 	constexpr _Ty *data(_Ty(&_Array)[_Size]) _NOEXCEPT
 	{	// get pointer to data of array
 	return (_Array);
 	}
 
-template<class _Elem> inline
+template<class _Elem>
 	constexpr const _Elem *data(
 		initializer_list<_Elem> _Ilist) _NOEXCEPT
 	{	// get pointer to data of initializer_list
 	return (_Ilist.begin());
 	}
 
+
 		// TEMPLATE CLASS _Array_const_iterator
+#if _ITERATOR_DEBUG_LEVEL != 0
+struct _Iterator_base12_compatible
+	{	// TRANSITION, for binary compatibility
+	_Container_proxy * _Myproxy{};
+	_Iterator_base12 * _Mynextiter{};
+	};
+#endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+
 template<class _Ty,
 	size_t _Size>
 	class _Array_const_iterator
-		: public _Iterator012<random_access_iterator_tag,
-			_Ty,
-			ptrdiff_t,
-			const _Ty *,
-			const _Ty&,
-			_Iterator_base>
+#if _ITERATOR_DEBUG_LEVEL != 0
+		: private _Iterator_base12_compatible
+#endif /* _ITERATOR_DEBUG_LEVEL != 0 */
 	{	// iterator for nonmutable array
 public:
-	typedef _Array_const_iterator<_Ty, _Size> _Myiter;
-	typedef random_access_iterator_tag iterator_category;
+	using iterator_category = random_access_iterator_tag;
 
-	typedef _Ty value_type;
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
-	typedef const _Ty *pointer;
-	typedef const _Ty& reference;
+	using value_type = _Ty;
+	using difference_type = ptrdiff_t;
+	using pointer = const _Ty *;
+	using reference = const _Ty&;
 	enum {_EEN_SIZE = _Size};	// helper for expression evaluator
  #if _ITERATOR_DEBUG_LEVEL == 0
-	_Array_const_iterator()
-		: _Ptr(0)
+	_CONSTEXPR17 _Array_const_iterator()
+		: _Ptr()
 		{	// construct with null pointer
 		}
 
-	explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
+	_CONSTEXPR17 explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
 		: _Ptr(_Parg + _Off)
 		{	// construct with pointer and offset
 		}
 
-	typedef pointer _Unchecked_type;
+	using _Unchecked_type = pointer;
 
-	_Myiter& _Rechecked(_Unchecked_type _Right)
-		{	// reset from unchecked iterator
-		_Ptr = _Right;
-		return (*this);
-		}
-
-	_Unchecked_type _Unchecked() const
-		{	// make an unchecked iterator
-		return (_Ptr);
-		}
-
-	reference operator*() const
+	_CONSTEXPR17 reference operator*() const
 		{	// return designated object
 		return (*_Ptr);
 		}
 
-	pointer operator->() const
+	_CONSTEXPR17 pointer operator->() const
 		{	// return pointer to class object
-		return (pointer_traits<pointer>::pointer_to(**this));
+		return (_Ptr);
 		}
 
-	_Myiter& operator++()
+	_CONSTEXPR17 _Array_const_iterator& operator++()
 		{	// preincrement
 		++_Ptr;
 		return (*this);
 		}
 
-	_Myiter operator++(int)
+	_CONSTEXPR17 _Array_const_iterator operator++(int)
 		{	// postincrement
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		++*this;
 		return (_Tmp);
 		}
 
-	_Myiter& operator--()
+	_CONSTEXPR17 _Array_const_iterator& operator--()
 		{	// predecrement
 		--_Ptr;
 		return (*this);
 		}
 
-	_Myiter operator--(int)
+	_CONSTEXPR17 _Array_const_iterator operator--(int)
 		{	// postdecrement
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		--*this;
 		return (_Tmp);
 		}
 
-	_Myiter& operator+=(difference_type _Off)
+	_CONSTEXPR17 _Array_const_iterator& operator+=(ptrdiff_t _Off)
 		{	// increment by integer
 		_Ptr += _Off;
 		return (*this);
 		}
 
-	_Myiter operator+(difference_type _Off) const
+	_CONSTEXPR17 _Array_const_iterator operator+(ptrdiff_t _Off) const
 		{	// return this + integer
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		return (_Tmp += _Off);
 		}
 
-	_Myiter& operator-=(difference_type _Off)
+	_CONSTEXPR17 _Array_const_iterator& operator-=(ptrdiff_t _Off)
 		{	// decrement by integer
 		return (*this += -_Off);
 		}
 
-	_Myiter operator-(difference_type _Off) const
+	_CONSTEXPR17 _Array_const_iterator operator-(ptrdiff_t _Off) const
 		{	// return this - integer
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		return (_Tmp -= _Off);
 		}
 
-	difference_type operator-(const _Myiter& _Right) const
+	_CONSTEXPR17 ptrdiff_t operator-(const _Array_const_iterator& _Right) const
 		{	// return difference of iterators
 		return (_Ptr - _Right._Ptr);
 		}
 
-	reference operator[](difference_type _Off) const
+	_CONSTEXPR17 reference operator[](ptrdiff_t _Off) const
 		{	// subscript
 		return (*(*this + _Off));
 		}
 
-	bool operator==(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator==(const _Array_const_iterator& _Right) const
 		{	// test for iterator equality
 		return (_Ptr == _Right._Ptr);
 		}
 
-	bool operator!=(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator!=(const _Array_const_iterator& _Right) const
 		{	// test for iterator inequality
 		return (!(*this == _Right));
 		}
 
-	bool operator<(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator<(const _Array_const_iterator& _Right) const
 		{	// test if this < _Right
 		return (_Ptr < _Right._Ptr);
 		}
 
-	bool operator>(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator>(const _Array_const_iterator& _Right) const
 		{	// test if this > _Right
 		return (_Right < *this);
 		}
 
-	bool operator<=(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator<=(const _Array_const_iterator& _Right) const
 		{	// test if this <= _Right
 		return (!(_Right < *this));
 		}
 
-	bool operator>=(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator>=(const _Array_const_iterator& _Right) const
 		{	// test if this >= _Right
 		return (!(*this < _Right));
 		}
@@ -1683,32 +1663,21 @@ public:
 	pointer _Ptr;	// beginning of array
 
  #else /* _ITERATOR_DEBUG_LEVEL == 0 */
-	_Array_const_iterator()
+	_CONSTEXPR17 _Array_const_iterator()
 		: _Ptr(),
 		_Idx(0)
 		{	// construct with null pointer
 		}
 
-	explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
+	_CONSTEXPR17 explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
 		: _Ptr(_Parg),
 		_Idx(_Off)
 		{	// construct with pointer and offset
 		}
 
-	typedef pointer _Unchecked_type;
+	using _Unchecked_type = pointer;
 
-	_Myiter& _Rechecked(_Unchecked_type _Right)
-		{	// reset from unchecked iterator
-		_Idx = _Right - _Ptr;
-		return (*this);
-		}
-
-	_Unchecked_type _Unchecked() const
-		{	// make an unchecked iterator
-		return (_Ptr + _Idx);
-		}
-
-	reference operator*() const
+	_CONSTEXPR17 reference operator*() const
 		{	// return designated object
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Ptr == 0
@@ -1727,12 +1696,12 @@ public:
 		return (_Ptr[_Idx]);
 		}
 
-	pointer operator->() const
+	_CONSTEXPR17 pointer operator->() const
 		{	// return pointer to class object
 		return (pointer_traits<pointer>::pointer_to(**this));
 		}
 
-	_Myiter& operator++()
+	_CONSTEXPR17 _Array_const_iterator& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Ptr == 0
@@ -1750,14 +1719,14 @@ public:
 		return (*this);
 		}
 
-	_Myiter operator++(int)
+	_CONSTEXPR17 _Array_const_iterator operator++(int)
 		{	// postincrement
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		++*this;
 		return (_Tmp);
 		}
 
-	_Myiter& operator--()
+	_CONSTEXPR17 _Array_const_iterator& operator--()
 		{	// predecrement
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Ptr == 0
@@ -1775,14 +1744,14 @@ public:
 		return (*this);
 		}
 
-	_Myiter operator--(int)
+	_CONSTEXPR17 _Array_const_iterator operator--(int)
 		{	// postdecrement
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		--*this;
 		return (_Tmp);
 		}
 
-	_Myiter& operator+=(difference_type _Off)
+	_CONSTEXPR17 _Array_const_iterator& operator+=(ptrdiff_t _Off)
 		{	// increment by integer
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Size < _Idx + _Off)
@@ -1798,70 +1767,68 @@ public:
 		return (*this);
 		}
 
-	_Myiter operator+(difference_type _Off) const
+	_CONSTEXPR17 _Array_const_iterator operator+(ptrdiff_t _Off) const
 		{	// return this + integer
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		return (_Tmp += _Off);
 		}
 
-	_Myiter& operator-=(difference_type _Off)
+	_CONSTEXPR17 _Array_const_iterator& operator-=(ptrdiff_t _Off)
 		{	// decrement by integer
 		return (*this += -_Off);
 		}
 
-	_Myiter operator-(difference_type _Off) const
+	_CONSTEXPR17 _Array_const_iterator operator-(ptrdiff_t _Off) const
 		{	// return this - integer
-		_Myiter _Tmp = *this;
+		_Array_const_iterator _Tmp = *this;
 		return (_Tmp -= _Off);
 		}
 
-	difference_type operator-(const _Myiter& _Right) const
+	_CONSTEXPR17 ptrdiff_t operator-(const _Array_const_iterator& _Right) const
 		{	// return difference of iterators
 		_Compat(_Right);
-		return (_Idx < _Right._Idx
-			? -(difference_type)(_Right._Idx - _Idx)
-			: (difference_type)_Idx - _Right._Idx);
+		return (static_cast<ptrdiff_t>(_Idx - _Right._Idx));
 		}
 
-	reference operator[](difference_type _Off) const
+	_CONSTEXPR17 reference operator[](ptrdiff_t _Off) const
 		{	// subscript
 		return (*(*this + _Off));
 		}
 
-	bool operator==(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator==(const _Array_const_iterator& _Right) const
 		{	// test for iterator equality
 		_Compat(_Right);
 		return (_Idx == _Right._Idx);
 		}
 
-	bool operator!=(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator!=(const _Array_const_iterator& _Right) const
 		{	// test for iterator inequality
 		return (!(*this == _Right));
 		}
 
-	bool operator<(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator<(const _Array_const_iterator& _Right) const
 		{	// test if this < _Right
 		_Compat(_Right);
 		return (_Idx < _Right._Idx);
 		}
 
-	bool operator>(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator>(const _Array_const_iterator& _Right) const
 		{	// test if this > _Right
 		return (_Right < *this);
 		}
 
-	bool operator<=(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator<=(const _Array_const_iterator& _Right) const
 		{	// test if this <= _Right
 		return (!(_Right < *this));
 		}
 
-	bool operator>=(const _Myiter& _Right) const
+	_CONSTEXPR17 bool operator>=(const _Array_const_iterator& _Right) const
 		{	// test if this >= _Right
 		return (!(*this < _Right));
 		}
 
  #if _ITERATOR_DEBUG_LEVEL == 2
-	void _Compat(const _Myiter& _Right) const
+	_CONSTEXPR17 void _Compat(const _Array_const_iterator& _Right) const
 		{	// test for compatible iterator pair
 		if (_Ptr != _Right._Ptr)
 			{	// report error
@@ -1870,7 +1837,7 @@ public:
 		}
 
  #elif _ITERATOR_DEBUG_LEVEL == 1
-	void _Compat(const _Myiter& _Right) const
+	_CONSTEXPR17 void _Compat(const _Array_const_iterator& _Right) const
 		{	// test for compatible iterator pair
 		_SCL_SECURE_VALIDATE_RANGE(_Ptr == _Right._Ptr);
 		}
@@ -1882,30 +1849,37 @@ public:
 	};
 
 template<class _Ty,
-	size_t _Size> inline
-	typename _Array_const_iterator<_Ty, _Size>::_Unchecked_type
-		_Unchecked(_Array_const_iterator<_Ty, _Size> _Iter)
-	{	// convert to unchecked
-	return (_Iter._Unchecked());
-	}
-
-template<class _Ty,
-	size_t _Size> inline
-	_Array_const_iterator<_Ty, _Size>&
-		_Rechecked(_Array_const_iterator<_Ty, _Size>& _Iter,
-			typename _Array_const_iterator<_Ty, _Size>
-				::_Unchecked_type _Right)
-	{	// convert to checked
-	return (_Iter._Rechecked(_Right));
-	}
-
-template<class _Ty,
-	size_t _Size> inline
-	_Array_const_iterator<_Ty, _Size> operator+(
-		typename _Array_const_iterator<_Ty, _Size>::difference_type _Off,
+	size_t _Size>
+	_CONSTEXPR17 _Array_const_iterator<_Ty, _Size> operator+(
+		ptrdiff_t _Off,
 		_Array_const_iterator<_Ty, _Size> _Next)
 	{	// add offset to iterator
 	return (_Next += _Off);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 _Array_const_iterator<_Ty, _Size>& _Rechecked(_Array_const_iterator<_Ty, _Size>& _Iter,
+		const typename _Array_const_iterator<_Ty, _Size>::_Unchecked_type _Right)
+	{	// reset from unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	_Iter._Ptr = _Right;
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	_Iter._Idx = _Right - _Iter._Ptr;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	return (_Iter);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 typename _Array_const_iterator<_Ty, _Size>::_Unchecked_type _Unchecked(
+		const _Array_const_iterator<_Ty, _Size>& _Iter)
+	{	// make an unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	return (_Iter._Ptr);
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	return (_Iter._Ptr + _Iter._Idx);
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 	}
 
 		// TEMPLATE CLASS _Array_iterator
@@ -1915,133 +1889,127 @@ template<class _Ty,
 		: public _Array_const_iterator<_Ty, _Size>
 	{	// iterator for mutable array
 public:
-	typedef _Array_iterator<_Ty, _Size> _Myiter;
-	typedef _Array_const_iterator<_Ty, _Size> _Mybase;
-	typedef random_access_iterator_tag iterator_category;
+	using _Mybase = _Array_const_iterator<_Ty, _Size>;
+	using iterator_category = random_access_iterator_tag;
 
-	typedef _Ty value_type;
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
-	typedef _Ty *pointer;
-	typedef _Ty& reference;
+	using value_type = _Ty;
+	using difference_type = ptrdiff_t;
+	using pointer = _Ty *;
+	using reference = _Ty&;
 
-	_Array_iterator()
+	_CONSTEXPR17 _Array_iterator()
 		{	// construct with null pointer
 		}
 
-	explicit _Array_iterator(pointer _Parg, size_t _Off = 0)
+	_CONSTEXPR17 explicit _Array_iterator(pointer _Parg, size_t _Off = 0)
 		: _Mybase(_Parg, _Off)
 		{	// construct with pointer and offset
 		}
 	enum {_EEN_SIZE = _Size};	// helper for expression evaluator
-	typedef pointer _Unchecked_type;
+	using _Unchecked_type = pointer;
 
-	_Myiter& _Rechecked(_Unchecked_type _Right)
-		{	// reset from unchecked iterator
-		((_Mybase *)this)->_Rechecked(_Right);
-		return (*this);
-		}
-
-	_Unchecked_type _Unchecked() const
-		{	// make an unchecked iterator
-		return ((pointer)((_Mybase *)this)->_Unchecked());
-		}
-
-	reference operator*() const
+	_CONSTEXPR17 reference operator*() const
 		{	// return designated object
-		return ((reference)**(_Mybase *)this);
+		return (const_cast<reference>(_Mybase::operator*()));
 		}
 
-	pointer operator->() const
+	_CONSTEXPR17 pointer operator->() const
 		{	// return pointer to class object
-		return (pointer_traits<pointer>::pointer_to(**this));
+		return (const_cast<pointer>(_Mybase::operator->()));
 		}
 
-	_Myiter& operator++()
+	_CONSTEXPR17 _Array_iterator& operator++()
 		{	// preincrement
-		++*(_Mybase *)this;
+		++*static_cast<_Mybase *>(this);
 		return (*this);
 		}
 
-	_Myiter operator++(int)
+	_CONSTEXPR17 _Array_iterator operator++(int)
 		{	// postincrement
-		_Myiter _Tmp = *this;
+		_Array_iterator _Tmp = *this;
 		++*this;
 		return (_Tmp);
 		}
 
-	_Myiter& operator--()
+	_CONSTEXPR17 _Array_iterator& operator--()
 		{	// predecrement
-		--*(_Mybase *)this;
+		--*static_cast<_Mybase *>(this);
 		return (*this);
 		}
 
-	_Myiter operator--(int)
+	_CONSTEXPR17 _Array_iterator operator--(int)
 		{	// postdecrement
-		_Myiter _Tmp = *this;
+		_Array_iterator _Tmp = *this;
 		--*this;
 		return (_Tmp);
 		}
 
-	_Myiter& operator+=(difference_type _Off)
+	_CONSTEXPR17 _Array_iterator& operator+=(ptrdiff_t _Off)
 		{	// increment by integer
-		*(_Mybase *)this += _Off;
+		*static_cast<_Mybase *>(this) += _Off;
 		return (*this);
 		}
 
-	_Myiter operator+(difference_type _Off) const
+	_CONSTEXPR17 _Array_iterator operator+(ptrdiff_t _Off) const
 		{	// return this + integer
-		_Myiter _Tmp = *this;
+		_Array_iterator _Tmp = *this;
 		return (_Tmp += _Off);
 		}
 
-	_Myiter& operator-=(difference_type _Off)
+	_CONSTEXPR17 _Array_iterator& operator-=(ptrdiff_t _Off)
 		{	// decrement by integer
 		return (*this += -_Off);
 		}
 
-	_Myiter operator-(difference_type _Off) const
+	_CONSTEXPR17 _Array_iterator operator-(ptrdiff_t _Off) const
 		{	// return this - integer
-		_Myiter _Tmp = *this;
+		_Array_iterator _Tmp = *this;
 		return (_Tmp -= _Off);
 		}
 
-	difference_type operator-(const _Mybase& _Right) const
+	_CONSTEXPR17 ptrdiff_t operator-(const _Mybase& _Right) const
 		{	// return difference of iterators
-		return (*(_Mybase *)this - _Right);
+		return (*static_cast<const _Mybase *>(this) - _Right);
 		}
 
-	reference operator[](difference_type _Off) const
+	_CONSTEXPR17 reference operator[](ptrdiff_t _Off) const
 		{	// subscript
 		return (*(*this + _Off));
 		}
 	};
 
 template<class _Ty,
-	size_t _Size> inline
-	typename _Array_iterator<_Ty, _Size>::_Unchecked_type
-		_Unchecked(_Array_iterator<_Ty, _Size> _Iter)
-	{	// convert to unchecked
-	return (_Iter._Unchecked());
-	}
-
-template<class _Ty,
-	size_t _Size> inline
-	_Array_iterator<_Ty, _Size>&
-		_Rechecked(_Array_iterator<_Ty, _Size>& _Iter,
-			typename _Array_iterator<_Ty, _Size>
-				::_Unchecked_type _Right)
-	{	// convert to checked
-	return (_Iter._Rechecked(_Right));
-	}
-
-template<class _Ty,
-	size_t _Size> inline
-	_Array_iterator<_Ty, _Size> operator+(
-		typename _Array_iterator<_Ty, _Size>::difference_type _Off,
+	size_t _Size>
+	_CONSTEXPR17 _Array_iterator<_Ty, _Size> operator+(
+		ptrdiff_t _Off,
 		_Array_iterator<_Ty, _Size> _Next)
 	{	// add offset to iterator
 	return (_Next += _Off);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 _Array_iterator<_Ty, _Size>& _Rechecked(_Array_iterator<_Ty, _Size>& _Iter,
+		const typename _Array_iterator<_Ty, _Size>::_Unchecked_type _Right)
+	{	// reset from unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	_Iter._Ptr = _Right;
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	_Iter._Idx = _Right - _Iter._Ptr;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	return (_Iter);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 typename _Array_iterator<_Ty, _Size>::_Unchecked_type _Unchecked(
+		const _Array_iterator<_Ty, _Size>& _Iter)
+	{	// make an unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	return (const_cast<_Ty *>(_Iter._Ptr));
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	return (const_cast<_Ty *>(_Iter._Ptr + _Iter._Idx));
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
 	}
 
 		// TEMPLATE CLASS move_iterator
@@ -2049,127 +2017,105 @@ template<class _RanIt>
 	class move_iterator
 	{	// wrap iterator to move rvalues
 public:
-	typedef move_iterator<_RanIt> _Myt;
-	typedef typename iterator_traits<_RanIt>::iterator_category
-		iterator_category;
-	typedef typename iterator_traits<_RanIt>::value_type
-		value_type;
-	typedef typename iterator_traits<_RanIt>::difference_type
-		difference_type;
-	typedef _RanIt pointer;
-	typedef typename iterator_traits<_RanIt>::reference _Ref0;
-	typedef conditional_t<is_reference<_Ref0>::value,
-		remove_reference_t<_Ref0>&&, _Ref0> reference;
-	typedef _RanIt iterator_type;
+	using iterator_category = typename iterator_traits<_RanIt>::iterator_category;
+	using value_type = typename iterator_traits<_RanIt>::value_type;
+	using difference_type = typename iterator_traits<_RanIt>::difference_type;
+	using pointer = _RanIt;
+	using _Ref0 = typename iterator_traits<_RanIt>::reference;
+	using reference = conditional_t<is_reference<_Ref0>::value, remove_reference_t<_Ref0>&&, _Ref0>;
+	using iterator_type = _RanIt;
 
-	move_iterator()
+	_CONSTEXPR17 move_iterator()
 		: current()
 		{	// construct with value-initialized wrapped iterator
 		}
 
-	explicit move_iterator(iterator_type _Right)
+	_CONSTEXPR17 explicit move_iterator(iterator_type _Right)
 		: current(_Right)
 		{	// construct wrapped iterator from _Right
 		}
 
 	template<class _RanIt2>
-		move_iterator(const move_iterator<_RanIt2>& _Right)
+		_CONSTEXPR17 move_iterator(const move_iterator<_RanIt2>& _Right)
 		: current(_Right.base())
 		{	// initialize with compatible base
 		}
 
 	template<class _RanIt2>
-		_Myt& operator=(const move_iterator<_RanIt2>& _Right)
+		_CONSTEXPR17 move_iterator& operator=(const move_iterator<_RanIt2>& _Right)
 		{	// assign with compatible base
 		current = _Right.base();
 		return (*this);
 		}
 
-	_RanIt base() const
+	_CONSTEXPR17 _RanIt base() const
 		{	// return wrapped iterator
 		return (current);
 		}
 
-	reference operator*() const
+	_CONSTEXPR17 reference operator*() const
 		{	// return designated value
 		return (static_cast<reference>(*current));
 		}
 
-	pointer operator->() const
+	_CONSTEXPR17 pointer operator->() const
 		{	// return pointer to class object
 		return (current);
 		}
 
-	_Myt& operator++()
+	_CONSTEXPR17 move_iterator& operator++()
 		{	// preincrement
 		++current;
 		return (*this);
 		}
 
-	_Myt operator++(int)
+	_CONSTEXPR17 move_iterator operator++(int)
 		{	// postincrement
-		_Myt _Tmp = *this;
+		move_iterator _Tmp = *this;
 		++current;
 		return (_Tmp);
 		}
 
-	_Myt& operator--()
+	_CONSTEXPR17 move_iterator& operator--()
 		{	// predecrement
 		--current;
 		return (*this);
 		}
 
-	_Myt operator--(int)
+	_CONSTEXPR17 move_iterator operator--(int)
 		{	// postdecrement
-		_Myt _Tmp = *this;
+		move_iterator _Tmp = *this;
 		--current;
 		return (_Tmp);
 		}
 
-	template<class _RanIt2>
-		bool _Equal(const move_iterator<_RanIt2>& _Right) const
-		{	// test for iterator equality
-		return (current == _Right.base());
-		}
-
 // N.B. functions valid for random-access iterators only beyond this point
 
-	_Myt& operator+=(difference_type _Off)
+	_CONSTEXPR17 move_iterator& operator+=(difference_type _Off)
 		{	// increment by integer
 		current += _Off;
 		return (*this);
 		}
 
-	_Myt operator+(difference_type _Off) const
+	_CONSTEXPR17 move_iterator operator+(difference_type _Off) const
 		{	// return this + integer
-		return (_Myt(current + _Off));
+		return (move_iterator(current + _Off));
 		}
 
-	_Myt& operator-=(difference_type _Off)
+	_CONSTEXPR17 move_iterator& operator-=(difference_type _Off)
 		{	// decrement by integer
 		current -= _Off;
 		return (*this);
 		}
 
-	_Myt operator-(difference_type _Off) const
+	_CONSTEXPR17 move_iterator operator-(difference_type _Off) const
 		{	// return this - integer
-		return (_Myt(current - _Off));
+		return (move_iterator(current - _Off));
 		}
 
-	reference operator[](difference_type _Off) const
+	_CONSTEXPR17 reference operator[](difference_type _Off) const
 		{	// subscript
 		return (_STD move(current[_Off]));
-		}
-
-	template<class _RanIt2>
-		bool _Less(const move_iterator<_RanIt2>& _Right) const
-		{	// test if this < _Right
-		return (current < _Right.base());
-		}
-
-	difference_type operator-(const _Myt& _Right) const
-		{	// return difference of iterators
-		return (current - _Right.base());
 		}
 
 protected:
@@ -2177,16 +2123,15 @@ protected:
 	};
 
 template<class _RanIt>
-	struct _Is_checked_helper<move_iterator<_RanIt> >
+	struct _Is_checked_helper<move_iterator<_RanIt>>
 		: public _Is_checked_helper<_RanIt>
 	{	// mark move_iterator as checked if its wrapped iterator is checked
 	};
 
 		// move_iterator TEMPLATE OPERATORS
-template<class _RanIt,
-	class _Diff> inline
-	move_iterator<_RanIt>
-		operator+(_Diff _Off,
+template<class _RanIt>
+	_CONSTEXPR17 move_iterator<_RanIt> operator+(
+		typename move_iterator<_RanIt>::difference_type _Off,
 		const move_iterator<_RanIt>& _Right)
 	{	// return move_iterator + integer
 	return (_Right + _Off);
@@ -2194,26 +2139,26 @@ template<class _RanIt,
 
 template<class _RanIt1,
 	class _RanIt2>
-	auto inline operator-(
+	_CONSTEXPR17 auto operator-(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 			-> decltype(_Left.base() - _Right.base())
-	{	// test for move_iterator equality
+	{	// return difference of move_iterators
 	return (_Left.base() - _Right.base());
 	}
 
 template<class _RanIt1,
-	class _RanIt2> inline
-	bool operator==(
+	class _RanIt2>
+	_CONSTEXPR17 bool operator==(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 	{	// test for move_iterator equality
-	return (_Left._Equal(_Right));
+	return (_Left.base() == _Right.base());
 	}
 
 template<class _RanIt1,
-	class _RanIt2> inline
-	bool operator!=(
+	class _RanIt2>
+	_CONSTEXPR17 bool operator!=(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 	{	// test for move_iterator inequality
@@ -2221,17 +2166,17 @@ template<class _RanIt1,
 	}
 
 template<class _RanIt1,
-	class _RanIt2> inline
-	bool operator<(
+	class _RanIt2>
+	_CONSTEXPR17 bool operator<(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 	{	// test for move_iterator < move_iterator
-	return (_Left._Less(_Right));
+	return (_Left.base() < _Right.base());
 	}
 
 template<class _RanIt1,
-	class _RanIt2> inline
-	bool operator>(
+	class _RanIt2>
+	_CONSTEXPR17 bool operator>(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 	{	// test for move_iterator > move_iterator
@@ -2239,8 +2184,8 @@ template<class _RanIt1,
 	}
 
 template<class _RanIt1,
-	class _RanIt2> inline
-	bool operator<=(
+	class _RanIt2>
+	_CONSTEXPR17 bool operator<=(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 	{	// test for move_iterator <= move_iterator
@@ -2248,8 +2193,8 @@ template<class _RanIt1,
 	}
 
 template<class _RanIt1,
-	class _RanIt2> inline
-	bool operator>=(
+	class _RanIt2>
+	_CONSTEXPR17 bool operator>=(
 		const move_iterator<_RanIt1>& _Left,
 		const move_iterator<_RanIt2>& _Right)
 	{	// test for move_iterator >= move_iterator
@@ -2257,8 +2202,8 @@ template<class _RanIt1,
 	}
 
 		// TEMPLATE FUNCTION make_move_iterator
-template<class _RanIt> inline
-	move_iterator<_RanIt> make_move_iterator(_RanIt _Iter)
+template<class _RanIt>
+	_CONSTEXPR17 move_iterator<_RanIt> make_move_iterator(_RanIt _Iter)
 	{	// make move_iterator from iterator
 	return (move_iterator<_RanIt>(_Iter));
 	}
@@ -2267,7 +2212,7 @@ template<class _RanIt> inline
 template<class _Traits>
 	struct _Char_traits_eq
 	{
-	typedef typename _Traits::char_type _Elem;
+	using _Elem = typename _Traits::char_type;
 
 	bool operator()(_Elem _Left, _Elem _Right) const
 		{
@@ -2279,7 +2224,7 @@ template<class _Traits>
 template<class _Traits>
 	struct _Char_traits_lt
 	{
-	typedef typename _Traits::char_type _Elem;
+	using _Elem = typename _Traits::char_type;
 
 	bool operator()(_Elem _Left, _Elem _Right) const
 		{
@@ -2290,12 +2235,11 @@ template<class _Traits>
 		// TEMPLATE FUNCTION copy
 template<class _InIt,
 	class _OutIt> inline
-	_OutIt _Copy_memmove(_InIt _First, _InIt _Last,
-		_OutIt _Dest)
+	_OutIt _Copy_memmove(_InIt _First, _InIt _Last, _OutIt _Dest)
 	{	// implement copy-like function as memmove
-	const char * const _First_ch = reinterpret_cast<const char *>(_First);
-	const char * const _Last_ch = reinterpret_cast<const char *>(_Last);
-	char * const _Dest_ch = reinterpret_cast<char *>(_Dest);
+	const char * const _First_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_First));
+	const char * const _Last_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_Last));
+	char * const _Dest_ch = const_cast<char *>(reinterpret_cast<volatile char *>(_Dest));
 	const size_t _Count = _Last_ch - _First_ch;
 	_CSTD memmove(_Dest_ch, _First_ch, _Count);
 	return (reinterpret_cast<_OutIt>(_Dest_ch + _Count));
@@ -2337,7 +2281,7 @@ template<class _InIt,
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Copy_unchecked(_UFirst, _ULast, _UDest)));
 	}
@@ -2429,10 +2373,11 @@ template<class _InIt,
 template<class _InIt,
 	class _Diff,
 	class _OutIt> inline
-	_OutIt copy_n(_InIt _First, _Diff _Count,
+	_OutIt copy_n(_InIt _First, _Diff _Count_raw,
 		_OutIt _Dest)
 	{	// copy [_First, _First + _Count) to [_Dest, ...)
 		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
 	_DEPRECATE_UNCHECKED(copy_n, _Dest);
 	return (_Rechecked(_Dest,
 		_Copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Unchecked_n(_Dest, _Count))));
@@ -2443,10 +2388,11 @@ template<class _InTy,
 	size_t _InSize,
 	class _Diff,
 	class _OutIt> inline
-	_OutIt copy_n(_InTy (&_First)[_InSize], _Diff _Count,
+	_OutIt copy_n(_InTy (&_First)[_InSize], _Diff _Count_raw,
 		_OutIt _Dest)
 	{	// copy [_First, _First + _Count) to [_Dest, ...), array input
 		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
 	_DEPRECATE_UNCHECKED(copy_n, _Dest);
 	_DEBUG_ARRAY_SIZE(_First, _Count);
 	return (_Rechecked(_Dest,
@@ -2457,9 +2403,10 @@ template<class _InIt,
 	class _Diff,
 	class _OutTy,
 	size_t _OutSize> inline
-	_OutTy *copy_n(_InIt _First, _Diff _Count,
+	_OutTy *copy_n(_InIt _First, _Diff _Count_raw,
 		_OutTy (&_Dest)[_OutSize])
 	{	// copy [_First, _First + _Count) to [_Dest, ...), array dest
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
 	_DEBUG_ARRAY_SIZE(_Dest, _Count);
 	return (_Copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Dest));
 	}
@@ -2469,9 +2416,10 @@ template<class _InTy,
 	class _Diff,
 	class _OutTy,
 	size_t _OutSize> inline
-	_OutTy *copy_n(_InTy (&_First)[_InSize], _Diff _Count,
+	_OutTy *copy_n(_InTy (&_First)[_InSize], _Diff _Count_raw,
 		_OutTy (&_Dest)[_OutSize])
 	{	// copy [_First, _First + _Count) to [_Dest, ...), array input/dest
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
 	_DEBUG_ARRAY_SIZE(_First, _Count);
 	_DEBUG_ARRAY_SIZE(_Dest, _Count);
 	return (_Copy_n_unchecked(_First, _Count, _Dest));
@@ -2481,12 +2429,11 @@ template<class _InTy,
 		// TEMPLATE FUNCTION copy_backward
 template<class _BidIt1,
 	class _BidIt2> inline
-	_BidIt2 _Copy_backward_memmove(_BidIt1 _First, _BidIt1 _Last,
-		_BidIt2 _Dest)
+	_BidIt2 _Copy_backward_memmove(_BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest)
 	{	// implement copy_backward-like function as memmove
-	const char * const _First_ch = reinterpret_cast<const char *>(_First);
-	const char * const _Last_ch = reinterpret_cast<const char *>(_Last);
-	char * const _Dest_ch = reinterpret_cast<char *>(_Dest);
+	const char * const _First_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_First));
+	const char * const _Last_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_Last));
+	char * const _Dest_ch = const_cast<char *>(reinterpret_cast<volatile char *>(_Dest));
 	const size_t _Count = _Last_ch - _First_ch;
 	return (static_cast<_BidIt2>(
 		_CSTD memmove(_Dest_ch - _Count, _First_ch, _Count)));
@@ -2519,7 +2466,7 @@ template<class _BidIt1,
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n_backward(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n_backward(_Dest, _Idl_distance<_BidIt1>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Copy_backward_unchecked(_UFirst, _ULast, _UDest, _Ptr_copy_cat(_UFirst, _UDest))));
 	}
@@ -2562,7 +2509,7 @@ template<class _InIt,
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Move_unchecked(_UFirst, _ULast, _UDest)));
 	}
@@ -2627,7 +2574,7 @@ template<class _BidIt1,
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n_backward(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n_backward(_Dest, _Idl_distance<_BidIt1>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Move_backward_unchecked(_UFirst, _ULast, _UDest)));
 	}
@@ -2661,8 +2608,8 @@ template<class _FwdIt,
 	class _Ty>
 	struct _Fill_memset_is_safe_helper
 	{	// determines if _FwdIt and _Ty are eligible for memset optimization in fill
-	typedef _Iter_value_t<_FwdIt> _Value_type;
-	typedef _Conjunction_t<
+	using _Value_type = _Iter_value_t<_FwdIt>;
+	using type = _Conjunction_t<
 		is_pointer<_FwdIt>,
 		disjunction<
 			conjunction<
@@ -2671,7 +2618,7 @@ template<class _FwdIt,
 			conjunction<
 				is_same<bool, _Ty>,
 				is_same<bool, _Value_type>>
-		>> type;
+		>>;
 	};
 
 template<class _FwdIt,
@@ -2749,8 +2696,9 @@ template<class _OutIt,
 template<class _OutIt,
 	class _Diff,
 	class _Ty> inline
-	_OutIt fill_n(_OutIt _Dest, _Diff _Count, const _Ty& _Val)
+	_OutIt fill_n(_OutIt _Dest, _Diff _Count_raw, const _Ty& _Val)
 	{	// copy _Val _Count times through [_Dest, ...)
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
 	return (_Rechecked(_Dest,
 		_Fill_n_unchecked(_Unchecked_n(_Dest, _Count), _Count, _Val)));
 	}
@@ -2780,10 +2728,8 @@ template<class _Elem1,
 	struct _Equal_memcmp_is_safe_helper<_Elem1, _Elem2, equal_to<>>
 		: _Conjunction_t<
 			_Is_same_size<_Elem1, _Elem2>,
-			is_integral<_Elem1>,
-			is_integral<_Elem2>,
-			negation<is_same<bool, _Elem1>>,
-			negation<is_same<bool, _Elem2>>,
+			_Is_nonbool_integral<_Elem1>,
+			_Is_nonbool_integral<_Elem2>,
 			negation<is_volatile<_Elem1>>,
 			negation<is_volatile<_Elem2>>,
 			// note that order matters here, as being integral is a precondition
@@ -2876,7 +2822,7 @@ template<class _InIt1,
 	_DEBUG_RANGE(_First1, _Last1);
 	const auto _UFirst1 = _Unchecked(_First1);
 	const auto _ULast1 = _Unchecked(_Last1);
-	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance(_UFirst1, _ULast1));
+	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance<_InIt1>(_UFirst1, _ULast1));
 	return (_Equal_unchecked(_UFirst1, _ULast1, _UFirst2, _Pred));
 	}
 
@@ -3061,7 +3007,7 @@ template<class _InIt1,
 	const size_t _Num1 = _Last1 - _First1;
 	const size_t _Num2 = _Last2 - _First2;
 	const int _Ans = _CSTD memcmp(_First1, _First2, _Num1 < _Num2 ? _Num1 : _Num2);
-	return (_Memcmp_pr{}(_Ans, 0) || _Ans == 0 && _Num1 < _Num2);
+	return (_Memcmp_pr{}(_Ans, 0) || (_Ans == 0 && _Num1 < _Num2));
 	}
 
 template<class _InIt1,
@@ -3131,9 +3077,9 @@ template<class _InIt,
 	class _Ty> inline
 	bool _Within_limits(_InIt, const _Ty& _Val)
 	{	// check whether _Val is within the limits of _Elem
-	typedef typename remove_pointer<_InIt>::type _Elem;
+	using _Elem = remove_pointer_t<_InIt>;
 	return (_Within_limits(_Val, is_signed<_Elem>(), is_signed<_Ty>(),
-		integral_constant<bool, -1 == static_cast<_Ty>(-1)>()));
+		bool_constant<-1 == static_cast<_Ty>(-1)>()));
 	}
 
 template<class _InIt> inline
@@ -3168,7 +3114,7 @@ template<class _InIt,
 	_InIt _Find_unchecked(_InIt _First, _InIt _Last, const _Ty& _Val)
 	{	// find first matching _Val; choose optimization
 	// activate optimization for pointers to (const) bytes and integral values
-	typedef integral_constant<bool,
+	using _Memchr_opt = bool_constant<
 		(is_same<_InIt, char *>::value
 		|| is_same<_InIt, signed char *>::value
 		|| is_same<_InIt, unsigned char *>::value
@@ -3176,7 +3122,7 @@ template<class _InIt,
 		|| is_same<_InIt, const signed char *>::value
 		|| is_same<_InIt, const unsigned char *>::value)
 		&& is_integral<_Ty>::value
-	> _Memchr_opt;
+	>;
 	return (_Find_unchecked1(_First, _Last, _Val, _Memchr_opt()));
 	}
 
@@ -3313,7 +3259,7 @@ template<class _FwdIt1,
 	_DEBUG_RANGE(_First1, _Last1);
 	const auto _UFirst1 = _Unchecked(_First1);
 	const auto _ULast1 = _Unchecked(_Last1);
-	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance(_UFirst1, _ULast1));
+	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance<_FwdIt1>(_UFirst1, _ULast1));
 	return (_Is_permutation_unchecked(_UFirst1, _ULast1, _UFirst2, _Pred));
 	}
 
@@ -3467,7 +3413,11 @@ template<class _BidIt> inline
 		_BidIt _First, _BidIt _Sentinel, _BidIt _Last)
 	{	// reverse until either _First or _Last hits _Sentinel
 	while (_First != _Sentinel && _Last != _Sentinel)
-		_STD iter_swap(_First++, --_Last);
+		{
+		_STD iter_swap(_First, --_Last);
+		++_First;
+		}
+
 	return (_STD make_pair(_First, _Last));
 	}
 
@@ -3518,12 +3468,10 @@ template<class _Diff,
 	class _Rng_from_urng
 	{	// wrap a URNG as an RNG
 public:
-	typedef typename make_unsigned<_Diff>::type _Ty0;
-	typedef typename _Urng::result_type _Ty1;
+	using _Ty0 = make_unsigned_t<_Diff>;
+	using _Ty1 = typename _Urng::result_type;
 
-	typedef typename _If<sizeof (_Ty1) < sizeof (_Ty0),
-		_Ty0, _Ty1>::type _Udiff;
-
+	using _Udiff = conditional_t<sizeof (_Ty1) < sizeof (_Ty0), _Ty0, _Ty1>;
 
 	explicit _Rng_from_urng(_Urng& _Func)
 		: _Ref(_Func), _Bits(CHAR_BIT * sizeof (_Udiff)), _Bmask(_Udiff(-1))
@@ -3593,17 +3541,15 @@ private:
 
 		// TEMPLATE CLASS _Yarn
 template<class _Elem>
-	class _CRTIMP2_PURE _Yarn
+	class _CRTIMP2_PURE_IMPORT _Yarn
 	{	// wrap a NTBS
 public:
-	typedef _Yarn<_Elem> _Myt;
-
 	__CLR_OR_THIS_CALL _Yarn()
 		: _Myptr(0), _Nul(0)
 		{	// default construct
 		}
 
-	__CLR_OR_THIS_CALL _Yarn(const _Myt& _Right)
+	__CLR_OR_THIS_CALL _Yarn(const _Yarn& _Right)
 		: _Myptr(0), _Nul(0)
 		{	// construct from _Yarn
 		*this = _Right;
@@ -3615,12 +3561,12 @@ public:
 		*this = _Right;
 		}
 
-	_Myt& __CLR_OR_THIS_CALL operator=(const _Myt& _Right)
+	_Yarn& __CLR_OR_THIS_CALL operator=(const _Yarn& _Right)
 		{	// assign from _Yarn
 		return (*this = _Right._Myptr);
 		}
 
-	_Myt& __CLR_OR_THIS_CALL operator=(const _Elem * _Right)
+	_Yarn& __CLR_OR_THIS_CALL operator=(const _Elem * _Right)
 		{	// assign from NTBS
 		if (_Myptr != _Right)
 			{	// new value, discard old and copy new
@@ -3697,9 +3643,14 @@ private:
 		// TEMPLATE CLASS back_insert_iterator
 template<class _Container>
 	class back_insert_iterator
-		: public _Outit
 	{	// wrap pushes to back of container as output iterator
 public:
+	using iterator_category = output_iterator_tag;
+	using value_type = void;
+	using difference_type = void;
+	using pointer = void;
+	using reference = void;
+
 	using container_type = _Container;
 
 	explicit back_insert_iterator(_Container& _Cont)
@@ -3739,7 +3690,7 @@ protected:
 	};
 
 template<class _Container>
-	struct _Is_checked_helper<back_insert_iterator<_Container> >
+	struct _Is_checked_helper<back_insert_iterator<_Container>>
 		: public true_type
 	{	// mark back_insert_iterator as checked
 	};
@@ -3776,12 +3727,12 @@ struct allocator_arg_t
 
 constexpr allocator_arg_t allocator_arg{};
 
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xbad_alloc();
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_alloc();
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *);
 _STD_END
 
 namespace std {

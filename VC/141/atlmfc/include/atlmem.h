@@ -257,7 +257,7 @@ public:
 #pragma pack(pop)
 
 #ifdef _OBJBASE_H_
-#include <atlcommem.h>
+#include <ATLComMem.h>
 #endif	// _OBJBASE_H_
 
 #endif  //__ATLMEM_H__

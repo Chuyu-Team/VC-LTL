@@ -3,7 +3,7 @@
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
-*Purpose:   Utitily for cross App Domain Calls
+*Purpose:   Utility for cross App Domain Calls
 *
 *       [Public]
 *
@@ -14,7 +14,7 @@
 #if !defined (_INC_MSCLR_APPDOMAIN)
 
 #ifndef __cplusplus_cli
-#error ERROR: msclr libraries require /clr and are not compatible with /clr:oldSyntax
+#error ERROR: msclr libraries require /clr
 #endif  /* __cplusplus_cli */
 
 #ifdef _M_CEE_PURE

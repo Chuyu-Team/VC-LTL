@@ -3,7 +3,7 @@
 #ifndef _XTR1COMMON_
 #define _XTR1COMMON_
 #ifndef RC_INVOKED
-#include <cstdlib>
+#include <yvals.h>
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,_STL_WARNING_LEVEL)
@@ -24,8 +24,8 @@ template<class _Ty,
 	{	// convenient template for integral constant types
 	static constexpr _Ty value = _Val;
 
-	typedef _Ty value_type;
-	typedef integral_constant<_Ty, _Val> type;
+	using value_type = _Ty;
+	using type = integral_constant;
 
 	constexpr operator value_type() const _NOEXCEPT
 		{	// return stored value
@@ -38,19 +38,12 @@ template<class _Ty,
 		}
 	};
 
-typedef integral_constant<bool, true> true_type;
-typedef integral_constant<bool, false> false_type;
-
 	// ALIAS TEMPLATE bool_constant
 template<bool _Val>
 	using bool_constant = integral_constant<bool, _Val>;
 
-	// TEMPLATE CLASS _Cat_base
-template<bool _Val>
-	struct _Cat_base
-		: integral_constant<bool, _Val>
-	{	// base class for type predicates
-	};
+using true_type = bool_constant<true>;
+using false_type = bool_constant<false>;
 
 	// TEMPLATE CLASS enable_if
 template<bool _Test,
@@ -62,8 +55,12 @@ template<bool _Test,
 template<class _Ty>
 	struct enable_if<true, _Ty>
 	{	// type is _Ty for _Test
-	typedef _Ty type;
+	using type = _Ty;
 	};
+
+template<bool _Test,
+	class _Ty = void>
+	using enable_if_t = typename enable_if<_Test, _Ty>::type;
 
 	// TEMPLATE CLASS conditional
 template<bool _Test,
@@ -71,15 +68,20 @@ template<bool _Test,
 	class _Ty2>
 	struct conditional
 	{	// type is _Ty2 for assumed !_Test
-	typedef _Ty2 type;
+	using type = _Ty2;
 	};
 
 template<class _Ty1,
 	class _Ty2>
 	struct conditional<true, _Ty1, _Ty2>
 	{	// type is _Ty1 for _Test
-	typedef _Ty1 type;
+	using type = _Ty1;
 	};
+
+template<bool _Test,
+	class _Ty1,
+	class _Ty2>
+	using conditional_t = typename conditional<_Test, _Ty1, _Ty2>::type;
 
 	// TEMPLATE CLASS is_same
 template<class _Ty1,
@@ -103,35 +105,61 @@ template<class _Ty,
 template<class _Ty>
 	struct remove_const
 	{	// remove top level const qualifier
-	typedef _Ty type;
+	using type = _Ty;
 	};
 
 template<class _Ty>
 	struct remove_const<const _Ty>
 	{	// remove top level const qualifier
-	typedef _Ty type;
+	using type = _Ty;
 	};
+
+template<class _Ty>
+	using remove_const_t = typename remove_const<_Ty>::type;
 
 	// TEMPLATE CLASS remove_volatile
 template<class _Ty>
 	struct remove_volatile
 	{	// remove top level volatile qualifier
-	typedef _Ty type;
+	using type = _Ty;
 	};
 
 template<class _Ty>
 	struct remove_volatile<volatile _Ty>
 	{	// remove top level volatile qualifier
-	typedef _Ty type;
+	using type = _Ty;
 	};
+
+template<class _Ty>
+	using remove_volatile_t = typename remove_volatile<_Ty>::type;
 
 	// TEMPLATE CLASS remove_cv
 template<class _Ty>
 	struct remove_cv
 	{	// remove top level const and volatile qualifiers
-	typedef typename remove_const<typename remove_volatile<_Ty>::type>::type
-		type;
+	using type = _Ty;
 	};
+
+template<class _Ty>
+	struct remove_cv<const _Ty>
+	{	// remove top level const and volatile qualifiers
+	using type = _Ty;
+	};
+
+template<class _Ty>
+	struct remove_cv<volatile _Ty>
+	{	// remove top level const and volatile qualifiers
+	using type = _Ty;
+	};
+
+template<class _Ty>
+	struct remove_cv<const volatile _Ty>
+	{	// remove top level const and volatile qualifiers
+	using type = _Ty;
+	};
+
+template<class _Ty>
+	using remove_cv_t = typename remove_cv<_Ty>::type;
 
 	// TEMPLATE CLASS _Is_integral
 template<class _Ty>
@@ -173,42 +201,6 @@ template<>
  #endif /* _NATIVE_WCHAR_T_DEFINED */
 
 template<>
-	struct _Is_integral<unsigned short>
-		: true_type
-	{	// determine whether _Ty is integral
-	};
-
-template<>
-	struct _Is_integral<signed short>
-		: true_type
-	{	// determine whether _Ty is integral
-	};
-
-template<>
-	struct _Is_integral<unsigned int>
-		: true_type
-	{	// determine whether _Ty is integral
-	};
-
-template<>
-	struct _Is_integral<signed int>
-		: true_type
-	{	// determine whether _Ty is integral
-	};
-
-template<>
-	struct _Is_integral<unsigned long>
-		: true_type
-	{	// determine whether _Ty is integral
-	};
-
-template<>
-	struct _Is_integral<signed long>
-		: true_type
-	{	// determine whether _Ty is integral
-	};
-
-template<>
 	struct _Is_integral<char16_t>
 		: true_type
 	{	// determine whether _Ty is integral
@@ -221,7 +213,37 @@ template<>
 	};
 
 template<>
-	struct _Is_integral<long long>
+	struct _Is_integral<unsigned short>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<short>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<unsigned int>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<int>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<unsigned long>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<long>
 		: true_type
 	{	// determine whether _Ty is integral
 	};
@@ -232,10 +254,16 @@ template<>
 	{	// determine whether _Ty is integral
 	};
 
+template<>
+	struct _Is_integral<long long>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
 	// TEMPLATE CLASS is_integral
 template<class _Ty>
 	struct is_integral
-		: _Is_integral<typename remove_cv<_Ty>::type>
+		: _Is_integral<remove_cv_t<_Ty>>::type
 	{	// determine whether _Ty is integral
 	};
 
@@ -270,7 +298,7 @@ template<>
 	// TEMPLATE CLASS is_floating_point
 template<class _Ty>
 	struct is_floating_point
-		: _Is_floating_point<typename remove_cv<_Ty>::type>
+		: _Is_floating_point<remove_cv_t<_Ty>>::type
 	{	// determine whether _Ty is floating point
 	};
 
@@ -280,7 +308,7 @@ template<class _Ty>
 	// TEMPLATE CLASS is_arithmetic
 template<class _Ty>
 	struct is_arithmetic
-		: _Cat_base<is_integral<_Ty>::value
+		: bool_constant<is_integral<_Ty>::value
 			|| is_floating_point<_Ty>::value>
 	{	// determine whether _Ty is an arithmetic type
 	};
@@ -292,28 +320,24 @@ template<class _Ty>
 template<class _Ty>
 	struct remove_reference
 	{	// remove reference
-	typedef _Ty type;
+	using type = _Ty;
 	};
 
 template<class _Ty>
 	struct remove_reference<_Ty&>
 	{	// remove reference
-	typedef _Ty type;
+	using type = _Ty;
 	};
 
 template<class _Ty>
 	struct remove_reference<_Ty&&>
 	{	// remove rvalue reference
-	typedef _Ty type;
+	using type = _Ty;
 	};
 
-	// TYPE TESTING MACROS
-struct _Wrap_int
-	{	// wraps int so that int argument is favored over _Wrap_int
-	_Wrap_int(int)
-		{	// do nothing
-		}
-	};
+template<class _Ty>
+	using remove_reference_t = typename remove_reference<_Ty>::type;
+
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

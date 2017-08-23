@@ -2174,7 +2174,7 @@ template <> struct ::std::hash< ::Platform::String^> {
     typedef ::Platform::String^ argument_type;
     typedef size_t result_type;
     size_t operator()(::Platform::String^ s) const {
-        return ::std::_Hash_seq(reinterpret_cast<const unsigned char *>(s->Data()), s->Length() * sizeof(wchar_t));
+        return ::std::_Hash_array_representation(s->Data(), s->Length());
     }
 };
 

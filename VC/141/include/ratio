@@ -16,16 +16,15 @@ _STD_BEGIN
 	// CLASS TEMPLATE _Abs
 template<intmax_t _Val>
 	struct _Abs
+		: integral_constant<intmax_t, (_Val < 0 ? -_Val : _Val)>
 	{	// computes absolute value of _Val
-	static constexpr intmax_t value = _Val < 0 ? -_Val : _Val;
 	};
 
 	// CLASS TEMPLATE _Safe_mult
 template<intmax_t _Ax,
 	intmax_t _Bx,
 	bool _Sfinae = false,
-	bool _Good = (_Abs<_Ax>::value
-		<= INTMAX_MAX / (_Bx == 0 ? 1 : _Abs<_Bx>::value))>
+	bool _Good = (_Abs<_Ax>::value <= INTMAX_MAX / (_Bx == 0 ? 1 : _Abs<_Bx>::value))>
 	struct _Safe_mult
 		: integral_constant<intmax_t, _Ax * _Bx>
 	{	// computes _Ax * _Bx without overflow
@@ -43,8 +42,8 @@ template<intmax_t _Ax,
 	// CLASS TEMPLATE _Sign_of
 template<intmax_t _Val>
 	struct _Sign_of
+		: integral_constant<intmax_t, (_Val < 0 ? -1 : 1)>
 	{	// computes sign of _Val
-	static constexpr intmax_t value = _Val < 0 ? -1 : 1;
 	};
 
 	// CLASS TEMPLATE _Safe_add
@@ -53,8 +52,8 @@ template<intmax_t _Ax,
 	bool _Good,
 	bool _Also_good>
 	struct _Safe_addX
+		: integral_constant<intmax_t, _Ax + _Bx>
 	{	// computes _Ax + _Bx without overflow
-	static constexpr intmax_t value = _Ax + _Bx;
 	};
 
 template<intmax_t _Ax,
@@ -68,38 +67,37 @@ template<intmax_t _Ax,
 template<intmax_t _Ax,
 	intmax_t _Bx>
 	struct _Safe_add
+		: _Safe_addX<_Ax, _Bx,
+			_Sign_of<_Ax>::value != _Sign_of<_Bx>::value,
+			(_Abs<_Ax>::value <= INTMAX_MAX - _Abs<_Bx>::value)>::type
 	{	// computes _Ax + _Bx, forbids overflow
-	static constexpr intmax_t value = _Safe_addX<_Ax, _Bx,
-		_Sign_of<_Ax>::value != _Sign_of<_Bx>::value,
-		(_Abs<_Ax>::value <= INTMAX_MAX - _Abs<_Bx>::value)>::value;
 	};
 
 	// CLASS TEMPLATE _Gcd
 template<intmax_t _Ax,
 	intmax_t _Bx>
 	struct _GcdX
+		: _GcdX<_Bx, _Ax % _Bx>::type
 	{	// computes greatest common divisor of _Ax and _Bx
-	static constexpr intmax_t value = _GcdX<_Bx, _Ax % _Bx>::value;
 	};
 
 template<intmax_t _Ax>
 	struct _GcdX<_Ax, 0>
+		: integral_constant<intmax_t, _Ax>
 	{	// computes greatest common divisor of _Ax and 0
-	static constexpr intmax_t value = _Ax;
 	};
 
 template<intmax_t _Ax,
 	intmax_t _Bx>
 	struct _Gcd
+		: _GcdX<_Abs<_Ax>::value, _Abs<_Bx>::value>::type
 	{	// computes greatest common divisor of abs(_Ax) and abs(_Bx)
-	static constexpr intmax_t value =
-		_GcdX<_Abs<_Ax>::value, _Abs<_Bx>::value>::value;
 	};
 
 template<>
 	struct _Gcd<0, 0>
+		: integral_constant<intmax_t, 1>	// contrary to mathematical convention
 	{	// avoids division by 0 in ratio_less
-	static constexpr intmax_t value = 1;	// contrary to mathematical convention
 	};
 
 	// CLASS TEMPLATE ratio
@@ -117,8 +115,7 @@ template<intmax_t _Nx,
 	static constexpr intmax_t num = _Sign_of<_Nx>::value
 		* _Sign_of<_Dx>::value * _Abs<_Nx>::value / _Gcd<_Nx, _Dx>::value;
 
-	static constexpr intmax_t den = _Abs<_Dx>::value / _Gcd<_Nx, _Dx>
-		::value;
+	static constexpr intmax_t den = _Abs<_Dx>::value / _Gcd<_Nx, _Dx>::value;
 
 	typedef ratio<num, den> type;
 	};
@@ -135,7 +132,7 @@ template<intmax_t _N1,
 	intmax_t _D1,
 	intmax_t _N2,
 	intmax_t _D2>
-	struct _Are_ratios<ratio<_N1, _D1>, ratio<_N2, _D2> >
+	struct _Are_ratios<ratio<_N1, _D1>, ratio<_N2, _D2>>
 		: true_type
 	{	// determine whether _Ty1 and _Ty2 are both ratios
 	};
@@ -180,7 +177,7 @@ template<class _R1,
 	static constexpr intmax_t _N2 = _R2::num;
 	static constexpr intmax_t _D2 = _R2::den;
 
-	typedef ratio_add<_R1, ratio<-_N2, _D2> > type;
+	typedef ratio_add<_R1, ratio<-_N2, _D2>> type;
 	};
 
 template<class _R1,
@@ -222,7 +219,7 @@ template<class _R1,
 	bool _Sfinae>
 	struct _Ratio_multiply_sfinae<_R1, _R2, _Sfinae, void_t<
 		typename _Ratio_multiply<_R1, _R2>::_Num::type,
-		typename _Ratio_multiply<_R1, _R2>::_Den::type> >
+		typename _Ratio_multiply<_R1, _R2>::_Den::type>>
 	{	// typename ratio<>::type is unnecessary here
 	typedef ratio<
 		_Ratio_multiply<_R1, _R2>::_Num::value,
@@ -231,8 +228,7 @@ template<class _R1,
 
 template<class _R1,
 	class _R2>
-	using ratio_multiply = typename _Ratio_multiply_sfinae<_R1, _R2, false>
-		::type;
+	using ratio_multiply = typename _Ratio_multiply_sfinae<_R1, _R2, false>::type;
 
 	// ALIAS TEMPLATE ratio_divide
 template<class _R1,
@@ -262,7 +258,7 @@ template<class _R1,
 template<class _R1,
 	class _R2>
 	struct ratio_equal
-		: _Cat_base<_R1::num == _R2::num && _R1::den == _R2::den>
+		: bool_constant<_R1::num == _R2::num && _R1::den == _R2::den>
 	{	// tests if ratio == ratio
 	static_assert(_Are_ratios<_R1, _R2>::value,
 		"ratio_equal<R1, R2> requires R1 and R2 to be ratio<>s.");
@@ -272,7 +268,7 @@ template<class _R1,
 template<class _R1,
 	class _R2>
 	struct ratio_not_equal
-		: integral_constant<bool, !ratio_equal<_R1, _R2>::value>
+		: bool_constant<!ratio_equal<_R1, _R2>::value>
 	{	// tests if ratio != ratio
 	static_assert(_Are_ratios<_R1, _R2>::value,
 		"ratio_not_equal<R1, R2> requires R1 and R2 to be ratio<>s.");
@@ -294,7 +290,7 @@ template<class _R1,
 	static constexpr intmax_t _Left = _Safe_mult<_N1 / _Gn, _D2 / _Gd>::value;
 	static constexpr intmax_t _Right = _Safe_mult<_N2 / _Gn, _D1 / _Gd>::value;
 
-	typedef integral_constant<bool, (_Left < _Right)> type;
+	typedef bool_constant<(_Left < _Right)> type;
 	};
 
 template<class _R1,
@@ -310,7 +306,7 @@ template<class _R1,
 template<class _R1,
 	class _R2>
 	struct ratio_less_equal
-		: integral_constant<bool, !ratio_less<_R2, _R1>::value>
+		: bool_constant<!ratio_less<_R2, _R1>::value>
 	{	// tests if ratio <= ratio
 	static_assert(_Are_ratios<_R1, _R2>::value,
 		"ratio_less_equal<R1, R2> requires R1 and R2 to be ratio<>s.");
@@ -320,7 +316,7 @@ template<class _R1,
 template<class _R1,
 	class _R2>
 	struct ratio_greater
-		: integral_constant<bool, ratio_less<_R2, _R1>::value>
+		: ratio_less<_R2, _R1>::type
 	{	// tests if ratio > ratio
 	static_assert(_Are_ratios<_R1, _R2>::value,
 		"ratio_greater<R1, R2> requires R1 and R2 to be ratio<>s.");
@@ -330,7 +326,7 @@ template<class _R1,
 template<class _R1,
 	class _R2>
 	struct ratio_greater_equal
-		: integral_constant<bool, !ratio_less<_R1, _R2>::value>
+		: bool_constant<!ratio_less<_R1, _R2>::value>
 	{	// tests if ratio >= ratio
 	static_assert(_Are_ratios<_R1, _R2>::value,
 		"ratio_greater_equal<R1, R2> requires R1 and R2 to be ratio<>s.");

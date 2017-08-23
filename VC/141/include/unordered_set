@@ -21,10 +21,10 @@ template<class _Kty,	// key type (same as value type)
 		: public _Tr
 	{	// traits required to make _Hash behave like a set
 public:
-	typedef _Kty key_type;
-	typedef _Kty value_type;
-	typedef _Tr key_compare;
-	typedef _Alloc allocator_type;
+	using key_type = _Kty;
+	using value_type = _Kty;
+	using key_compare = _Tr;
+	using allocator_type = _Alloc;
 
 	enum
 		{	// make multi parameter visible as an enum constant
@@ -37,7 +37,7 @@ public:
 		{	// construct with specified comparator
 		}
 
-	typedef key_compare value_compare;
+	using value_compare = key_compare;
 
 	static const _Kty& _Kfn(const value_type& _Val)
 		{	// return entire value as key
@@ -54,37 +54,38 @@ public:
 template<class _Kty,
 	class _Hasher = hash<_Kty>,
 	class _Keyeq = equal_to<_Kty>,
-	class _Alloc = allocator<_Kty> >
+	class _Alloc = allocator<_Kty>>
 	class unordered_set
 		: public _Hash<_Uset_traits<_Kty,
-			_Uhash_compare<_Kty, _Hasher, _Keyeq>, _Alloc, false> >
+			_Uhash_compare<_Kty, _Hasher, _Keyeq>, _Alloc, false>>
 	{	// hash table of key values, unique keys
 public:
-	typedef unordered_set<_Kty, _Hasher, _Keyeq, _Alloc> _Myt;
-	typedef _Uhash_compare<_Kty, _Hasher, _Keyeq> _Mytraits;
-	typedef _Hash<_Uset_traits<_Kty,
-		_Mytraits, _Alloc, false> > _Mybase;
-	typedef _Hasher hasher;
-	typedef _Kty key_type;
-	typedef _Keyeq key_equal;
-	typedef _Mytraits key_compare;	// extra
+	static_assert(!_ENFORCE_MATCHING_ALLOCATORS || is_same<_Kty, typename _Alloc::value_type>::value,
+		_MISMATCHED_ALLOCATOR_MESSAGE("unordered_set<T, Hasher, Eq, Allocator>", "T"));
 
-//	typedef typename _Mybase::value_compare value_compare;
-	typedef typename _Mybase::allocator_type allocator_type;
-	typedef typename _Mybase::size_type size_type;
-	typedef typename _Mybase::difference_type difference_type;
-	typedef typename _Mybase::pointer pointer;
-	typedef typename _Mybase::const_pointer const_pointer;
-	typedef typename _Mybase::reference reference;
-	typedef typename _Mybase::const_reference const_reference;
-	typedef typename _Mybase::iterator iterator;
-	typedef typename _Mybase::const_iterator const_iterator;
-	typedef typename _Mybase::value_type value_type;
+	using _Mytraits = _Uhash_compare<_Kty, _Hasher, _Keyeq>;
+	using _Mybase = _Hash<_Uset_traits<_Kty, _Mytraits, _Alloc, false>>;
+	using hasher = _Hasher;
+	using key_type = _Kty;
+	using key_equal = _Keyeq;
+	using key_compare = _Mytraits;	// extra
 
-	typedef typename _Mybase::iterator local_iterator;
-	typedef typename _Mybase::const_iterator const_local_iterator;
+	using value_type = typename _Mybase::value_type;
+	using allocator_type = typename _Mybase::allocator_type;
+	using size_type = typename _Mybase::size_type;
+	using difference_type = typename _Mybase::difference_type;
+	using pointer = typename _Mybase::pointer;
+	using const_pointer = typename _Mybase::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+	using iterator = typename _Mybase::iterator;
+	using const_iterator = typename _Mybase::const_iterator;
 
-	typedef typename _Mybase::_Alty _Alty;
+	using local_iterator = typename _Mybase::iterator;
+	using const_local_iterator = typename _Mybase::const_iterator;
+
+	using _Alnode = typename _Mybase::_Alnode;
+	using _Alnode_traits = typename _Mybase::_Alnode_traits;
 
 	unordered_set()
 		: _Mybase(key_compare(), allocator_type())
@@ -96,13 +97,12 @@ public:
 		{	// construct empty set from defaults, allocator
 		}
 
-	unordered_set(const _Myt& _Right)
-		: _Mybase(_Right,
-			_Right._List._Getal().select_on_container_copy_construction())
+	unordered_set(const unordered_set& _Right)
+		: _Mybase(_Right, _Alnode_traits::select_on_container_copy_construction(_Right._List._Getal()))
 		{	// construct set by copying _Right
 		}
 
-	unordered_set(const _Myt& _Right, const allocator_type& _Al)
+	unordered_set(const unordered_set& _Right, const allocator_type& _Al)
 		: _Mybase(_Right, _Al)
 		{	// construct set by copying _Right, allocator
 		}
@@ -217,24 +217,24 @@ public:
 		this->insert(_First, _Last);
 		}
 
-	_Myt& operator=(const _Myt& _Right)
+	unordered_set& operator=(const unordered_set& _Right)
 		{	// assign by copying _Right
 		_Mybase::operator=(_Right);
 		return (*this);
 		}
 
-	unordered_set(_Myt&& _Right)
+	unordered_set(unordered_set&& _Right)
 		: _Mybase(_STD move(_Right))
 		{	// construct set by moving _Right
 		}
 
-	unordered_set(_Myt&& _Right, const allocator_type& _Al)
+	unordered_set(unordered_set&& _Right, const allocator_type& _Al)
 		: _Mybase(_STD move(_Right), _Al)
 		{	// construct set by moving _Right, allocator
 		}
 
-	_Myt& operator=(_Myt&& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
+	unordered_set& operator=(unordered_set&& _Right)
+		_NOEXCEPT_COND(_Alnode_traits::is_always_equal::value
 			&& is_nothrow_move_assignable<_Hasher>::value
 			&& is_nothrow_move_assignable<_Keyeq>::value)
 		{	// assign by moving _Right
@@ -242,10 +242,8 @@ public:
 		return (*this);
 		}
 
-	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _Is_nothrow_swappable<_Hasher>::value
-			&& _Is_nothrow_swappable<_Keyeq>::value)
+	void swap(unordered_set& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Mybase::swap(_Right))) // Strengthened
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
@@ -313,7 +311,7 @@ public:
 		this->insert(_Ilist);
 		}
 
-	_Myt& operator=(initializer_list<value_type> _Ilist)
+	unordered_set& operator=(initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
 		this->insert(_Ilist);
@@ -329,6 +327,9 @@ public:
 		{	// return equality comparator object
 		return (this->_Traitsobj._Getkeyeq());
 		}
+
+	using _Mybase::_Unchecked_begin;
+	using _Mybase::_Unchecked_end;
 	};
 
 template<class _Kty,
@@ -337,7 +338,7 @@ template<class _Kty,
 	class _Alloc>
 	void swap(unordered_set<_Kty, _Hasher, _Keyeq, _Alloc>& _Left,
 		unordered_set<_Kty, _Hasher, _Keyeq, _Alloc>& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right)))
 	{	// swap _Left and _Right unordered_sets
 	_Left.swap(_Right);
 	}
@@ -368,34 +369,35 @@ template<class _Kty,
 template<class _Kty,
 	class _Hasher = hash<_Kty>,
 	class _Keyeq = equal_to<_Kty>,
-	class _Alloc = allocator<_Kty> >
+	class _Alloc = allocator<_Kty>>
 	class unordered_multiset
 		: public _Hash<_Uset_traits<_Kty,
-			_Uhash_compare<_Kty, _Hasher, _Keyeq>, _Alloc, true> >
+			_Uhash_compare<_Kty, _Hasher, _Keyeq>, _Alloc, true>>
 	{	// hash table of key values, non-unique keys
 public:
-	typedef unordered_multiset<_Kty, _Hasher, _Keyeq, _Alloc> _Myt;
-	typedef _Uhash_compare<_Kty, _Hasher, _Keyeq> _Mytraits;
-	typedef _Hash<_Uset_traits<_Kty,
-		_Mytraits, _Alloc, true> > _Mybase;
-	typedef _Hasher hasher;
-	typedef _Kty key_type;
-	typedef _Keyeq key_equal;
-	typedef _Mytraits key_compare;	// extra
+	static_assert(!_ENFORCE_MATCHING_ALLOCATORS || is_same<_Kty, typename _Alloc::value_type>::value,
+		_MISMATCHED_ALLOCATOR_MESSAGE("unordered_multiset<T, Hasher, Eq, Allocator>", "T"));
 
-//	typedef typename _Mybase::value_compare value_compare;
-	typedef typename _Mybase::allocator_type allocator_type;
-	typedef typename _Mybase::size_type size_type;
-	typedef typename _Mybase::difference_type difference_type;
-	typedef typename _Mybase::pointer pointer;
-	typedef typename _Mybase::const_pointer const_pointer;
-	typedef typename _Mybase::reference reference;
-	typedef typename _Mybase::const_reference const_reference;
-	typedef typename _Mybase::iterator iterator;
-	typedef typename _Mybase::const_iterator const_iterator;
-	typedef typename _Mybase::value_type value_type;
+	using _Mytraits = _Uhash_compare<_Kty, _Hasher, _Keyeq>;
+	using _Mybase = _Hash<_Uset_traits<_Kty, _Mytraits, _Alloc, true>>;
+	using hasher = _Hasher;
+	using key_type = _Kty;
+	using key_equal = _Keyeq;
+	using key_compare = _Mytraits;	// extra
 
-	typedef typename _Mybase::_Alty _Alty;
+	using value_type = typename _Mybase::value_type;
+	using allocator_type = typename _Mybase::allocator_type;
+	using size_type = typename _Mybase::size_type;
+	using difference_type = typename _Mybase::difference_type;
+	using pointer = typename _Mybase::pointer;
+	using const_pointer = typename _Mybase::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+	using iterator = typename _Mybase::iterator;
+	using const_iterator = typename _Mybase::const_iterator;
+
+	using _Alnode = typename _Mybase::_Alnode;
+	using _Alnode_traits = typename _Mybase::_Alnode_traits;
 
 	unordered_multiset()
 		: _Mybase(key_compare(), allocator_type())
@@ -407,13 +409,12 @@ public:
 		{	// construct empty set from defaults, allocator
 		}
 
-	unordered_multiset(const _Myt& _Right)
-		: _Mybase(_Right,
-			_Right._List._Getal().select_on_container_copy_construction())
+	unordered_multiset(const unordered_multiset& _Right)
+		: _Mybase(_Right, _Alnode_traits::select_on_container_copy_construction(_Right._List._Getal()))
 		{	// construct set by copying _Right
 		}
 
-	unordered_multiset(const _Myt& _Right, const allocator_type& _Al)
+	unordered_multiset(const unordered_multiset& _Right, const allocator_type& _Al)
 		: _Mybase(_Right, _Al)
 		{	// construct set by copying _Right, allocator
 		}
@@ -528,24 +529,24 @@ public:
 		this->insert(_First, _Last);
 		}
 
-	_Myt& operator=(const _Myt& _Right)
+	unordered_multiset& operator=(const unordered_multiset& _Right)
 		{	// assign by copying _Right
 		_Mybase::operator=(_Right);
 		return (*this);
 		}
 
-	unordered_multiset(_Myt&& _Right)
+	unordered_multiset(unordered_multiset&& _Right)
 		: _Mybase(_STD move(_Right))
 		{	// construct set by moving _Right
 		}
 
-	unordered_multiset(_Myt&& _Right, const allocator_type& _Al)
+	unordered_multiset(unordered_multiset&& _Right, const allocator_type& _Al)
 		: _Mybase(_STD move(_Right), _Al)
 		{	// construct set by moving _Right, allocator
 		}
 
-	_Myt& operator=(_Myt&& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
+	unordered_multiset& operator=(unordered_multiset&& _Right)
+		_NOEXCEPT_COND(_Alnode_traits::is_always_equal::value
 			&& is_nothrow_move_assignable<_Hasher>::value
 			&& is_nothrow_move_assignable<_Keyeq>::value)
 		{	// assign by moving _Right
@@ -559,10 +560,8 @@ public:
 		return (_Mybase::emplace(_STD forward<_Valty>(_Val)...).first);
 		}
 
-	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _Is_nothrow_swappable<_Hasher>::value
-			&& _Is_nothrow_swappable<_Keyeq>::value)
+	void swap(unordered_multiset& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Mybase::swap(_Right))) // Strengthened
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
@@ -630,7 +629,7 @@ public:
 		this->insert(_Ilist);
 		}
 
-	_Myt& operator=(initializer_list<value_type> _Ilist)
+	unordered_multiset& operator=(initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
 		this->insert(_Ilist);
@@ -646,6 +645,9 @@ public:
 		{	// return equality comparator object
 		return (this->_Traitsobj._Getkeyeq());
 		}
+
+	using _Mybase::_Unchecked_begin;
+	using _Mybase::_Unchecked_end;
 	};
 
 template<class _Kty,
@@ -654,7 +656,7 @@ template<class _Kty,
 	class _Alloc>
 	void swap(unordered_multiset<_Kty, _Hasher, _Keyeq, _Alloc>& _Left,
 		unordered_multiset<_Kty, _Hasher, _Keyeq, _Alloc>& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right)))
 	{	// swap _Left and _Right unordered_multisets
 	_Left.swap(_Right);
 	}

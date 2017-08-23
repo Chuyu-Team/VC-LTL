@@ -315,6 +315,19 @@ template<class _Elem,
 	return (_Qobj(_Str.c_str(), _Str.size(), _Delim, _Escape));
 	}
 
+#if _HAS_CXX17
+template<class _Elem,
+	class _Traits> inline
+	_Quote_out<_Elem, _Traits, size_t>
+		quoted(const basic_string_view<_Elem, _Traits> _Str,
+			_Elem _Delim = _Elem('"'),
+			_Elem _Escape = _Elem('\\'))
+	{	// return a _Quote_out manipulator for string_view
+	using _Qobj = _Quote_out<_Elem, _Traits, size_t>;
+	return (_Qobj(_Str.data(), _Str.size(), _Delim, _Escape));
+	}
+#endif /* _HAS_CXX17 */
+
 template<class _Elem,
 	class _Traits,
 	class _Alloc> inline

@@ -19,7 +19,7 @@
 #error This file is not compatible with the current WINAPI_FAMILY
 #endif
 
-#include <msxml6.h>
+#include <MsXml6.h>
 
 #pragma warning (push)
 #pragma pack(push,_ATL_PACKING)
@@ -257,7 +257,7 @@ private:
 	CComQIPtr<T> m_pNode;
 };
 
-class CXMLDocument : 
+class CXMLDocument :
 	public CXMLNode<IXMLDOMDocument>
 {
 public:
@@ -420,7 +420,7 @@ public:
 ATLPREFAST_SUPPRESS(6386)
 				memcpy(lpVoid, lpBuffer, size);
 ATLPREFAST_UNSUPPRESS()
-					
+
 				::GlobalUnlock(hGlobal);
 
 				IStream* pStream = NULL;
@@ -540,7 +540,7 @@ ATLPREFAST_UNSUPPRESS()
     							pStream->Seek(dlibMove, STREAM_SEEK_SET, NULL);
                                 hr = pStream->Read(*lpBuffer, size, NULL);
 		    				}
-			    			else 
+			    			else
 				    		{
 						    	hr = E_OUTOFMEMORY;
 					    	}
@@ -549,12 +549,12 @@ ATLPREFAST_UNSUPPRESS()
 				}
 			}
 
-ATLPREFAST_SUPPRESS(6102)                
+ATLPREFAST_SUPPRESS(6102)
 			if (pStream != NULL)
 			{
 				pStream->Release();
 			}
-ATLPREFAST_UNSUPPRESS()                
+ATLPREFAST_UNSUPPRESS()
 
 			::GlobalFree(hGlobal);
 		}

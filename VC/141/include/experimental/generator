@@ -65,27 +65,36 @@ namespace experimental {
 				return _STD forward<_Uty>(_Whatever);
 			}
 
-			using _Alloc_traits = allocator_traits<_Alloc>;
-			using _Alloc_of_char_type =
-				typename _Alloc_traits::template rebind_alloc<char>;
+			using _Alloc_char = _Rebind_alloc_t<_Alloc, char>;
+			static_assert(is_same<char *, typename allocator_traits<_Alloc_char>::pointer>::value,
+				"generator does not support allocators with fancy pointer types");
+			static_assert(allocator_traits<_Alloc_char>::is_always_equal::value,
+				"generator only supports stateless allocators");
 
-			void *operator new(size_t _Size)
+			static void * operator new(size_t _Size)
 			{
-				_Alloc_of_char_type _Al;
-				return _Al.allocate(_Size);
+				_Alloc_char _Al;
+				return allocator_traits<_Alloc_char>::allocate(_Al, _Size);
 			}
 
-			void operator delete(void *_Ptr, size_t _Size)_NOEXCEPT
+			static void operator delete(void *_Ptr, size_t _Size) _NOEXCEPT
 			{
-				_Alloc_of_char_type _Al;
-				return _Al.deallocate(static_cast<char *>(_Ptr), _Size);
+				_Alloc_char _Al;
+				return allocator_traits<_Alloc_char>::deallocate(_Al, static_cast<char *>(_Ptr), _Size);
 			}
 		};
 
-		struct iterator : _STD iterator<input_iterator_tag, _Ty>
+		struct iterator
 		{
-			coroutine_handle<promise_type> _Coro;
+			using iterator_category = input_iterator_tag;
+			using difference_type = ptrdiff_t;
+			using value_type = _Ty;
+			using reference = _Ty const &;
+			using pointer = _Ty const *;
 
+			coroutine_handle<promise_type> _Coro = nullptr;
+
+			iterator() = default;
 			iterator(nullptr_t) : _Coro(nullptr)
 			{
 			}
@@ -102,16 +111,12 @@ namespace experimental {
 				return *this;
 			}
 
-			iterator operator++(int) = delete;
-			// generator iterator current_value
-			// is a reference to a temporary on the coroutine frame
-			// implementing postincrement will require storing a copy
-			// of the value in the iterator.
-			//{
-			//	auto _Result = *this;
-			//	++(*this);
-			//	return _Result;
-			//}
+			void operator++(int)
+			{
+				// This postincrement operator meets the requirements of the Ranges TS
+				// InputIterator concept, but not those of Standard C++ InputIterator.
+				++*this;
+			}
 
 			bool operator==(iterator const &_Right) const
 			{
@@ -123,14 +128,14 @@ namespace experimental {
 				return !(*this == _Right);
 			}
 
-			_Ty const &operator*() const
+			reference operator*() const
 			{
 				return *_Coro.promise()._CurrentValue;
 			}
 
-			_Ty const *operator->() const
+			pointer operator->() const
 			{
-				return _STD addressof(operator*());
+				return _Coro.promise()._CurrentValue;
 			}
 		};
 

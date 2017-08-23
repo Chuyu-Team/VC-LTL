@@ -28,6 +28,7 @@
 #include <mmintrin.h>
 
 #ifndef _VEC_ASSERT
+    #include <corecrt.h>
     #include <vcruntime.h>
 
 #ifdef NDEBUG
@@ -37,7 +38,8 @@
             extern "C" {
 #endif  /* __cplusplus */
 
-        _CRTIMP void __cdecl _wassert(_In_z_ const wchar_t * _Message, _In_z_ const wchar_t *_File, _In_ unsigned _Line);
+        _ACRTIMP void __cdecl _wassert(_In_z_ const wchar_t * _Message, _In_z_ const wchar_t * _File, _In_ unsigned _Line);
+
 #ifdef __cplusplus
             }
 #endif  /* __cplusplus */

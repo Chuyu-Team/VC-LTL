@@ -22,9 +22,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define STRICT
-#include <windows.h>
+#include <Windows.h>
 
-#include "DelayImp.h"
+#include "delayimp.h"
 
 #define DLOAD_UNLOAD 1
 #include "dloadsup.h"

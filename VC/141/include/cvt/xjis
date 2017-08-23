@@ -271,7 +271,7 @@ protected:
 		}
 
 	virtual int do_length(_Statype& _State, const _Byte *_First1,
-		const _Byte *_Last1, size_t _Count) const _THROW0()
+		const _Byte *_Last1, size_t _Count) const _NOEXCEPT
 		{	// return min(_Count, converted length of bytes [_First1, _Last1))
 		size_t _Wchars = 0;
 		_Statype _Mystate = _State;
@@ -302,17 +302,17 @@ protected:
 		return ((int)_Wchars);
 		}
 
-	virtual bool do_always_noconv() const _THROW0()
+	virtual bool do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input
 		return (false);
 		}
 
-	virtual int do_max_length() const _THROW0()
+	virtual int do_max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion
 		return (5);
 		}
 
-	virtual int do_encoding() const _THROW0()
+	virtual int do_encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return (0);	// 0 => varying length
 		}

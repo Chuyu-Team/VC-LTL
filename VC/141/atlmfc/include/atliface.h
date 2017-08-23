@@ -19,8 +19,8 @@
 /* Compiler settings for atliface.idl:
 	Oicf, W1, Zp8, env=Win32 (32b run)
 	protocol : dce , ms_ext, c_ext
-	error checks: allocation ref bounds_check enum stub_data 
-	VC __declspec() decoration level: 
+	error checks: allocation ref bounds_check enum stub_data
+	VC __declspec() decoration level:
 		 __declspec(uuid()), __declspec(selectany), __declspec(novtable)
 		 DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -40,7 +40,7 @@
 #endif // __RPCNDR_H_VERSION__
 
 #ifndef COM_NO_WINDOWS_H
-#include "windows.h"
+#include "Windows.h"
 #include "ole2.h"
 #endif /*COM_NO_WINDOWS_H*/
 
@@ -49,7 +49,7 @@
 
 #pragma once
 
-/* Forward Declarations */ 
+/* Forward Declarations */
 
 #ifndef __IRegistrarBase_FWD_DEFINED__
 #define __IRegistrarBase_FWD_DEFINED__
@@ -112,16 +112,16 @@ typedef interface IAccessibleServer IAccessibleServer;
 
 
 /* header files for imported files */
-#include "oaidl.h"
-#include "ocidl.h"
+#include "OAIdl.h"
+#include "OCIdl.h"
 #include "oleacc.h"
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 /* interface __MIDL_itf_atliface_0000 */
-/* [local] */ 
+/* [local] */
 
 EXTERN_C const CLSID CLSID_Registrar;
 
@@ -133,7 +133,7 @@ extern RPC_IF_HANDLE __MIDL_itf_atliface_0000_v0_0_s_ifspec;
 #define __IRegistrarBase_INTERFACE_DEFINED__
 
 /* interface IRegistrarBase */
-/* [unique][helpstring][uuid][object] */ 
+/* [unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IRegistrarBase;
@@ -144,7 +144,7 @@ EXTERN_C const IID IID_IRegistrarBase;
 	IRegistrarBase : public IUnknown
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE AddReplacement( 
+		virtual HRESULT STDMETHODCALLTYPE AddReplacement(
 			/* [in] */ LPCOLESTR key,
 			/* [in] */ LPCOLESTR item) = 0;
 
@@ -158,23 +158,23 @@ EXTERN_C const IID IID_IRegistrarBase;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IRegistrarBase * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IRegistrarBase * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IRegistrarBase * This);
 
-		HRESULT ( STDMETHODCALLTYPE *AddReplacement )( 
+		HRESULT ( STDMETHODCALLTYPE *AddReplacement )(
 			IRegistrarBase * This,
 			/* [in] */ LPCOLESTR key,
 			/* [in] */ LPCOLESTR item);
 
-		HRESULT ( STDMETHODCALLTYPE *ClearReplacements )( 
+		HRESULT ( STDMETHODCALLTYPE *ClearReplacements )(
 			IRegistrarBase * This);
 
 		END_INTERFACE
@@ -213,7 +213,7 @@ EXTERN_C const IID IID_IRegistrarBase;
 
 
 
-HRESULT STDMETHODCALLTYPE IRegistrarBase_AddReplacement_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrarBase_AddReplacement_Proxy(
 	IRegistrarBase * This,
 	/* [in] */ LPCOLESTR key,
 	/* [in] */ LPCOLESTR item);
@@ -226,7 +226,7 @@ void __RPC_STUB IRegistrarBase_AddReplacement_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrarBase_ClearReplacements_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrarBase_ClearReplacements_Proxy(
 	IRegistrarBase * This);
 
 
@@ -245,7 +245,7 @@ void __RPC_STUB IRegistrarBase_ClearReplacements_Stub(
 #define __IRegistrar_INTERFACE_DEFINED__
 
 /* interface IRegistrar */
-/* [unique][helpstring][uuid][object] */ 
+/* [unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IRegistrar;
@@ -256,34 +256,34 @@ EXTERN_C const IID IID_IRegistrar;
 	IRegistrar : public IRegistrarBase
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE ResourceRegisterSz( 
+		virtual HRESULT STDMETHODCALLTYPE ResourceRegisterSz(
 			/* [in] */ _In_z_ LPCOLESTR resFileName,
 			/* [in] */ _In_z_ LPCOLESTR szID,
 			/* [in] */ _In_z_ LPCOLESTR szType) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE ResourceUnregisterSz( 
+		virtual HRESULT STDMETHODCALLTYPE ResourceUnregisterSz(
 			/* [in] */ _In_z_ LPCOLESTR resFileName,
 			/* [in] */ _In_z_ LPCOLESTR szID,
 			/* [in] */ _In_z_ LPCOLESTR szType) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE FileRegister( 
+		virtual HRESULT STDMETHODCALLTYPE FileRegister(
 			/* [in] */ _In_z_ LPCOLESTR fileName) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE FileUnregister( 
+		virtual HRESULT STDMETHODCALLTYPE FileUnregister(
 			/* [in] */ _In_z_ LPCOLESTR fileName) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE StringRegister( 
+		virtual HRESULT STDMETHODCALLTYPE StringRegister(
 			/* [in] */ _In_z_ LPCOLESTR data) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE StringUnregister( 
+		virtual HRESULT STDMETHODCALLTYPE StringUnregister(
 			/* [in] */ _In_z_ LPCOLESTR data) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE ResourceRegister( 
+		virtual HRESULT STDMETHODCALLTYPE ResourceRegister(
 			/* [in] */ _In_z_ LPCOLESTR resFileName,
 			/* [in] */ _In_ UINT nID,
 			/* [in] */ _In_z_ LPCOLESTR szType) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE ResourceUnregister( 
+		virtual HRESULT STDMETHODCALLTYPE ResourceUnregister(
 			/* [in] */ _In_z_ LPCOLESTR resFileName,
 			/* [in] */ _In_ UINT nID,
 			/* [in] */ _In_z_ LPCOLESTR szType) = 0;
@@ -296,60 +296,60 @@ EXTERN_C const IID IID_IRegistrar;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IRegistrar * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IRegistrar * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IRegistrar * This);
 
-		HRESULT ( STDMETHODCALLTYPE *AddReplacement )( 
+		HRESULT ( STDMETHODCALLTYPE *AddReplacement )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR key,
 			/* [in] */ LPCOLESTR item);
 
-		HRESULT ( STDMETHODCALLTYPE *ClearReplacements )( 
+		HRESULT ( STDMETHODCALLTYPE *ClearReplacements )(
 			IRegistrar * This);
 
-		HRESULT ( STDMETHODCALLTYPE *ResourceRegisterSz )( 
+		HRESULT ( STDMETHODCALLTYPE *ResourceRegisterSz )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR resFileName,
 			/* [in] */ LPCOLESTR szID,
 			/* [in] */ LPCOLESTR szType);
 
-		HRESULT ( STDMETHODCALLTYPE *ResourceUnregisterSz )( 
+		HRESULT ( STDMETHODCALLTYPE *ResourceUnregisterSz )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR resFileName,
 			/* [in] */ LPCOLESTR szID,
 			/* [in] */ LPCOLESTR szType);
 
-		HRESULT ( STDMETHODCALLTYPE *FileRegister )( 
+		HRESULT ( STDMETHODCALLTYPE *FileRegister )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR fileName);
 
-		HRESULT ( STDMETHODCALLTYPE *FileUnregister )( 
+		HRESULT ( STDMETHODCALLTYPE *FileUnregister )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR fileName);
 
-		HRESULT ( STDMETHODCALLTYPE *StringRegister )( 
+		HRESULT ( STDMETHODCALLTYPE *StringRegister )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR data);
 
-		HRESULT ( STDMETHODCALLTYPE *StringUnregister )( 
+		HRESULT ( STDMETHODCALLTYPE *StringUnregister )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR data);
 
-		HRESULT ( STDMETHODCALLTYPE *ResourceRegister )( 
+		HRESULT ( STDMETHODCALLTYPE *ResourceRegister )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR resFileName,
 			/* [in] */ UINT nID,
 			/* [in] */ LPCOLESTR szType);
 
-		HRESULT ( STDMETHODCALLTYPE *ResourceUnregister )( 
+		HRESULT ( STDMETHODCALLTYPE *ResourceUnregister )(
 			IRegistrar * This,
 			/* [in] */ LPCOLESTR resFileName,
 			/* [in] */ UINT nID,
@@ -416,7 +416,7 @@ EXTERN_C const IID IID_IRegistrar;
 
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_ResourceRegisterSz_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_ResourceRegisterSz_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR resFileName,
 	/* [in] */ LPCOLESTR szID,
@@ -430,7 +430,7 @@ void __RPC_STUB IRegistrar_ResourceRegisterSz_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_ResourceUnregisterSz_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_ResourceUnregisterSz_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR resFileName,
 	/* [in] */ LPCOLESTR szID,
@@ -444,7 +444,7 @@ void __RPC_STUB IRegistrar_ResourceUnregisterSz_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_FileRegister_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_FileRegister_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR fileName);
 
@@ -456,7 +456,7 @@ void __RPC_STUB IRegistrar_FileRegister_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_FileUnregister_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_FileUnregister_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR fileName);
 
@@ -468,7 +468,7 @@ void __RPC_STUB IRegistrar_FileUnregister_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_StringRegister_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_StringRegister_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR data);
 
@@ -480,7 +480,7 @@ void __RPC_STUB IRegistrar_StringRegister_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_StringUnregister_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_StringUnregister_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR data);
 
@@ -492,7 +492,7 @@ void __RPC_STUB IRegistrar_StringUnregister_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_ResourceRegister_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_ResourceRegister_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR resFileName,
 	/* [in] */ UINT nID,
@@ -506,7 +506,7 @@ void __RPC_STUB IRegistrar_ResourceRegister_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IRegistrar_ResourceUnregister_Proxy( 
+HRESULT STDMETHODCALLTYPE IRegistrar_ResourceUnregister_Proxy(
 	IRegistrar * This,
 	/* [in] */ LPCOLESTR resFileName,
 	/* [in] */ UINT nID,
@@ -528,16 +528,16 @@ void __RPC_STUB IRegistrar_ResourceUnregister_Stub(
 #define __IDocHostUIHandlerDispatch_INTERFACE_DEFINED__
 
 /* interface IDocHostUIHandlerDispatch */
-/* [object][unique][helpstring][uuid][local] */ 
+/* [object][unique][helpstring][uuid][local] */
 
-typedef 
+typedef
 enum tagDOCHOSTUIDBLCLKDispatch
 	{	docHostUIDblClkDEFAULT	= 0,
 	docHostUIDblClkSHOWPROPERTIES	= 1,
 	docHostUIDblClkSHOWCODE	= 2
 	} 	DOCHOSTUIDBLCLKDispatch;
 
-typedef 
+typedef
 enum tagDocHostUIFlagDispatch
 	{	docHostUIFlagDIALOG	= 1,
 	docHostUIFlagDISABLE_HELP_MENU	= 2,
@@ -560,7 +560,7 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 	IDocHostUIHandlerDispatch : public IDispatch
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE ShowContextMenu( 
+		virtual HRESULT STDMETHODCALLTYPE ShowContextMenu(
 			/* [in] */ DWORD dwID,
 			/* [in] */ DWORD x,
 			/* [in] */ DWORD y,
@@ -568,11 +568,11 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ IDispatch *pdispReserved,
 			/* [retval][out] */ HRESULT *dwRetVal) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE GetHostInfo( 
+		virtual HRESULT STDMETHODCALLTYPE GetHostInfo(
 			/* [out][in] */ DWORD *pdwFlags,
 			/* [out][in] */ DWORD *pdwDoubleClick) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE ShowUI( 
+		virtual HRESULT STDMETHODCALLTYPE ShowUI(
 			/* [in] */ DWORD dwID,
 			/* [in] */ IUnknown *pActiveObject,
 			/* [in] */ IUnknown *pCommandTarget,
@@ -584,16 +584,16 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 
 		virtual HRESULT STDMETHODCALLTYPE UpdateUI( void) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE EnableModeless( 
+		virtual HRESULT STDMETHODCALLTYPE EnableModeless(
 			/* [in] */ VARIANT_BOOL fEnable) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE OnDocWindowActivate( 
+		virtual HRESULT STDMETHODCALLTYPE OnDocWindowActivate(
 			/* [in] */ VARIANT_BOOL fActivate) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE OnFrameWindowActivate( 
+		virtual HRESULT STDMETHODCALLTYPE OnFrameWindowActivate(
 			/* [in] */ VARIANT_BOOL fActivate) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE ResizeBorder( 
+		virtual HRESULT STDMETHODCALLTYPE ResizeBorder(
 			/* [in] */ long left,
 			/* [in] */ long top,
 			/* [in] */ long right,
@@ -601,7 +601,7 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ IUnknown *pUIWindow,
 			/* [in] */ VARIANT_BOOL fFrameWindow) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE TranslateAccelerator( 
+		virtual HRESULT STDMETHODCALLTYPE TranslateAccelerator(
 			/* [in] */ DWORD_PTR hWnd,
 			/* [in] */ DWORD nMessage,
 			/* [in] */ DWORD_PTR wParam,
@@ -610,23 +610,23 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ DWORD nCmdID,
 			/* [retval][out] */ HRESULT *dwRetVal) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE GetOptionKeyPath( 
+		virtual HRESULT STDMETHODCALLTYPE GetOptionKeyPath(
 			/* [out] */ BSTR *pbstrKey,
 			/* [in] */ DWORD dw) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE GetDropTarget( 
+		virtual HRESULT STDMETHODCALLTYPE GetDropTarget(
 			/* [in] */ IUnknown *pDropTarget,
 			/* [out] */ IUnknown **ppDropTarget) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE GetExternal( 
+		virtual HRESULT STDMETHODCALLTYPE GetExternal(
 			/* [out] */ IDispatch **ppDispatch) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE TranslateUrl( 
+		virtual HRESULT STDMETHODCALLTYPE TranslateUrl(
 			/* [in] */ DWORD dwTranslate,
 			/* [in] */ BSTR bstrURLIn,
 			/* [out] */ BSTR *pbstrURLOut) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE FilterDataObject( 
+		virtual HRESULT STDMETHODCALLTYPE FilterDataObject(
 			/* [in] */ IUnknown *pDO,
 			/* [out] */ IUnknown **ppDORet) = 0;
 
@@ -638,28 +638,28 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IDocHostUIHandlerDispatch * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IDocHostUIHandlerDispatch * This);
 
-		HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+		HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )(
 			IDocHostUIHandlerDispatch * This,
 			/* [out] */ UINT *pctinfo);
 
-		HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+		HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ UINT iTInfo,
 			/* [in] */ LCID lcid,
 			/* [out] */ ITypeInfo **ppTInfo);
 
-		HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+		HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ REFIID riid,
 			/* [size_is][in] */ _In_reads_(cNames) LPOLESTR *rgszNames,
@@ -667,7 +667,7 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ LCID lcid,
 			/* [size_is][out] */ DISPID *rgDispId);
 
-		/* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+		/* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ DISPID dispIdMember,
 			/* [in] */ REFIID riid,
@@ -678,7 +678,7 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [out] */ EXCEPINFO *pExcepInfo,
 			/* [out] */ UINT *puArgErr);
 
-		HRESULT ( STDMETHODCALLTYPE *ShowContextMenu )( 
+		HRESULT ( STDMETHODCALLTYPE *ShowContextMenu )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ DWORD dwID,
 			/* [in] */ DWORD x,
@@ -687,12 +687,12 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ IDispatch *pdispReserved,
 			/* [retval][out] */ HRESULT *dwRetVal);
 
-		HRESULT ( STDMETHODCALLTYPE *GetHostInfo )( 
+		HRESULT ( STDMETHODCALLTYPE *GetHostInfo )(
 			IDocHostUIHandlerDispatch * This,
 			/* [out][in] */ DWORD *pdwFlags,
 			/* [out][in] */ DWORD *pdwDoubleClick);
 
-		HRESULT ( STDMETHODCALLTYPE *ShowUI )( 
+		HRESULT ( STDMETHODCALLTYPE *ShowUI )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ DWORD dwID,
 			/* [in] */ IUnknown *pActiveObject,
@@ -701,25 +701,25 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ IUnknown *pDoc,
 			/* [retval][out] */ HRESULT *dwRetVal);
 
-		HRESULT ( STDMETHODCALLTYPE *HideUI )( 
+		HRESULT ( STDMETHODCALLTYPE *HideUI )(
 			IDocHostUIHandlerDispatch * This);
 
-		HRESULT ( STDMETHODCALLTYPE *UpdateUI )( 
+		HRESULT ( STDMETHODCALLTYPE *UpdateUI )(
 			IDocHostUIHandlerDispatch * This);
 
-		HRESULT ( STDMETHODCALLTYPE *EnableModeless )( 
+		HRESULT ( STDMETHODCALLTYPE *EnableModeless )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ VARIANT_BOOL fEnable);
 
-		HRESULT ( STDMETHODCALLTYPE *OnDocWindowActivate )( 
+		HRESULT ( STDMETHODCALLTYPE *OnDocWindowActivate )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ VARIANT_BOOL fActivate);
 
-		HRESULT ( STDMETHODCALLTYPE *OnFrameWindowActivate )( 
+		HRESULT ( STDMETHODCALLTYPE *OnFrameWindowActivate )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ VARIANT_BOOL fActivate);
 
-		HRESULT ( STDMETHODCALLTYPE *ResizeBorder )( 
+		HRESULT ( STDMETHODCALLTYPE *ResizeBorder )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ long left,
 			/* [in] */ long top,
@@ -728,7 +728,7 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ IUnknown *pUIWindow,
 			/* [in] */ VARIANT_BOOL fFrameWindow);
 
-		HRESULT ( STDMETHODCALLTYPE *TranslateAccelerator )( 
+		HRESULT ( STDMETHODCALLTYPE *TranslateAccelerator )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ DWORD_PTR hWnd,
 			/* [in] */ DWORD nMessage,
@@ -738,27 +738,27 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 			/* [in] */ DWORD nCmdID,
 			/* [retval][out] */ HRESULT *dwRetVal);
 
-		HRESULT ( STDMETHODCALLTYPE *GetOptionKeyPath )( 
+		HRESULT ( STDMETHODCALLTYPE *GetOptionKeyPath )(
 			IDocHostUIHandlerDispatch * This,
 			/* [out] */ BSTR *pbstrKey,
 			/* [in] */ DWORD dw);
 
-		HRESULT ( STDMETHODCALLTYPE *GetDropTarget )( 
+		HRESULT ( STDMETHODCALLTYPE *GetDropTarget )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ IUnknown *pDropTarget,
 			/* [out] */ IUnknown **ppDropTarget);
 
-		HRESULT ( STDMETHODCALLTYPE *GetExternal )( 
+		HRESULT ( STDMETHODCALLTYPE *GetExternal )(
 			IDocHostUIHandlerDispatch * This,
 			/* [out] */ IDispatch **ppDispatch);
 
-		HRESULT ( STDMETHODCALLTYPE *TranslateUrl )( 
+		HRESULT ( STDMETHODCALLTYPE *TranslateUrl )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ DWORD dwTranslate,
 			/* [in] */ BSTR bstrURLIn,
 			/* [out] */ BSTR *pbstrURLOut);
 
-		HRESULT ( STDMETHODCALLTYPE *FilterDataObject )( 
+		HRESULT ( STDMETHODCALLTYPE *FilterDataObject )(
 			IDocHostUIHandlerDispatch * This,
 			/* [in] */ IUnknown *pDO,
 			/* [out] */ IUnknown **ppDORet);
@@ -851,7 +851,7 @@ EXTERN_C const IID IID_IDocHostUIHandlerDispatch;
 
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_ShowContextMenu_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_ShowContextMenu_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ DWORD dwID,
 	/* [in] */ DWORD x,
@@ -868,7 +868,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_ShowContextMenu_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetHostInfo_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetHostInfo_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [out][in] */ DWORD *pdwFlags,
 	/* [out][in] */ DWORD *pdwDoubleClick);
@@ -881,7 +881,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_GetHostInfo_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_ShowUI_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_ShowUI_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ DWORD dwID,
 	/* [in] */ IUnknown *pActiveObject,
@@ -898,7 +898,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_ShowUI_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_HideUI_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_HideUI_Proxy(
 	IDocHostUIHandlerDispatch * This);
 
 
@@ -909,7 +909,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_HideUI_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_UpdateUI_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_UpdateUI_Proxy(
 	IDocHostUIHandlerDispatch * This);
 
 
@@ -920,7 +920,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_UpdateUI_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_EnableModeless_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_EnableModeless_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ VARIANT_BOOL fEnable);
 
@@ -932,7 +932,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_EnableModeless_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_OnDocWindowActivate_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_OnDocWindowActivate_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ VARIANT_BOOL fActivate);
 
@@ -944,7 +944,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_OnDocWindowActivate_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_OnFrameWindowActivate_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_OnFrameWindowActivate_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ VARIANT_BOOL fActivate);
 
@@ -956,7 +956,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_OnFrameWindowActivate_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_ResizeBorder_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_ResizeBorder_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ long left,
 	/* [in] */ long top,
@@ -973,7 +973,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_ResizeBorder_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_TranslateAccelerator_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_TranslateAccelerator_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ DWORD_PTR hWnd,
 	/* [in] */ DWORD nMessage,
@@ -991,7 +991,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_TranslateAccelerator_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetOptionKeyPath_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetOptionKeyPath_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [out] */ BSTR *pbstrKey,
 	/* [in] */ DWORD dw);
@@ -1004,7 +1004,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_GetOptionKeyPath_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetDropTarget_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetDropTarget_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ IUnknown *pDropTarget,
 	/* [out] */ IUnknown **ppDropTarget);
@@ -1017,7 +1017,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_GetDropTarget_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetExternal_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_GetExternal_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [out] */ IDispatch **ppDispatch);
 
@@ -1029,7 +1029,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_GetExternal_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_TranslateUrl_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_TranslateUrl_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ DWORD dwTranslate,
 	/* [in] */ BSTR bstrURLIn,
@@ -1043,7 +1043,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_TranslateUrl_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_FilterDataObject_Proxy( 
+HRESULT STDMETHODCALLTYPE IDocHostUIHandlerDispatch_FilterDataObject_Proxy(
 	IDocHostUIHandlerDispatch * This,
 	/* [in] */ IUnknown *pDO,
 	/* [out] */ IUnknown **ppDORet);
@@ -1064,7 +1064,7 @@ void __RPC_STUB IDocHostUIHandlerDispatch_FilterDataObject_Stub(
 #define __IAxWinHostWindow_INTERFACE_DEFINED__
 
 /* interface IAxWinHostWindow */
-/* [object][unique][helpstring][uuid] */ 
+/* [object][unique][helpstring][uuid] */
 
 
 EXTERN_C const IID IID_IAxWinHostWindow;
@@ -1075,12 +1075,12 @@ EXTERN_C const IID IID_IAxWinHostWindow;
 	IAxWinHostWindow : public IUnknown
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE CreateControl( 
+		virtual HRESULT STDMETHODCALLTYPE CreateControl(
 			_In_z_ LPCOLESTR lpTricsData,
 			_In_ HWND hWnd,
 			_Inout_opt_ IStream *pStream) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE CreateControlEx( 
+		virtual HRESULT STDMETHODCALLTYPE CreateControlEx(
 			_In_z_ LPCOLESTR lpszTricsData,
 			_In_ HWND hWnd,
 			_Inout_opt_ IStream* pStream,
@@ -1088,18 +1088,18 @@ EXTERN_C const IID IID_IAxWinHostWindow;
 			_In_ REFIID iidAdvise,
 			_Inout_ IUnknown* punkSink) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE AttachControl( 
+		virtual HRESULT STDMETHODCALLTYPE AttachControl(
 			_Inout_ IUnknown* pUnkControl,
 			_In_ HWND hWnd) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE QueryControl( 
+		virtual HRESULT STDMETHODCALLTYPE QueryControl(
 			_In_ REFIID riid,
 			_Outptr_ void** ppvObject) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE SetExternalDispatch( 
+		virtual HRESULT STDMETHODCALLTYPE SetExternalDispatch(
 			_In_opt_ IDispatch *pDisp) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE SetExternalUIHandler( 
+		virtual HRESULT STDMETHODCALLTYPE SetExternalUIHandler(
 			_In_opt_ IDocHostUIHandlerDispatch *pDisp) = 0;
 
 	};
@@ -1110,24 +1110,24 @@ EXTERN_C const IID IID_IAxWinHostWindow;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IAxWinHostWindow * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IAxWinHostWindow * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IAxWinHostWindow * This);
 
-		HRESULT ( STDMETHODCALLTYPE *CreateControl )( 
+		HRESULT ( STDMETHODCALLTYPE *CreateControl )(
 			IAxWinHostWindow * This,
 			/* [in] */ LPCOLESTR lpTricsData,
 			/* [in] */ HWND hWnd,
 			/* [in] */ IStream *pStream);
 
-		HRESULT ( STDMETHODCALLTYPE *CreateControlEx )( 
+		HRESULT ( STDMETHODCALLTYPE *CreateControlEx )(
 			IAxWinHostWindow * This,
 			/* [in] */ LPCOLESTR lpTricsData,
 			/* [in] */ HWND hWnd,
@@ -1136,21 +1136,21 @@ EXTERN_C const IID IID_IAxWinHostWindow;
 			/* [in] */ REFIID riidAdvise,
 			/* [in] */ IUnknown *punkAdvise);
 
-		HRESULT ( STDMETHODCALLTYPE *AttachControl )( 
+		HRESULT ( STDMETHODCALLTYPE *AttachControl )(
 			IAxWinHostWindow * This,
 			/* [in] */ IUnknown *pUnkControl,
 			/* [in] */ HWND hWnd);
 
-		HRESULT ( STDMETHODCALLTYPE *QueryControl )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryControl )(
 			IAxWinHostWindow * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		HRESULT ( STDMETHODCALLTYPE *SetExternalDispatch )( 
+		HRESULT ( STDMETHODCALLTYPE *SetExternalDispatch )(
 			IAxWinHostWindow * This,
 			/* [in] */ IDispatch *pDisp);
 
-		HRESULT ( STDMETHODCALLTYPE *SetExternalUIHandler )( 
+		HRESULT ( STDMETHODCALLTYPE *SetExternalUIHandler )(
 			IAxWinHostWindow * This,
 			/* [in] */ IDocHostUIHandlerDispatch *pDisp);
 
@@ -1202,7 +1202,7 @@ EXTERN_C const IID IID_IAxWinHostWindow;
 
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindow_CreateControl_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindow_CreateControl_Proxy(
 	IAxWinHostWindow * This,
 	/* [in] */ LPCOLESTR lpTricsData,
 	/* [in] */ HWND hWnd,
@@ -1216,7 +1216,7 @@ void __RPC_STUB IAxWinHostWindow_CreateControl_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindow_CreateControlEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindow_CreateControlEx_Proxy(
 	IAxWinHostWindow * This,
 	/* [in] */ LPCOLESTR lpTricsData,
 	/* [in] */ HWND hWnd,
@@ -1233,7 +1233,7 @@ void __RPC_STUB IAxWinHostWindow_CreateControlEx_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindow_AttachControl_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindow_AttachControl_Proxy(
 	IAxWinHostWindow * This,
 	/* [in] */ IUnknown *pUnkControl,
 	/* [in] */ HWND hWnd);
@@ -1246,7 +1246,7 @@ void __RPC_STUB IAxWinHostWindow_AttachControl_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindow_QueryControl_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindow_QueryControl_Proxy(
 	IAxWinHostWindow * This,
 	/* [in] */ REFIID riid,
 	/* [iid_is][out] */ void **ppvObject);
@@ -1259,7 +1259,7 @@ void __RPC_STUB IAxWinHostWindow_QueryControl_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindow_SetExternalDispatch_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindow_SetExternalDispatch_Proxy(
 	IAxWinHostWindow * This,
 	/* [in] */ IDispatch *pDisp);
 
@@ -1271,7 +1271,7 @@ void __RPC_STUB IAxWinHostWindow_SetExternalDispatch_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindow_SetExternalUIHandler_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindow_SetExternalUIHandler_Proxy(
 	IAxWinHostWindow * This,
 	/* [in] */ IDocHostUIHandlerDispatch *pDisp);
 
@@ -1291,7 +1291,7 @@ void __RPC_STUB IAxWinHostWindow_SetExternalUIHandler_Stub(
 #define __IAxWinHostWindowLic_INTERFACE_DEFINED__
 
 /* interface IAxWinHostWindowLic */
-/* [object][unique][helpstring][uuid] */ 
+/* [object][unique][helpstring][uuid] */
 
 
 EXTERN_C const IID IID_IAxWinHostWindowLic;
@@ -1302,13 +1302,13 @@ EXTERN_C const IID IID_IAxWinHostWindowLic;
 	IAxWinHostWindowLic : public IAxWinHostWindow
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE CreateControlLic( 
+		virtual HRESULT STDMETHODCALLTYPE CreateControlLic(
 			_In_z_ LPCOLESTR lpTricsData,
 			_In_ HWND hWnd,
 			_Inout_opt_ IStream* pStream,
 			_In_opt_z_ BSTR bstrLic) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE CreateControlLicEx( 
+		virtual HRESULT STDMETHODCALLTYPE CreateControlLicEx(
 			_In_z_ LPCOLESTR lpszTricsData,
 			_In_ HWND hWnd,
 			_Inout_opt_ IStream* pStream,
@@ -1325,24 +1325,24 @@ EXTERN_C const IID IID_IAxWinHostWindowLic;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IAxWinHostWindowLic * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IAxWinHostWindowLic * This);
 
-		HRESULT ( STDMETHODCALLTYPE *CreateControl )( 
+		HRESULT ( STDMETHODCALLTYPE *CreateControl )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ LPCOLESTR lpTricsData,
 			/* [in] */ HWND hWnd,
 			/* [in] */ IStream *pStream);
 
-		HRESULT ( STDMETHODCALLTYPE *CreateControlEx )( 
+		HRESULT ( STDMETHODCALLTYPE *CreateControlEx )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ LPCOLESTR lpTricsData,
 			/* [in] */ HWND hWnd,
@@ -1351,32 +1351,32 @@ EXTERN_C const IID IID_IAxWinHostWindowLic;
 			/* [in] */ REFIID riidAdvise,
 			/* [in] */ IUnknown *punkAdvise);
 
-		HRESULT ( STDMETHODCALLTYPE *AttachControl )( 
+		HRESULT ( STDMETHODCALLTYPE *AttachControl )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ IUnknown *pUnkControl,
 			/* [in] */ HWND hWnd);
 
-		HRESULT ( STDMETHODCALLTYPE *QueryControl )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryControl )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		HRESULT ( STDMETHODCALLTYPE *SetExternalDispatch )( 
+		HRESULT ( STDMETHODCALLTYPE *SetExternalDispatch )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ IDispatch *pDisp);
 
-		HRESULT ( STDMETHODCALLTYPE *SetExternalUIHandler )( 
+		HRESULT ( STDMETHODCALLTYPE *SetExternalUIHandler )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ IDocHostUIHandlerDispatch *pDisp);
 
-		HRESULT ( STDMETHODCALLTYPE *CreateControlLic )( 
+		HRESULT ( STDMETHODCALLTYPE *CreateControlLic )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ LPCOLESTR lpTricsData,
 			/* [in] */ HWND hWnd,
 			/* [in] */ IStream *pStream,
 			/* [in] */ BSTR bstrLic);
 
-		HRESULT ( STDMETHODCALLTYPE *CreateControlLicEx )( 
+		HRESULT ( STDMETHODCALLTYPE *CreateControlLicEx )(
 			IAxWinHostWindowLic * This,
 			/* [in] */ LPCOLESTR lpTricsData,
 			/* [in] */ HWND hWnd,
@@ -1441,7 +1441,7 @@ EXTERN_C const IID IID_IAxWinHostWindowLic;
 
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindowLic_CreateControlLic_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindowLic_CreateControlLic_Proxy(
 	IAxWinHostWindowLic * This,
 	/* [in] */ LPCOLESTR lpTricsData,
 	/* [in] */ HWND hWnd,
@@ -1456,7 +1456,7 @@ void __RPC_STUB IAxWinHostWindowLic_CreateControlLic_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAxWinHostWindowLic_CreateControlLicEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IAxWinHostWindowLic_CreateControlLicEx_Proxy(
 	IAxWinHostWindowLic * This,
 	/* [in] */ LPCOLESTR lpTricsData,
 	/* [in] */ HWND hWnd,
@@ -1482,7 +1482,7 @@ void __RPC_STUB IAxWinHostWindowLic_CreateControlLicEx_Stub(
 #define __IAxWinAmbientDispatch_INTERFACE_DEFINED__
 
 /* interface IAxWinAmbientDispatch */
-/* [unique][helpstring][uuid][dual][object] */ 
+/* [unique][helpstring][uuid][dual][object] */
 
 
 EXTERN_C const IID IID_IAxWinAmbientDispatch;
@@ -1493,88 +1493,88 @@ EXTERN_C const IID IID_IAxWinAmbientDispatch;
 	IAxWinAmbientDispatch : public IDispatch
 	{
 	public:
-		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_AllowWindowlessActivation( 
+		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_AllowWindowlessActivation(
 			_In_ VARIANT_BOOL bCanWindowlessActivate) = 0;
 
-		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_AllowWindowlessActivation( 
+		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_AllowWindowlessActivation(
 			_Out_ VARIANT_BOOL *pbCanWindowlessActivate) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_BackColor( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_BackColor(
 			_In_ OLE_COLOR clrBackground) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_BackColor(
 			_Out_ OLE_COLOR *pclrBackground) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_ForeColor( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_ForeColor(
 			_In_ OLE_COLOR clrForeground) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_ForeColor( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_ForeColor(
 			_Out_ OLE_COLOR *pclrForeground) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_LocaleID( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_LocaleID(
 			_In_ LCID lcidLocaleID) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_LocaleID( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_LocaleID(
 			_Out_ LCID *plcidLocaleID) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_UserMode( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_UserMode(
 			_In_ VARIANT_BOOL bUserMode) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_UserMode( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_UserMode(
 			_Out_ VARIANT_BOOL *pbUserMode) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_DisplayAsDefault( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_DisplayAsDefault(
 			_In_ VARIANT_BOOL bDisplayAsDefault) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_DisplayAsDefault( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_DisplayAsDefault(
 			_Out_ VARIANT_BOOL *pbDisplayAsDefault) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_Font( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_Font(
 			_In_ IFontDisp *pFont) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_Font( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_Font(
 			_Out_ IFontDisp **pFont) = 0;
 
-		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_MessageReflect( 
+		virtual /* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_MessageReflect(
 			_In_ VARIANT_BOOL bMsgReflect) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_MessageReflect( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_MessageReflect(
 			_Out_ VARIANT_BOOL *pbMsgReflect) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_ShowGrabHandles( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_ShowGrabHandles(
 			_Out_ VARIANT_BOOL *pbShowGrabHandles) = 0;
 
-		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_ShowHatching( 
+		virtual /* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_ShowHatching(
 			_Out_ VARIANT_BOOL *pbShowHatching) = 0;
 
-		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_DocHostFlags( 
+		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_DocHostFlags(
 			_In_ DWORD dwDocHostFlags) = 0;
 
-		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_DocHostFlags( 
+		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_DocHostFlags(
 			_Out_ DWORD *pdwDocHostFlags) = 0;
 
-		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_DocHostDoubleClickFlags( 
+		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_DocHostDoubleClickFlags(
 			_In_ DWORD dwDocHostDoubleClickFlags) = 0;
 
-		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_DocHostDoubleClickFlags( 
+		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_DocHostDoubleClickFlags(
 			_Out_ DWORD *pdwDocHostDoubleClickFlags) = 0;
 
-		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_AllowContextMenu( 
+		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_AllowContextMenu(
 			_In_ VARIANT_BOOL bAllowContextMenu) = 0;
 
-		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_AllowContextMenu( 
+		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_AllowContextMenu(
 			_Out_ VARIANT_BOOL *pbAllowContextMenu) = 0;
 
-		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_AllowShowUI( 
+		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_AllowShowUI(
 			_In_ VARIANT_BOOL bAllowShowUI) = 0;
 
-		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_AllowShowUI( 
+		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_AllowShowUI(
 			_Out_ VARIANT_BOOL *pbAllowShowUI) = 0;
 
-		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_OptionKeyPath( 
+		virtual /* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE put_OptionKeyPath(
 			_In_ BSTR bstrOptionKeyPath) = 0;
 
-		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_OptionKeyPath( 
+		virtual /* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE get_OptionKeyPath(
 			_Out_ BSTR *pbstrOptionKeyPath) = 0;
 
 	};
@@ -1585,28 +1585,28 @@ EXTERN_C const IID IID_IAxWinAmbientDispatch;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IAxWinAmbientDispatch * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IAxWinAmbientDispatch * This);
 
-		HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+		HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )(
 			IAxWinAmbientDispatch * This,
 			/* [out] */ UINT *pctinfo);
 
-		HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+		HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ UINT iTInfo,
 			/* [in] */ LCID lcid,
 			/* [out] */ ITypeInfo **ppTInfo);
 
-		HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+		HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ REFIID riid,
 			/* [size_is][in] */ _In_reads_(cNames) LPOLESTR *rgszNames,
@@ -1614,7 +1614,7 @@ EXTERN_C const IID IID_IAxWinAmbientDispatch;
 			/* [in] */ LCID lcid,
 			/* [size_is][out] */ DISPID *rgDispId);
 
-		/* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+		/* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ DISPID dispIdMember,
 			/* [in] */ REFIID riid,
@@ -1625,115 +1625,115 @@ EXTERN_C const IID IID_IAxWinAmbientDispatch;
 			/* [out] */ EXCEPINFO *pExcepInfo,
 			/* [out] */ UINT *puArgErr);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowWindowlessActivation )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowWindowlessActivation )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ VARIANT_BOOL bCanWindowlessActivate);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowWindowlessActivation )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowWindowlessActivation )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbCanWindowlessActivate);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ OLE_COLOR clrBackground);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ OLE_COLOR *pclrBackground);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ForeColor )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ForeColor )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ OLE_COLOR clrForeground);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ OLE_COLOR *pclrForeground);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_LocaleID )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_LocaleID )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ LCID lcidLocaleID);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_LocaleID )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_LocaleID )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ LCID *plcidLocaleID);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_UserMode )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_UserMode )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ VARIANT_BOOL bUserMode);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_UserMode )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_UserMode )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbUserMode);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DisplayAsDefault )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DisplayAsDefault )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ VARIANT_BOOL bDisplayAsDefault);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayAsDefault )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayAsDefault )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbDisplayAsDefault);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Font )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Font )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ IFontDisp *pFont);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Font )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Font )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ IFontDisp **pFont);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_MessageReflect )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_MessageReflect )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ VARIANT_BOOL bMsgReflect);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_MessageReflect )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_MessageReflect )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbMsgReflect);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowGrabHandles )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowGrabHandles )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbShowGrabHandles);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowHatching )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowHatching )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbShowHatching);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostFlags )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostFlags )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ DWORD dwDocHostFlags);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostFlags )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostFlags )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ DWORD *pdwDocHostFlags);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostDoubleClickFlags )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostDoubleClickFlags )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ DWORD dwDocHostDoubleClickFlags);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostDoubleClickFlags )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostDoubleClickFlags )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ DWORD *pdwDocHostDoubleClickFlags);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowContextMenu )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowContextMenu )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ VARIANT_BOOL bAllowContextMenu);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowContextMenu )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowContextMenu )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbAllowContextMenu);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowShowUI )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowShowUI )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ VARIANT_BOOL bAllowShowUI);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowShowUI )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowShowUI )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ VARIANT_BOOL *pbAllowShowUI);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_OptionKeyPath )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_OptionKeyPath )(
 			IAxWinAmbientDispatch * This,
 			/* [in] */ BSTR bstrOptionKeyPath);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_OptionKeyPath )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_OptionKeyPath )(
 			IAxWinAmbientDispatch * This,
 			/* [retval][out] */ BSTR *pbstrOptionKeyPath);
 
@@ -1864,7 +1864,7 @@ EXTERN_C const IID IID_IAxWinAmbientDispatch;
 
 
 
-/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_AllowWindowlessActivation_Proxy( 
+/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_AllowWindowlessActivation_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ VARIANT_BOOL bCanWindowlessActivate);
 
@@ -1876,7 +1876,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_AllowWindowlessActivation_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_AllowWindowlessActivation_Proxy( 
+/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_AllowWindowlessActivation_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbCanWindowlessActivate);
 
@@ -1888,7 +1888,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_AllowWindowlessActivation_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_BackColor_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_BackColor_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ OLE_COLOR clrBackground);
 
@@ -1900,7 +1900,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_BackColor_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_BackColor_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_BackColor_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ OLE_COLOR *pclrBackground);
 
@@ -1912,7 +1912,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_BackColor_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_ForeColor_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_ForeColor_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ OLE_COLOR clrForeground);
 
@@ -1924,7 +1924,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_ForeColor_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_ForeColor_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_ForeColor_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ OLE_COLOR *pclrForeground);
 
@@ -1936,7 +1936,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_ForeColor_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_LocaleID_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_LocaleID_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ LCID lcidLocaleID);
 
@@ -1948,7 +1948,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_LocaleID_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_LocaleID_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_LocaleID_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ LCID *plcidLocaleID);
 
@@ -1960,7 +1960,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_LocaleID_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_UserMode_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_UserMode_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ VARIANT_BOOL bUserMode);
 
@@ -1972,7 +1972,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_UserMode_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_UserMode_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_UserMode_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbUserMode);
 
@@ -1984,7 +1984,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_UserMode_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_DisplayAsDefault_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_DisplayAsDefault_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ VARIANT_BOOL bDisplayAsDefault);
 
@@ -1996,7 +1996,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_DisplayAsDefault_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_DisplayAsDefault_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_DisplayAsDefault_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbDisplayAsDefault);
 
@@ -2008,7 +2008,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_DisplayAsDefault_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_Font_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_Font_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ IFontDisp *pFont);
 
@@ -2020,7 +2020,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_Font_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_Font_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_Font_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ IFontDisp **pFont);
 
@@ -2032,7 +2032,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_Font_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_MessageReflect_Proxy( 
+/* [id][helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_MessageReflect_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ VARIANT_BOOL bMsgReflect);
 
@@ -2044,7 +2044,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_MessageReflect_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_MessageReflect_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_MessageReflect_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbMsgReflect);
 
@@ -2056,7 +2056,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_MessageReflect_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_ShowGrabHandles_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_ShowGrabHandles_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbShowGrabHandles);
 
@@ -2068,7 +2068,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_ShowGrabHandles_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_ShowHatching_Proxy( 
+/* [id][helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_ShowHatching_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbShowHatching);
 
@@ -2080,7 +2080,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_ShowHatching_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_DocHostFlags_Proxy( 
+/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_DocHostFlags_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ DWORD dwDocHostFlags);
 
@@ -2092,7 +2092,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_DocHostFlags_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_DocHostFlags_Proxy( 
+/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_DocHostFlags_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ DWORD *pdwDocHostFlags);
 
@@ -2104,7 +2104,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_DocHostFlags_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_DocHostDoubleClickFlags_Proxy( 
+/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_DocHostDoubleClickFlags_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ DWORD dwDocHostDoubleClickFlags);
 
@@ -2116,7 +2116,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_DocHostDoubleClickFlags_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_DocHostDoubleClickFlags_Proxy( 
+/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_DocHostDoubleClickFlags_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ DWORD *pdwDocHostDoubleClickFlags);
 
@@ -2128,7 +2128,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_DocHostDoubleClickFlags_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_AllowContextMenu_Proxy( 
+/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_AllowContextMenu_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ VARIANT_BOOL bAllowContextMenu);
 
@@ -2140,7 +2140,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_AllowContextMenu_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_AllowContextMenu_Proxy( 
+/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_AllowContextMenu_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbAllowContextMenu);
 
@@ -2152,7 +2152,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_AllowContextMenu_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_AllowShowUI_Proxy( 
+/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_AllowShowUI_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ VARIANT_BOOL bAllowShowUI);
 
@@ -2164,7 +2164,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_AllowShowUI_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_AllowShowUI_Proxy( 
+/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_AllowShowUI_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ VARIANT_BOOL *pbAllowShowUI);
 
@@ -2176,7 +2176,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_AllowShowUI_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_OptionKeyPath_Proxy( 
+/* [helpstring][propput] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_put_OptionKeyPath_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [in] */ BSTR bstrOptionKeyPath);
 
@@ -2188,7 +2188,7 @@ void __RPC_STUB IAxWinAmbientDispatch_put_OptionKeyPath_Stub(
 	DWORD *_pdwStubPhase);
 
 
-/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_OptionKeyPath_Proxy( 
+/* [helpstring][propget] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatch_get_OptionKeyPath_Proxy(
 	IAxWinAmbientDispatch * This,
 	/* [retval][out] */ BSTR *pbstrOptionKeyPath);
 
@@ -2208,7 +2208,7 @@ void __RPC_STUB IAxWinAmbientDispatch_get_OptionKeyPath_Stub(
 #define __IAxWinAmbientDispatchEx_INTERFACE_DEFINED__
 
 /* interface IAxWinAmbientDispatchEx */
-/* [unique][helpstring][uuid][dual][object] */ 
+/* [unique][helpstring][uuid][dual][object] */
 
 
 EXTERN_C const IID IID_IAxWinAmbientDispatchEx;
@@ -2219,7 +2219,7 @@ EXTERN_C const IID IID_IAxWinAmbientDispatchEx;
 	IAxWinAmbientDispatchEx : public IAxWinAmbientDispatch
 	{
 	public:
-		virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetAmbientDispatch( 
+		virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetAmbientDispatch(
 			_In_ IDispatch *pDispatch) = 0;
 
 	};
@@ -2230,28 +2230,28 @@ EXTERN_C const IID IID_IAxWinAmbientDispatchEx;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IAxWinAmbientDispatchEx * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IAxWinAmbientDispatchEx * This);
 
-		HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+		HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )(
 			IAxWinAmbientDispatchEx * This,
 			/* [out] */ UINT *pctinfo);
 
-		HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+		HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ UINT iTInfo,
 			/* [in] */ LCID lcid,
 			/* [out] */ ITypeInfo **ppTInfo);
 
-		HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+		HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ REFIID riid,
 			/* [size_is][in] */ _In_reads_(cNames) LPOLESTR *rgszNames,
@@ -2259,7 +2259,7 @@ EXTERN_C const IID IID_IAxWinAmbientDispatchEx;
 			/* [in] */ LCID lcid,
 			/* [size_is][out] */ DISPID *rgDispId);
 
-		/* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+		/* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ DISPID dispIdMember,
 			/* [in] */ REFIID riid,
@@ -2270,119 +2270,119 @@ EXTERN_C const IID IID_IAxWinAmbientDispatchEx;
 			/* [out] */ EXCEPINFO *pExcepInfo,
 			/* [out] */ UINT *puArgErr);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowWindowlessActivation )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowWindowlessActivation )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ VARIANT_BOOL bCanWindowlessActivate);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowWindowlessActivation )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowWindowlessActivation )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbCanWindowlessActivate);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ OLE_COLOR clrBackground);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ OLE_COLOR *pclrBackground);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ForeColor )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_ForeColor )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ OLE_COLOR clrForeground);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ OLE_COLOR *pclrForeground);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_LocaleID )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_LocaleID )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ LCID lcidLocaleID);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_LocaleID )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_LocaleID )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ LCID *plcidLocaleID);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_UserMode )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_UserMode )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ VARIANT_BOOL bUserMode);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_UserMode )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_UserMode )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbUserMode);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DisplayAsDefault )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DisplayAsDefault )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ VARIANT_BOOL bDisplayAsDefault);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayAsDefault )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayAsDefault )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbDisplayAsDefault);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Font )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_Font )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ IFontDisp *pFont);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Font )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Font )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ IFontDisp **pFont);
 
-		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_MessageReflect )( 
+		/* [id][helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_MessageReflect )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ VARIANT_BOOL bMsgReflect);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_MessageReflect )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_MessageReflect )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbMsgReflect);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowGrabHandles )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowGrabHandles )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbShowGrabHandles);
 
-		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowHatching )( 
+		/* [id][helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_ShowHatching )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbShowHatching);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostFlags )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostFlags )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ DWORD dwDocHostFlags);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostFlags )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostFlags )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ DWORD *pdwDocHostFlags);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostDoubleClickFlags )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_DocHostDoubleClickFlags )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ DWORD dwDocHostDoubleClickFlags);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostDoubleClickFlags )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_DocHostDoubleClickFlags )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ DWORD *pdwDocHostDoubleClickFlags);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowContextMenu )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowContextMenu )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ VARIANT_BOOL bAllowContextMenu);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowContextMenu )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowContextMenu )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbAllowContextMenu);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowShowUI )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_AllowShowUI )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ VARIANT_BOOL bAllowShowUI);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowShowUI )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_AllowShowUI )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ VARIANT_BOOL *pbAllowShowUI);
 
-		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_OptionKeyPath )( 
+		/* [helpstring][propput] */ HRESULT ( STDMETHODCALLTYPE *put_OptionKeyPath )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ BSTR bstrOptionKeyPath);
 
-		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_OptionKeyPath )( 
+		/* [helpstring][propget] */ HRESULT ( STDMETHODCALLTYPE *get_OptionKeyPath )(
 			IAxWinAmbientDispatchEx * This,
 			/* [retval][out] */ BSTR *pbstrOptionKeyPath);
 
-		/* [id] */ HRESULT ( STDMETHODCALLTYPE *SetAmbientDispatch )( 
+		/* [id] */ HRESULT ( STDMETHODCALLTYPE *SetAmbientDispatch )(
 			IAxWinAmbientDispatchEx * This,
 			/* [in] */ IDispatch *pDispatch);
 
@@ -2517,7 +2517,7 @@ EXTERN_C const IID IID_IAxWinAmbientDispatchEx;
 
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatchEx_SetAmbientDispatch_Proxy( 
+/* [id] */ HRESULT STDMETHODCALLTYPE IAxWinAmbientDispatchEx_SetAmbientDispatch_Proxy(
 	IAxWinAmbientDispatchEx * This,
 	/* [in] */ IDispatch *pDispatch);
 
@@ -2537,7 +2537,7 @@ void __RPC_STUB IAxWinAmbientDispatchEx_SetAmbientDispatch_Stub(
 #define __IInternalConnection_INTERFACE_DEFINED__
 
 /* interface IInternalConnection */
-/* [object][unique][helpstring][uuid] */ 
+/* [object][unique][helpstring][uuid] */
 
 
 EXTERN_C const IID IID_IInternalConnection;
@@ -2560,21 +2560,21 @@ EXTERN_C const IID IID_IInternalConnection;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IInternalConnection * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IInternalConnection * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IInternalConnection * This);
 
-		HRESULT ( STDMETHODCALLTYPE *AddConnection )( 
+		HRESULT ( STDMETHODCALLTYPE *AddConnection )(
 			IInternalConnection * This);
 
-		HRESULT ( STDMETHODCALLTYPE *ReleaseConnection )( 
+		HRESULT ( STDMETHODCALLTYPE *ReleaseConnection )(
 			IInternalConnection * This);
 
 		END_INTERFACE
@@ -2611,7 +2611,7 @@ EXTERN_C const IID IID_IInternalConnection;
 
 #endif 	/* C style interface */
 
-HRESULT STDMETHODCALLTYPE IInternalConnection_AddConnection_Proxy( 
+HRESULT STDMETHODCALLTYPE IInternalConnection_AddConnection_Proxy(
 	IInternalConnection * This);
 
 void __RPC_STUB IInternalConnection_AddConnection_Stub(
@@ -2620,7 +2620,7 @@ void __RPC_STUB IInternalConnection_AddConnection_Stub(
 	PRPC_MESSAGE _pRpcMessage,
 	DWORD *_pdwStubPhase);
 
-HRESULT STDMETHODCALLTYPE IInternalConnection_ReleaseConnection_Proxy( 
+HRESULT STDMETHODCALLTYPE IInternalConnection_ReleaseConnection_Proxy(
 	IInternalConnection * This);
 
 
@@ -2634,7 +2634,7 @@ void __RPC_STUB IInternalConnection_ReleaseConnection_Stub(
 
 
 /* interface __MIDL_itf_atliface_0257 */
-/* [local] */ 
+/* [local] */
 
 
 #pragma pack(push,_ATL_PACKING)
@@ -2649,17 +2649,17 @@ namespace ATL
 #endif	// __cplusplus
 
 ATLAPI_(INT_PTR) AtlAxDialogBoxW(
-	_In_ HINSTANCE hInstance, 
+	_In_ HINSTANCE hInstance,
 	_In_z_ LPCWSTR lpTemplateName,
-	_In_ HWND hWndParent, 
-	_In_ DLGPROC lpDialogProc, 
+	_In_ HWND hWndParent,
+	_In_ DLGPROC lpDialogProc,
 	_In_ LPARAM dwInitParam);
 
 ATLAPI_(INT_PTR) AtlAxDialogBoxA(
-	_In_ HINSTANCE hInstance, 
-	_In_z_ LPCSTR lpTemplateName, 
-	_In_ HWND hWndParent, 
-	_In_ DLGPROC lpDialogProc, 
+	_In_ HINSTANCE hInstance,
+	_In_z_ LPCSTR lpTemplateName,
+	_In_ HWND hWndParent,
+	_In_ DLGPROC lpDialogProc,
 	_In_ LPARAM dwInitParam);
 
 #ifdef UNICODE
@@ -2670,16 +2670,16 @@ ATLAPI_(INT_PTR) AtlAxDialogBoxA(
 
 ATLAPI_(HWND) AtlAxCreateDialogW(
 	_In_ HINSTANCE hInstance,
-	_In_z_ LPCWSTR lpTemplateName, 
-	_In_ HWND hWndParent, 
-	_In_ DLGPROC lpDialogProc, 
+	_In_z_ LPCWSTR lpTemplateName,
+	_In_ HWND hWndParent,
+	_In_ DLGPROC lpDialogProc,
 	_In_ LPARAM dwInitParam);
 
 ATLAPI_(HWND) AtlAxCreateDialogA(
-	_In_ HINSTANCE hInstance, 
+	_In_ HINSTANCE hInstance,
 	_In_z_ LPCSTR lpTemplateName,
-	_In_ HWND hWndParent, 
-	_In_ DLGPROC lpDialogProc, 
+	_In_ HWND hWndParent,
+	_In_ DLGPROC lpDialogProc,
 	_In_ LPARAM dwInitParam);
 
 #ifdef UNICODE
@@ -2689,82 +2689,82 @@ ATLAPI_(HWND) AtlAxCreateDialogA(
 #endif
 
 ATLAPI AtlAxCreateControl(
-	_In_z_ LPCOLESTR lpszName, 
-	_In_ HWND hWnd, 
-	_Inout_opt_ IStream* pStream, 
+	_In_z_ LPCOLESTR lpszName,
+	_In_ HWND hWnd,
+	_Inout_opt_ IStream* pStream,
 	_Outptr_ IUnknown** ppUnkContainer);
 
 #ifdef __cplusplus
 
 ATLAPI AtlAxCreateControlEx(
-	_In_z_ LPCOLESTR lpszName, 
-	_In_ HWND hWnd, 
+	_In_z_ LPCOLESTR lpszName,
+	_In_ HWND hWnd,
 	_Inout_opt_ IStream* pStream,
 	_Outptr_opt_ IUnknown** ppUnkContainer,
 	_Outptr_opt_ IUnknown** ppUnkControl,
-	_In_ REFIID iidSink=IID_NULL, 
+	_In_ REFIID iidSink=IID_NULL,
 	_Inout_opt_ IUnknown* punkSink=NULL);
 
 ATLAPI AtlAxCreateControlLic(
 	_In_z_ LPCOLESTR lpszName,
 	_In_ HWND hWnd,
-	_Inout_opt_ IStream* pStream, 
-	_Outptr_opt_ IUnknown** ppUnkContainer, 
+	_Inout_opt_ IStream* pStream,
+	_Outptr_opt_ IUnknown** ppUnkContainer,
 	_In_opt_z_ BSTR bstrLic = NULL);
 
 ATLAPI AtlAxCreateControlLicEx(
 	_In_z_ LPCOLESTR lpszName,
-	_In_ HWND hWnd, 
-	_Inout_opt_ IStream* pStream, 
-	_Outptr_opt_ IUnknown** ppUnkContainer, 
-	_Outptr_opt_ IUnknown** ppUnkControl, 
-	_In_ REFIID iidSink=IID_NULL, 
-	_Inout_opt_ IUnknown* punkSink=NULL, 
+	_In_ HWND hWnd,
+	_Inout_opt_ IStream* pStream,
+	_Outptr_opt_ IUnknown** ppUnkContainer,
+	_Outptr_opt_ IUnknown** ppUnkControl,
+	_In_ REFIID iidSink=IID_NULL,
+	_Inout_opt_ IUnknown* punkSink=NULL,
 	_In_opt_z_ BSTR bstrLic = NULL);
 
 #else
 
 ATLAPI AtlAxCreateControlEx(
-	_In_z_ LPCOLESTR lpszName, 
-	_In_ HWND hWnd, 
-	_Inout_opt_ IStream* pStream, 
+	_In_z_ LPCOLESTR lpszName,
+	_In_ HWND hWnd,
+	_Inout_opt_ IStream* pStream,
 	_Outptr_opt_ IUnknown** ppUnkContainer,
 	_Outptr_opt_ IUnknown** ppUnkControl,
-	_In_ REFIID iidSink, 
+	_In_ REFIID iidSink,
 	_Inout_opt_ IUnknown* punkSink);
 
 ATLAPI AtlAxCreateControlLic(
 	_In_z_ LPCOLESTR lpszName,
-	_In_ HWND hWnd, 
-	_Inout_opt_ IStream* pStream, 
+	_In_ HWND hWnd,
+	_Inout_opt_ IStream* pStream,
 	_Outptr_opt_ IUnknown** ppUnkContainer,
 	_In_opt_z_ BSTR bstrLic);
 
 ATLAPI AtlAxCreateControlLicEx(
-	_In_z_ LPCOLESTR lpszName, 
-	_Inout_ HWND hWnd, 
-	_In_opt_ IStream* pStream, 
-	_Outptr_opt_ IUnknown** ppUnkContainer, 
-	_Outptr_opt_ IUnknown** ppUnkControl, 
+	_In_z_ LPCOLESTR lpszName,
+	_Inout_ HWND hWnd,
+	_In_opt_ IStream* pStream,
+	_Outptr_opt_ IUnknown** ppUnkContainer,
+	_Outptr_opt_ IUnknown** ppUnkControl,
 	_In_ REFIID iidSink,
 	_Inout_opt_ IUnknown* punkSink,
 	_In_opt_z_ BSTR bstrLic);
-	
+
 #endif	// __cplusplus
-	
+
 ATLAPI AtlAxAttachControl(
 	_Inout_ IUnknown* pControl,
-	_In_ HWND hWnd, 
+	_In_ HWND hWnd,
 	_Outptr_opt_ IUnknown** ppUnkContainer);
 
 ATLAPI_(BOOL) AtlAxWinInit();
 
 ATLAPI AtlAxGetHost(
-	_In_ HWND h, 
+	_In_ HWND h,
 	_Outptr_ IUnknown** pp);
 
 ATLAPI AtlAxGetControl(
-	_In_ HWND h, 
+	_In_ HWND h,
 	_Outptr_ IUnknown** pp);
 
 }; //namespace ATL
@@ -2777,7 +2777,7 @@ extern RPC_IF_HANDLE __MIDL_itf_atliface_0257_v0_0_s_ifspec;
 #define __IAccessibleProxy_INTERFACE_DEFINED__
 
 /* interface IAccessibleProxy */
-/* [unique][helpstring][dual][uuid][object] */ 
+/* [unique][helpstring][dual][uuid][object] */
 
 
 EXTERN_C const IID IID_IAccessibleProxy;
@@ -2788,7 +2788,7 @@ EXTERN_C const IID IID_IAccessibleProxy;
 	IAccessibleProxy : public IUnknown
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE SetServer( 
+		virtual HRESULT STDMETHODCALLTYPE SetServer(
 			/* [in] */ _In_ IAccessible *pAccessible,
 			/* [in] */ _In_ IAccessibleServer *pServer) = 0;
 
@@ -2800,18 +2800,18 @@ EXTERN_C const IID IID_IAccessibleProxy;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IAccessibleProxy * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IAccessibleProxy * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IAccessibleProxy * This);
 
-		HRESULT ( STDMETHODCALLTYPE *SetServer )( 
+		HRESULT ( STDMETHODCALLTYPE *SetServer )(
 			IAccessibleProxy * This,
 			/* [in] */ IAccessible *pAccessible,
 			/* [in] */ IAccessibleServer *pServer);
@@ -2849,7 +2849,7 @@ EXTERN_C const IID IID_IAccessibleProxy;
 
 
 
-HRESULT STDMETHODCALLTYPE IAccessibleProxy_SetServer_Proxy( 
+HRESULT STDMETHODCALLTYPE IAccessibleProxy_SetServer_Proxy(
 	IAccessibleProxy * This,
 	/* [in] */ IAccessible *pAccessible,
 	/* [in] */ IAccessibleServer *pServer);
@@ -2870,7 +2870,7 @@ void __RPC_STUB IAccessibleProxy_SetServer_Stub(
 #define __IAccessibleServer_INTERFACE_DEFINED__
 
 /* interface IAccessibleServer */
-/* [unique][helpstring][uuid][object] */ 
+/* [unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IAccessibleServer;
@@ -2881,13 +2881,13 @@ EXTERN_C const IID IID_IAccessibleServer;
 	IAccessibleServer : public IUnknown
 	{
 	public:
-		virtual HRESULT STDMETHODCALLTYPE SetProxy( 
+		virtual HRESULT STDMETHODCALLTYPE SetProxy(
 			/* [in] */ IAccessibleProxy *pUnknown) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE GetHWND( 
+		virtual HRESULT STDMETHODCALLTYPE GetHWND(
 			/* [out] */ HWND *phWnd) = 0;
 
-		virtual HRESULT STDMETHODCALLTYPE GetEnumVariant( 
+		virtual HRESULT STDMETHODCALLTYPE GetEnumVariant(
 			/* [out] */ IEnumVARIANT **ppEnumVariant) = 0;
 
 	};
@@ -2898,26 +2898,26 @@ EXTERN_C const IID IID_IAccessibleServer;
 	{
 		BEGIN_INTERFACE
 
-		HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+		HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
 			IAccessibleServer * This,
 			/* [in] */ REFIID riid,
 			/* [iid_is][out] */ void **ppvObject);
 
-		ULONG ( STDMETHODCALLTYPE *AddRef )( 
+		ULONG ( STDMETHODCALLTYPE *AddRef )(
 			IAccessibleServer * This);
 
-		ULONG ( STDMETHODCALLTYPE *Release )( 
+		ULONG ( STDMETHODCALLTYPE *Release )(
 			IAccessibleServer * This);
 
-		HRESULT ( STDMETHODCALLTYPE *SetProxy )( 
+		HRESULT ( STDMETHODCALLTYPE *SetProxy )(
 			IAccessibleServer * This,
 			/* [in] */ IAccessibleProxy *pUnknown);
 
-		HRESULT ( STDMETHODCALLTYPE *GetHWND )( 
+		HRESULT ( STDMETHODCALLTYPE *GetHWND )(
 			IAccessibleServer * This,
 			/* [out] */ HWND *phWnd);
 
-		HRESULT ( STDMETHODCALLTYPE *GetEnumVariant )( 
+		HRESULT ( STDMETHODCALLTYPE *GetEnumVariant )(
 			IAccessibleServer * This,
 			/* [out] */ IEnumVARIANT **ppEnumVariant);
 
@@ -2960,7 +2960,7 @@ EXTERN_C const IID IID_IAccessibleServer;
 
 
 
-HRESULT STDMETHODCALLTYPE IAccessibleServer_SetProxy_Proxy( 
+HRESULT STDMETHODCALLTYPE IAccessibleServer_SetProxy_Proxy(
 	IAccessibleServer * This,
 	/* [in] */ IAccessibleProxy *pUnknown);
 
@@ -2972,7 +2972,7 @@ void __RPC_STUB IAccessibleServer_SetProxy_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAccessibleServer_GetHWND_Proxy( 
+HRESULT STDMETHODCALLTYPE IAccessibleServer_GetHWND_Proxy(
 	IAccessibleServer * This,
 	/* [out] */ HWND *phWnd);
 
@@ -2984,7 +2984,7 @@ void __RPC_STUB IAccessibleServer_GetHWND_Stub(
 	DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IAccessibleServer_GetEnumVariant_Proxy( 
+HRESULT STDMETHODCALLTYPE IAccessibleServer_GetEnumVariant_Proxy(
 	IAccessibleServer * This,
 	/* [out] */ IEnumVARIANT **ppEnumVariant);
 
@@ -3002,15 +3002,15 @@ void __RPC_STUB IAccessibleServer_GetEnumVariant_Stub(
 
 /* Additional Prototypes for ALL interfaces */
 
-unsigned long             __RPC_USER  BSTR_UserSize(     __RPC__in unsigned long *, unsigned long            , __RPC__in BSTR * ); 
-unsigned char * __RPC_USER  BSTR_UserMarshal(  __RPC__in unsigned long *, __RPC__inout_xcount(0) unsigned char *, __RPC__in BSTR * ); 
-unsigned char * __RPC_USER  BSTR_UserUnmarshal(__RPC__in unsigned long *, __RPC__in_xcount(0) unsigned char *, __RPC__out BSTR * ); 
-void                      __RPC_USER  BSTR_UserFree(     __RPC__in unsigned long *, __RPC__in BSTR * ); 
+unsigned long             __RPC_USER  BSTR_UserSize(     __RPC__in unsigned long *, unsigned long            , __RPC__in BSTR * );
+unsigned char * __RPC_USER  BSTR_UserMarshal(  __RPC__in unsigned long *, __RPC__inout_xcount(0) unsigned char *, __RPC__in BSTR * );
+unsigned char * __RPC_USER  BSTR_UserUnmarshal(__RPC__in unsigned long *, __RPC__in_xcount(0) unsigned char *, __RPC__out BSTR * );
+void                      __RPC_USER  BSTR_UserFree(     __RPC__in unsigned long *, __RPC__in BSTR * );
 
-unsigned long             __RPC_USER  HWND_UserSize(     __RPC__in unsigned long *, unsigned long            , __RPC__in HWND * ); 
-unsigned char * __RPC_USER  HWND_UserMarshal(  __RPC__in unsigned long *, __RPC__inout_xcount(0) unsigned char *, __RPC__in HWND * ); 
-unsigned char * __RPC_USER  HWND_UserUnmarshal(__RPC__in unsigned long *, __RPC__in_xcount(0) unsigned char *, __RPC__out HWND * ); 
-void                      __RPC_USER  HWND_UserFree(     __RPC__in unsigned long *, __RPC__in HWND * ); 
+unsigned long             __RPC_USER  HWND_UserSize(     __RPC__in unsigned long *, unsigned long            , __RPC__in HWND * );
+unsigned char * __RPC_USER  HWND_UserMarshal(  __RPC__in unsigned long *, __RPC__inout_xcount(0) unsigned char *, __RPC__in HWND * );
+unsigned char * __RPC_USER  HWND_UserUnmarshal(__RPC__in unsigned long *, __RPC__in_xcount(0) unsigned char *, __RPC__out HWND * );
+void                      __RPC_USER  HWND_UserFree(     __RPC__in unsigned long *, __RPC__in HWND * );
 
 /* end of Additional Prototypes */
 

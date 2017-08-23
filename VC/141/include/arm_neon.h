@@ -3040,12 +3040,12 @@ void __neon_AdrQx4x(unsigned int _Enc, _Out_writes_bytes_(_Inexpressible_(_Enc))
 extern "C" {
 #endif  /* defined (__cplusplus) */
 
-__n128 __aesd_p8(__n128 _Qm);
-__n128 __aesd_s8(__n128 _Qm);
-__n128 __aesd_u8(__n128 _Qm);
-__n128 __aese_p8(__n128 _Qm);
-__n128 __aese_s8(__n128 _Qm);
-__n128 __aese_u8(__n128 _Qm);
+__n128 __aesd_p8(__n128 _Qd, __n128 _Qm);
+__n128 __aesd_s8(__n128 _Qd, __n128 _Qm);
+__n128 __aesd_u8(__n128 _Qd, __n128 _Qm);
+__n128 __aese_p8(__n128 _Qd, __n128 _Qm);
+__n128 __aese_s8(__n128 _Qd, __n128 _Qm);
+__n128 __aese_u8(__n128 _Qd, __n128 _Qm);
 __n128 __aesimc_p8(__n128 _Qm);
 __n128 __aesimc_s8(__n128 _Qm);
 __n128 __aesimc_u8(__n128 _Qm);
@@ -3055,33 +3055,33 @@ __n128 __aesmc_u8(__n128 _Qm);
 __n128 __sha1h_f32(__n128 _Qm);
 __n128 __sha1h_s32(__n128 _Qm);
 __n128 __sha1h_u32(__n128 _Qm);
-__n128 __sha1su1_f32(__n128 _Qm);
-__n128 __sha1su1_s32(__n128 _Qm);
-__n128 __sha1su1_u32(__n128 _Qm);
-__n128 __sha256su0_f32(__n128 _Qm);
-__n128 __sha256su0_s32(__n128 _Qm);
-__n128 __sha256su0_u32(__n128 _Qm);
-__n128 __sha1c_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1c_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1c_u32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1m_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1m_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1m_u32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1p_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1p_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1p_u32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1su0_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1su0_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha1su0_u32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256h_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256h_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256h_u32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256h2_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256h2_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256h2_u32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256su1_f32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256su1_s32(__n128 _Qn, __n128 _Qm);
-__n128 __sha256su1_u32(__n128 _Qn, __n128 _Qm);
+__n128 __sha1su1_f32(__n128 _Qd, __n128 _Qm);
+__n128 __sha1su1_s32(__n128 _Qd, __n128 _Qm);
+__n128 __sha1su1_u32(__n128 _Qd, __n128 _Qm);
+__n128 __sha256su0_f32(__n128 _Qd, __n128 _Qm);
+__n128 __sha256su0_s32(__n128 _Qd, __n128 _Qm);
+__n128 __sha256su0_u32(__n128 _Qd, __n128 _Qm);
+__n128 __sha1c_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1c_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1c_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1m_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1m_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1m_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1p_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1p_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1p_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1su0_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1su0_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha1su0_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256h_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256h_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256h_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256h2_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256h2_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256h2_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256su1_f32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256su1_s32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
+__n128 __sha256su1_u32(__n128 _Qd, __n128 _Qn, __n128 _Qm);
 __n64 __vaba_s16(__n64 _Dd, __n64 _Dn, __n64 _Dm);
 __n64 __vaba_s32(__n64 _Dd, __n64 _Dn, __n64 _Dm);
 __n64 __vaba_s8(__n64 _Dd, __n64 _Dn, __n64 _Dm);
@@ -5073,6 +5073,24 @@ __n128x2 __vzipq_s8(__n128 _Qd, __n128 _Qm);
 __n128x2 __vzipq_u16(__n128 _Qd, __n128 _Qm);
 __n128x2 __vzipq_u32(__n128 _Qd, __n128 _Qm);
 __n128x2 __vzipq_u8(__n128 _Qd, __n128 _Qm);
+
+// AESD/AESE/AESIMC/AESMC
+#define vaesdq_u8(src1, src2)   __aesd_u8(src1, src2)
+#define vaeseq_u8(src1, src2)   __aese_u8(src1, src2)
+#define vaesimcq_u8(src)        __aesimc_u8(src)
+#define vaesmcq_u8(src)         __aesmc_u8(src)
+
+// SHA1C/SHA1H/SHA1M/SHA1P/SHA1SU0/SHA1SU1/SHA256H/SHA256H2/SHA256SU0/SHA256SU1/
+#define vsha1cq_u32(src1, src2, src3)       __sha1c_u32(src1, __vmovq_n_u32(src2), src3)
+#define vsha1h_u32(src)                     __vgetq_lane_u32(__sha1h_u32(__vmovq_n_u32(src)), 0)
+#define vsha1mq_u32(src1, src2, src3)       __sha1m_u32(src1, __vmovq_n_u32(src2), src3)
+#define vsha1pq_u32(src1, src2, src3)       __sha1p_u32(src1, __vmovq_n_u32(src2), src3)
+#define vsha1su0q_u32(src1, src2, src3)     __sha1su0_u32(src1, src2, src3)
+#define vsha1su1q_u32(src1, src2)           __sha1su1_u32(src1, src2)
+#define vsha256hq_u32(src1, src2, src3)     __sha256h_u32(src1, src2, src3)
+#define vsha256h2q_u32(src1, src2, src3)    __sha256h2_u32(src1, src2, src3)
+#define vsha256su0q_u32(src1, src2)         __sha256su0_u32(src1, src2)
+#define vsha256su1q_u32(src1, src2, src3)   __sha256su1_u32(src1, src2, src3)
 
 // Type reinterpretation no-ops
 #define __vreinterpret_f32_s8(a)    (a)

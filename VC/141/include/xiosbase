@@ -195,14 +195,14 @@ template<class _Dummy>
 	const typename _Iosb<_Dummy>::_Seekdir _Iosb<_Dummy>::end;
 
 		// CLASS ios_base
-class _CRTIMP2_PURE ios_base
+class _CRTIMP2_PURE_IMPORT ios_base
 	: public _Iosb<int>
 	{	// base class for ios
 public:
-	_IOS_BITMASK(_Fmtflags, fmtflags);
-	_IOS_BITMASK(_Iostate, iostate);
-	_IOS_BITMASK(_Openmode, openmode);
-	_IOS_BITMASK(_Seekdir, seekdir);
+	typedef int fmtflags;
+	typedef int iostate;
+	typedef int openmode;
+	typedef int seekdir;
 
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	typedef _STD streamoff streamoff;
@@ -250,7 +250,7 @@ public:
 		};
 
 			// CLASS Init
-	class _CRTIMP2_PURE Init
+	class _CRTIMP2_PURE_IMPORT Init
 		{	// controller for standard-stream initialization
 	public:
 		__CLR_OR_THIS_CALL Init()
@@ -290,11 +290,11 @@ public:
 		else if (_Reraise)
 			_RERAISE;
 		else if (_Mystate & _Except & badbit)
-			_THROW_NCEE(failure, "ios_base::badbit set");
+			_THROW(failure, "ios_base::badbit set");
 		else if (_Mystate & _Except & failbit)
-			_THROW_NCEE(failure, "ios_base::failbit set");
+			_THROW(failure, "ios_base::failbit set");
 		else
-			_THROW_NCEE(failure, "ios_base::eofbit set");
+			_THROW(failure, "ios_base::eofbit set");
 		}
 
 	void __CLR_OR_THIS_CALL clear(iostate _State = goodbit)
@@ -644,11 +644,6 @@ public:
 	ios_base(const ios_base&) = delete;
 	ios_base& operator=(const ios_base&) = delete;
 	};
-
-_IOS_BITMASK_OPS(ios_base::_Fmtflags)
-_IOS_BITMASK_OPS(ios_base::_Iostate)
-_IOS_BITMASK_OPS(ios_base::_Openmode)
-_IOS_BITMASK_OPS(ios_base::_Seekdir)
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

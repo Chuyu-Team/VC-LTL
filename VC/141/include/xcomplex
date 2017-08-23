@@ -122,7 +122,7 @@ _TMPLT(_Ty) inline
 	}
 
 		// TEMPLATE FUNCTION operator==
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr bool operator==(const _CMPLX(_Ty)& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex equal to complex
@@ -130,7 +130,7 @@ _TMPLT(_Ty) inline
 		&& _Left.imag() == _Right.imag());
 	}
 
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr bool operator==(const _CMPLX(_Ty)& _Left,
 		const _Ty& _Right)
 	{	// test real equal to complex
@@ -138,7 +138,7 @@ _TMPLT(_Ty) inline
 		&& _Left.imag() == 0);
 	}
 
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr bool operator==(const _Ty& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex equal to real
@@ -147,21 +147,21 @@ _TMPLT(_Ty) inline
 	}
 
 		// TEMPLATE FUNCTION operator!=
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr bool operator!=(const _CMPLX(_Ty)& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex not equal to complex
 	return (!(_Left == _Right));
 	}
 
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr bool operator!=(const _CMPLX(_Ty)& _Left,
 		const _Ty& _Right)
 	{	// test real not equal to complex
 	return (!(_Left == _Right));
 	}
 
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr bool operator!=(const _Ty& _Left,
 		const _CMPLX(_Ty)& _Right)
 	{	// test complex not equal to real
@@ -169,14 +169,14 @@ _TMPLT(_Ty) inline
 	}
 
 		// TEMPLATE FUNCTION imag
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr _Ty imag(const _CMPLX(_Ty)& _Left)
 	{	// return imaginary component
 	return (_Left.imag());
 	}
 
 		// TEMPLATE FUNCTION real
-_TMPLT(_Ty) inline
+_TMPLT(_Ty)
 	constexpr _Ty real(const _CMPLX(_Ty)& _Left)
 	{	// return real component
 	return (_Left.real());
@@ -858,24 +858,26 @@ _TMPLT(_Ty) inline
 	}
 
 		// ADDITIONAL OVERLOADS
+template<class _Ty>
+	struct _Promote_to_float
+	{	// promote integral to double
+	using type = conditional_t<is_integral<_Ty>::value, double, _Ty>;
+	};
+
 #define _GENERIC_MATHC0X(FUN, VAL) \
-template<class _Ty> inline \
-	typename enable_if<is_arithmetic<_Ty>::value, \
-		typename _Promote_to_float<_Ty>::type>::type \
-	FUN(_Ty) \
+template<class _Ty, \
+	class = enable_if_t<is_arithmetic<_Ty>::value>> inline \
+	typename _Promote_to_float<_Ty>::type FUN(_Ty) \
 	{ \
-	typedef typename _Promote_to_float<_Ty>::type type; \
-	return ((type)VAL); \
+	return (static_cast<typename _Promote_to_float<_Ty>::type>(VAL)); \
 	}
 
 #define _GENERIC_MATHC1X(FUN, VAL) \
-template<class _Ty> inline \
-	typename enable_if<is_arithmetic<_Ty>::value, \
-		typename _Promote_to_float<_Ty>::type>::type \
-	FUN(_Ty _Left) \
+template<class _Ty, \
+	class = enable_if_t<is_arithmetic<_Ty>::value>> inline \
+	typename _Promote_to_float<_Ty>::type FUN(_Ty _Left) \
 	{ \
-	typedef typename _Promote_to_float<_Ty>::type type; \
-	return ((type)VAL); \
+	return (static_cast<typename _Promote_to_float<_Ty>::type>(VAL)); \
 	}
 
 _GENERIC_MATHC0X(arg, 0)
@@ -887,49 +889,51 @@ _GENERIC_MATHC1X(norm, (_Left * _Left))
 _GENERIC_MATHC1X(conj, _Left)
 _GENERIC_MATHC1X(proj, _Left)
 
+#undef _GENERIC_MATHC0X
+#undef _GENERIC_MATHC1X
+
 		// TEMPLATE FUNCTION polar
 template<class _Ty1,
 	class _Ty2> inline
-	complex<typename _Common_float_type<_Ty1, _Ty2>::type>
+	complex<_Common_float_type_t<_Ty1, _Ty2>>
 	polar(const _Ty1& _Left, const _Ty2& _Right)
 	{	// bring mixed types to a common type
-	typedef complex<typename _Common_float_type<_Ty1, _Ty2>::type> type;
+	typedef complex<_Common_float_type_t<_Ty1, _Ty2>> type;
 	return (_STD polar((type)_Left, (type)_Right));
 	}
 
 		// TEMPLATE FUNCTION pow
 template<class _Ty1,
 	class _Ty2> inline
-	complex<typename _Common_float_type<_Ty1, _Ty2>::type>
+	complex<_Common_float_type_t<_Ty1, _Ty2>>
 	pow(const complex<_Ty1>& _Left, const complex<_Ty2>& _Right)
 	{	// bring mixed types to a common type
-	typedef complex<typename _Common_float_type<_Ty1, _Ty2>::type> type;
+	typedef complex<_Common_float_type_t<_Ty1, _Ty2>> type;
 	return (_STD pow(type(_Left), type(_Right)));
 	}
 
 template<class _Ty1,
 	class _Ty2> inline
-	complex<typename _Common_float_type<_Ty1, _Ty2>::type>
+	complex<_Common_float_type_t<_Ty1, _Ty2>>
 	pow(const complex<_Ty1>& _Left, const _Ty2& _Right)
 	{	// bring mixed types to a common type
-	typedef complex<typename _Common_float_type<_Ty1, _Ty2>::type> type;
+	typedef complex<_Common_float_type_t<_Ty1, _Ty2>> type;
 	return (_STD pow(type(_Left), type(_Right)));
 	}
 
 template<class _Ty1,
 	class _Ty2> inline
-	complex<typename _Common_float_type<_Ty1, _Ty2>::type>
+	complex<_Common_float_type_t<_Ty1, _Ty2>>
 	pow(const _Ty1& _Left, const complex<_Ty2>& _Right)
 	{	// bring mixed types to a common type
-	typedef complex<typename _Common_float_type<_Ty1, _Ty2>::type> type;
+	typedef complex<_Common_float_type_t<_Ty1, _Ty2>> type;
 	return (_STD pow(type(_Left), type(_Right)));
 	}
 
 template<class _Ty1,
-	class _Ty2> inline
-	typename enable_if<is_integral<_Ty1>::value && is_integral<_Ty2>::value,
-		complex<_Ty1> >::type
-	pow(const complex<_Ty1>& _Left, _Ty2& _Right)
+	class _Ty2,
+	class = enable_if_t<is_integral<_Ty1>::value && is_integral<_Ty2>::value>> inline
+	complex<_Ty1> pow(const complex<_Ty1>& _Left, _Ty2& _Right)
 	{	// raise Gaussian integer to an integer power
 	typedef complex<_Ty1> type;
 	type _Ans = type(1, 0);

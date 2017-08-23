@@ -43,16 +43,12 @@ typedef wchar_t _Pchar;	// UTF16
 struct char8_t;	/* flag for UTF8 */
 
 		// ENUM file_type
-
 enum class file_type {	// names for file types
 	not_found = -1, none, regular, directory, symlink,
 	block, character, fifo, socket, unknown
 	};
 
-typedef file_type _File_type;
-
 		// ENUM copy_options
-
 enum class copy_options {	// names for copy options
 	none = 0,
 	skip_existing = 1, overwrite_existing = 2, update_existing = 4,
@@ -62,20 +58,14 @@ enum class copy_options {	// names for copy options
 	_Unspecified_recursion_prevention_tag = 512
 	};
 
-typedef copy_options _Copy_options;
-
 _BITMASK_OPS(copy_options)
 
 		// ENUM dirctory_options
-
 enum class directory_options {	// names for directory options
 	none = 0, follow_directory_symlink
 	};
 
-typedef directory_options _Directory_options;
-
 		// ENUM perms
-
 enum class perms {	// names for permissions
 	none = 0,
 	owner_read = 0400,	// S_IRUSR
@@ -101,8 +91,6 @@ enum class perms {	// names for permissions
 	resolve_symlinks = 0x40000
 	};
 
-typedef perms _Perms;
-
 _BITMASK_OPS(perms)
 
 		// CLASS file_status
@@ -110,8 +98,8 @@ class file_status
 	{	// stores file status
 public:
 	explicit file_status(
-		_File_type _Ftype = _File_type::none,
-			_Perms _Prms = perms::unknown) _NOEXCEPT
+		file_type _Ftype = file_type::none,
+			perms _Prms = perms::unknown) _NOEXCEPT
 		: _Myftype(_Ftype), _Myperms(_Prms)
 		{	// construct with optional arguments
 		}
@@ -123,29 +111,29 @@ public:
 	file_status(file_status&&) = default;
 	file_status& operator=(file_status&&) = default;
 
-	_File_type type() const _NOEXCEPT
+	file_type type() const _NOEXCEPT
 		{	// get file type
 		return (_Myftype);
 		}
 
-	_Perms permissions() const _NOEXCEPT
+	perms permissions() const _NOEXCEPT
 		{	// get file permissions
 		return (_Myperms);
 		}
 
-	void type(_File_type _Ftype) _NOEXCEPT
+	void type(file_type _Ftype) _NOEXCEPT
 		{	// set file type
 		_Myftype = _Ftype;
 		}
 
-	void permissions(_Perms _Prms) _NOEXCEPT
+	void permissions(perms _Prms) _NOEXCEPT
 		{	// set permissions
 		_Myperms = _Prms;
 		}
 
 private:
-	_File_type _Myftype;
-	_Perms _Myperms;
+	file_type _Myftype;
+	perms _Myperms;
 	};
 
 		// STRUCT space_info
@@ -159,9 +147,9 @@ struct space_info
 		// SYSTEM SUPPORT FUNCTIONS
 	// wide filenames
 _FS_DLL void *__CLRCALL_PURE_OR_CDECL _Open_dir(wchar_t (&)[_MAX_FILESYS_NAME],
-	const wchar_t *, int&, _File_type&);
+	const wchar_t *, int&, file_type&);
 _FS_DLL wchar_t *__CLRCALL_PURE_OR_CDECL _Read_dir(wchar_t (&)[_MAX_FILESYS_NAME],
-	void *, _File_type&);
+	void *, file_type&);
 _FS_DLL void __CLRCALL_PURE_OR_CDECL _Close_dir(void *);
 _FS_DLL bool __CLRCALL_PURE_OR_CDECL _Current_get(wchar_t (&)[_MAX_FILESYS_NAME]);
 _FS_DLL bool __CLRCALL_PURE_OR_CDECL _Current_set(const wchar_t *);
@@ -172,8 +160,8 @@ _FS_DLL wchar_t *__CLRCALL_PURE_OR_CDECL _Temp_get(wchar_t (&)[_MAX_FILESYS_NAME
 _FS_DLL int __CLRCALL_PURE_OR_CDECL _Make_dir(const wchar_t *, const wchar_t *);
 _FS_DLL bool __CLRCALL_PURE_OR_CDECL _Remove_dir(const wchar_t *);
 
-_FS_DLL _File_type __CLRCALL_PURE_OR_CDECL _Stat(const wchar_t *, _Perms *);
-_FS_DLL _File_type __CLRCALL_PURE_OR_CDECL _Lstat(const wchar_t *, _Perms *);
+_FS_DLL file_type __CLRCALL_PURE_OR_CDECL _Stat(const wchar_t *, perms *);
+_FS_DLL file_type __CLRCALL_PURE_OR_CDECL _Lstat(const wchar_t *, perms *);
 _FS_DLL uintmax_t __CLRCALL_PURE_OR_CDECL _File_size(const wchar_t *);
 _FS_DLL uintmax_t __CLRCALL_PURE_OR_CDECL _Hard_links(const wchar_t *);
 _FS_DLL int64_t __CLRCALL_PURE_OR_CDECL _Last_write_time(const wchar_t *);
@@ -187,15 +175,7 @@ _FS_DLL int __CLRCALL_PURE_OR_CDECL _Rename(const wchar_t *, const wchar_t *);
 _FS_DLL int __CLRCALL_PURE_OR_CDECL _Resize(const wchar_t *, uintmax_t);
 _FS_DLL int __CLRCALL_PURE_OR_CDECL _Unlink(const wchar_t *);
 _FS_DLL int __CLRCALL_PURE_OR_CDECL _Copy_file(const wchar_t *, const wchar_t *);
-_FS_DLL int __CLRCALL_PURE_OR_CDECL _Chmod(const wchar_t *, _Perms);
-
-
-		// STRUCT _Unused_locale
-struct _Unused_locale
-	{	// Struct that absorbs locale if provided
-	constexpr _Unused_locale() _NOEXCEPT = default;
-	constexpr _Unused_locale(const locale&) _NOEXCEPT {}
-	};
+_FS_DLL int __CLRCALL_PURE_OR_CDECL _Chmod(const wchar_t *, perms);
 
 
 		// TEMPLATE STRUCT _Path_cvt
@@ -207,7 +187,7 @@ template<class _Inchar,
 	{	// converts among {char, wchar_t, UTF8, char16_t, char32_t} paths
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert _Inchar sequence to _Outchar one-to-one
 		for (; 0 < _Size; --_Size, ++_First)
 			_Str.append(1, (_Outchar)*_First);
@@ -222,7 +202,7 @@ template<class _Outchar,
 	{	// converts among {char, wchar_t, UTF8, char16_t, char32_t} paths
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Outchar *_First, size_t _Size, _Unused_locale = {})
+		const _Outchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// copy _Outchar sequence to _Outchar one-to-one
 		return (_STD move(_Str.append(_First, _First + _Size)));
 		}
@@ -236,7 +216,7 @@ template<class _Outtraits,
 	typedef char16_t _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert char sequence to char16_t string
 		wstring_convert<codecvt_utf8_utf16<_Outchar>, _Outchar> _Wcvt;
 		return (_STD move(
@@ -252,7 +232,7 @@ template<class _Outtraits,
 	typedef char _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert char16_t sequence to char string
 		wstring_convert<codecvt_utf8_utf16<_Inchar>, _Inchar> _Wcvt;
 		return (_STD move(
@@ -268,7 +248,7 @@ template<class _Outtraits,
 	typedef char32_t _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert char sequence to char32_t string
 		wstring_convert<codecvt_utf8<_Outchar>, _Outchar> _Wcvt;
 		return (_STD move(
@@ -284,7 +264,7 @@ template<class _Outtraits,
 	typedef char _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert char32_t sequence to char string
 		wstring_convert<codecvt_utf8<_Inchar>, _Inchar> _Wcvt;
 		return (_STD move(
@@ -358,7 +338,7 @@ template<>
 	typedef allocator<_Outchar> _Outalloc;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t, _Unused_locale = {})
+		const _Inchar *_First, size_t, _Unused_parameter = {})
 		{	// convert char sequence to UTF8 string -- Windows
 		wchar_t _Fname_wide[_MAX_FILESYS_NAME];
 		if (_To_wide(_First, _Fname_wide) == 0)
@@ -381,7 +361,7 @@ template<class _Outtraits,
 	typedef char _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert UTF8 sequence to char string -- Windows
 		wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> _Wcvt;
 		wstring _Str0(_Wcvt.from_bytes(_First, _First + _Size));
@@ -402,7 +382,7 @@ template<>
 	typedef allocator<_Outchar> _Outalloc;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert wchar_t sequence to UTF8 string -- Windows
 		wstring_convert<codecvt_utf8<_Inchar>, _Inchar> _Wcvt;
 		return (_STD move(
@@ -418,7 +398,7 @@ template<class _Outtraits,
 	typedef wchar_t _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert UTF8 sequence to wchar_t string -- Windows
 		wstring_convert<codecvt_utf8<_Outchar>, _Outchar> _Wcvt;
 		return (_STD move(
@@ -437,7 +417,7 @@ template<class _Outtraits,
 	typedef char32_t _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert wchar_t sequence to char32_t string -- Windows
 		wstring_convert<codecvt_utf8_utf16<_Inchar>, _Inchar> _Wcvt0;
 		_STD string _Str0(_Wcvt0.to_bytes(_First, _First + _Size));
@@ -456,7 +436,7 @@ template<class _Outtraits,
 	typedef wchar_t _Outchar;
 	typedef basic_string<_Outchar, _Outtraits, _Outalloc> _Outstr;
 	static _Outstr&& _Cvt(_Outstr& _Str,
-		const _Inchar *_First, size_t _Size, _Unused_locale = {})
+		const _Inchar *_First, size_t _Size, _Unused_parameter = {})
 		{	// convert char32_t sequence to wchar_t string -- Windows
 		wstring_convert<codecvt_utf8<_Inchar>, _Inchar> _Wcvt0;
 		_STD string _Str0(_Wcvt0.to_bytes(_First, _First + _Size));
@@ -485,14 +465,14 @@ path canonical(const path&, const path&,
 void copy(const path&, const path&);
 void copy(const path&, const path&,
 	error_code&) _NOEXCEPT;
-void copy(const path&, const path&, _Copy_options);
-void copy(const path&, const path&, _Copy_options,
+void copy(const path&, const path&, copy_options);
+void copy(const path&, const path&, copy_options,
 	error_code&) _NOEXCEPT;
 
-bool copy_file(const path&, const path&, _Copy_options = copy_options::none);
+bool copy_file(const path&, const path&, copy_options = copy_options::none);
 bool copy_file(const path&, const path&,
 	error_code&) _NOEXCEPT;
-bool copy_file(const path&, const path&, _Copy_options,
+bool copy_file(const path&, const path&, copy_options,
 	error_code&) _NOEXCEPT;
 
 void copy_symlink(const path&, const path&);
@@ -599,8 +579,8 @@ void last_write_time(const path&, file_time_type,
 	error_code&) _NOEXCEPT;
 void last_write_time(const path&, file_time_type);
 
-void permissions(const path&, _Perms);
-void permissions(const path&, _Perms,
+void permissions(const path&, perms);
+void permissions(const path&, perms,
 	error_code&);
 
 path read_symlink(const path&);
@@ -854,10 +834,8 @@ public:
 	// ARBITRARY SOURCE CONSTRUCT
 
 	template<class _InIt,
-		class = typename enable_if<_Is_iterator<_InIt>::value,
-			void>::type>
+		class = enable_if_t<_Is_iterator<_InIt>::value>>
 		path(_InIt _First, _InIt _Last)
-
 		{	// construct from [_First, _Last), given iterators
 		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str(_First, _Last);
@@ -867,10 +845,8 @@ public:
 		}
 
 	template<class _InIt,
-		class = typename enable_if<_Is_iterator<_InIt>::value,
-			void>::type>
+		class = enable_if_t<_Is_iterator<_InIt>::value>>
 		path(_InIt _First)
-
 		{	// construct from NTCTS, given iterator
 		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str;
@@ -894,11 +870,9 @@ public:
 	// ARBITRARY SOURCE CONSTRUCT, WITH LOCALE
 
 	template<class _InIt,
-		class = typename enable_if<_Is_iterator<_InIt>::value,
-			void>::type>
+		class = enable_if_t<_Is_iterator<_InIt>::value>>
 		path(_InIt _First, _InIt _Last,
 			const locale& _Loc)
-
 		{	// construct from [_First, _Last), given iterators
 		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str(_First, _Last);
@@ -908,11 +882,9 @@ public:
 		}
 
 	template<class _InIt,
-		class = typename enable_if<_Is_iterator<_InIt>::value,
-			void>::type>
+		class = enable_if_t<_Is_iterator<_InIt>::value>>
 		path(_InIt _First,
 			const locale& _Loc)
-
 		{	// construct from NTCTS, given iterator
 		typedef _Iter_value_t<_InIt> _Valty;
 		basic_string<_Valty> _Str;
@@ -1553,10 +1525,8 @@ template<class _Elem,
 	// TEMPLATE FUNCTION u8path
 
 template<class _InIt,
-	class = typename enable_if<_Is_iterator<_InIt>::value,
-		void>::type> inline
+	class = enable_if_t<_Is_iterator<_InIt>::value>> inline
 	path u8path(_InIt _First, _InIt _Last)
-
 	{	// make path from [_First, _Last) UTF8, given iterators
 	string _Str(_First, _Last);
 	path::string_type _Str_out;
@@ -1565,10 +1535,8 @@ template<class _InIt,
 	}
 
 template<class _InIt,
-	class = typename enable_if<_Is_iterator<_InIt>::value,
-		void>::type> inline
+	class = enable_if_t<_Is_iterator<_InIt>::value>> inline
 	path u8path(_InIt _First)
-
 	{	// make path from NTBS UTF8, given iterator
 	string _Str;
 	for (; *_First != '\0'; ++_First)
@@ -1811,7 +1779,7 @@ public:
 		{	// construct from _Path
 		typename string_type::value_type _Dest[_MAX_FILESYS_NAME];
 		int _Errno = 0;
-		_File_type _Ftype;
+		file_type _Ftype;
 
 		*_Mypdir = _Open_dir(_Dest, _Path.c_str(), _Errno, _Ftype);
 		if (*_Mypdir != 0)
@@ -1824,7 +1792,7 @@ public:
 		{	// construct from _Path, errors to _Code
 		typename string_type::value_type _Dest[_MAX_FILESYS_NAME];
 		int _Errno = 0;
-		_File_type _Ftype;
+		file_type _Ftype;
 
 		*_Mypdir = _Open_dir(_Dest, _Path.c_str(), _Errno, _Ftype);
 		if (*_Mypdir != 0)
@@ -1910,7 +1878,7 @@ private:
 		if (*_Mypdir != 0)
 			{	// read a directory entry
 			typename string_type::value_type _Dest[_MAX_FILESYS_NAME];
-			_File_type _Ftype;
+			file_type _Ftype;
 			if (_Read_dir(_Dest, *_Mypdir, _Ftype)[0] == 0)
 				{	// end of directory, close it
 				_Close_dir(*_Mypdir);
@@ -1922,14 +1890,14 @@ private:
 		}
 
 	void _Form_name(typename string_type::value_type *_Filename,
-			_File_type _Ftype, true_type)
+			file_type _Ftype, true_type)
 		{	// set entry to _Mydirpath/_Filename
 		_Myentry.assign(_Mydirpath / path(_Filename),
 			file_status(_Ftype));
 		}
 
 	void _Form_name(typename string_type::value_type *_Filename,
-			_File_type _Ftype, false_type)
+			file_type _Ftype, false_type)
 		{	// set entry to _Filename
 		_Myentry.assign(path(_Filename), file_status(_Ftype));
 		}
@@ -1989,12 +1957,12 @@ public:
 		: _Mylist(1, _Mypair()),
 			_Myentry(),
 			_No_push(false),
-			_Options(_Directory_options::none)
+			_Options(directory_options::none)
 		{	// default construct
 		}
 
 	explicit recursive_directory_iterator(const path& _Path,
-		_Directory_options _Opts = _Directory_options::none)
+		directory_options _Opts = directory_options::none)
 		: _Mylist(1, _Mypair(_Myiter(_Path), _Path)),
 			_Myentry(),
 			_No_push(false),
@@ -2004,7 +1972,7 @@ public:
 		}
 
 	recursive_directory_iterator(const path& _Path,
-		_Directory_options _Opts, error_code& _Code) _NOEXCEPT
+		directory_options _Opts, error_code& _Code) _NOEXCEPT
 		: _Mylist(1, _Mypair(_Myiter(_Path), _Path)),
 			_Myentry(),
 			_No_push(false),
@@ -2019,7 +1987,7 @@ public:
 		: _Mylist(1, _Mypair(_Myiter(_Path), _Path)),
 			_Myentry(),
 			_No_push(false),
-			_Options(_Directory_options::none)
+			_Options(directory_options::none)
 		{	// construct from _Path
 		_Code = error_code();
 		_Get();
@@ -2032,7 +2000,7 @@ public:
 	recursive_directory_iterator(_Myt&&) = default;
 	_Myt& operator=(_Myt&&) = default;
 
-	_Directory_options options() const
+	directory_options options() const
 		{	// get directory options
 		return (_Options);
 		}
@@ -2090,7 +2058,7 @@ public:
 
 		if (_No_push
 			|| !is_directory(_Mylist.front().first->status())
-			|| (_Options != _Directory_options::follow_directory_symlink
+			|| (_Options != directory_options::follow_directory_symlink
 				&& is_symlink(_Mylist.front().first->status())))
 			{
 			_No_push = false;
@@ -2145,7 +2113,7 @@ private:
 	list<_Mypair> _Mylist;
 	value_type _Myentry;
 	bool _No_push;
-	_Directory_options _Options;
+	directory_options _Options;
 	};
 
 inline bool operator==(
@@ -2213,7 +2181,7 @@ inline path absolute(const path& _Path,
 	error_code _Code;
 	path _Result = _Absolute(_Path, _Base, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"absolute(p1, p2): current_path() couldn't get current working directory");
 	return (_Result);
 	}
@@ -2262,7 +2230,7 @@ inline path canonical(const path& _Path,
 	path _Ans = canonical(_Path, _Base, _Code);
 
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"canonical(p1, p2): invalid arguments");
 	return (_Ans);
 	}
@@ -2295,13 +2263,13 @@ inline path canonical(const path& _Path, const path& _Base,
 	return (_Canon_path);
 	}
 
-inline bool _Copy_options_indicate_recursive_copy(_Copy_options _Opts)
-	{	// Checks a _Copy_options for whether copy should call itself recursively
-	if (_Opts == _Copy_options::none)
+inline bool _Copy_options_indicate_recursive_copy(copy_options _Opts)
+	{	// Checks a copy_options for whether copy should call itself recursively
+	if (_Opts == copy_options::none)
 		// This supports "copying a directory" as copying the directory and
 		// files therein but not subdirectories.
 		return (true);
-	if ((_Opts & _Copy_options::recursive) != _Copy_options::none)
+	if ((_Opts & copy_options::recursive) != copy_options::none)
 		return (true);
 	return (false);
 	}
@@ -2310,31 +2278,31 @@ inline void copy(const path& _Oldpval, const path& _Newpval)
 	{	// copy _Oldpval to _Newpval, general
 	error_code _Code;
 
-	copy(_Oldpval, _Newpval, _Copy_options::none, _Code);
+	copy(_Oldpval, _Newpval, copy_options::none, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"copy(p1, p2): invalid arguments");
 	}
 
 inline void copy(const path& _Oldpval, const path& _Newpval,
 	error_code& _Code) _NOEXCEPT
 	{	// copy _Oldpval to _Newpval, general
-	copy(_Oldpval, _Newpval, _Copy_options::none, _Code);
+	copy(_Oldpval, _Newpval, copy_options::none, _Code);
 	}
 
 inline void copy(const path& _Oldpval, const path& _Newpval,
-	_Copy_options _Opts)
+	copy_options _Opts)
 	{	// copy _Oldpval to _Newpval, general
 	error_code _Code;
 
 	copy(_Oldpval, _Newpval, _Opts, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"copy(p1, p2, options): invalid arguments");
 	}
 
 inline void copy(const path& _Oldpval, const path& _Newpval,
-	_Copy_options _Opts,
+	copy_options _Opts,
 	error_code& _Code) _NOEXCEPT
 	{	// copy _Oldpval to _Newpval, general
 	file_status _Oldstat;
@@ -2342,8 +2310,8 @@ inline void copy(const path& _Oldpval, const path& _Newpval,
 	error_code _Code2;
 
 	_Code = error_code();
-	if ((_Opts & _Copy_options::create_symlinks) != _Copy_options::none
-		|| (_Opts & _Copy_options::skip_symlinks) != _Copy_options::none)
+	if ((_Opts & copy_options::create_symlinks) != copy_options::none
+		|| (_Opts & copy_options::skip_symlinks) != copy_options::none)
 		{	// get symlink status
 		_Oldstat = symlink_status(_Oldpval);
 		_Newstat = symlink_status(_Newpval);
@@ -2360,21 +2328,21 @@ inline void copy(const path& _Oldpval, const path& _Newpval,
 		|| (is_directory(_Oldstat) && is_regular_file(_Newstat)))
 		_Code = make_error_code(errc::operation_not_permitted);
 	else if (is_symlink(_Oldstat))
-		if ((_Opts & _Copy_options::skip_symlinks) != _Copy_options::none)
+		if ((_Opts & copy_options::skip_symlinks) != copy_options::none)
 			;
 		else if (!exists(_Newstat)
-			&& (_Opts & _Copy_options::copy_symlinks) != _Copy_options::none)
+			&& (_Opts & copy_options::copy_symlinks) != copy_options::none)
 			copy_symlink(_Oldpval, _Newpval, _Code);
 		else
 			_Code = make_error_code(errc::operation_not_permitted);
 	else if (is_regular_file(_Oldstat))
-		if ((_Opts & _Copy_options::directories_only) != _Copy_options::none)
+		if ((_Opts & copy_options::directories_only) != copy_options::none)
 			;
-		else if ((_Opts & _Copy_options::create_symlinks)
-			!= _Copy_options::none)
+		else if ((_Opts & copy_options::create_symlinks)
+			!= copy_options::none)
 			create_symlink(_Oldpval, _Newpval, _Code);
-		else if ((_Opts & _Copy_options::create_hard_links)
-			!= _Copy_options::none)
+		else if ((_Opts & copy_options::create_hard_links)
+			!= copy_options::none)
 			create_hard_link(_Oldpval, _Newpval, _Code);
 		else if (is_directory(_Newstat))
 			copy_file(_Oldpval, _Newpval / _Oldpval.filename(), _Opts, _Code);
@@ -2389,18 +2357,18 @@ inline void copy(const path& _Oldpval, const path& _Newpval,
 			_Code == error_code() && _Next != _End; ++_Next)
 			copy(_Next->path(),
 				_Newpval / _Next->path().filename(),
-				_Opts | _Copy_options::_Unspecified_recursion_prevention_tag,
+				_Opts | copy_options::_Unspecified_recursion_prevention_tag,
 				_Code);
 		}
 	}
 
 inline bool copy_file(const path& _Oldpval, const path& _Newpval,
-		_Copy_options _Opt /* = copy_options::none */)
+		copy_options _Opt /* = copy_options::none */)
 	{	// copy _Oldpval to _Newpval
 	error_code _Code;
 	bool _Ans = copy_file(_Oldpval, _Newpval, _Opt, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"copy_file(p1, p2, options): invalid arguments");
 	return (_Ans);
 	}
@@ -2412,7 +2380,7 @@ inline bool copy_file(const path& _Oldpval, const path& _Newpval,
 	}
 
 inline bool copy_file(const path& _Oldpval, const path& _Newpval,
-	_Copy_options _Opt,
+	copy_options _Opt,
 	error_code& _Code) _NOEXCEPT
 	{	// copy _Oldpval to _Newpval
 	_Opt &= (copy_options::skip_existing
@@ -2449,7 +2417,7 @@ inline void copy_symlink(const path& _Oldpval, const path& _Newpval)
 	error_code _Code;
 	copy_symlink(_Oldpval, _Newpval, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"copy_symlink(p1, p2): invalid arguments");
 	}
 
@@ -2467,7 +2435,7 @@ inline bool create_directories(const path& _Path)
 	error_code _Code;
 	bool _Ans = create_directories(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"create_directories(p): invalid argument");
 	return (_Ans);
 	}
@@ -2505,7 +2473,7 @@ inline bool create_directory(const path& _Path)
 	bool _Ans = create_directory(_Path, _Code);
 
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"create_directory(p): invalid argument");
 	return (_Ans);
 	}
@@ -2527,7 +2495,7 @@ inline bool create_directory(const path& _Path, const path& _Attrs)
 	bool _Ans = create_directory(_Path, _Attrs, _Code);
 
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"create_directory(p1, p2): invalid arguments");
 	return (_Ans);
 	}
@@ -2549,7 +2517,7 @@ inline void create_directory_symlink(const path& _Oldpval,
 	error_code _Code;
 	create_directory_symlink(_Oldpval, _Newpval, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"create_directory_symlink(p1, p2): invalid arguments");
 	}
 
@@ -2569,7 +2537,7 @@ inline void create_hard_link(const path& _Oldpval, const path& _Newpval)
 	error_code _Code;
 	create_hard_link(_Oldpval, _Newpval, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"create_hard_link(p1, p2): invalid arguments");
 	}
 
@@ -2588,7 +2556,7 @@ inline void create_symlink(const path& _Oldpval, const path& _Newpval)
 	error_code _Code;
 	create_symlink(_Oldpval, _Newpval, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"create_symlink(p1, p2): invalid arguments");
 	}
 
@@ -2607,7 +2575,7 @@ inline path current_path()
 	error_code _Code;
 	path _Ans = current_path(_Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"current_path(): can't get current working directory");
 	return (_Ans);
 	}
@@ -2628,7 +2596,7 @@ inline path current_path(
 inline void current_path(const path& _Path)
 	{	// set current working directory
 	if (!_Current_set(_Path.c_str()))
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"current_path(p): invalid argument");
 	}
 
@@ -2646,7 +2614,7 @@ inline bool equivalent(const path& _Path1, const path& _Path2)
 	int _Ans = equivalent(_Path1, _Path2, _Code);
 
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"equivalent(p1, p2): invalid arguments");
 	return (0 < _Ans);
 	}
@@ -2665,7 +2633,7 @@ inline bool equivalent(const path& _Path1, const path& _Path2,
 inline bool exists(file_status _Stat) _NOEXCEPT
 	{	// test if path exists
 	return (status_known(_Stat)
-		&& _Stat.type() != _File_type::not_found);
+		&& _Stat.type() != file_type::not_found);
 	}
 
 inline bool exists(const path& _Path)
@@ -2685,7 +2653,7 @@ inline uintmax_t file_size(const path& _Path)
 	error_code _Code;
 	uintmax_t _Ans = file_size(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"file_size(p): invalid argument");
 	return (_Ans);
 	}
@@ -2709,7 +2677,7 @@ inline uintmax_t hard_link_count(const path& _Path)
 	error_code _Code;
 	uintmax_t _Ans = hard_link_count(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"hard_link_count(p): invalid argument");
 	return (_Ans);
 	}
@@ -2726,7 +2694,7 @@ inline uintmax_t hard_link_count(const path& _Path,
 
 inline bool is_block_file(file_status _Stat) _NOEXCEPT
 	{	// test for block file
-	return (_Stat.type() == _File_type::block);
+	return (_Stat.type() == file_type::block);
 	}
 
 inline bool is_block_file(const path& _Path)
@@ -2742,7 +2710,7 @@ inline bool is_block_file(const path& _Path,
 
 inline bool is_character_file(file_status _Stat) _NOEXCEPT
 	{	// test for character file
-	return (_Stat.type() == _File_type::character);
+	return (_Stat.type() == file_type::character);
 	}
 
 inline bool is_character_file(const path& _Path)
@@ -2758,7 +2726,7 @@ inline bool is_character_file(const path& _Path,
 
 inline bool is_directory(file_status _Stat) _NOEXCEPT
 	{	// test for directory
-	return (_Stat.type() == _File_type::directory);
+	return (_Stat.type() == file_type::directory);
 	}
 
 inline bool is_directory(const path& _Path)
@@ -2777,7 +2745,7 @@ inline bool is_empty(const path& _Path)
 	error_code _Code;
 	bool _Ans = _FSPFX is_empty(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"is_empty(p): invalid argument");
 	return (_Ans);
 	}
@@ -2797,7 +2765,7 @@ inline bool is_empty(const path& _Path,
 
 inline bool is_fifo(file_status _Stat) _NOEXCEPT
 	{	// test for fifo file
-	return (_Stat.type() == _File_type::fifo);
+	return (_Stat.type() == file_type::fifo);
 	}
 
 inline bool is_fifo(const path& _Path)
@@ -2832,7 +2800,7 @@ inline bool is_other(const path& _Path,
 
 inline bool is_regular_file(file_status _Stat) _NOEXCEPT
 	{	// test for regular file
-	return (_Stat.type() == _File_type::regular);
+	return (_Stat.type() == file_type::regular);
 	}
 
 inline bool is_regular_file(const path& _Path)
@@ -2848,7 +2816,7 @@ inline bool is_regular_file(const path& _Path,
 
 inline bool is_socket(file_status _Stat) _NOEXCEPT
 	{	// test for socket file
-	return (_Stat.type() == _File_type::socket);
+	return (_Stat.type() == file_type::socket);
 	}
 
 inline bool is_socket(const path& _Path)
@@ -2864,7 +2832,7 @@ inline bool is_socket(const path& _Path,
 
 inline bool is_symlink(file_status _Stat) _NOEXCEPT
 	{	// test for symlink
-	return (_Stat.type() == _File_type::symlink);
+	return (_Stat.type() == file_type::symlink);
 	}
 
 inline bool is_symlink(const path& _Path)
@@ -2883,7 +2851,7 @@ inline file_time_type last_write_time(const path& _Path)
 	error_code _Code;
 	file_time_type _Ans = last_write_time(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"last_write_time(p): invalid argument");
 	return (_Ans);
 	}
@@ -2907,7 +2875,7 @@ inline void last_write_time(const path& _Path, file_time_type _Newtime)
 	error_code _Code;
 	last_write_time(_Path, _Newtime, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"last_write_time(p, new_time): invalid arguments");
 	}
 
@@ -2920,20 +2888,20 @@ inline void last_write_time(const path& _Path, file_time_type _Newtime,
 		_Code = make_error_code(errc::operation_not_permitted);
 	}
 
-inline void permissions(const path& _Path, _Perms _Mask)
+inline void permissions(const path& _Path, perms _Mask)
 	{	// set access permissions
 	error_code _Code;
 	permissions(_Path, _Mask, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"permissions(p, prms): can't set permissions");
 	}
 
-inline void permissions(const path& _Path, _Perms _Mask,
+inline void permissions(const path& _Path, perms _Mask,
 	error_code& _Code)
 	{	// set access permissions
-	_Perms _Todo = _Mask;
-	_Mask = (_Perms)(_Mask & perms::mask);
+	perms _Todo = _Mask;
+	_Mask = (perms)(_Mask & perms::mask);
 	bool _Ok = true;
 
 	_Code = error_code();
@@ -2941,10 +2909,10 @@ inline void permissions(const path& _Path, _Perms _Mask,
 		if ((_Todo & perms::remove_perms) == perms::none)
 			;
 		else
-			_Mask = (_Perms)(status(_Path).permissions() & ~_Mask);
+			_Mask = (perms)(status(_Path).permissions() & ~_Mask);
 	else
 		if ((_Todo & perms::remove_perms) == perms::none)
-			_Mask = (_Perms)(_Mask | status(_Path).permissions());
+			_Mask = (perms)(_Mask | status(_Path).permissions());
 		else
 			_Ok = false;
 	if (!_Ok || _Chmod(_Path.c_str(), _Mask) != 0)
@@ -2956,7 +2924,7 @@ inline path read_symlink(const path& _Path)
 	error_code _Code;
 	path _Sympath = read_symlink(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"read_symlink(p): can't read symbolic link");
 	return (_Sympath);
 	}
@@ -2980,7 +2948,7 @@ inline bool remove(const path& _Path)
 	bool _Ans = remove(_Path, _Code);
 
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"remove(p): invalid argument");
 	return (_Ans);
 	}
@@ -3047,7 +3015,7 @@ inline uintmax_t remove_all(const path& _Path)
 	error_code _Code;
 	uintmax_t _Ans = remove_all(_Path, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"remove_all(p): invalid argument");
 	return (_Ans);
 	}
@@ -3067,7 +3035,7 @@ inline void rename(const path& _Oldpval, const path& _Newpval)
 	error_code _Code;
 	rename(_Oldpval, _Newpval, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"rename(p1, p2): invalid arguments");
 	}
 
@@ -3100,7 +3068,7 @@ inline void resize_file(const path& _Path, uintmax_t _Newsize)
 	error_code _Code;
 	resize_file(_Path, _Newsize, _Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"resize_file(p, n): invalid arguments");
 	};
 
@@ -3136,14 +3104,14 @@ inline file_status status(const path& _Path,
 	error_code& _Code) _NOEXCEPT
 	{	// get file status
 	_Code = error_code();
-	_Perms _Mode;
-	_File_type _Ftype = _Stat(_Path.c_str(), &_Mode);
+	perms _Mode;
+	file_type _Ftype = _Stat(_Path.c_str(), &_Mode);
 	return (file_status(_Ftype, _Mode));
 	}
 
 inline bool status_known(file_status _Stat) _NOEXCEPT
 	{	// test if status known
-	return (_Stat.type() != _File_type::unknown);
+	return (_Stat.type() != file_type::unknown);
 	}
 
 inline file_status symlink_status(const path& _Path)
@@ -3155,8 +3123,8 @@ inline file_status symlink_status(const path& _Path)
 inline file_status symlink_status(const path& _Path,
 	error_code& _Code) _NOEXCEPT
 	{	// get symlink file status
-	_Perms _Mode;
-	_File_type _Ftype = _Lstat(_Path.c_str(), &_Mode);
+	perms _Mode;
+	file_type _Ftype = _Lstat(_Path.c_str(), &_Mode);
 
 	_Code = error_code();
 	return (file_status(_Ftype, _Mode));
@@ -3197,7 +3165,7 @@ inline path temp_directory_path()
 	error_code _Code;
 	path _Ans = temp_directory_path(_Code);
 	if (_Code != error_code())
-		_THROW_NCEE(filesystem_error,
+		_THROW(filesystem_error,
 			"temp_directory_path(): can't find temp directory");
 	return (_Ans);
 	}
@@ -3217,6 +3185,7 @@ inline path temp_directory_path(
 		}
 	return (_Ans);
 	}
+
 		}	// inline namespace v1
 	}	// namespace filesystem
 }	// namespace experimental

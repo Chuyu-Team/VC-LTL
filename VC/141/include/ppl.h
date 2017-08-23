@@ -1645,15 +1645,13 @@ public:
     ///     Constructs a <c>static_partitioner</c> object.
     /// </summary>
     /**/
-    static_partitioner()
-    {
-    }
+    static_partitioner() = default;
 
     /// <summary>
     ///     Destroys a <c>static_partitioner</c> object.
     /// </summary>
     /**/
-    ~static_partitioner() {}
+    ~static_partitioner() = default;
 
     template<class _Type>
     _Type _Get_num_chunks(_Type ) const
@@ -2368,7 +2366,14 @@ void _Parallel_chunk_impl(const _Random_iterator& _First, _Index_type _Range_arg
     _CONCRT_ASSERT(_Range_arg > 1);
     _CONCRT_ASSERT(_Step > 0);
 
-    _Index_type _Num_iterations = (_Step == 1) ? _Range_arg : (((_Range_arg - 1) / _Step) + 1);
+    _Index_type _Num_iterations = _Range_arg;
+    if (_Step != 1)
+    {
+        --_Num_iterations;
+        _Num_iterations /= _Step;
+        ++_Num_iterations;
+    }
+
     _CONCRT_ASSERT(_Num_iterations > 1);
 
     _Index_type _Num_chunks = _Part._Get_num_chunks(_Num_iterations);
@@ -2484,15 +2489,11 @@ void _Parallel_for_impl(_Index_type _First, _Index_type _Last, _Index_type _Step
         return;
     }
 
-    // Compute the difference type based on the arguments and avoid signed overflow for int, long, and long long
-    typedef typename std::conditional<std::is_same<_Index_type, int>::value, unsigned int,
-        typename std::conditional<std::is_same<_Index_type, long>::value, unsigned long,
-            typename std::conditional<std::is_same<_Index_type, long long>::value, unsigned long long, decltype(_Last - _First)
-            >::type
-        >::type
-    >::type _Diff_type;
+    using _Diff_type = std::conditional_t<std::is_integral<_Index_type>::value,
+        std::conditional_t<sizeof(_Index_type) <= sizeof(long), unsigned long, unsigned long long>,
+        decltype(_Last - _First)>;
 
-    _Diff_type _Range_size = _Diff_type(_Last) - _Diff_type(_First);
+    _Diff_type _Range_size = static_cast<_Diff_type>(_Last) - static_cast<_Diff_type>(_First);
     _Diff_type _Diff_step = _Step;
 
     if (_Range_size <= _Diff_step)
@@ -2629,7 +2630,7 @@ void parallel_for(_Index_type _First, _Index_type _Last, _Index_type _Step, cons
 template <typename _Index_type, typename _Function>
 void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func, const auto_partitioner& _Part = auto_partitioner())
 {
-    parallel_for(_First, _Last, _Index_type(1), _Func, _Part);
+    parallel_for(_First, _Last, static_cast<_Index_type>(1), _Func, _Part);
 }
 
 /// <summary>
@@ -2668,7 +2669,7 @@ void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func,
 template <typename _Index_type, typename _Function>
 void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func, const static_partitioner& _Part)
 {
-    parallel_for(_First, _Last, _Index_type(1), _Func, _Part);
+    parallel_for(_First, _Last, static_cast<_Index_type>(1), _Func, _Part);
 }
 
 /// <summary>
@@ -2707,7 +2708,7 @@ void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func,
 template <typename _Index_type, typename _Function>
 void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func, const simple_partitioner& _Part)
 {
-    parallel_for(_First, _Last, _Index_type(1), _Func, _Part);
+    parallel_for(_First, _Last, static_cast<_Index_type>(1), _Func, _Part);
 }
 
 /// <summary>
@@ -2746,7 +2747,7 @@ void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func,
 template <typename _Index_type, typename _Function>
 void parallel_for(_Index_type _First, _Index_type _Last, const _Function& _Func, affinity_partitioner& _Part)
 {
-    parallel_for(_First, _Last, _Index_type(1), _Func, _Part);
+    parallel_for(_First, _Last, static_cast<_Index_type>(1), _Func, _Part);
 }
 
 // parallel_for_each -- This function will iterate over all elements in the iterator's range.

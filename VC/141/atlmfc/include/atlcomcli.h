@@ -14,9 +14,9 @@
 #pragma once
 
 #include <atlcore.h>
-#include <ole2.h>
+#include <Ole2.h>
 #ifndef _ATL_USE_WINAPI_FAMILY_PHONE_APP
-#include <olectl.h>
+#include <OleCtl.h>
 #endif // _ATL_USE_WINAPI_FAMILY_PHONE_APP
 
 #pragma warning (push)
@@ -1736,7 +1736,7 @@ public:
     {
     }
 
-    CAdapt(_Inout_ CAdapt<T>&& rSrCA) _ATL_NOEXCEPT(details::is_nothrow_move_constructible<T>::value) :
+    CAdapt(_Inout_ CAdapt<T>&& rSrCA) _ATL_NOEXCEPT(ATLImplementationDetails::is_nothrow_move_constructible<T>::value) :
         m_T( static_cast<T&&>(rSrCA.m_T) )
     {
     }
@@ -1748,7 +1748,7 @@ public:
         return *this;
     }
 
-    CAdapt<T>& operator=(_Inout_ CAdapt<T>&& rSrc) _ATL_NOEXCEPT(details::is_nothrow_move_assignable<T>::value)
+    CAdapt<T>& operator=(_Inout_ CAdapt<T>&& rSrc) _ATL_NOEXCEPT(ATLImplementationDetails::is_nothrow_move_assignable<T>::value)
     {
         if (this != &rSrc)
         {

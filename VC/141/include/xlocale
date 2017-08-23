@@ -57,7 +57,7 @@ template<class _Facet>
 template<class _Elem>
 	class collate;
 
-struct _CRTIMP2_PURE _Crt_new_delete
+struct _CRTIMP2_PURE_IMPORT _Crt_new_delete
 	{	// base class for marking allocations as CRT blocks
   #ifdef _DEBUG
 	void * __CLRCALL_OR_CDECL operator new(size_t _Size)
@@ -101,7 +101,7 @@ public:
 	typedef int category;
 
 			// CLASS id
-	class _CRTIMP2_PURE id
+	class _CRTIMP2_PURE_IMPORT id
 		{	// identifier stamp, unique for each distinct kind of facet
 	public:
 		__CLR_OR_THIS_CALL id(size_t _Val = 0)
@@ -134,7 +134,7 @@ public:
 	class _Locimp;
 
 			// CLASS facet
-	class _CRTIMP2_PURE facet
+	class _CRTIMP2_PURE_IMPORT facet
 		: public _Facet_base, public _Crt_new_delete
 		{	// base class for all locale facets, performs reference counting
 	public:
@@ -176,7 +176,7 @@ public:
 		};
 
 			// CLASS _Locimp
-	class _CRTIMP2_PURE _Locimp
+	class _CRTIMP2_PURE_IMPORT _Locimp
 		: public facet
 		{	// reference-counted actual implementation of a locale
 	protected:
@@ -293,13 +293,13 @@ public:
 		{	// defer construction
 		}
 
-	locale(const locale& _Right) _THROW0()
+	locale(const locale& _Right) _NOEXCEPT
 		: _Ptr(_Right._Ptr)
 		{	// construct by copying
 		_Ptr->_Incref();
 		}
 
-	locale() _THROW0()
+	locale() _NOEXCEPT
 		: _Ptr(_Init(true))
 		{	// construct from current locale
 		}
@@ -405,7 +405,7 @@ public:
 			delete _Ptr->_Decref();
 		}
 
-	locale& operator=(const locale& _Right) _THROW0()
+	locale& operator=(const locale& _Right) _NOEXCEPT
 		{	// assign a locale
 		if (_Ptr != _Right._Ptr)
 			{	// different implementation, point at new one
@@ -518,7 +518,7 @@ template<class _Facet> inline
 
  #if _HAS_EXCEPTIONS
 
-			_THROW_NCEE(bad_cast, _EMPTY_ARGUMENT);	// lazy disallowed
+			_THROW(bad_cast, _EMPTY_ARGUMENT);	// lazy disallowed
 
  #else /* _HAS_EXCEPTIONS */
 			abort();	// lazy disallowed
@@ -750,7 +750,7 @@ template<> inline
  #endif /* _NATIVE_WCHAR_T_DEFINED */
 
 		// STRUCT codecvt_base
-class _CRTIMP2_PURE codecvt_base
+class _CRTIMP2_PURE_IMPORT codecvt_base
 	: public locale::facet
 	{	// base class for codecvt
 public:
@@ -764,17 +764,17 @@ public:
 		{	// default constructor
 		}
 
-	bool __CLR_OR_THIS_CALL always_noconv() const _THROW0()
+	bool __CLR_OR_THIS_CALL always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input (from codecvt)
 		return (do_always_noconv());
 		}
 
-	int __CLR_OR_THIS_CALL max_length() const _THROW0()
+	int __CLR_OR_THIS_CALL max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion (from codecvt)
 		return (do_max_length());
 		}
 
-	int __CLR_OR_THIS_CALL encoding() const _THROW0()
+	int __CLR_OR_THIS_CALL encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return (do_encoding());
 		}
@@ -784,17 +784,17 @@ public:
 		}
 
 protected:
-	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _THROW0()
+	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input (from codecvt)
 		return (false);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_max_length() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion (from codecvt)
 		return (1);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_encoding() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return (1);	// -1 ==> state dependent, 0 ==> varying length
 		}
@@ -872,7 +872,7 @@ protected:
 		{	// initialize from _Locinfo object
 		}
 
-	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _THROW0()
+	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input (from codecvt)
 		return (is_same<_Byte, _Elem>::value);
 		}
@@ -925,10 +925,19 @@ protected:
 	};
 
 		// STATIC codecvt::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _Byte,
 	class _Statype>
 	__PURE_APPDOMAIN_GLOBAL locale::id codecvt<_Elem, _Byte, _Statype>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// ENUM _Codecvt_mode
 enum _Codecvt_mode {
@@ -938,7 +947,7 @@ enum _Codecvt_mode {
 
 		// CLASS codecvt<char16_t, char, _Mbstatet>
 template<>
-	class _CRTIMP2_PURE codecvt<char16_t, char, _Mbstatet>
+	class _CRTIMP2_PURE_IMPORT codecvt<char16_t, char, _Mbstatet>
 	: public codecvt_base
 	{	// facet for converting between char16_t and UTF-8 byte sequences
 public:
@@ -1238,19 +1247,19 @@ protected:
 		return ((int)_Wchars);
 		}
 
-	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _THROW0()
+	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input
 		return (false);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_max_length() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion
 		return ((_Mode & _Consume_header) != 0 ? 9	// header + max input
 			: (_Mode & _Generate_header) != 0 ? 7	// header + max output
 			: 6);	// 6-byte max input sequence, no 3-byte header
 		}
 
-	virtual int do_encoding() const _THROW0()
+	virtual int do_encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return (0);	// 0 => varying length
 		}
@@ -1262,7 +1271,7 @@ private:
 
 		// CLASS codecvt<char32_t, char, _Mbstatet>
 template<>
-	class _CRTIMP2_PURE codecvt<char32_t, char, _Mbstatet>
+	class _CRTIMP2_PURE_IMPORT codecvt<char32_t, char, _Mbstatet>
 	: public codecvt_base
 	{	// facet for converting between char32_t and UTF-8 byte sequences
 public:
@@ -1505,18 +1514,18 @@ protected:
 		return ((int)_Wchars);
 		}
 
-	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _THROW0()
+	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input
 		return (false);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_max_length() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion
 		return ((_Mode & (_Consume_header | _Generate_header)) != 0
 			? 9 : 6);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_encoding() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return ((_Mode & (_Consume_header | _Generate_header)) != 0
 			? -1 : 0);	// -1 => state dependent, 0 => varying length
@@ -1529,7 +1538,7 @@ private:
 
 		// CLASS codecvt<wchar_t, char, _Mbstatet>
 template<>
-	class _CRTIMP2_PURE codecvt<wchar_t, char, _Mbstatet>
+	class _CRTIMP2_PURE_IMPORT codecvt<wchar_t, char, _Mbstatet>
 	: public codecvt_base
 	{	// facet for converting between wchar_t and char (_Byte) sequences
 public:
@@ -1756,17 +1765,17 @@ protected:
 		return (_Wchars);
 		}
 
-	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _THROW0()
+	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input
 		return (false);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_max_length() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion (from codecvt)
 		return (MB_LEN_MAX);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_encoding() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return (0);	// 0 => varying length
 		}
@@ -1778,7 +1787,7 @@ private:
  #ifdef _NATIVE_WCHAR_T_DEFINED
 		// CLASS codecvt<unsigned short, char, _Mbstatet>
 template<>
-	class _CRTIMP2_PURE codecvt<unsigned short, char, _Mbstatet>
+	class _CRTIMP2_PURE_IMPORT codecvt<unsigned short, char, _Mbstatet>
 	: public codecvt_base
 	{	// facet for converting between unsigned short and char sequences
 public:
@@ -2005,17 +2014,17 @@ protected:
 		return (_Wchars);
 		}
 
-	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _THROW0()
+	virtual bool __CLR_OR_THIS_CALL do_always_noconv() const _NOEXCEPT
 		{	// return true if conversions never change input
 		return (false);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_max_length() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_max_length() const _NOEXCEPT
 		{	// return maximum length required for a conversion (from codecvt)
 		return (MB_LEN_MAX);
 		}
 
-	virtual int __CLR_OR_THIS_CALL do_encoding() const _THROW0()
+	virtual int __CLR_OR_THIS_CALL do_encoding() const _NOEXCEPT
 		{	// return length of code sequence (from codecvt)
 		return (0);	// 0 => varying length
 		}
@@ -2050,7 +2059,7 @@ protected:
 	};
 
 		// STRUCT ctype_base
-struct _CRTIMP2_PURE ctype_base
+struct _CRTIMP2_PURE_IMPORT ctype_base
 	: public locale::facet
 	{	// base for ctype
 	enum
@@ -2307,12 +2316,21 @@ private:
 	};
 
 		// STATIC ctype::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem>
 	locale::id ctype<_Elem>::id;
 
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
+
 		// CLASS ctype<char>
 template<>
-	class _CRTIMP2_PURE ctype<char>
+	class _CRTIMP2_PURE_IMPORT ctype<char>
 	: public ctype_base
 	{	// facet for classifying char elements, converting cases
 	typedef ctype<char> _Myt;
@@ -2434,12 +2452,12 @@ public:
 		return (_X_CTYPE);
 		}
 
-	const mask *__CLR_OR_THIS_CALL table() const _THROW0()
+	const mask *__CLR_OR_THIS_CALL table() const _NOEXCEPT
 		{	// return address of char to mask table
 		return (_Ctype._Table);
 		}
 
-	static const mask *__CLRCALL_OR_CDECL classic_table() _THROW0()
+	static const mask *__CLRCALL_OR_CDECL classic_table() _NOEXCEPT
 		{	// return address of char to mask table for "C" locale
 		const _Myt& _Ctype_fac = _USE(locale::classic(), _Myt);
 		return (_Ctype_fac.table());
@@ -2529,7 +2547,7 @@ private:
 
 		// CLASS ctype<wchar_t>
 template<>
-	class _CRTIMP2_PURE ctype<wchar_t>
+	class _CRTIMP2_PURE_IMPORT ctype<wchar_t>
 	: public ctype_base
 	{	// facet for classifying wchar_t elements, converting cases
 	typedef ctype<wchar_t> _Myt;
@@ -2753,7 +2771,7 @@ private:
  #ifdef _NATIVE_WCHAR_T_DEFINED
 		// CLASS ctype<unsigned short>
 template<>
-	class _CRTIMP2_PURE ctype<unsigned short>
+	class _CRTIMP2_PURE_IMPORT ctype<unsigned short>
 	: public ctype_base
 	{	// facet for classifying unsigned short elements, converting cases
 	typedef ctype<unsigned short> _Myt;
@@ -3020,12 +3038,12 @@ protected:
 		}
 	};
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE codecvt<char, char, _Mbstatet>;
+template class _CRTIMP2_PURE_IMPORT codecvt<char, char, _Mbstatet>;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

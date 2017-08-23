@@ -21,55 +21,78 @@ _CRT_BEGIN_C_HEADER
 struct __std_exception_data
 {
     char const* _What;
-    int        _DoFree;
+    bool        _DoFree;
 };
 
-extern void __cdecl __std_exception_copy(
+_VCRTIMP void __cdecl __std_exception_copy(
     _In_  __std_exception_data const* _From,
     _Out_ __std_exception_data*       _To
     );
 
-extern void __cdecl __std_exception_destroy(
+_VCRTIMP void __cdecl __std_exception_destroy(
     _Inout_ __std_exception_data* _Data
     );
 
 _CRT_END_C_HEADER
 
+
+
+namespace std {
+
 class exception
 {
 public:
 
-	exception() throw();
+    exception() throw()
+        : _Data()
+    {
+    }
 
-	explicit exception(char const* const& _Message) throw();
+    explicit exception(char const* const _Message) throw()
+        : _Data()
+    {
+        __std_exception_data _InitData = { _Message, true };
+        __std_exception_copy(&_InitData, &_Data);
+    }
 
-	exception(char const* const& _Message, int) throw()
-#ifndef _ATL_XP_TARGETING
-		;
-#else
-		:_Data{ _Message,0 }
-	{
+    exception(char const* const _Message, int) throw()
+        : _Data()
+    {
+        _Data._What = _Message;
+    }
 
-	}
-#endif
+    exception(exception const& _Other) throw()
+        : _Data()
+    {
+        __std_exception_copy(&_Other._Data, &_Data);
+    }
 
-	exception(exception const& _Other) throw();
+    exception& operator=(exception const& _Other) throw()
+    {
+        if (this == &_Other)
+        {
+            return *this;
+        }
 
-	exception& operator=(exception const& _Other) throw();
+        __std_exception_destroy(&_Data);
+        __std_exception_copy(&_Other._Data, &_Data);
+        return *this;
+    }
 
-	virtual ~exception() throw();
+    virtual ~exception() throw()
+    {
+        __std_exception_destroy(&_Data);
+    }
 
-	virtual char const* what() const;
+    virtual char const* what() const
+    {
+        return _Data._What ? _Data._What : "Unknown exception";
+    }
 
 private:
 
-	__std_exception_data _Data;
+    __std_exception_data _Data;
 };
-
-namespace std {
-
-using ::exception;
-
 
 class bad_exception
     : public exception

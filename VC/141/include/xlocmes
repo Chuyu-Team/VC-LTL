@@ -11,8 +11,6 @@
  #pragma push_macro("new")
  #undef new
 
- #pragma warning(disable: 4988)	// TRANSITION, variable declared outside class/function scope
-
 _STD_BEGIN
 		// STRUCT messages_base
 struct messages_base
@@ -52,7 +50,7 @@ public:
 		do_close(_Catval);
 		}
 
-	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE static locale::id id;	// unique facet id
+	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE_IMPORT static locale::id id;	// unique facet id
 
 	explicit messages(size_t _Refs = 0)
 		: messages_base(_Refs)
@@ -111,8 +109,17 @@ protected:
 	};
 
 		// STATIC messages::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem>
 	__PURE_APPDOMAIN_GLOBAL locale::id messages<_Elem>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS messages_byname
 template<class _Elem>
@@ -136,7 +143,7 @@ protected:
 		}
 	};
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
 template __PURE_APPDOMAIN_GLOBAL locale::id messages<char>::id;
@@ -146,7 +153,7 @@ template __PURE_APPDOMAIN_GLOBAL locale::id messages<wchar_t>::id;
   #ifdef __FORCE_INSTANCE
 template __PURE_APPDOMAIN_GLOBAL locale::id messages<unsigned short>::id;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

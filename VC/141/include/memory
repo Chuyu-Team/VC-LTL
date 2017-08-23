@@ -15,13 +15,13 @@
  #undef new
 
 _STD_BEGIN
-		// TEMPLATE FUNCTION uninitialized_copy
+		// FUNCTION TEMPLATE uninitialized_copy
 template<class _InIt,
 	class _FwdIt> inline
 	_FwdIt _Uninitialized_copy_unchecked(_InIt _First, _InIt _Last,
 		_FwdIt _Dest, _General_ptr_iterator_tag)
 	{	// copy [_First, _Last) to raw [_Dest, ...), no special optimization
-	_FwdIt _Next = _Dest;
+	const _FwdIt _Next = _Dest;
 
 	_TRY_BEGIN
 	for (; _First != _Last; ++_Dest, (void)++_First)
@@ -54,7 +54,7 @@ template<class _InIt,
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Uninitialized_copy_unchecked(_UFirst, _ULast, _UDest, _Ptr_copy_cat(_UFirst, _UDest))));
 	}
@@ -72,14 +72,14 @@ template<class _InIt,
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
 
-		// TEMPLATE FUNCTION uninitialized_copy_n
+		// FUNCTION TEMPLATE uninitialized_copy_n
 template<class _InIt,
 	class _Diff,
 	class _FwdIt> inline
 	_FwdIt _Uninitialized_copy_n_unchecked1(_InIt _First, _Diff _Count,
 		_FwdIt _Dest, _General_ptr_iterator_tag)
 	{	// copy [_First, _First + _Count) to [_Dest, ...), no special optimization
-	_FwdIt _Next = _Dest;
+	const _FwdIt _Next = _Dest;
 
 	_TRY_BEGIN
 	for (; 0 < _Count; --_Count, (void)++_Dest, ++_First)
@@ -171,13 +171,173 @@ template<class _InTy,
 	}
  #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
 
+#if _HAS_CXX17
+		// FUNCTION TEMPLATE uninitialized_move
+template<class _InIt,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_move_unchecked(_InIt _First, _InIt _Last,
+		_FwdIt _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _Last) to raw [_Dest, ...), no special optimization
+	const _FwdIt _Next = _Dest;
 
-		// TEMPLATE FUNCTION uninitialized_fill
+	_TRY_BEGIN
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		{
+		_Construct_in_place(*_Dest, _STD move(*_First));
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _Dest);
+	_RERAISE;
+	_CATCH_END
+
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_move_unchecked(_InIt _First, _InIt _Last,
+		_FwdIt _Dest, _Really_trivial_ptr_iterator_tag)
+	{	// move [_First, _Last) to raw [_Dest, ...), memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
+	}
+
+template<class _InIt,
+	class _FwdIt> inline
+	_FwdIt uninitialized_move(_InIt _First, _InIt _Last,
+		_FwdIt _Dest)
+	{	// move [_First, _Last) to raw [_Dest, ...)
+	_DEPRECATE_UNCHECKED(uninitialized_move, _Dest);
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
+	return (_Rechecked(_Dest,
+		_Uninitialized_move_unchecked(_UFirst, _ULast, _UDest, _Ptr_move_cat(_UFirst, _UDest))));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _OutTy,
+	size_t _OutSize> inline
+	_OutTy *uninitialized_move(_InIt _First, _InIt _Last,
+		_OutTy (&_Dest)[_OutSize])
+	{	// move [_First, _Last) to raw [_Dest, ...)
+	return (_Unchecked(
+		_STD uninitialized_move(_First, _Last,
+			_Array_iterator<_OutTy, _OutSize>(_Dest))));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE uninitialized_move_n
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	pair<_InIt, _FwdIt> _Uninitialized_move_n_unchecked1(_InIt _First, _Diff _Count,
+		_FwdIt _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _First + _Count) to [_Dest, ...), no special optimization
+	const _FwdIt _Next = _Dest;
+
+	_TRY_BEGIN
+	for (; 0 < _Count; --_Count, (void)++_Dest, ++_First)
+		{
+		_Construct_in_place(*_Dest, _STD move(*_First));
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _Dest);
+	_RERAISE;
+	_CATCH_END
+
+	return (pair<_InIt, _FwdIt>(_First, _Dest));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	pair<_InIt, _FwdIt> _Uninitialized_move_n_unchecked1(_InIt _First, _Diff _Count,
+		_FwdIt _Dest, _Really_trivial_ptr_iterator_tag)
+	{	// move [_First, _First + _Count) to [_Dest, ...), memmove optimization
+	if (0 < _Count)
+		{
+		_Dest = _Copy_memmove(_First, _First + _Count, _Dest);
+		_First += _Count;
+		}
+
+	return (pair<_InIt, _FwdIt>(_First, _Dest));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	pair<_InIt, _FwdIt> _Uninitialized_move_n_unchecked(_InIt _First, _Diff _Count,
+		_FwdIt _Dest)
+	{	// move [_First, _First + _Count) to [_Dest, ...), choose optimization
+	return (_Uninitialized_move_n_unchecked1(_First, _Count,
+		_Dest, _Ptr_move_cat(_First, _Dest)));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _FwdIt> inline
+	pair<_InIt, _FwdIt> uninitialized_move_n(_InIt _First, _Diff _Count,
+		_FwdIt _Dest)
+	{	// move [_First, _First + _Count) to [_Dest, ...)
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	_DEPRECATE_UNCHECKED(uninitialized_move_n, _Dest);
+	return (_Rechecked_both(_First, _Dest,
+		_Uninitialized_move_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Unchecked_n(_Dest, _Count))));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InTy,
+	size_t _InSize,
+	class _Diff,
+	class _FwdIt> inline
+	pair<_InTy *, _FwdIt> uninitialized_move_n(_InTy (&_First)[_InSize], _Diff _Count,
+		_FwdIt _Dest)
+	{	// move [_First, _First + _Count) to [_Dest, ...), array input
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	_DEPRECATE_UNCHECKED(uninitialized_move_n, _Dest);
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	return (_Rechecked_second(_Dest,
+		_Uninitialized_move_n_unchecked(_First, _Count, _Unchecked_n(_Dest, _Count))));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutTy,
+	size_t _OutSize> inline
+	pair<_InIt, _OutTy *> uninitialized_move_n(_InIt _First, _Diff _Count,
+		_OutTy (&_Dest)[_OutSize])
+	{	// move [_First, _First + _Count) to [_Dest, ...), array dest
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Rechecked_first(_First,
+		_Uninitialized_move_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Dest)));
+	}
+
+template<class _InTy,
+	size_t _InSize,
+	class _Diff,
+	class _OutTy,
+	size_t _OutSize> inline
+	pair<_InTy *, _OutTy *> uninitialized_move_n(_InTy (&_First)[_InSize], _Diff _Count,
+		_OutTy (&_Dest)[_OutSize])
+	{	// move [_First, _First + _Count) to [_Dest, ...), array input/dest
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Uninitialized_move_n_unchecked(_First, _Count, _Dest));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE uninitialized_fill
 template<class _FwdIt,
 	class _Tval> inline
 	void _Uninitialized_fill_unchecked(_FwdIt _First, _FwdIt _Last, const _Tval& _Val, false_type)
 	{	// copy _Val throughout raw [_First, _Last), no special optimization
-	_FwdIt _Next = _First;
+	const _FwdIt _Next = _First;
 
 	_TRY_BEGIN
 	for (; _First != _Last; ++_First)
@@ -204,18 +364,17 @@ template<class _FwdIt,
 	{	// copy _Val throughout raw [_First, _Last)
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
-	const auto _ULast = _Unchecked(_Last);
-	_Uninitialized_fill_unchecked(_UFirst, _ULast, _Val, _Fill_memset_is_safe(_UFirst, _Val));
+	_Uninitialized_fill_unchecked(_UFirst, _Unchecked(_Last), _Val, _Fill_memset_is_safe(_UFirst, _Val));
 	}
 
 
-		// TEMPLATE FUNCTION uninitialized_fill_n
+		// FUNCTION TEMPLATE uninitialized_fill_n
 template<class _FwdIt,
 	class _Diff,
 	class _Tval> inline
 	_FwdIt _Uninitialized_fill_n_unchecked(_FwdIt _First, _Diff _Count, const _Tval& _Val, false_type)
 	{	// copy _Count copies of _Val to raw _First, no special optimization
-	_FwdIt _Next = _First;
+	const _FwdIt _Next = _First;
 
 	_TRY_BEGIN
 	for (; 0 < _Count; --_Count, (void)++_First)
@@ -256,14 +415,216 @@ template<class _FwdIt,
 		_Uninitialized_fill_n_unchecked(_UFirst, _Count, _Val, _Fill_memset_is_safe(_UFirst, _Val))));
 	}
 
+#if _HAS_CXX17
+		// FUNCTION TEMPLATE destroy_at
+template<class _Ty> inline
+	void destroy_at(_Ty * const _Location)
+	{	// destroy _Ty at memory address _Location
+	_Location->~_Ty();
+	}
+
+		// FUNCTION TEMPLATE destroy
+template<class _FwdIt> inline
+	void destroy(const _FwdIt _First, const _FwdIt _Last)
+	{	// destroy all elements in [_First, _Last)
+	_DEBUG_RANGE(_First, _Last);
+	_Destroy_range(_Unchecked(_First), _Unchecked(_Last));
+	}
+
+		// FUNCTION TEMPLATE destroy_n
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt _Destroy_n1(_FwdIt _First, _Diff _Count, false_type)
+	{	// destroy [_First, _First + _Count), no special optimization
+	for (; 0 < _Count; ++_First, (void)--_Count)
+		{
+		_Destroy_in_place(*_First);
+		}
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt _Destroy_n1(const _FwdIt _First, const _Diff _Count, true_type)
+	{	// destroy [_First, _First + _Count), trivially destructible
+	return (_STD next(_First, _Count)); // nothing to do
+	}
+
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt destroy_n(_FwdIt _First, const _Diff _Count_raw)
+	{	// destroy all elements in [_First, _First + _Count)
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	const auto _UFirst = _Unchecked_n(_First, _Count);
+	return (_Rechecked(_First, _Destroy_n1(_UFirst, _Count,
+		is_trivially_destructible<_Iter_value_t<_FwdIt>>())));
+	}
+
+		// FUNCTION TEMPLATE uninitialized_default_construct
+template<class _FwdIt> inline
+	void _Uninitialized_default_construct_unchecked(_FwdIt _First, const _FwdIt _Last, false_type)
+	{	// default-initialize all elements in [_First, _Last), no special optimization
+	const _FwdIt _Next = _First;
+
+	_TRY_BEGIN
+	for (; _First != _Last; ++_First)
+		{
+		::new (static_cast<void *>(_Unfancy(_First))) _Iter_value_t<_FwdIt>;
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _First);
+	_RERAISE;
+	_CATCH_END
+	}
+
+template<class _FwdIt> inline
+	void _Uninitialized_default_construct_unchecked(_FwdIt, _FwdIt, true_type)
+	{	// default-initialize all elements in [_First, _Last), trivially default constructible types
+		// nothing to do
+	}
+
+template<class _FwdIt> inline
+	void uninitialized_default_construct(const _FwdIt _First, const _FwdIt _Last)
+	{	// default-initialize all elements in [_First, _Last)
+	_DEBUG_RANGE(_First, _Last);
+	_Uninitialized_default_construct_unchecked(_Unchecked(_First), _Unchecked(_Last),
+		is_trivially_default_constructible<_Iter_value_t<_FwdIt>>());
+	}
+
+		// FUNCTION TEMPLATE uninitialized_default_construct_n
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt _Uninitialized_default_construct_n_unchecked(_FwdIt _First, _Diff _Count, false_type)
+	{	// default-initialize all elements in [_First, _First + _Count), no special optimization
+	const _FwdIt _Next = _First;
+
+	_TRY_BEGIN
+	for (; 0 < _Count; ++_First, (void)--_Count)
+		{
+		::new (static_cast<void *>(_Unfancy(_First))) _Iter_value_t<_FwdIt>;
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _First);
+	_RERAISE;
+	_CATCH_END
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt _Uninitialized_default_construct_n_unchecked(const _FwdIt _First, const _Diff _Count, true_type)
+	{	// default-initialize all elements in [_First, _First + _Count), trivially default constructible types
+		// nothing to do
+	return (_STD next(_First, _Count));
+	}
+
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt uninitialized_default_construct_n(_FwdIt _First, const _Diff _Count_raw)
+	{	// default-initialize all elements in [_First, _First + _Count_raw)
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	const auto _UFirst = _Unchecked_n(_First, _Count);
+	return (_Rechecked(_First,
+		_Uninitialized_default_construct_n_unchecked(_UFirst, _Count,
+		is_trivially_default_constructible<_Iter_value_t<_FwdIt>>())));
+	}
+
+		// FUNCTION TEMPLATE uninitialized_value_construct
+template<class _FwdIt> inline
+	void _Uninitialized_value_construct_unchecked(_FwdIt _First, const _FwdIt _Last, false_type)
+	{	// value-initialize all elements in [_First, _Last), no special optimization
+	const _FwdIt _Next = _First;
+
+	_TRY_BEGIN
+	for (; _First != _Last; ++_First)
+		{
+		_Construct_in_place(*_First);
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _First);
+	_RERAISE;
+	_CATCH_END
+	}
+
+template<class _FwdIt> inline
+	void _Uninitialized_value_construct_unchecked(const _FwdIt _First, const _FwdIt _Last, true_type)
+	{	// value-initialize all elements in [_First, _Last), all-bits-zero type
+	_Zero_range(_First, _Last);
+	}
+
+template<class _FwdIt> inline
+	void uninitialized_value_construct(const _FwdIt _First, const _FwdIt _Last)
+	{	// value-initialize all elements in [_First, _Last)
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	_Uninitialized_value_construct_unchecked(_UFirst, _Unchecked(_Last),
+		_Use_memset_value_construct_t<_Unchecked_t<_FwdIt>>());
+	}
+
+		// FUNCTION TEMPLATE uninitialized_value_construct_n
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt _Uninitialized_value_construct_n_unchecked(_FwdIt _First, _Diff _Count, false_type)
+	{	// value-initialize all elements in [_First, _First + _Count), no special optimization
+	const _FwdIt _Next = _First;
+
+	_TRY_BEGIN
+	for (; 0 < _Count; ++_First, (void)--_Count)
+		{
+		_Construct_in_place(*_First);
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _First);
+	_RERAISE;
+	_CATCH_END
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt _Uninitialized_value_construct_n_unchecked(_FwdIt _First, const _Diff _Count, true_type)
+	{	// value-initialize all elements in [_First, _First + _Count), all-bits-zero type
+	if (0 < _Count)
+		{
+		return (_Zero_range(_First, _First + _Count));
+		}
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff> inline
+	_FwdIt uninitialized_value_construct_n(_FwdIt _First, const _Diff _Count_raw)
+	{	// value-initialize all elements in [_First, _First + _Count_raw)
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	const auto _UFirst = _Unchecked_n(_First, _Count);
+	return (_Rechecked(_First,
+		_Uninitialized_value_construct_n_unchecked(_UFirst, _Count,
+			_Use_memset_value_construct_t<_Unchecked_t<_FwdIt>>())));
+	}
+
+#endif /* _HAS_CXX17 */
+
 
 		// TEMPLATE CLASS raw_storage_iterator
 template<class _OutIt,
 	class _Ty>
 	class raw_storage_iterator
-		: public _Outit
 	{	// wrap stores to raw buffer as output iterator
 public:
+	using iterator_category = output_iterator_tag;
+	using value_type = void;
+	using difference_type = void;
+	using pointer = void;
+	using reference = void;
+
 	explicit raw_storage_iterator(_OutIt _First)
 		: _Next(_First)
 		{	// construct with iterator
@@ -332,17 +693,17 @@ public:
 	typedef auto_ptr<_Ty> _Myt;
 	typedef _Ty element_type;
 
-	explicit auto_ptr(_Ty *_Ptr = 0) _THROW0()
+	explicit auto_ptr(_Ty *_Ptr = 0) _NOEXCEPT
 		: _Myptr(_Ptr)
 		{	// construct from object pointer
 		}
 
-	auto_ptr(_Myt& _Right) _THROW0()
+	auto_ptr(_Myt& _Right) _NOEXCEPT
 		: _Myptr(_Right.release())
 		{	// construct by assuming pointer from _Right auto_ptr
 		}
 
-	auto_ptr(auto_ptr_ref<_Ty> _Right) _THROW0()
+	auto_ptr(auto_ptr_ref<_Ty> _Right) _NOEXCEPT
 		{	// construct by assuming pointer from _Right auto_ptr_ref
 		_Ty *_Ptr = _Right._Ref;
 		_Right._Ref = 0;	// release old
@@ -350,13 +711,13 @@ public:
 		}
 
 	template<class _Other>
-		operator auto_ptr<_Other>() _THROW0()
+		operator auto_ptr<_Other>() _NOEXCEPT
 		{	// convert to compatible auto_ptr
 		return (auto_ptr<_Other>(*this));
 		}
 
 	template<class _Other>
-		operator auto_ptr_ref<_Other>() _THROW0()
+		operator auto_ptr_ref<_Other>() _NOEXCEPT
 		{	// convert to compatible auto_ptr_ref
 		_Other *_Cvtptr = _Myptr;	// test implicit conversion
 		auto_ptr_ref<_Other> _Ans(_Cvtptr);
@@ -365,25 +726,25 @@ public:
 		}
 
 	template<class _Other>
-		_Myt& operator=(auto_ptr<_Other>& _Right) _THROW0()
+		_Myt& operator=(auto_ptr<_Other>& _Right) _NOEXCEPT
 		{	// assign compatible _Right (assume pointer)
 		reset(_Right.release());
 		return (*this);
 		}
 
 	template<class _Other>
-		auto_ptr(auto_ptr<_Other>& _Right) _THROW0()
+		auto_ptr(auto_ptr<_Other>& _Right) _NOEXCEPT
 		: _Myptr(_Right.release())
 		{	// construct by assuming pointer from _Right
 		}
 
-	_Myt& operator=(_Myt& _Right) _THROW0()
+	_Myt& operator=(_Myt& _Right) _NOEXCEPT
 		{	// assign compatible _Right (assume pointer)
 		reset(_Right.release());
 		return (*this);
 		}
 
-	_Myt& operator=(auto_ptr_ref<_Ty> _Right) _THROW0()
+	_Myt& operator=(auto_ptr_ref<_Ty> _Right) _NOEXCEPT
 		{	// assign compatible _Right._Ref (assume pointer)
 		_Ty *_Ptr = _Right._Ref;
 		_Right._Ref = 0;	// release old
@@ -396,7 +757,7 @@ public:
 		delete _Myptr;
 		}
 
-	_Ty& operator*() const _THROW0()
+	_Ty& operator*() const _NOEXCEPT
 		{	// return designated value
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Myptr == 0)
@@ -408,7 +769,7 @@ public:
 		return (*get());
 		}
 
-	_Ty *operator->() const _THROW0()
+	_Ty *operator->() const _NOEXCEPT
 		{	// return pointer to class object
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Myptr == 0)
@@ -420,12 +781,12 @@ public:
 		return (get());
 		}
 
-	_Ty *get() const _THROW0()
+	_Ty *get() const _NOEXCEPT
 		{	// return wrapped pointer
 		return (_Myptr);
 		}
 
-	_Ty *release() _THROW0()
+	_Ty *release() _NOEXCEPT
 		{	// return wrapped pointer and give up ownership
 		_Ty *_Tmp = _Myptr;
 		_Myptr = 0;
@@ -441,6 +802,13 @@ public:
 
 private:
 	_Ty *_Myptr;	// the wrapped object pointer
+	};
+
+template<>
+	class auto_ptr<void>
+	{
+public:
+	typedef void element_type;
 	};
  #endif /* _HAS_AUTO_PTR_ETC */
 
@@ -600,8 +968,16 @@ public:
 
 	virtual void *_Get_deleter(const type_info& _Typeid) const _NOEXCEPT
 		{	// return address of deleter object
-		return ((void *)(_Typeid == typeid(_Dx)
-			? _STD addressof(_Mypair._Get_first()) : 0));
+#if _HAS_STATIC_RTTI
+		if (_Typeid == typeid(_Dx))
+			{
+			return (const_cast<_Dx *>(_STD addressof(_Mypair._Get_first())));
+			}
+#else /* _HAS_STATIC_RTTI */
+		(void)_Typeid;
+#endif /* _HAS_STATIC_RTTI */
+
+		return (0);
 		}
 
 private:
@@ -626,9 +1002,7 @@ template<class _Ty,
 	: public _Ref_count_base
 	{	// handle reference counting for object with deleter and allocator
 public:
-	typedef _Ref_count_del_alloc<_Ty, _Dx, _Alloc> _Myt;
-	typedef _Wrap_alloc<_Alloc> _Myalty0;
-	typedef typename _Myalty0::template rebind<_Myt>::other _Myalty;
+	using _Myalty = _Rebind_alloc_t<_Alloc, _Ref_count_del_alloc>;
 
 	_Ref_count_del_alloc(_Ty *_Px, _Dx _Dt, const _Alloc& _Ax)
 		: _Ref_count_base(), _Mypair(_One_then_variadic_args_t(), _Dt,
@@ -638,8 +1012,16 @@ public:
 
 	virtual void *_Get_deleter(const type_info& _Typeid) const _NOEXCEPT
 		{	// return address of deleter object
-		return ((void *)(_Typeid == typeid(_Dx)
-			? _STD addressof(_Mypair._Get_first()) : 0));
+#if _HAS_STATIC_RTTI
+		if (_Typeid == typeid(_Dx))
+			{
+			return (const_cast<_Dx *>(_STD addressof(_Mypair._Get_first())));
+			}
+#else /* _HAS_STATIC_RTTI */
+		(void)_Typeid;
+#endif /* _HAS_STATIC_RTTI */
+
+		return (0);
 		}
 
 private:
@@ -651,8 +1033,8 @@ private:
 	virtual void _Delete_this() _NOEXCEPT
 		{	// destroy self
 		_Myalty _Al = _Mypair._Get_second()._Get_first();
-		_Al.destroy(this);
-		_Al.deallocate(_Al.address(*this), 1);
+		allocator_traits<_Myalty>::destroy(_Al, this);
+		_Deallocate_plain(_Al, this);
 		}
 
 	_Compressed_pair<_Dx, _Compressed_pair<_Myalty, _Ty *> > _Mypair;
@@ -735,15 +1117,17 @@ public:
 		}
 
 	template<class _Ty2>
-		bool owner_before(const _Ptr_base<_Ty2>& _Right) const
+		bool owner_before(const _Ptr_base<_Ty2>& _Right) const _NOEXCEPT
 		{	// compare addresses of manager objects
 		return (_Rep < _Right._Rep);
 		}
 
+#if _HAS_STATIC_RTTI
 	void *_Get_deleter(const type_info& _Typeid) const _NOEXCEPT
 		{	// return pointer to deleter object if its type is _Typeid
 		return (_Rep ? _Rep->_Get_deleter(_Typeid) : 0);
 		}
+#endif /* _HAS_STATIC_RTTI */
 
 	_Ty *_Get() const _NOEXCEPT
 		{	// return pointer to resource
@@ -935,7 +1319,7 @@ public:
 		{	// construct shared_ptr object that owns resource *_Other
 		if (!this->_Reset_weak(_Other))
 			{
-			_THROW_NCEE(bad_weak_ptr, _EMPTY_ARGUMENT);
+			_THROW(bad_weak_ptr, _EMPTY_ARGUMENT);
 			}
 		}
 
@@ -1058,7 +1442,7 @@ public:
 		return (this->_Get());
 		}
 
-	typename add_lvalue_reference<_Ty>::type operator*() const _NOEXCEPT
+	add_lvalue_reference_t<_Ty> operator*() const _NOEXCEPT
 		{	// return reference to resource
 		return (*this->_Get());
 		}
@@ -1107,14 +1491,21 @@ private:
 		class _Alloc>
 		void _Resetp(_Ux *_Px, _Dx _Dt, _Alloc _Ax)
 		{	// release, take ownership of _Px, deleter _Dt, allocator _Ax
-		typedef _Ref_count_del_alloc<_Ux, _Dx, _Alloc> _Refd;
-		typedef _Wrap_alloc<_Alloc> _Alref0;
-		typename _Alref0::template rebind<_Refd>::other _Alref(_Ax);
+		using _Refd = _Ref_count_del_alloc<_Ux, _Dx, _Alloc>;
+		using _Alref_alloc = _Rebind_alloc_t<_Alloc, _Refd>;
+		using _Alref_traits = allocator_traits<_Alref_alloc>;
+		_Alref_alloc _Alref(_Ax);
 
 		_TRY_BEGIN	// allocate control block and reset
-		_Refd *_Pref = _Unfancy(_Alref.allocate(1));
-		_Alref.construct(_Pref, _Px, _Dt, _Ax);
-		_Resetp0(_Px, _Pref);
+		const auto _Pfancy = _Alref_traits::allocate(_Alref, 1);
+		_Refd * const _Pref = _Unfancy(_Pfancy);
+			_TRY_BEGIN
+			_Alref_traits::construct(_Alref, _Pref, _Px, _Dt, _Ax);
+			_Resetp0(_Px, _Pref);
+			_CATCH_ALL
+			_Alref_traits::deallocate(_Alref, _Pfancy, 1);
+			_RERAISE;
+			_CATCH_END
 		_CATCH_ALL	// allocation failed, delete resource
 		_Dt(_Px);
 		_RERAISE;
@@ -1148,9 +1539,7 @@ template<class _Ty1,
 	class _Ty2>
 	bool operator<(const shared_ptr<_Ty1>& _Left, const shared_ptr<_Ty2>& _Right) _NOEXCEPT
 	{	// test if shared_ptr < shared_ptr
-	return (less<decltype(_Always_false<_Ty1>::value
-		? _Left.get() : _Right.get())>()(
-			_Left.get(), _Right.get()));
+	return (less<>()(_Left.get(), _Right.get()));
 	}
 
 template<class _Ty1,
@@ -1177,73 +1566,73 @@ template<class _Ty1,
 template<class _Ty>
 	bool operator==(const shared_ptr<_Ty>& _Left, nullptr_t) _NOEXCEPT
 	{	// test if shared_ptr == nullptr
-	return (_Left.get() == nullptr_t{});
+	return (_Left.get() == nullptr);
 	}
 
 template<class _Ty>
 	bool operator==(nullptr_t, const shared_ptr<_Ty>& _Right) _NOEXCEPT
 	{	// test if nullptr == shared_ptr
-	return (nullptr_t{} == _Right.get());
+	return (nullptr == _Right.get());
 	}
 
 template<class _Ty>
 	bool operator!=(const shared_ptr<_Ty>& _Left, nullptr_t) _NOEXCEPT
 	{	// test if shared_ptr != nullptr
-	return (!(_Left == nullptr_t{}));
+	return (!(_Left == nullptr));
 	}
 
 template<class _Ty>
 	bool operator!=(nullptr_t, const shared_ptr<_Ty>& _Right) _NOEXCEPT
 	{	// test if nullptr != shared_ptr
-	return (!(nullptr_t{} == _Right));
+	return (!(nullptr == _Right));
 	}
 
 template<class _Ty>
 	bool operator<(const shared_ptr<_Ty>& _Left, nullptr_t) _NOEXCEPT
 	{	// test if shared_ptr < nullptr
-	return (less<_Ty *>()(_Left.get(), nullptr_t{}));
+	return (less<_Ty *>()(_Left.get(), nullptr));
 	}
 
 template<class _Ty>
 	bool operator<(nullptr_t, const shared_ptr<_Ty>& _Right) _NOEXCEPT
 	{	// test if nullptr < shared_ptr
-	return (less<_Ty *>()(nullptr_t{}, _Right.get()));
+	return (less<_Ty *>()(nullptr, _Right.get()));
 	}
 
 template<class _Ty>
 	bool operator>=(const shared_ptr<_Ty>& _Left, nullptr_t) _NOEXCEPT
 	{	// test if shared_ptr >= nullptr
-	return (!(_Left < nullptr_t{}));
+	return (!(_Left < nullptr));
 	}
 
 template<class _Ty>
 	bool operator>=(nullptr_t, const shared_ptr<_Ty>& _Right) _NOEXCEPT
 	{	// test if nullptr >= shared_ptr
-	return (!(nullptr_t{} < _Right));
+	return (!(nullptr < _Right));
 	}
 
 template<class _Ty>
 	bool operator>(const shared_ptr<_Ty>& _Left, nullptr_t) _NOEXCEPT
 	{	// test if shared_ptr > nullptr
-	return (nullptr_t{} < _Left);
+	return (nullptr < _Left);
 	}
 
 template<class _Ty>
 	bool operator>(nullptr_t, const shared_ptr<_Ty>& _Right) _NOEXCEPT
 	{	// test if nullptr > shared_ptr
-	return (_Right < nullptr_t{});
+	return (_Right < nullptr);
 	}
 
 template<class _Ty>
 	bool operator<=(const shared_ptr<_Ty>& _Left, nullptr_t) _NOEXCEPT
 	{	// test if shared_ptr <= nullptr
-	return (!(nullptr_t{} < _Left));
+	return (!(nullptr < _Left));
 	}
 
 template<class _Ty>
 	bool operator<=(nullptr_t, const shared_ptr<_Ty>& _Right) _NOEXCEPT
 	{	// test if nullptr <= shared_ptr
-	return (!(_Right < nullptr_t{}));
+	return (!(_Right < nullptr));
 	}
 
 template<class _Elem,
@@ -1263,8 +1652,7 @@ template<class _Ty>
 
 template<class _Ty1,
 	class _Ty2>
-	shared_ptr<_Ty1>
-		static_pointer_cast(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
+	shared_ptr<_Ty1> static_pointer_cast(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
 	{	// return shared_ptr object holding static_cast<_Ty1 *>(_Other.get())
 	typedef typename shared_ptr<_Ty1>::element_type _Elem1;
 	_Elem1 *_Ptr = static_cast<_Elem1 *>(_Other.get());
@@ -1273,18 +1661,17 @@ template<class _Ty1,
 
 template<class _Ty1,
 	class _Ty2>
-	shared_ptr<_Ty1>
-		const_pointer_cast(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
+	shared_ptr<_Ty1> const_pointer_cast(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
 	{	// return shared_ptr object holding const_cast<_Ty1 *>(_Other.get())
 	typedef typename shared_ptr<_Ty1>::element_type _Elem1;
 	_Elem1 *_Ptr = const_cast<_Elem1 *>(_Other.get());
 	return (shared_ptr<_Ty1>(_Other, _Ptr));
 	}
 
+#ifdef _CPPRTTI
 template<class _Ty1,
 	class _Ty2>
-	shared_ptr<_Ty1>
-		dynamic_pointer_cast(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
+	shared_ptr<_Ty1> dynamic_pointer_cast(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
 	{	// return shared_ptr object holding dynamic_cast<_Ty1 *>(_Other.get())
 	typedef typename shared_ptr<_Ty1>::element_type _Elem1;
 	_Elem1 *_Ptr = dynamic_cast<_Elem1 *>(_Other.get());
@@ -1293,13 +1680,24 @@ template<class _Ty1,
 	else
 		return (shared_ptr<_Ty1>());
 	}
+#else /* _CPPRTTI */
+template<class _Ty1,
+	class _Ty2>
+	shared_ptr<_Ty1> dynamic_pointer_cast(const shared_ptr<_Ty2>&) _NOEXCEPT = delete;	// requires /GR option
+#endif /* _CPPRTTI */
 
+#if _HAS_STATIC_RTTI
 template<class _Dx,
 	class _Ty>
 	_Dx *get_deleter(const shared_ptr<_Ty>& _Sx) _NOEXCEPT
-	{	// return pointer to shared_ptr's deleter object if its type is _Ty
-	return ((_Dx *)_Sx._Get_deleter(typeid(_Dx)));
+	{	// return pointer to shared_ptr's deleter object if its type is _Dx
+	return (static_cast<_Dx *>(_Sx._Get_deleter(typeid(_Dx))));
 	}
+#else /* _HAS_STATIC_RTTI */
+template<class _Dx,
+	class _Ty>
+	_Dx *get_deleter(const shared_ptr<_Ty>&) _NOEXCEPT = delete;	// requires static RTTI
+#endif /* _HAS_STATIC_RTTI */
 
 	// TEMPLATE CLASS _Ref_count_obj
 template<class _Ty>
@@ -1311,13 +1709,12 @@ public:
 		_Ref_count_obj(_Types&&... _Args)
 		: _Ref_count_base()
 		{	// construct from argument list
-		::new ((void *)&_Storage) _Ty(_STD forward<_Types>(_Args)...);
+		::new (static_cast<void *>(&_Storage)) _Ty(_STD forward<_Types>(_Args)...);
 		}
 
-
-	_Ty *_Getptr() const
+	_Ty * _Getptr()
 		{	// get pointer
-		return ((_Ty *)&_Storage);
+		return (reinterpret_cast<_Ty *>(&_Storage));
 		}
 
 private:
@@ -1331,7 +1728,7 @@ private:
 		delete this;
 		}
 
-	typename aligned_union<1, _Ty>::type _Storage;
+	aligned_union_t<1, _Ty> _Storage;
 	};
 
 	// TEMPLATE CLASS _Ref_count_obj_alloc
@@ -1341,22 +1738,19 @@ template<class _Ty,
 	: public _Ref_count_base
 	{	// handle reference counting for object in control block, allocator
 public:
-	typedef _Ref_count_obj_alloc<_Ty, _Alloc> _Myt;
-	typedef _Wrap_alloc<_Alloc> _Myalty0;
-	typedef typename _Myalty0::template rebind<_Myt>::other _Myalty;
-	typedef typename aligned_union<1, _Ty>::type _Mystoragety;
+	using _Myalty = _Rebind_alloc_t<_Alloc, _Ref_count_obj_alloc>;
+	using _Mystoragety = aligned_union_t<1, _Ty>;
 
 	template<class... _Types>
 		_Ref_count_obj_alloc(const _Alloc& _Al_arg, _Types&&... _Args)
 		: _Ref_count_base(), _Mypair(_One_then_variadic_args_t(), _Al_arg)
 		{	// construct from argument list, allocator
-		::new ((void *)_Getptr()) _Ty(_STD forward<_Types>(_Args)...);
+		::new (static_cast<void *>(&_Mypair._Get_second())) _Ty(_STD forward<_Types>(_Args)...);
 		}
 
-
-	_Ty *_Getptr() const
+	_Ty * _Getptr()
 		{	// get pointer
-		return ((_Ty *)&_Mypair._Get_second());
+		return (reinterpret_cast<_Ty *>(&_Mypair._Get_second()));
 		}
 
 private:
@@ -1368,14 +1762,14 @@ private:
 	virtual void _Delete_this() _NOEXCEPT
 		{	// destroy self
 		_Myalty _Al = _Mypair._Get_first();
-		_Al.destroy(this);
-		_Al.deallocate(_Al.address(*this), 1);
+		allocator_traits<_Myalty>::destroy(_Al, this);
+		_Deallocate_plain(_Al, this);
 		}
 
 	_Compressed_pair<_Myalty, _Mystoragety> _Mypair;
 	};
 
-	// TEMPLATE FUNCTION make_shared
+	// FUNCTION TEMPLATE make_shared
 template<class _Ty,
 	class... _Types> inline
 		shared_ptr<_Ty> make_shared(_Types&&... _Args)
@@ -1388,23 +1782,24 @@ template<class _Ty,
 	return (_Ret);
 	}
 
-	// TEMPLATE FUNCTION allocate_shared
+	// FUNCTION TEMPLATE allocate_shared
 template<class _Ty,
 	class _Alloc,
 	class... _Types> inline
 	shared_ptr<_Ty> allocate_shared(
 		const _Alloc& _Al_arg, _Types&&... _Args)
 	{	// make a shared_ptr
-	typedef _Ref_count_obj_alloc<_Ty, _Alloc> _Refoa;
-	typedef _Wrap_alloc<_Alloc> _Alref0;
-	typename _Alref0::template rebind<_Refoa>::other _Alref(_Al_arg);
+	using _Refoa = _Ref_count_obj_alloc<_Ty, _Alloc>;
+	using _Alref_alloc = _Rebind_alloc_t<_Alloc, _Refoa>;
+	using _Alref_traits = allocator_traits<_Alref_alloc>;
+	_Alref_alloc _Alref(_Al_arg);
 
-	const auto _Rx = _Alref.allocate(1);
+	const auto _Rx = _Alref_traits::allocate(_Alref, 1);
 
 	_TRY_BEGIN
-		_Alref.construct(_Unfancy(_Rx), _Al_arg, _STD forward<_Types>(_Args)...);
+		_Alref_traits::construct(_Alref, _Unfancy(_Rx), _Al_arg, _STD forward<_Types>(_Args)...);
 	_CATCH_ALL
-		_Alref.deallocate(_Rx, 1);
+		_Alref_traits::deallocate(_Alref, _Rx, 1);
 	_RERAISE;
 	_CATCH_END
 
@@ -1433,16 +1828,14 @@ public:
 		}
 
 	template<class _Ty2,
-		class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Ty2 *, _Ty *>::value>>
 		weak_ptr(const shared_ptr<_Ty2>& _Other) _NOEXCEPT
 		{	// construct weak_ptr object for resource owned by _Other
 		this->_Resetw(_Other);
 		}
 
 	template<class _Ty2,
-		class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Ty2 *, _Ty *>::value>>
 		weak_ptr(const weak_ptr<_Ty2>& _Other) _NOEXCEPT
 		{	// construct weak_ptr object for resource pointed to by _Other
 		this->_Resetw(_Other.lock());
@@ -1454,8 +1847,7 @@ public:
 		}
 
 	template<class _Ty2,
-		class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Ty2 *, _Ty *>::value>>
 		weak_ptr(weak_ptr<_Ty2>&& _Other) _NOEXCEPT
 		{	// move construct from _Other
 		this->_Resetw(_Other.lock());
@@ -1595,8 +1987,7 @@ template<class _Ty>
 	constexpr default_delete() _NOEXCEPT = default;
 
 	template<class _Ty2,
-		class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Ty2 *, _Ty *>::value>>
 		default_delete(const default_delete<_Ty2>&) _NOEXCEPT
 		{	// construct from another default_delete
 		}
@@ -1615,15 +2006,13 @@ template<class _Ty>
 	constexpr default_delete() _NOEXCEPT = default;
 
 	template<class _Uty,
-		class = typename enable_if<is_convertible<_Uty(*)[], _Ty(*)[]>::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Uty(*)[], _Ty(*)[]>::value>>
 		default_delete(const default_delete<_Uty[]>&) _NOEXCEPT
 		{	// construct from another default_delete
 		}
 
 	template<class _Uty,
-		class = typename enable_if<is_convertible<_Uty(*)[], _Ty(*)[]>::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Uty(*)[], _Ty(*)[]>::value>>
 		void operator()(_Uty *_Ptr) const _NOEXCEPT
 		{	// delete a pointer
 		static_assert(0 < sizeof (_Uty),
@@ -1736,14 +2125,14 @@ public:
 		}
 
 	unique_ptr(pointer _Ptr,
-		typename _If<is_reference<_Dx>::value, _Dx,
-			const typename remove_reference<_Dx>::type&>::type _Dt) _NOEXCEPT
+		conditional_t<is_reference<_Dx>::value, _Dx,
+			const remove_reference_t<_Dx>&> _Dt) _NOEXCEPT
 		: _Mybase(_Ptr, _Dt)
 		{	// construct with pointer and (maybe const) deleter&
 		}
 
 	unique_ptr(pointer _Ptr,
-		typename remove_reference<_Dx>::type&& _Dt) _NOEXCEPT
+		remove_reference_t<_Dx>&& _Dt) _NOEXCEPT
 		: _Mybase(_Ptr, _STD move(_Dt))
 		{	// construct by moving deleter
 		static_assert(!is_reference<_Dx>::value,
@@ -1758,13 +2147,11 @@ public:
 
 	template<class _Ty2,
 		class _Dx2,
-		class = typename enable_if<!is_array<_Ty2>::value
-			&& is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer,
-				pointer>::value
+		class = enable_if_t<!is_array<_Ty2>::value
+			&& is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer, pointer>::value
 			&& (is_reference<_Dx>::value
 				? is_same<_Dx2, _Dx>::value
-				: is_convertible<_Dx2, _Dx>::value),
-			void>::type>
+				: is_convertible<_Dx2, _Dx>::value)>>
 		unique_ptr(unique_ptr<_Ty2, _Dx2>&& _Right) _NOEXCEPT
 			: _Mybase(_Right.release(),
 				_STD forward<_Dx2>(_Right.get_deleter()))
@@ -1773,9 +2160,8 @@ public:
 
  #if _HAS_AUTO_PTR_ETC
 	template<class _Ty2,
-		class = typename enable_if<is_convertible<_Ty2 *, _Ty *>::value
-			&& is_same<_Dx, default_delete<_Ty> >::value,
-			void>::type>
+		class = enable_if_t<is_convertible<_Ty2 *, _Ty *>::value
+			&& is_same<_Dx, default_delete<_Ty> >::value>>
 		unique_ptr(auto_ptr<_Ty2>&& _Right) _NOEXCEPT
 			: _Mybase(_Right.release())
 		{	// construct by moving _Right
@@ -1783,13 +2169,11 @@ public:
  #endif /* _HAS_AUTO_PTR_ETC */
 
 	template<class _Ty2,
-		class _Dx2>
-		typename enable_if<!is_array<_Ty2>::value
+		class _Dx2,
+		class = enable_if_t<!is_array<_Ty2>::value
 			&& is_assignable<_Dx&, _Dx2&&>::value
-			&& is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer,
-				pointer>::value,
-			_Myt&>::type
-		operator=(unique_ptr<_Ty2, _Dx2>&& _Right) _NOEXCEPT
+			&& is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer, pointer>::value>>
+		_Myt& operator=(unique_ptr<_Ty2, _Dx2>&& _Right) _NOEXCEPT
 		{	// assign by moving _Right
 		reset(_Right.release());
 		this->get_deleter() = _STD forward<_Dx2>(_Right.get_deleter());
@@ -1819,7 +2203,7 @@ public:
 			this->get_deleter()(get());
 		}
 
-	typename add_lvalue_reference<_Ty>::type operator*() const
+	add_lvalue_reference_t<_Ty> operator*() const
 		{	// return reference to object
 		return (*get());
 		}
@@ -1904,8 +2288,8 @@ public:
 	template<class _Uty,
 		class = _Enable_ctor_reset<_Uty> >
 	unique_ptr(_Uty _Ptr,
-		typename _If<is_reference<_Dx>::value, _Dx,
-			const typename remove_reference<_Dx>::type&>::type _Dt) _NOEXCEPT
+		conditional_t<is_reference<_Dx>::value, _Dx,
+			const remove_reference_t<_Dx>&> _Dt) _NOEXCEPT
 		: _Mybase(_Ptr, _Dt)
 		{	// construct with pointer and (maybe const) deleter&
 		}
@@ -1913,7 +2297,7 @@ public:
 	template<class _Uty,
 		class = _Enable_ctor_reset<_Uty> >
 	unique_ptr(_Uty _Ptr,
-		typename remove_reference<_Dx>::type&& _Dt) _NOEXCEPT
+		remove_reference_t<_Dx>&& _Dt) _NOEXCEPT
 		: _Mybase(_Ptr, _STD move(_Dt))
 		{	// construct by moving deleter
 		static_assert(!is_reference<_Dx>::value,
@@ -1984,7 +2368,7 @@ public:
 		return (*this);
 		}
 
-	void reset(nullptr_t = nullptr_t{}) _NOEXCEPT
+	void reset(nullptr_t = nullptr) _NOEXCEPT
 		{	// establish new null pointer
 		reset(pointer());
 		}
@@ -2045,28 +2429,60 @@ private:
 	};
 
 
-	// TEMPLATE FUNCTION make_unique
+	// FUNCTION TEMPLATE make_unique
 template<class _Ty,
-	class... _Types> inline
-	typename enable_if<!is_array<_Ty>::value,
-		unique_ptr<_Ty> >::type make_unique(_Types&&... _Args)
+	class... _Types,
+	class = enable_if_t<!is_array<_Ty>::value>> inline
+	unique_ptr<_Ty> make_unique(_Types&&... _Args)
 	{	// make a unique_ptr
 	return (unique_ptr<_Ty>(new _Ty(_STD forward<_Types>(_Args)...)));
 	}
 
-template<class _Ty> inline
-	typename enable_if<is_array<_Ty>::value && extent<_Ty>::value == 0,
-		unique_ptr<_Ty> >::type make_unique(size_t _Size)
+template<class _Ty,
+	class = enable_if_t<is_array<_Ty>::value && extent<_Ty>::value == 0>> inline
+	unique_ptr<_Ty> make_unique(size_t _Size)
 	{	// make a unique_ptr
-	typedef typename remove_extent<_Ty>::type _Elem;
+	typedef remove_extent_t<_Ty> _Elem;
 	return (unique_ptr<_Ty>(new _Elem[_Size]()));
 	}
 
 template<class _Ty,
-	class... _Types>
-	typename enable_if<extent<_Ty>::value != 0,
-		void>::type make_unique(_Types&&...) = delete;
+	class... _Types,
+	class = enable_if_t<extent<_Ty>::value != 0>>
+	void make_unique(_Types&&...) = delete;
 
+
+	// FUNCTION TEMPLATE _Make_unique_alloc
+template<class _Alloc>
+	struct _Allocator_deleter
+	{
+	_Alloc _Al;
+
+	using pointer = typename allocator_traits<_Alloc>::pointer;
+	void operator()(pointer _Ptr) _NOEXCEPT
+		{	// delete the pointer
+		allocator_traits<_Alloc>::destroy(_Al, _Unfancy(_Ptr));
+		_Al.deallocate(_Ptr, 1);
+		}
+	};
+
+template<class _Alloc>
+	using _Unique_ptr_alloc = unique_ptr<typename _Alloc::value_type, _Allocator_deleter<_Alloc>>;
+
+template<class _Alloc,
+	class... _Args>
+	_Unique_ptr_alloc<_Alloc> _Make_unique_alloc(_Alloc& _Al, _Args&&... _Vals)
+	{	// construct an object with an allocator and return it owned by a unique_ptr
+	auto _Ptr = _Al.allocate(1);
+	_TRY_BEGIN
+		allocator_traits<_Alloc>::construct(_Al, _Unfancy(_Ptr), _STD forward<_Args>(_Vals)...);
+	_CATCH_ALL
+		_Al.deallocate(_Ptr, 1);
+	_RERAISE;
+	_CATCH_END
+
+	return (_Unique_ptr_alloc<_Alloc>(_Ptr, _Allocator_deleter<_Alloc>{_Al}));
+	}
 
 template<class _Ty,
 	class _Dx,
@@ -2106,9 +2522,8 @@ template<class _Ty1,
 	{	// test if unique_ptr _Left precedes _Right
 	typedef typename unique_ptr<_Ty1, _Dx1>::pointer _Ptr1;
 	typedef typename unique_ptr<_Ty2, _Dx2>::pointer _Ptr2;
-	typedef typename common_type<_Ptr1, _Ptr2>::type _Common;
+	typedef common_type_t<_Ptr1, _Ptr2> _Common;
 	return (less<_Common>()(_Left.get(), _Right.get()));
-
 	}
 
 template<class _Ty1,
@@ -2247,8 +2662,6 @@ enum class pointer_safety {	// return codes for get_pointer_safety
 	strict
 	};
 
-typedef pointer_safety _Pointer_safety;
-
 inline void declare_reachable(void *)
 	{	// increment pointer reachable count
 	}
@@ -2267,7 +2680,7 @@ inline void undeclare_no_pointers(char *, size_t)
 	{	// undeclare region to be pointer free
 	}
 
-inline _Pointer_safety get_pointer_safety() _NOEXCEPT
+inline pointer_safety get_pointer_safety() _NOEXCEPT
 	{	// get pointer safety status
 	return (pointer_safety::relaxed);
 	}
@@ -2300,19 +2713,19 @@ template<class _Ty>
 	typedef bool result_type;
 
 	bool operator()(const shared_ptr<_Ty>& _Left,
-		const shared_ptr<_Ty>& _Right) const
+		const shared_ptr<_Ty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	bool operator()(const shared_ptr<_Ty>& _Left,
-		const weak_ptr<_Ty>& _Right) const
+		const weak_ptr<_Ty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	bool operator()(const weak_ptr<_Ty>& _Left,
-		const shared_ptr<_Ty>& _Right) const
+		const shared_ptr<_Ty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
@@ -2326,19 +2739,19 @@ template<class _Ty>
 	typedef bool result_type;
 
 	bool operator()(const weak_ptr<_Ty>& _Left,
-		const weak_ptr<_Ty>& _Right) const
+		const weak_ptr<_Ty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	bool operator()(const weak_ptr<_Ty>& _Left,
-		const shared_ptr<_Ty>& _Right) const
+		const shared_ptr<_Ty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	bool operator()(const shared_ptr<_Ty>& _Left,
-		const weak_ptr<_Ty>& _Right) const
+		const weak_ptr<_Ty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
@@ -2351,45 +2764,44 @@ template<>
 
 	template<class _Ty,
 		class _Uty>
-		bool operator()(const shared_ptr<_Ty>& _Left, const shared_ptr<_Uty>& _Right) const
+		bool operator()(const shared_ptr<_Ty>& _Left, const shared_ptr<_Uty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	template<class _Ty,
 		class _Uty>
-		bool operator()(const shared_ptr<_Ty>& _Left, const weak_ptr<_Uty>& _Right) const
+		bool operator()(const shared_ptr<_Ty>& _Left, const weak_ptr<_Uty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	template<class _Ty,
 		class _Uty>
-		bool operator()(const weak_ptr<_Ty>& _Left, const shared_ptr<_Uty>& _Right) const
+		bool operator()(const weak_ptr<_Ty>& _Left, const shared_ptr<_Uty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 
 	template<class _Ty,
 		class _Uty>
-		bool operator()(const weak_ptr<_Ty>& _Left, const weak_ptr<_Uty>& _Right) const
+		bool operator()(const weak_ptr<_Ty>& _Left, const weak_ptr<_Uty>& _Right) const _NOEXCEPT
 		{	// apply owner_before to operands
 		return (_Left.owner_before(_Right));
 		}
 	};
 
-	// TEMPLATE STRUCT SPECIALIZATION hash
+	// STRUCT TEMPLATE SPECIALIZATION hash
 template<class _Ty,
 	class _Dx>
 	struct hash<unique_ptr<_Ty, _Dx> >
+		: _Conditionally_enabled_hash<unique_ptr<_Ty, _Dx>,
+			is_default_constructible<hash<typename unique_ptr<_Ty, _Dx>::pointer>>::value>
 	{	// hash functor
-	typedef unique_ptr<_Ty, _Dx> argument_type;
-	typedef size_t result_type;
-
-	size_t operator()(const argument_type& _Keyval) const
+	static size_t _Do_hash(const unique_ptr<_Ty, _Dx>& _Keyval)
+			_NOEXCEPT_COND(_Is_nothrow_hashable<typename unique_ptr<_Ty, _Dx>::pointer>::value) // strengthened
 		{	// hash _Keyval to size_t value by pseudorandomizing transform
-		typedef typename argument_type::pointer _Ptrtype;
-		return (hash<_Ptrtype>()(_Keyval.get()));
+		return (hash<typename unique_ptr<_Ty, _Dx>::pointer>{}(_Keyval.get()));
 		}
 	};
 
@@ -2399,28 +2811,33 @@ template<class _Ty>
 	typedef shared_ptr<_Ty> argument_type;
 	typedef size_t result_type;
 
-	size_t operator()(const argument_type& _Keyval) const
+	size_t operator()(const shared_ptr<_Ty>& _Keyval) const _NOEXCEPT
 		{	// hash _Keyval to size_t value by pseudorandomizing transform
 		return (hash<_Ty *>()(_Keyval.get()));
 		}
 	};
 
 		// FUNCTION align
-inline void *align(size_t _Bound, size_t _Size,
-	void *& _Ptr, size_t& _Space) _NOEXCEPT
+inline void *align(size_t _Bound, size_t _Size, void *& _Ptr, size_t& _Space) _NOEXCEPT
 	{	// try to carve out _Size bytes on boundary _Bound
-	size_t _Off = (size_t)((uintptr_t)_Ptr & (_Bound - 1));
-	if (0 < _Off)
+	size_t _Off = static_cast<size_t>(reinterpret_cast<uintptr_t>(_Ptr) & (_Bound - 1));
+	if (_Off != 0)
+		{
 		_Off = _Bound - _Off;	// number of bytes to skip
-	if (_Space < _Off || _Space - _Off < _Size)
-		return (0);
-	else
-		{	// enough room, update
-		_Ptr = (char *)_Ptr + _Off;
-		_Space -= _Off;
-		return (_Ptr);
 		}
+
+	if (_Space < _Off || _Space - _Off < _Size)
+		{
+		return (0);
+		}
+
+	// enough room, update
+	_Ptr = static_cast<char *>(_Ptr) + _Off;
+	_Space -= _Off;
+	return (_Ptr);
 	}
+
+
 
 		/* SPIN LOCKS */
 _EXTERN_C

@@ -16,25 +16,11 @@
 // CRT DLL Export/Import Macros
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#ifndef _CRTIMP_PURE
-    #if defined _M_CEE_PURE || defined _STATIC_CPPLIB
-        #define _CRTIMP_PURE
-    #elif defined MRTDLL && defined _CRTBLD
-        #define _CRTIMP_PURE
-    #else
-        #define _CRTIMP_PURE _CRTIMP
-    #endif
-#endif
-
 #ifndef _CRTIMP2
     #if defined CRTDLL2 && defined _CRTBLD
         #define _CRTIMP2 __declspec(dllexport)
     #else
-        #if defined _DLL && !defined _STATIC_CPPLIB
-            #define _CRTIMP2 __declspec(dllimport)
-        #else
-            #define _CRTIMP2
-        #endif
+        #define _CRTIMP2
     #endif
 #endif
 
@@ -56,10 +42,6 @@
     #elif defined MRTDLL && defined _CRTBLD
         #define _MRTIMP2 _MRTIMP
     #else
-        #if defined _DLL && !defined _STATIC_CPPLIB
-            #define _MRTIMP2 __declspec(dllimport)
-        #else
-            #define _MRTIMP2
-        #endif
+        #define _MRTIMP2
     #endif
 #endif

@@ -48,18 +48,7 @@ public:
     {
     }
 
-    typedef _Solist_const_iterator<_Mylist> _Unchecked_type;
-
-    _Myiter& _Rechecked(_Unchecked_type _Right)
-    {
-        this->_Ptr = _Right._Ptr;
-        return (*this);
-    }
-
-    _Unchecked_type _Unchecked() const
-    {
-        return (_Unchecked_type(this->_Ptr, (_Mylist *)this->_Getcont()));
-    }
+    typedef _Solist_const_iterator _Unchecked_type;
 
     reference operator*() const
     {
@@ -96,16 +85,17 @@ public:
 };
 
 template<class _Mylist> inline
-typename _Solist_const_iterator<_Mylist>::_Unchecked_type _Unchecked(_Solist_const_iterator<_Mylist> _Iterator)
-{
-    return (_Iterator._Unchecked());
+_Solist_const_iterator<_Mylist>& _Rechecked(_Solist_const_iterator<_Mylist>& _Iter,
+    const _Solist_const_iterator<_Mylist> _Right)
+{   // preserve our type when being _Rechecked
+    _Iter._Ptr = _Right._Ptr;
+    return (_Iter);
 }
 
 template<class _Mylist> inline
-_Solist_const_iterator<_Mylist>& _Rechecked(_Solist_const_iterator<_Mylist>& _Iterator,
-    typename _Solist_const_iterator<_Mylist>::_Unchecked_type _Right)
-{
-    return (_Iterator._Rechecked(_Right));
+_Solist_const_iterator<_Mylist> _Unchecked(const _Solist_const_iterator<_Mylist>& _Iter)
+{   // preserve our type when being _Unchecked
+    return (_Iter);
 }
 
 template<class _Mylist>
@@ -130,18 +120,7 @@ public:
     {
     }
 
-    typedef _Solist_iterator<_Mylist> _Unchecked_type;
-
-    _Myiter& _Rechecked(_Unchecked_type _Right)
-    {
-        this->_Ptr = _Right._Ptr;
-        return (*this);
-    }
-
-    _Unchecked_type _Unchecked() const
-    {
-        return (_Unchecked_type(this->_Ptr, (_Mylist *)this->_Getcont()));
-    }
+    typedef _Solist_iterator _Unchecked_type;
 
     reference operator*() const
     {
@@ -178,16 +157,18 @@ public:
 };
 
 template<class _Mylist> inline
-typename _Solist_iterator<_Mylist>::_Unchecked_type _Unchecked(_Solist_iterator<_Mylist> _Iterator)
-{
-    return (_Iterator._Unchecked());
+_Solist_iterator<_Mylist>& _Rechecked(_Solist_iterator<_Mylist>& _Iter,
+    const typename _Solist_iterator<_Mylist>::_Unchecked_type _Right)
+{   // preserve our type when being _Rechecked
+    _Iter._Ptr = _Right._Ptr;
+    return (_Iter);
 }
 
 template<class _Mylist> inline
-_Solist_iterator<_Mylist>& _Rechecked(_Solist_iterator<_Mylist>& _Iterator,
-    typename _Solist_iterator<_Mylist>::_Unchecked_type _Right)
-{
-    return (_Iterator._Rechecked(_Right));
+typename _Solist_iterator<_Mylist>::_Unchecked_type
+    _Unchecked(const _Solist_iterator<_Mylist>& _Iter)
+{   // preserve our type when being _Unchecked
+    return (_Iter);
 }
 
 // Forward type and class definitions
@@ -204,7 +185,6 @@ public:
 
     struct _Node;
     typedef _Node * _Nodeptr;
-    typedef _Nodeptr& _Nodepref;
 
     // Node that holds the element in a split-ordered list
     struct _Node
@@ -213,7 +193,7 @@ public:
         void _Init(_Split_order_key _Order_key)
         {
             _M_order_key = _Order_key;
-            _M_next = NULL;
+            _Next = NULL;
         }
 
         // Return the order key (needed for hashing)
@@ -226,7 +206,7 @@ public:
         _Nodeptr _Atomic_set_next(_Nodeptr _New_node, _Nodeptr _Current_node)
         {
             // Try to change the next pointer on the current element to a new element, only if it still points to the cached next
-            _Nodeptr _Exchange_node = (_Nodeptr) _InterlockedCompareExchangePointer((void * volatile *) &_M_next, _New_node, _Current_node);
+            _Nodeptr _Exchange_node = (_Nodeptr) _InterlockedCompareExchangePointer((void * volatile *) &_Next, _New_node, _Current_node);
 
             if (_Exchange_node == _Current_node)
             {
@@ -250,8 +230,8 @@ public:
         // dummy default constructor - never used but for suppress warning
         _Node();
 
-        _Nodeptr         _M_next;      // Next element in the list
-        value_type       _M_element;   // Element storage
+        _Nodeptr         _Next;        // Next element in the list
+        value_type       _Myval;       // Element storage
         _Split_order_key _M_order_key; // Order key for this element
     };
 
@@ -295,7 +275,6 @@ class _Split_order_list_value : public _Split_order_list_node<_Element_type, _Al
 public:
     typedef _Split_order_list_node<_Element_type, _Allocator_type> _Mybase;
     typedef typename _Mybase::_Nodeptr _Nodeptr;
-    typedef typename _Mybase::_Nodepref _Nodepref;
     typedef typename _Allocator_type::template rebind<_Element_type>::other _Allocator_type;
 
     typedef typename _Allocator_type::size_type size_type;
@@ -325,7 +304,7 @@ public:
 
         try
         {
-            this->_M_value_allocator.construct(std::addressof(_Myval(_Pnode)), std::forward<_ValTy>(_Value));
+            this->_M_value_allocator.construct(std::addressof(_Pnode->_Myval), std::forward<_ValTy>(_Value));
             _Pnode->_Init(_Order_key);
         }
         catch(...)
@@ -344,18 +323,6 @@ public:
         _Pnode->_Init(_Order_key);
 
         return (_Pnode);
-    }
-
-    // Get the next node
-    static _Nodepref _Nextnode(_Nodeptr _Pnode)
-    {
-        return ((_Nodepref)(*_Pnode)._M_next);
-    }
-
-    // Get the stored value
-    static reference _Myval(_Nodeptr _Pnode)
-    {
-        return ((reference)(*_Pnode)._M_element);
     }
 };
 
@@ -397,7 +364,7 @@ public:
         _Nodeptr _Pnode = this->_Myhead;
         this->_Myhead = NULL;
 
-        _ASSERT_EXPR(_Pnode != NULL && this->_Nextnode(_Pnode) == NULL, L"Invalid head list node");
+        _ASSERT_EXPR(_Pnode != NULL && _Pnode->_Next == NULL, L"Invalid head list node");
 
         _Erase(_Pnode);
     }
@@ -419,13 +386,13 @@ public:
         _Nodeptr _Pnode = this->_Myhead;
 
         _ASSERT_EXPR(this->_Myhead != NULL, L"Invalid head list node");
-        _Pnext = this->_Nextnode(_Pnode);
-        _Pnode->_M_next = NULL;
+        _Pnext = _Pnode->_Next;
+        _Pnode->_Next = NULL;
         _Pnode = _Pnext;
 
         while (_Pnode != NULL)
         {
-            _Pnext = this->_Nextnode(_Pnode);
+            _Pnext = _Pnode->_Next;
             _Erase(_Pnode);
             _Pnode = _Pnext;
         }
@@ -573,7 +540,7 @@ public:
         // Skip all dummy, internal only iterators
         while (_Iterator != _End() && _Iterator._Mynode()->_Is_dummy())
         {
-            _Iterator++;
+            ++_Iterator;
         }
 
         return iterator(_Iterator._Mynode(), this);
@@ -586,7 +553,7 @@ public:
         // Skip all dummy, internal only iterators
         while (_Iterator != _End() && _Iterator._Mynode()->_Is_dummy())
         {
-            _Iterator++;
+            ++_Iterator;
         }
 
         return const_iterator(_Iterator._Mynode(), this);
@@ -607,7 +574,7 @@ public:
     // was inserted instead.
     _Nodeptr _Insert(_Nodeptr _Previous, _Nodeptr _New_node, _Nodeptr _Current_node)
     {
-        _New_node->_M_next = _Current_node;
+        _New_node->_Next = _Current_node;
         return _Previous->_Atomic_set_next(_New_node, _Current_node);
     }
 
@@ -637,7 +604,7 @@ public:
 
         _ASSERT_EXPR(_Where != _Last, L"Invalid head node");
 
-        _Where++;
+        ++_Where;
 
         // Create a dummy element up front, even though it may be discarded (due to concurrent insertion)
         _Nodeptr _Dummy_node = _Buynode(_Order_key);
@@ -669,7 +636,7 @@ public:
                     // known to be larger (note: this is legal only because there is no safe
                     // concurrent erase operation supported).
                     _Where = _Iterator;
-                    _Where++;
+                    ++_Where;
                     continue;
                 }
             }
@@ -682,7 +649,7 @@ public:
 
             // Move the iterator forward
             _Iterator = _Where;
-            _Where++;
+            ++_Where;
         }
 
     }
@@ -702,8 +669,8 @@ public:
 #endif  /* _ITERATOR_DEBUG_LEVEL == 2 */
 
         _Nodeptr _Prevnode = _Previous._Mynode();
-        _ASSERT_EXPR(_Prevnode->_M_next == _Pnode, L"Erase must take consecutive iterators");
-        _Prevnode->_M_next = _Pnode->_M_next;
+        _ASSERT_EXPR(_Prevnode->_Next == _Pnode, L"Erase must take consecutive iterators");
+        _Prevnode->_Next = _Pnode->_Next;
 
         _Erase(_Pnode);
     }
@@ -737,7 +704,7 @@ public:
         {
             _Nodeptr _Node = _Iterator._Mynode();
 
-            _Nodeptr _Dummy_node = _Node->_Is_dummy() ? _Buynode(_Node->_Get_order_key()) : _Buynode(_Node->_Get_order_key(), this->_Myval(_Node));
+            _Nodeptr _Dummy_node = _Node->_Is_dummy() ? _Buynode(_Node->_Get_order_key()) : _Buynode(_Node->_Get_order_key(), _Node->_Myval);
             _Previous_node = _Insert(_Previous_node, _Dummy_node, NULL);
             _ASSERT_EXPR(_Previous_node != NULL, L"Insertion must succeed");
             _Full_const_iterator _Where = _Iterator++;
@@ -751,10 +718,10 @@ private:
     void _Check_range()
     {
 #if defined (_DEBUG)
-        for (_Full_iterator _Iterator = _Begin(); _Iterator != _End(); _Iterator++)
+        for (_Full_iterator _Iterator = _Begin(); _Iterator != _End(); ++_Iterator)
         {
             _Full_iterator _Next_iterator = _Iterator;
-            _Next_iterator++;
+            ++_Next_iterator;
 
             _ASSERT_EXPR(_Next_iterator == end() || _Next_iterator._Mynode()->_Get_order_key() >= _Iterator._Mynode()->_Get_order_key(), L"!!! List order inconsistency !!!");
         }

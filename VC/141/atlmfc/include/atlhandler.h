@@ -19,7 +19,7 @@
 #error This file is not compatible with the current WINAPI_FAMILY
 #endif
 
-#include <filter.h>
+#include <Filter.h>
 
 #ifndef REFPROPERTYKEY
 #include <propkeydef.h>

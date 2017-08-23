@@ -116,7 +116,7 @@ public:
 		string_type;
 	typedef _Elem char_type;
 
-	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE static locale::id id;	// unique facet id
+	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE_IMPORT static locale::id id;	// unique facet id
 
 	_Elem decimal_point() const
 		{	// return decimal point
@@ -289,8 +289,17 @@ protected:
 	};
 
 		// STATIC numpunct::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem>
 	__PURE_APPDOMAIN_GLOBAL locale::id numpunct<_Elem>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS num_get
 template<class _Elem,
@@ -1212,9 +1221,18 @@ private:
 	};
 
 		// STATIC num_get::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _InIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id num_get<_Elem, _InIt>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS num_put
 template<class _Elem,
@@ -1649,34 +1667,43 @@ private:
 	};
 
 		// STATIC num_put::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _OutIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id num_put<_Elem, _OutIt>::id;
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
 template __PURE_APPDOMAIN_GLOBAL locale::id numpunct<char>::id;
-template class _CRTIMP2_PURE num_get<char,
+template class _CRTIMP2_PURE_IMPORT num_get<char,
 	istreambuf_iterator<char, char_traits<char> > >;
-template class _CRTIMP2_PURE num_put<char,
+template class _CRTIMP2_PURE_IMPORT num_put<char,
 	ostreambuf_iterator<char, char_traits<char> > >;
 
 template __PURE_APPDOMAIN_GLOBAL locale::id numpunct<wchar_t>::id;
-template class _CRTIMP2_PURE num_get<wchar_t,
+template class _CRTIMP2_PURE_IMPORT num_get<wchar_t,
 	istreambuf_iterator<wchar_t, char_traits<wchar_t> > >;
-template class _CRTIMP2_PURE num_put<wchar_t,
+template class _CRTIMP2_PURE_IMPORT num_put<wchar_t,
 	ostreambuf_iterator<wchar_t, char_traits<wchar_t> > >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
 template __PURE_APPDOMAIN_GLOBAL locale::id numpunct<unsigned short>::id;
-template class _CRTIMP2_PURE num_get<unsigned short,
+template class _CRTIMP2_PURE_IMPORT num_get<unsigned short,
 	istreambuf_iterator<unsigned short, char_traits<unsigned short> > >;
-template class _CRTIMP2_PURE num_put<unsigned short,
+template class _CRTIMP2_PURE_IMPORT num_put<unsigned short,
 	ostreambuf_iterator<unsigned short, char_traits<unsigned short> > >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

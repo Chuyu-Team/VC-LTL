@@ -18,7 +18,7 @@
 
 _STD_BEGIN
 	// CLASS _Facet_base
-class _CRTIMP2_PURE _Facet_base
+class _CRTIMP2_PURE_IMPORT _Facet_base
 	{	// code for reference counting a facet
 public:
 	virtual __CLR_OR_THIS_CALL ~_Facet_base() _NOEXCEPT

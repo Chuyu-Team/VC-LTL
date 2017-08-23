@@ -5,28 +5,52 @@
 #ifndef RC_INVOKED
 
 // _HAS_CXX17 directly controls:
+// P0024R2 Serial for_each_n()
+//     (other components not yet implemented)
 // P0025R1 clamp()
+// P0031R0 constexpr For <array> (Again) And <iterator>
 // P0032R3 Homogeneous Interface For variant/any/optional
-// P0077R2 is_callable, is_nothrow_callable
+// P0040R3 Extending Memory Management Tools
+// P0084R2 Emplace Return Type
 // P0088R3 <variant>
+// P0152R1 atomic::is_always_lock_free
+// P0154R1 hardware_destructive_interference_size, etc.
+// P0156R2 scoped_lock
 // P0163R0 shared_ptr::weak_type
 // P0185R1 is_swappable, is_nothrow_swappable
 // P0209R2 make_from_tuple()
-// P0220R1 <any>, <optional>, <string_view>, apply(), sample()
-//     (other components not yet implemented)
+// P0220R1 <any>, <optional>, <string_view>, apply(), sample(), Boyer-Moore search()
+//     (<memory_resource> not yet implemented)
+// P0253R1 Fixing Searcher Return Types
 // P0254R2 Integrating string_view And std::string
+// P0258R2 has_unique_object_representations
 // P0272R1 Non-const basic_string::data()
+// P0295R0 gcd(), lcm()
 // P0307R2 Making Optional Greater Equal Again
 // P0393R3 Making Variant Greater Equal
+// P0403R1 UDLs For <string_view> ("meow"sv, etc.)
 // P0504R0 Revisiting in_place_t/in_place_type_t<T>/in_place_index_t<I>
+// P0505R0 constexpr For <chrono> (Again)
 // P0510R0 Rejecting variants Of Nothing, Arrays, References, And Incomplete Types
+// P0604R0 invoke_result, is_invocable, is_nothrow_invocable
 
 // _HAS_CXX17 indirectly controls:
 // N4190 Removing auto_ptr, random_shuffle(), And Old <functional> Stuff
 // P0004R1 Removing Deprecated Iostreams Aliases
+// P0298R3 std::byte
 // LWG 2385 function::assign allocator argument doesn't make sense
 // The non-Standard std::tr1 namespace and TR1-only machinery
 // The non-Standard std::identity struct
+// Enforcement of matching allocator value_types
+
+// Implemented unconditionally:
+// P0418R2 atomic compare_exchange memory_order Requirements
+// P0435R1 Overhauling common_type
+// P0513R0 Poisoning hash
+// P0516R0 Marking shared_future Copying As noexcept
+// P0517R0 Constructing future_error From future_errc
+// P0548R1 Tweaking common_type And duration
+// P0599R1 noexcept hash
 
  #ifndef _HAS_CXX17
   #if defined(_MSVC_LANG) && !(defined(__EDG__) && defined(__clang__))	// TRANSITION, VSO#273681
@@ -68,8 +92,9 @@
 #endif /* _STL_EXTRA_DISABLED_WARNINGS */
 
 // warning C4702: unreachable code
+// warning C4988: variable declared outside class/function scope (/Wall /d1WarnOnGlobals)
 #ifndef _STL_DISABLED_WARNINGS
- #define _STL_DISABLED_WARNINGS	4702 _STL_EXTRA_DISABLED_WARNINGS
+ #define _STL_DISABLED_WARNINGS	4702 4988 _STL_EXTRA_DISABLED_WARNINGS
 #endif /* _STL_DISABLED_WARNINGS */
 
 #pragma pack(push,_CRT_PACKING)
@@ -81,52 +106,29 @@
 #define _CPPLIB_VER	650
 
  #if _HAS_EXCEPTIONS
-  #define _NOEXCEPT	noexcept
-  #define _NOEXCEPT_OP(x)	noexcept(x)
+  #define _NOEXCEPT				noexcept
+  #define _NOEXCEPT_COND(...)	noexcept(__VA_ARGS__)
+  #define _NOEXCEPT_OPER(...)	noexcept(__VA_ARGS__)
  #else /* _HAS_EXCEPTIONS */
-  #define _NOEXCEPT	throw ()
-  #define _NOEXCEPT_OP(x)
+  #define _NOEXCEPT				throw ()
+  #define _NOEXCEPT_COND(...)	throw ()
+  #define _NOEXCEPT_OPER(...)	true
  #endif /* _HAS_EXCEPTIONS */
 
- #ifndef _HAS_CONSTEXPR14
-  #if defined(__cpp_constexpr)
-   #if __cpp_constexpr >= 201304
-    #define _HAS_CONSTEXPR14 1
-   #else /* ^^^ __cpp_constexpr >= 201304 / __cpp_constexpr < 201304 vvv */
-    #define _HAS_CONSTEXPR14 0
-   #endif /* __cpp_constexpr >= 201304 */
-  #elif defined(_MSC_FULL_VER)
-   #if _MSC_FULL_VER >= 190024318
-    #define _HAS_CONSTEXPR14 1
-   #else /* ^^^ _MSC_FULL_VER >= 190024318 / _MSC_FULL_VER < 190024318 vvv */
-    #define _HAS_CONSTEXPR14 0
-   #endif /* _MSC_FULL_VER >= 190024318 */
-  #elif __cplusplus >= 201402
-   #define _HAS_CONSTEXPR14 1
-  #else /* ^^^ __cplusplus >= 201402 / __cplusplus < 201402 vvv */
-   #define _HAS_CONSTEXPR14 0
-  #endif /* __cpp_constexpr */
- #endif /* _HAS_CONSTEXPR14 */
+ #ifndef _HAS_STATIC_RTTI
+  #define _HAS_STATIC_RTTI	1
+ #endif /* _HAS_STATIC_RTTI */
 
- #if _HAS_CONSTEXPR14
-  #define _CONSTEXPR14 constexpr
- #else /* ^^^ has relaxed constexpr ^^^ / vvv no relaxed constexpr vvv */
-  #define _CONSTEXPR14 inline
- #endif /* _HAS_CONSTEXPR14 */
+ #if defined(_CPPRTTI) && !_HAS_STATIC_RTTI
+  #error /GR implies _HAS_STATIC_RTTI.
+ #endif /* defined(_CPPRTTI) && !_HAS_STATIC_RTTI */
 
- // C++17 constexpr additions implementable without C++14 relaxed constexpr
+// C++17 constexpr additions
  #if _HAS_CXX17
-  #define _CONSTEXPR17_11 constexpr
+  #define _CONSTEXPR17 constexpr
  #else /* ^^^ has C++17 constexpr additions ^^^ / vvv no C++17 constexpr additions vvv */
-  #define _CONSTEXPR17_11 inline
+  #define _CONSTEXPR17 inline
  #endif /* _HAS_CXX17 */
-
- // C++17 constexpr additions implementable with C++14 relaxed constexpr
- #if _HAS_CXX17 && _HAS_CONSTEXPR14
-  #define _CONSTEXPR17_14 constexpr
- #else /* ^^^ has C++17 constexpr additions ^^^ / vvv no C++17 constexpr additions vvv */
-  #define _CONSTEXPR17_14 inline
- #endif /* _HAS_CXX17 && _HAS_CONSTEXPR14 */
 
 // N4190 Removing auto_ptr, random_shuffle(), And Old <functional> Stuff
  #ifndef _HAS_AUTO_PTR_ETC
@@ -145,6 +147,15 @@
    #define _HAS_OLD_IOSTREAMS_MEMBERS	1
   #endif /* _HAS_CXX17 */
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
+
+// P0298R3 std::byte
+ #ifndef _HAS_STD_BYTE
+  #if _HAS_CXX17
+   #define _HAS_STD_BYTE	1
+  #else /* _HAS_CXX17 */
+   #define _HAS_STD_BYTE	0
+  #endif /* _HAS_CXX17 */
+ #endif /* _HAS_STD_BYTE */
 
 // LWG 2385 function::assign allocator argument doesn't make sense
  #ifndef _HAS_FUNCTION_ASSIGN
@@ -173,13 +184,33 @@
   #endif /* _HAS_CXX17 */
  #endif /* _HAS_IDENTITY_STRUCT */
 
+// Enforcement of matching allocator value_types
+ #ifndef _ENFORCE_MATCHING_ALLOCATORS
+  #if _HAS_CXX17
+   #define _ENFORCE_MATCHING_ALLOCATORS	1
+  #else /* _HAS_CXX17 */
+   #define _ENFORCE_MATCHING_ALLOCATORS	0
+  #endif /* _HAS_CXX17 */
+ #endif /* _ENFORCE_MATCHING_ALLOCATORS */
+
+#define _MISMATCHED_ALLOCATOR_MESSAGE(_CONTAINER, _VALUE_TYPE) \
+_CONTAINER " requires that Allocator's value_type match " _VALUE_TYPE \
+	" (See N4659 26.2.1 [container.requirements.general]/16 allocator_type)" \
+	" Either fix the allocator value_type or define _ENFORCE_MATCHING_ALLOCATORS=0" \
+	" to suppress this diagnostic."
+
+ #ifndef _HAS_HAS_UNIQUE_OBJECT_REPRESENTATIONS
+  #if defined(_MSC_VER) && !defined(__EDG__) && !defined(__clang__)
+   #define _HAS_HAS_UNIQUE_OBJECT_REPRESENTATIONS _HAS_CXX17
+  #else /* ^^^ C1XX ^^^ // vvv others vvv */
+   #define _HAS_HAS_UNIQUE_OBJECT_REPRESENTATIONS 0
+  #endif /* defined(_MSC_VER) && !defined(__EDG__) && !defined(__clang__) */
+ #endif /* _HAS_HAS_UNIQUE_OBJECT_REPRESENTATIONS */
 
  #ifdef _RTC_CONVERSION_CHECKS_ENABLED
   #ifndef _ALLOW_RTCc_IN_STL
-static_assert(false, "/RTCc rejects conformant code, "
-	"so it isn't supported by the C++ Standard Library. "
-	"Either remove this compiler option, or define _ALLOW_RTCc_IN_STL "
-	"to acknowledge that you have received this warning.");
+   #error /RTCc rejects conformant code, so it is not supported by the C++ Standard Library. Either remove this \
+compiler option, or define _ALLOW_RTCc_IN_STL to acknowledge that you have received this warning.
   #endif /* _ALLOW_RTCc_IN_STL */
  #endif /* _RTC_CONVERSION_CHECKS_ENABLED */
 
@@ -423,14 +454,8 @@ clients and process-global for mixed clients.
 
  #else /* _ITERATOR_DEBUG_LEVEL > 0 */
 
-/* when users disable _SECURE_SCL to get performance, we don't want analysis warnings from SCL headers */
-#if _ITERATOR_DEBUG_LEVEL == 2
- #define _SCL_SECURE_VALIDATE(cond)			_Analysis_assume_(cond)
- #define _SCL_SECURE_VALIDATE_RANGE(cond)	_Analysis_assume_(cond)
-#else
  #define _SCL_SECURE_VALIDATE(cond)
  #define _SCL_SECURE_VALIDATE_RANGE(cond)
-#endif
 
  #endif /* _ITERATOR_DEBUG_LEVEL > 0 */
 
@@ -444,38 +469,20 @@ clients and process-global for mixed clients.
 
 #include <use_ansi.h>
 
+#define _WARNING_MESSAGE(NUMBER, MESSAGE) \
+	__FILE__ "(" _CRT_STRINGIZE(__LINE__) "): warning " NUMBER ": " MESSAGE
+
 #if defined(_M_CEE) && defined(_STATIC_CPPLIB)
-#error _STATIC_CPPLIB is not supported while building with /clr or /clr:pure
+	#error _STATIC_CPPLIB is not supported while building with /clr or /clr:pure
 #endif
 
 #if defined(_DLL) && defined(_STATIC_CPPLIB) && !defined(_DISABLE_DEPRECATE_STATIC_CPPLIB)
-#pragma _CRT_WARNING("_STATIC_CPPLIB is deprecated")
+	#pragma message(_WARNING_MESSAGE("STL4000", "_STATIC_CPPLIB is deprecated and will be REMOVED."))
 #endif
 
-/* Define _CRTIMP2 */
- #ifndef _CRTIMP2
-  #if defined(CRTDLL2) && defined(_CRTBLD)
-   #define _CRTIMP2	__declspec(dllexport)
-  #else   /* ndef CRTDLL2 && _CRTBLD */
-
-   #if defined(_DLL) && !defined(_STATIC_CPPLIB)
-    #define _CRTIMP2	__declspec(dllimport)
-
-   #else   /* ndef _DLL && !STATIC_CPPLIB */
-    #define _CRTIMP2
-   #endif  /* _DLL && !STATIC_CPPLIB */
-
-  #endif  /* CRTDLL2 && _CRTBLD */
- #endif  /* _CRTIMP2 */
-
-/* Define _CRTIMP2_NCEEPURE */
- #ifndef _CRTIMP2_NCEEPURE
-  #if defined(_M_CEE_PURE)
-   #define _CRTIMP2_NCEEPURE
-  #else
-   #define _CRTIMP2_NCEEPURE _CRTIMP2
-  #endif
- #endif
+#if defined(_M_CEE_PURE) && !defined(_SILENCE_CLR_PURE_DEPRECATION_WARNING)
+	#pragma message(_WARNING_MESSAGE("STL4001", "/clr:pure is deprecated and will be REMOVED."))
+#endif
 
  #ifndef _MRTIMP2_PURE
   #if defined(_M_CEE_PURE)
@@ -502,14 +509,7 @@ clients and process-global for mixed clients.
       #define _MRTIMP2_NPURE
     #endif
   #else   /* ndef MRTDLL && _CRTBLD */
-
-   #if defined(_DLL) && defined(_M_CEE_PURE)
-    #define _MRTIMP2_NPURE	__declspec(dllimport)
-
-   #else
-    #define _MRTIMP2_NPURE
-   #endif
-
+   #define _MRTIMP2_NPURE
   #endif  /* MRTDLL && _CRTBLD */
  #endif  /* _MRTIMP2_NPURE */
 
@@ -530,24 +530,52 @@ clients and process-global for mixed clients.
  #endif
 
  #ifdef _CRTBLD
-  #if !defined(_CRTDATA2)
-   #if !defined(MRTDLL)
-    #define _CRTDATA2 _CRTIMP2
-   #else
-    #define _CRTDATA2
-   #endif
-  #endif
-
 /* These functions are for enabling STATIC_CPPLIB functionality */
   #define _cpp_stdin  (__acrt_iob_func(0))
   #define _cpp_stdout (__acrt_iob_func(1))
   #define _cpp_stderr (__acrt_iob_func(2))
   #define _cpp_isleadbyte(c) (__pctype_func()[(unsigned char)(c)] & _LEADBYTE)
- #else  /* _CRTBLD */
-  #if !defined(_CRTDATA2)
-   #define _CRTDATA2 _CRTIMP2
-  #endif
  #endif  /* _CRTBLD */
+
+#ifndef _CRTIMP2_IMPORT
+ #if defined(CRTDLL2) && defined(_CRTBLD)
+  #define _CRTIMP2_IMPORT __declspec(dllexport)
+ #else
+  #if defined(_DLL) && !defined(_STATIC_CPPLIB)
+   #define _CRTIMP2_IMPORT __declspec(dllimport)
+  #else
+   #define _CRTIMP2_IMPORT
+  #endif
+ #endif
+#endif
+
+#ifndef _CRTIMP2_PURE_IMPORT
+ #if defined(MRTDLL) && defined(_CRTBLD)
+  #define _CRTIMP2_PURE_IMPORT
+ #else
+  #ifdef _M_CEE_PURE
+   #define _CRTIMP2_PURE_IMPORT
+  #else
+   #define _CRTIMP2_PURE_IMPORT _CRTIMP2_IMPORT
+  #endif
+ #endif
+#endif
+
+#ifndef _CRTDATA2_IMPORT
+ #if defined(MRTDLL) && defined(_CRTBLD)
+  #define _CRTDATA2_IMPORT
+ #else
+  #define _CRTDATA2_IMPORT _CRTIMP2_IMPORT
+ #endif
+#endif
+
+#ifndef _CRTIMP2_NCEEPURE_IMPORT
+ #ifdef _M_CEE_PURE
+  #define _CRTIMP2_NCEEPURE_IMPORT
+ #else
+  #define _CRTIMP2_NCEEPURE_IMPORT _CRTIMP2_IMPORT
+ #endif
+#endif
 
 		/* NAMESPACE */
 #define _STD_BEGIN	namespace std {
@@ -602,7 +630,7 @@ enum _Uninitialized
 	};
 
 		// CLASS _Lockit
-class _CRTIMP2_PURE _Lockit
+class _CRTIMP2_PURE_IMPORT _Lockit
 	{	// lock while object in existence -- MUST NEST
 public:
  #if defined(_M_CEE_PURE) || defined(MRTDLL)
@@ -645,7 +673,7 @@ private:
 	};
 
  #ifdef _M_CEE
-class _CRTIMP2_PURE _EmptyLockit
+class _CRTIMP2_PURE_IMPORT _EmptyLockit
 	{	// empty lock class used for bin compat
 private:
 	int _Locktype;
@@ -726,7 +754,7 @@ private:
   #define _RELIABILITY_CONTRACT
  #endif /* _M_CEE */
 
-class _CRTIMP2_PURE _Init_locks
+class _CRTIMP2_PURE_IMPORT _Init_locks
 	{	// initialize mutexes
 public:
  #if defined(_M_CEE_PURE) || defined(MRTDLL)

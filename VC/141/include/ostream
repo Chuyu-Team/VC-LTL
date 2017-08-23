@@ -662,20 +662,20 @@ template<> inline
 	}
   #endif /* _NATIVE_WCHAR_T_DEFINED */
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE basic_ostream<char,
+template class _CRTIMP2_PURE_IMPORT basic_ostream<char,
 	char_traits<char> >;
-template class _CRTIMP2_PURE basic_ostream<wchar_t,
+template class _CRTIMP2_PURE_IMPORT basic_ostream<wchar_t,
 	char_traits<wchar_t> >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
-template class _CRTIMP2_PURE basic_ostream<unsigned short,
+template class _CRTIMP2_PURE_IMPORT basic_ostream<unsigned short,
 	char_traits<unsigned short> >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 
 		// INSERTERS
 

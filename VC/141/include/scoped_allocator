@@ -33,7 +33,7 @@ template<class _Alloc,
 
 template<class _Alloc>
 	struct _Scoped_outermost_helper<_Alloc, void_t<
-			_Scoped_outermost_helper_tag,	// TRANSITION, C1XX
+			_Scoped_outermost_helper_tag,
 			decltype(_STD declval<_Alloc&>().outer_allocator())>>
 	{	// gets the outermost allocator
 	typedef decltype(_STD declval<_Alloc&>().outer_allocator()) _Outer_alloc;
@@ -72,7 +72,7 @@ template<class _Ty,
 			tuple<_Atypes...>&& _Val)
 	{	// construct tuple from tuple argument, no allocator
 	static_assert(is_constructible<_Ty, _Atypes...>::value,
-		"N4582 20.16.4 [allocator.adaptor.members]/11 requires "
+		"N4659 23.13.4 [allocator.adaptor.members]/11 requires "
 		"is_constructible<T, Args...> "
 		"when uses_allocator<T, inner_allocator_type> is false");
 	return (_STD move(_Val));
@@ -98,7 +98,7 @@ template<class _Ty,
 			tuple<_Atypes...>&& _Val)
 	{	// construct tuple from tuple argument, trailing allocator
 	static_assert(is_constructible<_Ty, _Atypes..., _Alloc&>::value,
-		"N4582 20.16.4 [allocator.adaptor.members]/11 requires "
+		"N4659 23.13.4 [allocator.adaptor.members]/11 requires "
 		"is_constructible<T, allocator_arg_t, inner_allocator_type&, Args...> or "
 		"is_constructible<T, Args..., inner_allocator_type&> "
 		"when uses_allocator<T, inner_allocator_type> is true");
@@ -354,7 +354,7 @@ public:
 		void _Construct1(false_type, _Any_tag, _Ty *_Ptr, _Types&&... _Args)
 		{	// construct with uses_allocator<T, inner_allocator_type> == false
 		static_assert(is_constructible<_Ty, _Types...>::value,
-			"N4582 20.16.4 [allocator.adaptor.members]/9 requires "
+			"N4659 23.13.4 [allocator.adaptor.members]/9 requires "
 			"is_constructible<T, Args...> "
 			"when uses_allocator<T, inner_allocator_type> is false");
 		_Scoped_outermost_traits<scoped_allocator_adaptor>::construct(
@@ -382,7 +382,7 @@ public:
 		{	// construct with uses_allocator<_Ty, inner_allocator_type> and
 			// is_constructible<_Ty, _Types..., inner_allocator_type&>
 		static_assert(is_constructible<_Ty, _Types..., inner_allocator_type&>::value,
-			"N4582 20.16.4 [allocator.adaptor.members]/9 requires "
+			"N4659 23.13.4 [allocator.adaptor.members]/9 requires "
 			"is_constructible<T, allocator_arg_t, inner_allocator_type&, Args...> or "
 			"is_constructible<T, Args..., inner_allocator_type&> "
 			"when uses_allocator<T, inner_allocator_type> == true");

@@ -15,9 +15,9 @@
 #ifndef RC_INVOKED
 #ifndef __midl
 
-#if defined (__cplusplus)
+#if defined(__cplusplus)
 extern "C" {
-#endif  /* defined (__cplusplus) */
+#endif
 
 /*
 ** __MACHINE              : everything
@@ -29,6 +29,7 @@ extern "C" {
 ** __MACHINEARM_ARM64     : ARM and ARM64 only
 ** __MACHINEARM_ARM64_X64 : ARM and 64-bit Arch only
 ** __MACHINEARM64_X64     : ARM64 and x64 only
+** __MACHINECHPEX86ARM64  : CHPE x86 on arm64 only
 ** __MACHINEWVMPURE       : /clr:pure only
 ** __MACHINEZ             : nothing
 */
@@ -41,63 +42,69 @@ extern "C" {
 #define __MACHINEARM_ARM64     __MACHINE
 #define __MACHINEARM_ARM64_X64 __MACHINE
 #define __MACHINEARM64_X64     __MACHINE
+#define __MACHINECHPEX86ARM64  __MACHINE
 
 /* Most intrinsics not available to pure managed code */
-#if defined (_M_CEE_PURE)
+#if defined(_M_CEE_PURE)
 #define __MACHINE(X)        __MACHINEZ(X)
 #define __MACHINEWVMPURE(X) X;
-#else  /* defined (_M_CEE_PURE) */
+#else
 #define __MACHINE(X)        X;
 #define __MACHINEWVMPURE(X) __MACHINEZ(X)
-#endif  /* defined (_M_CEE_PURE) */
+#endif
 
 #define __MACHINEZ(X)       /* NOTHING */
 
-#if !defined (_M_IX86)
+#if !defined(_M_IX86) || defined(_CHPE_ONLY_)
 #undef __MACHINEX86
 #define __MACHINEX86        __MACHINEZ
-#endif  /* !defined (_M_IX86) */
+#endif
 
-#if !defined (_M_X64)
+#if !defined(_M_X64)
 #undef __MACHINEX64
 #define __MACHINEX64        __MACHINEZ
-#endif  /* !defined (_M_X64) */
+#endif
 
-#if !(defined (_M_IX86) || defined (_M_X64))
+#if !(defined(_M_IX86) || defined(_M_X64)) || defined(_CHPE_ONLY_)
 #undef __MACHINEX86_X64
 #define __MACHINEX86_X64    __MACHINEZ
-#endif  /* !(defined (_M_IX86) || defined (_M_X64)) */
+#endif
 
-#if !defined (_M_ARM)
+#if !defined(_M_ARM)
 #undef  __MACHINEARM
 #define __MACHINEARM        __MACHINEZ
-#endif  /* !defined (_M_ARM) */
+#endif
 
 /* For compatibility with <winnt.h>, some intrinsics are __cdecl except on x64 */
-#if defined (_M_X64)
+#if defined(_M_X64)
 #define __MACHINECALL_CDECL_OR_DEFAULT
 #else
 #define __MACHINECALL_CDECL_OR_DEFAULT __cdecl
 #endif
 
-#if !defined(_M_ARM64)
+#if !defined(_M_ARM64) && !defined(_M_HYBRID_X86_ARM64)
 #undef  __MACHINEARM64
 #define __MACHINEARM64      __MACHINEZ
 #endif
 
-#if !(defined(_M_ARM) || defined(_M_ARM64))
+#if !(defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64))
 #undef __MACHINEARM_ARM64
 #define __MACHINEARM_ARM64  __MACHINEZ
 #endif
 
-#if !(defined(_M_ARM) || defined(_M_X64) || defined(_M_ARM64))
+#if !(defined(_M_ARM) || defined(_M_X64) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64))
 #undef __MACHINEARM_ARM64_X64
 #define __MACHINEARM_ARM64_X64     __MACHINEZ
 #endif
 
-#if !(defined(_M_X64) || defined(_M_ARM64))
+#if !(defined(_M_X64) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64))
 #undef __MACHINEARM64_X64
 #define __MACHINEARM64_X64     __MACHINEZ
+#endif
+
+#if !defined(_M_HYBRID_X86_ARM64)
+#undef __MACHINECHPEX86ARM64
+#define __MACHINECHPEX86ARM64 __MACHINEZ
 #endif
 
 /*******************************************************************
@@ -232,8 +239,8 @@ __MACHINEARM_ARM64(unsigned char _interlockedbittestandset_rel(long volatile *, 
 * OTHERWISE, new intrinsics should be added to intrin.h.           *
 *******************************************************************/
 
-#if defined (__cplusplus)
+#if defined(__cplusplus)
 }
-#endif  /* defined (__cplusplus) */
+#endif
 #endif  /* __midl */
 #endif  /* RC_INVOKED */

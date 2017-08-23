@@ -26,8 +26,8 @@
 #endif
 
 
-#include <mmc.h>
-#include <commctrl.h>
+#include <MMC.h>
+#include <CommCtrl.h>
 #include <atlwin.h>
 
 #ifndef _ATL_NO_DEFAULT_LIBS
@@ -354,7 +354,7 @@ ATLPREFAST_UNSUPPRESS()
 		}
 
 		GlobalFree(stgmedium.hGlobal);
-				
+
 		return hr;
 	}
 
@@ -1641,7 +1641,7 @@ public:
 		*pResultDataItem = &m_resultDataItem;
 		return S_OK;
 	}
-	
+
 	STDMETHOD(GetDataObject)(
 		_COM_Outptr_ IDataObject** pDataObj,
 		_In_ DATA_OBJECT_TYPES type)
@@ -1663,7 +1663,7 @@ public:
 		hr = pData->QueryInterface(__uuidof(IDataObject), (void**)(pDataObj));
 		return hr;
 	}
-	
+
 	void UpdateMenuState(
 		_In_ UINT /*id*/,
 		_In_opt_z_ LPTSTR /*pBuf*/,

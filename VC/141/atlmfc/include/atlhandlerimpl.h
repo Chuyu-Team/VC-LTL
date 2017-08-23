@@ -30,7 +30,7 @@
 #include <Filterr.h>
 #include <atlhandler.h>
 #include <atlcoll.h>
-#include <shobjidl.h>
+#include <ShObjIdl.h>
 #include <propsys.h>
 #include <thumbcache.h>
 
@@ -819,7 +819,7 @@ public:
 #ifdef _AFXDLL
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		return E_NOTIMPL; 
+		return E_NOTIMPL;
 	};
 
 	STDMETHODIMP GetSizeMax(_Out_ ULARGE_INTEGER * /* pcbSize */)
@@ -936,7 +936,7 @@ protected:
 	BOOL                        m_bEnableEventLog;
 };
 
-class CFilterChunkValueImpl : 
+class CFilterChunkValueImpl :
 	public IFilterChunkValue
 {
 public:
@@ -987,11 +987,11 @@ ATLPREFAST_SUPPRESS(6387)
 			// detach and return this as the value
 			*ppPropVariant = spPropVariant.Detach();
 		}
-				
+
 		return hr;
 	}
 ATLPREFAST_UNSUPPRESS()
-	
+
 	virtual PROPVARIANT GetValueNoAlloc()
 	{
 		return m_propVariant;
@@ -1261,7 +1261,7 @@ private:
 	CString     m_strValue;
 };
 
-class CAtlDocumentImpl : 
+class CAtlDocumentImpl :
 	public IDocument
 {
 public:

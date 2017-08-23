@@ -17,7 +17,7 @@ cpp_quote("EXTERN_C const CLSID CLSID_Registrar;")
 // produce the type library (atl.tlb) and marshalling code.
 import "oaidl.idl";
 import "ocidl.idl";
-#include <olectl.h>
+#include <OleCtl.h>
 
 [
 	object,
@@ -87,10 +87,10 @@ interface IDocHostUIHandlerDispatch : IDispatch
 	} DocHostUIFlagDispatch ;
 
     HRESULT ShowContextMenu(
-            [in] DWORD dwID, 
-            [in] DWORD x, 
-            [in] DWORD y, 
-            [in] IUnknown* pcmdtReserved,  
+            [in] DWORD dwID,
+            [in] DWORD x,
+            [in] DWORD y,
+            [in] IUnknown* pcmdtReserved,
             [in] IDispatch* pdispReserved,
 			[out, retval] HRESULT* dwRetVal);
     HRESULT GetHostInfo(
@@ -123,14 +123,14 @@ interface IDocHostUIHandlerDispatch : IDispatch
 			[in] DWORD nMessage,
 			[in] DWORD_PTR wParam,
 			[in] DWORD_PTR lParam,
-            [in] BSTR bstrGuidCmdGroup, 
+            [in] BSTR bstrGuidCmdGroup,
             [in] DWORD nCmdID,
 			[out, retval] HRESULT* dwRetVal);
     HRESULT GetOptionKeyPath(
 			[out] BSTR* pbstrKey,
 			[in] DWORD dw);
     HRESULT GetDropTarget(
-            [in] IUnknown* pDropTarget, 
+            [in] IUnknown* pDropTarget,
             [out] IUnknown** ppDropTarget);
     HRESULT GetExternal(
 			[out] IDispatch **ppDispatch);
@@ -278,7 +278,7 @@ interface IAxWinAmbientDispatchEx : IAxWinAmbientDispatch
 {
 	[ id(100) ] HRESULT SetAmbientDispatch([in] IDispatch* pDispatch);
 };
-	
+
 
 [
 	uuid(72AD0770-6A9F-11d1-BCEC-0060088F444E),

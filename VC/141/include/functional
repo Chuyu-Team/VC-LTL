@@ -3,10 +3,14 @@
 #ifndef _FUNCTIONAL_
 #define _FUNCTIONAL_
 #ifndef RC_INVOKED
-#include <xfunctional>
 #include <exception>
-#include <typeinfo>
 #include <tuple>	// for bind
+#include <typeinfo>
+#include <xfunctional>
+#if _HAS_CXX17
+ #include <memory>
+ #include <unordered_map>
+#endif /* _HAS_CXX17 */
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,_STL_WARNING_LEVEL)
@@ -55,13 +59,13 @@ public:
 		{	// construct
 		}
 
-	virtual const char *__CLR_OR_THIS_CALL what() const _THROW0()
+	virtual const char *__CLR_OR_THIS_CALL what() const _NOEXCEPT
 		{	// return pointer to message string
 		return ("bad function call");
 		}
 	};
 
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xbad_function_call();
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_function_call();
 
 	// TEMPLATE FUNCTION _Test_callable
 template<class _Fty>
@@ -82,8 +86,8 @@ template<class _Ty> inline
 template<class _Ty> inline
 	bool _Test_callable(const _Ty& _Arg) _NOEXCEPT
 	{	// determine whether std::function must store _Arg
-	_Cat_base<is_member_pointer<_Ty>::value || (is_pointer<_Ty>::value
-		&& is_function<typename remove_pointer<_Ty>::type>::value)> _Testable;
+	bool_constant<is_member_pointer<_Ty>::value || (is_pointer<_Ty>::value
+		&& is_function<remove_pointer_t<_Ty>>::value)> _Testable;
 	return (_Test_callable(_Arg, _Testable));
 	}
 
@@ -101,27 +105,23 @@ template<class _Rx,
 	class _Func_base
 	{	// abstract base for implementation types
 public:
-	typedef _Func_base<_Rx, _Types...> _Myt;
-
-	virtual _Myt *_Copy(void *) const = 0;
-	virtual _Myt *_Move(void *) = 0;
+	virtual _Func_base * _Copy(void *) const = 0;
+	virtual _Func_base * _Move(void *) = 0;
 	virtual _Rx _Do_call(_Types&&...) = 0;
 	virtual const type_info& _Target_type() const _NOEXCEPT = 0;
 	virtual void _Delete_this(bool) _NOEXCEPT = 0;
 
+#if _HAS_STATIC_RTTI
 	const void *_Target(const type_info& _Info) const _NOEXCEPT
 		{	// return pointer to stored object of type _Info
 		return (_Target_type() == _Info ? _Get() : 0);
 		}
-
-	_Func_base(const _Myt&) = delete;
-	_Myt& operator=(const _Myt&) = delete;
+#endif /* _HAS_STATIC_RTTI */
 
 	_Func_base() = default;
-
-	~_Func_base() _NOEXCEPT
-		{	// non-virtual due to _Delete_this()
-		}
+	_Func_base(const _Func_base&) = delete;
+	_Func_base& operator=(const _Func_base&) = delete;
+	~_Func_base() _NOEXCEPT = default; // non-virtual due to _Delete_this()
 
 private:
 	virtual const void *_Get() const _NOEXCEPT = 0;
@@ -147,12 +147,11 @@ template<class _Callable,
 	class... _Types>
 	class _Func_impl final
 		: public _Func_base<_Rx, _Types...>
-	{	// derived class for specific implementation types
+	{	// derived class for specific implementation types that use allocators
 public:
-	typedef _Func_impl<_Callable, _Alloc, _Rx, _Types...> _Myt;
 	typedef _Func_base<_Rx, _Types...> _Mybase;
-	typedef _Wrap_alloc<_Alloc> _Myalty0;
-	typedef typename _Myalty0::template rebind<_Myt>::other _Myalty;
+	typedef _Rebind_alloc_t<_Alloc, _Func_impl> _Myalty;
+	typedef allocator_traits<_Myalty> _Myalty_traits;
 	typedef is_nothrow_move_constructible<_Callable> _Nothrow_move;
 
 	template<class _Other1,
@@ -163,70 +162,72 @@ public:
 		{	// construct
 		}
 
-	~_Func_impl() _NOEXCEPT
-		{	// non-virtual due to _Delete_this()
-		}
+	~_Func_impl() _NOEXCEPT = default; // non-virtual due to _Delete_this()
 
 private:
-	virtual _Mybase *_Copy(void *_Where) const
+	virtual _Mybase *_Copy(void *_Where) const override
 		{	// return clone of *this
-		return (_Clone(_Where, _Is_large<_Myt>()));
+		return (_Clone(_Where, _Is_large<_Func_impl>()));
 		}
 
-	template<class _Void>
-		_Mybase *_Clone(_Void *, true_type) const
+	_Mybase *_Clone(void *, true_type) const
 		{	// return clone of *this, large (dynamically allocated)
 		_Myalty _Al(_Myax());
-		const auto _Ptr = _Al.allocate(1);
+		const auto _Ptr = _Myalty_traits::allocate(_Al, 1);
 
 		_TRY_BEGIN
-			_Al.construct(_Unfancy(_Ptr), _Callee(), _Myax());
+			_Myalty_traits::construct(_Al, _Unfancy(_Ptr), _Callee(), _Myax());
 		_CATCH_ALL
-			_Al.deallocate(_Ptr, 1);
+			_Myalty_traits::deallocate(_Al, _Ptr, 1);
 		_RERAISE;
 		_CATCH_END
 
 		return (_Unfancy(_Ptr));
 		}
 
-	template<class _Void>
-		_Mybase *_Clone(_Void *_Where, false_type) const
+	_Mybase *_Clone(void *_Where, false_type) const
 		{	// return clone of *this, small (locally stored)
 		_Myalty _Al(_Myax());
-		_Myt * _Ptr = static_cast<_Myt *>(_Where);
-		_Al.construct(_Ptr, _Callee(), _Myax());
+		_Func_impl * _Ptr = static_cast<_Func_impl *>(_Where);
+		_Myalty_traits::construct(_Al, _Ptr, _Callee(), _Myax());
 		return (_Ptr);
 		}
 
-	virtual _Mybase *_Move(void *_Where)
+	virtual _Mybase *_Move(void *_Where) override
 		{	// return clone of *this
 		_Myalty _Al(_Myax());
-		_Myt *_Ptr = static_cast<_Myt *>(_Where);
-		_Al.construct(_Ptr, _STD move(_Callee()), _STD move(_Myax()));
+		_Func_impl *_Ptr = static_cast<_Func_impl *>(_Where);
+		_Myalty_traits::construct(_Al, _Ptr, _STD move(_Callee()), _STD move(_Myax()));
 		return (_Ptr);
 		}
 
-	virtual _Rx _Do_call(_Types&&... _Args)
+	virtual _Rx _Do_call(_Types&&... _Args) override
 		{	// call wrapped function
 		return (_Invoker_ret<_Rx>::_Call(_Callee(), _STD forward<_Types>(_Args)...));
 		}
 
-	virtual const type_info& _Target_type() const _NOEXCEPT
+	virtual const type_info& _Target_type() const _NOEXCEPT override
 		{	// return type information for stored object
+#if _HAS_STATIC_RTTI
 		return (typeid(_Callable));
+#else /* _HAS_STATIC_RTTI */
+		return (typeid(void));
+#endif /* _HAS_STATIC_RTTI */
 		}
 
-	virtual const void *_Get() const _NOEXCEPT
+	virtual const void *_Get() const _NOEXCEPT override
 		{	// return address of stored object
 		return (_STD addressof(_Callee()));
 		}
 
-	virtual void _Delete_this(bool _Deallocate) _NOEXCEPT
+	virtual void _Delete_this(bool _Deallocate) _NOEXCEPT override
 		{	// destroy self
 		_Myalty _Al(_Myax());
-		_Al.destroy(this);
+		_Myalty_traits::destroy(_Al, this);
 		if (_Deallocate)
-			_Al.deallocate(_Al.address(*this), 1);
+			{
+			_Deallocate_plain(_Al, this);
+			}
 		}
 
 	_Compressed_pair<_Alloc, _Callable> _Mypair;
@@ -250,6 +251,78 @@ private:
 		{	// return const reference to wrapped function
 		return (_Mypair._Get_second());
 		}
+	};
+
+	// TEMPLATE CLASS _Func_impl_no_alloc
+template<class _Callable,
+	class _Rx,
+	class... _Types>
+	class _Func_impl_no_alloc final
+		: public _Func_base<_Rx, _Types...>
+	{	// derived class for specific implementation types that don't use allocators
+public:
+	typedef _Func_base<_Rx, _Types...> _Mybase;
+	typedef is_nothrow_move_constructible<_Callable> _Nothrow_move;
+
+	template<class _Other,
+		class = enable_if_t<!is_same<_Func_impl_no_alloc, decay_t<_Other>>::value>>
+		explicit _Func_impl_no_alloc(_Other&& _Val)
+		: _Callee(_STD forward<_Other>(_Val))
+		{	// construct
+		}
+
+	~_Func_impl_no_alloc() _NOEXCEPT = default; // non-virtual due to _Delete_this()
+
+private:
+	virtual _Mybase *_Copy(void *_Where) const override
+		{	// return clone of *this
+		return (_Clone(_Where, _Is_large<_Func_impl_no_alloc>()));
+		}
+
+	_Mybase *_Clone(void *, true_type) const
+		{	// return clone of *this, large (dynamically allocated)
+		return (_Global_new<_Func_impl_no_alloc>(_Callee));
+		}
+
+	_Mybase *_Clone(void *_Where, false_type) const
+		{	// return clone of *this, small (locally stored)
+		return (::new (_Where) _Func_impl_no_alloc(_Callee));
+		}
+
+	virtual _Mybase *_Move(void *_Where) override
+		{	// return clone of *this
+		return (::new (_Where) _Func_impl_no_alloc(_STD move(_Callee)));
+		}
+
+	virtual _Rx _Do_call(_Types&&... _Args) override
+		{	// call wrapped function
+		return (_Invoker_ret<_Rx>::_Call(_Callee, _STD forward<_Types>(_Args)...));
+		}
+
+	virtual const type_info& _Target_type() const _NOEXCEPT override
+		{	// return type information for stored object
+#if _HAS_STATIC_RTTI
+		return (typeid(_Callable));
+#else /* _HAS_STATIC_RTTI */
+		return (typeid(void));
+#endif /* _HAS_STATIC_RTTI */
+		}
+
+	virtual const void *_Get() const _NOEXCEPT override
+		{	// return address of stored object
+		return (_STD addressof(_Callee));
+		}
+
+	virtual void _Delete_this(bool _Dealloc) _NOEXCEPT override
+		{	// destroy self
+		this->~_Func_impl_no_alloc();
+		if (_Dealloc)
+			{
+			_Deallocate(this, 1, sizeof(*this));
+			}
+		}
+
+	_Callable _Callee;
 	};
 #pragma warning(pop)
 
@@ -285,7 +358,7 @@ public:
 protected:
 	template<class _Fx>
 		using _Enable_if_callable_t = enable_if_t<
-			_Is_callable1<void, _Ret, _Fx, _Types...>::value>;
+			_Invoke_traits<void, _Fx, _Types...>::template _Is_invocable_r<_Ret>::value>;
 
 	bool _Empty() const _NOEXCEPT
 		{	// return true if no stored object
@@ -319,7 +392,27 @@ protected:
 	template<class _Fx>
 		void _Reset(_Fx&& _Val)
 		{	// store copy of _Val
-		_Reset_alloc(_STD forward<_Fx>(_Val), allocator<int>());
+		if (!_Test_callable(_Val))
+			{	// null member pointer/function pointer/std::function
+			return;	// already empty
+			}
+
+		using _Impl = _Func_impl_no_alloc<decay_t<_Fx>, _Ret, _Types...>;
+		_Reset_impl<_Impl>(_STD forward<_Fx>(_Val), _Is_large<_Impl>());
+		}
+
+	template<class _Myimpl,
+		class _Fx>
+		void _Reset_impl(_Fx&& _Val, true_type)
+		{	// store copy of _Val, large (dynamically allocated)
+		_Set(_Global_new<_Myimpl>(_STD forward<_Fx>(_Val)));
+		}
+
+	template<class _Myimpl,
+		class _Fx>
+		void _Reset_impl(_Fx&& _Val, false_type)
+		{	// store copy of _Val, small (locally stored)
+		_Set(::new (_Getspace()) _Myimpl(_STD forward<_Fx>(_Val)));
 		}
 
 	template<class _Fx,
@@ -331,31 +424,27 @@ protected:
 			return;	// already empty
 			}
 
-		typedef typename decay<_Fx>::type _Decayed;
-		typedef _Func_impl<_Decayed, _Alloc, _Ret, _Types...> _Myimpl;
+		using _Myimpl = _Func_impl<decay_t<_Fx>, _Alloc, _Ret, _Types...>;
 		_Myimpl *_Ptr = 0;
 
-		typedef _Wrap_alloc<_Alloc> _Alimpl0;
-		typedef typename _Alimpl0::template rebind<_Myimpl>::other _Alimpl;
-		_Alimpl _Al(_Ax);
-
-		_Reset_impl(_STD forward<_Fx>(_Val), _Ax,
-			_Ptr, _Al, _Is_large<_Myimpl>());
+		_Rebind_alloc_t<_Alloc, _Myimpl> _Al(_Ax);
+		_Reset_impl_alloc(_STD forward<_Fx>(_Val), _Ax, _Ptr, _Al, _Is_large<_Myimpl>());
 		}
 
 	template<class _Fx,
 		class _Alloc,
 		class _Myimpl,
 		class _Alimpl>
-		void _Reset_impl(_Fx&& _Val, const _Alloc& _Ax,
+		void _Reset_impl_alloc(_Fx&& _Val, const _Alloc& _Ax,
 			_Myimpl *, _Alimpl& _Al, true_type)
 		{	// store copy of _Val with allocator, large (dynamically allocated)
-		const auto _Ptr = _Al.allocate(1);
+		using _Alimpl_traits = allocator_traits<_Alimpl>;
+		const auto _Ptr = _Alimpl_traits::allocate(_Al, 1);
 
 		_TRY_BEGIN
-			_Al.construct(_Unfancy(_Ptr), _STD forward<_Fx>(_Val), _Ax);
+			_Alimpl_traits::construct(_Al, _Unfancy(_Ptr), _STD forward<_Fx>(_Val), _Ax);
 		_CATCH_ALL
-			_Al.deallocate(_Ptr, 1);
+			_Alimpl_traits::deallocate(_Al, _Ptr, 1);
 		_RERAISE;
 		_CATCH_END
 
@@ -366,11 +455,11 @@ protected:
 		class _Alloc,
 		class _Myimpl,
 		class _Alimpl>
-		void _Reset_impl(_Fx&& _Val, const _Alloc& _Ax,
+		void _Reset_impl_alloc(_Fx&& _Val, const _Alloc& _Ax,
 			_Myimpl *, _Alimpl& _Al, false_type)
 		{	// store copy of _Val with allocator, small (locally stored)
 		_Myimpl *_Ptr = static_cast<_Myimpl *>(_Getspace());
-		_Al.construct(_Ptr, _STD forward<_Fx>(_Val), _Ax);
+		allocator_traits<_Alimpl>::construct(_Al, _Ptr, _STD forward<_Fx>(_Val), _Ax);
 		_Set(_Ptr);
 		}
 
@@ -400,6 +489,7 @@ protected:
 			}
 		}
 
+#if _HAS_STATIC_RTTI
 	const type_info& _Target_type() const _NOEXCEPT
 		{	// return type information for stored object
 		return (_Getimpl() ? _Getimpl()->_Target_type() : typeid(void));
@@ -409,6 +499,7 @@ protected:
 		{	// return pointer to stored object
 		return (_Getimpl() ? _Getimpl()->_Target(_Info) : 0);
 		}
+#endif /* _HAS_STATIC_RTTI */
 
 private:
 	bool _Local() const _NOEXCEPT
@@ -516,9 +607,7 @@ public:
 		this->_Reset_alloc(_STD move(_Func), _Ax);
 		}
 
-	~function() _NOEXCEPT
-		{	// destroy the object
-		}
+	~function() _NOEXCEPT = default;
 
 	_Myt& operator=(const _Myt& _Right)
 		{	// assign _Right
@@ -588,6 +677,7 @@ public:
 		return (!this->_Empty());
 		}
 
+#if _HAS_STATIC_RTTI
 	const type_info& target_type() const _NOEXCEPT
 		{	// return type_info object for target type
 		return (this->_Target_type());
@@ -596,15 +686,23 @@ public:
 	template<class _Fx>
 		_Fx *target() _NOEXCEPT
 		{	// return pointer to target object
-		return (static_cast<_Fx *>(const_cast<void *>(
-			this->_Target(typeid(_Fx)))));
+		return (reinterpret_cast<_Fx *>(const_cast<void *>(this->_Target(typeid(_Fx)))));
 		}
 
 	template<class _Fx>
 		const _Fx *target() const _NOEXCEPT
 		{	// return pointer to target object
-		return (static_cast<const _Fx *>(this->_Target(typeid(_Fx))));
+		return (reinterpret_cast<const _Fx *>(this->_Target(typeid(_Fx))));
 		}
+#else /* _HAS_STATIC_RTTI */
+	const type_info& target_type() const _NOEXCEPT = delete;	// requires static RTTI
+
+	template<class _Fx>
+		_Fx *target() _NOEXCEPT = delete;	// requires static RTTI
+
+	template<class _Fx>
+		const _Fx *target() const _NOEXCEPT = delete;	// requires static RTTI
+#endif /* _HAS_STATIC_RTTI */
 	};
 
 	// TEMPLATE FUNCTION swap
@@ -827,13 +925,13 @@ template<class _Ret,
 	class _Fx>
 	struct _Binder_result_type
 	{	// provide result_type (sometimes)
-	typedef typename decay<_Fx>::type _Decayed;
+	typedef decay_t<_Fx> _Decayed;
 
 	typedef typename _Weak_types<_Decayed>::type _All_weak_types;
 
-	typedef typename _If<is_same<_Ret, _Unforced>::value,
+	typedef conditional_t<is_same<_Ret, _Unforced>::value,
 		_Weak_result_type<_All_weak_types>,
-		_Forced_result_type<_Ret> >::type type;
+		_Forced_result_type<_Ret>> type;
 	};
 
 template<class _Ret,
@@ -844,8 +942,8 @@ template<class _Ret,
 	{	// wrap bound callable object and arguments
 private:
 	typedef index_sequence_for<_Types...> _Seq;
-	typedef typename decay<_Fx>::type _First;
-	typedef tuple<typename decay<_Types>::type...> _Second;
+	typedef decay_t<_Fx> _First;
+	typedef tuple<decay_t<_Types>...> _Second;
 
 	_Compressed_pair<_First, _Second> _Mypair;
 
@@ -930,9 +1028,7 @@ namespace placeholders {
 	}	// namespace placeholders
 }	// namespace tr1
 #endif /* _HAS_TR1_NAMESPACE */
-_STD_END
 
-namespace std {
 	// TEMPLATE STRUCT uses_allocator
 template<class _Fty,
 	class _Alloc>
@@ -940,7 +1036,716 @@ template<class _Fty,
 		: true_type
 	{	// true_type if container allocator enabled
 	};
-}	// namespace std
+
+#if _HAS_CXX17
+	// HETEROGENEOUS MEMORY BLOCK UTILITIES
+inline void _Add_alloc_size(size_t& _Size, const size_t _Size_added, const size_t _Alignment)
+	{	// moves _Size up to account for storing an object of size _Size_added with alignment
+		// _Alignment in a memory buffer
+		// assumes that the memory buffer will be allocated for the "worst" alignment used in the
+		// resulting buffer
+	const size_t _Align_masked = _Size & (_Alignment - 1u);
+	_Size += _Size_added;
+	if (_Align_masked != 0)
+		{
+		_Size += _Alignment - _Align_masked;
+		}
+	}
+
+template<class _Ty> inline
+	void _Add_alloc_size(size_t& _Size)
+	{	// moves _Size up to account for allocating a _Ty
+	_Add_alloc_size(_Size, sizeof(_Ty), alignof(_Ty));
+	}
+
+template<class _Ty> inline
+	void _Add_alloc_size(size_t& _Size, const size_t _Count)
+	{	// moves _Size up to account for allocating an array of _Count _Ty instances
+	if (static_cast<size_t>(-1) / sizeof(_Ty) < _Count)
+		{
+		_Xbad_alloc();
+		}
+
+	_Add_alloc_size(_Size, sizeof(_Ty) * _Count, alignof(_Ty));
+	}
+
+inline void * _Decode_aligned_block(void *& _Base, size_t _Size, const size_t _Alignment)
+	{	// "allocates" an object of size _Size and alignment _Alignment from _Base, and shifts
+		// _Base up by the size necessary to decode that object.
+	auto _Space = static_cast<size_t>(-1);
+	auto _Result = _STD align(_Alignment, _Size, _Base, _Space);
+	_Base = static_cast<char *>(_Base) + _Size;
+	return (_Result);
+	}
+
+template<class _Ty> inline
+	_Ty * _Decode_aligned_block(void *& _Base)
+	{	// "allocates" a _Ty from _Base
+	return (static_cast<_Ty *>(_Decode_aligned_block(_Base, sizeof(_Ty), alignof(_Ty))));
+	}
+
+template<class _Ty> inline
+	_Ty * _Decode_aligned_block(void *& _Base, const size_t _Count)
+	{	// "allocates" an array of _Count _Ty instances from _Base
+	return (static_cast<_Ty *>(_Decode_aligned_block(_Base, sizeof(_Ty) * _Count, alignof(_Ty))));
+	}
+
+		// STRUCT _Global_delete
+struct _Global_delete
+	{
+	void operator()(void * const _Ptr) const
+		{
+		::operator delete(_Ptr);
+		}
+	};
+
+		// CLASS TEMPLATE default_searcher
+template<class _FwdItHaystack,
+	class _FwdItPat,
+	class _Pred_eq> inline
+	pair<_FwdItHaystack, _FwdItHaystack> _Search_pair_unchecked(_FwdItHaystack _First1, _FwdItHaystack _Last1,
+		_FwdItPat _First2, _FwdItPat _Last2, _Pred_eq& _Eq,
+		forward_iterator_tag, forward_iterator_tag)
+	{	// find first [_First2, _Last2) satisfying _Eq, arbitrary iterators
+	for (; ; ++_First1)
+		{	// loop until match or end of a sequence
+		_FwdItHaystack _Mid1 = _First1;
+		for (_FwdItPat _Mid2 = _First2; ; ++_Mid1, (void)++_Mid2)
+			{
+			if (_Mid2 == _Last2)
+				{
+				return {_First1, _Mid1};
+				}
+
+			if (_Mid1 == _Last1)
+				{
+				return {_Last1, _Last1};
+				}
+
+			if (!_Eq(*_Mid1, *_Mid2))
+				{
+				break;
+				}
+			}
+		}
+	}
+
+template<class _FwdItHaystack,
+	class _FwdItPat,
+	class _Pred_eq> inline
+	pair<_FwdItHaystack, _FwdItHaystack> _Search_pair_unchecked(_FwdItHaystack _First1, _FwdItHaystack _Last1,
+		_FwdItPat _First2, _FwdItPat _Last2, _Pred_eq& _Eq,
+		random_access_iterator_tag, random_access_iterator_tag)
+	{	// find first [_First2, _Last2) satisfying _Eq, random-access iterators
+	_Iter_diff_t<_FwdItHaystack> _Count1 = _Last1 - _First1;
+	_Iter_diff_t<_FwdItPat> _Count2 = _Last2 - _First2;
+
+	for (; _Count2 <= _Count1; ++_First1, (void)--_Count1)
+		{	// room for match, try it
+		_FwdItHaystack _Mid1 = _First1;
+		for (_FwdItPat _Mid2 = _First2; ; ++_Mid1, (void)++_Mid2)
+			{
+			if (_Mid2 == _Last2)
+				{
+				return {_First1, _Mid1};
+				}
+
+			if (!_Eq(*_Mid1, *_Mid2))
+				{
+				break;
+				}
+			}
+		}
+
+	return {_Last1, _Last1};
+	}
+
+template<class _FwdItPat,
+	class _Pred_eq = equal_to<>>
+	class default_searcher
+	{	// functor to search haystacks for needles
+public:
+	default_searcher(_FwdItPat _First, _FwdItPat _Last, _Pred_eq _Eq = _Pred_eq())
+		: _Data{_One_then_variadic_args_t{}, _STD move(_Eq), pair<_FwdItPat, _FwdItPat>{_First, _Last}}
+		{	// construct a default_searcher
+		const auto& _Pat = _Data._Get_second();
+		_DEBUG_RANGE(_Pat.first, _Pat.second);
+		(void)_Pat;
+		}
+
+	template<class _FwdItHaystack>
+		pair<_FwdItHaystack, _FwdItHaystack> operator()(_FwdItHaystack _First, _FwdItHaystack _Last) const
+		{	// search [_First, _Last) for the searcher's pattern
+		_DEBUG_RANGE(_First, _Last);
+		const auto& _Eq = _Data._Get_first();
+		const auto& _Pat = _Data._Get_second();
+		const auto _UPat_first = _Unchecked(_Pat.first);
+		const auto _UFirst = _Unchecked(_First);
+		return (_Rechecked_both(_First, _Last,
+			_Search_pair_unchecked(_UFirst, _Unchecked(_Last),
+			_UPat_first, _Unchecked(_Pat.second), _Eq,
+			_Iter_cat_t<_FwdItHaystack>{}, _Iter_cat_t<_FwdItPat>{})));
+		}
+
+private:
+	_Compressed_pair<_Pred_eq, pair<_FwdItPat, _FwdItPat>> _Data;
+	};
+
+
+		// STRUCT TEMPLATE _Boyer_moore_hash_delta_1_table
+template<class _RanItPat,
+	class _Hash_ty,
+	class _Pred_eq>
+	struct _Boyer_moore_hash_delta_1_table
+	{	// stores the Boyer-Moore delta_1 table using a hash table
+	using _Value_t = _Iter_value_t<_RanItPat>;
+	using _Diff = _Iter_diff_t<_RanItPat>;
+
+	_Boyer_moore_hash_delta_1_table(_RanItPat _Pat_first_arg, _Unchecked_t<_RanItPat> _UPat_first,
+			const _Diff _Pat_size_arg, _Hash_ty&& _Hash_fn, _Pred_eq&& _Eq)
+		: _Pat_first(_Pat_first_arg),
+		_Pat_size(_Pat_size_arg),
+		_Map(0, _STD move(_Hash_fn), _STD move(_Eq))
+		{	// initialize a delta_1 hash table
+		for (_Diff _Idx = 1; _Idx <= _Pat_size; ++_Idx, (void)++_UPat_first)
+			{
+			_Map.insert_or_assign(*_UPat_first, _Pat_size - _Idx);
+			}
+		}
+
+	_Diff _Lookup(const _Value_t& _Value) const
+		{	// lookup the "character" _Value in the table, returning the maximum shift if found
+		const auto _Iter = _Map.find(_Value);
+		if (_Iter == _Map.end())
+			{
+			return (_Pat_size);
+			}
+
+		return (_Iter->second);
+		}
+
+	_Pred_eq _Get_eq() const
+		{	// return the comparison predicate
+		return (_Map.key_eq());
+		}
+
+	const _RanItPat _Pat_first;
+	const _Diff _Pat_size;
+
+private:
+	unordered_map<_Value_t, _Diff, _Hash_ty, _Pred_eq> _Map;
+	};
+
+
+		// STRUCT TEMPLATE _Boyer_moore_flat_delta_1_table
+template<class _RanItPat,
+	_Iter_diff_t<_RanItPat> _Limit>
+	struct _Boyer_moore_flat_delta_1_table
+	{	// stores the Boyer-Moore delta_1 table using a plain array lookup
+	using _Value_t = _Iter_value_t<_RanItPat>;
+	using _Diff = _Iter_diff_t<_RanItPat>;
+
+	_Boyer_moore_flat_delta_1_table(_RanItPat _Pat_first_arg, _Unchecked_t<_RanItPat> _UPat_first,
+		const _Diff _Pat_size_arg, _Unused_parameter, _Unused_parameter)
+		: _Pat_first(_Pat_first_arg),
+		_Pat_size(_Pat_size_arg)
+		{	// initialize a delta_1 flat table
+		_STD fill(_STD begin(_Table), _STD end(_Table), _Pat_size);
+		for (_Diff _Idx = 1; _Idx <= _Pat_size; ++_Idx, (void)++_UPat_first)
+			{
+			_Table[_Unsigned_value(*_UPat_first)] = _Pat_size - _Idx;
+			}
+		}
+
+	_Diff _Lookup(const _Value_t _Value) const
+		{	// lookup the "character" _Value in the table
+		const auto _UValue = _Unsigned_value(_Value);
+		if (_UValue < _STD size(_Table))
+			{
+			return (_Table[_UValue]);
+			}
+
+		return (_Pat_size);
+		}
+
+	equal_to<> _Get_eq() const
+		{	// return an equality comparer
+		return {};
+		}
+
+	const _RanItPat _Pat_first;
+	const _Diff _Pat_size;
+
+private:
+	_Diff _Table[_Limit];
+	};
+
+
+		// FUNCTION TEMPLATE _Build_boyer_moore_delta_2_table
+template<class _RanItPat,
+	class _Pred_eq> inline
+	void _Build_boyer_moore_delta_2_table(
+		_Iter_diff_t<_RanItPat> * _Shifts,
+		const _RanItPat _Pat_first, const _Iter_diff_t<_RanItPat> _Pat_size,
+		_Pred_eq& _Eq)
+	{	// builds Boyer-Moore's delta_2 table from a pattern [_Pat_first, _Pat_first + _Pat_size)
+		// pre: _Shifts is a pointer to _Pat_size _Iter_diff_t<_RanIt>s
+	if (_Pat_size == 0)
+		{
+		return;
+		}
+
+	using _Diff = _Iter_diff_t<_RanItPat>;
+	unique_ptr<_Diff[]> _Suffix_fn{::new _Diff[_Pat_size]};
+	for (_Diff _Idx = 0; _Idx < _Pat_size; ++_Idx)
+		{
+		_Shifts[_Idx] = 2 * _Pat_size - _Idx - 1;
+		}
+
+	_Diff _Suffix = _Pat_size;
+	for (_Diff _Idx = _Pat_size; _Idx > 0; --_Idx, (void)--_Suffix)
+		{
+		_Suffix_fn[_Idx - 1] = _Suffix;
+		while (_Suffix < _Pat_size && !_Eq(_Pat_first[_Idx - 1], _Pat_first[_Suffix]))
+			{
+			_Shifts[_Suffix] = _Min_value(_Shifts[_Suffix], _Pat_size - _Idx);
+			_Suffix = _Suffix_fn[_Suffix];
+			}
+		}
+
+	for (_Diff _Idx = 0; _Idx <= _Suffix; ++_Idx)
+		{
+		_Shifts[_Idx] = _Min_value(_Shifts[_Idx], _Pat_size + _Suffix - _Idx);
+		}
+	}
+
+
+		// FUNCTION TEMPLATE _Boyer_moore_search
+template<class _Delta1_t,
+	class _RanItHaystack> inline
+	pair<_RanItHaystack, _RanItHaystack> _Boyer_moore_search(
+		const _Delta1_t& _Delta1, typename _Delta1_t::_Diff * _Delta2,
+		_RanItHaystack _First, _RanItHaystack _Last)
+	{	// run the loop of the Boyer-Moore string search algorithm
+	static_assert(is_same<typename _Delta1_t::_Value_t, _Iter_value_t<_RanItHaystack>>::value,
+		"boyer_moore_searcher requires matching iterator value types");
+	using _Diff = typename _Delta1_t::_Diff;
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _Pat_size = _Delta1._Pat_size;
+#if _ITERATOR_DEBUG_LEVEL != 0
+	_Delta1._Pat_first + _Pat_size; // effectively _DEBUG_RANGE
+#endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+	if (_Pat_size == 0)
+		{
+		return {_First, _First};
+		}
+
+	const auto _UPat_first = _Unchecked(_Delta1._Pat_first);
+	const auto _Eq = _Delta1._Get_eq();
+	_Diff _Shift = _Pat_size - 1;
+	while (_Shift <= _ULast - _UFirst)
+		{
+		_UFirst += _Shift;
+		_Shift = _Delta1._Lookup(*_UFirst);
+		if (_Shift == 0)
+			{	// that is, *_UFirst == "_Pat.back()"
+			_Diff _Idx = _Pat_size - 1;
+			do
+				{
+				if (_Idx == 0)
+					{
+					return {_Rechecked(_First, _UFirst), _Rechecked(_Last, _UFirst + _Pat_size)};
+					}
+
+				--_Idx;
+				--_UFirst;
+				}
+			while (_Eq(*_UFirst, _UPat_first[_Idx]));
+			_Shift = _Max_value(_Delta1._Lookup(*_UFirst), _Delta2[_Idx]);
+			}
+		}
+
+	return {_Rechecked(_First, _ULast), _Rechecked(_Last, _ULast)};
+	}
+
+
+		// FUNCTION TEMPLATE _Boyer_moore_horspool_search
+template<class _Delta1_t,
+	class _RanItHaystack> inline
+	pair<_RanItHaystack, _RanItHaystack> _Boyer_moore_horspool_search(
+		const _Delta1_t& _Delta1,
+		_RanItHaystack _First, _RanItHaystack _Last)
+	{	// run the loop of the Boyer-Moore-Horspool string search algorithm
+	static_assert(is_same<typename _Delta1_t::_Value_t, _Iter_value_t<_RanItHaystack>>::value,
+		"boyer_moore_horspool_searcher requires matching iterator value types");
+	using _Diff = typename _Delta1_t::_Diff;
+	_DEBUG_RANGE(_First, _Last);
+	const auto _Pat_size = _Delta1._Pat_size;
+#if _ITERATOR_DEBUG_LEVEL != 0
+	_Delta1._Pat_first + _Pat_size; // effectively _DEBUG_RANGE
+#endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+	if (_Pat_size == 0)
+		{
+		return {_First, _First};
+		}
+
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UPat_first = _Unchecked(_Delta1._Pat_first);
+	const auto _Eq = _Delta1._Get_eq();
+	_Diff _Shift = _Pat_size - 1;
+	while (_Shift <= _ULast - _UFirst)
+		{
+		_UFirst += _Shift;
+		_Shift = _Delta1._Lookup(*_UFirst);
+		if (_Shift == 0)
+			{	// that is, *_UFirst == "_Pat.back()"
+			const auto _Candidate = _UFirst - (_Pat_size - 1);
+			if (_Equal_unchecked(_UPat_first, _UPat_first + (_Pat_size - 1), _Candidate, _Eq))
+				{
+				return {_Rechecked(_First, _Candidate), _Rechecked(_Last, _Candidate + _Pat_size)};
+				}
+
+			_Shift = 1;
+			}
+		}
+
+	return {_Rechecked(_First, _ULast), _Rechecked(_Last, _ULast)};
+	}
+
+
+		// STRUCT AND ALIAS TEMPLATES _Boyer_moore_traits
+template<class _RanItPat,
+	class _Hash_ty,
+	class _Pred_eq,
+	class _Delta1_t>
+	struct _Single_delta1_type_boyer_moore_traits
+	{
+	using _Diff = _Iter_diff_t<_RanItPat>;
+
+	// uses buffers of the form {
+	// _Atomic_counter_t _Ref_count
+	// _Delta1_t _Delta1
+	// _Diff _Delta2[_Pattern_size] // not used for Boyer-Moore-Horspool
+	// }
+
+	template<bool _Build_delta2>
+		static void * _Build_boyer_moore(_RanItPat _First, _RanItPat _Last,
+			_Hash_ty _Hash_fn, _Pred_eq _Eq)
+		{	// builds data tables for the Boyer-Moore string search algorithm
+		_DEBUG_RANGE(_First, _Last);
+		const auto _UFirst = _Unchecked(_First);
+		const auto _Pat_size = _Unchecked(_Last) - _UFirst;
+
+		size_t _Buf_size = 0;
+		_Add_alloc_size<_Atomic_counter_t>(_Buf_size);
+		_Add_alloc_size<_Delta1_t>(_Buf_size);
+		if (_Build_delta2)
+			{
+			_Add_alloc_size<_Diff>(_Buf_size, _Pat_size);
+			}
+
+		unique_ptr<void, _Global_delete> _Buf_bytes(::operator new(_Buf_size));
+		void * _Buf = _Buf_bytes.get();
+		*_Decode_aligned_block<_Atomic_counter_t>(_Buf) = 1;
+		void * const _Delta1 = _Decode_aligned_block<_Delta1_t>(_Buf);
+		if (_Build_delta2)
+			{
+			_Build_boyer_moore_delta_2_table(_Decode_aligned_block<_Diff>(_Buf, _Pat_size),
+				_UFirst, _Pat_size, _Eq);
+			}
+
+		::new (_Delta1) _Delta1_t(_First, _UFirst, _Pat_size, _STD move(_Hash_fn), _STD move(_Eq));
+		return (_Buf_bytes.release());
+		}
+
+	template<class _RanItHaystack>
+		static pair<_RanItHaystack, _RanItHaystack> _Use_boyer_moore(void * _Data,
+			_RanItHaystack _First, _RanItHaystack _Last)
+		{	// decodes data tables for the Boyer-Moore string search algorithm
+		(void)_Decode_aligned_block<_Atomic_counter_t>(_Data);
+		const auto _Delta1 = _Decode_aligned_block<_Delta1_t>(_Data);
+		const auto _Delta2 = _Decode_aligned_block<_Diff>(_Data, _Delta1->_Pat_size);
+		return (_Boyer_moore_search(*_Delta1, _Delta2, _First, _Last));
+		}
+
+	template<class _RanItHaystack>
+		static pair<_RanItHaystack, _RanItHaystack> _Use_boyer_moore_horspool(void * _Data,
+			_RanItHaystack _First, _RanItHaystack _Last)
+		{	// decodes data tables for the Boyer-Moore string search algorithm
+		(void)_Decode_aligned_block<_Atomic_counter_t>(_Data);
+		const auto _Delta1 = _Decode_aligned_block<_Delta1_t>(_Data);
+		return (_Boyer_moore_horspool_search(*_Delta1, _First, _Last));
+		}
+
+	static void _Destroy(void * const _Base) _NOEXCEPT
+		{	// destroys data tables for either the Boyer-Moore or Boyer-Moore-Horspool
+			// string search algorithms
+		void * _Data = _Base;
+		(void)_Decode_aligned_block<_Atomic_counter_t>(_Data);
+		_Decode_aligned_block<_Delta1_t>(_Data)->~_Delta1_t();
+		::operator delete(_Base);
+		}
+	};
+
+template<class _RanItPat,
+	class _Hash_ty,
+	class _Pred_eq>
+	using _Boyer_moore_traits_char_mode = _Single_delta1_type_boyer_moore_traits<_RanItPat, _Hash_ty, _Pred_eq,
+			_Boyer_moore_flat_delta_1_table<_RanItPat, 256>>;
+
+template<class _RanItPat>
+	struct _Boyer_moore_traits_wchar_t_mode
+	{
+	using _Value_t = _Iter_value_t<_RanItPat>;
+	using _Diff = _Iter_diff_t<_RanItPat>;
+	using _Big_table_t = _Boyer_moore_flat_delta_1_table<_RanItPat, 65536>;
+	using _Small_table_t = _Boyer_moore_flat_delta_1_table<_RanItPat, 256>;
+
+	// uses buffers of the form {
+	// _Atomic_counter_t _Ref_count
+	// bool _Use_large_table // true if anything in the pattern is > 255
+	// conditional_t<_Use_large_table, _Big_table_t, _Small_table_t> _Delta1
+	// _Diff _Delta2[_Pattern_size] // not used for Boyer-Moore-Horspool
+	// }
+
+	template<bool _Build_delta2>
+		static void * _Build_boyer_moore(_RanItPat _First, _RanItPat _Last,
+			_Unused_parameter, _Unused_parameter)
+		{	// builds data tables for the Boyer-Moore string search algorithm
+		_DEBUG_RANGE(_First, _Last);
+		const auto _UFirst = _Unchecked(_First);
+		const auto _ULast = _Unchecked(_Last);
+		const auto _Pat_size = _ULast - _UFirst;
+
+		size_t _Buf_size = 0;
+		_Add_alloc_size<_Atomic_counter_t>(_Buf_size);
+		bool _Use_large_table = false;
+
+		for (auto _Temp = _UFirst; _Temp != _ULast; ++_Temp)
+			{
+			if (_Unsigned_value(*_Temp) > 255)
+				{
+				_Use_large_table = true;
+				break;
+				}
+			}
+
+		_Add_alloc_size<bool>(_Buf_size);
+		if (_Use_large_table)
+			{
+			_Add_alloc_size<_Big_table_t>(_Buf_size);
+			}
+		else
+			{
+			_Add_alloc_size<_Small_table_t>(_Buf_size);
+			}
+
+		if (_Build_delta2)
+			{
+			_Add_alloc_size<_Diff>(_Buf_size, _Pat_size);
+			}
+
+		unique_ptr<void, _Global_delete> _Buf_bytes(::operator new(_Buf_size));
+		void * _Buf = _Buf_bytes.get();
+		*_Decode_aligned_block<_Atomic_counter_t>(_Buf) = 1;
+		*_Decode_aligned_block<bool>(_Buf) = _Use_large_table;
+		if (_Use_large_table)
+			{
+			using _Delta1_t = _Big_table_t;
+			::new (static_cast<void *>(_Decode_aligned_block<_Delta1_t>(_Buf)))
+				_Delta1_t(_First, _UFirst, _Pat_size, {}, {});
+			}
+		else
+			{
+			using _Delta1_t = _Small_table_t;
+			::new (static_cast<void *>(_Decode_aligned_block<_Delta1_t>(_Buf)))
+				_Delta1_t(_First, _UFirst, _Pat_size, {}, {});
+			}
+
+		if (_Build_delta2)
+			{
+			equal_to<> _Eq;
+			_Build_boyer_moore_delta_2_table(_Decode_aligned_block<_Diff>(_Buf, _Pat_size),
+				_UFirst, _Pat_size, _Eq);
+			}
+
+		return (_Buf_bytes.release());
+		}
+
+	template<class _RanItHaystack>
+		static pair<_RanItHaystack, _RanItHaystack> _Use_boyer_moore(void * _Data,
+			_RanItHaystack _First, _RanItHaystack _Last)
+		{	// decodes data tables for the Boyer-Moore string search algorithm
+		(void)_Decode_aligned_block<_Atomic_counter_t>(_Data);
+		if (*_Decode_aligned_block<bool>(_Data))
+			{
+			const auto _Delta1 = _Decode_aligned_block<_Big_table_t>(_Data);
+			const auto _Delta2 = _Decode_aligned_block<_Diff>(_Data, _Delta1->_Pat_size);
+			return (_Boyer_moore_search(*_Delta1, _Delta2, _First, _Last));
+			}
+		else
+			{
+			const auto _Delta1 = _Decode_aligned_block<_Small_table_t>(_Data);
+			const auto _Delta2 = _Decode_aligned_block<_Diff>(_Data, _Delta1->_Pat_size);
+			return (_Boyer_moore_search(*_Delta1, _Delta2, _First, _Last));
+			}
+		}
+
+	template<class _RanItHaystack>
+		static pair<_RanItHaystack, _RanItHaystack> _Use_boyer_moore_horspool(void * _Data,
+			_RanItHaystack _First, _RanItHaystack _Last)
+		{	// decodes data tables for the Boyer-Moore string search algorithm
+		(void)_Decode_aligned_block<_Atomic_counter_t>(_Data);
+		if (*_Decode_aligned_block<bool>(_Data))
+			{
+			const auto _Delta1 = _Decode_aligned_block<_Big_table_t>(_Data);
+			return (_Boyer_moore_horspool_search(*_Delta1, _First, _Last));
+			}
+		else
+			{
+			const auto _Delta1 = _Decode_aligned_block<_Small_table_t>(_Data);
+			return (_Boyer_moore_horspool_search(*_Delta1, _First, _Last));
+			}
+		}
+
+	static void _Destroy(void * const _Base) _NOEXCEPT
+		{	// destroys data tables for either the Boyer-Moore or Boyer-Moore-Horspool
+			// string search algorithms
+		void * _Data = _Base;
+		(void)_Decode_aligned_block<_Atomic_counter_t>(_Data);
+		if (*_Decode_aligned_block<bool>(_Data))
+			{
+			const auto _Delta1 = _Decode_aligned_block<_Big_table_t>(_Data);
+			_Delta1->~_Big_table_t();
+			}
+		else
+			{
+			const auto _Delta1 = _Decode_aligned_block<_Small_table_t>(_Data);
+			_Delta1->~_Small_table_t();
+			}
+		static_assert(is_trivially_destructible<_Diff>::value, "allows Boyer-Moore and Boyer-Moore-Horspool to "
+			"share cleanup functions");
+		::operator delete(_Base);
+		}
+	};
+
+template<class _RanItPat,
+	class _Hash_ty,
+	class _Pred_eq>
+	using _Boyer_moore_traits_general_mode = _Single_delta1_type_boyer_moore_traits<_RanItPat, _Hash_ty, _Pred_eq,
+			_Boyer_moore_hash_delta_1_table<_RanItPat, _Hash_ty, _Pred_eq>>;
+
+template<class _RanItPat,
+	class _Hash_ty,
+	class _Pred_eq,
+	class _Value_t = _Iter_value_t<_RanItPat>>
+	using _Boyer_moore_traits = conditional_t<is_integral<_Value_t>::value && sizeof(_Value_t) <= 2
+		&& (is_same<equal_to<>, _Pred_eq>::value || is_same<equal_to<_Value_t>, _Pred_eq>::value),
+			conditional_t<sizeof(_Value_t) == 1, _Boyer_moore_traits_char_mode<_RanItPat, _Hash_ty, _Pred_eq>,
+			_Boyer_moore_traits_wchar_t_mode<_RanItPat>>,
+		_Boyer_moore_traits_general_mode<_RanItPat, _Hash_ty, _Pred_eq>>;
+
+
+		// CLASS TEMPLATE boyer_moore_searcher
+template<class _RanItPat,
+	class _Hash_ty = hash<_Iter_value_t<_RanItPat>>,
+	class _Pred_eq = equal_to<>>
+	class boyer_moore_searcher
+	{	// an implementation of the Boyer-Moore string search algorithm
+public:
+	boyer_moore_searcher(const _RanItPat _First, const _RanItPat _Last,
+			_Hash_ty _Hash_fn = _Hash_ty(), _Pred_eq _Eq = _Pred_eq())
+		: _Data(_Traits::template _Build_boyer_moore<true>(_First, _Last,
+			_STD move(_Hash_fn), _STD move(_Eq)))
+		{	// preprocess a pattern for use with the Boyer-Moore string search algorithm
+		}
+
+	boyer_moore_searcher(const boyer_moore_searcher& _Other) _NOEXCEPT // Strengthened
+		: _Data(_Other)
+		{	// copy an instance of the Boyer-Moore string search algorithm
+		_MT_INCR(*static_cast<_Atomic_counter_t *>(_Data));
+		}
+
+	~boyer_moore_searcher() _NOEXCEPT
+		{	// destroy this instance
+		if (_MT_DECR(*static_cast<_Atomic_counter_t *>(_Data)) == 0)
+			{
+			_Traits::_Destroy(_Data);
+			}
+		}
+
+	boyer_moore_searcher& operator=(const boyer_moore_searcher& _Other) _NOEXCEPT // Strengthened
+		{	// assign over this instance
+		boyer_moore_searcher _Cpy(_Other);
+		swap(_Data, _Other._Data);
+		}
+
+	template<class _RanItHaystack>
+		pair<_RanItHaystack, _RanItHaystack> operator()(
+			const _RanItHaystack _First, const _RanItHaystack _Last) const
+		{	// search for the preprocessed pattern in [_First, _Last)
+		return (_Traits::_Use_boyer_moore(_Data, _First, _Last));
+		}
+private:
+	using _Traits = _Boyer_moore_traits<_RanItPat, _Hash_ty, _Pred_eq>;
+	void * _Data;
+	};
+
+
+		// CLASS TEMPLATE boyer_moore_horspool_searcher
+template<class _RanItPat,
+	class _Hash_ty = hash<_Iter_value_t<_RanItPat>>,
+	class _Pred_eq = equal_to<>>
+	class boyer_moore_horspool_searcher
+	{	// an implementation of the Boyer-Moore-Horspool string search algorithm
+		// (equivalent to Boyer-Moore without the second table)
+public:
+	boyer_moore_horspool_searcher(const _RanItPat _First, const _RanItPat _Last,
+			_Hash_ty _Hash_fn = _Hash_ty(), _Pred_eq _Eq = _Pred_eq())
+		: _Data(_Traits::template _Build_boyer_moore<false>(_First, _Last,
+			_STD move(_Hash_fn), _STD move(_Eq)))
+		{	// preprocess a pattern for use with the Boyer-Moore-Horspool string search algorithm
+		}
+
+	boyer_moore_horspool_searcher(
+			const boyer_moore_horspool_searcher& _Other) _NOEXCEPT // Strengthened
+		: _Data(_Other)
+		{	// copy an instance of the Boyer-Moore-Horspool string search algorithm
+		_MT_INCR(*static_cast<_Atomic_counter_t *>(_Data));
+		}
+
+	~boyer_moore_horspool_searcher() _NOEXCEPT
+		{
+		if (_MT_DECR(*static_cast<_Atomic_counter_t *>(_Data)) == 0)
+			{
+			_Traits::_Destroy(_Data);
+			}
+		}
+
+	boyer_moore_horspool_searcher& operator=(
+			const boyer_moore_horspool_searcher& _Other) _NOEXCEPT // Strengthened
+		{	// assign over this instance
+		boyer_moore_horspool_searcher _Cpy(_Other);
+		swap(_Data, _Other._Data);
+		}
+
+	template<class _RanItHaystack>
+		pair<_RanItHaystack, _RanItHaystack> operator()(
+			const _RanItHaystack _First, const _RanItHaystack _Last) const
+		{	// search for the preprocessed pattern in [_First, _Last)
+		return (_Traits::_Use_boyer_moore_horspool(_Data, _First, _Last));
+		}
+private:
+	using _Traits = _Boyer_moore_traits<_RanItPat, _Hash_ty, _Pred_eq>;
+	void * _Data;
+	};
+#endif /* _HAS_CXX17 */
+
+_STD_END
+
  #pragma pop_macro("new")
  #pragma warning(pop)
  #pragma pack(pop)

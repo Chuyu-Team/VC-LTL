@@ -193,20 +193,20 @@ public:
 	_Myt& __CLR_OR_THIS_CALL operator=(const _Myt&) = delete;
 	};
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE basic_ios<char,
+template class _CRTIMP2_PURE_IMPORT basic_ios<char,
 	char_traits<char> >;
-template class _CRTIMP2_PURE basic_ios<wchar_t,
+template class _CRTIMP2_PURE_IMPORT basic_ios<wchar_t,
 	char_traits<wchar_t> >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
-template class _CRTIMP2_PURE basic_ios<unsigned short,
+template class _CRTIMP2_PURE_IMPORT basic_ios<unsigned short,
 	char_traits<unsigned short> >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 
 		// MANIPULATORS
 inline ios_base& __CLRCALL_OR_CDECL boolalpha(ios_base& _Iosbase)

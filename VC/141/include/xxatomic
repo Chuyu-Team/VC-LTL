@@ -67,94 +67,98 @@ static_assert(_ISIZE == sizeof (_ITYPE),
 		// STRUCT _ATOMIC_ITYPE
 typedef struct _ATOMIC_ITYPE
 	{	// struct for atomic operations on type _ITYPE
-	_ITYPE operator=(_ITYPE) volatile _NOEXCEPT;
-	_ITYPE operator=(_ITYPE) _NOEXCEPT;
+	_ITYPE operator=(_ITYPE) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator=(_ITYPE) throw(); // TRANSITION, VSO#174686
 
-	bool is_lock_free() const volatile _NOEXCEPT;
-	bool is_lock_free() const _NOEXCEPT;
+#if _HAS_CXX17
+	static constexpr bool is_always_lock_free = true;
+#endif /* _HAS_CXX17 */
+
+	bool is_lock_free() const volatile throw(); // TRANSITION, VSO#174686
+	bool is_lock_free() const throw(); // TRANSITION, VSO#174686
 	void store(_ITYPE, memory_order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
 	void store(_ITYPE, memory_order = memory_order_seq_cst)
-		_NOEXCEPT;
+		throw(); // TRANSITION, VSO#174686
 	_ITYPE load(memory_order = memory_order_seq_cst)
-		const volatile _NOEXCEPT;
+		const volatile throw(); // TRANSITION, VSO#174686
 	_ITYPE load(memory_order = memory_order_seq_cst)
-		const _NOEXCEPT;
+		const throw(); // TRANSITION, VSO#174686
 #ifndef _ATOMIC_IS_ADDRESS_TYPE
-	operator _ITYPE() const volatile _NOEXCEPT;
-	operator _ITYPE() const _NOEXCEPT;
+	operator _ITYPE() const volatile throw(); // TRANSITION, VSO#174686
+	operator _ITYPE() const throw(); // TRANSITION, VSO#174686
 #endif /* _ATOMIC_IS_ADDRESS_TYPE */
 	_ITYPE exchange(_ITYPE,
-		memory_order = memory_order_seq_cst) volatile _NOEXCEPT;
+		memory_order = memory_order_seq_cst) volatile throw(); // TRANSITION, VSO#174686
 	_ITYPE exchange(_ITYPE,
-		memory_order = memory_order_seq_cst) _NOEXCEPT;
+		memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_weak(_ITYPE&, _ITYPE,
-		memory_order, memory_order) volatile _NOEXCEPT;
+		memory_order, memory_order) volatile throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_weak(_ITYPE&, _ITYPE,
-		memory_order, memory_order) _NOEXCEPT;
+		memory_order, memory_order) throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_strong(_ITYPE&, _ITYPE,
-		memory_order, memory_order) volatile _NOEXCEPT;
+		memory_order, memory_order) volatile throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_strong(_ITYPE&, _ITYPE,
-		memory_order, memory_order) _NOEXCEPT;
+		memory_order, memory_order) throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_weak(_ITYPE&, _ITYPE,
-		memory_order = memory_order_seq_cst) volatile _NOEXCEPT;
+		memory_order = memory_order_seq_cst) volatile throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_weak(_ITYPE&, _ITYPE,
-		memory_order = memory_order_seq_cst) _NOEXCEPT;
+		memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_strong(_ITYPE&, _ITYPE,
-		memory_order = memory_order_seq_cst) volatile _NOEXCEPT;
+		memory_order = memory_order_seq_cst) volatile throw(); // TRANSITION, VSO#174686
 	bool compare_exchange_strong(_ITYPE&, _ITYPE,
-		memory_order = memory_order_seq_cst) _NOEXCEPT;
+		memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 
  #ifdef _ATOMIC_HAS_ARITHMETIC_OPS
-	_ITYPE operator++(int) volatile _NOEXCEPT;
-	_ITYPE operator++(int) _NOEXCEPT;
-	_ITYPE operator--(int) volatile _NOEXCEPT;
-	_ITYPE operator--(int) _NOEXCEPT;
-	_ITYPE operator++() volatile _NOEXCEPT;
-	_ITYPE operator++() _NOEXCEPT;
-	_ITYPE operator--() volatile _NOEXCEPT;
-	_ITYPE operator--() _NOEXCEPT;
-	_ITYPE operator+=(_ITYPE) volatile _NOEXCEPT;
-	_ITYPE operator+=(_ITYPE) _NOEXCEPT;
-	_ITYPE operator-=(_ITYPE) volatile _NOEXCEPT;
-	_ITYPE operator-=(_ITYPE) _NOEXCEPT;
-	_ITYPE operator&=(_ITYPE) volatile _NOEXCEPT;
-	_ITYPE operator&=(_ITYPE) _NOEXCEPT;
-	_ITYPE operator|=(_ITYPE) volatile _NOEXCEPT;
-	_ITYPE operator|=(_ITYPE) _NOEXCEPT;
-	_ITYPE operator^=(_ITYPE) volatile _NOEXCEPT;
-	_ITYPE operator^=(_ITYPE) _NOEXCEPT;
+	_ITYPE operator++(int) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator++(int) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator--(int) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator--(int) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator++() volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator++() throw(); // TRANSITION, VSO#174686
+	_ITYPE operator--() volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator--() throw(); // TRANSITION, VSO#174686
+	_ITYPE operator+=(_ITYPE) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator+=(_ITYPE) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator-=(_ITYPE) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator-=(_ITYPE) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator&=(_ITYPE) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator&=(_ITYPE) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator|=(_ITYPE) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator|=(_ITYPE) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator^=(_ITYPE) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator^=(_ITYPE) throw(); // TRANSITION, VSO#174686
 
 	_ITYPE fetch_add(_ITYPE, memory_order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	_ITYPE fetch_add(_ITYPE, memory_order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE fetch_add(_ITYPE, memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_sub(_ITYPE, memory_order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	_ITYPE fetch_sub(_ITYPE, memory_order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE fetch_sub(_ITYPE, memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_and(_ITYPE, memory_order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	_ITYPE fetch_and(_ITYPE, memory_order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE fetch_and(_ITYPE, memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_or(_ITYPE, memory_order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	_ITYPE fetch_or(_ITYPE, memory_order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE fetch_or(_ITYPE, memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_xor(_ITYPE, memory_order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	_ITYPE fetch_xor(_ITYPE, memory_order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE fetch_xor(_ITYPE, memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
  #endif /* _ATOMIC_HAS_ARITHMETIC_OPS */
 
  #ifdef _ATOMIC_IS_ADDRESS_TYPE
 	_ITYPE fetch_add(ptrdiff_t,
-		memory_order = memory_order_seq_cst) volatile _NOEXCEPT;
+		memory_order = memory_order_seq_cst) volatile throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_add(ptrdiff_t,
-		memory_order = memory_order_seq_cst) _NOEXCEPT;
+		memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_sub(ptrdiff_t,
-		memory_order = memory_order_seq_cst) volatile _NOEXCEPT;
+		memory_order = memory_order_seq_cst) volatile throw(); // TRANSITION, VSO#174686
 	_ITYPE fetch_sub(ptrdiff_t,
-		memory_order = memory_order_seq_cst) _NOEXCEPT;
-	_ITYPE operator+=(ptrdiff_t) volatile _NOEXCEPT;
-	_ITYPE operator+=(ptrdiff_t) _NOEXCEPT;
-	_ITYPE operator-=(ptrdiff_t) volatile _NOEXCEPT;
-	_ITYPE operator-=(ptrdiff_t) _NOEXCEPT;
+		memory_order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator+=(ptrdiff_t) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator+=(ptrdiff_t) throw(); // TRANSITION, VSO#174686
+	_ITYPE operator-=(ptrdiff_t) volatile throw(); // TRANSITION, VSO#174686
+	_ITYPE operator-=(ptrdiff_t) throw(); // TRANSITION, VSO#174686
  #endif /* _ATOMIC_IS_ADDRESS_TYPE */
 
 
@@ -180,19 +184,22 @@ template<>
 		: _ATOMIC_ITYPE
 	{	/* template specialization that manages
 			values of _ITYPE atomically */
+	using value_type = _ITYPE;
+	using difference_type = _ITYPE;
+
 	atomic() _NOEXCEPT = default;
 
-	constexpr atomic(_ITYPE _Val) _NOEXCEPT
+	constexpr atomic(_ITYPE _Val) throw() // TRANSITION, VSO#174686
 		: _ATOMIC_ITYPE{(_ATOMIC_UINT)_Val}
 		{	// construct from _Val, initialization is not atomic
 		}
 
-	_ITYPE operator=(_ITYPE _Val) volatile _NOEXCEPT
+	_ITYPE operator=(_ITYPE _Val) volatile throw() // TRANSITION, VSO#174686
 		{	// assign from _Val
 		return (_ATOMIC_ITYPE::operator=(_Val));
 		}
 
-	_ITYPE operator=(_ITYPE _Val) _NOEXCEPT
+	_ITYPE operator=(_ITYPE _Val) throw() // TRANSITION, VSO#174686
 		{	// assign from _Val
 		return (_ATOMIC_ITYPE::operator=(_Val));
 		}
@@ -209,72 +216,75 @@ template<class _Ty>
 	struct atomic<_Ty *>
 		: _Atomic_address
 	{	// template that manages values of _Ty * atomically
+	using value_type = _Ty *;
+	using difference_type = ptrdiff_t;
+
 	atomic(const atomic&) = delete;
 	atomic& operator=(const atomic&) = delete;
 	atomic& operator=(const atomic&) volatile = delete;
 
 	atomic() _NOEXCEPT = default;
 
-	constexpr atomic(_Ty *_Right) _NOEXCEPT
+	constexpr atomic(_Ty *_Right) throw() // TRANSITION, VSO#174686
 		: _Atomic_address{(_ATOMIC_UINT)_Right}
 		{	// construct from _Right, initialization is not atomic
 		}
 
-	_Ty *operator=(_Ty *_Right) volatile _NOEXCEPT
+	_Ty *operator=(_Ty *_Right) volatile throw() // TRANSITION, VSO#174686
 		{	// assign from _Right
 		return (reinterpret_cast<_Ty *>(
 			_Atomic_address::operator=((void *)_Right)));
 		}
 
-	_Ty *operator=(_Ty *_Right) _NOEXCEPT
+	_Ty *operator=(_Ty *_Right) throw() // TRANSITION, VSO#174686
 		{	// assign from _Right
 		return (reinterpret_cast<_Ty *>(
 			_Atomic_address::operator=((void *)_Right)));
 		}
 
 	void store(_Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// store _Value into *this
 		_Atomic_address::store((void *)_Value, _Order);
 		}
 
 	void store(_Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// store _Value into *this
 		_Atomic_address::store((void *)_Value, _Order);
 		}
 
 	_Ty *load(memory_order _Order = memory_order_seq_cst)
-		const volatile _NOEXCEPT
+		const volatile throw() // TRANSITION, VSO#174686
 		{	// return value held in *this
 		return (reinterpret_cast<_Ty *>(_Atomic_address::load(_Order)));
 		}
 
 	_Ty *load(memory_order _Order = memory_order_seq_cst)
-		const _NOEXCEPT
+		const throw() // TRANSITION, VSO#174686
 		{	// return value held in *this
 		return (reinterpret_cast<_Ty *>(_Atomic_address::load(_Order)));
 		}
 
-	operator _Ty *() const volatile _NOEXCEPT
+	operator _Ty *() const volatile throw() // TRANSITION, VSO#174686
 		{	// return value held in *this
 		return (load());
 		}
 
-	operator _Ty *() const _NOEXCEPT
+	operator _Ty *() const throw() // TRANSITION, VSO#174686
 		{	// return value held in *this
 		return (load());
 		}
 
 	_Ty *exchange(_Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// exchange value stored in *this with _Value
 		return (reinterpret_cast<_Ty *>(_Atomic_address::exchange(
 			(void *)_Value, _Order)));
 		}
 
 	_Ty *exchange(_Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// exchange value stored in *this with _Value
 		return (reinterpret_cast<_Ty *>(_Atomic_address::exchange(
 			(void *)_Value, _Order)));
@@ -283,7 +293,7 @@ template<class _Ty>
 	bool compare_exchange_weak(
 		_Ty *& _Exp, _Ty *_Value,
 			memory_order _Order1,
-			memory_order _Order2) volatile _NOEXCEPT
+			memory_order _Order2) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_weak(
 			(void *&)_Exp, (void *)_Value, _Order1, _Order2));
@@ -292,7 +302,7 @@ template<class _Ty>
 	bool compare_exchange_weak(
 		_Ty *& _Exp, _Ty *_Value,
 		memory_order _Order1,
-		memory_order _Order2) _NOEXCEPT
+		memory_order _Order2) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_weak(
 			(void *&)_Exp, (void *)_Value, _Order1, _Order2));
@@ -300,7 +310,7 @@ template<class _Ty>
 
 	bool compare_exchange_weak(
 		_Ty *& _Exp, _Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_weak(
 			(void *&)_Exp, (void *)_Value, _Order));
@@ -308,7 +318,7 @@ template<class _Ty>
 
 	bool compare_exchange_weak(
 		_Ty *& _Exp, _Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_weak(
 			(void *&)_Exp, (void *)_Value, _Order));
@@ -316,7 +326,7 @@ template<class _Ty>
 
 	bool compare_exchange_strong(
 		_Ty *& _Exp, _Ty *_Value,
-		memory_order _Order1, memory_order _Order2) volatile _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_strong(
 			(void *&)_Exp, (void *)_Value, _Order1, _Order2));
@@ -324,7 +334,7 @@ template<class _Ty>
 
 	bool compare_exchange_strong(
 		_Ty *& _Exp, _Ty *_Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_strong(
 			(void *&)_Exp, (void *)_Value, _Order1, _Order2));
@@ -332,7 +342,7 @@ template<class _Ty>
 
 	bool compare_exchange_strong(
 		_Ty *& _Exp, _Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_strong(
 			(void *&)_Exp, (void *)_Value, _Order));
@@ -340,98 +350,96 @@ template<class _Ty>
 
 	bool compare_exchange_strong(
 		_Ty *& _Exp, _Ty *_Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (_Atomic_address::compare_exchange_strong(
 			(void *&)_Exp, (void *)_Value, _Order));
 		}
 
-	typedef typename _If<is_object<_Ty>::value, _Ty, char>::type _Obj;
-
 	_Ty *fetch_add(ptrdiff_t _Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// add _Value to value stored in *this
 		return (reinterpret_cast<_Ty *>(
-			_Atomic_address::fetch_add(_Value * sizeof (_Obj), _Order)));
+			_Atomic_address::fetch_add(_Value * sizeof (_Ty), _Order)));
 		}
 
 	_Ty *fetch_add(ptrdiff_t _Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// add _Value to value stored in *this
 		return (reinterpret_cast<_Ty *>(
-			_Atomic_address::fetch_add(_Value * sizeof (_Obj), _Order)));
+			_Atomic_address::fetch_add(_Value * sizeof (_Ty), _Order)));
 		}
 
 	_Ty *fetch_sub(ptrdiff_t _Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// subtract _Value from value stored in *this
 		return (reinterpret_cast<_Ty *>(
-			_Atomic_address::fetch_sub(_Value * sizeof (_Obj), _Order)));
+			_Atomic_address::fetch_sub(_Value * sizeof (_Ty), _Order)));
 		}
 
 	_Ty *fetch_sub(ptrdiff_t _Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// subtract _Value from value stored in *this
 		return (reinterpret_cast<_Ty *>(
-			_Atomic_address::fetch_sub(_Value * sizeof (_Obj), _Order)));
+			_Atomic_address::fetch_sub(_Value * sizeof (_Ty), _Order)));
 		}
 
-	_Ty *operator++(int) volatile _NOEXCEPT
+	_Ty *operator++(int) volatile throw() // TRANSITION, VSO#174686
 		{	// increment stored pointer
 		return (fetch_add(1));
 		}
 
-	_Ty *operator++(int) _NOEXCEPT
+	_Ty *operator++(int) throw() // TRANSITION, VSO#174686
 		{	// increment stored pointer
 		return (fetch_add(1));
 		}
 
-	_Ty *operator--(int) volatile _NOEXCEPT
+	_Ty *operator--(int) volatile throw() // TRANSITION, VSO#174686
 		{	// decrement stored pointer
 		return (fetch_sub(1));
 		}
 
-	_Ty *operator--(int) _NOEXCEPT
+	_Ty *operator--(int) throw() // TRANSITION, VSO#174686
 		{	// decrement stored pointer
 		return (fetch_sub(1));
 		}
 
-	_Ty *operator+=(ptrdiff_t _Right) volatile _NOEXCEPT
+	_Ty *operator+=(ptrdiff_t _Right) volatile throw() // TRANSITION, VSO#174686
 		{	// add _Right to value stored in *this
-		return ((_Ty *)((_Obj *)fetch_add(_Right) + _Right));
+		return (fetch_add(_Right) + _Right);
 		}
 
-	_Ty *operator+=(ptrdiff_t _Right) _NOEXCEPT
+	_Ty *operator+=(ptrdiff_t _Right) throw() // TRANSITION, VSO#174686
 		{	// add _Right to value stored in *this
-		return ((_Ty *)((_Obj *)fetch_add(_Right) + _Right));
+		return (fetch_add(_Right) + _Right);
 		}
 
-	_Ty *operator-=(ptrdiff_t _Right) volatile _NOEXCEPT
+	_Ty *operator-=(ptrdiff_t _Right) volatile throw() // TRANSITION, VSO#174686
 		{	// subtract _Right from value stored in *this
-		return ((_Ty *)((_Obj *)fetch_sub(_Right) - _Right));
+		return (fetch_sub(_Right) - _Right);
 		}
 
-	_Ty *operator-=(ptrdiff_t _Right) _NOEXCEPT
+	_Ty *operator-=(ptrdiff_t _Right) throw() // TRANSITION, VSO#174686
 		{	// subtract _Right from value stored in *this
-		return ((_Ty *)((_Obj *)fetch_sub(_Right) - _Right));
+		return (fetch_sub(_Right) - _Right);
 		}
 
-	_Ty *operator++() volatile _NOEXCEPT
+	_Ty *operator++() volatile throw() // TRANSITION, VSO#174686
 		{	// increment stored pointer
 		return (*this += 1);
 		}
 
-	_Ty *operator++() _NOEXCEPT
+	_Ty *operator++() throw() // TRANSITION, VSO#174686
 		{	// increment stored pointer
 		return (*this += 1);
 		}
 
-	_Ty *operator--() volatile _NOEXCEPT
+	_Ty *operator--() volatile throw() // TRANSITION, VSO#174686
 		{	// decrement stored pointer
 		return (*this -= 1);
 		}
 
-	_Ty *operator--() _NOEXCEPT
+	_Ty *operator--() throw() // TRANSITION, VSO#174686
 		{	// decrement stored pointer
 		return (*this -= 1);
 		}
@@ -440,23 +448,23 @@ template<class _Ty>
 
 		// CORE NON-MEMBER FUNCTIONS
 	// TEMPLATE FUNCTION atomic_is_lock_free
-inline bool atomic_is_lock_free(const volatile _ATOMIC_ITYPE *) _NOEXCEPT
+inline bool atomic_is_lock_free(const volatile _ATOMIC_ITYPE *) throw() // TRANSITION, VSO#174686
 	{	// return true if operations on _ATOMIC_ITYPE are lock-free
 	return (true);
 	}
 
-inline bool atomic_is_lock_free(const _ATOMIC_ITYPE *) _NOEXCEPT
+inline bool atomic_is_lock_free(const _ATOMIC_ITYPE *) throw() // TRANSITION, VSO#174686
 	{	// return true if operations on _ATOMIC_ITYPE are lock-free
 	return (true);
 	}
 
  #ifndef _ATOMIC_HAS_NO_SPECIALIZATION
-inline bool atomic_is_lock_free(const volatile atomic<_ITYPE> *) _NOEXCEPT
+inline bool atomic_is_lock_free(const volatile atomic<_ITYPE> *) throw() // TRANSITION, VSO#174686
 	{	// return true if operations on _ATOMIC_ITYPE are lock-free
 	return (true);
 	}
 
-inline bool atomic_is_lock_free(const atomic<_ITYPE> *) _NOEXCEPT
+inline bool atomic_is_lock_free(const atomic<_ITYPE> *) throw() // TRANSITION, VSO#174686
 	{	// return true if operations on _ATOMIC_ITYPE are lock-free
 	return (true);
 	}
@@ -464,14 +472,14 @@ inline bool atomic_is_lock_free(const atomic<_ITYPE> *) _NOEXCEPT
 
 	// TEMPLATE FUNCTION atomic_init
 inline void atomic_init(volatile _ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// non-atomically initialize *_Atom to _Value
 	_Atom->_My_val = (_ATOMIC_UINT)_Value;
 
 	}
 
 inline void atomic_init(_ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// non-atomically initialize *_Atom to _Value
 	_Atom->_My_val = (_ATOMIC_UINT)_Value;
 
@@ -479,14 +487,14 @@ inline void atomic_init(_ATOMIC_ITYPE *_Atom,
 
  #ifndef _ATOMIC_HAS_NO_SPECIALIZATION
 inline void atomic_init(volatile atomic<_ITYPE> *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// non-atomically initialize *_Atom to _Value
 	_Atom->_My_val = (_ATOMIC_UINT)_Value;
 
 	}
 
 inline void atomic_init(atomic<_ITYPE> *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// non-atomically initialize *_Atom to _Value
 	_Atom->_My_val = (_ATOMIC_UINT)_Value;
 
@@ -495,83 +503,83 @@ inline void atomic_init(atomic<_ITYPE> *_Atom,
 
 inline void atomic_store_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// store _Value into *_Atom
 	_ATOMIC_STORE(_Atom, _Value, _Order);
 	}
 
 inline void atomic_store_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// store _Value into *_Atom
 	_ATOMIC_STORE(_Atom, _Value, _Order);
 	}
 
 inline void atomic_store(volatile _ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// store _Value into *_Atom
 	atomic_store_explicit(_Atom, _Value, memory_order_seq_cst);
 	}
 
 inline void atomic_store(_ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// store _Value into *_Atom
 	atomic_store_explicit(_Atom, _Value, memory_order_seq_cst);
 	}
 
 inline _ITYPE atomic_load_explicit(
-	const volatile _ATOMIC_ITYPE *_Atom, memory_order _Order) _NOEXCEPT
+	const volatile _ATOMIC_ITYPE *_Atom, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// return value held in *_Atom
 	return (_ATOMIC_LOAD(_Atom, _Order));
 	}
 
 inline _ITYPE atomic_load_explicit(
-	const _ATOMIC_ITYPE *_Atom, memory_order _Order) _NOEXCEPT
+	const _ATOMIC_ITYPE *_Atom, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// return value held in *_Atom
 	return (_ATOMIC_LOAD(_Atom, _Order));
 	}
 
 inline _ITYPE atomic_load(
-	const volatile _ATOMIC_ITYPE *_Atom) _NOEXCEPT
+	const volatile _ATOMIC_ITYPE *_Atom) throw() // TRANSITION, VSO#174686
 	{	// return value stored in *_Atom
 	return (atomic_load_explicit(_Atom, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_load(
-	const _ATOMIC_ITYPE *_Atom) _NOEXCEPT
+	const _ATOMIC_ITYPE *_Atom) throw() // TRANSITION, VSO#174686
 	{	// return value stored in *_Atom
 	return (atomic_load_explicit(_Atom, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_exchange_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// exchange value stored in *_Atom with _Value
 	return (_ATOMIC_EXCHANGE(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_exchange_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// exchange value stored in *_Atom with _Value
 	return (_ATOMIC_EXCHANGE(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_exchange(volatile _ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// exchange value stored in *_Atom with _Value
 	return (atomic_exchange_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_exchange(_ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// exchange value stored in *_Atom with _Value
 	return (atomic_exchange_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline bool atomic_compare_exchange_weak_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (_ATOMIC_COMPARE_EXCHANGE_WEAK(_Atom, _Exp, _Value,
 		_Order1, _Order2));
@@ -579,7 +587,7 @@ inline bool atomic_compare_exchange_weak_explicit(
 
 inline bool atomic_compare_exchange_weak_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (_ATOMIC_COMPARE_EXCHANGE_WEAK(_Atom, _Exp, _Value,
 		_Order1, _Order2));
@@ -587,7 +595,7 @@ inline bool atomic_compare_exchange_weak_explicit(
 
 inline bool atomic_compare_exchange_weak(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE *_Exp,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (atomic_compare_exchange_weak_explicit(
 		_Atom, _Exp, _Value, memory_order_seq_cst, memory_order_seq_cst));
@@ -595,7 +603,7 @@ inline bool atomic_compare_exchange_weak(
 
 inline bool atomic_compare_exchange_weak(
 	_ATOMIC_ITYPE *_Atom, _ITYPE *_Exp,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (atomic_compare_exchange_weak_explicit(
 		_Atom, _Exp, _Value, memory_order_seq_cst, memory_order_seq_cst));
@@ -603,7 +611,7 @@ inline bool atomic_compare_exchange_weak(
 
 inline bool atomic_compare_exchange_strong_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (_ATOMIC_COMPARE_EXCHANGE_STRONG(_Atom, _Exp, _Value,
 		_Order1, _Order2));
@@ -611,100 +619,100 @@ inline bool atomic_compare_exchange_strong_explicit(
 
 inline bool atomic_compare_exchange_strong_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (_ATOMIC_COMPARE_EXCHANGE_STRONG(_Atom, _Exp, _Value,
 		_Order1, _Order2));
 	}
 
 inline bool atomic_compare_exchange_strong(
-	volatile _ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value) _NOEXCEPT
+	volatile _ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (atomic_compare_exchange_strong_explicit(
 		_Atom, _Exp, _Value, memory_order_seq_cst, memory_order_seq_cst));
 	}
 
 inline bool atomic_compare_exchange_strong(
-	_ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value) _NOEXCEPT
+	_ATOMIC_ITYPE *_Atom, _ITYPE *_Exp, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *_Atom with *_Exp, _Value
 	return (atomic_compare_exchange_strong_explicit(
 		_Atom, _Exp, _Value, memory_order_seq_cst, memory_order_seq_cst));
 	}
 
 		// CORE MEMBER FUNCTIONS
-inline _ITYPE _ATOMIC_ITYPE::operator=(_ITYPE _Value) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator=(_ITYPE _Value) volatile throw() // TRANSITION, VSO#174686
 	{	// assign _Value to *this
 	atomic_store(this, _Value);
 	return (_Value);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator=(_ITYPE _Value) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator=(_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// assign _Value to *this
 	atomic_store(this, _Value);
 	return (_Value);
 	}
 
-inline bool _ATOMIC_ITYPE::is_lock_free() const volatile _NOEXCEPT
+inline bool _ATOMIC_ITYPE::is_lock_free() const volatile throw() // TRANSITION, VSO#174686
 	{	// return true if operations on *this are lock-free
 	return (atomic_is_lock_free(this));
 	}
 
-inline bool _ATOMIC_ITYPE::is_lock_free() const _NOEXCEPT
+inline bool _ATOMIC_ITYPE::is_lock_free() const throw() // TRANSITION, VSO#174686
 	{	// return true if operations on *this are lock-free
 	return (atomic_is_lock_free(this));
 	}
 
 inline void _ATOMIC_ITYPE::store(_ITYPE _Value,
-	memory_order _Order) volatile _NOEXCEPT
+	memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// store _Value into *this
 	atomic_store_explicit(this, _Value, _Order);
 	}
 
 inline void _ATOMIC_ITYPE::store(_ITYPE _Value,
-	memory_order _Order) _NOEXCEPT
+	memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// store _Value into *this
 	atomic_store_explicit(this, _Value, _Order);
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::load(
-	memory_order _Order) const volatile _NOEXCEPT
+	memory_order _Order) const volatile throw() // TRANSITION, VSO#174686
 	{	// return value held in *this
 	return (atomic_load_explicit(this, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::load(
-	memory_order _Order) const _NOEXCEPT
+	memory_order _Order) const throw() // TRANSITION, VSO#174686
 	{	// return value held in *this
 	return (atomic_load_explicit(this, _Order));
 	}
 
 #ifndef _ATOMIC_IS_ADDRESS_TYPE
-inline _ATOMIC_ITYPE::operator _ITYPE() const volatile _NOEXCEPT
+inline _ATOMIC_ITYPE::operator _ITYPE() const volatile throw() // TRANSITION, VSO#174686
 	{	// return value held in *this
 	return (atomic_load(this));
 	}
 
-inline _ATOMIC_ITYPE::operator _ITYPE() const _NOEXCEPT
+inline _ATOMIC_ITYPE::operator _ITYPE() const throw() // TRANSITION, VSO#174686
 	{	// return value held in *this
 	return (atomic_load(this));
 	}
 #endif // _ATOMIC_IS_ADDRESS_TYPE
 
 inline _ITYPE _ATOMIC_ITYPE::exchange(
-	_ITYPE _Value, memory_order _Order) volatile _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// exchange value stored in *this with _Value
 	return (atomic_exchange_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::exchange(
-	_ITYPE _Value, memory_order _Order) _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// exchange value stored in *this with _Value
 	return (atomic_exchange_explicit(this, _Value, _Order));
 	}
 
 inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) volatile _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) volatile throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_weak_explicit(
 		this, &_Exp, _Value, _Order1, _Order2));
@@ -712,7 +720,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_weak_explicit(
 		this, &_Exp, _Value, _Order1, _Order2));
@@ -720,7 +728,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order) volatile _NOEXCEPT
+	memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_weak_explicit(
 		this, &_Exp, _Value, _Order, _Get_memory_order(_Order)));
@@ -728,7 +736,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order) _NOEXCEPT
+	memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_weak_explicit(
 		this, &_Exp, _Value, _Order, _Get_memory_order(_Order)));
@@ -736,7 +744,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_weak(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) volatile _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) volatile throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_strong_explicit(
 		this, &_Exp, _Value, _Order1, _Order2));
@@ -744,7 +752,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_strong_explicit(
 		this, &_Exp, _Value, _Order1, _Order2));
@@ -752,7 +760,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order) volatile _NOEXCEPT
+	memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_strong_explicit(
 		this, &_Exp, _Value, _Order, _Get_memory_order(_Order)));
@@ -760,7 +768,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 
 inline bool _ATOMIC_ITYPE::compare_exchange_strong(
 	_ITYPE& _Exp, _ITYPE _Value,
-	memory_order _Order) _NOEXCEPT
+	memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// compare and exchange value stored in *this with *_Exp, _Value
 	return (atomic_compare_exchange_strong_explicit(
 		this, &_Exp, _Value, _Order, _Get_memory_order(_Order)));
@@ -770,7 +778,7 @@ inline bool _ATOMIC_ITYPE::compare_exchange_strong(
  #ifndef _ATOMIC_HAS_NO_SPECIALIZATION
 template<>
 	inline bool atomic_is_lock_free(
-		const volatile atomic<_ITYPE> *_Atom) _NOEXCEPT
+		const volatile atomic<_ITYPE> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_is_lock_free(
 		static_cast<const volatile _ATOMIC_ITYPE *>(_Atom)));
@@ -778,42 +786,42 @@ template<>
 
 template<>
 	inline bool atomic_is_lock_free(
-		const atomic<_ITYPE> *_Atom) _NOEXCEPT
+		const atomic<_ITYPE> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_is_lock_free(static_cast<const _ATOMIC_ITYPE *>(_Atom)));
 	}
 
 template<>
 	inline void atomic_init(volatile atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	atomic_init(static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value);
 	}
 
 template<>
 	inline void atomic_init(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	atomic_init(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value);
 	}
 
 template<>
 	inline void atomic_store(volatile atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	atomic_store(static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value);
 	}
 
 template<>
 	inline void atomic_store(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	atomic_store(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value);
 	}
 
 template<>
 	inline void atomic_store_explicit(volatile atomic<_ITYPE> *_Atom,
-		_ITYPE _Value, memory_order _Order) _NOEXCEPT
+		_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	atomic_store_explicit(static_cast<volatile _ATOMIC_ITYPE *>(_Atom),
 		_Value, _Order);
@@ -821,27 +829,27 @@ template<>
 
 template<>
 	inline void atomic_store_explicit(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value, memory_order _Order) _NOEXCEPT
+		_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	atomic_store_explicit(static_cast<_ATOMIC_ITYPE *>(_Atom),
 		_Value, _Order);
 	}
 
 template<>
-	inline _ITYPE atomic_load(const volatile atomic<_ITYPE> *_Atom) _NOEXCEPT
+	inline _ITYPE atomic_load(const volatile atomic<_ITYPE> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_load(static_cast<const volatile _ATOMIC_ITYPE *>(_Atom)));
 	}
 
 template<>
-	inline _ITYPE atomic_load(const atomic<_ITYPE> *_Atom) _NOEXCEPT
+	inline _ITYPE atomic_load(const atomic<_ITYPE> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_load(static_cast<const volatile _ATOMIC_ITYPE *>(_Atom)));
 	}
 
 template<>
 	inline _ITYPE atomic_load_explicit(
-		const volatile atomic<_ITYPE> *_Atom, memory_order _Order) _NOEXCEPT
+		const volatile atomic<_ITYPE> *_Atom, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_load_explicit(
 		static_cast<const volatile _ATOMIC_ITYPE *>(_Atom), _Order));
@@ -849,7 +857,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_load_explicit(
-		const atomic<_ITYPE> *_Atom, memory_order _Order) _NOEXCEPT
+		const atomic<_ITYPE> *_Atom, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_load_explicit(
 		static_cast<const _ATOMIC_ITYPE *>(_Atom), _Order));
@@ -857,7 +865,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_exchange(
-		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value) _NOEXCEPT
+		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_exchange(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value));
@@ -865,7 +873,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_exchange(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_exchange(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value));
 	}
@@ -873,7 +881,7 @@ template<>
 template<>
 	inline _ITYPE atomic_exchange_explicit(
 		volatile atomic<_ITYPE> *_Atom,
-			_ITYPE _Value, memory_order _Order) _NOEXCEPT
+			_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_exchange_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -881,7 +889,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_exchange_explicit(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value, memory_order _Order) _NOEXCEPT
+		_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_exchange_explicit(static_cast<_ATOMIC_ITYPE *>(_Atom),
 		_Value, _Order));
@@ -890,7 +898,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_weak(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE *_Exp,
-			_ITYPE _Value) _NOEXCEPT
+			_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_weak(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Exp, _Value));
@@ -899,7 +907,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_weak(
 		atomic<_ITYPE> *_Atom, _ITYPE *_Exp,
-			_ITYPE _Value) _NOEXCEPT
+			_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_weak(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Exp, _Value));
@@ -908,7 +916,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_weak_explicit(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_weak_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Exp,
@@ -918,7 +926,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_weak_explicit(
 		atomic<_ITYPE> *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-	memory_order _Order1, memory_order _Order2) _NOEXCEPT
+	memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_weak_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Exp, _Value, _Order1, _Order2));
@@ -927,7 +935,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_strong(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE *_Exp,
-			_ITYPE _Value) _NOEXCEPT
+			_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_strong(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Exp, _Value));
@@ -936,7 +944,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_strong(
 		atomic<_ITYPE> *_Atom, _ITYPE *_Exp,
-			_ITYPE _Value) _NOEXCEPT
+			_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_strong(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Exp, _Value));
@@ -945,7 +953,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_strong_explicit(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_strong_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Exp,
@@ -955,7 +963,7 @@ template<>
 template<>
 	inline bool atomic_compare_exchange_strong_explicit(
 		atomic<_ITYPE> *_Atom, _ITYPE *_Exp, _ITYPE _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_compare_exchange_strong_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Exp, _Value, _Order1, _Order2));
@@ -966,281 +974,281 @@ template<>
 		// ARITHMETIC NON-MEMBER FUNCTIONS
 inline _ITYPE atomic_fetch_add_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return (_ATOMIC_FETCH_ADD(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_add_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return (_ATOMIC_FETCH_ADD(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_add(volatile _ATOMIC_ITYPE *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return (atomic_fetch_add_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_add(_ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return (atomic_fetch_add_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_sub_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return (_ATOMIC_FETCH_SUB(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_sub_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return (_ATOMIC_FETCH_SUB(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_sub(volatile _ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return (atomic_fetch_sub_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_sub(_ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return (atomic_fetch_sub_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_and_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// and _Value with value stored in *_Atom
 	return (_ATOMIC_FETCH_AND(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_and_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// and _Value with value stored in *_Atom
 	return (_ATOMIC_FETCH_AND(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_and(volatile _ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// and _Value with value stored in *_Atom
 	return (atomic_fetch_and_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_and(_ATOMIC_ITYPE *_Atom,
-	_ITYPE _Value) _NOEXCEPT
+	_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// and _Value with value stored in *_Atom
 	return (atomic_fetch_and_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_or_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// or _Value with value stored in *_Atom
 	return (_ATOMIC_FETCH_OR(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_or_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// or _Value with value stored in *_Atom
 	return (_ATOMIC_FETCH_OR(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_or(
-	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value) _NOEXCEPT
+	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// or _Value with value stored in *_Atom
 	return (atomic_fetch_or_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_or(
-	_ATOMIC_ITYPE *_Atom, _ITYPE _Value) _NOEXCEPT
+	_ATOMIC_ITYPE *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// or _Value with value stored in *_Atom
 	return (atomic_fetch_or_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_xor_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// xor _Value with value stored in *_Atom
 	return (_ATOMIC_FETCH_XOR(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_xor_explicit(
 	_ATOMIC_ITYPE *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// xor _Value with value stored in *_Atom
 	return (_ATOMIC_FETCH_XOR(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_xor(
-	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value) _NOEXCEPT
+	volatile _ATOMIC_ITYPE *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// xor _Value with value stored in *_Atom
 	return (atomic_fetch_xor_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_xor(
-	_ATOMIC_ITYPE *_Atom, _ITYPE _Value) _NOEXCEPT
+	_ATOMIC_ITYPE *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{	// xor _Value with value stored in *_Atom
 	return (atomic_fetch_xor_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 		// ARITHMETIC MEMBER FUNCTIONS
-inline _ITYPE _ATOMIC_ITYPE::operator++(int) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator++(int) volatile throw() // TRANSITION, VSO#174686
 	{	// increment value stored in *this
 	return (atomic_fetch_add(this, 1));
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator++(int) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator++(int) throw() // TRANSITION, VSO#174686
 	{	// increment value stored in *this
 	return (atomic_fetch_add(this, 1));
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator--(int) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator--(int) volatile throw() // TRANSITION, VSO#174686
 	{	// decrement value stored in *this
 	return (atomic_fetch_sub(this, 1));
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator--(int) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator--(int) throw() // TRANSITION, VSO#174686
 	{	// decrement value stored in *this
 	return (atomic_fetch_sub(this, 1));
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator++() volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator++() volatile throw() // TRANSITION, VSO#174686
 	{	// increment value stored in *this
 	return (atomic_fetch_add(this, 1) + 1);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator++() _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator++() throw() // TRANSITION, VSO#174686
 	{	// increment value stored in *this
 	return (atomic_fetch_add(this, 1) + 1);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator--() volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator--() volatile throw() // TRANSITION, VSO#174686
 	{	// decrement value stored in *this
 	return (atomic_fetch_sub(this, 1) - 1);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator--() _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator--() throw() // TRANSITION, VSO#174686
 	{	// decrement value stored in *this
 	return (atomic_fetch_sub(this, 1) - 1);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator+=(_ITYPE _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator+=(_ITYPE _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// add _Right to value stored in *this
 	return (atomic_fetch_add(this, _Right) + _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator+=(_ITYPE _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator+=(_ITYPE _Right) throw() // TRANSITION, VSO#174686
 	{	// add _Right to value stored in *this
 	return (atomic_fetch_add(this, _Right) + _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator-=(_ITYPE _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator-=(_ITYPE _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// subtract _Right from value stored in *this
 	return (atomic_fetch_sub(this, _Right) - _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator-=(_ITYPE _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator-=(_ITYPE _Right) throw() // TRANSITION, VSO#174686
 	{	// subtract _Right from value stored in *this
 	return (atomic_fetch_sub(this, _Right) - _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator&=(_ITYPE _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator&=(_ITYPE _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// and _Right with value stored in *this
 	return (atomic_fetch_and(this, _Right) & _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator&=(_ITYPE _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator&=(_ITYPE _Right) throw() // TRANSITION, VSO#174686
 	{	// and _Right with value stored in *this
 	return (atomic_fetch_and(this, _Right) & _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator|=(_ITYPE _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator|=(_ITYPE _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// or _Right with value stored in *this
 	return (atomic_fetch_or(this, _Right) | _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator|=(_ITYPE _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator|=(_ITYPE _Right) throw() // TRANSITION, VSO#174686
 	{	// or _Right with value stored in *this
 	return (atomic_fetch_or(this, _Right) | _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator^=(_ITYPE _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator^=(_ITYPE _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// xor _Right with value stored in *this
 	return (atomic_fetch_xor(this, _Right) ^ _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator^=(_ITYPE _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator^=(_ITYPE _Right) throw() // TRANSITION, VSO#174686
 	{	// xor _Right with value stored in *this
 	return (atomic_fetch_xor(this, _Right) ^ _Right);
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_add(
-	_ITYPE _Value, memory_order _Order) volatile _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *this
 	return (atomic_fetch_add_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_add(
-	_ITYPE _Value, memory_order _Order) _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *this
 	return (atomic_fetch_add_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_sub(
-	_ITYPE _Value, memory_order _Order) volatile _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *this
 	return (atomic_fetch_sub_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_sub(
-	_ITYPE _Value, memory_order _Order) _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *this
 	return (atomic_fetch_sub_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_and(
-	_ITYPE _Value, memory_order _Order) volatile _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// and _Value with value stored in *this
 	return (atomic_fetch_and_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_and(
-	_ITYPE _Value, memory_order _Order) _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// and _Value with value stored in *this
 	return (atomic_fetch_and_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_or(
-	_ITYPE _Value, memory_order _Order) volatile _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// or _Value with value stored in *this
 	return (atomic_fetch_or_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_or(
-	_ITYPE _Value, memory_order _Order) _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// or _Value with value stored in *this
 	return (atomic_fetch_or_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_xor(
-	_ITYPE _Value, memory_order _Order) volatile _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// xor _Value with value stored in *this
 	return (atomic_fetch_xor_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_xor(
-	_ITYPE _Value, memory_order _Order) _NOEXCEPT
+	_ITYPE _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// xor _Value with value stored in *this
 	return (atomic_fetch_xor_explicit(this, _Value, _Order));
 	}
@@ -1250,7 +1258,7 @@ inline _ITYPE _ATOMIC_ITYPE::fetch_xor(
 template<>
 	inline _ITYPE atomic_fetch_add(
 		volatile atomic<_ITYPE> *_Atom,
-			_ITYPE _Value) _NOEXCEPT
+			_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_add(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value));
@@ -1258,7 +1266,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_add(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_add(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value));
 	}
@@ -1266,7 +1274,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_add_explicit(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_add_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1275,7 +1283,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_add_explicit(
 	atomic<_ITYPE> *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_add_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1284,7 +1292,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_sub(
 		volatile atomic<_ITYPE> *_Atom,
-			_ITYPE _Value) _NOEXCEPT
+			_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_sub(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value));
@@ -1292,7 +1300,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_sub(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_sub(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value));
 	}
@@ -1300,7 +1308,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_sub_explicit(
 	volatile atomic<_ITYPE> *_Atom, _ITYPE _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_sub_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1309,7 +1317,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_sub_explicit(
 		atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_sub_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1317,7 +1325,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_and(
-		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value) _NOEXCEPT
+		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_and(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value));
@@ -1325,7 +1333,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_and(
-		atomic<_ITYPE> *_Atom, _ITYPE _Value) _NOEXCEPT
+		atomic<_ITYPE> *_Atom, _ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_and(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value));
 	}
@@ -1333,7 +1341,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_and_explicit(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_and_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1342,7 +1350,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_and_explicit(
 		atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_and_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1350,7 +1358,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_or(volatile atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_or(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value));
@@ -1358,7 +1366,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_or(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_or(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value));
 	}
@@ -1366,7 +1374,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_or_explicit(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_or_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1375,7 +1383,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_or_explicit(
 		atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_or_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1383,7 +1391,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_xor(volatile atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_xor(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value));
@@ -1391,7 +1399,7 @@ template<>
 
 template<>
 	inline _ITYPE atomic_fetch_xor(atomic<_ITYPE> *_Atom,
-		_ITYPE _Value) _NOEXCEPT
+		_ITYPE _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_xor(static_cast<_ATOMIC_ITYPE *>(_Atom), _Value));
 	}
@@ -1399,7 +1407,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_xor_explicit(
 		volatile atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_xor_explicit(
 		static_cast<volatile _ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1408,7 +1416,7 @@ template<>
 template<>
 	inline _ITYPE atomic_fetch_xor_explicit(
 		atomic<_ITYPE> *_Atom, _ITYPE _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (atomic_fetch_xor_explicit(
 		static_cast<_ATOMIC_ITYPE *>(_Atom), _Value, _Order));
@@ -1420,97 +1428,97 @@ template<>
 		// ADDRESS NON-MEMBER FUNCTIONS
 inline _ITYPE atomic_fetch_add_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, ptrdiff_t _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return ((_ITYPE)_ATOMIC_FETCH_ADD(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_add_explicit(
 	_ATOMIC_ITYPE *_Atom, ptrdiff_t _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return ((_ITYPE)_ATOMIC_FETCH_ADD(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_add(
-	volatile _ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) _NOEXCEPT
+	volatile _ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return (atomic_fetch_add_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_add(
-	_ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) _NOEXCEPT
+	_ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *_Atom
 	return (atomic_fetch_add_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_sub_explicit(
 	volatile _ATOMIC_ITYPE *_Atom, ptrdiff_t _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return ((_ITYPE)_ATOMIC_FETCH_SUB(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_sub_explicit(
 	_ATOMIC_ITYPE *_Atom, ptrdiff_t _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return ((_ITYPE)_ATOMIC_FETCH_SUB(_Atom, _Value, _Order));
 	}
 
 inline _ITYPE atomic_fetch_sub(
-	volatile _ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) _NOEXCEPT
+	volatile _ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return (atomic_fetch_sub_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 inline _ITYPE atomic_fetch_sub(
-	_ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) _NOEXCEPT
+	_ATOMIC_ITYPE *_Atom, ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *_Atom
 	return (atomic_fetch_sub_explicit(_Atom, _Value, memory_order_seq_cst));
 	}
 
 		// ADDRESS MEMBER FUNCTIONS
 inline _ITYPE _ATOMIC_ITYPE::fetch_add(
-	ptrdiff_t _Value, memory_order _Order) volatile _NOEXCEPT
+	ptrdiff_t _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *this
 	return (atomic_fetch_add_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_add(
-	ptrdiff_t _Value, memory_order _Order) _NOEXCEPT
+	ptrdiff_t _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// add _Value to value stored in *this
 	return (atomic_fetch_add_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_sub(
-	ptrdiff_t _Value, memory_order _Order) volatile _NOEXCEPT
+	ptrdiff_t _Value, memory_order _Order) volatile throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *this
 	return (atomic_fetch_sub_explicit(this, _Value, _Order));
 	}
 
 inline _ITYPE _ATOMIC_ITYPE::fetch_sub(
-	ptrdiff_t _Value, memory_order _Order) _NOEXCEPT
+	ptrdiff_t _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// subtract _Value from value stored in *this
 	return (atomic_fetch_sub_explicit(this, _Value, _Order));
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator+=(ptrdiff_t _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator+=(ptrdiff_t _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// add _Right to value stored in *this
 	return ((char*)fetch_add(_Right) + _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator+=(ptrdiff_t _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator+=(ptrdiff_t _Right) throw() // TRANSITION, VSO#174686
 	{	// add _Right to value stored in *this
 	return ((char*)fetch_add(_Right) + _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator-=(ptrdiff_t _Right) volatile _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator-=(ptrdiff_t _Right) volatile throw() // TRANSITION, VSO#174686
 	{	// subtract _Right from value stored in *this
 	return ((char*)fetch_sub(_Right) - _Right);
 	}
 
-inline _ITYPE _ATOMIC_ITYPE::operator-=(ptrdiff_t _Right) _NOEXCEPT
+inline _ITYPE _ATOMIC_ITYPE::operator-=(ptrdiff_t _Right) throw() // TRANSITION, VSO#174686
 	{	// subtract _Right from value stored in *this
 	return ((char*)fetch_sub(_Right) - _Right);
 	}

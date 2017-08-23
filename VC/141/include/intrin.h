@@ -21,12 +21,12 @@
 
 #ifndef _M_CEE_PURE
 
-    #if defined (_M_IX86) || defined (_M_X64)
+    #if (defined (_M_IX86) || defined (_M_X64)) && !defined(_CHPE_ONLY_)
         #include <immintrin.h>
         #include <ammintrin.h>
     #endif
 
-    #if defined (_M_IX86)
+    #if defined (_M_IX86) && !defined(_CHPE_ONLY_)
         #include <mm3dnow.h>
     #endif
 
@@ -35,7 +35,7 @@
         #include <arm_neon.h>
     #endif
 
-    #if defined (_M_ARM64)
+    #if defined (_M_ARM64) || defined(_M_HYBRID_X86_ARM64)
         #include <arm64intr.h>
         #include <arm64_neon.h>
     #endif
@@ -67,6 +67,7 @@ __MACHINEARM(unsigned int _CountOneBits(unsigned long))
 __MACHINEARM(unsigned int _CountOneBits64(unsigned __int64))
 __MACHINEARM(int _DAddSatInt(int, int))
 __MACHINEARM(int _DSubSatInt(int, int))
+__MACHINECHPEX86ARM64(void _HybridGenerateThunks(void *, unsigned))
 __MACHINEARM_ARM64(long _InterlockedAdd(long volatile * _Addend, long _Value))
 __MACHINEARM_ARM64(__int64 _InterlockedAdd64(__int64 volatile * _Addend, __int64 _Value))
 __MACHINEARM_ARM64(__int64 _InterlockedAdd64_acq(__int64 volatile * _Addend, __int64 _Value))
@@ -219,6 +220,7 @@ __MACHINEX86_X64(unsigned int __popcnt(unsigned int))
 __MACHINEX86_X64(unsigned short __popcnt16(unsigned short))
 __MACHINEX64(unsigned __int64 __popcnt64(unsigned __int64))
 __MACHINEARM_ARM64(void __cdecl __prefetch(const void *))
+__MACHINEARM64(void __cdecl __prefetch2(const void *, uint8_t prfop))
 __MACHINEARM(void __cdecl __prefetchw(const void *))
 __MACHINEARM(unsigned __int64 __rdpmccntr64(void))
 __MACHINEX86_X64(unsigned __int64 __rdtsc(void))

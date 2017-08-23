@@ -6,7 +6,7 @@
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
 *       Purpose: Library support of coroutines
-*       http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0057r3.pdf
+*       https://isocpp.org/files/papers/N4663.pdf
 *
 *       [Public]
 *
@@ -39,11 +39,19 @@ _STD_BEGIN
 
 namespace experimental {
 
-	// TEMPLATE CLASS coroutine_traits
-	template <typename _Ret, typename... _Ts>
-	struct coroutine_traits
+	template <class _Ret, class = void>
+	struct _Coroutine_traits_sfinae {};
+
+	template <class _Ret>
+	struct _Coroutine_traits_sfinae<_Ret, void_t<typename _Ret::promise_type>>
 	{
 		using promise_type = typename _Ret::promise_type;
+	};
+
+	// TEMPLATE CLASS coroutine_traits
+	template <typename _Ret, typename... _Ts>
+	struct coroutine_traits : _Coroutine_traits_sfinae<_Ret>
+	{
 	};
 
 	// TEMPLATE CLASS coroutine_handle
@@ -159,16 +167,10 @@ namespace experimental {
 				? 0
 				: ((sizeof(_PromiseT) + _ALIGN_REQ - 1) & ~(_ALIGN_REQ - 1));
 
-		_PromiseT &promise() _NOEXCEPT
+		_PromiseT &promise() const _NOEXCEPT
 		{
-			return *reinterpret_cast<_PromiseT *>(
-				reinterpret_cast<char *>(_Ptr) - _ALIGNED_SIZE);
-		}
-
-		_PromiseT const &promise() const _NOEXCEPT
-		{
-			return *reinterpret_cast<_PromiseT const *>(
-				reinterpret_cast<char const *>(_Ptr) - _ALIGNED_SIZE);
+			return *const_cast<_PromiseT *>(reinterpret_cast<_PromiseT const *>(
+				reinterpret_cast<char const *>(_Ptr) - _ALIGNED_SIZE));
 		}
 	};
 

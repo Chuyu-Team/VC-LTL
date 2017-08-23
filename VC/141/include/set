@@ -19,16 +19,16 @@ template<class _Kty,	// key/value type
 	class _Tset_traits
 	{	// traits required to make _Tree behave like a set
 public:
-	typedef _Kty key_type;
-	typedef _Kty value_type;
-	typedef _Pr key_compare;
-	typedef _Alloc allocator_type;
+	using key_type = _Kty;
+	using value_type = _Kty;
+	using key_compare = _Pr;
+	using allocator_type = _Alloc;
 
 	enum
 		{	// make multi parameter visible as an enumeration constant
 		_Multi = _Mfl};
 
-	typedef key_compare value_compare;
+	using value_compare = key_compare;
 
 	static const _Kty& _Kfn(const value_type& _Val)
 		{	// extract key from element value
@@ -39,31 +39,33 @@ public:
 		// TEMPLATE CLASS set
 template<class _Kty,
 	class _Pr = less<_Kty>,
-	class _Alloc = allocator<_Kty> >
+	class _Alloc = allocator<_Kty>>
 	class set
-		: public _Tree<_Tset_traits<_Kty, _Pr, _Alloc, false> >
+		: public _Tree<_Tset_traits<_Kty, _Pr, _Alloc, false>>
 	{	// ordered red-black tree of key values, unique keys
 public:
-	typedef set<_Kty, _Pr, _Alloc> _Myt;
-	typedef _Tree<_Tset_traits<_Kty, _Pr, _Alloc, false> > _Mybase;
-	typedef _Kty key_type;
-	typedef _Pr key_compare;
-	typedef typename _Mybase::value_compare value_compare;
-	typedef typename _Mybase::allocator_type allocator_type;
-	typedef typename _Mybase::size_type size_type;
-	typedef typename _Mybase::difference_type difference_type;
-	typedef typename _Mybase::pointer pointer;
-	typedef typename _Mybase::const_pointer const_pointer;
-	typedef typename _Mybase::reference reference;
-	typedef typename _Mybase::const_reference const_reference;
-	typedef typename _Mybase::iterator iterator;
-	typedef typename _Mybase::const_iterator const_iterator;
-	typedef typename _Mybase::reverse_iterator reverse_iterator;
-	typedef typename _Mybase::const_reverse_iterator
-		const_reverse_iterator;
-	typedef typename _Mybase::value_type value_type;
+	static_assert(!_ENFORCE_MATCHING_ALLOCATORS || is_same<_Kty, typename _Alloc::value_type>::value,
+		_MISMATCHED_ALLOCATOR_MESSAGE("set<T, Compare, Allocator>", "T"));
 
-	typedef typename _Mybase::_Alty _Alty;
+	using _Mybase = _Tree<_Tset_traits<_Kty, _Pr, _Alloc, false>>;
+	using key_type = _Kty;
+	using key_compare = _Pr;
+	using value_compare = typename _Mybase::value_compare;
+	using value_type = typename _Mybase::value_type;
+	using allocator_type = typename _Mybase::allocator_type;
+	using size_type = typename _Mybase::size_type;
+	using difference_type = typename _Mybase::difference_type;
+	using pointer = typename _Mybase::pointer;
+	using const_pointer = typename _Mybase::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+	using iterator = typename _Mybase::iterator;
+	using const_iterator = typename _Mybase::const_iterator;
+	using reverse_iterator = typename _Mybase::reverse_iterator;
+	using const_reverse_iterator = typename _Mybase::const_reverse_iterator;
+
+	using _Alnode = typename _Mybase::_Alnode;
+	using _Alnode_traits = typename _Mybase::_Alnode_traits;
 
 	set()
 		: _Mybase(key_compare())
@@ -75,13 +77,12 @@ public:
 		{	// construct empty set from defaults, allocator
 		}
 
-	set(const _Myt& _Right)
-		: _Mybase(_Right,
-			_Right._Getal().select_on_container_copy_construction())
+	set(const set& _Right)
+		: _Mybase(_Right, _Alnode_traits::select_on_container_copy_construction(_Right._Getal()))
 		{	// construct set by copying _Right
 		}
 
-	set(const _Myt& _Right, const allocator_type& _Al)
+	set(const set& _Right, const allocator_type& _Al)
 		: _Mybase(_Right, _Al)
 		{	// construct set by copying _Right, allocator
 		}
@@ -127,33 +128,32 @@ public:
 		this->insert(_First, _Last);
 		}
 
-	_Myt& operator=(const _Myt& _Right)
+	set& operator=(const set& _Right)
 		{	// assign by copying _Right
 		_Mybase::operator=(_Right);
 		return (*this);
 		}
 
-	set(_Myt&& _Right)
+	set(set&& _Right)
 		: _Mybase(_STD move(_Right))
 		{	// construct set by moving _Right
 		}
 
-	set(_Myt&& _Right, const allocator_type& _Al)
+	set(set&& _Right, const allocator_type& _Al)
 		: _Mybase(_STD move(_Right), _Al)
 		{	// construct set by moving _Right, allocator
 		}
 
-	_Myt& operator=(_Myt&& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
+	set& operator=(set&& _Right)
+		_NOEXCEPT_COND(_Alnode_traits::is_always_equal::value
 			&& is_nothrow_move_assignable<_Pr>::value)
 		{	// assign by moving _Right
 		_Mybase::operator=(_STD move(_Right));
 		return (*this);
 		}
 
-	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _Is_nothrow_swappable<_Pr>::value)
+	void swap(set& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Mybase::swap(_Right))) // Strengthened
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
@@ -185,12 +185,15 @@ public:
 		this->insert(_Ilist);
 		}
 
-	_Myt& operator=(initializer_list<value_type> _Ilist)
+	set& operator=(initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
 		this->insert(_Ilist);
 		return (*this);
 		}
+
+	using _Mybase::_Unchecked_begin;
+	using _Mybase::_Unchecked_end;
 	};
 
 template<class _Kty,
@@ -198,7 +201,7 @@ template<class _Kty,
 	class _Alloc> inline
 	void swap(set<_Kty, _Pr, _Alloc>& _Left,
 		set<_Kty, _Pr, _Alloc>& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right)))
 	{	// swap _Left and _Right sets
 	_Left.swap(_Right);
 	}
@@ -206,31 +209,33 @@ template<class _Kty,
 		// TEMPLATE CLASS multiset
 template<class _Kty,
 	class _Pr = less<_Kty>,
-	class _Alloc = allocator<_Kty> >
+	class _Alloc = allocator<_Kty>>
 	class multiset
-		: public _Tree<_Tset_traits<_Kty, _Pr, _Alloc, true> >
+		: public _Tree<_Tset_traits<_Kty, _Pr, _Alloc, true>>
 	{	// ordered red-black tree of key values, non-unique keys
 public:
-	typedef multiset<_Kty, _Pr, _Alloc> _Myt;
-	typedef _Tree<_Tset_traits<_Kty, _Pr, _Alloc, true> > _Mybase;
-	typedef _Kty key_type;
-	typedef _Pr key_compare;
-	typedef typename _Mybase::value_compare value_compare;
-	typedef typename _Mybase::allocator_type allocator_type;
-	typedef typename _Mybase::size_type size_type;
-	typedef typename _Mybase::difference_type difference_type;
-	typedef typename _Mybase::pointer pointer;
-	typedef typename _Mybase::const_pointer const_pointer;
-	typedef typename _Mybase::reference reference;
-	typedef typename _Mybase::const_reference const_reference;
-	typedef typename _Mybase::iterator iterator;
-	typedef typename _Mybase::const_iterator const_iterator;
-	typedef typename _Mybase::reverse_iterator reverse_iterator;
-	typedef typename _Mybase::const_reverse_iterator
-		const_reverse_iterator;
-	typedef typename _Mybase::value_type value_type;
+	static_assert(!_ENFORCE_MATCHING_ALLOCATORS || is_same<_Kty, typename _Alloc::value_type>::value,
+		_MISMATCHED_ALLOCATOR_MESSAGE("multiset<T, Compare, Allocator>", "T"));
 
-	typedef typename _Mybase::_Alty _Alty;
+	using _Mybase = _Tree<_Tset_traits<_Kty, _Pr, _Alloc, true>>;
+	using key_type = _Kty;
+	using key_compare = _Pr;
+	using value_compare = typename _Mybase::value_compare;
+	using value_type = typename _Mybase::value_type;
+	using allocator_type = typename _Mybase::allocator_type;
+	using size_type = typename _Mybase::size_type;
+	using difference_type = typename _Mybase::difference_type;
+	using pointer = typename _Mybase::pointer;
+	using const_pointer = typename _Mybase::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+	using iterator = typename _Mybase::iterator;
+	using const_iterator = typename _Mybase::const_iterator;
+	using reverse_iterator = typename _Mybase::reverse_iterator;
+	using const_reverse_iterator = typename _Mybase::const_reverse_iterator;
+
+	using _Alnode = typename _Mybase::_Alnode;
+	using _Alnode_traits = typename _Mybase::_Alnode_traits;
 
 	multiset()
 		: _Mybase(key_compare())
@@ -242,13 +247,12 @@ public:
 		{	// construct empty set from defaults, allocator
 		}
 
-	multiset(const _Myt& _Right)
-		: _Mybase(_Right,
-			_Right._Getal().select_on_container_copy_construction())
+	multiset(const multiset& _Right)
+		: _Mybase(_Right, _Alnode_traits::select_on_container_copy_construction(_Right._Getal()))
 		{	// construct set by copying _Right
 		}
 
-	multiset(const _Myt& _Right, const allocator_type& _Al)
+	multiset(const multiset& _Right, const allocator_type& _Al)
 		: _Mybase(_Right, _Al)
 		{	// construct set by copying _Right, allocator
 		}
@@ -294,24 +298,24 @@ public:
 		this->insert(_First, _Last);
 		}
 
-	_Myt& operator=(const _Myt& _Right)
+	multiset& operator=(const multiset& _Right)
 		{	// assign by copying _Right
 		_Mybase::operator=(_Right);
 		return (*this);
 		}
 
-	multiset(_Myt&& _Right)
+	multiset(multiset&& _Right)
 		: _Mybase(_STD move(_Right))
 		{	// construct set by moving _Right
 		}
 
-	multiset(_Myt&& _Right, const allocator_type& _Al)
+	multiset(multiset&& _Right, const allocator_type& _Al)
 		: _Mybase(_STD move(_Right), _Al)
 		{	// construct set by moving _Right
 		}
 
-	_Myt& operator=(_Myt&& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
+	multiset& operator=(multiset&& _Right)
+		_NOEXCEPT_COND(_Alnode_traits::is_always_equal::value
 			&& is_nothrow_move_assignable<_Pr>::value)
 		{	// assign by moving _Right
 		_Mybase::operator=(_STD move(_Right));
@@ -324,9 +328,8 @@ public:
 		return (_Mybase::emplace(_STD forward<_Valty>(_Val)...).first);
 		}
 
-	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_Alty::is_always_equal::value
-			&& _Is_nothrow_swappable<_Pr>::value)
+	void swap(multiset& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Mybase::swap(_Right))) // Strengthened
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
@@ -358,12 +361,15 @@ public:
 		this->insert(_Ilist);
 		}
 
-	_Myt& operator=(initializer_list<value_type> _Ilist)
+	multiset& operator=(initializer_list<value_type> _Ilist)
 		{	// assign initializer_list
 		this->clear();
 		this->insert(_Ilist);
 		return (*this);
 		}
+
+	using _Mybase::_Unchecked_begin;
+	using _Mybase::_Unchecked_end;
 	};
 
 template<class _Kty,
@@ -371,7 +377,7 @@ template<class _Kty,
 	class _Alloc> inline
 	void swap(multiset<_Kty, _Pr, _Alloc>& _Left,
 		multiset<_Kty, _Pr, _Alloc>& _Right)
-		_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right)))
 	{	// swap _Left and _Right multisets
 	_Left.swap(_Right);
 	}

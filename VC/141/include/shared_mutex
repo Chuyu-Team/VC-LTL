@@ -5,7 +5,7 @@
 #ifndef RC_INVOKED
 
  #ifdef _M_CEE
- static_assert(false, "<shared_mutex> is not supported when compiling with /clr or /clr:pure.");
+  #error <shared_mutex> is not supported when compiling with /clr or /clr:pure.
  #endif /* _M_CEE */
 
 #include <thr/xthreads.h>
@@ -364,7 +364,7 @@ public:
 	void unlock()
 		{	// try to unlock the mutex
 		if (!_Pmtx || !_Owns)
-			_THROW_NCEE(system_error,
+			_THROW(system_error,
 				_STD make_error_code(errc::operation_not_permitted));
 		_Pmtx->unlock_shared();
 		_Owns = false;
@@ -408,10 +408,10 @@ private:
 	void _Validate() const
 		{	// check if the mutex can be locked
 		if (!_Pmtx)
-			_THROW_NCEE(system_error,
+			_THROW(system_error,
 				_STD make_error_code(errc::operation_not_permitted));
 		if (_Owns)
-			_THROW_NCEE(system_error,
+			_THROW(system_error,
 				_STD make_error_code(errc::resource_deadlock_would_occur));
 		}
 	};

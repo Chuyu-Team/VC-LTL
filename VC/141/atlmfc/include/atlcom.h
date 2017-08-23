@@ -2392,7 +2392,7 @@ struct AtlVerifyInheritance
 
 #if defined(_M_IX86)
 #define OBJECT_ENTRY_PRAGMA(class) __pragma(comment(linker, "/include:___pobjMap_" #class));
-#elif defined(_M_IA64) || defined(_M_AMD64) || (_M_ARM) || defined(_M_ARM64)
+#elif defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64)
 #define OBJECT_ENTRY_PRAGMA(class) __pragma(comment(linker, "/include:__pobjMap_" #class));
 #else
 #error Unknown Platform. define OBJECT_ENTRY_PRAGMA
@@ -4500,29 +4500,7 @@ ATLAPI AtlGetObjectSourceInterface(
 
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 
-#ifdef _M_IA64
-template <class T>
-class CComStdCallThunk
-{
-public:
-	typedef void (__stdcall T::*TMFP)();
-	void* pVtable;
-	void* pFunc;
-	_stdcallthunk thunk;
-	void Init(_In_ TMFP dw, _In_ void* pThis)
-	{
-		pVtable = &pFunc;
-		pFunc = &thunk;
-		union {
-			DWORD_PTR dwFunc;
-			TMFP pfn;
-		} pfn;
-		pfn.pfn = dw;
-		thunk.Init(pfn.dwFunc, pThis);
-	}
-};
-
-#elif defined ( _M_IX86 ) || defined ( _M_AMD64 ) || defined ( _M_ARM ) || defined (_M_ARM64)
+#if defined(_M_IX86) || defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64)
 
 extern "C"
 {
@@ -4550,8 +4528,8 @@ public:
 };
 
 #else
-#error X86, AMD64, IA64 and ARM
-#endif // _M_IX86 |
+#error X86, X64, ARM, and ARM64
+#endif
 
 #endif // _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 

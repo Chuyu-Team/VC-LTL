@@ -26,7 +26,7 @@ typedef long long streamsize;
 extern const streamoff _BADOFF;
 
   #else /* _M_CEE_PURE */
-extern _CRTDATA2 _PGLOBAL const streamoff _BADOFF;
+extern _CRTDATA2_IMPORT _PGLOBAL const streamoff _BADOFF;
   #endif /* _M_CEE_PURE */
 
 		// TEMPLATE CLASS fpos (from <streambuf>)
@@ -607,7 +607,7 @@ template<class _Elem,
 	class _Traits = char_traits<_Elem> >
 	class basic_fstream;
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 template<class _Elem,
 	class _InIt >
 	class num_get;
@@ -616,7 +616,7 @@ template<class _Elem,
 	class num_put;
 template<class _Elem>
 	class collate;
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 
 		// char TYPEDEFS
 typedef basic_ios<char, char_traits<char> > ios;

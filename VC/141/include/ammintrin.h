@@ -1,6 +1,6 @@
 /****
 * Copyright (C) 2007-2008 Advanced Micro Devices Inc.  All rights reserved.
-* 
+*
 *  The information and source code contained herein is the exclusive
 *  property of Advanced Micro Devices and may not be disclosed, examined
 *  or reproduced in whole or in part without explicit written authorization

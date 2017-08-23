@@ -169,12 +169,12 @@ public:
     ~_Concurrent_hash()
     {
         // Delete all node segments
-        for (size_type _Index = 0; _Index < _Pointers_per_table; _Index++)
+        for (size_type _Index = 0; _Index < _Pointers_per_table; ++_Index)
         {
             if (_M_buckets[_Index] != NULL)
             {
                 size_type _Seg_size = _Segment_size(_Index);
-                for (size_type _Index2 = 0; _Index2 < _Seg_size; _Index2++)
+                for (size_type _Index2 = 0; _Index2 < _Seg_size; ++_Index2)
                 {
                     _M_allocator.destroy(&_M_buckets[_Index][_Index2]);
                 }
@@ -443,12 +443,12 @@ public:
         _M_split_ordered_list.clear();
 
         // Clear buckets
-        for (size_type _Index = 0; _Index < _Pointers_per_table; _Index++)
+        for (size_type _Index = 0; _Index < _Pointers_per_table; ++_Index)
         {
             if (_M_buckets[_Index] != NULL)
             {
                 size_type _Seg_size = _Segment_size(_Index);
-                for (size_type _Index2 = 0; _Index2 < _Seg_size; _Index2++)
+                for (size_type _Index2 = 0; _Index2 < _Seg_size; ++_Index2)
                 {
                     _M_allocator.destroy(&_M_buckets[_Index][_Index2]);
                 }
@@ -506,9 +506,9 @@ public:
     {
         size_type _Count = 0;
         const_iterator _It = _Find(_Keyval);
-        for (;_It != end() && !this->_M_comparator(this->_Key_function(*_It), _Keyval); _It++)
+        for (;_It != end() && !this->_M_comparator(this->_Key_function(*_It), _Keyval); ++_It)
         {
-            _Count++;
+            ++_Count;
         }
         return _Count;
     }
@@ -597,11 +597,11 @@ public:
         }
 
         _Full_iterator _Iterator = _Get_bucket(_Bucket);
-        _Iterator++;
+        ++_Iterator;
 
-        for (; _Iterator != _M_split_ordered_list._End() && !_Iterator._Mynode()->_Is_dummy(); _Iterator++)
+        for (; _Iterator != _M_split_ordered_list._End() && !_Iterator._Mynode()->_Is_dummy(); ++_Iterator)
         {
-            _Count++;
+            ++_Count;
         }
 
         return _Count;
@@ -684,7 +684,7 @@ public:
         // node marking the end of this bucket has not yet been lazily initialized.
         // Inserting from _M_number_of_buckets/2 to _M_number_of_buckets will recursively
         // initialize all the dummy nodes in the map.
-        for(size_type _Bucket_index = _M_number_of_buckets >> 1; _Bucket_index < _M_number_of_buckets; _Bucket_index++)
+        for(size_type _Bucket_index = _M_number_of_buckets >> 1; _Bucket_index < _M_number_of_buckets; ++_Bucket_index)
         {
             if (!_Is_initialized(_Bucket_index))
             {
@@ -697,7 +697,7 @@ public:
         // Find the end of the bucket, denoted by the dummy element
         do
         {
-            _Iterator++;
+            ++_Iterator;
         }
         while(_Iterator != _M_split_ordered_list._End() && !_Iterator._Mynode()->_Is_dummy());
 
@@ -721,7 +721,7 @@ public:
         // node marking the end of this bucket has not yet been lazily initialized.
         // Inserting from _M_number_of_buckets/2 to _M_number_of_buckets will recursively
         // initialize all the dummy nodes in the map.
-        for(size_type _Bucket_index = _M_number_of_buckets >> 1; _Bucket_index < _M_number_of_buckets; _Bucket_index++)
+        for(size_type _Bucket_index = _M_number_of_buckets >> 1; _Bucket_index < _M_number_of_buckets; ++_Bucket_index)
         {
             if (!_Is_initialized(_Bucket_index))
             {
@@ -734,7 +734,7 @@ public:
         // Find the end of the bucket, denoted by the dummy element
         do
         {
-            _Iterator++;
+            ++_Iterator;
         }
         while(_Iterator != _M_split_ordered_list._End() && !_Iterator._Mynode()->_Is_dummy());
 
@@ -879,7 +879,7 @@ protected:
         _ASSERT_EXPR(_Where != _Last, L"Invalid head node");
 
         // First node is a dummy node
-        _Where++;
+        ++_Where;
 
         for (;;)
         {
@@ -902,12 +902,12 @@ protected:
                     // known to be larger (note: this is legal only because there is no safe
                     // concurrent erase operation supported).
                     _Where = _Iterator;
-                    _Where++;
+                    ++_Where;
                     continue;
                 }
             }
             else if (!this->_M_allow_multimapping && _Mylist::_Get_key(_Where) == _Order_key &&
-                this->_M_comparator(this->_Key_function(*_Where), this->_Key_function(_New_node->_M_element)) == 0)
+                this->_M_comparator(this->_Key_function(*_Where), this->_Key_function(_New_node->_Myval)) == 0)
             {
                 // If the insert failed (element already there), then delete the new one
                 _M_split_ordered_list._Erase(_New_node);
@@ -918,14 +918,14 @@ protected:
 
             // Move the iterator forward
             _Iterator = _Where;
-            _Where++;
+            ++_Where;
         }
     }
 
     template<class _Iterator>
     void _Insert(_Iterator _First, _Iterator _Last)
     {
-        for (_Iterator _I = _First; _I != _Last; _I++)
+        for (_Iterator _I = _First; _I != _Last; ++_I)
         {
             _Insert(*_I);
         }
@@ -968,7 +968,7 @@ private:
         if (_M_allocator == _Right._M_allocator)
         {
             // Swap all node segments
-            for (size_type _Index = 0; _Index < _Pointers_per_table; _Index++)
+            for (size_type _Index = 0; _Index < _Pointers_per_table; ++_Index)
             {
                 _Full_iterator * _Iterator_pointer = _M_buckets[_Index];
                 _M_buckets[_Index] = _Right._M_buckets[_Index];
@@ -986,9 +986,9 @@ private:
     {
         size_type _Num = 0;
 
-        for (const_iterator _Iterator = _First; _Iterator != _Last; _Iterator++)
+        for (const_iterator _Iterator = _First; _Iterator != _Last; ++_Iterator)
         {
-            _Num++;
+            ++_Num;
         }
 
         return _Num;
@@ -1009,7 +1009,7 @@ private:
         _Order_key = _Split_order_regular_key(_Order_key);
         _Full_iterator _Last = _M_split_ordered_list._End();
 
-        for (_Full_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; _Iterator++)
+        for (_Full_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; ++_Iterator)
         {
             if (_Mylist::_Get_key(_Iterator) > _Order_key)
             {
@@ -1048,7 +1048,7 @@ private:
         _Order_key = _Split_order_regular_key(_Order_key);
         _Full_const_iterator _Last = _M_split_ordered_list._End();
 
-        for (_Full_const_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; _Iterator++)
+        for (_Full_const_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; ++_Iterator)
         {
             if (_Mylist::_Get_key(_Iterator) > _Order_key)
             {
@@ -1092,7 +1092,7 @@ private:
         _ASSERT_EXPR(_Where != _Last, L"Invalid head node");
 
         // First node is a dummy node
-        _Where++;
+        ++_Where;
 
         for (;;)
         {
@@ -1107,7 +1107,7 @@ private:
 
             // Move the iterator forward
             _Previous = _Where;
-            _Where++;
+            ++_Where;
         }
     }
 
@@ -1127,7 +1127,7 @@ private:
         _Order_key = _Split_order_regular_key(_Order_key);
         _Full_iterator _Last = _M_split_ordered_list._End();
 
-        for (_Full_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; _Iterator++)
+        for (_Full_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; ++_Iterator)
         {
             if (_Mylist::_Get_key(_Iterator) > _Order_key)
             {
@@ -1139,7 +1139,7 @@ private:
                 iterator _Begin = _M_split_ordered_list._Get_iterator(_Iterator);
                 iterator _End= _Begin;
 
-                for (;_End != end() && !this->_M_comparator(this->_Key_function(*_End), _Keyval); _End++)
+                for (;_End != end() && !this->_M_comparator(this->_Key_function(*_End), _Keyval); ++_End)
                 {
                 }
 
@@ -1167,7 +1167,7 @@ private:
         _Order_key = _Split_order_regular_key(_Order_key);
         _Full_const_iterator _Last = _M_split_ordered_list._End();
 
-        for (_Full_const_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; _Iterator++)
+        for (_Full_const_iterator _Iterator = _Get_bucket(_Bucket); _Iterator != _Last; ++_Iterator)
         {
             if (_Mylist::_Get_key(_Iterator) > _Order_key)
             {
@@ -1179,7 +1179,7 @@ private:
                 const_iterator _Begin = _M_split_ordered_list._Get_iterator(_Iterator);
                 const_iterator _End = _Begin;
 
-                for (; _End != end() && !this->_M_comparator(this->_Key_function(*_End), _Keyval); _End++)
+                for (; _End != end() && !this->_M_comparator(this->_Key_function(*_End), _Keyval); ++_End)
                 {
                 }
 
@@ -1249,8 +1249,7 @@ private:
         {
             size_type _Seg_size = _Segment_size(_Segment);
             _Full_iterator * _New_segment = _M_allocator.allocate(_Seg_size);
-            std::_Wrap_alloc<decltype(_M_allocator)> _Wrapped_allocator(_M_allocator);
-            std::_Uninitialized_default_fill_n(_New_segment, _Seg_size, _Wrapped_allocator);
+            std::_Uninitialized_value_construct_n(_New_segment, _Seg_size, _M_allocator);
             if (_InterlockedCompareExchangePointer((void * volatile *) &_M_buckets[_Segment], _New_segment, NULL) != NULL)
             {
                 _M_allocator.deallocate(_New_segment, _Seg_size);
@@ -1282,7 +1281,7 @@ private:
         unsigned char * _Reversed = (unsigned char *) &_Reversed_order_key;
 
         int _Size = sizeof(_Map_key);
-        for (int _Index = 0; _Index < _Size; _Index++)
+        for (int _Index = 0; _Index < _Size; ++_Index)
         {
             _Reversed[_Size - _Index - 1] = _Reverse_byte(_Original[_Index]);
         }

@@ -37,24 +37,21 @@ public:
 		}
 
 	template<class _Alloc,
-		class = typename enable_if<uses_allocator<_Container, _Alloc>::value,
-			void>::type>
+		class = enable_if_t<uses_allocator<_Container, _Alloc>::value>>
 		explicit stack(const _Alloc& _Al)
 		: c(_Al)
 		{	// construct with allocator
 		}
 
 	template<class _Alloc,
-		class = typename enable_if<uses_allocator<_Container, _Alloc>::value,
-			void>::type>
+		class = enable_if_t<uses_allocator<_Container, _Alloc>::value>>
 		stack(const _Myt& _Right, const _Alloc& _Al)
 		: c(_Right.c, _Al)
 		{	// construct by copying specified container
 		}
 
 	template<class _Alloc,
-		class = typename enable_if<uses_allocator<_Container, _Alloc>::value,
-			void>::type>
+		class = enable_if_t<uses_allocator<_Container, _Alloc>::value>>
 		stack(const _Container& _Cont, const _Alloc& _Al)
 		: c(_Cont, _Al)
 		{	// construct by copying specified container
@@ -66,16 +63,14 @@ public:
 		}
 
 	template<class _Alloc,
-		class = typename enable_if<uses_allocator<_Container, _Alloc>::value,
-			void>::type>
+		class = enable_if_t<uses_allocator<_Container, _Alloc>::value>>
 		stack(_Myt&& _Right, const _Alloc& _Al)
 		: c(_STD move(_Right.c), _Al)
 		{	// construct by moving specified container
 		}
 
 	template<class _Alloc,
-		class = typename enable_if<uses_allocator<_Container, _Alloc>::value,
-			void>::type>
+		class = enable_if_t<uses_allocator<_Container, _Alloc>::value>>
 		stack(_Container&& _Cont, const _Alloc& _Al)
 		: c(_STD move(_Cont), _Al)
 		{	// construct by moving specified container
@@ -87,9 +82,13 @@ public:
 		}
 
 	template<class... _Valty>
-		void emplace(_Valty&&... _Val)
+		decltype(auto) emplace(_Valty&&... _Val)
 		{	// insert element at beginning
+#if _HAS_CXX17
+		return (c.emplace_back(_STD forward<_Valty>(_Val)...));
+#else /* _HAS_CXX17 */
 		c.emplace_back(_STD forward<_Valty>(_Val)...);
+#endif /* _HAS_CXX17 */
 		}
 
 	bool empty() const
@@ -128,7 +127,7 @@ public:
 		}
 
 	void swap(_Myt& _Right)
-		_NOEXCEPT_OP(_Is_nothrow_swappable<_Container>::value)
+		_NOEXCEPT_COND(_Is_nothrow_swappable<_Container>::value)
 		{	// exchange contents with _Right
 		_Swap_adl(c, _Right.c);
 		}
@@ -143,7 +142,7 @@ template<class _Ty,
 	class = enable_if_t<_Is_swappable<_Container>::value>> inline
 	void swap(stack<_Ty, _Container>& _Left,
 		stack<_Ty, _Container>& _Right)
-			_NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(_Right)))
+			_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right)))
 	{	// swap _Left and _Right stacks
 	_Left.swap(_Right);
 	}

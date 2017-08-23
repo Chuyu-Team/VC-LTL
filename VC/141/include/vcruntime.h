@@ -107,35 +107,17 @@ _CRT_BEGIN_C_HEADER
         #define _VCRTIMP _CRTIMP
     #elif defined _VCRT_BUILD && defined CRTDLL
         #define _VCRTIMP __declspec(dllexport)
-    #elif defined _CORECRT_BUILD
-        #define _VCRTIMP
-    #elif defined _DLL
-        #define _VCRTIMP __declspec(dllimport)
     #else
         #define _VCRTIMP
     #endif
 #endif
 
 #ifndef _MRTIMP
-    #if defined MRTDLL && defined _CRTBLD
-        #if !defined _M_CEE_PURE
-            #define _MRTIMP __declspec(dllexport)
-        #else
-            #define _MRTIMP
-        #endif
+    #if defined MRTDLL && defined _CRTBLD && !defined _M_CEE_PURE
+        #define _MRTIMP __declspec(dllexport)
     #else
-        #define _MRTIMP __declspec(dllimport)
+        #define _MRTIMP
     #endif
-#endif
-
-
-
-#ifdef _M_CEE_PURE
-    #define _VCRTIMP_PURE
-#elif (defined _VCRT_BUILD || defined _CRTBLD) && defined MRTDLL
-    #define _VCRTIMP_PURE
-#else
-    #define _VCRTIMP_PURE _VCRTIMP
 #endif
 
 // Definitions of calling conventions used code sometimes compiled as managed
@@ -286,13 +268,6 @@ _CRT_BEGIN_C_HEADER
             _CRT_INSECURE_DEPRECATE(_Replacement)
     #endif
 #endif
-
-
-
-#define _CRT_WARNING(description)                   \
-    message("" __FILE__ "(" _CRT_STRINGIZE(__LINE__) ") : warning CRT0000 : " _CRT_STRINGIZE(description))
-
-
 
 #if !defined _M_CEE && !defined __midl
     void __cdecl __security_init_cookie(void);

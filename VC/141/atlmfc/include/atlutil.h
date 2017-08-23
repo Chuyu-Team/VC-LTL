@@ -29,7 +29,7 @@
 #pragma warning(push)
 #pragma warning(disable:4091)
 
-#include <imagehlp.h>
+#include <ImageHlp.h>
 
 #pragma warning(pop)
 
@@ -42,7 +42,7 @@
 
 #ifndef _ATL_NO_DEFAULT_LIBS
 
-#pragma comment(lib, "dbghelp.lib")
+#pragma comment(lib, "DbgHelp.Lib")
 
 #endif  // !_ATL_NO_DEFAULT_LIBS
 
@@ -414,7 +414,7 @@ ATLPREFAST_SUPPRESS(6340)
 #ifdef _WIN64
 					sprintf_s(szWithOffset, ATL_SYMBOL_NAME_LEN, "%s + %I64d bytes", pszSymbol, siSymbol.dwOffset);
 #else
-					sprintf_s(szWithOffset, ATL_SYMBOL_NAME_LEN, "%s + %d bytes", pszSymbol, siSymbol.dwOffset);						
+					sprintf_s(szWithOffset, ATL_SYMBOL_NAME_LEN, "%s + %d bytes", pszSymbol, siSymbol.dwOffset);
 #endif
 ATLPREFAST_UNSUPPRESS()
 
@@ -448,7 +448,7 @@ public:
 	HANDLE             hThread; //Thread to get context for
 #if defined(_M_ARM64)
     __int64            pad;
-#endif	
+#endif
 	CONTEXT            context; //Where to put context
 	IStackDumpHandler* pHandler;
 	_AtlThreadContextInfo(_In_ IStackDumpHandler* p) throw()
@@ -530,14 +530,10 @@ public:
 			stackFrame.AddrPC.Offset     = context.Eip;
 			stackFrame.AddrStack.Offset  = context.Esp;
 			stackFrame.AddrFrame.Offset  = context.Ebp;
-#elif defined(_M_AMD64)
+#elif defined(_M_X64)
 			// only program counter
 			dwMachType                   = IMAGE_FILE_MACHINE_AMD64;
 			stackFrame.AddrPC.Offset     = context.Rip;
-#elif defined(_M_IA64)
-			// only program counter
-			dwMachType                   = IMAGE_FILE_MACHINE_IA64;
-			stackFrame.AddrPC.Offset     = context.StIIP;
 #elif defined(_M_ARM)
 			// only program counter
 			dwMachType                   = IMAGE_FILE_MACHINE_ARMNT;
@@ -545,9 +541,9 @@ public:
 #elif defined(_M_ARM64)
 			// only program counter
 			dwMachType                   = IMAGE_FILE_MACHINE_ARM64;
-			stackFrame.AddrPC.Offset     = context.Pc;			
+			stackFrame.AddrPC.Offset     = context.Pc;
 #else
-#error("Unknown Target Machine");
+#error Unknown Target Machine
 #endif
 
 			adwAddress.SetCount(0, 16);
@@ -609,7 +605,7 @@ ATL_NOINLINE inline void AtlDumpStack(_In_ IStackDumpHandler *pHandler)
 // CReportHookDumpHandler is a stack dump handler
 // that gathers the stack dump into the format
 // used by CDebugReportHook
-class CReportHookDumpHandler : 
+class CReportHookDumpHandler :
 	public IStackDumpHandler
 {
 public:
@@ -970,7 +966,7 @@ __interface __declspec(uuid("B1F64757-6E88-4fa2-8886-7848B0D7E660"))
 #define ATLS_POOL_SHUTDOWN ((OVERLAPPED*) ((__int64) -1))
 ATLPREFAST_SUPPRESS(6387)
 template <class Worker, class ThreadTraits=DefaultThreadTraits, class WaitTraits=DefaultWaitTraits>
-class CThreadPool : 
+class CThreadPool :
 	public IThreadPoolConfig
 {
 protected:
@@ -1867,7 +1863,7 @@ inline BOOL AtlUnescapeUrl(
 	{
 		if (ch == '%')
 		{
-			if ((*(szStringIn + 1) == '\0') || (*(szStringIn + 2) == '\0')) 
+			if ((*(szStringIn + 1) == '\0') || (*(szStringIn + 2) == '\0'))
 			{
 				// '%' sequence incomplete, set the output buffer size to
 				// what we've counted so far, but it would not reflect the real
@@ -2005,7 +2001,7 @@ inline BOOL AtlUnescapeUrl(
 
 ATLPREFAST_SUPPRESS(6103)
 //Canonicalize a URL (same as InternetCanonicalizeUrl)
-_Success_(return != FALSE) 
+_Success_(return != FALSE)
 inline BOOL AtlCanonicalizeUrl(
 	_In_z_ LPCTSTR szUrl,
 	_Out_writes_(*pdwMaxLength) LPTSTR szCanonicalized,
@@ -2195,7 +2191,7 @@ public:
 		return bRet;
 	}
 
-ATLPREFAST_SUPPRESS(6103)    
+ATLPREFAST_SUPPRESS(6103)
 	_Success_(return != FALSE)
 	inline BOOL CreateUrl(
 		_Out_writes_to_(*pdwMaxLength,*pdwMaxLength) LPTSTR lpszUrl,
@@ -2318,7 +2314,7 @@ ATLPREFAST_UNSUPPRESS()
 				return TRUE;
 			}
 			else
-			{              
+			{
 				return FALSE;
 			}
 		}

@@ -3,6 +3,7 @@
 #ifndef _RANDOM_
 #define _RANDOM_
 #ifndef RC_INVOKED
+#include <algorithm>
 #include <istream>
 #include <vector>
 
@@ -19,19 +20,18 @@
   #define _BITS_BYTE	8
  #endif /* _BITS_BYTE */
 
- #if defined(_DEBUG) || defined(_RNG_CHECK)
-  #define _RNG_ASSERT(_Ex, _Msg)	\
-	((_Ex) ? (void)0 : _Rng_abort(__FILE__ "(" _STRINGIZE(__LINE__) "): " _Msg))
-
- #else /* defined(_DEBUG) || defined(_RNG_CHECK) */
+ #if defined(_DEBUG)
+  #define _RNG_ASSERT(_Ex, _Msg) ((_Ex) ? (void)0 \
+	: (_STD _Debug_message(L ## _Msg, __FILEW__, __LINE__), _SCL_SECURE_INVALID_PARAMETER(_Msg)))
+ #else /* defined(_DEBUG) */
   #define _RNG_ASSERT(_Ex, _Msg) ((void)0)
- #endif /* defined(_DEBUG) || defined(_RNG_CHECK) */
+ #endif /* defined(_DEBUG) */
 
 _STD_BEGIN
 	// TEMPLATE STRUCT _Is_RealType
 template<class _Ty>
 	struct _Is_RealType
-		: _Cat_base<is_same<_Ty, float>::value
+		: bool_constant<is_same<_Ty, float>::value
 		|| is_same<_Ty, double>::value
 		|| is_same<_Ty, long double>::value>
 	{	// determine whether _Ty satisfies <random>'s RealType requirements
@@ -40,7 +40,7 @@ template<class _Ty>
 	// TEMPLATE STRUCT _Is_UIntType
 template<class _Ty>
 	struct _Is_UIntType
-		: _Cat_base<is_same<_Ty, unsigned short>::value
+		: bool_constant<is_same<_Ty, unsigned short>::value
 		|| is_same<_Ty, unsigned int>::value
 		|| is_same<_Ty, unsigned long>::value
 		|| is_same<_Ty, unsigned long long>::value>
@@ -50,7 +50,7 @@ template<class _Ty>
 	// TEMPLATE STRUCT _Is_IntType
 template<class _Ty>
 	struct _Is_IntType
-		: _Cat_base<is_same<_Ty, short>::value
+		: bool_constant<is_same<_Ty, short>::value
 		|| is_same<_Ty, int>::value
 		|| is_same<_Ty, long>::value
 		|| is_same<_Ty, long long>::value
@@ -65,18 +65,18 @@ template<class _Ty>
 
 #define _RNG_REQUIRE_REALTYPE(_RandType, _CheckedType) \
 	static_assert(_Is_RealType<_CheckedType>::value, \
-		"invalid template argument for " #_RandType ": N4606 26.6.1.1 [rand.req.genl]/1d requires one of " \
+		"invalid template argument for " #_RandType ": N4659 29.6.1.1 [rand.req.genl]/1d requires one of " \
 		"float, double, or long double")
 
 #define _RNG_REQUIRE_INTTYPE(_RandType, _CheckedType) \
 	static_assert(_Is_IntType<_CheckedType>::value, \
-		"invalid template argument for " #_RandType ": N4606 26.6.1.1 [rand.req.genl]/1e requires one of " \
+		"invalid template argument for " #_RandType ": N4659 29.6.1.1 [rand.req.genl]/1e requires one of " \
 		"short, int, long, long long, unsigned short, unsigned int, unsigned long, or unsigned long long"); \
 	_RNG_PROHIBIT_CHAR(_CheckedType)
 
 #define _RNG_REQUIRE_UINTTYPE(_RandType, _CheckedType) \
 	static_assert(_Is_UIntType<_CheckedType>::value, \
-		"invalid template argument for " #_RandType ": N4606 26.6.1.1 [rand.req.genl]/1f requires one of " \
+		"invalid template argument for " #_RandType ": N4659 29.6.1.1 [rand.req.genl]/1f requires one of " \
 		"unsigned short, unsigned int, unsigned long, or unsigned long long"); \
 	_RNG_PROHIBIT_CHAR(_CheckedType)
 
@@ -87,12 +87,10 @@ template<class _Seed_seq,
 	class _Engine = _Self>
 	struct _Enable_if_seed_seq
 		: enable_if<
-			!is_convertible<typename decay<_Seed_seq>::type,
+			!is_convertible<decay_t<_Seed_seq>,
 				typename _Self::result_type>::value
-			&& !is_same<typename decay<_Seed_seq>::type,
-				_Self>::value
-			&& !is_same<typename decay<_Seed_seq>::type,
-				_Engine>::value>
+			&& !is_same<decay_t<_Seed_seq>, _Self>::value
+			&& !is_same<decay_t<_Seed_seq>, _Engine>::value>
 	{	// determine whether _Seed_seq qualifies as a seed sequence
 	};
 
@@ -103,7 +101,6 @@ constexpr long double _Two32 = 4294967296.0L;
 constexpr long double _Two31 = 2147483648.0L;
 
 	// HELPER FUNCTIONS
-[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Rng_abort(_In_z_ const char *_Msg);
 _CRTIMP2_PURE float __CLRCALL_PURE_OR_CDECL _XLgamma(float);
 _CRTIMP2_PURE double __CLRCALL_PURE_OR_CDECL _XLgamma(double);
 _CRTIMP2_PURE long double __CLRCALL_PURE_OR_CDECL _XLgamma(long double);
@@ -1799,7 +1796,7 @@ public:
 		}
 
 	explicit discard_block_engine(_Engine&& _Ex)
-		: _Mybase(_STD forward<_Engine>(_Ex))
+		: _Mybase(_STD move(_Ex))
 		{	// construct with engine initializer _Ex
 		}
 
@@ -1855,7 +1852,7 @@ public:
 		}
 
 	explicit independent_bits_engine(_Engine&& _Ex)
-		: _Eng(_STD forward<_Engine>(_Ex))
+		: _Eng(_STD move(_Ex))
 		{	// construct with engine initializer _Ex
 		_Init();
 		}
@@ -1921,7 +1918,7 @@ public:
 				if (_Val <= _Y0)
 					break;
 				}
-			_Res = _Res << _W0 | static_cast<result_type>(_Val) & _Mask;
+			_Res = _Res << _W0 | (static_cast<result_type>(_Val) & _Mask);
 			}
 
 		_Mask = _Mask << 1 | 1;
@@ -1933,7 +1930,7 @@ public:
 				if (_Val <= _Y1)
 					break;
 				}
-			_Res = (_Res << (_W0 + 1)) | static_cast<result_type>(_Val) & _Mask;
+			_Res = _Res << (_W0 + 1) | (static_cast<result_type>(_Val) & _Mask);
 			}
 		return (_Res);
 		}
@@ -2068,7 +2065,7 @@ public:
 		}
 
 	explicit shuffle_order_engine(_Engine&& _Ex)
-		: _Eng(_STD forward<_Engine>(_Ex))
+		: _Eng(_STD move(_Ex))
 		{	// construct with engine initializer _Ex
 		_Init();
 		}
@@ -2348,7 +2345,7 @@ public:
 		}
 
 private:
-	typedef typename make_unsigned<_Ty>::type _Uty;
+	typedef make_unsigned_t<_Ty> _Uty;
 
 	template<class _Engine>
 		result_type _Eval(_Engine& _Eng, _Ty _Min, _Ty _Max) const
@@ -3775,16 +3772,16 @@ private:
 			}
 		else
 			{	// generate two values, store one, return one
-			double _V1, _V2, _Sx;
+			_Ty _V1, _V2, _Sx;
 			for (; ; )
 				{	// reject bad values
-				_V1 = 2 * _NRAND(_Eng, _Ty) - 1.0;
-				_V2 = 2 * _NRAND(_Eng, _Ty) - 1.0;
+				_V1 = 2 * _NRAND(_Eng, _Ty) - 1;
+				_V2 = 2 * _NRAND(_Eng, _Ty) - 1;
 				_Sx = _V1 * _V1 + _V2 * _V2;
-				if (_Sx < 1.0)
+				if (_Sx < 1)
 					break;
 				}
-			double _Fx = _CSTD sqrt(-2.0 * _CSTD log(_Sx) / _Sx);
+			const auto _Fx = static_cast<_Ty>(_CSTD sqrt(-2.0 * _CSTD log(_Sx) / _Sx));
 			if (_Keep)
 				{	// save second value for next call
 				_X2 = _Fx * _V2;
@@ -5488,8 +5485,9 @@ private:
 		result_type _Eval(_Engine& _Eng, const param_type& _Par0) const
 		{	// return pseudo-random value
 		double _V1;
-		gamma_distribution<double>
-			dist1(_Par0._Kx, (1 - _Par0._Px) / (_Par0._Px));
+		gamma_distribution<double> dist1(
+			static_cast<double>(_Par0._Kx),
+			static_cast<double>((static_cast<_Ty>(1) - _Par0._Px) / _Par0._Px));
 		_V1 = dist1(_Eng);
 		poisson_distribution<_Ty> dist2(_V1);
 
@@ -5747,23 +5745,9 @@ private:
 		result_type _Eval(_Engine& _Eng, const param_type& _Par0) const
 		{	// return next value
 		double _Px = _NRAND(_Eng, double);
-		result_type _Count = (result_type)_Par0._Pcdf.size();
-		result_type _First = 0;
-
-		while (0 < _Count)
-			{	// divide and conquer, find half that contains answer
-			result_type _Count2 = _Count / 2;
-			result_type _Mid = _First + _Count2;
-
-			if (_Px <= _Par0._Pcdf[_Mid])
-				_Count = _Count2;	// answer in first half, stay there
-			else
-				{	// answer in second half, move up
-				_First = ++_Mid;
-				_Count -= _Count2 + 1;
-				}
-			}
-		return (_First);
+		const auto _First = _Par0._Pcdf.begin();
+		const auto _Position = _STD lower_bound(_First, _Par0._Pcdf.end(), _Px);
+		return (static_cast<result_type>(_Position - _First));
 		}
 
 public:
@@ -5825,21 +5809,24 @@ public:
 
 		param_type()
 			{	// default constructor
-			_Bvec.push_back(_Ty(0));
-			_Bvec.push_back(_Ty(1));
+			_Bvec.push_back(0);
+			_Bvec.push_back(1);
 			}
 
 		template<class _InIt1,
 			class _InIt2>
 			param_type(_InIt1 _First1, _InIt1 _Last1, _InIt2 _First2)
-				: _Mypbase(_Noinit())
+				: _Mypbase(_Noinit()),
+				_Bvec(_First1, _Last1)
 			{	// construct from [_First1, _Last1) and [_First2, ...)
-			for (; _First1 != _Last1; ++_First1)
-				_Bvec.push_back(*_First1);
-
 			if (2 <= _Bvec.size())
+				{
 				for (size_t _Idx = 0; _Idx < _Bvec.size() - 1; ++_Idx)
-					this->_Pvec.push_back(*_First2++);
+					{
+					this->_Pvec.push_back(static_cast<double>(*_First2++));
+					}
+				}
+
 			_Init();
 			}
 
@@ -5852,8 +5839,8 @@ public:
 				_Bvec.assign(_Ilist);
 			else
 				{	// default construct
-				_Bvec.push_back(_Ty(0));
-				_Bvec.push_back(_Ty(1));
+				_Bvec.push_back(0);
+				_Bvec.push_back(1);
 				}
 
 			_Ty _Low = _Bvec.front();
@@ -6085,21 +6072,24 @@ public:
 
 		param_type()
 			{	// default constructor
-			_Bvec.push_back(_Ty(0));
-			_Bvec.push_back(_Ty(1));
+			_Bvec.push_back(0);
+			_Bvec.push_back(1);
 			}
 
 		template<class _InIt1,
 			class _InIt2>
 			param_type(_InIt1 _First1, _InIt1 _Last1, _InIt2 _First2)
-				: _Mypbase(_Noinit())
+				: _Mypbase(_Noinit()),
+				_Bvec(_First1, _Last1)
 			{	// construct from [_First1, _Last1) and [_First2, ...)
-			for (; _First1 != _Last1; ++_First1)
-				_Bvec.push_back(*_First1);
-
 			if (2 <= _Bvec.size())
+				{
 				for (size_t _Idx = 0; _Idx < _Bvec.size(); ++_Idx)
-					this->_Pvec.push_back(*_First2++);
+					{
+					this->_Pvec.push_back(static_cast<double>(*_First2++));
+					}
+				}
+
 			_Init();
 			}
 
@@ -6112,8 +6102,8 @@ public:
 				_Bvec.assign(_Ilist);
 			else
 				{	// default construct
-				_Bvec.push_back(_Ty(0));
-				_Bvec.push_back(_Ty(1));
+				_Bvec.push_back(0);
+				_Bvec.push_back(1);
 				}
 
 			_Ty _Low = _Bvec.front();
@@ -6122,7 +6112,10 @@ public:
 
 			_Range /= (_Ty)_Count;
 			for (size_t _Idx = 0; _Idx < _Count; ++_Idx)
+				{
 				this->_Pvec.push_back(_Func(_Low + _Idx * _Range));
+				}
+
 			_Init();
 			}
 
@@ -6334,8 +6327,11 @@ public:
 		result_type _X0 = _Dist(_Eng);
 
 		if (_P0 != _P1)
-			_X0 = (_STD sqrt(_P0 * _P0 * (1.0 - _X0)
-				+ _P1 * _P1 * _X0) - _P0) / (_P1 - _P0);
+			{
+			_X0 = static_cast<result_type>((_STD sqrt(_P0 * _P0 * (1.0 - _X0)
+				+ _P1 * _P1 * _X0) - _P0) / (_P1 - _P0));
+			}
+
 		return (_Par0._Bvec[_Px]
 			+ _X0 * (_Par0._Bvec[_Px + 1] - _Par0._Bvec[_Px]));
 		}

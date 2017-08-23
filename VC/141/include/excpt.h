@@ -27,7 +27,7 @@ typedef enum _EXCEPTION_DISPOSITION
 
 
 // SEH handler
-#ifdef _M_IX86
+#if defined(_M_IX86) && !defined(_CHPE_X86_ARM64_EH_)
 
     struct _EXCEPTION_RECORD;
     struct _CONTEXT;
@@ -39,14 +39,14 @@ typedef enum _EXCEPTION_DISPOSITION
         _Inout_ void*                  _DispatcherContext
         );
 
-#elif defined _M_X64 || defined _M_ARM || defined _M_ARM64
+#elif defined _M_X64 || defined _M_ARM || defined _M_ARM64 || defined _CHPE_X86_ARM64_EH_
     #ifndef _M_CEE_PURE
 
         struct _EXCEPTION_RECORD;
         struct _CONTEXT;
         struct _DISPATCHER_CONTEXT;
 
-        _VCRTIMP EXCEPTION_DISPOSITION __C_specific_handler(
+        _VCRTIMP EXCEPTION_DISPOSITION __cdecl __C_specific_handler(
             _In_    struct _EXCEPTION_RECORD*   ExceptionRecord,
             _In_    void*                       EstablisherFrame,
             _Inout_ struct _CONTEXT*            ContextRecord,

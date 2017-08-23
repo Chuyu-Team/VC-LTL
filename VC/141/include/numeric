@@ -14,8 +14,8 @@ _STD_BEGIN
 		// FUNCTION TEMPLATE accumulate WITH BINOP
 template<class _InIt,
 	class _Ty,
-	class _Fn2> inline
-	_Ty _Accumulate_unchecked(_InIt _First, _InIt _Last, _Ty _Val, _Fn2& _Func)
+	class _Fn> inline
+	_Ty _Accumulate_unchecked(_InIt _First, _InIt _Last, _Ty _Val, _Fn& _Func)
 	{	// return sum of _Val and all in [_First, _Last), using _Func
 	for (; _First != _Last; ++_First)
 		_Val = _Func(_Val, *_First);
@@ -24,8 +24,8 @@ template<class _InIt,
 
 template<class _InIt,
 	class _Ty,
-	class _Fn2> inline
-	_Ty accumulate(_InIt _First, _InIt _Last, _Ty _Val, _Fn2 _Func)
+	class _Fn> inline
+	_Ty accumulate(_InIt _First, _InIt _Last, _Ty _Val, _Fn _Func)
 	{	// return sum of _Val and all in [_First, _Last), using _Func
 	_DEBUG_RANGE(_First, _Last);
 	return (_Accumulate_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val, _Func));
@@ -43,11 +43,11 @@ template<class _InIt,
 template<class _InIt1,
 	class _InIt2,
 	class _Ty,
-	class _Fn21,
-	class _Fn22> inline
+	class _Fn1,
+	class _Fn2> inline
 	_Ty _Inner_product_unchecked(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _Ty _Val,
-		_Fn21& _Func1, _Fn22& _Func2)
+		_Fn1& _Func1, _Fn2& _Func2)
 	{	// return inner product of sequences, using _Func1 and _Func2
 	for (; _First1 != _Last1; ++_First1, (void)++_First2)
 		_Val = _Func1(_Val, _Func2(*_First1, *_First2));
@@ -57,27 +57,27 @@ template<class _InIt1,
 template<class _InIt1,
 	class _InIt2,
 	class _Ty,
-	class _Fn21,
-	class _Fn22> inline
+	class _Fn1,
+	class _Fn2> inline
 	_Ty _Inner_product_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _Ty _Val,
-		_Fn21& _Func1, _Fn22& _Func2)
+		_Fn1& _Func1, _Fn2& _Func2)
 	{	// return inner product of sequences, using _Func1 and _Func2, no deprecation warnings
 	_DEBUG_RANGE(_First1, _Last1);
 	const auto _UFirst1 = _Unchecked(_First1);
 	const auto _ULast1 = _Unchecked(_Last1);
-	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance(_UFirst1, _ULast1));
+	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance<_InIt1>(_UFirst1, _ULast1));
 	return (_Inner_product_unchecked(_UFirst1, _ULast1, _UFirst2, _Val, _Func1, _Func2));
 	}
 
 template<class _InIt1,
 	class _InIt2,
 	class _Ty,
-	class _Fn21,
-	class _Fn22> inline
+	class _Fn1,
+	class _Fn2> inline
 	_Ty inner_product(_InIt1 _First1, _InIt1 _Last1,
 		_InIt2 _First2, _Ty _Val,
-		_Fn21 _Func1, _Fn22 _Func2)
+		_Fn1 _Func1, _Fn2 _Func2)
 	{	// return inner product of sequences, using _Func1 and _Func2
 	_DEPRECATE_UNCHECKED(inner_product, _First2);
 	return (_Inner_product_no_deprecate(_First1, _Last1, _First2, _Val, _Func1, _Func2));
@@ -88,11 +88,11 @@ template<class _InIt1,
 	class _InTy,
 	size_t _InSize,
 	class _Ty,
-	class _Fn21,
-	class _Fn22> inline
+	class _Fn1,
+	class _Fn2> inline
 	_Ty inner_product(_InIt1 _First1, _InIt1 _Last1,
 		_InTy (&_First2)[_InSize], _Ty _Val,
-		_Fn21 _Func1, _Fn22 _Func2)
+		_Fn1 _Func1, _Fn2 _Func2)
 	{	// return inner product of sequences, using _Func1 and _Func2
 	return (_Inner_product_no_deprecate(_First1, _Last1,
 		_Array_iterator<_InTy, _InSize>(_First2), _Val,
@@ -127,9 +127,9 @@ template<class _InIt1,
 		// FUNCTION TEMPLATE partial_sum WITH BINOP
 template<class _InIt,
 	class _OutIt,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutIt _Partial_sum_unchecked(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn2& _Func)
+		_OutIt _Dest, _Fn& _Func)
 	{	// compute partial sums into _Dest, using _Func
 	if (_First != _Last)
 		{
@@ -144,23 +144,23 @@ template<class _InIt,
 
 template<class _InIt,
 	class _OutIt,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutIt _Partial_sum_no_deprecate(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn2& _Func)
+		_OutIt _Dest, _Fn& _Func)
 	{	// compute partial sums into _Dest, using _Func, no deprecation warnings
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Partial_sum_unchecked(_UFirst, _ULast, _UDest, _Func)));
 	}
 
 template<class _InIt,
 	class _OutIt,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutIt partial_sum(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn2 _Func)
+		_OutIt _Dest, _Fn _Func)
 	{	// compute partial sums into _Dest, using _Func
 	_DEPRECATE_UNCHECKED(partial_sum, _Dest);
 	return (_Partial_sum_no_deprecate(_First, _Last, _Dest, _Func));
@@ -170,9 +170,9 @@ template<class _InIt,
 template<class _InIt,
 	class _OutTy,
 	size_t _OutSize,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutTy *partial_sum(_InIt _First, _InIt _Last,
-		_OutTy (&_Dest)[_OutSize], _Fn2 _Func)
+		_OutTy (&_Dest)[_OutSize], _Fn _Func)
 	{	// compute partial sums into _Dest, using _Func
 	return (_Unchecked(
 		_Partial_sum_no_deprecate(_First, _Last,
@@ -203,9 +203,9 @@ template<class _InIt,
 		// FUNCTION TEMPLATE adjacent_difference WITH BINOP
 template<class _InIt,
 	class _OutIt,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutIt _Adjacent_difference_unchecked(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn2& _Func)
+		_OutIt _Dest, _Fn& _Func)
 	{	// compute adjacent differences into _Dest, using _Func
 	if (_First != _Last)
 		{
@@ -224,23 +224,23 @@ template<class _InIt,
 
 template<class _InIt,
 	class _OutIt,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutIt _Adjacent_difference_no_deprecate(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn2& _Func)
+		_OutIt _Dest, _Fn& _Func)
 	{	// compute adjacent differences into _Dest, using _Func, no deprecation warnings
 	_DEBUG_RANGE(_First, _Last);
 	const auto _UFirst = _Unchecked(_First);
 	const auto _ULast = _Unchecked(_Last);
-	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance(_UFirst, _ULast));
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
 	return (_Rechecked(_Dest,
 		_Adjacent_difference_unchecked(_UFirst, _ULast, _UDest, _Func)));
 	}
 
 template<class _InIt,
 	class _OutIt,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutIt adjacent_difference(_InIt _First, _InIt _Last,
-		_OutIt _Dest, _Fn2 _Func)
+		_OutIt _Dest, _Fn _Func)
 	{	// compute adjacent differences into _Dest, using _Func
 	_DEPRECATE_UNCHECKED(adjacent_difference, _Dest);
 	return (_Adjacent_difference_no_deprecate(_First, _Last, _Dest, _Func));
@@ -250,9 +250,9 @@ template<class _InIt,
 template<class _InIt,
 	class _OutTy,
 	size_t _OutSize,
-	class _Fn2> inline
+	class _Fn> inline
 	_OutTy *adjacent_difference(_InIt _First, _InIt _Last,
-		_OutTy (&_Dest)[_OutSize], _Fn2 _Func)
+		_OutTy (&_Dest)[_OutSize], _Fn _Func)
 	{	// compute adjacent differences into _Dest, using _Func
 	return (_Unchecked(
 		_Adjacent_difference_no_deprecate(_First, _Last,
@@ -297,6 +297,112 @@ template<class _FwdIt,
 	_DEBUG_RANGE(_First, _Last);
 	_Iota_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val);
 	}
+
+#if _HAS_CXX17
+	// FUNCTION TEMPLATE _Abs_u
+template<class _Signed,
+	enable_if_t<is_signed<_Signed>::value, int> = 0>
+	constexpr make_unsigned_t<_Signed> _Abs_u(const _Signed _Val) _NOEXCEPT
+	{	// computes absolute value of _Val as an unsigned value
+	using _Unsigned = make_unsigned_t<_Signed>;
+	if (_Val < 0)
+		{
+		return (static_cast<_Unsigned>(0) - static_cast<_Unsigned>(_Val));
+		}
+
+	return (static_cast<_Unsigned>(_Val));
+	}
+
+template<class _Unsigned,
+	enable_if_t<is_unsigned<_Unsigned>::value, int> = 0>
+	constexpr _Unsigned _Abs_u(const _Unsigned _Val) _NOEXCEPT
+	{	// computes absolute value of _Val as an unsigned value
+	return (_Val);
+	}
+
+	// FUNCTION TEMPLATE _Stl_bitscan_forward
+template<class _Unsigned>
+	constexpr unsigned long _Stl_bitscan_forward(_Unsigned _Mask) _NOEXCEPT
+	{	// find the index of the least significant set bit
+		// _BitScanForward isn't constexpr... yet :)
+	static_assert(is_unsigned<_Unsigned>::value, "Bitscan only works on bits");
+	unsigned long _Count = 0;
+	if (_Mask != 0)
+		{
+		while ((_Mask & 1U) == 0)
+			{
+			_Mask >>= 1;
+			++_Count;
+			}
+		}
+
+	return (_Count);
+	}
+
+	// FUNCTION TEMPLATE gcd
+template<class _Mt,
+	class _Nt>
+	constexpr common_type_t<_Mt, _Nt> gcd(const _Mt _Mx, const _Nt _Nx) _NOEXCEPT // Strengthened
+	{	// calculate greatest common divisor
+	static_assert(_Is_nonbool_integral<_Mt>::value && _Is_nonbool_integral<_Nt>::value,
+		"GCD requires nonbool integral types");
+
+	using _Common = common_type_t<_Mt, _Nt>;
+	using _Common_unsigned = make_unsigned_t<_Common>;
+	_Common_unsigned _Mx_magnitude = _Abs_u(_Mx);
+	_Common_unsigned _Nx_magnitude = _Abs_u(_Nx);
+	if (_Mx_magnitude == 0U)
+		{
+		return (static_cast<_Common>(_Nx_magnitude));
+		}
+
+	if (_Nx_magnitude == 0U)
+		{
+		return (static_cast<_Common>(_Mx_magnitude));
+		}
+
+	const auto _Mx_trailing_zeroes = _Stl_bitscan_forward(_Mx_magnitude);
+	const auto _Common_factors_of_2 = _Min_value(_Mx_trailing_zeroes,
+		_Stl_bitscan_forward(_Nx_magnitude));
+	_Nx_magnitude >>= _Common_factors_of_2;
+	_Mx_magnitude >>= _Mx_trailing_zeroes;
+	do
+		{
+		_Nx_magnitude >>= _Stl_bitscan_forward(_Nx_magnitude);
+		if (_Mx_magnitude > _Nx_magnitude)
+			{
+			_Common_unsigned _Temp = _Mx_magnitude;
+			_Mx_magnitude = _Nx_magnitude;
+			_Nx_magnitude = _Temp;
+			}
+
+		_Nx_magnitude -= _Mx_magnitude;
+		}
+	while (_Nx_magnitude != 0U);
+
+	return (static_cast<_Common>(_Mx_magnitude << _Common_factors_of_2));
+	}
+
+	// FUNCTION TEMPLATE lcm
+template<class _Mt,
+	class _Nt>
+	constexpr common_type_t<_Mt, _Nt> lcm(const _Mt _Mx, const _Nt _Nx) _NOEXCEPT // Strengthened
+	{	// calculate least common multiple
+	static_assert(_Is_nonbool_integral<_Mt>::value && _Is_nonbool_integral<_Nt>::value,
+		"LCM requires nonbool integral types");
+	using _Common = common_type_t<_Mt, _Nt>;
+	using _Common_unsigned = make_unsigned_t<_Common>;
+	const _Common_unsigned _Mx_magnitude = _Abs_u(_Mx);
+	const _Common_unsigned _Nx_magnitude = _Abs_u(_Nx);
+	if (_Mx_magnitude == 0 || _Nx_magnitude == 0)
+		{
+		return (static_cast<_Common>(0));
+		}
+
+	return (static_cast<_Common>((_Mx_magnitude / _STD gcd(_Mx_magnitude, _Nx_magnitude))
+		* _Nx_magnitude));
+	}
+#endif /* _HAS_CXX17 */
 _STD_END
  #pragma pop_macro("new")
  #pragma warning(pop)

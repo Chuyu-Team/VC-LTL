@@ -13,7 +13,7 @@
 #endif  // _MSC_VER
 
 #include <algorithm>
-#include <wrl\client.h>
+#include <wrl/client.h>
 
 #if !defined(__cplusplus_winrt)
 #error agile.h can only be used with /ZW

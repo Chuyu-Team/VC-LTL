@@ -12,11 +12,9 @@
  #pragma push_macro("new")
  #undef new
 
- #pragma warning(disable: 4988)	// TRANSITION, variable declared outside class/function scope
-
 _STD_BEGIN
 		// STRUCT time_base
-struct _CRTIMP2_PURE time_base
+struct _CRTIMP2_PURE_IMPORT time_base
 	: public locale::facet
 	{	// base class for time_get
 	enum dateorder
@@ -656,9 +654,18 @@ private:
 	};
 
 		// STATIC time_get::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _InIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id time_get<_Elem, _InIt>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS time_get_byname
 template<class _Elem,
@@ -808,14 +815,22 @@ private:
 	};
 
 		// STATIC time_put::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _OutIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id time_put<_Elem, _OutIt>::id;
 
-		// CLASS time_put<wchar_t>
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
+		// CLASS time_put<wchar_t>
 template<class _OutIt>
-	class _CRTIMP2_PURE time_put<wchar_t, _OutIt>
+	class _CRTIMP2_PURE_IMPORT time_put<wchar_t, _OutIt>
 		: public locale::facet
 	{	// facet for converting encoded times to wchar_t text
 public:
@@ -946,14 +961,23 @@ private:
 	};
 
 		// STATIC time_put::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _OutIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id time_put<wchar_t, _OutIt>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
  #if defined(_CRTBLD)
 		// CLASS time_put<unsigned short>
 
 template<class _OutIt>
-	class _CRTIMP2_PURE time_put<unsigned short, _OutIt>
+	class _CRTIMP2_PURE_IMPORT time_put<unsigned short, _OutIt>
 		: public locale::facet
 	{	// facet for converting encoded times to unsigned short text
 public:
@@ -1084,8 +1108,17 @@ private:
 	};
 
 		// STATIC time_put::id OBJECT
+  #ifdef __clang__
+   #pragma clang diagnostic push
+   #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+  #endif /* __clang__ */
+
 template<class _OutIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id time_put<unsigned short, _OutIt>::id;
+
+  #ifdef __clang__
+   #pragma clang diagnostic pop
+  #endif /* __clang__ */
  #endif /* defined(_CRTBLD) */
 
 		// TEMPLATE CLASS time_put_byname
@@ -1111,27 +1144,27 @@ protected:
 		}
 	};
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE time_get<char,
+template class _CRTIMP2_PURE_IMPORT time_get<char,
 	istreambuf_iterator<char, char_traits<char> > >;
-template class _CRTIMP2_PURE time_put<char,
+template class _CRTIMP2_PURE_IMPORT time_put<char,
 	ostreambuf_iterator<char, char_traits<char> > >;
 
-template class _CRTIMP2_PURE time_get<wchar_t,
+template class _CRTIMP2_PURE_IMPORT time_get<wchar_t,
 	istreambuf_iterator<wchar_t, char_traits<wchar_t> > >;
-template class _CRTIMP2_PURE time_put<wchar_t,
+template class _CRTIMP2_PURE_IMPORT time_put<wchar_t,
 	ostreambuf_iterator<wchar_t, char_traits<wchar_t> > >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
-template class _CRTIMP2_PURE time_get<unsigned short,
+template class _CRTIMP2_PURE_IMPORT time_get<unsigned short,
 	istreambuf_iterator<unsigned short, char_traits<unsigned short> > >;
-template class _CRTIMP2_PURE time_put<unsigned short,
+template class _CRTIMP2_PURE_IMPORT time_put<unsigned short,
 	ostreambuf_iterator<unsigned short, char_traits<unsigned short> > >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 _STD_END
 
  #pragma pop_macro("new")

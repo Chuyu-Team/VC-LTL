@@ -54,7 +54,7 @@
 
 #endif // _CXXAMP
 
-#include <unknwn.h>
+#include <Unknwn.h>
 #include <crtdbg.h>
 #include <string>
 #include <vector>

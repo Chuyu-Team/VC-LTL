@@ -27,9 +27,9 @@
 #endif
 
 #include <urlmon.h>
-#include <mshtml.h>
-#include <mshtmhst.h>
-#include <exdisp.h>
+#include <MsHTML.h>
+#include <MsHtmHst.h>
+#include <ExDisp.h>
 
 #ifndef _ATL_AXHOST
 #define _ATL_AXHOST
@@ -2577,7 +2577,7 @@ ATLPREFAST_UNSUPPRESS()
 			// Format of data in lpCreateParams
 			//	int nCreateSize;	// size of Create data in bytes
 			//	WORD nMsg;			//constant used to indicate type of DLGINIT data. See _DialogSplitHelper for values.
-			//	DWORD dwLen;		// Length of data strred for control in DLGINIT format in bytes.
+			//	DWORD dwLen;		// Length of data stored for control in DLGINIT format in bytes.
 			//	DWORD cchLicKey;	// Length of license key in OLECHAR's
 			//  OLECHAR *szLicKey;	// This will be present only if cchLicKey is greater than 0. This is of variable length and will contain cchLicKey OLECHAR's that represent the licence key.
 			//	The following two fields will be present only if nMsg is WM_OCC_LOADFROMSTREAM_EX or WM_OCC_LOADFROMSTORAGE_EX. If present this information will be ignored since databinding is not supported.

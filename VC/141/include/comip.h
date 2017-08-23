@@ -16,7 +16,7 @@
 #if !defined(_INC_COMIP)
 #define _INC_COMIP
 
-#include <ole2.h>
+#include <Ole2.h>
 #include <malloc.h>
 
 #include <comutil.h>

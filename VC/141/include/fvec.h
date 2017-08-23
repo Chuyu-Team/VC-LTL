@@ -50,7 +50,7 @@
             extern "C" {
 #endif  /* __cplusplus */
 
-        void __cdecl _wassert(_In_z_ const wchar_t * _Message, _In_z_ const wchar_t *_File, _In_ unsigned _Line);
+        _ACRTIMP void __cdecl _wassert(_In_z_ const wchar_t * _Message, _In_z_ const wchar_t * _File, _In_ unsigned _Line);
 
 #ifdef __cplusplus
             }

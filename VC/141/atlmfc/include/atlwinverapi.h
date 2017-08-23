@@ -22,8 +22,8 @@
 #pragma warning(disable: 4949) // pragmas 'managed' and 'unmanaged' are meaningful only when compiled with /clr
 
 #include <atldef.h>
-#include <windows.h>
-#include <ole2.h>
+#include <Windows.h>
+#include <Ole2.h>
 #include <sdkddkver.h>
 
 // This file contains declarations of wrappers for methods used
@@ -571,7 +571,7 @@ inline wchar_t __cdecl _AtlAsciiToWLower(_In_ wchar_t c)
 	return ((c >= L'A' && c <= L'Z') ? (c - L'A' + L'a') : c);
 }
 
-// Implements wcsncpmp for ASCII chars only. 
+// Implements wcsncpmp for ASCII chars only.
 // We can't use wcsncmp in this context because we may end up trying to modify
 // locale data structs or even calling the same function in NLS code.
 inline int __cdecl _AtlWcsnicmpAscii(_In_reads_z_(count) const wchar_t* string1, _In_reads_z_(count) const wchar_t* string2, _In_ size_t count)
@@ -594,7 +594,7 @@ inline int __cdecl _AtlWcsnicmpAscii(_In_reads_z_(count) const wchar_t* string1,
 	return result;
 }
 
-// Maps input locale name to the index on LcidToLocaleNameTable 
+// Maps input locale name to the index on LcidToLocaleNameTable
 inline int __cdecl _AtlGetTableIndexFromLocaleName(_In_z_ const wchar_t* localeName)
 {
 	_ATL_LOCALENAME_INDEX *localeNamesIndex = (_ATL_LOCALENAME_INDEX*) _pAtlLocaleNameToIndexTable;

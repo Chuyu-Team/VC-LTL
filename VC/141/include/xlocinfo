@@ -15,7 +15,7 @@
 
 _STD_BEGIN
 		// CLASS _Timevec
-class _CRTIMP2_PURE _Timevec
+class _CRTIMP2_PURE_IMPORT _Timevec
 	{	// smart pointer to information used by _Strftime
 public:
 	__CLR_OR_THIS_CALL _Timevec(void *_Ptr = 0)
@@ -50,7 +50,7 @@ private:
 	};
 
 		// CLASS _Locinfo
-class _CRTIMP2_PURE _Locinfo
+class _CRTIMP2_PURE_IMPORT _Locinfo
 	{	// summary of all stuff peculiar to a locale used by standard facets
 public:
 	typedef ::_Collvec _Collvec;
@@ -74,7 +74,7 @@ public:
 
 		{	// construct from NTBS
 		if (_Pch == 0)
-			_THROW_NCEE(runtime_error, "bad locale name");
+			_THROW(runtime_error, "bad locale name");
 		_Locinfo_ctor(this, _Pch);
 		}
 
@@ -85,7 +85,7 @@ public:
 
 		{	// construct from category mask and NTBS
 		if (_Pch == 0)
-			_THROW_NCEE(runtime_error, "bad locale name");
+			_THROW(runtime_error, "bad locale name");
 		_Locinfo_ctor(this, _Cat, _Pch);
 		}
 
@@ -97,7 +97,7 @@ public:
 	_Locinfo& __CLR_OR_THIS_CALL _Addcats(int _Cat, const char *_Pch)
 		{	// add facets matching category mask and NTBS
 		if (_Pch == 0)
-			_THROW_NCEE(runtime_error, "bad locale name");
+			_THROW(runtime_error, "bad locale name");
 		return (_Locinfo_Addcats(this, _Cat, _Pch));
 		}
 

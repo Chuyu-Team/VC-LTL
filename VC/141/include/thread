@@ -40,8 +40,7 @@ public:
 
 	template<class _Fn,
 		class... _Args,
-		class = typename enable_if<
-			!is_same<typename decay<_Fn>::type, thread>::value>::type>
+		class = enable_if_t<!is_same<decay_t<_Fn>, thread>::value>>
 		explicit thread(_Fn&& _Fx, _Args&&... _Ax)
 		{	// construct with _Fx(_Ax...)
 		_Launch(&_Thr,
@@ -167,11 +166,6 @@ private:
 		{	// construct from unique id
 		}
 
-	size_t _Hash_id() const
-		{	// hash bits to size_t value by pseudorandomizing transform
-		return (hash<_Thrd_id_t>()(_Id));
-		}
-
 	_Thrd_id_t _Id;
 
 	friend thread::id thread::get_id() const _NOEXCEPT;
@@ -249,16 +243,16 @@ template<class _Ch,
 	return (_Id._To_text(_Str));
 	}
 
-	// TEMPLATE STRUCT SPECIALIZATION hash
+	// STRUCT TEMPLATE SPECIALIZATION hash
 template<>
 	struct hash<thread::id>
 	{	// hash functor for thread::id
 	typedef thread::id argument_type;
 	typedef size_t result_type;
 
-	size_t operator()(const argument_type& _Keyval) const
+	size_t operator()(const thread::id _Keyval) const _NOEXCEPT
 		{	// hash _Keyval to size_t value by pseudorandomizing transform
-		return (_Keyval._Hash_id());
+		return (_Hash_representation(_Keyval._Id));
 		}
 	};
 _STD_END

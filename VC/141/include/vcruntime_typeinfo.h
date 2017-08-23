@@ -31,26 +31,28 @@
 
 _CRT_BEGIN_C_HEADER
 
-
-#pragma warning(push)
-#pragma warning(disable: 4510 4512 4610) // This type can never be instantiated
 struct __std_type_info_data
 {
-    char const* _UndecoratedName;
-    char const  _DecoratedName[1];
+    const char * _UndecoratedName;
+    const char   _DecoratedName[1];
+    __std_type_info_data() = delete;
+    __std_type_info_data(const __std_type_info_data&) = delete;
+    __std_type_info_data(__std_type_info_data&&) = delete;
+
+    __std_type_info_data& operator=(const __std_type_info_data&) = delete;
+    __std_type_info_data& operator=(__std_type_info_data&&) = delete;
 };
-#pragma warning(pop)
 
 _VCRTIMP int __cdecl __std_type_info_compare(
-    _In_ __std_type_info_data const* _Lhs,
-    _In_ __std_type_info_data const* _Rhs
+    _In_ const __std_type_info_data* _Lhs,
+    _In_ const __std_type_info_data* _Rhs
     );
 
 _VCRTIMP size_t __cdecl __std_type_info_hash(
-    _In_ __std_type_info_data const* _Data
+    _In_ const __std_type_info_data* _Data
     );
 
-_VCRTIMP char const* __cdecl __std_type_info_name(
+_VCRTIMP const char* __cdecl __std_type_info_name(
     _Inout_ __std_type_info_data* _Data,
     _Inout_ __type_info_node*     _RootNode
     );
@@ -63,49 +65,42 @@ class type_info
 {
 public:
 
-    type_info(type_info const&) = delete;
-    type_info& operator=(type_info const&) = delete;
+    type_info(const type_info&) = delete;
+    type_info& operator=(const type_info&) = delete;
 
     size_t hash_code() const throw()
     {
-		// FNV-1a hash function for the undecorated name
-
-#ifdef _WIN64
-		static_assert(sizeof(size_t) == 8, "This code is for 64-bit size_t.");
-		size_t const fnv_offset_basis = 14695981039346656037ULL;
-		size_t const fnv_prime = 1099511628211ULL;
-#else
-		static_assert(sizeof(size_t) == 4, "This code is for 32-bit size_t.");
-		size_t const fnv_offset_basis = 2166136261U;
-		size_t const fnv_prime = 16777619U;
-#endif
-
-		size_t value = fnv_offset_basis;
-		for (char const* it = raw_name() + 1; *it != '\0'; ++it)
-		{
-			value ^= static_cast<size_t>(static_cast<unsigned char>(*it));
-			value *= fnv_prime;
-		}
-
-#ifdef _WIN64
-		static_assert(sizeof(size_t) == 8, "This code is for 64-bit size_t.");
-		value ^= value >> 32;
-#else
-		static_assert(sizeof(size_t) == 4, "This code is for 32-bit size_t.");
-#endif
-
-		return value;
+        return __std_type_info_hash(&_Data);
     }
 
-	bool operator==(type_info const& _Other) const throw();
+    bool operator==(const type_info& _Other) const throw()
+    {
+        return __std_type_info_compare(&_Data, &_Other._Data) == 0;
+    }
 
-	bool operator!=(type_info const& _Other) const throw();
+    bool operator!=(const type_info& _Other) const throw()
+    {
+        return __std_type_info_compare(&_Data, &_Other._Data) != 0;
+    }
 
-	bool before(type_info const& _Other) const throw();
+    bool before(const type_info& _Other) const throw()
+    {
+        return __std_type_info_compare(&_Data, &_Other._Data) < 0;
+    }
 
-	char const* name() const throw();
+    const char* name() const throw()
+    {
+        #ifdef _M_CEE_PURE
+        return __std_type_info_name(&_Data, static_cast<__type_info_node*>(__type_info_root_node.ToPointer()));
+        #else
+        return __std_type_info_name(&_Data, &__type_info_root_node);
+        #endif
+    }
 
-	char const* raw_name() const throw();
+    const char* raw_name() const throw()
+    {
+        return _Data._DecoratedName;
+    }
 
     virtual ~type_info() throw();
 
@@ -132,14 +127,14 @@ public:
     {
     }
 
-    static bad_cast __construct_from_string_literal(char const* const _Message) throw()
+    static bad_cast __construct_from_string_literal(const char* const _Message) throw()
     {
         return bad_cast(_Message, 1);
     }
 
 private:
 
-    bad_cast(char const* const _Message, int) throw()
+    bad_cast(const char* const _Message, int) throw()
         : exception(_Message, 1)
     {
     }
@@ -155,7 +150,7 @@ public:
     {
     }
 
-    static bad_typeid __construct_from_string_literal(char const* const _Message) throw()
+    static bad_typeid __construct_from_string_literal(const char* const _Message) throw()
     {
         return bad_typeid(_Message, 1);
     }
@@ -164,7 +159,7 @@ private:
 
     friend class __non_rtti_object;
 
-    bad_typeid(char const* const _Message, int) throw()
+    bad_typeid(const char* const _Message, int) throw()
         : exception(_Message, 1)
     {
     }
@@ -175,14 +170,14 @@ class __non_rtti_object
 {
 public:
 
-    static __non_rtti_object __construct_from_string_literal(char const* const _Message) throw()
+    static __non_rtti_object __construct_from_string_literal(const char* const _Message) throw()
     {
         return __non_rtti_object(_Message, 1);
     }
 
 private:
 
-    __non_rtti_object(char const* const _Message, int) throw()
+    __non_rtti_object(const char* const _Message, int) throw()
         : bad_typeid(_Message, 1)
     {
     }

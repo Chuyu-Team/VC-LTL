@@ -53,7 +53,7 @@
 // OLEDB headers set packing to 2
 // There's gap where there should be padding on ARM because it requires
 // 8 byte align for double yet pointers are only on 4 byte boundaries
-// So it's different from x86 and x64 & IA64
+// So it's different from x86 and x64
 #pragma warning(push)
 #pragma warning(disable:4366)
 #endif
@@ -7574,7 +7574,7 @@ public:
 // OLEDB headers set packing to 2
 // There's gap where there should be padding on ARM because it requires
 // 8 byte align for double yet pointers are only on 4 byte boundaries
-// So it's different from x86 and x64 & IA64
+// So it's different from x86 and x64
 // Restore warning state pushed above
 #pragma warning(pop)
 #endif

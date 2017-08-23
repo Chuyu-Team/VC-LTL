@@ -33,25 +33,22 @@ template<class _Elem,
 	class _Alloc> inline
 	size_t hash_value(const basic_string<_Elem, _Traits, _Alloc>& _Str)
 	{	// hash string to size_t value
-	return (_STD _Hash_seq((const unsigned char *)_Str.c_str(),
-		_Str.size() * sizeof (_Elem)));
+	return (_STD _Hash_array_representation(_Str.c_str(), _Str.size()));
 	}
 
 inline size_t hash_value(_In_z_ const char *_Str)
 	{	// hash NTBS to size_t value
-	return (_STD _Hash_seq((const unsigned char *)_Str,
-		_CSTD strlen(_Str)));
+	return (_STD _Hash_array_representation(_Str, _CSTD strlen(_Str)));
 	}
 
 inline size_t hash_value(_In_z_ const wchar_t *_Str)
 	{	// hash NTWCS to size_t value
-	return (_STD _Hash_seq((const unsigned char *)_Str,
-		_CSTD wcslen(_Str) * sizeof (wchar_t)));
+	return (_STD _Hash_array_representation(_Str, _CSTD wcslen(_Str)));
 	}
 
 		// TEMPLATE CLASS hash_compare
 template<class _Kty,
-	class _Pr = less<_Kty> >
+	class _Pr = less<_Kty>>
 	class hash_compare
 	{	// traits class for hash containers
 public:
@@ -138,7 +135,17 @@ public:
 		return (_Mypair._Get_second()._Get_second());
 		}
 
-	_Compressed_pair<_Hasher, _Compressed_pair<_Keyeq, float> > _Mypair;
+	void swap(_Uhash_compare& _Rhs) _NOEXCEPT_COND(_Is_nothrow_swappable<_Hasher>::value
+		&& _Is_nothrow_swappable<_Keyeq>::value)
+		{
+		_Swap_adl(_Mypair._Get_first(), _Rhs._Mypair._Get_first());
+		auto& _Lsecond = _Mypair._Get_second();
+		auto& _Rsecond = _Rhs._Mypair._Get_second();
+		_Swap_adl(_Lsecond._Get_first(), _Rsecond._Get_first());
+		_STD swap(_Lsecond._Get_second(), _Rsecond._Get_second());
+		}
+
+	_Compressed_pair<_Hasher, _Compressed_pair<_Keyeq, float>> _Mypair;
 	};
 
 		// TEMPLATE CLASS _Hash
@@ -146,69 +153,64 @@ template<class _Traits>
 	class _Hash
 	{	// hash table -- list with vector of iterators for quick access
 public:
-	typedef _Hash<_Traits> _Myt;
-
-	typedef typename _Traits::key_type key_type;
-	typedef typename _Traits::key_compare key_compare;
-	typedef typename _Traits::value_compare value_compare;
+	using key_type = typename _Traits::key_type;
+	using key_compare = typename _Traits::key_compare;
+	using value_compare = typename _Traits::value_compare;
 	enum
 		{	// various constants
 		_Bucket_size = key_compare::bucket_size,
 		_Min_buckets = 8,	// min_buckets = 2 ^^ N, 0 < N
 		_Multi = _Traits::_Multi};
-	typedef list<typename _Traits::value_type,
-		typename _Traits::allocator_type> _Mylist;
-	typedef typename _Mylist::_Alty _Alty;
+	using _Mylist = list<typename _Traits::value_type, typename _Traits::allocator_type>;
+	using _Alnode = typename _Mylist::_Alnode;
+	using _Alnode_traits = typename _Mylist::_Alnode_traits;
 
-	typedef typename _Mylist::value_type value_type;
-	typedef typename _Mylist::allocator_type allocator_type;
-	typedef typename _Mylist::size_type size_type;
-	typedef typename _Mylist::difference_type difference_type;
-	typedef typename _Mylist::pointer pointer;
-	typedef typename _Mylist::const_pointer const_pointer;
-	typedef typename _Mylist::reference reference;
-	typedef typename _Mylist::const_reference const_reference;
+	using value_type = typename _Mylist::value_type;
+	using allocator_type = typename _Mylist::allocator_type;
+	using size_type = typename _Mylist::size_type;
+	using difference_type = typename _Mylist::difference_type;
+	using pointer = typename _Mylist::pointer;
+	using const_pointer = typename _Mylist::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
 
-	typedef typename _If<is_same<key_type, value_type>::value,
+	using iterator = conditional_t<is_same<key_type, value_type>::value,
 		typename _Mylist::const_iterator,
-		typename _Mylist::iterator>::type iterator;
-	typedef typename _Mylist::const_iterator const_iterator;
+		typename _Mylist::iterator>;
+	using const_iterator = typename _Mylist::const_iterator;
 
-	typedef typename _If<is_same<key_type, value_type>::value,
+	using _Unchecked_iterator = conditional_t<is_same<key_type, value_type>::value,
 		typename _Mylist::_Unchecked_const_iterator,
-		typename _Mylist::_Unchecked_iterator>::type
-		_Unchecked_iterator;
-	typedef typename _Mylist::_Unchecked_const_iterator
-		_Unchecked_const_iterator;
+		typename _Mylist::_Unchecked_iterator>;
+	using _Unchecked_const_iterator = typename _Mylist::_Unchecked_const_iterator;
 
-	typedef vector<_Unchecked_iterator,
-		typename _Alty::template
-			rebind<_Unchecked_iterator>::other> _Myvec;
+	using _Aliter = _Rebind_alloc_t<_Alnode, _Unchecked_iterator>;
+	using _Myvec = vector<_Unchecked_iterator, _Aliter>;
 
-	typedef pair<iterator, bool> _Pairib;
-	typedef pair<iterator, iterator> _Pairii;
-	typedef pair<const_iterator, const_iterator> _Paircc;
+	using _Pairib = pair<iterator, bool>;
+	using _Pairii = pair<iterator, iterator>;
+	using _Paircc = pair<const_iterator, const_iterator>;
 
 	_Hash(const key_compare& _Parg,
 		const allocator_type& _Al)
 		: _Traitsobj(_Parg),
 			_List(_Al),
-			_Vec(_Al)
+			_Vec(static_cast<_Aliter>(_Al))
 		{	// construct empty hash table
 		_Max_bucket_size() = _Bucket_size;
 		_Init();
 		}
 
 	template<class _Any_alloc>
-		_Hash(const _Myt& _Right, const _Any_alloc& _Al)
+		_Hash(const _Hash& _Right, const _Any_alloc& _Al)
 		: _Traitsobj(_Right._Traitsobj),
 			_List(allocator_type(_Al)),
-			_Vec(_Al)
+			_Vec(static_cast<_Aliter>(_Al))
 		{	// construct hash table by copying right
 		_Copy(_Right);
 		}
 
-	_Hash(_Myt&& _Right)
+	_Hash(_Hash&& _Right)
 		: _Traitsobj(_Right._Traitsobj),
 			_List(_STD move(_Right._List)),
 			_Vec(_STD move(_Right._Vec)),
@@ -260,10 +262,10 @@ public:
 			}
 		}
 
-	_Hash(_Myt&& _Right, const allocator_type& _Al)
+	_Hash(_Hash&& _Right, const allocator_type& _Al)
 		: _Traitsobj(_Right._Traitsobj),
 			_List(_Al),
-			_Vec(_STD move(_Right._Vec), _Al),
+			_Vec(_STD move(_Right._Vec), static_cast<_Aliter>(_Al)),
 			_Mask(_Right._Mask),
 			_Maxidx(_Right._Maxidx)
 		{	// construct hash table by moving _Right, allocator
@@ -272,7 +274,7 @@ public:
 		_Right.clear();
 		}
 
-	_Myt& operator=(_Myt&& _Right)
+	_Hash& operator=(_Hash&& _Right)
 		{	// assign by moving _Right
 		if (this != _STD addressof(_Right))
 			{
@@ -281,7 +283,7 @@ public:
 			_Mask = _Right._Mask;
 			_Maxidx = _Right._Maxidx;
 
-			_Move_assign_list(_Right, typename _Alty::propagate_on_container_move_assignment());
+			_Move_assign_list(_Right, typename _Alnode_traits::propagate_on_container_move_assignment());
 
 			_Right.clear();
 			}
@@ -303,12 +305,9 @@ public:
 		return (_Insert(_List.front(), _Unchecked_begin()).first);
 		}
 
-	~_Hash() _NOEXCEPT
-		{	// destroy hash table
-//		_List.clear();	// speed orphaning of checked iterators
-		}
+	~_Hash() _NOEXCEPT = default;
 
-	_Myt& operator=(const _Myt& _Right)
+	_Hash& operator=(const _Hash& _Right)
 		{	// replace contents from _Right
 		if (this != _STD addressof(_Right))
 			{
@@ -399,8 +398,7 @@ public:
 
 	allocator_type get_allocator() const _NOEXCEPT
 		{	// return allocator object for values
-		allocator_type _Ret(_List.get_allocator());
-		return (_Ret);
+		return (static_cast<allocator_type>(_List.get_allocator()));
 		}
 
 	key_compare key_comp() const
@@ -413,8 +411,8 @@ public:
 		return (value_compare(key_comp()));
 		}
 
-	typedef iterator local_iterator;
-	typedef const_iterator const_local_iterator;
+	using local_iterator = iterator;
+	using const_local_iterator = const_iterator;
 
 	size_type bucket_count() const _NOEXCEPT
 		{	// return number of buckets
@@ -582,6 +580,13 @@ public:
 		insert(_Ilist.begin(), _Ilist.end());
 		}
 
+	template<class _Iter = iterator,
+		class = enable_if_t<!is_same<_Iter, const_iterator>::value>>
+		iterator erase(iterator _Plist)
+		{	// erase element at _Plist
+		return (erase(const_iterator{_Plist}));
+		}
+
 	iterator erase(const_iterator _Plist)
 		{	// erase element at _Plist
 		size_type _Bucket = _Hashval(_Traits::_Kfn(*_Plist));
@@ -718,12 +723,12 @@ public:
 		return (_Paircc(end(), end()));
 		}
 
-	void swap(_Myt& _Right)
+	void swap(_Hash& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(this->_Traitsobj.swap(_Right._Traitsobj))) // Strengthened, TRANSITION, VSO#424948
 		{	// exchange contents with _Right
 		if (this != _STD addressof(_Right))
 			{	// different, worth swapping
-			_Swap_adl(_Traitsobj, _Right._Traitsobj);
-
+			_Traitsobj.swap(_Right._Traitsobj);
 			this->_List.swap(_Right._List);
 			this->_Vec.swap(_Right._Vec);
 			_Swap_adl(this->_Mask, _Right._Mask);
@@ -864,7 +869,7 @@ protected:
 
 	void _Erase_bucket(iterator _Plist_arg, size_type _Bucket)
 		{	// fix iterators before erasing _Plist before _Where
-		_Unchecked_iterator _Plist = _Plist_arg._Unchecked();
+		_Unchecked_iterator _Plist = _Unchecked(_Plist_arg);
 		if (_Vec_hi(_Bucket) == _Plist)
 			if (_Vec_lo(_Bucket) == _Plist)
 				{	// make bucket empty
@@ -891,7 +896,7 @@ protected:
 			--_Vec_hi(_Bucket);	// or not
 		}
 
-	void _Copy(const _Myt& _Right)
+	void _Copy(const _Hash& _Right)
 		{	// copy entire hash table
 		_Mask = _Right._Mask;
 		_Maxidx = _Right._Maxidx;
@@ -974,7 +979,7 @@ template<class _Traits> inline
 		const _Hash<_Traits>& _Right,
 		false_type)
 	{	// test for _Hash equality (same size, unique keys)
-	typedef typename _Hash<_Traits>::const_iterator _Iter;
+	using _Iter = typename _Hash<_Traits>::const_iterator;
 	for (_Iter _Next1 = _Left.begin(); _Next1 != _Left.end(); ++_Next1)
 		{	// look for element with equivalent key
 		_Iter _Next2 = _Right.find(_Traits::_Kfn(*_Next1));
@@ -991,8 +996,8 @@ template<class _Traits> inline
 		const _Hash<_Traits>& _Right,
 		true_type)
 	{	// test for _Hash equality (same size, equivalent keys)
-	typedef typename _Hash<_Traits>::const_iterator _Iter;
-	typedef pair<_Iter, _Iter> _Iter_pair;
+	using _Iter = typename _Hash<_Traits>::const_iterator;
+	using _Iter_pair = pair<_Iter, _Iter>;
 
 	for (_Iter _Next1 = _Left.begin(); _Next1 != _Left.end(); )
 		{	// look for elements with equivalent keys
@@ -1013,7 +1018,7 @@ template<class _Traits> inline
 		const _Hash<_Traits>& _Right)
 	{	// test for _Hash equality
 	return (_Left.size() == _Right.size() && _Hash_equal_elements(
-		_Left, _Right, integral_constant<bool, _Traits::_Multi>()));
+		_Left, _Right, bool_constant<_Traits::_Multi>()));
 	}
 _STD_END
 

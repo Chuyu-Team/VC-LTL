@@ -42,7 +42,7 @@
   #define _INTRIN_SEQ_CST(x)	x
  #endif /* defined(_M_ARM) || defined(_M_ARM64) */
 
- #if defined(_M_IX86)
+ #if defined(_M_IX86) && !defined(_M_HYBRID_X86_ARM64)
 #pragma push_macro("_InterlockedExchange64")
 #pragma push_macro("_InterlockedExchangeAdd64")
 #pragma push_macro("_InterlockedAnd64")
@@ -129,7 +129,7 @@ inline long long _InterlockedXor64(volatile long long *_Tgt, long long _Value)
 
 	return (_Oldval);
 }
- #endif /* defined(_M_IX86) */
+ #endif /* defined(_M_IX86) && !defined(_M_HYBRID_X86_ARM64) */
 
 _STD_BEGIN
 		/* TYPEDEFS FOR INTERNAL ARITHMETIC TYPES */
@@ -151,8 +151,36 @@ typedef long _Atomic_flag_t;
    #endif /* _ITERATOR_DEBUG_LEVEL */
   #endif /* _INVALID_MEMORY_ORDER */
 
-inline memory_order _Memory_order_upper_bound(memory_order _Order1,
-	memory_order _Order2)
+		// FUNCTION _Check_memory_order
+inline void _Check_memory_order(const memory_order _Order)
+	{	// check that a value of memory_order is a valid memory_order
+	if (static_cast<unsigned int>(_Order) > memory_order_seq_cst)
+		{
+		_INVALID_MEMORY_ORDER;
+		}
+	}
+
+		// FUNCTION _Check_load_memory_order
+inline void _Check_load_memory_order(const memory_order _Order)
+	{
+	switch (_Order)
+		{
+		case memory_order_relaxed:
+		case memory_order_consume:
+		case memory_order_acquire:
+		case memory_order_seq_cst:
+			// nothing to do
+			break;
+
+		case memory_order_release:
+		case memory_order_acq_rel:
+		default:
+			_INVALID_MEMORY_ORDER;
+			break;
+		}
+	}
+
+inline memory_order _Memory_order_upper_bound(const memory_order _Success, const memory_order _Failure)
 	{   /* find upper bound of two memory orders,
 			based on the following partial order:
 
@@ -184,45 +212,9 @@ inline memory_order _Memory_order_upper_bound(memory_order _Order1,
 		}
 		};
 
-	if ((_Order1 < 0) || (6 <= _Order1)
-		|| (_Order2 < 0) || (6 <= _Order2))
-		{	/* launder memory order */
-		_INVALID_MEMORY_ORDER;
-		return (memory_order_seq_cst);
-		}
-	return (_Upper[_Order1][_Order2]);
-	}
-
-inline void _Validate_compare_exchange_memory_order(
-	memory_order _Success, memory_order _Failure)
-	{	/* validate success/failure */
-	/* _Failure may not be memory_order_release or memory_order_acq_rel
-		and may not be stronger than _Success */
-	switch (_Failure)
-		{
-	case memory_order_relaxed:
-		break;
-
-	case memory_order_seq_cst:
-		if (_Success != memory_order_seq_cst)
-			_INVALID_MEMORY_ORDER;
-		break;
-
-	case memory_order_acquire:
-		if ((_Success == memory_order_consume) ||
-			(_Success == memory_order_relaxed))
-			_INVALID_MEMORY_ORDER;
-		break;
-
-	case memory_order_consume:
-		if (_Success == memory_order_relaxed)
-			_INVALID_MEMORY_ORDER;
-		break;
-
-	default:
-		_INVALID_MEMORY_ORDER;
-		break;
-		}
+	_Check_memory_order(_Success);
+	_Check_load_memory_order(_Failure);
+	return (_Upper[_Success][_Failure]);
 	}
 
 
@@ -282,6 +274,9 @@ inline void _Atomic_store_1(
 			_Store_seq_cst_1(_Tgt, _Value);
 			break;
 
+		case memory_order_consume:
+		case memory_order_acquire:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			break;
@@ -343,6 +338,8 @@ inline _Uint1_t _Atomic_load_1(
 		case memory_order_seq_cst:
 			return (_Load_seq_cst_1(_Tgt));
 
+		case memory_order_release:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			return (0);
@@ -480,8 +477,6 @@ inline int _Atomic_compare_exchange_strong_1(
 	volatile _Uint1_t *_Tgt, _Uint1_t *_Exp, _Uint1_t _Value,
 	memory_order _Order1, memory_order _Order2)
 	{	/* compare and exchange values atomically */
-	_Validate_compare_exchange_memory_order(_Order1, _Order2);
-
 	switch (_Memory_order_upper_bound(_Order1, _Order2))
 		{
 		case memory_order_relaxed:
@@ -792,6 +787,9 @@ inline void _Atomic_store_2(
 			_Store_seq_cst_2(_Tgt, _Value);
 			break;
 
+		case memory_order_consume:
+		case memory_order_acquire:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			break;
@@ -853,6 +851,8 @@ inline _Uint2_t _Atomic_load_2(
 		case memory_order_seq_cst:
 			return (_Load_seq_cst_2(_Tgt));
 
+		case memory_order_release:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			return (0);
@@ -990,8 +990,6 @@ inline int _Atomic_compare_exchange_strong_2(
 	volatile _Uint2_t *_Tgt, _Uint2_t *_Exp, _Uint2_t _Value,
 	memory_order _Order1, memory_order _Order2)
 	{	/* compare and exchange values atomically */
-	_Validate_compare_exchange_memory_order(_Order1, _Order2);
-
 	switch (_Memory_order_upper_bound(_Order1, _Order2))
 		{
 		case memory_order_relaxed:
@@ -1302,6 +1300,9 @@ inline void _Atomic_store_4(
 			_Store_seq_cst_4(_Tgt, _Value);
 			break;
 
+		case memory_order_consume:
+		case memory_order_acquire:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			break;
@@ -1363,6 +1364,8 @@ inline _Uint4_t _Atomic_load_4(
 		case memory_order_seq_cst:
 			return (_Load_seq_cst_4(_Tgt));
 
+		case memory_order_release:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			return (0);
@@ -1500,8 +1503,6 @@ inline int _Atomic_compare_exchange_strong_4(
 	volatile _Uint4_t *_Tgt, _Uint4_t *_Exp, _Uint4_t _Value,
 	memory_order _Order1, memory_order _Order2)
 	{	/* compare and exchange values atomically */
-	_Validate_compare_exchange_memory_order(_Order1, _Order2);
-
 	switch (_Memory_order_upper_bound(_Order1, _Order2))
 		{
 		case memory_order_relaxed:
@@ -1818,6 +1819,9 @@ inline void _Atomic_store_8(
 			_Store_seq_cst_8(_Tgt, _Value);
 			break;
 
+		case memory_order_consume:
+		case memory_order_acquire:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			break;
@@ -1892,6 +1896,8 @@ inline _Uint8_t _Atomic_load_8(
 		case memory_order_seq_cst:
 			return (_Load_seq_cst_8(_Tgt));
 
+		case memory_order_release:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			return (0);
@@ -2029,8 +2035,6 @@ inline int _Atomic_compare_exchange_strong_8(
 	volatile _Uint8_t *_Tgt, _Uint8_t *_Exp, _Uint8_t _Value,
 	memory_order _Order1, memory_order _Order2)
 	{	/* compare and exchange values atomically */
-	_Validate_compare_exchange_memory_order(_Order1, _Order2);
-
 	switch (_Memory_order_upper_bound(_Order1, _Order2))
 		{
 		case memory_order_relaxed:
@@ -2324,6 +2328,9 @@ inline void _Atomic_flag_clear(volatile _Atomic_flag_t *_Flag,
 			_Atomic_store_4((volatile _Uint4_t *)_Flag, 0, _Order);
 			break;
 
+		case memory_order_consume:
+		case memory_order_acquire:
+		case memory_order_acq_rel:
 		default:
 			_INVALID_MEMORY_ORDER;
 			break;
@@ -2489,13 +2496,13 @@ inline _Atomic_integral_t _Compare_increment_atomic_counter(
  #endif /* _USE_INTERLOCKED_REFCOUNTING == 0 */
 _STD_END
 
- #if defined(_M_IX86)
+ #if defined(_M_IX86) && !defined(_M_HYBRID_X86_ARM64)
 #pragma pop_macro("_InterlockedExchange64")
 #pragma pop_macro("_InterlockedExchangeAdd64")
 #pragma pop_macro("_InterlockedAnd64")
 #pragma pop_macro("_InterlockedOr64")
 #pragma pop_macro("_InterlockedXor64")
- #endif /* defined(_M_IX86) */
+ #endif /* defined(_M_IX86) && !defined(_M_HYBRID_X86_ARM64) */
 
  #pragma pop_macro("new")
  #pragma warning(pop)

@@ -16,8 +16,6 @@
  #pragma push_macro("new")
  #undef new
 
- #pragma warning(disable: 4988)	// TRANSITION, variable declared outside class/function scope
-
 _STD_BEGIN
 		// TEMPLATE CLASS collate
 template<class _Elem>
@@ -45,7 +43,7 @@ public:
 		return (do_hash(_First, _Last));
 		}
 
-	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE static locale::id id;	// unique facet id
+	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE_IMPORT static locale::id id;	// unique facet id
 
 	explicit collate(size_t _Refs = 0)
 		: locale::facet(_Refs)
@@ -118,12 +116,10 @@ protected:
 		return (_Str);
 		}
 
-	virtual long __CLR_OR_THIS_CALL do_hash(const _Elem *_First,
-		const _Elem *_Last) const
+	virtual long __CLR_OR_THIS_CALL do_hash(const _Elem *_First, const _Elem *_Last) const
 		{	// compute hash code for [_First, _Last)
 		_DEBUG_RANGE(_First, _Last);
-		return ((long)_Hash_seq((const unsigned char *)_First,
-			(_Last - _First) * sizeof (_Elem)));
+		return (static_cast<long>(_Hash_array_representation(_First, _Last - _First)));
 		}
 
 private:
@@ -131,6 +127,11 @@ private:
 	};
 
 		// STATIC collate::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem>
 	__PURE_APPDOMAIN_GLOBAL locale::id collate<_Elem>::id;
 
@@ -144,7 +145,11 @@ template __PURE_APPDOMAIN_GLOBAL locale::id collate<wchar_t>::id;
   #ifdef __FORCE_INSTANCE
 template __PURE_APPDOMAIN_GLOBAL locale::id collate<unsigned short>::id;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS collate_byname
 template<class _Elem>
@@ -173,7 +178,7 @@ protected:
   #define _HAS(loc, fac)	has_facet<fac>(loc)
 
 template<class _Facet> inline
-	bool has_facet(const locale& _Loc) _THROW0()
+	bool has_facet(const locale& _Loc) _NOEXCEPT
 	{	// test if facet is in locale
 	_BEGIN_LOCK(_LOCK_LOCALE)	// the thread lock, make get atomic
 		size_t _Id = _Facet::id;

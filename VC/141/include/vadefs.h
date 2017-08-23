@@ -46,7 +46,7 @@ extern "C" {
     #define _ADDRESSOF(v) (&(v))
 #endif
 
-#if defined _M_ARM && !defined _M_CEE_PURE
+#if (defined _M_ARM || defined _M_HYBRID_X86_ARM64) && !defined _M_CEE_PURE
     #define _VA_ALIGN       4
     #define _SLOTSIZEOF(t)  ((sizeof(t) + _VA_ALIGN - 1) & ~(_VA_ALIGN - 1))
     #define _APALIGN(t,ap)  (((va_list)0 - (ap)) & (__alignof(t) - 1))
@@ -69,7 +69,7 @@ extern "C" {
     #define __crt_va_arg(ap, t)     (*(t *)__va_arg(&ap, _SLOTSIZEOF(t), _APALIGN(t,ap), (t*)0))
     #define __crt_va_end(ap)        ((void)(__va_end(&ap)))
 
-#elif defined _M_IX86
+#elif defined _M_IX86 && !defined _M_HYBRID_X86_ARM64
 
     #define _INTSIZEOF(n)          ((sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1))
 
@@ -88,6 +88,12 @@ extern "C" {
 
     #define __crt_va_arg(ap, t) (*(t*)((ap += _SLOTSIZEOF(t) + _APALIGN(t,ap)) - _SLOTSIZEOF(t)))
     #define __crt_va_end(ap)    ((void)(ap = (va_list)0))
+
+#elif defined _M_HYBRID_X86_ARM64
+    void __cdecl __va_start(va_list*, ...);
+    #define __crt_va_start_a(ap,v) ((void)(__va_start(&ap, _ADDRESSOF(v), _SLOTSIZEOF(v), __alignof(v), _ADDRESSOF(v))))
+    #define __crt_va_arg(ap, t)    (*(t*)((ap += _SLOTSIZEOF(t)) - _SLOTSIZEOF(t)))
+    #define __crt_va_end(ap)       ((void)(ap = (va_list)0))
 
 #elif defined _M_ARM64
 

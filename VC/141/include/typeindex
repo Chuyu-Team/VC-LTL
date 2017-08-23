@@ -64,14 +64,14 @@ private:
 	const type_info *_Tptr;
 	};
 
-	// TEMPLATE STRUCT SPECIALIZATION hash
+	// STRUCT TEMPLATE SPECIALIZATION hash
 template<>
 	struct hash<type_index>
 	{	// hash functor for type_index
 	typedef type_index argument_type;
 	typedef size_t result_type;
 
-	size_t operator()(const argument_type& _Keyval) const
+	size_t operator()(const type_index& _Keyval) const _NOEXCEPT
 		{	// hash _Keyval to size_t value by pseudorandomizing transform
 		return (_Keyval.hash_code());
 		}

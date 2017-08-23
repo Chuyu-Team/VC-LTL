@@ -31,9 +31,9 @@
 
 #if defined(VCWINRT_DLL)
 #include <stdio.h>
-#include <windows.h>
+#include <Windows.h>
 #include <inspectable.h>
-#include <WinString.h>
+#include <winstring.h>
 #endif
 
 // All WinRT types should have a packing (the default C++ packing).
@@ -209,9 +209,17 @@ __interface __declspec(uuid("00000003-0000-0000-C000-000000000046")) __abi_IMars
 
 extern __abi_Module* __abi_module;
 
+/* For compatibility with <winnt.h>, some intrinsics are __cdecl except on x64 */
+#if defined (_M_X64)
+extern "C" long _InterlockedIncrement(long volatile *);
+extern "C" long _InterlockedDecrement(long volatile *);
+extern "C" long _InterlockedCompareExchange(long volatile *, long, long);
+#else
 extern "C" long __cdecl _InterlockedIncrement(long volatile *);
 extern "C" long __cdecl _InterlockedDecrement(long volatile *);
 extern "C" long __cdecl _InterlockedCompareExchange(long volatile *, long, long);
+#endif
+
 extern "C" void* _InterlockedCompareExchangePointer(void* volatile *, void* , void*);
 
 #pragma intrinsic(_InterlockedIncrement)
@@ -1166,6 +1174,8 @@ extern "C"
 	void __stdcall __Platform_CoTaskMemFree(void*);
 	size_t __cdecl __Platform_wcslen(const ::default::char16 *);
 	void * __cdecl __Platform_memset(void *, int, size_t);
+	void __stdcall __Platform_AcquireSRWLockShared(void*);
+	void __stdcall __Platform_ReleaseSRWLockShared(void*);
 }
 #else // VCWINRT_DLL
 #define __Platform_WindowsCreateString              WindowsCreateString
@@ -1180,6 +1190,8 @@ extern "C"
 #define __Platform_WindowsConcatString              WindowsConcatString
 #define __Platform_CoTaskMemAlloc                   CoTaskMemAlloc
 #define __Platform_CoTaskMemFree                    CoTaskMemFree
+#define __Platform_AcquireSRWLockShared             AcquireSRWLockShared;
+#define __Platform_ReleaseSRWLockShared             ReleaseSRWLockShared;
 
 #define __Platform_wcslen                           wcslen
 #define __Platform_memset                           memset
@@ -2387,11 +2399,11 @@ namespace Platform
 		//    _fastpassflag = false
 		//    _refcount = 1
 
-		if (__size == 0 && __data == nullptr)
+		if (this->__size == 0 && this->__data == nullptr)
 		{
-			__size = __sizeArg;
-			__fastpassflag = false;
-			__data = __srcArg;
+			this->__size = __sizeArg;
+			this->__fastpassflag = false;
+			this->__data = __srcArg;
 			return;
 		}
 
@@ -2408,11 +2420,11 @@ namespace Platform
 		//    _size = size
 		//    _fastpassflag = true
 
-		if (__size == 0 && __data == nullptr)
+		if (this->__size == 0 && this->__data == nullptr)
 		{
-			__size = __sizeArg;
-			__fastpassflag = true;
-			__data = __srcArg;
+			this->__size = __sizeArg;
+			this->__fastpassflag = true;
+			this->__data = __srcArg;
 			return;
 		}
 
@@ -2550,7 +2562,19 @@ namespace Platform
 			// NOTE:  EventSource::Invoke(...) must never take the _addRemoveLock.
 			::Platform::Object^ __targetsLoc;
 			// Attaching Array without AddRef'ing
-			*reinterpret_cast<void**>(&__targetsLoc) = Details::EventSourceGetTargetArray(__targets, __lockArg);
+
+			// In order to prevent a load of __targets while unprotected by __targetsLock,
+			// we must take the lock externally to the call to EventSourceGetTargetArray.
+			// We then pass in a dummy lock instead of the real lock in order to prevent
+			// recursive acquisition. This fix was made to avoid modifying vccorlib.dll.
+			// On the next binary breaking change, the Details::EventSourceGetTargetArray
+			// call interface should be modified to take __targets by pointer instead of
+			// by value.
+			Details::EventLock __dummylock = { nullptr, nullptr };
+			__Platform_AcquireSRWLockShared(&__lockArg->__targetsLock);
+			void* __EvSrcGTA_ret = Details::EventSourceGetTargetArray(__targets, &__dummylock);
+			__Platform_ReleaseSRWLockShared(&__lockArg->__targetsLock);
+			*reinterpret_cast<void**>(&__targetsLoc) = __EvSrcGTA_ret;
 
 			typename __TReturnType __returnVal = typename __TReturnType();
 			// The list may not exist if nobody has registered
@@ -2610,7 +2634,19 @@ namespace Platform
 			// NOTE:  EventSource::Invoke(...) must never take the _addRemoveLock.
 			::Platform::Object^ __targetsLoc;
 			// Attaching Array without AddRef'ing
-			*reinterpret_cast<void**>(&__targetsLoc) = Details::EventSourceGetTargetArray(__targets, __lockArg);
+
+			// In order to prevent a load of __targets while unprotected by __targetsLock,
+			// we must take the lock externally to the call to EventSourceGetTargetArray.
+			// We then pass in a dummy lock instead of the real lock in order to prevent
+			// recursive acquisition. This fix was made to avoid modifying vccorlib.dll.
+			// On the next binary breaking change, the Details::EventSourceGetTargetArray
+			// call interface should be modified to take __targets by pointer instead of
+			// by value.
+			Details::EventLock __dummylock = { nullptr, nullptr };
+			__Platform_AcquireSRWLockShared(&__lockArg->__targetsLock);
+			void* __EvSrcGTA_ret = Details::EventSourceGetTargetArray(__targets, &__dummylock);
+			__Platform_ReleaseSRWLockShared(&__lockArg->__targetsLock);
+			*reinterpret_cast<void**>(&__targetsLoc) = __EvSrcGTA_ret;
 
 			// The list may not exist if nobody has registered
 			if (__targetsLoc != nullptr)

@@ -58,134 +58,134 @@ template<class _Ty>
 template <class _Ty>
 	struct atomic;
 template <class _Ty>
-	bool atomic_is_lock_free(const volatile atomic<_Ty> *) _NOEXCEPT;
+	bool atomic_is_lock_free(const volatile atomic<_Ty> *) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	bool atomic_is_lock_free(const atomic<_Ty> *) _NOEXCEPT;
+	bool atomic_is_lock_free(const atomic<_Ty> *) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	void atomic_init(volatile atomic<_Ty> *, _Ty) _NOEXCEPT;
+	void atomic_init(volatile atomic<_Ty> *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	void atomic_init(atomic<_Ty> *, _Ty) _NOEXCEPT;
+	void atomic_init(atomic<_Ty> *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	void atomic_store(volatile atomic<_Ty> *, _Ty) _NOEXCEPT;
+	void atomic_store(volatile atomic<_Ty> *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	void atomic_store(atomic<_Ty> *, _Ty) _NOEXCEPT;
+	void atomic_store(atomic<_Ty> *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	void atomic_store_explicit(volatile atomic<_Ty> *, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	void atomic_store_explicit(atomic<_Ty> *, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_load(const volatile atomic<_Ty> *) _NOEXCEPT;
+	_Ty atomic_load(const volatile atomic<_Ty> *) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_load(const atomic<_Ty> *) _NOEXCEPT;
+	_Ty atomic_load(const atomic<_Ty> *) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_load_explicit(const volatile atomic<_Ty> *,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_load_explicit(const atomic<_Ty> *,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_exchange(volatile atomic<_Ty> *, _Ty) _NOEXCEPT;
+	_Ty atomic_exchange(volatile atomic<_Ty> *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_exchange(atomic<_Ty> *, _Ty) _NOEXCEPT;
+	_Ty atomic_exchange(atomic<_Ty> *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_exchange_explicit(volatile atomic<_Ty> *, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_exchange_explicit(atomic<_Ty> *, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_weak(volatile atomic<_Ty> *,
-		_Ty *, _Ty) _NOEXCEPT;
+		_Ty *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_weak(atomic<_Ty> *,
-		_Ty *, _Ty) _NOEXCEPT;
+		_Ty *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_weak_explicit(
 		volatile atomic<_Ty> *, _Ty *, _Ty,
-			memory_order, memory_order) _NOEXCEPT;
+			memory_order, memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_weak_explicit(
 		atomic<_Ty> *, _Ty *, _Ty,
-			memory_order, memory_order) _NOEXCEPT;
+			memory_order, memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_strong(volatile atomic<_Ty> *,
-		_Ty *, _Ty) _NOEXCEPT;
+		_Ty *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_strong(atomic<_Ty> *,
-		_Ty *, _Ty) _NOEXCEPT;
+		_Ty *, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_strong_explicit(
 		volatile atomic<_Ty> *, _Ty *, _Ty,
-			memory_order, memory_order) _NOEXCEPT;
+			memory_order, memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	bool atomic_compare_exchange_strong_explicit(
 		atomic<_Ty> *, _Ty *, _Ty,
-			memory_order, memory_order) _NOEXCEPT;
+			memory_order, memory_order) throw(); // TRANSITION, VSO#174686
 
 		// TEMPLATED OPERATIONS ON ATOMIC TYPES (DECLARED BUT NOT DEFINED)
 template <class _Ty>
-	_Ty atomic_fetch_add(volatile atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_add(volatile atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_add(atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_add(atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_add_explicit(volatile atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_add_explicit(atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_sub(volatile atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_sub(volatile atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_sub(atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_sub(atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_sub_explicit(volatile atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_sub_explicit(atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_and(volatile atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_and(volatile atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_and(atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_and(atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_and_explicit(volatile atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_and_explicit(atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_or(volatile atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_or(volatile atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_or(atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_or(atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_or_explicit(volatile atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_or_explicit(atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_xor(volatile atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_xor(volatile atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
-	_Ty atomic_fetch_xor(atomic<_Ty>*, _Ty) _NOEXCEPT;
+	_Ty atomic_fetch_xor(atomic<_Ty>*, _Ty) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_xor_explicit(volatile atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 template <class _Ty>
 	_Ty atomic_fetch_xor_explicit(atomic<_Ty>*, _Ty,
-		memory_order) _NOEXCEPT;
+		memory_order) throw(); // TRANSITION, VSO#174686
 
 		// STRUCT atomic_flag
 #define ATOMIC_FLAG_INIT	{0}
 typedef struct atomic_flag
 	{	// structure for managing flag with test-and-set semantics
 	bool test_and_set(memory_order _Order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	bool test_and_set(memory_order _Order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	bool test_and_set(memory_order _Order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 	void clear(memory_order _Order = memory_order_seq_cst)
-		volatile _NOEXCEPT;
-	void clear(memory_order _Order = memory_order_seq_cst) _NOEXCEPT;
+		volatile throw(); // TRANSITION, VSO#174686
+	void clear(memory_order _Order = memory_order_seq_cst) throw(); // TRANSITION, VSO#174686
 
 	_Atomic_flag_t _My_flag;
 
@@ -196,67 +196,67 @@ typedef struct atomic_flag
 	} atomic_flag;
 
 inline bool atomic_flag::test_and_set(memory_order _Order)
-		volatile _NOEXCEPT
+		volatile throw() // TRANSITION, VSO#174686
 	{	// atomically set *this to true and return previous value
 	return (_Atomic_flag_test_and_set(&_My_flag, _Order));
 	}
 
-inline bool atomic_flag::test_and_set(memory_order _Order) _NOEXCEPT
+inline bool atomic_flag::test_and_set(memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// atomically set *this to true and return previous value
 	return (_Atomic_flag_test_and_set(&_My_flag, _Order));
 	}
 
 inline void atomic_flag::clear(memory_order _Order)
-	volatile _NOEXCEPT
+	volatile throw() // TRANSITION, VSO#174686
 	{	// atomically clear *this
 	_Atomic_flag_clear(&_My_flag, _Order);
 	}
 
-inline void atomic_flag::clear(memory_order _Order) _NOEXCEPT
+inline void atomic_flag::clear(memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// atomically clear *this
 	_Atomic_flag_clear(&_My_flag, _Order);
 	}
 
-inline bool atomic_flag_test_and_set(volatile atomic_flag *_Flag) _NOEXCEPT
+inline bool atomic_flag_test_and_set(volatile atomic_flag *_Flag) throw() // TRANSITION, VSO#174686
 	{	// atomically set *_Flag to true and return previous value
 	return (_Atomic_flag_test_and_set(&_Flag->_My_flag, memory_order_seq_cst));
 	}
 
-inline bool atomic_flag_test_and_set(atomic_flag *_Flag) _NOEXCEPT
+inline bool atomic_flag_test_and_set(atomic_flag *_Flag) throw() // TRANSITION, VSO#174686
 	{	// atomically set *_Flag to true and return previous value
 	return (_Atomic_flag_test_and_set(&_Flag->_My_flag, memory_order_seq_cst));
 	}
 
 inline bool atomic_flag_test_and_set_explicit(
-	volatile atomic_flag *_Flag, memory_order _Order) _NOEXCEPT
+	volatile atomic_flag *_Flag, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// atomically set *_Flag to true and return previous value
 	return (_Atomic_flag_test_and_set(&_Flag->_My_flag, _Order));
 	}
 
 inline bool atomic_flag_test_and_set_explicit(
-	atomic_flag *_Flag, memory_order _Order) _NOEXCEPT
+	atomic_flag *_Flag, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// atomically set *_Flag to true and return previous value
 	return (_Atomic_flag_test_and_set(&_Flag->_My_flag, _Order));
 	}
 
-inline void atomic_flag_clear(volatile atomic_flag *_Flag) _NOEXCEPT
+inline void atomic_flag_clear(volatile atomic_flag *_Flag) throw() // TRANSITION, VSO#174686
 	{	// atomically clear *_Flag
 	_Atomic_flag_clear(&_Flag->_My_flag, memory_order_seq_cst);
 	}
 
-inline void atomic_flag_clear(atomic_flag *_Flag) _NOEXCEPT
+inline void atomic_flag_clear(atomic_flag *_Flag) throw() // TRANSITION, VSO#174686
 	{	// atomically clear *_Flag
 	_Atomic_flag_clear(&_Flag->_My_flag, memory_order_seq_cst);
 	}
 
 inline void atomic_flag_clear_explicit(
-	volatile atomic_flag *_Flag, memory_order _Order) _NOEXCEPT
+	volatile atomic_flag *_Flag, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// atomically clear *_Flag
 	_Atomic_flag_clear(&_Flag->_My_flag, _Order);
 	}
 
 inline void atomic_flag_clear_explicit(
-	atomic_flag *_Flag, memory_order _Order) _NOEXCEPT
+	atomic_flag *_Flag, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// atomically clear *_Flag
 	_Atomic_flag_clear(&_Flag->_My_flag, _Order);
 	}
@@ -267,7 +267,7 @@ template<unsigned _Bytes>
 	{	// struct for managing locks around operations on atomic types
 	typedef _Uint1_t _My_int;	// "1 byte" means "no alignment required"
 
-	constexpr _Atomic_impl() _NOEXCEPT
+	constexpr _Atomic_impl() throw() // TRANSITION, VSO#174686
 		: _My_flag(0)
 		{	// default constructor
 		}
@@ -508,7 +508,7 @@ template<class _Ty,
 	typedef _Atomic_impl<_Bytes> _Mybase;
 	typedef typename _Mybase::_My_int _My_int;
 
-	constexpr _Atomic_base(_Ty _Val) _NOEXCEPT
+	constexpr _Atomic_base(_Ty _Val) throw() // TRANSITION, VSO#174686
 		: _My_val(_Val)
 		{	// construct from _Val, initialization is not an atomic operation
 		}
@@ -518,42 +518,42 @@ template<class _Ty,
 	_Atomic_base& operator=(const _Atomic_base&) = delete;
 	_Atomic_base& operator=(const _Atomic_base&) volatile = delete;
 
-	_Ty operator=(_Ty _Right) volatile _NOEXCEPT
+	_Ty operator=(_Ty _Right) volatile throw() // TRANSITION, VSO#174686
 		{	// assign from _Right
 		this->_Store((void *)_STD addressof(_My_val), _STD addressof(_Right), memory_order_seq_cst);
 		return (_Right);
 		}
 
-	_Ty operator=(_Ty _Right) _NOEXCEPT
+	_Ty operator=(_Ty _Right) throw() // TRANSITION, VSO#174686
 		{	// assign from _Right
 		this->_Store((void *)_STD addressof(_My_val), _STD addressof(_Right), memory_order_seq_cst);
 		return (_Right);
 		}
 
-	bool is_lock_free() const volatile _NOEXCEPT
+	bool is_lock_free() const volatile throw() // TRANSITION, VSO#174686
 		{	// return true if operations are lock-free
 		return (this->_Is_lock_free());
 		}
 
-	bool is_lock_free() const _NOEXCEPT
+	bool is_lock_free() const throw() // TRANSITION, VSO#174686
 		{	// return true if operations are lock-free
 		return (this->_Is_lock_free());
 		}
 
 	void store(_Ty _Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// store _Value into *this
 		this->_Store((void *)_STD addressof(_My_val), _STD addressof(_Value), _Order);
 		}
 
 	void store(_Ty _Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// store _Value into *this
 		this->_Store((void *)_STD addressof(_My_val), _STD addressof(_Value), _Order);
 		}
 
 	_Ty load(memory_order _Order = memory_order_seq_cst)
-		const volatile _NOEXCEPT
+		const volatile throw() // TRANSITION, VSO#174686
 		{	// return value stored in *this
 		_Ty _Result;
 		this->_Load((void *)_STD addressof(_Result), (const void *)_STD addressof(_My_val), _Order);
@@ -561,39 +561,39 @@ template<class _Ty,
 		}
 
 	_Ty load(memory_order _Order = memory_order_seq_cst)
-		const _NOEXCEPT
+		const throw() // TRANSITION, VSO#174686
 		{	// return value stored in *this
 		_Ty _Result;
 		this->_Load((void *)_STD addressof(_Result), (const void *)_STD addressof(_My_val), _Order);
 		return (_Result);
 		}
 
-	operator _Ty() const volatile _NOEXCEPT
+	operator _Ty() const volatile throw() // TRANSITION, VSO#174686
 		{	// return value stored in *this
 		return (load());
 		}
 
-	operator _Ty() const _NOEXCEPT
+	operator _Ty() const throw() // TRANSITION, VSO#174686
 		{	// return value stored in *this
 		return (load());
 		}
 
 	_Ty exchange(_Ty _Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// exchange value stored in *this with _Value
 		this->_Exchange((void *)_STD addressof(_My_val), (void *)_STD addressof(_Value), _Order);
 		return (_Value);
 		}
 
 	_Ty exchange(_Ty _Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// exchange value stored in *this with _Value
 		this->_Exchange((void *)_STD addressof(_My_val), (void *)_STD addressof(_Value), _Order);
 		return (_Value);
 		}
 
 	bool compare_exchange_weak(_Ty& _Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) volatile _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (this->_Compare_exchange_weak(
 			(void *)_STD addressof(_My_val), (void *)_STD addressof(_Exp), (const void *)_STD addressof(_Value),
@@ -601,7 +601,7 @@ template<class _Ty,
 		}
 
 	bool compare_exchange_weak(_Ty& _Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (this->_Compare_exchange_weak(
 			(void *)_STD addressof(_My_val), (void *)_STD addressof(_Exp), (const void *)_STD addressof(_Value),
@@ -609,21 +609,21 @@ template<class _Ty,
 		}
 
 	bool compare_exchange_weak(_Ty& _Exp, _Ty _Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (compare_exchange_weak(
 			_Exp, _Value, _Order, _Get_memory_order(_Order)));
 		}
 
 	bool compare_exchange_weak(_Ty& _Exp, _Ty _Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (compare_exchange_weak(
 			_Exp, _Value, _Order, _Get_memory_order(_Order)));
 		}
 
 	bool compare_exchange_strong(_Ty& _Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) volatile _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (this->_Compare_exchange_strong(
 			(void *)_STD addressof(_My_val), (void *)_STD addressof(_Exp), (const void *)_STD addressof(_Value),
@@ -631,7 +631,7 @@ template<class _Ty,
 		}
 
 	bool compare_exchange_strong(_Ty& _Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (this->_Compare_exchange_strong(
 			(void *)_STD addressof(_My_val), (void *)_STD addressof(_Exp), (void *)_STD addressof(_Value),
@@ -639,14 +639,14 @@ template<class _Ty,
 		}
 
 	bool compare_exchange_strong(_Ty& _Exp, _Ty _Value,
-		memory_order _Order = memory_order_seq_cst) volatile _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) volatile throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (compare_exchange_strong(
 			_Exp, _Value, _Order, _Get_memory_order(_Order)));
 		}
 
 	bool compare_exchange_strong(_Ty& _Exp, _Ty _Value,
-		memory_order _Order = memory_order_seq_cst) _NOEXCEPT
+		memory_order _Order = memory_order_seq_cst) throw() // TRANSITION, VSO#174686
 		{	// compare and exchange value stored in *this with *_Exp, _Value
 		return (compare_exchange_strong(
 			_Exp, _Value, _Order, _Get_memory_order(_Order)));
@@ -675,22 +675,32 @@ template<class _Ty>
 
 	typedef _Atomic_base<_Ty, sizeof (_Ty)> _My_base;
 
+	using value_type = _Ty;
+
+#if _HAS_CXX17
+	static constexpr bool is_always_lock_free =
+		sizeof(_Ty) == 1
+		|| sizeof(_Ty) == 2
+		|| sizeof(_Ty) == 4
+		|| sizeof(_Ty) == 8;
+#endif /* _HAS_CXX17 */
+
 	atomic() _NOEXCEPT = default;
 	atomic(const atomic&) = delete;
 	atomic& operator=(const atomic&) = delete;
 	atomic& operator=(const atomic&) volatile = delete;
 
-	constexpr atomic(_Ty _Val) _NOEXCEPT
+	constexpr atomic(_Ty _Val) throw() // TRANSITION, VSO#174686
 		: _My_base(_Val)
 		{	// construct from _Val
 		}
 
-	_Ty operator=(_Ty _Right) volatile _NOEXCEPT
+	_Ty operator=(_Ty _Right) volatile throw() // TRANSITION, VSO#174686
 		{	// assign from _Right
 		return (_My_base::operator=(_Right));
 		}
 
-	_Ty operator=(_Ty _Right) _NOEXCEPT
+	_Ty operator=(_Ty _Right) throw() // TRANSITION, VSO#174686
 		{	// assign from _Right
 		return (_My_base::operator=(_Right));
 		}
@@ -800,42 +810,42 @@ template<class _Ty>
 		// GENERAL OPERATIONS ON ATOMIC TYPES
 template <class _Ty>
 	inline bool atomic_is_lock_free(
-		const volatile atomic<_Ty> *_Atom) _NOEXCEPT
+		const volatile atomic<_Ty> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->is_lock_free());
 	}
 
 template <class _Ty>
 	inline bool atomic_is_lock_free(
-		const atomic<_Ty> *_Atom) _NOEXCEPT
+		const atomic<_Ty> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->is_lock_free());
 	}
 
 template <class _Ty>
 	inline void atomic_init(
-		volatile atomic<_Ty> *_Atom, _Ty _Value) _NOEXCEPT
+		volatile atomic<_Ty> *_Atom, _Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	*_Atom = _Value;
 	}
 
 template <class _Ty>
 	inline void atomic_init(
-		atomic<_Ty> *_Atom, _Ty _Value) _NOEXCEPT
+		atomic<_Ty> *_Atom, _Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	*_Atom = _Value;
 	}
 
 template <class _Ty>
 	inline void atomic_store(volatile atomic<_Ty> *_Atom,
-		_Ty _Value) _NOEXCEPT
+		_Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	_Atom->store(_Value);
 	}
 
 template <class _Ty>
 	inline void atomic_store(atomic<_Ty> *_Atom,
-		_Ty _Value) _NOEXCEPT
+		_Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	_Atom->store(_Value);
 	}
@@ -843,7 +853,7 @@ template <class _Ty>
 template <class _Ty>
 	inline void atomic_store_explicit(
 		volatile atomic<_Ty> *_Atom, _Ty _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	_Atom->store(_Value, _Order);
 	}
@@ -851,19 +861,19 @@ template <class _Ty>
 template <class _Ty>
 	inline void atomic_store_explicit(
 		atomic<_Ty> *_Atom, _Ty _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	_Atom->store(_Value, _Order);
 	}
 
 template <class _Ty>
-	inline _Ty atomic_load(const volatile atomic<_Ty> *_Atom) _NOEXCEPT
+	inline _Ty atomic_load(const volatile atomic<_Ty> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->load());
 	}
 
 template <class _Ty>
-	inline _Ty atomic_load(const atomic<_Ty> *_Atom) _NOEXCEPT
+	inline _Ty atomic_load(const atomic<_Ty> *_Atom) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->load());
 	}
@@ -871,7 +881,7 @@ template <class _Ty>
 template <class _Ty>
 	inline _Ty atomic_load_explicit(
 		const volatile atomic<_Ty> *_Atom,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->load(_Order));
 	}
@@ -879,49 +889,49 @@ template <class _Ty>
 template <class _Ty>
 	inline _Ty atomic_load_explicit(
 		const atomic<_Ty> *_Atom,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->load(_Order));
 	}
 
 template <class _Ty>
 	inline _Ty atomic_exchange(volatile atomic<_Ty> *_Atom,
-		_Ty _Value) _NOEXCEPT
+		_Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->exchange(_Value));
 	}
 
 template <class _Ty>
 	inline _Ty atomic_exchange(atomic<_Ty> *_Atom,
-		_Ty _Value) _NOEXCEPT
+		_Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->exchange(_Value));
 	}
 
 template <class _Ty>
 	inline _Ty atomic_exchange_explicit(volatile atomic<_Ty> *_Atom,
-		_Ty _Value, memory_order _Order) _NOEXCEPT
+		_Ty _Value, memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->exchange(_Value, _Order));
 	}
 
 template <class _Ty>
 	inline _Ty atomic_exchange_explicit(atomic<_Ty> *_Atom, _Ty _Value,
-		memory_order _Order) _NOEXCEPT
+		memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->exchange(_Value, _Order));
 	}
 
 template <class _Ty>
 	inline bool atomic_compare_exchange_weak(
-		volatile atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) _NOEXCEPT
+		volatile atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_weak(*_Exp, _Value));
 	}
 
 template <class _Ty>
 	inline bool atomic_compare_exchange_weak(
-		atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) _NOEXCEPT
+		atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_weak(*_Exp, _Value));
 	}
@@ -929,7 +939,7 @@ template <class _Ty>
 template <class _Ty>
 	inline bool atomic_compare_exchange_weak_explicit(
 		volatile atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_weak(*_Exp, _Value, _Order1, _Order2));
 	}
@@ -937,21 +947,21 @@ template <class _Ty>
 template <class _Ty>
 	inline bool atomic_compare_exchange_weak_explicit(
 		atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_weak(*_Exp, _Value, _Order1, _Order2));
 	}
 
 template <class _Ty>
 	inline bool atomic_compare_exchange_strong(
-		volatile atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) _NOEXCEPT
+		volatile atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_strong(*_Exp, _Value));
 	}
 
 template <class _Ty>
 	inline bool atomic_compare_exchange_strong(
-		atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) _NOEXCEPT
+		atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_strong(*_Exp, _Value));
 	}
@@ -959,7 +969,7 @@ template <class _Ty>
 template <class _Ty>
 	inline bool atomic_compare_exchange_strong_explicit(
 		volatile atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_strong(*_Exp, _Value, _Order1, _Order2));
 	}
@@ -967,7 +977,7 @@ template <class _Ty>
 template <class _Ty>
 	inline bool atomic_compare_exchange_strong_explicit(
 		atomic<_Ty> *_Atom, _Ty *_Exp, _Ty _Value,
-		memory_order _Order1, memory_order _Order2) _NOEXCEPT
+		memory_order _Order1, memory_order _Order2) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->compare_exchange_strong(*_Exp, _Value, _Order1, _Order2));
 	}
@@ -975,14 +985,14 @@ template <class _Ty>
 		// OVERLOADS FOR POINTERS
 template <class _Ty>
 	inline _Ty *atomic_fetch_add(volatile atomic<_Ty*> *_Atom,
-		ptrdiff_t _Value) _NOEXCEPT
+		ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_add(_Value));
 	}
 
 template <class _Ty>
 	inline _Ty *atomic_fetch_add(atomic<_Ty*> *_Atom,
-		ptrdiff_t _Value) _NOEXCEPT
+		ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_add(_Value));
 	}
@@ -990,7 +1000,7 @@ template <class _Ty>
 template <class _Ty>
 	inline _Ty *atomic_fetch_add_explicit(
 		volatile atomic<_Ty*> *_Atom, ptrdiff_t _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_add(_Value, _Order));
 	}
@@ -998,21 +1008,21 @@ template <class _Ty>
 template <class _Ty>
 	inline _Ty *atomic_fetch_add_explicit(
 		atomic<_Ty*> *_Atom, ptrdiff_t _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_add(_Value, _Order));
 	}
 
 template <class _Ty>
 	inline _Ty *atomic_fetch_sub(volatile atomic<_Ty*> *_Atom,
-		ptrdiff_t _Value) _NOEXCEPT
+		ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_sub(_Value));
 	}
 
 template <class _Ty>
 	inline _Ty *atomic_fetch_sub(atomic<_Ty*> *_Atom,
-		ptrdiff_t _Value) _NOEXCEPT
+		ptrdiff_t _Value) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_sub(_Value));
 	}
@@ -1020,7 +1030,7 @@ template <class _Ty>
 template <class _Ty>
 	inline _Ty *atomic_fetch_sub_explicit(
 		volatile atomic<_Ty*> *_Atom, ptrdiff_t _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_sub(_Value, _Order));
 	}
@@ -1028,18 +1038,18 @@ template <class _Ty>
 template <class _Ty>
 	inline _Ty *atomic_fetch_sub_explicit(
 		atomic<_Ty*> *_Atom, ptrdiff_t _Value,
-			memory_order _Order) _NOEXCEPT
+			memory_order _Order) throw() // TRANSITION, VSO#174686
 	{
 	return (_Atom->fetch_sub(_Value, _Order));
 	}
 
 		// FENCES
-extern "C" inline void atomic_thread_fence(memory_order _Order) _NOEXCEPT
+extern "C" inline void atomic_thread_fence(memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// force memory visibility and inhibit compiler reordering
 	return (_Atomic_thread_fence(_Order));
 	}
 
-extern "C" inline void atomic_signal_fence(memory_order _Order) _NOEXCEPT
+extern "C" inline void atomic_signal_fence(memory_order _Order) throw() // TRANSITION, VSO#174686
 	{	// force memory visibility and inhibit compiler reordering
 	return (_Atomic_signal_fence(_Order));
 	}

@@ -19,8 +19,7 @@
 #ifndef _TYPEINFO_
 #define _TYPEINFO_
 #ifndef RC_INVOKED
-#include <xstddef>
-#include <exception>	// for std::exception
+#include <exception>
 
 #pragma pack(push,_CRT_PACKING)
 #pragma warning(push,_STL_WARNING_LEVEL)
@@ -40,11 +39,11 @@ constexpr int _Small_object_num_ptrs = 6 + 16 / sizeof (void *);
  #if !(_HAS_EXCEPTIONS)
 
 		// CLASS bad_cast
-class _CRTIMP2 bad_cast
+class _CRTIMP2_IMPORT bad_cast
 	: public exception
 	{	// base of all bad cast exceptions
 public:
-	bad_cast(const char *_Message = "bad cast") _THROW0()
+	bad_cast(const char *_Message = "bad cast") _NOEXCEPT
 		: exception(_Message)
 		{	// construct from message string
 		}
@@ -61,11 +60,11 @@ protected:
 	};
 
 		// CLASS bad_typeid
-class _CRTIMP2 bad_typeid
+class _CRTIMP2_IMPORT bad_typeid
 	: public exception
 	{	// base of all bad typeid exceptions
 public:
-	bad_typeid(const char *_Message = "bad typeid") _THROW0()
+	bad_typeid(const char *_Message = "bad typeid") _NOEXCEPT
 		: exception(_Message)
 		{	// construct from message string
 		}
@@ -81,7 +80,7 @@ protected:
 		}
 	};
 
-class _CRTIMP2 __non_rtti_object
+class _CRTIMP2_IMPORT __non_rtti_object
 	: public bad_typeid
 	{	// report a non RTTI object
 public:

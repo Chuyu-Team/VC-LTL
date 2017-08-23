@@ -32,7 +32,7 @@
 
 #include <atlwin.h>
 
-#include <objsafe.h>
+#include <ObjSafe.h>
 #include <urlmon.h>
 
 #ifndef _ATL_NO_DEFAULT_LIBS
@@ -1972,7 +1972,7 @@ public:
 		_Out_  BOOL& bHandled)
 	{
 		// initialize controls in dialog with DLGINIT resource section
-		ExecuteDlgInit(static_cast<T*>(this)->IDD);
+		this->ExecuteDlgInit(static_cast<T*>(this)->IDD);
 		bHandled = TRUE;
 		return 1;
 	}

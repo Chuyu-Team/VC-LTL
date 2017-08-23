@@ -9212,7 +9212,7 @@ public:
           _M_savedMessageIdArray(_NumInputs)
     {
         _Initialize(_NumInputs);
-        register_filter(_Filter);
+        this->register_filter(_Filter);
     }
 
 #ifdef _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
@@ -9269,7 +9269,7 @@ public:
           _M_savedMessageIdArray(_NumInputs)
     {
         _Initialize(_NumInputs, &_PScheduler);
-        register_filter(_Filter);
+        this->register_filter(_Filter);
     }
 
     /// <summary>
@@ -9327,7 +9327,7 @@ public:
           _M_savedMessageIdArray(_NumInputs)
     {
         _Initialize(_NumInputs, NULL, &_PScheduleGroup);
-        register_filter(_Filter);
+        this->register_filter(_Filter);
     }
 #endif  /* _CRT_USE_WINAPI_FAMILY_DESKTOP_APP */
 
@@ -10224,7 +10224,7 @@ public:
         _M_savedId(-1),
         _M_pReservedSource(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget);
     }
 
     /// <summary>
@@ -10249,8 +10249,8 @@ public:
         _M_savedId(-1),
         _M_pReservedSource(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget);
     }
 
     /// <summary>
@@ -10275,7 +10275,7 @@ public:
         _M_savedId(-1),
         _M_pReservedSource(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
     }
 
     /// <summary>
@@ -10303,8 +10303,8 @@ public:
         _M_savedId(-1),
         _M_pReservedSource(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
     }
 
     /// <summary>
@@ -10329,7 +10329,7 @@ public:
         _M_savedId(-1),
         _M_pReservedSource(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
     }
 
     /// <summary>
@@ -10357,8 +10357,8 @@ public:
         _M_savedId(-1),
         _M_pReservedSource(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
     }
 
     /// <summary>
@@ -10611,7 +10611,7 @@ public:
         _M_savedId(-1),
         _M_pGreedyMessage(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget);
     }
 
     /// <summary>
@@ -10635,8 +10635,8 @@ public:
         _M_savedId(-1),
         _M_pGreedyMessage(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget);
     }
 
     /// <summary>
@@ -10660,7 +10660,7 @@ public:
         _M_savedId(-1),
         _M_pGreedyMessage(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
     }
 
     /// <summary>
@@ -10687,8 +10687,8 @@ public:
         _M_savedId(-1),
         _M_pGreedyMessage(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
     }
 
     /// <summary>
@@ -10712,7 +10712,7 @@ public:
         _M_savedId(-1),
         _M_pGreedyMessage(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
     }
 
     /// <summary>
@@ -10739,8 +10739,8 @@ public:
         _M_savedId(-1),
         _M_pGreedyMessage(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
     }
 
     /// <summary>
@@ -11006,7 +11006,7 @@ public:
         _M_reservedId(-1),
         _M_pReservedSource(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget);
     }
 
     /// <summary>
@@ -11031,8 +11031,8 @@ public:
         _M_reservedId(-1),
         _M_pReservedSource(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget);
     }
 
     /// <summary>
@@ -11057,7 +11057,7 @@ public:
         _M_reservedId(-1),
         _M_pReservedSource(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
     }
 
     /// <summary>
@@ -11085,8 +11085,8 @@ public:
         _M_reservedId(-1),
         _M_pReservedSource(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, &_PScheduler);
     }
 
     /// <summary>
@@ -11111,7 +11111,7 @@ public:
         _M_reservedId(-1),
         _M_pReservedSource(NULL)
     {
-        _Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
     }
 
     /// <summary>
@@ -11139,8 +11139,8 @@ public:
         _M_reservedId(-1),
         _M_pReservedSource(NULL)
     {
-        register_filter(_Filter);
-        _Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
+        this->register_filter(_Filter);
+        this->_Initialize_order_node(_PSource, _Index, _PTarget, NULL, &_PScheduleGroup);
     }
 
     /// <summary>

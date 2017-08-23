@@ -764,7 +764,7 @@ public:
 /// </remarks>
 /**/
 template<typename _Ty, class _Ax>
-concurrent_queue<_Ty,_Ax>::concurrent_queue(const concurrent_queue& _Queue, const allocator_type& _Al = allocator_type())
+concurrent_queue<_Ty,_Ax>::concurrent_queue(const concurrent_queue& _Queue, const allocator_type& _Al)
     : _Concurrent_queue_base_v4( sizeof(_Ty) ), _My_allocator(_Al)
 {
     concurrent_queue::const_iterator _QEnd = _Queue.unsafe_end();
@@ -789,7 +789,7 @@ concurrent_queue<_Ty,_Ax>::concurrent_queue(const concurrent_queue& _Queue, cons
 /// </remarks>
 /**/
 template<typename _Ty, class _Ax>
-concurrent_queue<_Ty,_Ax>::concurrent_queue(concurrent_queue&& _Queue, const allocator_type& _Al = allocator_type())
+concurrent_queue<_Ty,_Ax>::concurrent_queue(concurrent_queue&& _Queue, const allocator_type& _Al)
     : _Concurrent_queue_base_v4( sizeof(_Ty) ), _My_allocator(_Al)
 {
     _Internal_swap(_Queue);

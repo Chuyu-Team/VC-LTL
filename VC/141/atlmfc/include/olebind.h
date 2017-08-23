@@ -12,7 +12,7 @@
 #define _OLEBIND_H_
 
 #if !defined( INITGUID )
-#include <olectl.h>
+#include <OleCtl.h>
 #endif
 
 DEFINE_GUID(IID_IBoundObject,

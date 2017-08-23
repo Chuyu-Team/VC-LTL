@@ -38,35 +38,33 @@ public:
 	typedef typename wide_string::traits_type::int_type int_type;
 
 	wstring_convert()
-		: _Has_berr(false), _Has_werr(false), _Has_state(false)
+		: _Has_state(false), _Has_berr(false), _Has_werr(false)
 		{	// construct with no error strings
 		_Init();
 		}
 
 	explicit wstring_convert(_Codecvt *_Pcvt_arg)
-		: _Has_berr(false), _Has_werr(false), _Has_state(false)
+		: _Has_state(false), _Has_berr(false), _Has_werr(false)
 		{	// construct with no error strings and codecvt
 		_Init(_Pcvt_arg);
 		}
 
 	wstring_convert(_Codecvt *_Pcvt_arg, state_type _State_arg)
-		: _Has_berr(false), _Has_werr(false), _Has_state(true)
+		: _Has_state(true), _Has_berr(false), _Has_werr(false)
 		{	// construct with no error strings, codecvt, and state
 		_Init(_Pcvt_arg);
 		_State = _State_arg;
 		}
 
 	explicit wstring_convert(const byte_string& _Berr_arg)
-		: _Has_berr(true), _Has_werr(false), _Has_state(false),
-			_Berr(_Berr_arg)
+		: _Berr(_Berr_arg), _Has_state(false), _Has_berr(true), _Has_werr(false)
 		{	// construct with byte error string
 		_Init();
 		}
 
 	wstring_convert(const byte_string& _Berr_arg,
 		const wide_string& _Werr_arg)
-		: _Has_berr(true), _Has_werr(true), _Has_state(false),
-			_Berr(_Berr_arg), _Werr(_Werr_arg)
+		: _Berr(_Berr_arg), _Werr(_Werr_arg), _Has_state(false), _Has_berr(true), _Has_werr(true)
 		{	// construct with byte and wide error strings
 		_Init();
 		}

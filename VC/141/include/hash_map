@@ -12,10 +12,8 @@
  #undef new
 
  #ifndef _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
-static_assert(false, "<hash_map> is deprecated and will be REMOVED. "
-	"Please use <unordered_map>. You can define "
-	"_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS "
-	"to acknowledge that you have received this warning.");
+  #error <hash_map> is deprecated and will be REMOVED. Please use <unordered_map>. You can define \
+_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS to acknowledge that you have received this warning.
  #endif /* _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS */
 
 namespace stdext {
@@ -23,7 +21,10 @@ using _STD allocator;
 using _STD enable_if_t;
 using _STD is_constructible;
 using _STD pair;
+using _STD swap;
 using _STD _Hash;
+using _STD _Is_nothrow_swappable;
+using _STD _Swap_adl;
 using _STD _Xout_of_range;
 
 		// TEMPLATE CLASS _Hmap_traits
@@ -97,6 +98,12 @@ public:
 		return (_Max_buckets);
 		}
 
+	void swap(_Hmap_traits& _Rhs) _NOEXCEPT_COND(_Is_nothrow_swappable<_Tr>::value)
+		{
+		_Swap_adl(static_cast<_Tr&>(*this), static_cast<_Tr&>(_Rhs));
+		_STD swap(_Max_buckets, _Rhs._Max_buckets);
+		}
+
 	float _Max_buckets;	// current maximum bucket size
 	};
 
@@ -116,17 +123,19 @@ public:
 	typedef _Ty referent_type;
 	typedef _Tr key_compare;
 	typedef typename _Mybase::value_compare value_compare;
+	typedef typename _Mybase::value_type value_type;
 	typedef typename _Mybase::allocator_type allocator_type;
 	typedef typename _Mybase::size_type size_type;
 	typedef typename _Mybase::difference_type difference_type;
 	typedef typename _Mybase::pointer pointer;
 	typedef typename _Mybase::const_pointer const_pointer;
-	typedef typename _Mybase::reference reference;
-	typedef typename _Mybase::const_reference const_reference;
+	typedef value_type& reference;
+	typedef const value_type& const_reference;
 	typedef typename _Mybase::iterator iterator;
 	typedef typename _Mybase::const_iterator const_iterator;
-	typedef typename _Mybase::value_type value_type;
 	typedef typename _Mybase::_Pairib _Pairib;
+	typedef typename _Mybase::_Alnode _Alnode;
+	typedef typename _Mybase::_Alnode_traits _Alnode_traits;
 
 	hash_map()
 		: _Mybase(key_compare(), allocator_type())
@@ -139,8 +148,7 @@ public:
 		}
 
 	hash_map(const _Myt& _Right)
-		: _Mybase(_Right,
-			_Right._List._Getal().select_on_container_copy_construction())
+		: _Mybase(_Right, _Alnode_traits::select_on_container_copy_construction(_Right._List._Getal()))
 		{	// construct map by copying _Right
 		}
 
@@ -217,6 +225,7 @@ public:
 		}
 
 	void swap(_Myt& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Mybase::swap(_Right))) // Strengthened
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
@@ -323,6 +332,9 @@ public:
 		{	// return iterator for end of reversed nonmutable sequence
 		return (rend());
 		}
+
+	using _Mybase::_Unchecked_begin;
+	using _Mybase::_Unchecked_end;
 	};
 
 template<class _Kty,
@@ -331,6 +343,7 @@ template<class _Kty,
 	class _Alloc> inline
 	void swap(hash_map<_Kty, _Ty, _Tr, _Alloc>& _Left,
 		hash_map<_Kty, _Ty, _Tr, _Alloc>& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right))) // Strengthened
 	{	// swap _Left and _Right hash_maps
 	_Left.swap(_Right);
 	}
@@ -373,16 +386,18 @@ public:
 	typedef _Ty referent_type;	// old name, magically gone
 	typedef _Tr key_compare;
 	typedef typename _Mybase::value_compare value_compare;
+	typedef typename _Mybase::value_type value_type;
 	typedef typename _Mybase::allocator_type allocator_type;
 	typedef typename _Mybase::size_type size_type;
 	typedef typename _Mybase::difference_type difference_type;
 	typedef typename _Mybase::pointer pointer;
 	typedef typename _Mybase::const_pointer const_pointer;
-	typedef typename _Mybase::reference reference;
-	typedef typename _Mybase::const_reference const_reference;
+	typedef value_type& reference;
+	typedef const value_type& const_reference;
 	typedef typename _Mybase::iterator iterator;
 	typedef typename _Mybase::const_iterator const_iterator;
-	typedef typename _Mybase::value_type value_type;
+	typedef typename _Mybase::_Alnode _Alnode;
+	typedef typename _Mybase::_Alnode_traits _Alnode_traits;
 
 	hash_multimap()
 		: _Mybase(key_compare(), allocator_type())
@@ -395,8 +410,7 @@ public:
 		}
 
 	hash_multimap(const _Myt& _Right)
-		: _Mybase(_Right,
-			_Right._List._Getal().select_on_container_copy_construction())
+		: _Mybase(_Right, _Alnode_traits::select_on_container_copy_construction(_Right._List._Getal()))
 		{	// construct map by copying _Right
 		}
 
@@ -462,6 +476,7 @@ public:
 		}
 
 	void swap(_Myt& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Mybase::swap(_Right))) // Strengthened
 		{	// exchange contents with non-movable _Right
 		_Mybase::swap(_Right);
 		}
@@ -541,6 +556,9 @@ public:
 		{	// return iterator for end of reversed nonmutable sequence
 		return (rend());
 		}
+
+	using _Mybase::_Unchecked_begin;
+	using _Mybase::_Unchecked_end;
 	};
 
 template<class _Kty,
@@ -549,6 +567,7 @@ template<class _Kty,
 	class _Alloc> inline
 	void swap(hash_multimap<_Kty, _Ty, _Tr, _Alloc>& _Left,
 		hash_multimap<_Kty, _Ty, _Tr, _Alloc>& _Right)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left.swap(_Right))) // Strengthened
 	{	// swap _Left and _Right hash_multimaps
 	_Left.swap(_Right);
 	}

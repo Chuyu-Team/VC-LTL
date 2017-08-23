@@ -17,7 +17,7 @@
 #endif
 
 #include <atlbase.h>
-#include <winnls.h>
+#include <WinNls.h>
 #include <limits.h>
 #include <cstringt.h>
 
@@ -40,11 +40,7 @@ public:
 	{
 		m_nil.SetManager( this );
 	}
-	virtual ~CAtlStringMgr() throw()
-	{
-		isInitialized = false;
-	}
-
+	virtual ~CAtlStringMgr() throw() = default;
 	void SetMemoryManager(_In_ IAtlMemMgr* pMemMgr) throw()
 	{
 		ATLASSUME( m_pMemMgr == NULL );
@@ -53,8 +49,11 @@ public:
 
 	static IAtlStringMgr* GetInstance()
 	{
+#pragma warning(push)
+#pragma warning(disable: 4640) // will always be initialized on entry thread by CImageStaticInitializer
 		static CWin32Heap strHeap( ::GetProcessHeap() );
 		static CAtlStringMgr strMgr(&strHeap);
+#pragma warning(pop)
 
 		return &strMgr;
 	}
@@ -149,17 +148,18 @@ public:
 protected:
 	IAtlMemMgr* m_pMemMgr;
 	CNilStringData m_nil;
-private:
-	static bool StaticInitialize()
-	{
-		GetInstance();
-		return true;
-	}
-
-	static bool isInitialized;
 };
 
-__declspec(selectany) bool CAtlStringMgr::isInitialized = CAtlStringMgr::StaticInitialize();
+namespace ATLImplementationDetails
+{
+struct CAtlStringMgrStaticInitializer
+{
+	CAtlStringMgrStaticInitializer() { (void)CAtlStringMgr::GetInstance(); }
+};
+
+__declspec(selectany) CAtlStringMgrStaticInitializer InitializeCAtlStringMgr;
+}
+
 
 template <class ChTraits>
 inline typename ChTraits::PCXSTR strstrT(typename ChTraits::PCXSTR pStr,typename ChTraits::PCXSTR pCharSet);

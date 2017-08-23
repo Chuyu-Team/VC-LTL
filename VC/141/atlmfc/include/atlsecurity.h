@@ -19,8 +19,8 @@
 #endif
 
 #include <sddl.h>
-#include <userenv.h>
-#include <aclapi.h>
+#include <UserEnv.h>
+#include <AclAPI.h>
 #include <atlcoll.h>
 #include <atlstr.h>
 
@@ -325,7 +325,7 @@ private:
 	void Copy(_In_ const CDacl &rhs) throw(...);
 	void Copy(_In_ const ACL &rhs) throw(...);
 
-	class CAccessAce : 
+	class CAccessAce :
 		public CAcl::CAce
 	{
 	public:
@@ -351,7 +351,7 @@ private:
 		bool m_bAllow;
 	};
 
-	class CAccessObjectAce : 
+	class CAccessObjectAce :
 		public CAccessAce
 	{
 	public:
@@ -389,7 +389,7 @@ private:
 //******************************************
 // CSacl
 
-class CSacl : 
+class CSacl :
 	public CAcl
 {
 public:
@@ -425,7 +425,7 @@ private:
 	void Copy(_In_ const CSacl &rhs) throw(...);
 	void Copy(_In_ const ACL &rhs) throw(...);
 
-	class CAuditAce : 
+	class CAuditAce :
 		public CAcl::CAce
 	{
 	public:
@@ -759,19 +759,19 @@ public:
 	HANDLE GetHandle() const throw();
 	HKEY HKeyCurrentUser() const throw();
 
-	// Privileges    
+	// Privileges
 	_Success_(return != false) bool EnablePrivilege(
 		_In_z_ LPCTSTR pszPrivilege,
 		_In_opt_ CTokenPrivileges *pPreviousState = NULL,
-		_Out_opt_ bool* pbErrNotAllAssigned=NULL) throw(...);    
+		_Out_opt_ bool* pbErrNotAllAssigned=NULL) throw(...);
 	_Success_(return != false) bool EnablePrivileges(
 		_In_ const CAtlArray<LPCTSTR> &rPrivileges,
 		_Inout_opt_ CTokenPrivileges *pPreviousState = NULL,
-		_Out_opt_ bool* pbErrNotAllAssigned=NULL) throw(...);    
+		_Out_opt_ bool* pbErrNotAllAssigned=NULL) throw(...);
 	_Success_(return != false) bool DisablePrivilege(
 		_In_z_ LPCTSTR pszPrivilege,
 		_In_opt_ CTokenPrivileges *pPreviousState = NULL,
-		_Out_opt_ bool* pbErrNotAllAssigned=NULL) throw(...);    
+		_Out_opt_ bool* pbErrNotAllAssigned=NULL) throw(...);
 	_Success_(return != false) bool DisablePrivileges(
 		_In_ const CAtlArray<LPCTSTR> &rPrivileges,
 		_Inout_opt_ CTokenPrivileges *pPreviousState = NULL,
@@ -1000,7 +1000,7 @@ private:
 		virtual bool Revert() throw() = 0;
 	};
 
-	class CRevertToSelf : 
+	class CRevertToSelf :
 		public CRevert
 	{
 	public:
@@ -1020,7 +1020,7 @@ private:
 		}
 	};
 
-	class CRpcRevertToSelfEx : 
+	class CRpcRevertToSelfEx :
 		public CRevert
 	{
 	public:
@@ -1063,7 +1063,7 @@ private:
 //*******************************************
 // CPrivateObjectSecurityDesc
 
-class CPrivateObjectSecurityDesc : 
+class CPrivateObjectSecurityDesc :
 	public CSecurityDesc
 {
 public:
@@ -2701,13 +2701,13 @@ inline void *CDacl::CAccessObjectAce::GetACE() const throw(...)
 				pAce->ObjectType = *m_pInheritedObjectType;
 			pAce->Flags |= ACE_INHERITED_OBJECT_TYPE_PRESENT;
 		}
-		
+
 		size_t sidSpaceAvailable = nLength - (pb - reinterpret_cast<BYTE*>(pAce));
 		if (sidSpaceAvailable > nLength)
 		{
 			sidSpaceAvailable = 0;
 		}
-		
+
 		ATLASSERT(sidSpaceAvailable >= m_sid.GetLength());
 		Checked::memcpy_s(pb, sidSpaceAvailable, m_sid.GetPSID(), m_sid.GetLength());
 		m_pAce = pAce;
@@ -5085,7 +5085,7 @@ inline bool CAccessToken::OpenThreadToken(
 	_In_ SECURITY_IMPERSONATION_LEVEL sil /* = SecurityImpersonation */) throw(...)
 {
 	// If bImpersonate == false the original impersonate level should be restored after getting token.
-	SECURITY_IMPERSONATION_LEVEL silCurrent = SecurityAnonymous; 
+	SECURITY_IMPERSONATION_LEVEL silCurrent = SecurityAnonymous;
 	bool bNeedRestoreLevel = CheckImpersonation() && !bImpersonate;
 	if(bNeedRestoreLevel)
 	{

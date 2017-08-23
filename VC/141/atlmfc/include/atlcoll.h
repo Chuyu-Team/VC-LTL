@@ -4221,14 +4221,14 @@ template< typename K, typename V, class KTraits, class VTraits >
 const typename CRBMap< K, V, KTraits, VTraits >::CPair* CRBMap< K, V, KTraits, VTraits >::Lookup(
 	/* _In_ */ KINARGTYPE key) const throw()
 {
-	return Find(key);
+	return this->Find(key);
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
 typename CRBMap< K, V, KTraits, VTraits >::CPair* CRBMap< K, V, KTraits, VTraits >::Lookup(
 	/* _In_ */ KINARGTYPE key) throw()
 {
-	return Find(key);
+	return this->Find(key);
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
@@ -4236,7 +4236,7 @@ _Success_(return == true) bool CRBMap< K, V, KTraits, VTraits >::Lookup(
 	/* _In_ */ KINARGTYPE key,
 	_Out_ VOUTARGTYPE value) const throw( ... )
 {
-	const CPair* pLookup = Find( key );
+	const CPair* pLookup = this->Find( key );
 	if( pLookup == NULL )
 		return false;
 
@@ -4249,10 +4249,10 @@ POSITION CRBMap< K, V, KTraits, VTraits >::SetAt(
 	/* _In_ */ KINARGTYPE key,
 	/* _In_ */ VINARGTYPE value) throw( ... )
 {
-	CPair* pNode = Find( key );
+	CPair* pNode = this->Find( key );
 	if( pNode == NULL )
 	{
-		return( RBInsert( key, value ) );
+		return(this->RBInsert( key, value ) );
 	}
 	else
 	{
@@ -4326,7 +4326,7 @@ POSITION CRBMultiMap< K, V, KTraits, VTraits >::Insert(
 	/* _In_ */ KINARGTYPE key,
 	/* _In_ */ VINARGTYPE value) throw( ... )
 {
-	return( RBInsert( key, value ) );
+	return( this->RBInsert( key, value ) );
 }
 
 template< typename K, typename V, class KTraits, class VTraits >
@@ -4351,7 +4351,7 @@ template< typename K, typename V, class KTraits, class VTraits >
 POSITION CRBMultiMap< K, V, KTraits, VTraits >::FindFirstWithKey(
 	/* _In_ */ KINARGTYPE key) const throw()
 {
-	return( Find( key ) );
+	return( this->Find( key ) );
 }
 
 template< typename K, typename V, class KTraits, class VTraits >

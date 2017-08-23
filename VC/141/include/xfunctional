@@ -454,14 +454,14 @@ template<>
 	};
 
 		// TEMPLATE CLASS unary_negate
-template<class _Fn1>
+template<class _Fn>
 	class unary_negate
 	{	// functor adapter !_Func(left)
 public:
-	typedef typename _Fn1::argument_type argument_type;
+	typedef typename _Fn::argument_type argument_type;
 	typedef bool result_type;
 
-	constexpr explicit unary_negate(const _Fn1& _Func)
+	constexpr explicit unary_negate(const _Fn& _Func)
 		: _Functor(_Func)
 		{	// construct from functor
 		}
@@ -472,26 +472,26 @@ public:
 		}
 
 private:
-	_Fn1 _Functor;	// the functor to apply
+	_Fn _Functor;	// the functor to apply
 	};
 
 		// TEMPLATE FUNCTION not1
-template<class _Fn1> inline
-	constexpr unary_negate<_Fn1> not1(const _Fn1& _Func)
+template<class _Fn>
+	constexpr unary_negate<_Fn> not1(const _Fn& _Func)
 	{	// return a unary_negate functor adapter
-	return (unary_negate<_Fn1>(_Func));
+	return (unary_negate<_Fn>(_Func));
 	}
 
 		// TEMPLATE CLASS binary_negate
-template<class _Fn2>
+template<class _Fn>
 	class binary_negate
 	{	// functor adapter !_Func(left, right)
 public:
-	typedef typename _Fn2::first_argument_type first_argument_type;
-	typedef typename _Fn2::second_argument_type second_argument_type;
+	typedef typename _Fn::first_argument_type first_argument_type;
+	typedef typename _Fn::second_argument_type second_argument_type;
 	typedef bool result_type;
 
-	constexpr explicit binary_negate(const _Fn2& _Func)
+	constexpr explicit binary_negate(const _Fn& _Func)
 		: _Functor(_Func)
 		{	// construct from functor
 		}
@@ -503,31 +503,31 @@ public:
 		}
 
 private:
-	_Fn2 _Functor;	// the functor to apply
+	_Fn _Functor;	// the functor to apply
 	};
 
 		// TEMPLATE FUNCTION not2
-template<class _Fn2> inline
-	constexpr binary_negate<_Fn2> not2(const _Fn2& _Func)
+template<class _Fn>
+	constexpr binary_negate<_Fn> not2(const _Fn& _Func)
 	{	// return a binary_negate functor adapter
-	return (binary_negate<_Fn2>(_Func));
+	return (binary_negate<_Fn>(_Func));
 	}
 
  #if _HAS_AUTO_PTR_ETC
 		// TEMPLATE CLASS binder1st
-template<class _Fn2>
+template<class _Fn>
 	class binder1st
-		: public unary_function<typename _Fn2::second_argument_type,
-			typename _Fn2::result_type>
+		: public unary_function<typename _Fn::second_argument_type,
+			typename _Fn::result_type>
 	{	// functor adapter _Func(stored, right)
 public:
-	typedef unary_function<typename _Fn2::second_argument_type,
-		typename _Fn2::result_type> _Base;
+	typedef unary_function<typename _Fn::second_argument_type,
+		typename _Fn::result_type> _Base;
 	typedef typename _Base::argument_type argument_type;
 	typedef typename _Base::result_type result_type;
 
-	binder1st(const _Fn2& _Func,
-		const typename _Fn2::first_argument_type& _Left)
+	binder1st(const _Fn& _Func,
+		const typename _Fn::first_argument_type& _Left)
 		: op(_Func), value(_Left)
 		{	// construct from functor and left operand
 		}
@@ -543,33 +543,33 @@ public:
 		}
 
 protected:
-	_Fn2 op;	// the functor to apply
-	typename _Fn2::first_argument_type value;	// the left operand
+	_Fn op;	// the functor to apply
+	typename _Fn::first_argument_type value;	// the left operand
 	};
 
 		// TEMPLATE FUNCTION bind1st
-template<class _Fn2,
+template<class _Fn,
 	class _Ty> inline
-	binder1st<_Fn2> bind1st(const _Fn2& _Func, const _Ty& _Left)
+	binder1st<_Fn> bind1st(const _Fn& _Func, const _Ty& _Left)
 	{	// return a binder1st functor adapter
-	typename _Fn2::first_argument_type _Val(_Left);
-	return (binder1st<_Fn2>(_Func, _Val));
+	typename _Fn::first_argument_type _Val(_Left);
+	return (binder1st<_Fn>(_Func, _Val));
 	}
 
 		// TEMPLATE CLASS binder2nd
-template<class _Fn2>
+template<class _Fn>
 	class binder2nd
-		: public unary_function<typename _Fn2::first_argument_type,
-			typename _Fn2::result_type>
+		: public unary_function<typename _Fn::first_argument_type,
+			typename _Fn::result_type>
 	{	// functor adapter _Func(left, stored)
 public:
-	typedef unary_function<typename _Fn2::first_argument_type,
-		typename _Fn2::result_type> _Base;
+	typedef unary_function<typename _Fn::first_argument_type,
+		typename _Fn::result_type> _Base;
 	typedef typename _Base::argument_type argument_type;
 	typedef typename _Base::result_type result_type;
 
-	binder2nd(const _Fn2& _Func,
-		const typename _Fn2::second_argument_type& _Right)
+	binder2nd(const _Fn& _Func,
+		const typename _Fn::second_argument_type& _Right)
 		: op(_Func), value(_Right)
 		{	// construct from functor and right operand
 		}
@@ -585,17 +585,17 @@ public:
 		}
 
 protected:
-	_Fn2 op;	// the functor to apply
-	typename _Fn2::second_argument_type value;	// the right operand
+	_Fn op;	// the functor to apply
+	typename _Fn::second_argument_type value;	// the right operand
 	};
 
 		// TEMPLATE FUNCTION bind2nd
-template<class _Fn2,
+template<class _Fn,
 	class _Ty> inline
-	binder2nd<_Fn2> bind2nd(const _Fn2& _Func, const _Ty& _Right)
+	binder2nd<_Fn> bind2nd(const _Fn& _Func, const _Ty& _Right)
 	{	// return a binder2nd functor adapter
-	typename _Fn2::second_argument_type _Val(_Right);
-	return (binder2nd<_Fn2>(_Func, _Val));
+	typename _Fn::second_argument_type _Val(_Right);
+	return (binder2nd<_Fn>(_Func, _Val));
 	}
 
 		// TEMPLATE CLASS pointer_to_unary_function

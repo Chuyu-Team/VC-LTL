@@ -15,7 +15,7 @@
 #define _INC_MSCLR_MARSHAL_WINDOWS
 
 #include <msclr/marshal.h>
-#include <windows.h>
+#include <Windows.h>
 #include <comutil.h>
 
 namespace msclr{

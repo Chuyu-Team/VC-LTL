@@ -174,14 +174,15 @@ template<class _Elem,
 inline int stoi(const string& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert string to int
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long _Ans = _CSTD strtol(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoi argument");
-	if (errno == ERANGE || _Ans < INT_MIN || INT_MAX < _Ans)
+	if (_Errno_ref == ERANGE || _Ans < INT_MIN || INT_MAX < _Ans)
 		_Xout_of_range("stoi argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -191,14 +192,15 @@ inline int stoi(const string& _Str, size_t *_Idx = 0,
 inline long stol(const string& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert string to long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long _Ans = _CSTD strtol(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stol argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stol argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -208,14 +210,15 @@ inline long stol(const string& _Str, size_t *_Idx = 0,
 inline unsigned long stoul(const string& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert string to unsigned long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	unsigned long _Ans = _CSTD strtoul(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoul argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stoul argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -225,14 +228,15 @@ inline unsigned long stoul(const string& _Str, size_t *_Idx = 0,
 inline long long stoll(const string& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert string to long long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long long _Ans = _CSTD strtoll(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoll argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stoll argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -242,14 +246,15 @@ inline long long stoll(const string& _Str, size_t *_Idx = 0,
 inline unsigned long long stoull(const string& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert string to unsigned long long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	unsigned long long _Ans = _CSTD strtoull(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoull argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stoull argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -258,14 +263,15 @@ inline unsigned long long stoull(const string& _Str, size_t *_Idx = 0,
 
 inline float stof(const string& _Str, size_t *_Idx = 0)
 	{	// convert string to float
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	float _Ans = _CSTD strtof(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stof argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stof argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -274,14 +280,15 @@ inline float stof(const string& _Str, size_t *_Idx = 0)
 
 inline double stod(const string& _Str, size_t *_Idx = 0)
 	{	// convert string to double
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	double _Ans = _CSTD strtod(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stod argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stod argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -290,14 +297,15 @@ inline double stod(const string& _Str, size_t *_Idx = 0)
 
 inline long double stold(const string& _Str, size_t *_Idx = 0)
 	{	// convert string to long double
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const char *_Ptr = _Str.c_str();
 	char *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long double _Ans = _CSTD strtold(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stold argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stold argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -308,14 +316,15 @@ inline long double stold(const string& _Str, size_t *_Idx = 0)
 inline int stoi(const wstring& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert wstring to int
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long _Ans = _CSTD wcstol(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoi argument");
-	if (errno == ERANGE || _Ans < INT_MIN || INT_MAX < _Ans)
+	if (_Errno_ref == ERANGE || _Ans < INT_MIN || INT_MAX < _Ans)
 		_Xout_of_range("stoi argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -325,14 +334,15 @@ inline int stoi(const wstring& _Str, size_t *_Idx = 0,
 inline long stol(const wstring& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert wstring to long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long _Ans = _CSTD wcstol(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stol argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stol argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -342,14 +352,15 @@ inline long stol(const wstring& _Str, size_t *_Idx = 0,
 inline unsigned long stoul(const wstring& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert wstring to unsigned long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	unsigned long _Ans = _CSTD wcstoul(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoul argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stoul argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -359,14 +370,15 @@ inline unsigned long stoul(const wstring& _Str, size_t *_Idx = 0,
 inline long long stoll(const wstring& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert wstring to long long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long long _Ans = _CSTD wcstoll(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoll argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stoll argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -376,14 +388,15 @@ inline long long stoll(const wstring& _Str, size_t *_Idx = 0,
 inline unsigned long long stoull(const wstring& _Str, size_t *_Idx = 0,
 	int _Base = 10)
 	{	// convert wstring to unsigned long long
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	unsigned long long _Ans = _CSTD wcstoull(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stoull argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stoull argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -392,14 +405,15 @@ inline unsigned long long stoull(const wstring& _Str, size_t *_Idx = 0,
 
 inline float stof(const wstring& _Str, size_t *_Idx = 0)
 	{	// convert wstring to float
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	float _Ans = _CSTD wcstof(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stof argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stof argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -408,14 +422,15 @@ inline float stof(const wstring& _Str, size_t *_Idx = 0)
 
 inline double stod(const wstring& _Str, size_t *_Idx = 0)
 	{	// convert wstring to double
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	double _Ans = _CSTD wcstod(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stod argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stod argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
@@ -424,14 +439,15 @@ inline double stod(const wstring& _Str, size_t *_Idx = 0)
 
 inline long double stold(const wstring& _Str, size_t *_Idx = 0)
 	{	// convert wstring to long double
+	int& _Errno_ref = errno;	// Nonzero cost, pay it once
 	const wchar_t *_Ptr = _Str.c_str();
 	wchar_t *_Eptr;
-	errno = 0;
+	_Errno_ref = 0;
 	long double _Ans = _CSTD wcstold(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		_Xinvalid_argument("invalid stold argument");
-	if (errno == ERANGE)
+	if (_Errno_ref == ERANGE)
 		_Xout_of_range("stold argument out of range");
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);

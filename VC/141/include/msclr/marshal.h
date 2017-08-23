@@ -20,7 +20,7 @@
 #endif
 
 #include <sal.h>
-#include <windows.h>
+#include <Windows.h>
 #include <vcclr.h>
 #include <stdlib.h>
 #include <string.h>

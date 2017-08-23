@@ -25,6 +25,46 @@ template<class _Elem,
 	{	// insert _Str into _Ostr
 	return (_Insert_string(_Ostr, _Str.data(), _Str.size()));
 	}
+
+
+	// basic_string_view LITERALS
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wuser-defined-literals"
+#endif /* __clang__ */
+
+#pragma warning(push)
+#pragma warning(disable: 4455)	// literal suffix identifiers that do not start with an underscore are reserved
+
+inline namespace literals {
+inline namespace string_view_literals {
+constexpr string_view operator "" sv(const char *_Str, size_t _Len) _NOEXCEPT
+	{	// construct string_view from [_Str, _Str + _Len)
+	return (string_view(_Str, _Len));
+	}
+
+constexpr wstring_view operator "" sv(const wchar_t *_Str, size_t _Len) _NOEXCEPT
+	{	// construct wstring_view from [_Str, _Str + _Len)
+	return (wstring_view(_Str, _Len));
+	}
+
+constexpr u16string_view operator "" sv(const char16_t *_Str, size_t _Len) _NOEXCEPT
+	{	// construct u16string_view from [_Str, _Str + _Len)
+	return (u16string_view(_Str, _Len));
+	}
+
+constexpr u32string_view operator "" sv(const char32_t *_Str, size_t _Len) _NOEXCEPT
+	{	// construct u32string_view from [_Str, _Str + _Len)
+	return (u32string_view(_Str, _Len));
+	}
+}	// inline namespace string_view_literals
+}	// inline namespace literals
+
+#pragma warning(pop)
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 _STD_END
 
 #pragma pop_macro("new")

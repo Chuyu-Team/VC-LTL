@@ -32,7 +32,7 @@
 #endif /* WINAPI_FAMILY */
 
 #ifndef _COMDEF_WINAPI_FAMILY_PHONE_APP
-#include <ole2.h>
+#include <Ole2.h>
 
 #include <comutil.h>
 #endif /* _COMDEF_WINAPI_FAMILY_PHONE_APP */
@@ -179,7 +179,7 @@ inline void __stdcall _set_com_error_handler(void (__stdcall *pHandler)(HRESULT,
 
 #else
 
-#include <olectl.h>
+#include <OleCtl.h>
 
 #ifdef _NATIVE_WCHAR_T_DEFINED
 #if defined(_GUARDED_CRT)

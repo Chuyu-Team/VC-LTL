@@ -28,7 +28,7 @@ struct _EXCEPTION_POINTERS;
 
 #ifdef __cplusplus
 
-    _VCRTIMP __declspec(noreturn) void __cdecl unexpected() throw(...);
+    _VCRTIMP __declspec(noreturn) void __cdecl unexpected() noexcept(false);
 
     #ifndef _M_CEE_PURE
 

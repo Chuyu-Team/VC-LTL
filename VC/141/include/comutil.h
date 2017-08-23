@@ -16,7 +16,7 @@
 #if !defined(_INC_COMUTIL)
 #define _INC_COMUTIL
 
-#include <ole2.h>
+#include <Ole2.h>
 
 #if !defined(_COM_ASSERT)
 # if defined(_DEBUG)

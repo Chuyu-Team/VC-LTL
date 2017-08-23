@@ -131,7 +131,7 @@ template <> class task<void>;
 /**/
 inline __declspec(noreturn) void __cdecl cancel_current_task()
 {
-    _THROW_NCEE(task_canceled, _EMPTY_ARGUMENT);
+    _THROW(task_canceled, _EMPTY_ARGUMENT);
 }
 
 namespace details
@@ -144,7 +144,7 @@ namespace details
         /// </summary>
         static void __declspec(noreturn) __cdecl _NoCallOnDefaultTask_ErrorImpl()
         {
-            _THROW_NCEE(invalid_operation, "This function cannot be called on a default constructed task");
+            _THROW(invalid_operation, "This function cannot be called on a default constructed task");
         }
     };
 
@@ -1239,8 +1239,8 @@ namespace details
     {
         _ThenImplOptions(_CancellationTokenState *_Token_state, const task_continuation_context* _Continuation_context,
             scheduler_ptr _PScheduler, _TaskCreationCallstack _Creation_stack, _TaskInliningMode_t _Inlining_mode = _NoInline) :
-            _PTokenState(_Token_state), _PContinuationContext(const_cast<task_continuation_context*>(_Continuation_context)), _Scheduler(_PScheduler),
-            _CreationStack(_Creation_stack), _InliningMode(_Inlining_mode) {}
+            _PTokenState(_Token_state), _Scheduler(_PScheduler), _CreationStack(_Creation_stack), _InliningMode(_Inlining_mode),
+            _PContinuationContext(const_cast<task_continuation_context*>(_Continuation_context)) {}
 
         _CancellationTokenState *_PTokenState;
         scheduler_ptr _Scheduler;
@@ -1464,7 +1464,7 @@ namespace details
         _Task_impl_base(_CancellationTokenState * _PTokenState, scheduler_ptr _Scheduler_arg)
                           : _M_TaskState(_Created),
                             _M_fFromAsync(false), _M_fUnwrappedTask(false),
-                            _M_pRegistration(nullptr), _M_Continuations(nullptr), _M_TaskCollection(_Scheduler_arg),
+                            _M_Continuations(nullptr), _M_pRegistration(nullptr), _M_TaskCollection(_Scheduler_arg),
                             _M_taskEventLogger(this)
         {
             // Set cancellation token
@@ -1493,7 +1493,7 @@ namespace details
                 // if task has not been completed.
                 if (!_IsCompleted() && !_IsCanceled())
                 {
-                    _THROW_NCEE(invalid_operation, "Illegal to wait on a task in a Windows Runtime STA");
+                    _THROW(invalid_operation, "Illegal to wait on a task in a Windows Runtime STA");
                 }
                 else
                 {
@@ -3271,7 +3271,7 @@ public:
 
         if (_M_Impl->_Wait() == canceled)
         {
-            _THROW_NCEE(task_canceled, _EMPTY_ARGUMENT);
+            _THROW(task_canceled, _EMPTY_ARGUMENT);
         }
 
         return _M_Impl->_GetResult();
@@ -3775,7 +3775,7 @@ private:
     template<typename _InternalReturnType, typename _Function>
     void _TaskInitWithFunctor(const _Function& _Func)
     {
-        typedef typename details::_InitFunctorTypeTraits<_InternalReturnType, std::result_of_t<_Function()>> _Async_type_traits;
+        typedef typename details::_InitFunctorTypeTraits<_InternalReturnType, decltype(std::declval<_Function>()())> _Async_type_traits;
 
         _M_Impl->_M_fFromAsync = _Async_type_traits::_IsAsyncTask;
         _M_Impl->_M_fUnwrappedTask = _Async_type_traits::_IsUnwrappedTaskOrAsync;
@@ -4448,9 +4448,9 @@ namespace details
 
     inline bool _IsHRCOMDisconnected(int __hr)
     {
-        return __hr == 0x800706BA // HRESULT_FROM_WIN32(RPC_S_SERVER_UNAVAILABLE)
-            || __hr == 0x80010108 // RPC_E_DISCONNECTED
-            || __hr == 0x89020001; // JSCRIPT_E_CANTEXECUTE
+        return static_cast<unsigned int>(__hr) == 0x800706BAU // HRESULT_FROM_WIN32(RPC_S_SERVER_UNAVAILABLE)
+            || static_cast<unsigned int>(__hr) == 0x80010108U // RPC_E_DISCONNECTED
+            || static_cast<unsigned int>(__hr) == 0x89020001U; // JSCRIPT_E_CANTEXECUTE
     }
 } // namespace details
 
@@ -6150,12 +6150,8 @@ namespace details
 
                     _PTask->_Then([_PParam, _Index](task<_ElementType> _ResultTask) {
 
-                        //  Dev10 compiler bug
-                        typedef _ElementType _ElementTypeDev10;
-                        auto _PParamCopy = _PParam;
-                        auto _IndexCopy = _Index;
-                        auto _Func = [_PParamCopy, _IndexCopy, &_ResultTask](){
-                            _PParamCopy->_M_vector._Result[_IndexCopy] = _ResultTask._GetImpl()->_GetResult();
+                        auto _Func = [_PParam, _Index, &_ResultTask](){
+                            _PParam->_M_vector._Result[_Index] = _ResultTask._GetImpl()->_GetResult();
                         };
 
                         _WhenAllContinuationWrapper(_PParam, _Func, _ResultTask);
@@ -6229,12 +6225,8 @@ namespace details
                     }
 
                     _PTask->_Then([_PParam, _Index](task<std::vector<_ElementType>> _ResultTask) {
-                        //  Dev10 compiler bug
-                        typedef _ElementType _ElementTypeDev10;
-                        auto _PParamCopy = _PParam;
-                        auto _IndexCopy = _Index;
-                        auto _Func = [_PParamCopy, _IndexCopy, &_ResultTask]() {
-                            _PParamCopy->_M_vector[_IndexCopy].Set(_ResultTask._GetImpl()->_GetResult());
+                        auto _Func = [_PParam, _Index, &_ResultTask]() {
+                            _PParam->_M_vector[_Index].Set(_ResultTask._GetImpl()->_GetResult());
                         };
 
                         _WhenAllContinuationWrapper(_PParam, _Func, _ResultTask);
@@ -6347,23 +6339,17 @@ namespace details
             _ReturnTask._SetAsync();
         }
         _VectorTask._Then([_PParam](task<std::vector<_ReturnType>> _ResultTask) {
-            //  Dev10 compiler bug
-            typedef _ReturnType _ReturnTypeDev10;
-            auto _PParamCopy = _PParam;
-            auto _Func = [_PParamCopy, &_ResultTask]() {
+            auto _Func = [_PParam, &_ResultTask]() {
                 auto _ResultLocal = _ResultTask._GetImpl()->_GetResult();
-                _PParamCopy->_M_vector.Set(_ResultLocal);
+                _PParam->_M_vector.Set(_ResultLocal);
             };
 
             _WhenAllContinuationWrapper(_PParam, _Func, _ResultTask);
         }, _CancellationTokenState::_None());
         _ValueTask._Then([_PParam](task<_ReturnType> _ResultTask) {
-            //  Dev10 compiler bug
-            typedef _ReturnType _ReturnTypeDev10;
-            auto _PParamCopy = _PParam;
-            auto _Func = [_PParamCopy, &_ResultTask]() {
+            auto _Func = [_PParam, &_ResultTask]() {
                 auto _ResultLocal = _ResultTask._GetImpl()->_GetResult();
-                _PParamCopy->_M_mergeVal.Set(_ResultLocal);
+                _PParam->_M_mergeVal.Set(_ResultLocal);
             };
 
             _WhenAllContinuationWrapper(_PParam, _Func, _ResultTask);
@@ -6655,7 +6641,7 @@ namespace details
         {
             if( _Begin == _End )
             {
-                _THROW_NCEE(invalid_operation, "when_any(begin, end) cannot be called on an empty container.");
+                _THROW(invalid_operation, "when_any(begin, end) cannot be called on an empty container.");
             }
             _CancellationTokenState *_PTokenState = _TaskOptions.has_cancellation_token() ? _TaskOptions.get_cancellation_token()._GetImplValue() : nullptr;
             auto _PParam = new _RunAnyParam<std::pair<std::pair<_ElementType, size_t>, _CancellationTokenState *>>();
@@ -6683,10 +6669,8 @@ namespace details
                 }
 
                 _PTask->_Then([_PParam, _Index](task<_ElementType> _ResultTask) {
-                    auto _PParamCopy = _PParam; // Dev10
-                    auto _IndexCopy = _Index; // Dev10
-                    auto _Func = [&_ResultTask, _PParamCopy, _IndexCopy]() {
-                        _PParamCopy->_M_Completed.set(std::make_pair(std::make_pair(_ResultTask._GetImpl()->_GetResult(), _IndexCopy),  _ResultTask._GetImpl()->_M_pTokenState));
+                    auto _Func = [&_ResultTask, _PParam, _Index]() {
+                        _PParam->_M_Completed.set(std::make_pair(std::make_pair(_ResultTask._GetImpl()->_GetResult(), _Index),  _ResultTask._GetImpl()->_M_pTokenState));
                     };
 
                     _WhenAnyContinuationWrapper(_PParam, _Func, _ResultTask);
@@ -6714,7 +6698,7 @@ namespace details
         {
             if( _Begin == _End )
             {
-                _THROW_NCEE(invalid_operation, "when_any(begin, end) cannot be called on an empty container.");
+                _THROW(invalid_operation, "when_any(begin, end) cannot be called on an empty container.");
             }
 
             _CancellationTokenState *_PTokenState = _TaskOptions.has_cancellation_token() ? _TaskOptions.get_cancellation_token()._GetImplValue() : nullptr;
@@ -6743,10 +6727,8 @@ namespace details
                 }
 
                 _PTask->_Then([_PParam, _Index](task<void> _ResultTask) {
-                    auto _PParamCopy = _PParam; // Dev10
-                    auto _IndexCopy = _Index; // Dev10
-                    auto _Func = [&_ResultTask, _PParamCopy, _IndexCopy]() {
-                        _PParamCopy->_M_Completed.set(std::make_pair(_IndexCopy, _ResultTask._GetImpl()->_M_pTokenState));
+                    auto _Func = [&_ResultTask, _PParam, _Index]() {
+                        _PParam->_M_Completed.set(std::make_pair(_Index, _ResultTask._GetImpl()->_M_pTokenState));
                     };
                     _WhenAnyContinuationWrapper(_PParam, _Func, _ResultTask);
                 }, _CancellationTokenState::_None());
@@ -6874,10 +6856,8 @@ task<_ReturnType> operator||(const task<_ReturnType> & _Lhs, const task<_ReturnT
 
     _PParam->_M_numTasks = 2;
     auto _Continuation = [_PParam](task<_ReturnType> _ResultTask) {
-        //  Dev10 compiler bug
-        auto _PParamCopy = _PParam;
-        auto _Func = [&_ResultTask, _PParamCopy]() {
-            _PParamCopy->_M_Completed.set(std::make_pair(_ResultTask._GetImpl()->_GetResult(), reinterpret_cast<size_t>(_ResultTask._GetImpl()->_M_pTokenState)));
+        auto _Func = [&_ResultTask, _PParam]() {
+            _PParam->_M_Completed.set(std::make_pair(_ResultTask._GetImpl()->_GetResult(), reinterpret_cast<size_t>(_ResultTask._GetImpl()->_M_pTokenState)));
         };
         _WhenAnyContinuationWrapper(_PParam, _Func, _ResultTask);
     };
@@ -6936,11 +6916,9 @@ task<std::vector<_ReturnType>> operator||(const task<std::vector<_ReturnType>> &
 
     _PParam->_M_numTasks = 2;
     _Lhs._Then([_PParam](task<std::vector<_ReturnType>> _ResultTask) {
-        //  Dev10 compiler bug
-        auto _PParamCopy = _PParam;
-        auto _Func = [&_ResultTask, _PParamCopy]() {
+        auto _Func = [&_ResultTask, _PParam]() {
             auto _Result = _ResultTask._GetImpl()->_GetResult();
-            _PParamCopy->_M_Completed.set(std::make_pair(_Result, _ResultTask._GetImpl()->_M_pTokenState));
+            _PParam->_M_Completed.set(std::make_pair(_Result, _ResultTask._GetImpl()->_M_pTokenState));
         };
         _WhenAnyContinuationWrapper(_PParam, _Func, _ResultTask);
     }, details::_CancellationTokenState::_None());
@@ -6948,15 +6926,12 @@ task<std::vector<_ReturnType>> operator||(const task<std::vector<_ReturnType>> &
 
     _Rhs._Then([_PParam](task<_ReturnType> _ResultTask)
     {
-        //  Dev10 compiler bug
-        typedef _ReturnType _ReturnTypeDev10;
-        auto _PParamCopy = _PParam;
-        auto _Func = [&_ResultTask, _PParamCopy]() {
+        auto _Func = [&_ResultTask, _PParam]() {
             auto _Result = _ResultTask._GetImpl()->_GetResult();
 
-            std::vector<_ReturnTypeDev10> _Vec;
+            std::vector<_ReturnType> _Vec;
             _Vec.push_back(_Result);
-            _PParamCopy->_M_Completed.set(std::make_pair(_Vec, _ResultTask._GetImpl()->_M_pTokenState));
+            _PParam->_M_Completed.set(std::make_pair(_Vec, _ResultTask._GetImpl()->_M_pTokenState));
         };
         _WhenAnyContinuationWrapper(_PParam, _Func, _ResultTask);
     }, details::_CancellationTokenState::_None());
@@ -7041,10 +7016,8 @@ inline task<void> operator||(const task<void> & _Lhs, const task<void> & _Rhs)
 
     _PParam->_M_numTasks = 2;
     auto _Continuation = [_PParam](task<void> _ResultTask) mutable {
-        //  Dev10 compiler needs this.
-        auto _PParam1 = _PParam;
-        auto _Func = [&_ResultTask, _PParam1]() {
-            _PParam1->_M_Completed.set(std::make_pair(details::_Unit_type(), _ResultTask._GetImpl()->_M_pTokenState));
+        auto _Func = [&_ResultTask, _PParam]() {
+            _PParam->_M_Completed.set(std::make_pair(details::_Unit_type(), _ResultTask._GetImpl()->_M_pTokenState));
         };
         _WhenAnyContinuationWrapper(_PParam, _Func, _ResultTask);
     };

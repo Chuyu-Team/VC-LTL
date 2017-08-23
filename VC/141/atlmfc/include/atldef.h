@@ -104,7 +104,7 @@
 
 // If you are mixing compilation units that are built as
 // native code with those that are built /clr, you must define
-// the symbol '_ATL_MIXED'. _ATL_MIXED must be defined for all 
+// the symbol '_ATL_MIXED'. _ATL_MIXED must be defined for all
 // compilation units in an executable or it must be defined for none of them.
 #if defined(_M_CEE)
 #ifdef _ATL_MIXED
@@ -119,9 +119,9 @@
 // Include the delete() operator
 #if defined _M_IX86 || defined _M_ARM
 #pragma comment(linker, "/include:??3@YAXPAX@Z")
-#elif defined _M_AMD64 || defined _M_ARM64
+#elif defined _M_X64 || defined _M_ARM64
 #pragma comment(linker, "/include:??3@YAXPEAX@Z")
-#else 
+#else
 #error Unsupported target architecture.
 #endif
 #ifndef _ATL_NATIVE_INITIALIZATION
@@ -156,7 +156,7 @@
 //PREFAST support static_assert from version 16.00
 #if defined(_PREFAST_) && (_MSC_VER < 1600)
 #define ATLSTATIC_ASSERT(expr, comment)
-#else 
+#else
 #define ATLSTATIC_ASSERT(expr, comment)		static_assert(expr, comment)
 #endif
 
@@ -174,7 +174,7 @@
 #define ATLASSERT(expr) _ASSERTE(expr)
 #endif // ATLASSERT
 
-/* 
+/*
 Why does ATLASSUME exist?
 
 ATL 8 has two existing validation models
@@ -205,29 +205,29 @@ We could add
 	if(!m_pFoo) return E_POINTER;
 
 But this is very unlikely to help, since it removes the ability of the developer to debug this problem if it's seen in a retail
-build of the application. 
+build of the application.
 
 We could try something more severe
 
 	if(!m_pFoo) terminate(); // or your favourite shutdown function
 
-This would ensure good reporting (because VC8 terminate generates a Windows Error Report and crash dump), but hardly seems a big win 
+This would ensure good reporting (because VC8 terminate generates a Windows Error Report and crash dump), but hardly seems a big win
 over the previous crash.
 
-ATLENSURE might seem slightly better. It is debuggable and consistent with ATL in general. In fact, many parts of ATL do just this. 
-But in this specific context, it doesn't look like a great choice. COM methods should not in general be emitting native C++ exceptions 
-as an error reporting strategy. 
+ATLENSURE might seem slightly better. It is debuggable and consistent with ATL in general. In fact, many parts of ATL do just this.
+But in this specific context, it doesn't look like a great choice. COM methods should not in general be emitting native C++ exceptions
+as an error reporting strategy.
 
-So we find ourselves in a quandry. For these kinds of methods, the traditional code (ATLASSERT followed by a crash), seems be the most 
+So we find ourselves in a quandry. For these kinds of methods, the traditional code (ATLASSERT followed by a crash), seems be the most
 debuggable thing to do in this situation. At least for VS8, we have decided to stick with this shape.
 
 ---
 
 Now consider the impact of cl /analyze. We want cl /analyze to not warn about our potential dereferences when they refer to member variables
 whose state was previously validated by another method. But we do want to see the impact of function contracts on the parameters of the
-function. 
+function.
 
-So we've done a broad replace of all the member-related ATLASSERT to ATLASSUME. 
+So we've done a broad replace of all the member-related ATLASSERT to ATLASSUME.
 
 */
 
@@ -271,7 +271,7 @@ do {                                           \
 	int __atl_condVal=!!(expr);                \
 	ATLASSERT(__atl_condVal);                  \
 	if(!(__atl_condVal)) return val;           \
-} __pragma(warning(suppress:4127)) while (0) 
+} __pragma(warning(suppress:4127)) while (0)
 #endif // ATLENSURE_RETURN_VAL
 
 /* Used inside COM methods that do not want to throw */
@@ -435,13 +435,13 @@ do { \
 #define _ATLRETHROW throw
 #endif	// _ATLTRY
 
-/* 
+/*
 COM functions should not throw. Which means we should protect their callers from C++ exceptions leaking out. These macros
 can help with that, though they have not yet been applied to the whole of ATL, which uses a variety of patterns to achieve
 this end
 */
- 
-#ifndef _ATL_COM_BEGIN 
+
+#ifndef _ATL_COM_BEGIN
 #define _ATL_COM_BEGIN \
 	HRESULT __hrAtlComMethod = S_OK; \
 	try \
@@ -467,7 +467,7 @@ this end
 	}
 #endif
 
-#ifndef _ATL_COM_END 
+#ifndef _ATL_COM_END
 #define _ATL_COM_END \
 	} \
 	_AFX_COM_END_PART \
@@ -475,7 +475,7 @@ this end
 	{ \
 		__hrAtlComMethod = E_FAIL; \
 	} \
-	return __hrAtlComMethod; 
+	return __hrAtlComMethod;
 #endif
 
 
@@ -486,7 +486,7 @@ this end
 #define ATLTRYALLOC(x) x;
 #endif	//ATLTRYALLOC
 
-// if _ATLTRY is defined before including this file then 
+// if _ATLTRY is defined before including this file then
 // _ATLCATCH and _ATLRETHROW should be defined as well.
 #ifndef _ATLTRY
 #define _ATLTRY
@@ -619,7 +619,7 @@ that we consider it dangerous to even throw an exception
 	__pragma(warning( pop ))
 #endif //_ATL_ENABLE_PTM_WARNING
 
-/* we have to define our own versions of MAKEINTRESOURCE and IS_INTRESOURCE to 
+/* we have to define our own versions of MAKEINTRESOURCE and IS_INTRESOURCE to
  * fix warning 6268. At least until those macros are not cleanend in PSDK.
    Same comes true for those definitions of constants which use the above macros
 */
@@ -666,12 +666,12 @@ that we consider it dangerous to even throw an exception
 
 #define ATLPREFAST_SUPPRESS(x) __pragma(warning(push)) __pragma(warning(disable: x))
 #define ATLPREFAST_UNSUPPRESS() __pragma(warning(pop))
-	
+
 #ifndef _FormatMessage_format_string_
 #define _FormatMessage_format_string_
 #endif
-	
-/* 
+
+/*
 	Helper functions for SAL annotation
 */
 namespace ATL {
@@ -679,7 +679,7 @@ namespace ATL {
 ATLPREFAST_SUPPRESS(6001 6101)
 template < typename T >
 _Ret_maybenull_ _Post_writable_byte_size_(dwLen) inline __declspec(noalias) T* SAL_Assume_bytecap_for_opt_(
-	_Out_writes_opt_(0) T* buf, 
+	_Out_writes_opt_(0) T* buf,
 	_In_ size_t dwLen)
 {
 	(void)(dwLen);
@@ -692,7 +692,7 @@ _Ret_z_ inline __declspec(noalias) T* SAL_Assume_notnull_for_opt_z_(_In_opt_z_ T
 {
 	ATLASSUME(buf!=0);
 	return buf;
-}		
+}
 
 } // namespace ATL
 
@@ -713,3 +713,12 @@ _Ret_z_ inline __declspec(noalias) T* SAL_Assume_notnull_for_opt_z_(_In_opt_z_ T
 #define AtlGetProcAddressFn(hinst, fn) reinterpret_cast<decltype(::fn)*>(GetProcAddress(hinst, #fn))
 
 /////////////////////////////////////////////////////////////////////////////
+
+#include <Windows.h>
+
+#if !defined(_ATL_CUSTOM_THROW)
+namespace ATL
+{
+ATL_NOINLINE __declspec(noreturn) inline void WINAPI AtlThrowImpl(_In_ HRESULT hr);
+}
+#endif

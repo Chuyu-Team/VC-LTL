@@ -1083,42 +1083,42 @@ public:
 	};
 
 		// CONSTRUCTORS FOR complex SPECIALIZATIONS
-inline constexpr complex<float>::complex(
+constexpr complex<float>::complex(
 	const complex<double>& _Right)
 		: _Complex_base<float, _Fcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<float> from complex<double>
 	}
 
-inline constexpr complex<float>::complex(
+constexpr complex<float>::complex(
 	const complex<long double>& _Right)
 		: _Complex_base<float, _Fcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<float> from complex<long double>
 	}
 
-inline constexpr complex<double>::complex(
+constexpr complex<double>::complex(
 	const complex<float>& _Right)
 		: _Complex_base<double, _Dcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<double> from complex<float>
 	}
 
-inline constexpr complex<double>::complex(
+constexpr complex<double>::complex(
 	const complex<long double>& _Right)
 		: _Complex_base<double, _Dcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<double> from complex<long double>
 	}
 
-inline constexpr complex<long double>::complex(
+constexpr complex<long double>::complex(
 	const complex<float>& _Right)
 		: _Complex_base<long double, _Lcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
 	{	// construct complex<long double> from complex<float>
 	}
 
-inline constexpr complex<long double>::complex(
+constexpr complex<long double>::complex(
 	const complex<double>& _Right)
 		: _Complex_base<long double, _Lcomplex_value>(
 			(_Ty)_Right.real(), (_Ty)_Right.imag())
@@ -1318,32 +1318,32 @@ template<class _Ty,
 
 inline namespace literals {
 inline namespace complex_literals {
-inline constexpr complex<long double> operator""il(long double _Val)
+constexpr complex<long double> operator""il(long double _Val)
 	{	// return imaginary _Val
 	return (complex<long double>(0.0L, static_cast<long double>(_Val)));
 	}
 
-inline constexpr complex<long double> operator""il(unsigned long long _Val)
+constexpr complex<long double> operator""il(unsigned long long _Val)
 	{	// return imaginary _Val
 	return (complex<long double>(0.0L, static_cast<long double>(_Val)));
 	}
 
-inline constexpr complex<double> operator""i(long double _Val)
+constexpr complex<double> operator""i(long double _Val)
 	{	// return imaginary _Val
 	return (complex<double>(0.0, static_cast<double>(_Val)));
 	}
 
-inline constexpr complex<double> operator""i(unsigned long long _Val)
+constexpr complex<double> operator""i(unsigned long long _Val)
 	{	// return imaginary _Val
 	return (complex<double>(0.0, static_cast<double>(_Val)));
 	}
 
-inline constexpr complex<float> operator""if(long double _Val)
+constexpr complex<float> operator""if(long double _Val)
 	{	// return imaginary _Val
 	return (complex<float>(0.0f, static_cast<float>(_Val)));
 	}
 
-inline constexpr complex<float> operator""if(unsigned long long _Val)
+constexpr complex<float> operator""if(unsigned long long _Val)
 	{	// return imaginary _Val
 	return (complex<float>(0.0f, static_cast<float>(_Val)));
 	}

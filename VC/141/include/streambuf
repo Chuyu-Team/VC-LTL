@@ -466,42 +466,44 @@ protected:
 	locale *_Plocale;	// pointer to imbued locale object
 	};
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
-template class _CRTIMP2_PURE basic_streambuf<char, char_traits<char> >;
-template class _CRTIMP2_PURE basic_streambuf<wchar_t, char_traits<wchar_t> >;
+template class _CRTIMP2_PURE_IMPORT basic_streambuf<char, char_traits<char> >;
+template class _CRTIMP2_PURE_IMPORT basic_streambuf<wchar_t, char_traits<wchar_t> >;
   #endif /* !defined(_CRTBLD) || defined(__FORCE_INSTANCE) */
 
   #ifdef __FORCE_INSTANCE
-template class _CRTIMP2_PURE basic_streambuf<unsigned short,
+template class _CRTIMP2_PURE_IMPORT basic_streambuf<unsigned short,
 	char_traits<unsigned short> >;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
 
 		// TEMPLATE CLASS istreambuf_iterator
 template<class _Elem,
 	class _Traits>
 	class istreambuf_iterator
-		: public iterator<input_iterator_tag,
-			_Elem, typename _Traits::off_type, const _Elem *, _Elem>
 	{	// wrap stream buffer as input iterator
-	typedef istreambuf_iterator<_Elem, _Traits> _Myt;
 public:
-	typedef _Elem char_type;
-	typedef _Traits traits_type;
-	typedef basic_streambuf<_Elem, _Traits> streambuf_type;
-	typedef basic_istream<_Elem, _Traits> istream_type;
+	using iterator_category = input_iterator_tag;
+	using value_type = _Elem;
+	using difference_type = typename _Traits::off_type;
+	using pointer = const _Elem *;
+	using reference = _Elem;
 
-	typedef typename traits_type::int_type int_type;
-	typedef const _Elem *pointer;
+	using char_type = _Elem;
+	using traits_type = _Traits;
+	using streambuf_type = basic_streambuf<_Elem, _Traits>;
+	using istream_type = basic_istream<_Elem, _Traits>;
 
-	constexpr istreambuf_iterator(streambuf_type *_Sb = 0) _THROW0()
+	using int_type = typename traits_type::int_type;
+
+	constexpr istreambuf_iterator(streambuf_type *_Sb = 0) _NOEXCEPT
 		: _Strbuf(_Sb), _Got(_Sb == 0), _Val()
 		{	// construct from stream buffer _Sb
 		}
 
-	istreambuf_iterator(istream_type& _Istr) _THROW0()
+	istreambuf_iterator(istream_type& _Istr) _NOEXCEPT
 		: _Strbuf(_Istr.rdbuf()), _Got(_Istr.rdbuf() == 0)
 		{	// construct from stream buffer in istream _Istr
 		}
@@ -521,12 +523,7 @@ public:
 		return (_Val);
 		}
 
-	const _Elem *operator->() const
-		{	// return pointer to class object
-		return (pointer_traits<pointer>::pointer_to(**this));
-		}
-
-	_Myt& operator++()
+	istreambuf_iterator& operator++()
 		{	// preincrement
  #if _ITERATOR_DEBUG_LEVEL == 2
 		if (_Strbuf == 0)
@@ -539,16 +536,16 @@ public:
 		return (*this);
 		}
 
-	_Myt operator++(int)
+	istreambuf_iterator operator++(int)
 		{	// postincrement
 		if (!_Got)
 			_Peek();
-		_Myt _Tmp = *this;
+		istreambuf_iterator _Tmp = *this;
 		++*this;
 		return (_Tmp);
 		}
 
-	bool equal(const _Myt& _Right) const
+	bool equal(const istreambuf_iterator& _Right) const
 		{	// test for equality
 		if (!_Got)
 			_Peek();
@@ -602,7 +599,7 @@ template<class _Elem,
 		// istreambuf_iterator TEMPLATE OPERATORS
 template<class _Elem,
 	class _Traits> inline
-	bool __CLR_OR_THIS_CALL operator==(
+	bool operator==(
 		const istreambuf_iterator<_Elem, _Traits>& _Left,
 		const istreambuf_iterator<_Elem, _Traits>& _Right)
 	{	// test for istreambuf_iterator equality
@@ -611,7 +608,7 @@ template<class _Elem,
 
 template<class _Elem,
 	class _Traits> inline
-	bool __CLR_OR_THIS_CALL operator!=(
+	bool operator!=(
 		const istreambuf_iterator<_Elem, _Traits>& _Left,
 		const istreambuf_iterator<_Elem, _Traits>& _Right)
 	{	// test for istreambuf_iterator inequality
@@ -622,26 +619,30 @@ template<class _Elem,
 template<class _Elem,
 	class _Traits>
 	class ostreambuf_iterator
-		: public _Outit
 	{	// wrap stream buffer as output iterator
-	typedef ostreambuf_iterator<_Elem, _Traits> _Myt;
 public:
-	typedef _Elem char_type;
-	typedef _Traits traits_type;
-	typedef basic_streambuf<_Elem, _Traits> streambuf_type;
-	typedef basic_ostream<_Elem, _Traits> ostream_type;
+	using iterator_category = output_iterator_tag;
+	using value_type = void;
+	using difference_type = void;
+	using pointer = void;
+	using reference = void;
 
-	ostreambuf_iterator(streambuf_type *_Sb) _THROW0()
+	using char_type = _Elem;
+	using traits_type = _Traits;
+	using streambuf_type = basic_streambuf<_Elem, _Traits>;
+	using ostream_type = basic_ostream<_Elem, _Traits>;
+
+	ostreambuf_iterator(streambuf_type *_Sb) _NOEXCEPT
 		: _Failed(false), _Strbuf(_Sb)
 		{	// construct from stream buffer _Sb
 		}
 
-	ostreambuf_iterator(ostream_type& _Ostr) _THROW0()
+	ostreambuf_iterator(ostream_type& _Ostr) _NOEXCEPT
 		: _Failed(false), _Strbuf(_Ostr.rdbuf())
 		{	// construct from stream buffer in _Ostr
 		}
 
-	_Myt& operator=(_Elem _Right)
+	ostreambuf_iterator& operator=(_Elem _Right)
 		{	// store element and increment
 		if (_Strbuf == 0
 			|| traits_type::eq_int_type(_Traits::eof(),
@@ -650,22 +651,22 @@ public:
 		return (*this);
 		}
 
-	_Myt& operator*()
+	ostreambuf_iterator& operator*()
 		{	// pretend to get designated element
 		return (*this);
 		}
 
-	_Myt& operator++()
+	ostreambuf_iterator& operator++()
 		{	// pretend to preincrement
 		return (*this);
 		}
 
-	_Myt& operator++(int)
+	ostreambuf_iterator& operator++(int)
 		{	// pretend to postincrement
 		return (*this);
 		}
 
-	bool failed() const _THROW0()
+	bool failed() const _NOEXCEPT
 		{	// return true if any stores failed
 		return (_Failed);
 		}

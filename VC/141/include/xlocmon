@@ -11,8 +11,6 @@
  #pragma push_macro("new")
  #undef new
 
- #pragma warning(disable: 4988)	// TRANSITION, variable declared outside class/function scope
-
 _STD_BEGIN
 		// STRUCT money_base
 struct money_base
@@ -277,8 +275,8 @@ template<class _Elem,
 		: public _Mpunct<_Elem>
 	{	// facet for defining monetary punctuation text
 public:
-	_PGLOBAL _CRTIMP2_PURE static const bool intl;	// true if international
-	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE static locale::id id;	// unique facet id
+	_PGLOBAL _CRTIMP2_PURE_IMPORT static const bool intl;	// true if international
+	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE_IMPORT static locale::id id;	// unique facet id
 
 	explicit moneypunct(size_t _Refs = 0)
 		: _Mpunct<_Elem>(_Refs, _Intl)
@@ -316,9 +314,18 @@ template<class _Elem,
 	_PGLOBAL const bool moneypunct<_Elem, _Intl>::intl = _Intl;
 
 		// STATIC moneypunct::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	bool _Intl>
 	__PURE_APPDOMAIN_GLOBAL locale::id moneypunct<_Elem, _Intl>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS moneypunct_byname
 template<class _Elem,
@@ -372,7 +379,7 @@ public:
 		return (do_get(_First, _Last, _Intl, _Iosbase, _State, _Val));
 		}
 
-	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE static locale::id id;	// unique facet id
+	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE_IMPORT static locale::id id;	// unique facet id
 
 	explicit money_get(size_t _Refs = 0)
 		: locale::facet(_Refs)
@@ -643,9 +650,18 @@ private:
 	};
 
 		// STATIC money_get::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _InIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id money_get<_Elem, _InIt>::id;
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
 
 		// TEMPLATE CLASS money_put
 template<class _Elem,
@@ -676,7 +692,7 @@ public:
 		return (do_put(_Dest, _Intl, _Iosbase, _Fill, _Val));
 		}
 
-	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE static locale::id id;	// unique facet id
+	__PURE_APPDOMAIN_GLOBAL _CRTIMP2_PURE_IMPORT static locale::id id;	// unique facet id
 
 	explicit money_put(size_t _Refs = 0)
 		: locale::facet(_Refs)
@@ -939,11 +955,16 @@ private:
 	};
 
 		// STATIC money_put::id OBJECT
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdllimport-static-field-def"
+#endif /* __clang__ */
+
 template<class _Elem,
 	class _OutIt>
 	__PURE_APPDOMAIN_GLOBAL locale::id money_put<_Elem, _OutIt>::id;
 
- #if defined(_DLL_CPPLIB) && !defined(_M_CEE_PURE)
+ #if defined(_DLL_CPPLIB)
 
   #if !defined(_CRTBLD) || defined(__FORCE_INSTANCE)
 template _PGLOBAL const bool moneypunct<char, true>::intl;
@@ -987,7 +1008,12 @@ template __PURE_APPDOMAIN_GLOBAL locale::id
 	money_put<unsigned short, ostreambuf_iterator<unsigned short,
 		char_traits<unsigned short> > >::id;
   #endif /* __FORCE_INSTANCE */
- #endif /* defined(_DLL_CPPLIB) etc. */
+ #endif /* defined(_DLL_CPPLIB) */
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
+
 _STD_END
 
  #pragma pop_macro("new")

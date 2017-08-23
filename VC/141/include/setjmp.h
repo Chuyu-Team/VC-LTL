@@ -159,13 +159,10 @@ int __cdecl setjmp(
     );
 
 #ifdef __cplusplus
-    #pragma warning(push)
-    #pragma warning(disable:4987) // Nonstandard extension used
     __declspec(noreturn) void __cdecl longjmp(
         _In_ jmp_buf _Buf,
         _In_ int     _Value
-        ) throw(...);
-    #pragma warning(pop)
+        ) noexcept(false);
 #else
     __declspec(noreturn) void __cdecl longjmp(
         _In_ jmp_buf _Buf,

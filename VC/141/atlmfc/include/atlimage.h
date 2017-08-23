@@ -45,7 +45,7 @@ ATLPREFAST_UNSUPPRESS()
 #pragma pop_macro("new")
 #pragma warning( pop )
 
-#include <shlwapi.h>
+#include <Shlwapi.h>
 
 #ifndef _ATL_NO_DEFAULT_LIBS
 #pragma comment(lib, "gdi32.lib")
@@ -80,6 +80,11 @@ private:
 };
 
 #pragma warning(pop)
+
+namespace ATLImplementationDetails
+{
+	struct CImageStaticInitializer;
+}
 
 class CImage
 {
@@ -440,6 +445,7 @@ private:
 
 	static CInitGDIPlus* GetInitGDIPlusInstance()
 	{
+#pragma warning(suppress: 4640) // will always be initialized on entry thread by CImageStaticInitializer
 		static CInitGDIPlus gdiPlus;
 		return &gdiPlus;
 	}
@@ -493,21 +499,27 @@ private:
 
 	static CDCCache* GetCDCCacheInstance()
 	{
+#pragma warning(suppress: 4640) // will always be initialized on entry thread by CImageStaticInitializer
 		static CDCCache cache;
 		return &cache;
 	}
 
-	static bool CImageStaticInitialize()
-	{
-		GetInitGDIPlusInstance();
-		GetCDCCacheInstance();
-		return true;
-	}
-
-	static bool isCImageStaticInitialized;
+	friend ATLImplementationDetails::CImageStaticInitializer;
 };
 
-__declspec(selectany) bool CImage::isCImageStaticInitialized = CImage::CImageStaticInitialize();
+namespace ATLImplementationDetails
+{
+	struct CImageStaticInitializer
+	{
+		CImageStaticInitializer()
+		{
+			CImage::GetInitGDIPlusInstance();
+			CImage::GetCDCCacheInstance();
+		}
+	};
+
+__declspec(selectany) CImageStaticInitializer InitializeCImage;
+}
 
 inline CImageDC::CImageDC(_In_ const CImage& image) throw( ... ) :
 	m_image( image ),

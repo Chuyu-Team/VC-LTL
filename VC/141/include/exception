@@ -73,7 +73,7 @@ _STD_BEGIN
 _USE_EXCEPTION
 
 typedef void (__cdecl *_Prhand)(const exception&);
-extern _CRTIMP2_NCEEPURE _Prhand _Raise_handler;	// pointer to raise handler
+extern _CRTIMP2_NCEEPURE_IMPORT _Prhand _Raise_handler;	// pointer to raise handler
 
 _STD_END
 
@@ -91,18 +91,17 @@ public:
 
 	// this constructor is necessary to compile
 	// successfully header new for _HAS_EXCEPTIONS==0 scenario
-	explicit __CLR_OR_THIS_CALL exception(const char *_Message = "unknown", int = 1)
-		_THROW0()
+	explicit __CLR_OR_THIS_CALL exception(const char *_Message = "unknown", int = 1) _NOEXCEPT
 		: _Ptr(_Message)
 		{	// construct from message string
 		}
 
-	__CLR_OR_THIS_CALL exception(const exception& _Right) _THROW0()
+	__CLR_OR_THIS_CALL exception(const exception& _Right) _NOEXCEPT
 		: _Ptr(_Right._Ptr)
 		{	// construct by copying _Right
 		}
 
-	exception& __CLR_OR_THIS_CALL operator=(const exception& _Right) _THROW0()
+	exception& __CLR_OR_THIS_CALL operator=(const exception& _Right) _NOEXCEPT
 		{	// assign _Right
 		_Ptr = _Right._Ptr;
 		return (*this);
@@ -112,7 +111,7 @@ public:
 		{	// destroy the object
 		}
 
-	virtual const char * __CLR_OR_THIS_CALL what() const _THROW0()
+	virtual const char * __CLR_OR_THIS_CALL what() const _NOEXCEPT
 		{	// return pointer to message string
 		return (_Ptr != 0 ? _Ptr : "unknown exception");
 		}
@@ -139,8 +138,7 @@ protected:
 class bad_exception : public exception
 	{	// base of all bad exceptions
 public:
-	__CLR_OR_THIS_CALL bad_exception(const char *_Message = "bad exception")
-		_THROW0()
+	__CLR_OR_THIS_CALL bad_exception(const char *_Message = "bad exception") _NOEXCEPT
 		: exception(_Message)
 		{	// construct from message string
 		}
@@ -160,7 +158,7 @@ protected:
 class bad_alloc : public exception
 	{	// base of all bad allocation exceptions
 public:
-	__CLR_OR_THIS_CALL bad_alloc() _THROW0()
+	__CLR_OR_THIS_CALL bad_alloc() _NOEXCEPT
 		: exception("bad allocation", 1)
 		{	// construct from message string with no memory allocation
 		}
@@ -172,7 +170,7 @@ public:
 private:
 	friend class bad_array_new_length;
 
-	__CLR_OR_THIS_CALL bad_alloc(const char *_Message) _THROW0()
+	__CLR_OR_THIS_CALL bad_alloc(const char *_Message) _NOEXCEPT
 		: exception(_Message, 1)
 		{	// construct from message string with no memory allocation
 		}
@@ -193,14 +191,12 @@ typedef void (__cdecl *terminate_handler)();
 typedef void (__cdecl *unexpected_handler)();
 
 		// DUMMY FUNCTION DECLARATIONS
-inline terminate_handler __CRTDECL set_terminate(terminate_handler)
-	_THROW0()
+inline terminate_handler __CRTDECL set_terminate(terminate_handler) _NOEXCEPT
 	{	// register a terminate handler
 	return 0;
 	}
 
-inline unexpected_handler __CRTDECL set_unexpected(unexpected_handler)
-	_THROW0()
+inline unexpected_handler __CRTDECL set_unexpected(unexpected_handler) _NOEXCEPT
 	{	// register an unexpected handler
 	return 0;
 	}
@@ -425,26 +421,26 @@ template<class _Ty,
 template<class _Ty>
 	[[noreturn]] inline void _Throw_with_nested(_Ty&& _Arg, true_type)
 	{	// throw user exception glued to nested_exception
-	typedef typename remove_reference<_Ty>::type _Uty;
+	typedef decay_t<_Ty> _Uty;
 	typedef _With_nested<_Ty, _Uty> _Glued;
 
-	_THROW_NCEE(_Glued, _STD forward<_Ty>(_Arg));
+	_THROW(_Glued, _STD forward<_Ty>(_Arg));
 	}
 
 template<class _Ty>
 	[[noreturn]] inline void _Throw_with_nested(_Ty&& _Arg, false_type)
 	{	// throw user exception by itself
-	typedef typename decay<_Ty>::type _Decayed;
+	typedef decay_t<_Ty> _Decayed;
 
-	_THROW_NCEE(_Decayed, _STD forward<_Ty>(_Arg));
+	_THROW(_Decayed, _STD forward<_Ty>(_Arg));
 	}
 
 template<class _Ty>
 	[[noreturn]] inline void throw_with_nested(_Ty&& _Arg)
 	{	// throw user exception, glued to nested_exception if possible
-	typedef typename remove_reference<_Ty>::type _Uty;
+	typedef decay_t<_Ty> _Uty;
 
-	integral_constant<bool,
+	bool_constant<
 		is_class<_Uty>::value
 		&& !is_base_of<nested_exception, _Uty>::value
 		&& !is_final<_Uty>::value> _Tag;
@@ -452,6 +448,7 @@ template<class _Ty>
 	_Throw_with_nested(_STD forward<_Ty>(_Arg), _Tag);
 	}
 
+#ifdef _CPPRTTI
 	// TEMPLATE FUNCTION rethrow_if_nested
 template<class _Ty> inline
 	void _Rethrow_if_nested(const _Ty *_Ptr, true_type)
@@ -470,13 +467,16 @@ template<class _Ty> inline
 template<class _Ty> inline
 	void rethrow_if_nested(const _Ty& _Arg)
 	{	// detect nested_exception inheritance
-	integral_constant<bool,
-		is_polymorphic<_Ty>::value
-		&& (!is_base_of<nested_exception, _Ty>::value
-			|| is_convertible<_Ty *, nested_exception *>::value)> _Tag;
+	bool_constant<is_polymorphic<_Ty>::value && (!is_base_of<nested_exception, _Ty>::value
+		|| is_convertible<_Ty *, nested_exception *>::value)> _Tag;
 
 	_Rethrow_if_nested(_STD addressof(_Arg), _Tag);
 	}
+#else /* _CPPRTTI */
+template<class _Ty>
+	void rethrow_if_nested(const _Ty&) = delete;	// requires /GR option
+#endif /* _CPPRTTI */
+
 _STD_END
 
  #pragma pop_macro("new")

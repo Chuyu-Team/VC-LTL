@@ -26,7 +26,7 @@
 
 #include <atlstr.h>
 #include <math.h>
-#include <oleauto.h>
+#include <OleAuto.h>
 
 #ifndef _ATL_USE_WINAPI_FAMILY_PHONE_APP
 #ifndef __oledb_h__
@@ -44,7 +44,7 @@ struct tagVARIANT;
 typedef tagVARIANT VARIANT;
 
 typedef double DATE;
- 
+
 namespace ATL
 {
 
@@ -58,9 +58,9 @@ public:
 
 	COleDateTimeSpan(_In_ double dblSpanSrc) throw();
 	COleDateTimeSpan(
-		_In_ LONG lDays, 
-		_In_ int nHours, 
-		_In_ int nMins, 
+		_In_ LONG lDays,
+		_In_ int nHours,
+		_In_ int nMins,
 		_In_ int nSecs) throw();
 
 // Attributes
@@ -107,9 +107,9 @@ public:
 	operator double() const throw();
 
 	void SetDateTimeSpan(
-		_In_ LONG lDays, 
-		_In_ int nHours, 
-		_In_ int nMins, 
+		_In_ LONG lDays,
+		_In_ int nHours,
+		_In_ int nMins,
 		_In_ int nSecs) throw();
 
 	// formatting
@@ -140,11 +140,11 @@ public:
 	COleDateTime(_In_ const FILETIME& filetimeSrc) throw();
 
 	COleDateTime(
-		_In_ int nYear, 
-		_In_ int nMonth, 
+		_In_ int nYear,
+		_In_ int nMonth,
 		_In_ int nDay,
-		_In_ int nHour, 
-		_In_ int nMin, 
+		_In_ int nHour,
+		_In_ int nMin,
 		_In_ int nSec) throw();
 	COleDateTime(_In_ WORD wDosDate, _In_ WORD wDosTime) throw();
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
@@ -218,16 +218,16 @@ public:
 	operator DATE() const throw();
 
 	int SetDateTime(
-		_In_ int nYear, 
-		_In_ int nMonth, 
+		_In_ int nYear,
+		_In_ int nMonth,
 		_In_ int nDay,
-		_In_ int nHour, 
-		_In_ int nMin, 
+		_In_ int nHour,
+		_In_ int nMin,
 		_In_ int nSec) throw();
 	int SetDate(_In_ int nYear, _In_ int nMonth, _In_ int nDay) throw();
 	int SetTime(_In_ int nHour, _In_ int nMin, _In_ int nSec) throw();
 	bool ParseDateTime(
-		_In_opt_z_ LPCTSTR lpszDate, 
+		_In_opt_z_ LPCTSTR lpszDate,
 		_In_ DWORD dwFlags = 0,
 		_In_ LCID lcid = LANG_USER_DEFAULT) throw();
 
@@ -242,7 +242,7 @@ protected:
 	static double WINAPI DoubleFromDate(_In_ DATE date) throw();
 	static DATE WINAPI DateFromDouble(_In_ double f) throw();
 
-	void CheckRange();	
+	void CheckRange();
 	BOOL ConvertSystemTimeToVariantTime(_In_ const SYSTEMTIME& systimeSrc);
 };
 
@@ -257,16 +257,16 @@ inline COleDateTimeSpan::COleDateTimeSpan() throw() : m_span(0), m_status(valid)
 {
 }
 
-inline COleDateTimeSpan::COleDateTimeSpan(_In_ double dblSpanSrc) throw() : 
+inline COleDateTimeSpan::COleDateTimeSpan(_In_ double dblSpanSrc) throw() :
 	m_span(dblSpanSrc), m_status(valid)
 {
 	CheckRange();
 }
 
 inline COleDateTimeSpan::COleDateTimeSpan(
-	_In_ LONG lDays, 
-	_In_ int nHours, 
-	_In_ int nMins, 
+	_In_ LONG lDays,
+	_In_ int nHours,
+	_In_ int nMins,
 	_In_ int nSecs) throw()
 {
 	SetDateTimeSpan(lDays, nHours, nMins, nSecs);
@@ -296,7 +296,7 @@ inline double COleDateTimeSpan::GetTotalDays() const throw()
 inline double COleDateTimeSpan::GetTotalHours() const throw()
 {
 	ATLASSERT(GetStatus() == valid);
-	return (double)LONGLONG((m_span + (m_span < 0 ? 
+	return (double)LONGLONG((m_span + (m_span < 0 ?
 		-OLE_DATETIME_HALFSECOND : OLE_DATETIME_HALFSECOND)) * 24);
 }
 
@@ -353,7 +353,7 @@ inline bool COleDateTimeSpan::operator==(
 	{
 		if(GetStatus() == valid)
 		{
-			// it has to be in precision range to say that it as equal	
+			// it has to be in precision range to say that it as equal
 			if (m_span + OLE_DATETIME_HALFSECOND > dateSpan.m_span &&
 					m_span - OLE_DATETIME_HALFSECOND < dateSpan.m_span)
 			{
@@ -362,9 +362,9 @@ inline bool COleDateTimeSpan::operator==(
 			else
 			{
 				return false;
-			}			
+			}
 		}
-		
+
 		return (GetStatus() == null);
 	}
 
@@ -494,9 +494,9 @@ inline COleDateTimeSpan::operator double() const throw()
 }
 
 inline void COleDateTimeSpan::SetDateTimeSpan(
-	_In_ LONG lDays, 
-	_In_ int nHours, 
-	_In_ int nMins, 
+	_In_ LONG lDays,
+	_In_ int nHours,
+	_In_ int nMins,
 	_In_ int nSecs) throw()
 {
 	// Set date span by breaking into fractional days (all input ranges valid)
@@ -564,11 +564,11 @@ inline COleDateTime::COleDateTime(_In_ const FILETIME& filetimeSrc) throw() :
 }
 
 inline COleDateTime::COleDateTime(
-	_In_ int nYear, 
-	_In_ int nMonth, 
+	_In_ int nYear,
+	_In_ int nMonth,
 	_In_ int nDay,
-	_In_ int nHour, 
-	_In_ int nMin, 
+	_In_ int nHour,
+	_In_ int nMin,
 	_In_ int nSec) throw()
 {
 	SetDateTime(nYear, nMonth, nDay, nHour, nMin, nSec);
@@ -576,7 +576,7 @@ inline COleDateTime::COleDateTime(
 
 #ifdef _ATL_USE_WINAPI_FAMILY_DESKTOP_APP
 inline COleDateTime::COleDateTime(
-	_In_ WORD wDosDate, 
+	_In_ WORD wDosDate,
 	_In_ WORD wDosTime) throw()
 {
 	m_status = ::DosDateTimeToVariantTime(wDosDate, wDosTime, &m_dt) ?
@@ -636,7 +636,7 @@ inline int COleDateTime::GetMinute() const throw()
 }
 
 inline int COleDateTime::GetSecond() const throw()
-{ 
+{
 	SYSTEMTIME st = {0};
 	return GetAsSystemTime(st) ? st.wSecond : error;
 }
@@ -697,7 +697,7 @@ inline bool GetAsSystemTimeHelper(_In_ const __time64_t& timeSrc, _Out_ SYSTEMTI
 	{
 		return false;
 	}
-	
+
 	timeDest.wYear = (WORD) (1900 + ttm.tm_year);
 	timeDest.wMonth = (WORD) (1 + ttm.tm_mon);
 	timeDest.wDayOfWeek = (WORD) ttm.tm_wday;
@@ -742,7 +742,7 @@ inline COleDateTime &COleDateTime::operator=(_In_ const FILETIME &filetimeSrc) t
 	FILETIME ftl;
 	SYSTEMTIME st;
 
-	m_status =  ::FileTimeToLocalFileTime(&filetimeSrc, &ftl) && 
+	m_status =  ::FileTimeToLocalFileTime(&filetimeSrc, &ftl) &&
 				::FileTimeToSystemTime(&ftl, &st) &&
 				ConvertSystemTimeToVariantTime(st) ? valid : invalid;
 
@@ -752,7 +752,7 @@ inline COleDateTime &COleDateTime::operator=(_In_ const FILETIME &filetimeSrc) t
 
 inline BOOL COleDateTime::ConvertSystemTimeToVariantTime(_In_ const SYSTEMTIME& systimeSrc)
 {
-	return AtlConvertSystemTimeToVariantTime(systimeSrc,&m_dt);	
+	return AtlConvertSystemTimeToVariantTime(systimeSrc,&m_dt);
 }
 inline COleDateTime &COleDateTime::operator=(_In_ const UDATE &udate) throw()
 {
@@ -767,7 +767,7 @@ inline bool COleDateTime::operator==(_In_ const COleDateTime& date) const throw(
 	{
 		if(GetStatus() == valid)
 		{
-			// it has to be in precision range to say that it as equal			
+			// it has to be in precision range to say that it as equal
 			if (m_dt + COleDateTimeSpan::OLE_DATETIME_HALFSECOND > date.m_dt &&
 					m_dt - COleDateTimeSpan::OLE_DATETIME_HALFSECOND < date.m_dt)
 			{
@@ -776,7 +776,7 @@ inline bool COleDateTime::operator==(_In_ const COleDateTime& date) const throw(
 			else
 			{
 				return false;
-			}			
+			}
 		}
 
 		return (GetStatus() == null);
@@ -807,7 +807,7 @@ inline bool COleDateTime::operator>(_In_ const COleDateTime& date) const throw()
 	if( (GetStatus() == valid) && (GetStatus() == date.GetStatus()) )
 		return( DoubleFromDate( m_dt ) > DoubleFromDate( date.m_dt ) );
 
-	return false;		
+	return false;
 }
 
 inline bool COleDateTime::operator<=(_In_ const COleDateTime& date) const throw()
@@ -864,11 +864,11 @@ inline COleDateTime::operator DATE() const throw()
 }
 
 inline int COleDateTime::SetDateTime(
-	_In_ int nYear, 
-	_In_ int nMonth, 
+	_In_ int nYear,
+	_In_ int nMonth,
 	_In_ int nDay,
-	_In_ int nHour, 
-	_In_ int nMin, 
+	_In_ int nHour,
+	_In_ int nMin,
 	_In_ int nSec) throw()
 {
 	SYSTEMTIME st;
@@ -897,7 +897,7 @@ inline int COleDateTime::SetTime(_In_ int nHour, _In_ int nMin, _In_ int nSec) t
 }
 
 inline double WINAPI COleDateTime::DoubleFromDate(_In_ DATE date) throw()
-{	
+{
 	// We treat it as positive from -OLE_DATETIME_HALFSECOND because of numeric errors
 	// If value is positive it doesn't need conversion
 	if(date > -COleDateTimeSpan::OLE_DATETIME_HALFSECOND)
@@ -913,7 +913,7 @@ inline double WINAPI COleDateTime::DoubleFromDate(_In_ DATE date) throw()
 }
 
 inline DATE WINAPI COleDateTime::DateFromDouble(_In_ double f) throw()
-{	
+{
 	// We treat it as positive from -OLE_DATETIME_HALFSECOND because of numeric errors
 	// If value is positive it doesn't need conversion
 	if(f > -COleDateTimeSpan::OLE_DATETIME_HALFSECOND )
@@ -933,15 +933,15 @@ inline void COleDateTime::CheckRange()
 	// About year 100 to about 9999
 	if(m_dt > VTDATEGRE_MAX || m_dt < VTDATEGRE_MIN)
 	{
-		SetStatus(invalid);    
+		SetStatus(invalid);
 	}
 }
 
 #endif // _ATL_STATIC_LIB_IMPL
 
 inline bool COleDateTime::ParseDateTime(
-	_In_opt_z_ LPCTSTR lpszDate, 
-	_In_ DWORD dwFlags, 
+	_In_opt_z_ LPCTSTR lpszDate,
+	_In_ DWORD dwFlags,
 	_In_ LCID lcid) throw()
 {
 	USES_CONVERSION_EX;
@@ -1002,7 +1002,7 @@ inline CString COleDateTimeSpan::Format(_In_z_ LPCTSTR pFormat) const
 
 #if defined(_UNICODE) || !defined(_CSTRING_DISABLE_NARROW_WIDE_CONVERSION)
 inline CString COleDateTime::Format(
-	_In_ DWORD dwFlags, 
+	_In_ DWORD dwFlags,
 	_In_ LCID lcid) const
 {
 	// If null, return empty string
@@ -1035,7 +1035,7 @@ inline CString COleDateTime::Format(
 inline CString COleDateTime::Format(_In_z_ LPCTSTR pFormat) const
 {
 	ATLENSURE_THROW(pFormat != NULL, E_INVALIDARG);
-	
+
 	// If null, return empty string
 	if(GetStatus() == null)
 		return _T("");

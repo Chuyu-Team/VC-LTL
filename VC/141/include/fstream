@@ -13,6 +13,16 @@
 
 _STD_BEGIN
 
+namespace experimental {
+	namespace filesystem {
+		inline namespace v1 {
+
+class path;
+
+		}	// inline namespace v1
+	}	// namespace filesystem
+}	// namespace experimental
+
 extern _CRTIMP2_PURE _Filet *__CLRCALL_PURE_OR_CDECL _Fiopen(
 	const char *,
 	ios_base::openmode, int);
@@ -97,7 +107,7 @@ template<> inline bool _Fputc(unsigned short _Wchar, _Filet *_File)
 
 		// TEMPLATE FUNCTION _Ungetc
 template<class _Elem> inline
-	bool _Ungetc(const _Elem& _Ch, _Filet *_File)
+	bool _Ungetc(const _Elem&, _Filet *)
 	{	// put back an arbitrary element to a C stream (always fail)
 	return (false);
 	}
@@ -289,7 +299,7 @@ public:
 	_Myt *open(const wchar_t *_Filename,
 		ios_base::openmode _Mode,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		_Filet *_File;
 		if (_Myfile != 0 || (_File = _Fiopen(_Filename, _Mode, _Prot)) == 0)
 			return (0);	// open failed
@@ -306,10 +316,18 @@ public:
 		return (open(_Str.c_str(), _Mode, _Prot));
 		}
 
+	template<class _Path_ish = experimental::filesystem::path>
+		_Myt *open(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode,
+		int _Prot = (int)ios_base::_Openprot)
+		{	// open a path-named C stream
+		return (open(_Path.c_str(), _Mode, _Prot));
+		}
+
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	_Myt *open(const wchar_t *_Filename,
 		ios_base::open_mode _Mode)
-		{	// open a wide-named C stream (old style) -- EXTENSION
+		{	// open a wide-named C stream (old style) (in standard as const std::filesystem::path::value_type *)
 		return (open(_Filename, (ios_base::openmode)_Mode));
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -318,7 +336,7 @@ public:
 	_Myt *open(const unsigned short *_Filename,
 		ios_base::openmode _Mode,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		_Filet *_File;
 		if (_Myfile != 0 || (_File = _Fiopen(_Filename, _Mode, _Prot)) == 0)
 			return (0);	// open failed
@@ -331,7 +349,7 @@ public:
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	_Myt *open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
-		{	// open a wide-named C stream (old style) -- EXTENSION
+		{	// open a wide-named C stream (old style) (in standard as const std::filesystem::path::value_type *)
 		return (open(_Filename, (ios_base::openmode)_Mode));
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -753,17 +771,15 @@ public:
 	explicit basic_ifstream(const string& _Str,
 		ios_base::openmode _Mode = ios_base::in,
 		int _Prot = (int)ios_base::_Openprot)
-		: _Mybase(&_Filebuffer)
+		: basic_ifstream(_Str.c_str(), _Mode, _Prot)
 		{	// construct with named file and specified mode
-		if (_Filebuffer.open(_Str.c_str(), _Mode | ios_base::in, _Prot) == 0)
-			_Myios::setstate(ios_base::failbit);
 		}
 
 	explicit basic_ifstream(const wchar_t *_Filename,
 		ios_base::openmode _Mode = ios_base::in,
 		int _Prot = (int)ios_base::_Openprot)
 		: _Mybase(&_Filebuffer)
-		{	// construct with wide-named file -- EXTENSION
+		{	// construct with wide-named file (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::in, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		}
@@ -771,10 +787,16 @@ public:
 	explicit basic_ifstream(const wstring& _Str,
 		ios_base::openmode _Mode = ios_base::in,
 		int _Prot = (int)ios_base::_Openprot)
-		: _Mybase(&_Filebuffer)
+		: basic_ifstream(_Str.c_str(), _Mode, _Prot)
 		{	// construct with wide-named file -- EXTENSION
-		if (_Filebuffer.open(_Str.c_str(), _Mode | ios_base::in, _Prot) == 0)
-			_Myios::setstate(ios_base::failbit);
+		}
+
+	template<class _Path_ish = experimental::filesystem::path>
+		explicit basic_ifstream(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode = ios_base::in,
+		int _Prot = (int)ios_base::_Openprot)
+		: basic_ifstream(_Path.c_str(), _Mode, _Prot)
+		{	// construct with path-named file
 		}
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
@@ -782,7 +804,7 @@ public:
 		ios_base::openmode _Mode = ios_base::in,
 		int _Prot = (int)ios_base::_Openprot)
 		: _Mybase(&_Filebuffer)
-		{	// construct with wide-named file -- EXTENSION
+		{	// construct with wide-named file (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::in, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		}
@@ -830,7 +852,7 @@ public:
 	void open(const wchar_t *_Filename,
 		ios_base::openmode _Mode = ios_base::in,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::in, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		else
@@ -844,9 +866,17 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+	template<class _Path_ish = experimental::filesystem::path>
+		void open(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode = ios_base::in,
+		int _Prot = (int)ios_base::_Openprot)
+		{	// open a path-named C stream
+		open(_Path.c_str(), _Mode, _Prot);
+		}
+
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const wchar_t *_Filename, ios_base::open_mode _Mode)
-		{	// open wide-named file (old style) -- EXTENSION
+		{	// open wide-named file (old style) (in standard as const std::filesystem::path::value_type *)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -855,7 +885,7 @@ public:
 	void open(const unsigned short *_Filename,
 		ios_base::openmode _Mode = ios_base::in,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::in, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		else
@@ -865,7 +895,7 @@ public:
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
-		{	// open wide-named file (old style) -- EXTENSION
+		{	// open wide-named file (old style) (in standard as const std::filesystem::path::value_type *)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -957,17 +987,15 @@ public:
 	explicit basic_ofstream(const string& _Str,
 		ios_base::openmode _Mode = ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		: _Mybase(&_Filebuffer)
+		: basic_ofstream(_Str.c_str(), _Mode, _Prot)
 		{	// construct with named file and specified mode
-		if (_Filebuffer.open(_Str.c_str(), _Mode | ios_base::out, _Prot) == 0)
-			_Myios::setstate(ios_base::failbit);
 		}
 
 	explicit basic_ofstream(const wchar_t *_Filename,
 		ios_base::openmode _Mode = ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
 		: _Mybase(&_Filebuffer)
-		{	// construct with wide-named file -- EXTENSION
+		{	// construct with wide-named file (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::out, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		}
@@ -975,10 +1003,16 @@ public:
 	explicit basic_ofstream(const wstring& _Str,
 		ios_base::openmode _Mode = ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		: _Mybase(&_Filebuffer)
+		: basic_ofstream(_Str.c_str(), _Mode, _Prot)
 		{	// construct with wide-named file -- EXTENSION
-		if (_Filebuffer.open(_Str.c_str(), _Mode | ios_base::out, _Prot) == 0)
-			_Myios::setstate(ios_base::failbit);
+		}
+
+	template<class _Path_ish = experimental::filesystem::path>
+		explicit basic_ofstream(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode = ios_base::out,
+		int _Prot = (int)ios_base::_Openprot)
+		: basic_ofstream(_Path.c_str(), _Mode, _Prot)
+		{	// construct with path-named file
 		}
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
@@ -986,7 +1020,7 @@ public:
 		ios_base::openmode _Mode = ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
 		: _Mybase(&_Filebuffer)
-		{	// construct with wide-named file -- EXTENSION
+		{	// construct with wide-named file (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::out, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		}
@@ -1034,7 +1068,7 @@ public:
 	void open(const wchar_t *_Filename,
 		ios_base::openmode _Mode = ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::out, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		else
@@ -1048,9 +1082,17 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+	template<class _Path_ish = experimental::filesystem::path>
+		void open(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode = ios_base::out,
+		int _Prot = (int)ios_base::_Openprot)
+		{	// open a path-named C stream
+		open(_Path.c_str(), _Mode, _Prot);
+		}
+
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const wchar_t *_Filename, ios_base::open_mode _Mode)
-		{	// open a wide-named C stream (old style) -- EXTENSION
+		{	// open a wide-named C stream (old style) (in standard as const std::filesystem::path::value_type *)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -1059,7 +1101,7 @@ public:
 	void open(const unsigned short *_Filename,
 		ios_base::openmode _Mode = ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode | ios_base::out, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		else
@@ -1069,7 +1111,7 @@ public:
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
-		{	// open a wide-named C stream (old style) -- EXTENSION
+		{	// open a wide-named C stream (old style) (in standard as const std::filesystem::path::value_type *)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -1166,17 +1208,15 @@ public:
 	explicit basic_fstream(const string& _Str,
 		ios_base::openmode _Mode = ios_base::in | ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		: _Mybase(&_Filebuffer)
+		: basic_fstream(_Str.c_str(), _Mode, _Prot)
 		{	// construct with named file and specified mode
-		if (_Filebuffer.open(_Str.c_str(), _Mode, _Prot) == 0)
-			_Myios::setstate(ios_base::failbit);
 		}
 
 	explicit basic_fstream(const wchar_t *_Filename,
 		ios_base::openmode _Mode = ios_base::in | ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
 		: _Mybase(&_Filebuffer)
-		{	// construct with wide-named file -- EXTENSION
+		{	// construct with wide-named file (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		}
@@ -1184,10 +1224,16 @@ public:
 	explicit basic_fstream(const wstring& _Str,
 		ios_base::openmode _Mode = ios_base::in | ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		: _Mybase(&_Filebuffer)
+		: basic_fstream(_Str.c_str(), _Mode, _Prot)
 		{	// construct with wide-named file -- EXTENSION
-		if (_Filebuffer.open(_Str.c_str(), _Mode, _Prot) == 0)
-			_Myios::setstate(ios_base::failbit);
+		}
+
+	template<class _Path_ish = experimental::filesystem::path>
+		explicit basic_fstream(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode = ios_base::in | ios_base::out,
+		int _Prot = (int)ios_base::_Openprot)
+		: basic_fstream(_Path.c_str(), _Mode, _Prot)
+		{	// construct with path-named file
 		}
 
  #ifdef _NATIVE_WCHAR_T_DEFINED
@@ -1195,7 +1241,7 @@ public:
 		ios_base::openmode _Mode = ios_base::in | ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
 		: _Mybase(&_Filebuffer)
-		{	// construct with wide-named file -- EXTENSION
+		{	// construct with wide-named file (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		}
@@ -1243,7 +1289,7 @@ public:
 	void open(const wchar_t *_Filename,
 		ios_base::openmode _Mode = ios_base::in | ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		else
@@ -1257,9 +1303,17 @@ public:
 		open(_Str.c_str(), _Mode, _Prot);
 		}
 
+	template<class _Path_ish = experimental::filesystem::path>
+		void open(const _Identity_t<_Path_ish>& _Path,
+		ios_base::openmode _Mode = ios_base::in | ios_base::out,
+		int _Prot = (int)ios_base::_Openprot)
+		{	// open a path-named C stream
+		open(_Path.c_str(), _Mode, _Prot);
+		}
+
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const wchar_t *_Filename, ios_base::open_mode _Mode)
-		{	// open a wide-named C stream (old style) -- EXTENSION
+		{	// open a wide-named C stream (old style) (in standard as const std::filesystem::path::value_type *)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */
@@ -1268,7 +1322,7 @@ public:
 	void open(const unsigned short *_Filename,
 		ios_base::openmode _Mode = ios_base::in | ios_base::out,
 		int _Prot = (int)ios_base::_Openprot)
-		{	// open a wide-named C stream -- EXTENSION
+		{	// open a wide-named C stream (in standard as const std::filesystem::path::value_type *)
 		if (_Filebuffer.open(_Filename, _Mode, _Prot) == 0)
 			_Myios::setstate(ios_base::failbit);
 		else
@@ -1278,7 +1332,7 @@ public:
  #if _HAS_OLD_IOSTREAMS_MEMBERS
 	void open(const unsigned short *_Filename,
 		ios_base::open_mode _Mode)
-		{	// open a wide-named C stream (old style) -- EXTENSION
+		{	// open a wide-named C stream (old style) (in standard as const std::filesystem::path::value_type *)
 		open(_Filename, (ios_base::openmode)_Mode);
 		}
  #endif /* _HAS_OLD_IOSTREAMS_MEMBERS */

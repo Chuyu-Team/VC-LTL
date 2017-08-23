@@ -14,8 +14,8 @@
 #endif
 
 #include <atldef.h>
-#include <windows.h>
-#include <ole2.h>
+#include <Windows.h>
+#include <Ole2.h>
 
 #pragma pack(push,_ATL_PACKING)
 namespace ATL
@@ -603,7 +603,7 @@ namespace _ATL_SAFE_ALLOCA_IMPL
 #ifndef _ATL_STACK_MARGIN
 #if defined(_M_IX86)
 #define _ATL_STACK_MARGIN	0x2000	// Minimum stack available after call to _ATL_SAFE_ALLOCA
-#elif defined _M_AMD64 || defined _M_IA64 || defined _M_ARM64
+#elif defined _M_X64 || defined _M_ARM64
 #define _ATL_STACK_MARGIN	0x4000
 #elif defined _M_ARM
 // ARMWORKITEM: Page size is the same as x86 so that should probably be the same value
@@ -658,16 +658,14 @@ private :
 		CAtlSafeAllocBufferNode* m_pNext;
 #if defined(_M_IX86)
 		BYTE _pad[4];
-#elif defined(_M_IA64)
-		BYTE _pad[8];
-#elif defined(_M_AMD64)
+#elif defined(_M_X64)
 		BYTE _pad[8];
 #elif defined(_M_ARM)
 		BYTE _pad[4];
 #elif defined(_M_ARM64)
 		BYTE _pad[8];
 #else
-	#error Only supported for X86, AMD64, IA64 and ARM
+	#error Only supported for X86, X64, ARM, and ARM64
 #endif
 		void* GetData()
 		{

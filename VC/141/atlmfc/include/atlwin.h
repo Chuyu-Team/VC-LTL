@@ -37,7 +37,7 @@
 #endif
 
 #include <atlstdthunk.h>
-#include <commctrl.h>
+#include <CommCtrl.h>
 #include <atlsimpstr.h>
 
 // protect template members from windowsx.h macros
@@ -4332,7 +4332,7 @@ public:
 		_Out_ BOOL& bHandled)
 	{
 		// initialize controls in dialog with DLGINIT resource section
-		ExecuteDlgInit(static_cast<T*>(this)->IDD);
+		this->ExecuteDlgInit(static_cast<T*>(this)->IDD);
 		AdviseSinkMap(true);
 		bHandled = FALSE;
 		return 1;

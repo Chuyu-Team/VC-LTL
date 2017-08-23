@@ -21,10 +21,10 @@
 #pragma warning(disable: 4127) // constant expression
 
 #include <atldef.h>
-#include <windows.h>
-#include <ole2.h>
+#include <Windows.h>
+#include <Ole2.h>
 #ifdef _ATL_USE_WINAPI_FAMILY_PHONE_APP
-#include <oleauto.h>
+#include <OleAuto.h>
 #endif // _ATL_USE_WINAPI_FAMILY_PHONE_APP
 
 #include <limits.h>
@@ -39,7 +39,7 @@
 namespace ATL
 {
 
-namespace details
+namespace ATLImplementationDetails
 {
 	// Copy the necessary machinery from the STL to avoid dragging in STL headers.
 

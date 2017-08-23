@@ -20,8 +20,8 @@
 #pragma warning(push)
 #pragma warning(disable: 4191) // unsafe conversion from 'functionptr1' to 'functionptr2'
 
-#include <winsock2.h>
-#include <mswsock.h>
+#include <WinSock2.h>
+#include <MSWSock.h>
 #include <wtypes.h>
 #include <atlconv.h>
 #include <tchar.h>
@@ -32,7 +32,7 @@
 /* psdk prefast noise */
 #pragma warning(disable : 6011)
 #endif
-#include <ws2tcpip.h>
+#include <WS2tcpip.h>
 #pragma warning(pop)
 
 #pragma comment(lib, "ws2_32.lib")

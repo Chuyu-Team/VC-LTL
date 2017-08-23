@@ -21,7 +21,7 @@ template<size_t _Bits>
 	class bitset
 	{	// store fixed-length sequence of Boolean elements
 public:
-	typedef typename _If<_Bits <= 32, _Uint32t, unsigned long long>::type _Ty;
+	typedef conditional_t<_Bits <= 32, _Uint32t, unsigned long long> _Ty;
 
 
 		// CLASS reference
@@ -370,8 +370,7 @@ public:
 			"\3\4\4\5\4\5\5\6\4\5\5\6\5\6\6\7"
 			"\3\4\4\5\4\5\5\6\4\5\5\6\5\6\6\7"
 			"\4\5\5\6\5\6\6\7\5\6\6\7\6\7\7\x8";
-		const unsigned char *_Ptr =
-			(const unsigned char *)(const void *)_Array;
+		const unsigned char *_Ptr = &reinterpret_cast<const unsigned char&>(_Array);
 		const unsigned char *const _End = _Ptr + sizeof (_Array);
 		size_t _Val = 0;
 		for ( ; _Ptr != _End; ++_Ptr)
@@ -382,12 +381,6 @@ public:
 	constexpr size_t size() const _NOEXCEPT
 		{	// return size of bitset
 		return (_Bits);
-		}
-
-	size_t hash() const
-		{	// hash bits to size_t value by pseudorandomizing transform
-		return (_Hash_seq((const unsigned char *)_Array,
-			sizeof (_Array)));
 		}
 
 	bool operator==(const bitset& _Right) const _NOEXCEPT
@@ -444,8 +437,9 @@ public:
 		}
 
 private:
-	enum : ptrdiff_t
+	friend hash<bitset<_Bits>>;
 
+	enum : ptrdiff_t
 		{	// parameters for packing bits into words
 		_Bitsperword = (ptrdiff_t)(CHAR_BIT * sizeof (_Ty)),
 		_Words = (ptrdiff_t)(_Bits == 0
@@ -586,16 +580,16 @@ template<class _Elem,
 	return (_Istr);
 	}
 
-	// TEMPLATE STRUCT SPECIALIZATION hash
+	// STRUCT TEMPLATE SPECIALIZATION hash
 template<size_t _Bits>
-	struct hash<bitset<_Bits> >
+	struct hash<bitset<_Bits>>
 	{	// hash functor for bitset<_Bits>
 	typedef bitset<_Bits> argument_type;
 	typedef size_t result_type;
 
-	size_t operator()(const argument_type& _Keyval) const
+	size_t operator()(const bitset<_Bits>& _Keyval) const _NOEXCEPT
 		{	// hash _Keyval to size_t value by pseudorandomizing transform
-		return (_Keyval.hash());
+		return (_Hash_representation(_Keyval._Array));
 		}
 	};
 _STD_END
