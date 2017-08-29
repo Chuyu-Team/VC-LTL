@@ -298,6 +298,19 @@ extern "C"
 
 		return tmp;
 	}
+
+	//总是返回ture，因为老版本没有此函数，不过以前的 _matherr内部他会判断是否存在
+	bool __acrt_has_user_matherr()
+	{
+		return true;
+	}
+
+	int __CRTDECL _matherr(_Inout_ struct _exception* _Except);
+
+	int __acrt_invoke_user_matherr(_Inout_ struct _exception* _Except)
+	{
+		return _matherr(_Except);
+	}
 }
 
 #ifdef __cplusplus
