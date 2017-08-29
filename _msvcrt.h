@@ -73,11 +73,11 @@
 #endif
 
 
-#pragma comment(lib,"vc" __ltlversion ".lib")
 
 #ifndef _LIB
+#pragma comment(lib,"vc" __ltlversion ".lib")
 #pragma comment(lib,"ucrt_" _CRT_STRINGIZE(_UCRT_VERISON) ".lib")
-#endif
+#endif //!_LIB
 
 #if defined(__NO_LTL_LIB) || defined(__Build_LTL)
 
@@ -90,14 +90,18 @@
 #pragma detect_mismatch("_LTL_Mode", "Normal")
 
 //__NO_LTL_LIB 宏，可以取消对ltlXXX.lib的引用，取消引用后程序体积可以变得更小，但是必须手动在cpp include _msvcrt.cpp，否则将编译失败
+#ifndef _LIB
 #pragma comment(lib,"ltl" __ltlversion __ltlversionxp ".lib")
 #pragma message(_ltlfilelen "info: 进入ltl普通模式，已准备对" "ltl" __ltlversion __ltlversionxp ".lib" "的引用。定义 __NO_LTL_LIB  可切换到超越模式。")
+#endif //!_LIB
 
 #endif //__NO_LTL_LIB || __Build_LTL
 
+#ifndef _LIB
 //导入Windows Vista 动态库 msvcrt.dll
 #pragma comment(lib,"msvcrt_base.lib")
 //导入msvcrt补充库
 #pragma comment(lib,"msvcrtp.lib")
+#endif //!_LIB
 
 #endif //NDEBUG&&_DLL
