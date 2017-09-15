@@ -142,7 +142,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTIMP long long __cdecl wcstoll(
+    extern long long __cdecl wcstoll(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_                     int            _Radix
@@ -172,20 +172,11 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    __inline unsigned long long __cdecl wcstoull(
+    extern unsigned long long __cdecl wcstoull(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_                     int            _Radix
-        )
-	{
-		_ACRTIMP unsigned __int64 __cdecl _wcstoui64(
-			_In_z_                   wchar_t const* _String,
-			_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
-			_In_                     int            _Radix
-		);
-
-		return _wcstoui64(_String, _EndPtr, _Radix);
-	}
+        );
 
     _Check_return_
     _ACRTIMP unsigned long long __cdecl _wcstoull_l(
@@ -209,13 +200,10 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    __inline float __cdecl wcstof(
+    extern float __cdecl wcstof(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr
-        )
-	{
-		return wcstod(_String, _EndPtr);
-	}
+        );
 
     _Check_return_
     _ACRTIMP float __cdecl _wcstof_l(

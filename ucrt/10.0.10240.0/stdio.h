@@ -1423,23 +1423,15 @@ _CRT_STDIO_INLINE int __CRTDECL _vsnprintf(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE int __CRTDECL vsnprintf(
+__inline int __CRTDECL vsnprintf(
     _Out_writes_(_BufferCount)    char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
                                   va_list           _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
 {
-    int const _Result = __stdio_common_vsprintf(
-        _CRT_INTERNAL_LOCAL_PRINTF_OPTIONS | _CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR,
-        _Buffer, _BufferCount, _Format, NULL, _ArgList);
-
-    return _Result < 0 ? -1 : _Result;
+	return _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
 }
-#endif
 
 _Success_(return >= 0)
 _Check_return_opt_ _CRT_INSECURE_DEPRECATE(_vsprintf_s_l)

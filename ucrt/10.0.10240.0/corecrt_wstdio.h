@@ -28,11 +28,7 @@ _CRT_BEGIN_C_HEADER
     } FILE;
 #endif
 
-__inline FILE* __cdecl __acrt_iob_func(unsigned _Ix)
-{
-	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
-	return __iob_func(_Ix);
-}
+extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
 
 #define stdin  (__acrt_iob_func(0))
 #define stdout (__acrt_iob_func(1))
@@ -1178,6 +1174,7 @@ __inline int __CRTDECL _vswprintf_c(
     )
 {
 #ifdef _ATL_XP_TARGETING
+#pragma warning(suppress : 4996)
 	return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
 #else
     return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
@@ -1221,6 +1218,7 @@ __inline int __CRTDECL _vswprintf(
     )
 {
 #ifdef _ATL_XP_TARGETING
+#pragma warning(suppress : 4996)
 	return _vsnwprintf(_Buffer, -1, _Format, _ArgList);
 #else
     return _vswprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
@@ -1237,6 +1235,7 @@ __inline int __CRTDECL vswprintf(
     )
 {
 #ifdef _ATL_XP_TARGETING
+#pragma warning(suppress : 4996)
 	return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
 #else
     return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
@@ -1430,6 +1429,7 @@ __inline int __CRTDECL _swprintf(
 	int _Result;
 	va_list _ArgList;
 	__crt_va_start(_ArgList, _Format);
+#pragma warning(suppress : 4996)
 	_Result = _vsnwprintf(_Buffer, -1, _Format, _ArgList);
 	__crt_va_end(_ArgList);
 	return _Result;
@@ -1455,6 +1455,7 @@ __inline int __CRTDECL swprintf(
 	int _Result;
 	va_list _ArgList;
 	__crt_va_start(_ArgList, _Format);
+#pragma warning(suppress : 4996)
 	_Result = _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
 	__crt_va_end(_ArgList);
 	return _Result;

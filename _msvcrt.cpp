@@ -10,6 +10,7 @@
 #include <intrin.h>  
 #include <vcruntime_exception.h>
 #include <crtdbg.h>
+#include <time.h>
 
 #ifdef __NOTHROW_T_DEFINED
 
@@ -41,38 +42,40 @@ extern "C"
 		terminate();
 	}
 
-	/*_ACRTIMP FILE* __cdecl __iob_func(unsigned);
+	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
 
 	FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
 		return __iob_func(in);
-	}*/
+	}
 
-	/*unsigned long long __cdecl wcstoull(
+	unsigned long long __cdecl wcstoull(
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
 		_In_                     int            _Radix
 		)
 	{
 		return _wcstoui64(_String, _EndPtr, _Radix);
-	}*/
+	}
 
 	//系统自带有double，用此将其转换为float
-	/*float __cdecl strtof(
+	float __cdecl strtof(
 		_In_z_                   char const* _String,
 		_Out_opt_ _Deref_post_z_ char**      _EndPtr
 	)
 	{
+#pragma warning(suppress : 4244)
 		return strtod(_String, _EndPtr);
-	}*/
+	}
 
-	/*float __cdecl wcstof(
+	float __cdecl wcstof(
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr
 	)
 	{
+#pragma warning(suppress : 4244)
 		return wcstod(_String, _EndPtr);
-	}*/
+	}
 
 	BOOL __cdecl __vcrt_InitializeCriticalSectionEx(
 		LPCRITICAL_SECTION const critical_section,
@@ -286,6 +289,39 @@ extern "C"
 //		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_s_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
 //	}
 
+#ifdef _ATL_XP_TARGETING
+
+	double __cdecl _difftime64(
+		_In_ __time64_t _Time1,
+		_In_ __time64_t _Time2
+	)
+	{
+		if (!(_Time2 >= 0 && _Time1 >= 0))
+		{
+			errno = EINVAL;
+			return 0;
+		}
+		return static_cast<double>(_Time1 - _Time2);
+	}
+
+
+
+	errno_t __cdecl _localtime64_s(
+		_Out_ struct tm*        _Tm,
+		_In_  __time64_t const* _Time
+	)
+	{
+#pragma warning(suppress : 4996)
+		const struct tm* t = _localtime64(_Time);
+		if (!t)
+			return errno;
+
+		memcpy(_Tm, t, sizeof(struct tm));
+
+		return 0;
+	}
+
+
 	__time64_t gettime()
 	{
 		FILETIME FileTime;
@@ -299,6 +335,38 @@ extern "C"
 		return tmp;
 	}
 
+
+	__time32_t __cdecl _time32(
+		_Out_opt_ __time32_t* _Time
+	)
+	{
+		__time64_t gettime();
+
+#pragma warning(suppress : 4244)
+		__time32_t tmp = gettime();
+
+		if (_Time)
+			*_Time = tmp;
+
+		return tmp;
+	}
+
+
+	__time64_t __cdecl _time64(
+		_Out_opt_ __time64_t* _Time
+	)
+	{
+		__time64_t gettime();
+
+		__time64_t tmp = gettime();
+		if (_Time)
+			*_Time = tmp;
+
+		return tmp;
+	}
+
+#endif
+
 	//总是返回ture，因为老版本没有此函数，不过以前的 _matherr内部他会判断是否存在
 	bool __acrt_has_user_matherr()
 	{
@@ -311,6 +379,44 @@ extern "C"
 	{
 		return _matherr(_Except);
 	}
+
+	long long __cdecl wcstoll(
+		_In_z_                   wchar_t const* _String,
+		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+		_In_                     int            _Radix
+	)
+	{
+		return _wcstoi64(_String, _EndPtr, _Radix);
+	}
+
+	long long __cdecl strtoll(
+		_In_z_                   char const* _String,
+		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
+		_In_                     int         _Radix
+	)
+	{
+		return _strtoi64(_String, _EndPtr, _Radix);
+	}
+
+#ifndef _ATL_XP_TARGETING
+	_ACRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
+#else
+#include <Ntsecapi.h>
+	errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue)
+	{
+		*_RandomValue = 0;
+
+		if (!RtlGenRandom(_RandomValue, sizeof(*_RandomValue)))
+		{
+			errno = ENOMEM;
+			return ENOMEM;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+#endif
 }
 
 #ifdef __cplusplus
@@ -411,6 +517,16 @@ extern "C++"
 	{	// report a regex_error
 		_THROW(regex_error, _Code);
 	}
+
+	unsigned int __CLRCALL_PURE_OR_CDECL _Random_device()
+	{	// return a random value
+		unsigned int ans;
+		if (_CSTD rand_s(&ans))
+			_Xout_of_range("invalid random_device value");
+		return (ans);
+	}
+
+
 	_STD_END
 }
 #endif // !__cplusplus

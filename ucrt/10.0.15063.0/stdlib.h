@@ -347,7 +347,7 @@ _ACRTIMP void __cdecl srand(_In_ unsigned int _Seed);
 _Check_return_ _ACRTIMP int __cdecl rand(void);
 
 #if defined _CRT_RAND_S || defined _CRTBLD
-    _ACRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
+    _ACRTXPIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
 #endif
 
 
@@ -481,17 +481,10 @@ _ACRTIMP int __cdecl _atoldbl_l(
     );
 
 _Check_return_
-__inline float __cdecl strtof(
+extern float __cdecl strtof(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
-    )
-{
-	_ACRTIMP double __cdecl strtod(
-		_In_z_                   char const* _String,
-		_Out_opt_ _Deref_post_z_ char**      _EndPtr
-	);
-	return strtod(_String, _EndPtr);
-}
+    );
 
 _Check_return_
 _ACRTIMP float __cdecl _strtof_l(
@@ -542,7 +535,7 @@ _ACRTIMP long __cdecl _strtol_l(
     );
 
 _Check_return_
-_ACRTIMP long long __cdecl strtoll(
+extern long long __cdecl strtoll(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix

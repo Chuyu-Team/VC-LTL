@@ -6399,7 +6399,7 @@ typedef mt19937 default_random_engine;
 
 	// CLASS random_device
 
-_CRTIMP2_PURE unsigned int __CLRCALL_PURE_OR_CDECL _Random_device();
+extern unsigned int __CLRCALL_PURE_OR_CDECL _Random_device();
 
 class random_device
 	{	// class to generate random numbers (from hardware where available)
