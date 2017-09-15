@@ -46,6 +46,8 @@
 //XP以及以下系统外部导入
 #define _ACRTXPIMPINLINE extern
 
+#pragma detect_mismatch("_LTL_Mode", "XPMode")
+
 #else //_ATL_XP_TARGETING else
 //默认模式，此模式编译器新特性将使用Vista新API实现，性能更佳
 #define __ltlversionxp
@@ -54,6 +56,7 @@
 //XP以上系统inline以减少导入数量
 #define _ACRTXPIMPINLINE __inline
 
+#pragma detect_mismatch("_LTL_Mode", "VistaMode")
 #endif //_ATL_XP_TARGETING
 
 #ifndef _UCRT_VERISON
@@ -81,13 +84,9 @@
 
 #if defined(__NO_LTL_LIB) || defined(__Build_LTL)
 
-#ifndef __Build_LTL
-#pragma detect_mismatch("_LTL_Mode", "Overclock")
-#endif
 #pragma message(_ltlfilelen "info: 进入ltl超越模式，请务必手动引用 _msvcrt.cpp ，否则将编译失败。取消定义 __NO_LTL_LIB 可返回普通模式。")
 
 #else
-#pragma detect_mismatch("_LTL_Mode", "Normal")
 
 //__NO_LTL_LIB 宏，可以取消对ltlXXX.lib的引用，取消引用后程序体积可以变得更小，但是必须手动在cpp include _msvcrt.cpp，否则将编译失败
 #ifndef _LIB
