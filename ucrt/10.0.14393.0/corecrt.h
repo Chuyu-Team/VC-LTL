@@ -147,6 +147,13 @@ extern "C++"
 #define _CRT_INT_MAX 2147483647
 #define _CRT_SIZE_MAX ((size_t)-1)
 
+#ifdef _ATL_XP_TARGETING
+//Windows XP的msvcrt有BUG，内部32位带符号整形。因此外部最大只允许0x3FFFFFFF
+#define _CRT_STDIO_SIZE_MAX 0x3FFFFFFF
+#else
+#define _CRT_STDIO_SIZE_MAX _CRT_SIZE_MAX
+#endif
+
 #define __FILEW__     _CRT_WIDE(__FILE__)
 #define __FUNCTIONW__ _CRT_WIDE(__FUNCTION__)
 

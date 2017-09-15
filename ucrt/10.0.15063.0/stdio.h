@@ -1449,7 +1449,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     {
         #pragma warning(push)
         #pragma warning(disable: 4996) // Deprecation
-        return _vsnprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+        return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
         #pragma warning(pop)
     }
     #endif
@@ -1467,7 +1467,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     {
         #pragma warning(push)
         #pragma warning(disable: 4996) // Deprecation
-        return _vsnprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
+        return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, NULL, _ArgList);
         #pragma warning(pop)
     }
     #endif

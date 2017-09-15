@@ -1447,7 +1447,7 @@ _CRT_STDIO_INLINE int __CRTDECL _vsprintf_l(
 {
     #pragma warning(push)
     #pragma warning(disable: 4996) // Deprecation
-    return _vsnprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+    return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
     #pragma warning(pop)
 }
 #endif
@@ -1465,7 +1465,7 @@ _CRT_STDIO_INLINE int __CRTDECL vsprintf(
 {
     #pragma warning(push)
     #pragma warning(disable: 4996) // Deprecation
-    return _vsnprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
+    return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, NULL, _ArgList);
     #pragma warning(pop)
 }
 #endif

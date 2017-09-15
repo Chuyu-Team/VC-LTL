@@ -1208,7 +1208,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                                                 va_list              _ArgList
         )
     {
-        return _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+        return _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
     }
 
     _Success_(return >= 0)
@@ -1221,9 +1221,9 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
     {
 #ifdef _ATL_XP_TARGETING
 #pragma warning(suppress : 4996)
-		return _vsnwprintf(_Buffer, -1, _Format, _ArgList);
+		return _vsnwprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
 #else
-        return _vswprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
+        return _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, NULL, _ArgList);
 #endif
     }
 
@@ -1432,7 +1432,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
 		va_list _ArgList;
 		__crt_va_start(_ArgList, _Format);
 #pragma warning(suppress : 4996)
-		_Result = _vsnwprintf(_Buffer, -1, _Format, _ArgList);
+		_Result = _vsnwprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
 		__crt_va_end(_ArgList);
 		return _Result;
 #else
@@ -1818,8 +1818,8 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                 int _Result;
                 va_list _ArgList;
                 __crt_va_start(_ArgList, _Format);
-                #pragma warning(suppress: 28719)
-                _Result = vswprintf(_Buffer, _CRT_INT_MAX, _Format, _ArgList);
+				#pragma warning(suppress: 28719)
+                _Result = vswprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
                 __crt_va_end(_ArgList);
                 return _Result;
             }
@@ -1831,8 +1831,8 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                                               va_list              _ArgList
                 ) throw()
             {
-                #pragma warning(suppress: 28719)
-                return vswprintf(_Buffer, _CRT_INT_MAX, _Format, _ArgList);
+				#pragma warning(suppress: 28719)
+				return vswprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
             }
 
             extern "C++" _SWPRINTFS_DEPRECATED _CRT_INSECURE_DEPRECATE(_swprintf_s_l)
@@ -1845,7 +1845,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                 int _Result;
                 va_list _ArgList;
                 __crt_va_start(_ArgList, _Locale);
-                _Result = _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+                _Result = _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
                 __crt_va_end(_ArgList);
                 return _Result;
             }
@@ -1858,7 +1858,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                                                         va_list              _ArgList
                 ) throw()
             {
-                return _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+                return _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
             }
 
         #endif  // __cplusplus
