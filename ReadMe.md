@@ -92,6 +92,15 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 * vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
 
 ## Changes：
+1.0.0.12 2017-09-15 13:33
+* 解决BUG，使用strcat_s时在Windows XP中提示找不到指定符号。（感谢 stsm85）
+* 解决BUG，解决SSE2除法导致编译不通过问题（感谢 stsm85）
+* 解决BUG，解决wcstoll、vsnprintf、rand_s、strtoll无法使用问题（感谢 stsm85）
+* 代码调整，消除所有VC-LTL编译警告，强迫症患者福音。
+
+PS:本次更新后，FastCopy、winpck相关程序直接可以使用VC-LTL编译。
+
+
 1.0.0.11 2017-08-23 19:00
 * 解决BUG，使用_difftime64时Windows XP无法运行。
 * 解决BUG，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）
