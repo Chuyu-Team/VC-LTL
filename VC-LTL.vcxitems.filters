@@ -52,6 +52,12 @@
     <Filter Include="源代码\ucrt\10.0.10240.0\sys">
       <UniqueIdentifier>{4dbc34dd-7a9d-4fcf-9dfe-3677b17d07cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源代码\ucrt\10.0.16299.0">
+      <UniqueIdentifier>{dd5d5347-2e23-4336-a538-bdd4c8ab181c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.16299.0\sys">
+      <UniqueIdentifier>{358f81d7-03d8-4559-a3b5-2fbbf9ffd908}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h">
@@ -2753,6 +2759,195 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afxwinverapi.h">
       <Filter>源代码\VC\141\atlmfc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\assert.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\complex.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\conio.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_io.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_malloc.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_math.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_math_defines.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_memcpy_s.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_memory.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_search.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_share.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_startup.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_stdio_config.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_terminate.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wconio.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wctype.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wdirect.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wio.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wprocess.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wstdio.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wstdlib.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wstring.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\corecrt_wtime.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\crtdbg.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\ctype.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\direct.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\dos.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\errno.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\fcntl.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\fenv.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\float.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\fpieee.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\inttypes.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\io.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\locale.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\malloc.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\math.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\mbctype.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\mbstring.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\memory.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\minmax.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\new.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\process.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\safeint.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\safeint_internal.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\search.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\share.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\signal.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\stddef.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\stdio.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\stdlib.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\string.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\tchar.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\time.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\uchar.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\wchar.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\wctype.h">
+      <Filter>源代码\ucrt\10.0.16299.0</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\sys\locking.h">
+      <Filter>源代码\ucrt\10.0.16299.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\sys\stat.h">
+      <Filter>源代码\ucrt\10.0.16299.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\sys\timeb.h">
+      <Filter>源代码\ucrt\10.0.16299.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\sys\types.h">
+      <Filter>源代码\ucrt\10.0.16299.0\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\sys\utime.h">
+      <Filter>源代码\ucrt\10.0.16299.0\sys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
