@@ -1425,23 +1425,15 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL vsnprintf(
+    __inline int __CRTDECL vsnprintf(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
         _In_                                              size_t      const _BufferCount,
         _In_z_ _Printf_format_string_                     char const* const _Format,
                                                           va_list           _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
-        int const _Result = __stdio_common_vsprintf(
-            _CRT_INTERNAL_LOCAL_PRINTF_OPTIONS | _CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR,
-            _Buffer, _BufferCount, _Format, NULL, _ArgList);
-
-        return _Result < 0 ? -1 : _Result;
-    }
-    #endif
+		return _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
+	}
 
     _Success_(return >= 0)
     _Check_return_opt_ _CRT_INSECURE_DEPRECATE(_vsprintf_s_l)
@@ -1457,7 +1449,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     {
         #pragma warning(push)
         #pragma warning(disable: 4996) // Deprecation
-        return _vsnprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
+        return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
         #pragma warning(pop)
     }
     #endif
@@ -1475,7 +1467,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     {
         #pragma warning(push)
         #pragma warning(disable: 4996) // Deprecation
-        return _vsnprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
+        return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, NULL, _ArgList);
         #pragma warning(pop)
     }
     #endif
@@ -1694,17 +1686,13 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     #endif
 
     _Check_return_
-    _CRT_STDIO_INLINE int __CRTDECL _vscprintf_p(
+    __inline int __CRTDECL _vscprintf_p(
         _In_z_ _Printf_format_string_ char const* const _Format,
                                       va_list           _ArgList
         )
-    #if defined _NO_CRT_STDIO_INLINE
-    ;
-    #else
     {
         return _vscprintf_p_l(_Format, NULL, _ArgList);
     }
-    #endif
 
     _Check_return_opt_
     _CRT_STDIO_INLINE int __CRTDECL _vsnprintf_c_l(

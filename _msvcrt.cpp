@@ -398,6 +398,16 @@ extern "C"
 		return _strtoi64(_String, _EndPtr, _Radix);
 	}
 
+	unsigned long long __cdecl strtoull(
+		_In_z_                   char const* _String,
+		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
+		_In_                     int         _Radix
+	)
+	{
+		return _strtoui64(_String, _EndPtr, _Radix);
+	}
+
+
 #ifndef _ATL_XP_TARGETING
 	_ACRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
 #else

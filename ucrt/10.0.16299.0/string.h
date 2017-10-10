@@ -24,27 +24,27 @@ _CRT_BEGIN_C_HEADER
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl strcpy_s(
+	_ACRTXPIMP errno_t __cdecl strcpy_s(
         _Out_writes_z_(_SizeInBytes) char*       _Destination,
         _In_                         rsize_t     _SizeInBytes,
         _In_z_                       char const* _Source
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl strcat_s(
+    _ACRTXPIMP errno_t __cdecl strcat_s(
         _Inout_updates_z_(_SizeInBytes) char*       _Destination,
         _In_                            rsize_t     _SizeInBytes,
         _In_z_                          char const* _Source
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl strerror_s(
+    _ACRTXPIMP errno_t __cdecl strerror_s(
         _Out_writes_z_(_SizeInBytes) char*  _Buffer,
         _In_                         size_t _SizeInBytes,
         _In_                         int    _ErrorNumber);
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl strncat_s(
+    _ACRTXPIMP errno_t __cdecl strncat_s(
         _Inout_updates_z_(_SizeInBytes) char*       _Destination,
         _In_                            rsize_t     _SizeInBytes,
         _In_reads_or_z_(_MaxCount)      char const* _Source,
@@ -52,7 +52,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl strncpy_s(
+    _ACRTXPIMP errno_t __cdecl strncpy_s(
         _Out_writes_z_(_SizeInBytes) char*       _Destination,
         _In_                         rsize_t     _SizeInBytes,
         _In_reads_or_z_(_MaxCount)   char const* _Source,
@@ -60,7 +60,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTIMP char*  __cdecl strtok_s(
+    _ACRTXPIMP char*  __cdecl strtok_s(
         _Inout_opt_z_                 char*       _String,
         _In_z_                        char const* _Delimiter,
         _Inout_ _Deref_prepost_opt_z_ char**      _Context
@@ -351,7 +351,7 @@ _When_(
     _MaxCount <= _String_length_(_String),
     _Post_satisfies_(return == _MaxCount)
 )
-_ACRTIMP size_t __cdecl strnlen(
+_ACRTXPIMP size_t __cdecl strnlen(
     _In_reads_or_z_(_MaxCount) char const* _String,
     _In_                       size_t      _MaxCount
     );

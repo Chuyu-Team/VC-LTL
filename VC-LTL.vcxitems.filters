@@ -3028,6 +3028,12 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrtp.lib">
       <Filter>Libx86</Filter>
     </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_16299.lib">
+      <Filter>Libx64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_16299.lib">
+      <Filter>Libx86</Filter>
+    </Library>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)VC\140\include\algorithm">

@@ -993,6 +993,7 @@
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_10240.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_15063.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_16299.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ltl140.lib" />
@@ -1004,6 +1005,7 @@
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_10240.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_15063.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_16299.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib" />
   </ItemGroup>

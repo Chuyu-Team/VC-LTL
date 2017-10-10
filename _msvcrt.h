@@ -68,10 +68,15 @@
 #else
 #pragma message(_ltlfilelen "warning: 10240 ucrt 存在的目的仅用于兼容Windows XP工具集正常编译，而你的程序并未采用XP兼容，强烈建议你迁徙目标平台到Windows 10 15063。")
 #endif
-
+#elif _UCRT_VERISON == 10586
+#error "warning: 10586 ucrt 已经停止支持，请升级到15063 UCRT或者更高。"
 #elif _UCRT_VERISON == 14393
-#pragma message(_ltlfilelen "warning: 14393 ucrt 即将在下个Windows 10 SDK发布时删除，请尽快迁徙目标平台到Windows 10 15063。")
-#elif _UCRT_VERISON != 15063
+#error "warning: 14393 ucrt 已经停止支持，请升级到15063 UCRT或者更高。"
+#elif _UCRT_VERISON == 15063
+#pragma message(_ltlfilelen "warning: 15063 ucrt 即将在下个Windows 10 SDK发布时删除，请尽快迁徙目标平台到Windows 10 16299。")
+#elif _UCRT_VERISON == 16299
+//当前使用16229 UCRT
+#else
 #pragma message(_ltlfilelen "warning: 无法识别此版本是URCT，强烈建议升级到最新VC-LTL然后继续。")
 #endif
 

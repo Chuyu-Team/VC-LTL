@@ -347,7 +347,7 @@ _ACRTIMP void __cdecl srand(_In_ unsigned int _Seed);
 _Check_return_ _ACRTIMP int __cdecl rand(void);
 
 #if defined _CRT_RAND_S || defined _CRTBLD
-    _ACRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
+    _ACRTXPIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
 #endif
 
 
@@ -481,7 +481,7 @@ _ACRTIMP int __cdecl _atoldbl_l(
     );
 
 _Check_return_
-_ACRTIMP float __cdecl strtof(
+extern float __cdecl strtof(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
     );
@@ -535,7 +535,7 @@ _ACRTIMP long __cdecl _strtol_l(
     );
 
 _Check_return_
-_ACRTIMP long long __cdecl strtoll(
+extern long long __cdecl strtoll(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix
@@ -565,7 +565,7 @@ _ACRTIMP unsigned long __cdecl _strtoul_l(
     );
 
 _Check_return_
-_ACRTIMP unsigned long long __cdecl strtoull(
+extern unsigned long long __cdecl strtoull(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix
@@ -1154,38 +1154,59 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
     #endif // __STDC_WANT_SECURE_LIB__
 
 
+	_ACRTIMP extern int       __argc;
+	_ACRTIMP extern char**    __argv;
+	_ACRTIMP extern wchar_t** __wargv;
 
 
-    _ACRTIMP int*       __cdecl __p___argc (void);
-    _ACRTIMP char***    __cdecl __p___argv (void);
-    _ACRTIMP wchar_t*** __cdecl __p___wargv(void);
+	__inline int*       __cdecl __p___argc (void)
+	{
+		return &__argc;
+	}
+	__inline char***    __cdecl __p___argv (void)
+	{
+		return &__argv;
+	}
+	__inline wchar_t*** __cdecl __p___wargv(void)
+	{
+		return &__wargv;
+	}
 
-    #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        extern int       __argc;
-        extern char**    __argv;
-        extern wchar_t** __wargv;
-    #else
-        #define __argc  (*__p___argc())  // Pointer to number of command line arguments
-        #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
-        #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
-    #endif
+    //#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+    //    extern int       __argc;
+    //    extern char**    __argv;
+    //    extern wchar_t** __wargv;
+    //#else
+    //    #define __argc  (*__p___argc())  // Pointer to number of command line arguments
+    //    #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
+    //    #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
+    //#endif
 
-    _DCRTIMP char***    __cdecl __p__environ (void);
-    _DCRTIMP wchar_t*** __cdecl __p__wenviron(void);
+	_ACRTIMP extern char **    _environ;
+	_ACRTIMP extern wchar_t ** _wenviron;
+
+	__inline char***    __cdecl __p__environ (void)
+	{
+		return &_environ;
+	}
+	__inline wchar_t*** __cdecl __p__wenviron(void)
+	{
+		return &_wenviron;
+	}
 
     #ifndef _CRT_BEST_PRACTICES_USAGE
         #define _CRT_V12_LEGACY_FUNCTIONALITY
     #endif
 
-    #ifndef _CRT_V12_LEGACY_FUNCTIONALITY
-        // Deprecated symbol: Do not expose environment global pointers unless
-        // legacy access is specifically requested
-        #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
-        #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
-    #else
-        #define _environ  (*__p__environ())  // Pointer to narrow environment table
-        #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
-    #endif
+    //#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
+    //    // Deprecated symbol: Do not expose environment global pointers unless
+    //    // legacy access is specifically requested
+    //    #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
+    //    #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
+    //#else
+    //    #define _environ  (*__p__environ())  // Pointer to narrow environment table
+    //    #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
+    //#endif
 
 
 

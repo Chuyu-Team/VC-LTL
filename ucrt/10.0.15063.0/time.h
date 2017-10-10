@@ -10,10 +10,6 @@
 
 #include <corecrt.h>
 #include <corecrt_wtime.h>
-#include <vcruntime_string.h>
-#ifdef _ATL_XP_TARGETING
-#include <errno.h>
-#endif
 
 _CRT_BEGIN_C_HEADER
 

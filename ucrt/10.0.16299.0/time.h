@@ -183,7 +183,7 @@ _ACRTIMP double __cdecl _difftime32(
     );
 
 _Check_return_
-_ACRTIMP double __cdecl _difftime64(
+_ACRTXPIMP double __cdecl _difftime64(
     _In_ __time64_t _Time1,
     _In_ __time64_t _Time2
     );
@@ -231,7 +231,7 @@ _ACRTIMP struct tm* __cdecl _localtime64(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _localtime64_s(
+_ACRTXPIMP errno_t __cdecl _localtime64_s(
     _Out_ struct tm*        _Tm,
     _In_  __time64_t const* _Time
     );
@@ -307,11 +307,11 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     _Out_writes_z_(9), char, _Buffer
     )
 
-_ACRTIMP __time32_t __cdecl _time32(
+_ACRTXPIMP __time32_t __cdecl _time32(
     _Out_opt_ __time32_t* _Time
     );
 
-_ACRTIMP __time64_t __cdecl _time64(
+_ACRTXPIMP __time64_t __cdecl _time64(
     _Out_opt_ __time64_t* _Time
     );
 
