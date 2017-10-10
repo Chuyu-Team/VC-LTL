@@ -181,13 +181,13 @@ _Check_return_ _ACRTIMP int __cdecl _dpcomp(_In_ double _X, _In_ double _Y);
 _Check_return_ _ACRTIMP int __cdecl _ldpcomp(_In_ long double _X, _In_ long double _Y);
 _Check_return_ _ACRTIMP int __cdecl _fdpcomp(_In_ float _X, _In_ float _Y);
 
-_Check_return_ _ACRTIMP short __cdecl _dtest(_In_ double* _Px);
-_Check_return_ _ACRTIMP short __cdecl _ldtest(_In_ long double* _Px);
-_Check_return_ _ACRTIMP short __cdecl _fdtest(_In_ float* _Px);
+_Check_return_ extern short __cdecl _dtest(_In_ double* _Px);
+_Check_return_ extern short __cdecl _ldtest(_In_ long double* _Px);
+_Check_return_ extern short __cdecl _fdtest(_In_ float* _Px);
 
-_ACRTIMP short __cdecl _d_int(_Inout_ double* _Px, _In_ short _Xexp);
-_ACRTIMP short __cdecl _ld_int(_Inout_ long double* _Px, _In_ short _Xexp);
-_ACRTIMP short __cdecl _fd_int(_Inout_ float* _Px, _In_ short _Xexp);
+extern short __cdecl _d_int(_Inout_ double* _Px, _In_ short _Xexp);
+extern short __cdecl _ld_int(_Inout_ long double* _Px, _In_ short _Xexp);
+extern short __cdecl _fd_int(_Inout_ float* _Px, _In_ short _Xexp);
 
 _ACRTIMP short __cdecl _dscale(_Inout_ double* _Px, _In_ long _Lexp);
 _ACRTIMP short __cdecl _ldscale(_Inout_ long double* _Px, _In_ long _Lexp);
@@ -485,9 +485,9 @@ extern "C++"
     _Check_return_ double __cdecl tan(_In_ double _X);
     _Check_return_ double __cdecl tanh(_In_ double _X);
 
-    _Check_return_ _ACRTIMP double    __cdecl acosh(_In_ double _X);
-    _Check_return_ _ACRTIMP double    __cdecl asinh(_In_ double _X);
-    _Check_return_ _ACRTIMP double    __cdecl atanh(_In_ double _X);
+    _Check_return_ double    __cdecl acosh(_In_ double _X);
+    _Check_return_ double    __cdecl asinh(_In_ double _X);
+    _Check_return_ double    __cdecl atanh(_In_ double _X);
     _Check_return_ _ACRTIMP  double    __cdecl atof(_In_z_ char const* _String);
     _Check_return_ _ACRTIMP  double    __cdecl _atof_l(_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
     _Check_return_ _ACRTIMP double    __cdecl _cabs(_In_ struct _complex _Complex_value);
@@ -541,9 +541,9 @@ extern "C++"
     _Check_return_ _ACRTIMP double __cdecl _y1(_In_ double _X);
     _Check_return_ _ACRTIMP double __cdecl _yn(_In_ int _X, _In_ double _Y);
 
-    _Check_return_ _ACRTIMP float     __cdecl acoshf(_In_ float _X);
-    _Check_return_ _ACRTIMP float     __cdecl asinhf(_In_ float _X);
-    _Check_return_ _ACRTIMP float     __cdecl atanhf(_In_ float _X);
+    _Check_return_ float     __cdecl acoshf(_In_ float _X);
+    _Check_return_ float     __cdecl asinhf(_In_ float _X);
+    _Check_return_ float     __cdecl atanhf(_In_ float _X);
     _Check_return_ _ACRTIMP float     __cdecl cbrtf(_In_ float _X);
     _Check_return_ _ACRTIMP float     __cdecl _chgsignf(_In_ float _X);
     _Check_return_ _ACRTIMP float     __cdecl copysignf(_In_ float _Number, _In_ float _Sign);
@@ -771,14 +771,14 @@ extern "C++"
 
     #endif
 
-    _Check_return_ _ACRTIMP long double __cdecl acoshl(_In_ long double _X);
+    _Check_return_ long double __cdecl acoshl(_In_ long double _X);
 
     _Check_return_ __inline long double __CRTDECL acosl(_In_ long double _X)
     {
         return acos((double)_X);
     }
 
-    _Check_return_ _ACRTIMP long double __cdecl asinhl(_In_ long double _X);
+    _Check_return_ long double __cdecl asinhl(_In_ long double _X);
 
     _Check_return_ __inline long double __CRTDECL asinl(_In_ long double _X)
     {
@@ -790,7 +790,7 @@ extern "C++"
         return atan2((double)_Y, (double)_X);
     }
 
-    _Check_return_ _ACRTIMP long double __cdecl atanhl(_In_ long double _X);
+    _Check_return_ long double __cdecl atanhl(_In_ long double _X);
 
     _Check_return_ __inline long double __CRTDECL atanl(_In_ long double _X)
     {

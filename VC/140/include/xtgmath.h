@@ -176,9 +176,9 @@ template<class _Ty1,
 	return (_Remquo((type)_Left, (type)_Right, _Pquo));
 	}
 
-_GENERIC_MATH1(acosh, _CRTSPECIAL)
-_GENERIC_MATH1(asinh, _CRTSPECIAL)
-_GENERIC_MATH1(atanh, _CRTSPECIAL)
+_GENERIC_MATH1(acosh, _CRTDEFAULT)
+_GENERIC_MATH1(asinh, _CRTDEFAULT)
+_GENERIC_MATH1(atanh, _CRTDEFAULT)
 _GENERIC_MATH1(cbrt, _CRTSPECIAL)
 _GENERIC_MATH2(copysign, _CRTSPECIAL)
 _GENERIC_MATH1(erf, _CRTSPECIAL)
