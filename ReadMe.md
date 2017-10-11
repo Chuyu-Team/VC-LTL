@@ -88,10 +88,22 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 * msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了helper.asm转发函数）
 * msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取）
 * msvcrtp.lib 微软在msvcrt中导出的函数，但是并未在msvcrt.lib中提供的函数。
-* ucrt_14393.lib/ucrt_15063.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
+* ucrt_10240.lib/ucrt_15063.lib/ucrt_16299.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
 * vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
 
+### 6. VC-LTL已知问题规避
+* 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。
+* 由于WinXP本身BUG，vsprintf相关函数无法正常支持`%xll`。当你需要兼容XP时，请优先考虑使用`%I64x`代替。vsprintf_s相关版本不存在此问题。
+
+
 ## Changes：
+1.0.0.13 2017-10-11 14:00
+* 解决BUG，atanh、acosh、asinh无法使用问题（感谢 stsm85）
+* 新增Windows 10 16299 UCRT支持
+* 移除Windows 10 14393 UCRT支持
+
+PS：16299已经发布，因此移除老版本14393支持。相关项目请迁徙到15063或者最新16299。
+
 1.0.0.12 2017-09-15 13:33
 * 解决BUG，使用strcat_s时在Windows XP中提示找不到指定符号。（感谢 stsm85）
 * 解决BUG，解决SSE2除法导致编译不通过问题（感谢 stsm85）
