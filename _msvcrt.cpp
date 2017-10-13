@@ -427,6 +427,59 @@ extern "C"
 		}
 	}
 #endif
+
+#ifdef _X86_
+	#include <math.h>
+	double __cdecl _acos_default(_In_ double _X)
+	{
+		return acos(_X);
+	}
+
+	double __cdecl _asin_default(_In_ double _X)
+	{
+		return asin(_X);
+	}
+	
+	double __cdecl _atan_default(_In_ double _X)
+	{
+		return atan(_X);
+	}
+
+	double __cdecl _cos_default(_In_ double _X)
+	{
+		return cos(_X);
+	}
+
+	double __cdecl _exp_default(_In_ double _X)
+	{
+		return exp(_X);
+	}
+
+	double __cdecl _pow_default(_In_ double _X, _In_ double _Y)
+	{
+		return pow(_X, _Y);
+	}
+
+	double __cdecl _sin_default(_In_ double _X)
+	{
+		return sin(_X);
+	}
+
+	double __cdecl _tan_default(_In_ double _X)
+	{
+		return tan(_X);
+	}
+	
+	double __cdecl _log_default(_In_ double _X)
+	{
+		return log(_X);
+	}
+
+	double __cdecl _log10_default(_In_ double _X)
+	{
+		return log10(_X);
+	}
+#endif
 }
 
 #ifdef __cplusplus
