@@ -50,13 +50,15 @@ PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 
 如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.6）
 
-#### 2.1 在包含目录（include）的最上方添加以下内容：
+#### 2.1 C/C++ - 附加包含目录（AdditionalIncludeDirectories）的最上方添加以下内容：
 * $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\include
 * $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\atlmfc\include
 * $(SolutionDir)VC-LTL\ucrt\\$(TargetUniversalCRTVersion)
 
-#### 2.2 在库目录（library）增加：
+#### 2.2 链接器 - 附加库目录（AdditionalLibraryDirectories）增加：
 * $(SolutionDir)VC-LTL\\$(PlatformShortName)
+* $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\lib\\$(PlatformShortName)
+* $(SolutionDir)VC-LTL\ucrt\\$(TargetUniversalCRTVersion)\lib\\$(PlatformShortName)
 
 #### 2.3 在 C/C++ - 预处理器 增加：
 （仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
@@ -83,13 +85,12 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 
 
 ### 5. 文件说明
-* ltl140.lib/ltl141.lib VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
-* ltl140xp.lib/ltl141xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
-* msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了helper.asm转发函数）
-* msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取）
-* msvcrtp.lib 微软在msvcrt中导出的函数，但是并未在msvcrt.lib中提供的函数。
-* ucrt_10240.lib/ucrt_15063.lib/ucrt_16299.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
-* vc140.lib/vc141.lib 从msvcrt.lib提取的一些原有lib不支持的函数集合。
+* ltl1.lib  VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
+* ltl1xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
+* msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了helper.asm转发函数以及msvcrt.def导出函数）
+* msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取，仅作备份用途，无实际用途）
+* ucrt.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
+* vc.lib 从对应的VC版本编译器msvcrt.lib提取的一些原有lib不支持的函数集合。
 
 ### 6. VC-LTL已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。
