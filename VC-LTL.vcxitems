@@ -984,30 +984,28 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl140.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl140xp.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl141.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl141xp.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrtp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\lib\x64\ucrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\lib\x86\ucrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.15063.0\lib\x64\ucrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.15063.0\lib\x86\ucrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\lib\x64\ucrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\lib\x86\ucrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\ltl.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\ltlxp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\vc.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\ltl.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\ltlxp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\vc.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\ltl.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\ltlxp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\vc.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltl.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlxp.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\vc.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_10240.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_15063.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_16299.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl140.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl140xp.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl141.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl141xp.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrtp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_10240.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_15063.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_16299.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
@@ -1015,7 +1013,6 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
     <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
-    <None Include="$(MSBuildThisFileDirectory)msvcrtp.def" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afx.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn.inl" />
     <None Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\afxcmn2.inl" />
@@ -1278,7 +1275,9 @@
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xutility" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xxatomic" />
     <None Include="$(MSBuildThisFileDirectory)x64\helper.asm" />
+    <None Include="$(MSBuildThisFileDirectory)x64\msvcrt.def" />
     <None Include="$(MSBuildThisFileDirectory)x86\helper.asm" />
+    <None Include="$(MSBuildThisFileDirectory)x86\msvcrt.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc" />

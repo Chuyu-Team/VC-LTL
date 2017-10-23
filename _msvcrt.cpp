@@ -485,44 +485,40 @@ extern "C"
 #ifdef __cplusplus
 extern "C++"
 {
-//如果你需要禁用重载，请先定义 VCLTL_Not_Overload_New
-#ifndef VCLTL_Not_Overload_New
+	//void* __CRTDECL operator new(
+	//	size_t _Size
+	//	)
+	//{
+	//	return malloc(_Size);
+	//}
 
+	//void* __CRTDECL operator new[](
+	//		size_t _Size
+	//		)
+	//{
+	//	return malloc(_Size);
+	//}
 
-	void* __CRTDECL operator new(
-		size_t _Size
-		)
-	{
-		return malloc(_Size);
-	}
+	//void __CRTDECL operator delete(
+	//		void* _Block
+	//		) throw()
+	//{
+	//	free(_Block);
+	//}
 
-	void* __CRTDECL operator new[](
-			size_t _Size
-			)
-	{
-		return malloc(_Size);
-	}
-
-	void __CRTDECL operator delete(
-			void* _Block
-			) throw()
-	{
-		free(_Block);
-	}
-
-	void __CRTDECL operator delete[](
-		void* _Block
-		)
-	{
-		free(_Block);
-	}
+	//void __CRTDECL operator delete[](
+	//	void* _Block
+	//	)
+	//{
+	//	free(_Block);
+	//}
 
 	void __CRTDECL operator delete(
 			void*  _Block,
 			size_t _Size
 			)
 	{
-		free(_Block);
+		operator delete(_Block);
 	}
 
 	void __CRTDECL operator delete[](
@@ -530,10 +526,8 @@ extern "C++"
 		size_t _Size
 		)
 	{
-		free(_Block);
+		operator delete[](_Block);
 	}
-
-#endif // !VCLTL_Not_Overload_New
 
 	#include <functional>
 	#include <regex>

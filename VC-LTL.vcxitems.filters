@@ -58,6 +58,51 @@
     <Filter Include="源代码\ucrt\10.0.16299.0\sys">
       <UniqueIdentifier>{358f81d7-03d8-4559-a3b5-2fbbf9ffd908}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源代码\ucrt\10.0.10240.0\lib">
+      <UniqueIdentifier>{73d3247f-a34a-4129-bec2-789fe3965c71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.10240.0\lib\x86">
+      <UniqueIdentifier>{8a8e2026-2c26-4450-9674-68d011a6dd0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.10240.0\lib\x64">
+      <UniqueIdentifier>{bb11484e-3a5d-4830-8075-78101880c88f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.15063.0\lib">
+      <UniqueIdentifier>{a0c973c1-9f38-4f49-8aa2-82d33e3f3fa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.15063.0\lib\x86">
+      <UniqueIdentifier>{7d75aefa-bd45-49de-ad40-d1fdcd0b8897}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.15063.0\lib\x64">
+      <UniqueIdentifier>{44ee71b4-975d-40de-8d5f-6af2878fd242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.16299.0\lib">
+      <UniqueIdentifier>{060a27d5-7ed3-4fa6-987b-6088ad5b8b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.16299.0\lib\x86">
+      <UniqueIdentifier>{3b27e40e-ca38-4751-859e-07e593e04703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\ucrt\10.0.16299.0\lib\x64">
+      <UniqueIdentifier>{1de42f5f-01b9-4fea-992f-25ba9f05e687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\VC\140\lib">
+      <UniqueIdentifier>{1459a5c6-5afe-4e0c-8fc6-21c34442bd57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\VC\140\lib\x86">
+      <UniqueIdentifier>{22f53737-9165-4a25-9e08-2c1cba767023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\VC\140\lib\x64">
+      <UniqueIdentifier>{8134955c-bd92-40b6-81f5-9b316c8d9e93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\VC\141\lib">
+      <UniqueIdentifier>{7c8e1e12-f047-4b68-8c8b-9b3da16b33f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\VC\141\lib\x64">
+      <UniqueIdentifier>{31b06050-8b8b-4fc1-bd05-acb271e9f02f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源代码\VC\141\lib\x86">
+      <UniqueIdentifier>{99b0c5b1-a4e4-4ad4-b768-90c3c8d6c2e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)_msvcrt.h">
@@ -2971,68 +3016,62 @@
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib">
       <Filter>Libx64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc140.lib">
-      <Filter>Libx64</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib">
       <Filter>Libx86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc140.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\lib\x86\ucrt.lib">
+      <Filter>源代码\ucrt\10.0.10240.0\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\vc141.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\lib\x64\ucrt.lib">
+      <Filter>源代码\ucrt\10.0.10240.0\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\vc141.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.15063.0\lib\x64\ucrt.lib">
+      <Filter>源代码\ucrt\10.0.15063.0\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl140.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.15063.0\lib\x86\ucrt.lib">
+      <Filter>源代码\ucrt\10.0.15063.0\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl140xp.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\lib\x64\ucrt.lib">
+      <Filter>源代码\ucrt\10.0.16299.0\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl141.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.16299.0\lib\x86\ucrt.lib">
+      <Filter>源代码\ucrt\10.0.16299.0\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ltl141xp.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\ltl.lib">
+      <Filter>源代码\VC\140\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl140.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\ltlxp.lib">
+      <Filter>源代码\VC\140\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl140xp.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\vc.lib">
+      <Filter>源代码\VC\140\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl141.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\ltl.lib">
+      <Filter>源代码\VC\140\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ltl141xp.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\ltlxp.lib">
+      <Filter>源代码\VC\140\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_15063.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\vc.lib">
+      <Filter>源代码\VC\140\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_15063.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltl.lib">
+      <Filter>源代码\VC\141\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_10240.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlxp.lib">
+      <Filter>源代码\VC\141\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_10240.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\vc.lib">
+      <Filter>源代码\VC\141\lib\x86</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrtp.lib">
-      <Filter>Libx64</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\ltl.lib">
+      <Filter>源代码\VC\141\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrtp.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\ltlxp.lib">
+      <Filter>源代码\VC\141\lib\x64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\ucrt_16299.lib">
-      <Filter>Libx64</Filter>
-    </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\ucrt_16299.lib">
-      <Filter>Libx86</Filter>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\vc.lib">
+      <Filter>源代码\VC\141\lib\x64</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -3827,8 +3866,11 @@
       <Filter>源代码\VC\141\atlmfc\include</Filter>
     </None>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
-    <None Include="$(MSBuildThisFileDirectory)msvcrtp.def">
-      <Filter>源代码</Filter>
+    <None Include="$(MSBuildThisFileDirectory)x64\msvcrt.def">
+      <Filter>Libx64</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)x86\msvcrt.def">
+      <Filter>Libx86</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
