@@ -99,11 +99,11 @@ public:
 		return value;
     }
 
-	bool operator==(const type_info& _Other) const throw();
+	int operator==(const type_info& _Other) const throw();
 
-	bool operator!=(const type_info& _Other) const throw();
+	int operator!=(const type_info& _Other) const throw();
 
-	bool before(const type_info& _Other) const throw();
+	int before(const type_info& _Other) const throw();
 
 	const char* name() const throw();
 
