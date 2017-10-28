@@ -3073,6 +3073,30 @@
     <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\vc.lib">
       <Filter>源代码\VC\141\lib\x64</Filter>
     </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\ltlcprt.lib">
+      <Filter>源代码\VC\140\lib\x64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x64\ltlcprtxp.lib">
+      <Filter>源代码\VC\140\lib\x64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\ltlcprt.lib">
+      <Filter>源代码\VC\140\lib\x86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\140\lib\x86\ltlcprtxp.lib">
+      <Filter>源代码\VC\140\lib\x86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\ltlcprt.lib">
+      <Filter>源代码\VC\141\lib\x64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x64\ltlcprtxp.lib">
+      <Filter>源代码\VC\141\lib\x64</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlcprt.lib">
+      <Filter>源代码\VC\141\lib\x86</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlcprtxp.lib">
+      <Filter>源代码\VC\141\lib\x86</Filter>
+    </Library>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)VC\140\include\algorithm">

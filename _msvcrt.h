@@ -3,11 +3,11 @@
 #define _ltlfilelen __FILE__ "(" _CRT_STRINGIZE(__LINE__) ") : "
 
 #ifdef _DEBUG
-#pragma message(_ltlfilelen "warning: 调试版无法使用VC LTL，请切换到Release然后重新编译！")
+#error _ltlfilelen "warning: 调试版无法使用VC LTL，请切换到Release然后重新编译！"
 #endif
 
 #ifndef _DLL
-#pragma message(_ltlfilelen "warning: 由于VC LTL必须在MD编译选项才能使用，请将运行调整为MD！")
+#error  _ltlfilelen "warning: 由于VC LTL必须在MD编译选项才能使用，请将运行调整为MD！"
 #endif
 
 #if defined(NDEBUG)&&defined(_DLL)
@@ -18,8 +18,11 @@
 #define _NO_CRT_STDIO_INLINE
 #define _Build_By_LTL
 
+//静态整合C++库
+#define _STATIC_CPPLIB
+
 #pragma comment(linker, "/nodefaultlib:msvcrt.lib")
-#pragma comment(linker, "/nodefaultlib:msvcprt.lib")
+#pragma comment(linker, "/nodefaultlib:libcpmt.lib")
 
 //解决某些环境不会添加 XP Mode问题
 #ifndef _ATL_XP_TARGETING
@@ -46,7 +49,9 @@
 //XP以及以下系统外部导入
 #define _ACRTXPIMPINLINE extern
 
+#ifndef _Allow_LTL_Mode
 #pragma detect_mismatch("_LTL_Mode", "XPMode")
+#endif
 
 #else //_ATL_XP_TARGETING else
 //默认模式，此模式编译器新特性将使用Vista新API实现，性能更佳
@@ -56,7 +61,9 @@
 //XP以上系统inline以减少导入数量
 #define _ACRTXPIMPINLINE __inline
 
+#ifndef _Allow_LTL_Mode
 #pragma detect_mismatch("_LTL_Mode", "VistaMode")
+#endif
 #endif //_ATL_XP_TARGETING
 
 #ifndef _UCRT_VERISON
@@ -104,6 +111,27 @@
 #pragma comment(lib,"ucrt.lib")
 //导入Windows Vista 动态库 msvcrt.dll
 #pragma comment(lib,"msvcrt_base.lib")
+//导入C++库
+#pragma comment(lib,"ltlcprt" __ltlversionxp ".lib")
+
+#ifndef _NO__LTL_Initialization
+/*
+__LTL_Initialization用于初始化 initialization.cpp 全局构造
+
+你可以定义 _NO__LTL_Initialization 来移除 LTL 初始化
+
+但是当你使用iostrean以及_lock_locales相关功能时将导致程序崩溃
+
+*/
+#ifdef _M_IX86
+#pragma comment(linker,"/include:___LTL_Initialization")
+#else
+#pragma comment(linker,"/include:__LTL_Initialization")
+#endif
+
+#endif
+
+
 #endif //!_LIB
 
 #endif //NDEBUG&&_DLL

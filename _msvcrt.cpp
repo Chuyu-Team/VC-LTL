@@ -10,7 +10,11 @@
 #include <intrin.h>  
 #include <vcruntime_exception.h>
 #include <crtdbg.h>
-#include <time.h>
+#include <corecrt_wtime.h>
+
+#include <stdio.h>
+#include <internal_shared.h>
+#include <locale.h>
 
 #ifdef __NOTHROW_T_DEFINED
 
@@ -42,7 +46,7 @@ extern "C"
 		terminate();
 	}
 
-	_ACRTIMP FILE* __cdecl __iob_func(unsigned);
+	__declspec(dllimport) FILE* __cdecl __iob_func(unsigned);
 
 	FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
@@ -99,7 +103,7 @@ extern "C"
 	//	// folded when optimized.  The flag is not otherwise used.
 	//	__scrt_debugger_hook_flag = 0;
 	//}
-#define _CRT_DEBUGGER_HOOK(a) (0)
+//#define _CRT_DEBUGGER_HOOK(a) (0)
 
 	void __cdecl __scrt_fastfail(unsigned const code)
 	{
@@ -113,7 +117,7 @@ extern "C"
 		// filter.
 
 		// Notify the debugger if attached.
-		_CRT_DEBUGGER_HOOK(0);
+		//_CRT_DEBUGGER_HOOK(0);
 
 		CONTEXT context_record = {};
 
@@ -186,8 +190,8 @@ extern "C"
 
 		// If no handler was found and no debugger was previously attached, then make
 		// sure we notify the debugger.
-		if (result == EXCEPTION_CONTINUE_SEARCH && !was_debugger_present)
-			_CRT_DEBUGGER_HOOK(0);
+		//if (result == EXCEPTION_CONTINUE_SEARCH && !was_debugger_present)
+		//	_CRT_DEBUGGER_HOOK(0);
 	}
 
 	//void __cdecl __std_exception_copy(
@@ -304,7 +308,9 @@ extern "C"
 		return static_cast<double>(_Time1 - _Time2);
 	}
 
-
+	__declspec(dllimport) struct tm* __cdecl _localtime64(
+		_In_ __time64_t const* _Time
+	);
 
 	errno_t __cdecl _localtime64_s(
 		_Out_ struct tm*        _Tm,
@@ -322,7 +328,7 @@ extern "C"
 	}
 
 
-	__time64_t gettime()
+	static __inline __time64_t gettime()
 	{
 		FILETIME FileTime;
 
@@ -334,23 +340,6 @@ extern "C"
 
 		return tmp;
 	}
-
-
-	__time32_t __cdecl _time32(
-		_Out_opt_ __time32_t* _Time
-	)
-	{
-		__time64_t gettime();
-
-#pragma warning(suppress : 4244)
-		__time32_t tmp = gettime();
-
-		if (_Time)
-			*_Time = tmp;
-
-		return tmp;
-	}
-
 
 	__time64_t __cdecl _time64(
 		_Out_opt_ __time64_t* _Time
@@ -409,7 +398,7 @@ extern "C"
 
 
 #ifndef _ATL_XP_TARGETING
-	_ACRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
+	__declspec(dllimport) errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
 #else
 #include <Ntsecapi.h>
 	errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue)
@@ -480,6 +469,229 @@ extern "C"
 		return log10(_X);
 	}
 #endif
+
+
+
+#define _IOB_ENTRIES_MSVCRT 20
+	struct _iobuf_MSVCRT {
+		
+		char* _ptr;
+		int   _cnt;
+		char *_base;
+		int   _flag;
+		int   _file;
+		int   _charbuf;
+		int   _bufsiz;
+		char *_tmpfname;
+	};
+
+
+	struct __crt_stdio_stream_data :public _iobuf_MSVCRT
+	{
+		CRITICAL_SECTION _lock;
+	};
+
+
+	__declspec(dllimport) _iobuf_MSVCRT _iob[_IOB_ENTRIES_MSVCRT];
+	__declspec(dllimport) void __cdecl _lock(
+		int locknum
+		);
+	__declspec(dllimport) void __cdecl _unlock(
+			int locknum
+		);
+
+
+	static __inline bool IsInternalStream(_iobuf_MSVCRT* const stream)
+	{
+		return ((byte*)stream >= (byte*)_iob) && ((byte*)stream < (byte*)(_iob + _IOB_ENTRIES_MSVCRT));
+	}
+
+	// Locks a stdio stream.
+	void __cdecl _lock_file(FILE* const stream)
+	{
+		if (IsInternalStream((_iobuf_MSVCRT*)stream))
+			_lock((((_iobuf_MSVCRT*)stream) - _iob) | 0x10);
+		else
+			EnterCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
+	}
+
+
+
+	// Unlocks a stdio stream.
+	void __cdecl _unlock_file(FILE* const stream)
+	{
+		if (IsInternalStream((_iobuf_MSVCRT*)stream))
+			_unlock((((_iobuf_MSVCRT*)stream) - _iob) | 0x10);
+		else
+			LeaveCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
+	}
+
+
+	errno_t __cdecl _get_stream_buffer_pointers(
+		FILE*   const public_stream,
+		char*** const base,
+		char*** const ptr,
+		int**   const count
+	)
+	{
+		_VALIDATE_RETURN_ERRCODE(public_stream != nullptr, EINVAL);
+
+		
+		if (base)
+		{
+			*base = &(((_iobuf_MSVCRT*)public_stream)->_base);
+		}
+
+		if (ptr)
+		{
+			*ptr = &(((_iobuf_MSVCRT*)public_stream)->_ptr);
+		}
+
+		if (count)
+		{
+			*count = &(((_iobuf_MSVCRT*)public_stream)->_cnt);
+		}
+
+		return 0;
+	}
+
+
+	//msvrct仅支持_Strftime，我们可以将通过字符串转换，得到_Wcsftime
+	size_t __cdecl _Wcsftime(
+		wchar_t*       const buffer,
+		size_t         const max_size,
+		wchar_t const* const format,
+		tm const*      const timeptr,
+		void*          const lc_time_arg
+	)
+	{
+		_VALIDATE_RETURN(buffer != nullptr, EINVAL, 0)
+		_VALIDATE_RETURN(max_size != 0, EINVAL, 0)
+		*buffer = '\0';
+
+		_VALIDATE_RETURN(format != nullptr, EINVAL, 0)
+		_VALIDATE_RETURN(timeptr != nullptr, EINVAL, 0)
+
+		size_t Count = 0;
+		
+		unsigned int const lc_time_cp = ___lc_codepage_func();
+
+		auto ch_format = WideCharToMultiByte(lc_time_cp, 0, format, -1, 0,0, nullptr, nullptr);
+		if (ch_format==0)
+		{
+			return 0;
+		}
+
+		auto formatA = (char*)malloc(ch_format);
+		//开辟2倍缓冲区
+		auto BufferA = (char*)malloc(max_size * 2);
+		
+		if (formatA==nullptr|| BufferA==nullptr)
+		{
+			//内存不足
+			goto __Error;
+		}
+
+		if (WideCharToMultiByte(lc_time_cp, 0,format, -1, formatA, ch_format, nullptr, nullptr))
+		{
+			//转换失败
+			goto __Error;
+		}
+
+
+		Count = _Strftime(BufferA, max_size * 2, formatA, timeptr, lc_time_arg);
+
+		if (Count)
+		{
+			//
+			Count = MultiByteToWideChar(lc_time_cp, 0, BufferA, Count, buffer, max_size);
+
+			//改函数长度并不包含null，因为长度减一
+			if (Count)
+				--Count;
+		}
+
+
+
+	__Error:
+		if (formatA)
+			free(formatA);
+		if (BufferA)
+			free(BufferA);
+		return Count;
+	}
+
+
+	//msvrct仅支持_Getdays，我们可以将通过字符串转换，得到_W_Getdays
+	wchar_t* __cdecl _W_Getdays(void)
+	{
+		auto szDays = _Getdays();
+		if (!szDays)
+			return nullptr;
+
+		unsigned int const lc_time_cp = ___lc_codepage_func();
+
+		auto ch_Days = MultiByteToWideChar(lc_time_cp, 0, szDays, -1, 0, 0);
+		if (ch_Days==0)
+		{
+			return nullptr;
+		}
+
+		//内存申请失败
+		auto szDaysW = (wchar_t*)malloc(ch_Days * sizeof(wchar_t));
+		if (!szDaysW)
+			return nullptr;
+
+		ch_Days = MultiByteToWideChar(lc_time_cp, 0, szDays, -1, szDaysW, ch_Days);
+
+		if (ch_Days)
+		{
+			return szDaysW;
+		}
+		else
+		{
+			free(szDaysW);
+			return nullptr;
+		}
+	}
+
+	//msvrct仅支持_Getmonths，我们可以将通过字符串转换，得到_W_Getmonths
+	wchar_t *__cdecl _W_Getmonths(void)
+	{
+		auto szMonths = _Getmonths();
+		if (!szMonths)
+			return nullptr;
+
+		unsigned int const lc_time_cp = ___lc_codepage_func();
+
+		auto ch_Months = MultiByteToWideChar(lc_time_cp, 0, szMonths, -1, 0, 0);
+		if (ch_Months == 0)
+		{
+			return nullptr;
+		}
+
+		//内存申请失败
+		auto szMonthsW = (wchar_t*)malloc(ch_Months * sizeof(wchar_t));
+		if (!szMonthsW)
+			return nullptr;
+
+		ch_Months = MultiByteToWideChar(lc_time_cp, 0, szMonths, -1, szMonthsW, ch_Months);
+
+		if (ch_Months)
+		{
+			return szMonthsW;
+		}
+		else
+		{
+			free(szMonthsW);
+			return nullptr;
+		}
+	}
+
+	void* __cdecl _W_Gettnames()
+	{
+		return _Gettnames();
+	}
 }
 
 #ifdef __cplusplus
@@ -528,63 +740,6 @@ extern "C++"
 	{
 		operator delete[](_Block);
 	}
-
-	#include <functional>
-	#include <regex>
-
-	_STD_BEGIN
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xbad_alloc()
-	{	// report a bad_alloc error
-
-		_THROW(bad_alloc, _EMPTY_ARGUMENT);
-
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *_Message)
-	{	// report an invalid_argument error
-		_THROW(invalid_argument, _Message);
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *_Message)
-	{	// report a length_error
-		_THROW(length_error, _Message);
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *_Message)
-	{	// report an out_of_range error
-		_THROW(out_of_range, _Message);
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *_Message)
-	{	// report an overflow error
-		_THROW(overflow_error, _Message);
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *_Message)
-	{	// report a runtime_error
-		_THROW(runtime_error, _Message);
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xbad_function_call()
-	{	// report a bad_function_call error
-		_THROW(bad_function_call, _EMPTY_ARGUMENT);
-	}
-
-	[[noreturn]] void __CLRCALL_PURE_OR_CDECL _Xregex_error(regex_constants::error_type _Code)
-	{	// report a regex_error
-		_THROW(regex_error, _Code);
-	}
-
-	unsigned int __CLRCALL_PURE_OR_CDECL _Random_device()
-	{	// return a random value
-		unsigned int ans;
-		if (_CSTD rand_s(&ans))
-			_Xout_of_range("invalid random_device value");
-		return (ans);
-	}
-
-
-	_STD_END
 }
 #endif // !__cplusplus
 

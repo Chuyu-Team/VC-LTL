@@ -80,8 +80,8 @@ struct tm;
 
 #if _CRT_FUNCTIONS_REQUIRED
 
-    _ACRTIMP void __cdecl _lock_locales(void);
-    _ACRTIMP void __cdecl _unlock_locales(void);
+	extern void __cdecl _lock_locales(void);
+	extern void __cdecl _unlock_locales(void);
 
     _Check_return_opt_
     _ACRTIMP int __cdecl _configthreadlocale(
@@ -145,13 +145,13 @@ struct tm;
 
     _Success_(return != 0)
     _Ret_z_
-    _ACRTIMP wchar_t* __cdecl _W_Getdays(void);
+    extern wchar_t* __cdecl _W_Getdays(void);
 
     _Success_(return != 0)
     _Ret_z_
-    _ACRTIMP wchar_t* __cdecl _W_Getmonths(void);
+    extern wchar_t* __cdecl _W_Getmonths(void);
 
-    _ACRTIMP void*    __cdecl _W_Gettnames(void);
+	extern void*    __cdecl _W_Gettnames(void);
 
     _Success_(return > 0)
     _ACRTIMP size_t __cdecl _Strftime(
@@ -162,7 +162,7 @@ struct tm;
         _In_opt_                 void*            _Lc_time_arg);
 
     _Success_(return > 0)
-    _ACRTIMP size_t __cdecl _Wcsftime(
+    extern size_t __cdecl _Wcsftime(
         _Out_writes_z_(_Max_size) wchar_t*        _Buffer,
         _In_                     size_t           _Max_size,
         _In_z_                   wchar_t const*   _Format,

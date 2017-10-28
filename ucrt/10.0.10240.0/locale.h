@@ -76,8 +76,8 @@ struct lconv
 #define _ENABLE_PER_THREAD_LOCALE_NEW     0x0100
 #define _DISABLE_PER_THREAD_LOCALE_NEW    0x0200
 
-_ACRTIMP void __cdecl _lock_locales(void);
-_ACRTIMP void __cdecl _unlock_locales(void);
+extern void __cdecl _lock_locales(void);
+extern void __cdecl _unlock_locales(void);
 
 _Check_return_opt_
 _ACRTIMP int __cdecl _configthreadlocale(
