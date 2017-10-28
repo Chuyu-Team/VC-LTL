@@ -154,36 +154,13 @@ namespace ATL
 {
 #ifdef _ATL_XP_TARGETING
 	//WinXP SP2 才支持 EncodePointer 以及 DecodePointer
-	//为
-	enum : int
-	{
-		_maximum_pointer_shift = sizeof(uintptr_t) * 8
-	};
+	EXTERN_C PVOID __fastcall __CRT_DecodePointer(PVOID Ptr);
 
-	inline unsigned int _rotate_pointer_value(unsigned int const value, int const shift) throw()
-	{
-		return RotateRight32(value, shift);
-	}
+	EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
 
-	inline unsigned __int64 _rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
-	{
-		return RotateRight64(value, shift);
-	}
+#define EncodePointerDownlevel __CRT_DecodePointer
+#define DecodePointerDownlevel __CRT_EncodePointer
 
-	__inline PVOID __fastcall EncodePointerDownlevel(
-		__in_opt PVOID Ptr
-	)
-	{
-
-		return reinterpret_cast<PVOID>(_rotate_pointer_value(reinterpret_cast<uintptr_t>(Ptr), _maximum_pointer_shift - (__security_cookie% _maximum_pointer_shift)) ^ __security_cookie);
-	}
-
-	__inline PVOID __fastcall DecodePointerDownlevel(
-		__in_opt PVOID Ptr
-	)
-	{
-		return reinterpret_cast<PVOID>(_rotate_pointer_value(reinterpret_cast<uintptr_t>(Ptr) ^ __security_cookie, __security_cookie %_maximum_pointer_shift));
-	}
 #else
 #define EncodePointerDownlevel ::EncodePointer
 #define DecodePointerDownlevel ::DecodePointer
