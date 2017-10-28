@@ -1057,6 +1057,11 @@ __if_exists(try_get_GetProcessWindowStation)
 }
 
 
+enum : int
+{
+	__crt_maximum_pointer_shift = sizeof(uintptr_t) * 8
+};
+
 inline unsigned int __crt_rotate_pointer_value(unsigned int const value, int const shift) throw()
 {
 	return RotateRight32(value, shift);
