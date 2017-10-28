@@ -15,6 +15,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 * 无缝使用最新C/C++库以及最新编译器，无需使用陈旧的类库或者编译器，尽情的使用最新规范！
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
 * 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧~
+* 支持C++基础类库支持，比如vector、set、iostream、stringstream……（目前暂时初步支持，如果存在编译不通过的情况，还请帮忙纠正或者提交BUG）
 
 ## 支持平台
 ### 支持的IDE
@@ -85,12 +86,14 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 
 
 ### 5. 文件说明
-* ltl1.lib  VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
-* ltl1xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp得到
-* msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了helper.asm转发函数以及msvcrt.def导出函数）
+* ltl1.lib  VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
+* ltl1xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
+* msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了msvcrt.def导出函数）
 * msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取，仅作备份用途，无实际用途）
 * ucrt.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
 * vc.lib 从对应的VC版本编译器msvcrt.lib提取的一些原有lib不支持的函数集合。
+* ltlcprt.lib VC2015/VC2017 编译平台使用到的C++支持函数，其内容通过编译src文件夹得到
+* ltlcprtxp.lib VC2015/VC2017 XP模式 编译平台使用到的C++支持函数，其内容通过编译src文件夹得到
 
 ### 6. VC-LTL已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。
@@ -98,6 +101,10 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 
 
 ## Changes：
+
+2.0.0.1 待定
+* 新增iostream以及stringstream支持
+
 1.0.0.13 2017-10-11 14:00
 * 解决BUG，atanh、acosh、asinh无法使用问题（感谢 stsm85）
 * 新增Windows 10 16299 UCRT支持
