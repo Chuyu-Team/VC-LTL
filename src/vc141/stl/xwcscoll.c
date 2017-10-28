@@ -12,8 +12,9 @@
 #include <string.h>
 #include <locale.h>
 #include <errno.h>
-#include <awint.h>
+//#include <awint.h>
 #include <xlocinfo.h>   /* for _Collvec, _Wcscoll */
+#include <winapi_thunks.h>
 
 /***
 *static int _Wmemcmp(s1, s2, n) - compare wchar_t s1[n], s2[n]
@@ -77,24 +78,29 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcscoll (
         int n1 = (int)(_end1 - _string1);
         int n2 = (int)(_end2 - _string2);
         int ret=0;
-        const wchar_t *locale_name;
+        //const wchar_t *locale_name;
+		LCID     _Locale;
 
-        if (ploc == 0)
-            locale_name = ___lc_locale_name_func()[LC_COLLATE];
+		if (ploc == 0)
+		{
+			//locale_name = ___lc_locale_name_func()[LC_COLLATE];
+			_Locale = ___lc_handle_func()[LC_COLLATE];
+		}
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
         }
 
-        if (locale_name == NULL)
-        {
+		if (/*locale_name == NULL*/_Locale == 0)
+		{
             int ans;
             ans = _Wmemcmp(_string1, _string2, n1 < n2 ? n1 : n2);
             ret=(ans != 0 || n1 == n2 ? ans : n1 < n2 ? -1 : +1);
         }
         else
         {
-            if (0 == (ret = __crtCompareStringW(locale_name,
+            if (0 == (ret = __crtCompareStringW(_Locale,
                                                 SORT_STRINGSORT,
                                                 _string1,
                                                 n1,

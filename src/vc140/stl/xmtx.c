@@ -8,7 +8,7 @@
 
 void  __CLRCALL_PURE_OR_CDECL _Mtxinit(_Rmtx *_Mtx)
 	{	/* initialize mutex */
-	SetCriticalSectionSpinCount(_Mtx, 4000);
+	InitializeCriticalSectionAndSpinCount(_Mtx, 4000);
 	}
 
 void  __CLRCALL_PURE_OR_CDECL _Mtxdst(_Rmtx *_Mtx)

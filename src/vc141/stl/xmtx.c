@@ -1,12 +1,12 @@
 /*	xmtx.c -- mutex support for VC++ */
 #include "xmtx.h"
-#include <awint.h>
+//#include <awint.h>
 
 /* Win32 critical sections are recursive */
 
 void  __CLRCALL_PURE_OR_CDECL _Mtxinit(_Rmtx *_Mtx)
 	{	/* initialize mutex */
-	__crtInitializeCriticalSectionEx(_Mtx, 4000, 0);
+	InitializeCriticalSectionAndSpinCount(_Mtx, 4000);
 	}
 
 void  __CLRCALL_PURE_OR_CDECL _Mtxdst(_Rmtx *_Mtx)

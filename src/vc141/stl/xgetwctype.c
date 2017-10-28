@@ -1,8 +1,9 @@
 /* _Getwctype -- return character classification flags for wide character */
 #include <xlocinfo.h>
 #include <wchar.h>
-#include <awint.h>
+//#include <awint.h>
 #include <yvals.h>
+#include <Windows.h>
 
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Getwctype(wchar_t _Ch,
 	const _Ctypevec *_Ctype)

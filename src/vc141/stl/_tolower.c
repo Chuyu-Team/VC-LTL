@@ -13,9 +13,10 @@
 #include <stddef.h>
 #include <xlocinfo.h>
 #include <locale.h>
-#include <awint.h>
+//#include <awint.h>
 #include <stdlib.h>
 #include <yvals.h>
+#include <winapi_thunks.h>
 
 /* remove macro definitions of _tolower() and tolower()
  */
@@ -49,20 +50,27 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         unsigned char outbuffer[3];
 
         UINT codepage;
-        const wchar_t *locale_name;
+
+		LCID _Locale;
+
+        //const wchar_t *locale_name;
 
         if (ploc == 0)
         {
-            locale_name = ___lc_locale_name_func()[LC_CTYPE];
+            //locale_name = ___lc_locale_name_func()[LC_CTYPE];
+			_Locale = ___lc_handle_func()[LC_CTYPE];
+
             codepage = ___lc_codepage_func();
         }
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
             codepage = ploc->_Page;
         }
 
-        if (locale_name == NULL)
+        //if (locale_name == NULL)
+		if(_Locale==0)
         {
             if ( (c >= 'A') && (c <= 'Z') )
                 c = c + ('a' - 'A');
@@ -103,7 +111,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         }
 
         /* convert wide char to lowercase */
-        if (0 == (size = __crtLCMapStringA(locale_name, LCMAP_LOWERCASE,
+        if (0 == (size = __crtLCMapStringA(NULL, _Locale, LCMAP_LOWERCASE,
             (const char *)inbuffer, size, (char *)outbuffer, 3, codepage, TRUE)))
         {
             return c;

@@ -16,7 +16,6 @@
 #include <locale.h>
 #include <errno.h>
 //#include <awint.h>
-#include <Windows.h>
 #include <winapi_thunks.h>
 
 /***
@@ -65,7 +64,6 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Strcoll (
         {
             //locale_name = ___lc_locale_name_func()[LC_COLLATE];
 			_Locale = ___lc_handle_func()[LC_COLLATE];
-
             codepage = ___lc_collate_cp_func();
         }
         else

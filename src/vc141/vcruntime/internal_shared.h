@@ -475,44 +475,26 @@ extern "C++" {
 
 
 
-    enum : int
-    {
-        __crt_maximum_pointer_shift = sizeof(uintptr_t) * 8
-    };
+	EXTERN_C PVOID __fastcall __CRT_DecodePointer(
+		PVOID Ptr
+	);
 
-    inline unsigned int __crt_rotate_pointer_value(unsigned int const value, int const shift) throw()
-    {
-        return RotateRight32(value, shift);
-    }
+	EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
 
-    inline unsigned __int64 __crt_rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
-    {
-        return RotateRight64(value, shift);
-    }
 
     // Fast alternatives to the encode/decode pointer functions that do not use
     // the EncodePointer and DecodePointer functions.
     template <typename T>
     T __crt_fast_decode_pointer(T const p) throw()
     {
-        return reinterpret_cast<T>(
-            __crt_rotate_pointer_value(
-                reinterpret_cast<uintptr_t>(p) ^ __security_cookie,
-                __security_cookie % __crt_maximum_pointer_shift
-            )
-        );
-    }
+		return reinterpret_cast<T>(__CRT_DecodePointer(p));
+	}
 
     template <typename T>
     T __crt_fast_encode_pointer(T const p) throw()
     {
-        return reinterpret_cast<T>(
-            __crt_rotate_pointer_value(
-                reinterpret_cast<uintptr_t>(p),
-                __crt_maximum_pointer_shift - (__security_cookie % __crt_maximum_pointer_shift)
-            ) ^ __security_cookie
-        );
-    }
+		return reinterpret_cast<T>(__CRT_EncodePointer(p));
+	}
 
     // The primary __crt_fast_encode_pointer template does not work properly
     // when it is called with the argument 'nullptr' because the encoded void*
