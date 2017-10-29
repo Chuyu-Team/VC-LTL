@@ -420,9 +420,7 @@ extern "C"
 	}
 
 
-#ifndef _ATL_XP_TARGETING
-	__declspec(dllimport) errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
-#else
+#ifdef _ATL_XP_TARGETING
 #include <Ntsecapi.h>
 	errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue)
 	{
@@ -510,7 +508,7 @@ extern "C"
 	void __cdecl _lock_file(FILE* const stream)
 	{
 		if (IsInternalStream((_iobuf_MSVCRT*)stream))
-			_lock((((_iobuf_MSVCRT*)stream) - _iob) | 0x10);
+			_lock((((_iobuf_MSVCRT*)stream) - _iob) + 0x10);
 		else
 			EnterCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
 	}
@@ -521,7 +519,7 @@ extern "C"
 	void __cdecl _unlock_file(FILE* const stream)
 	{
 		if (IsInternalStream((_iobuf_MSVCRT*)stream))
-			_unlock((((_iobuf_MSVCRT*)stream) - _iob) | 0x10);
+			_unlock((((_iobuf_MSVCRT*)stream) - _iob) + 0x10);
 		else
 			LeaveCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
 	}
