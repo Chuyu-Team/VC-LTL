@@ -46,11 +46,32 @@ extern "C"
 		terminate();
 	}
 
-	__declspec(dllimport) FILE* __cdecl __iob_func(unsigned);
+
+#define _IOB_ENTRIES_MSVCRT 20
+	struct _iobuf_MSVCRT {
+
+		char* _ptr;
+		int   _cnt;
+		char *_base;
+		int   _flag;
+		int   _file;
+		int   _charbuf;
+		int   _bufsiz;
+		char *_tmpfname;
+	};
+
+
+	struct __crt_stdio_stream_data :public _iobuf_MSVCRT
+	{
+		CRITICAL_SECTION _lock;
+	};
+
+
+	__declspec(dllimport) _iobuf_MSVCRT _iob[_IOB_ENTRIES_MSVCRT];
 
 	FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
-		return __iob_func(in);
+		return (FILE*)&_iob[in];
 	}
 
 	unsigned long long __cdecl wcstoull(
@@ -470,29 +491,6 @@ extern "C"
 	}
 #endif
 
-
-
-#define _IOB_ENTRIES_MSVCRT 20
-	struct _iobuf_MSVCRT {
-		
-		char* _ptr;
-		int   _cnt;
-		char *_base;
-		int   _flag;
-		int   _file;
-		int   _charbuf;
-		int   _bufsiz;
-		char *_tmpfname;
-	};
-
-
-	struct __crt_stdio_stream_data :public _iobuf_MSVCRT
-	{
-		CRITICAL_SECTION _lock;
-	};
-
-
-	__declspec(dllimport) _iobuf_MSVCRT _iob[_IOB_ENTRIES_MSVCRT];
 	__declspec(dllimport) void __cdecl _lock(
 		int locknum
 		);
