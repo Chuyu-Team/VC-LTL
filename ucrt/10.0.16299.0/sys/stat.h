@@ -152,17 +152,17 @@ struct _stat64
 
 
 
-_ACRTIMP int __cdecl _fstat32(
+extern int __cdecl _fstat32(
     _In_  int             _FileHandle,
     _Out_ struct _stat32* _Stat
     );
 
-_ACRTIMP int __cdecl _fstat32i64(
+extern int __cdecl _fstat32i64(
     _In_  int                _FileHandle,
     _Out_ struct _stat32i64* _Stat
     );
 
-_ACRTIMP int __cdecl _fstat64i32(
+extern int __cdecl _fstat64i32(
     _In_  int                _FileHandle,
     _Out_ struct _stat64i32* _Stat
     );
@@ -172,17 +172,17 @@ _ACRTIMP int __cdecl _fstat64(
     _Out_ struct _stat64* _Stat
     );
 
-_ACRTIMP int __cdecl _stat32(
+extern int __cdecl _stat32(
     _In_z_ char const*     _FileName,
     _Out_  struct _stat32* _Stat
     );
 
-_ACRTIMP int __cdecl _stat32i64(
+extern int __cdecl _stat32i64(
     _In_z_ char const*        _FileName,
     _Out_  struct _stat32i64* _Stat
     );
 
-_ACRTIMP int __cdecl _stat64i32(
+extern int __cdecl _stat64i32(
     _In_z_ char const*        _FileName,
     _Out_  struct _stat64i32* _Stat
     );
@@ -192,17 +192,17 @@ _ACRTIMP int __cdecl _stat64(
     _Out_  struct _stat64* _Stat
     );
 
-_ACRTIMP int __cdecl _wstat32(
+extern int __cdecl _wstat32(
     _In_z_ wchar_t const*  _FileName,
     _Out_  struct _stat32* _Stat
     );
 
-_ACRTIMP int __cdecl _wstat32i64(
+extern int __cdecl _wstat32i64(
     _In_z_ wchar_t const*     _FileName,
     _Out_  struct _stat32i64* _Stat
     );
 
-_ACRTIMP int __cdecl _wstat64i32(
+extern int __cdecl _wstat64i32(
     _In_z_ wchar_t const*     _FileName,
     _Out_  struct _stat64i32* _Stat
     );

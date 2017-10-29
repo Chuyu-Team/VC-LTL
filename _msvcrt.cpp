@@ -16,6 +16,8 @@
 #include <internal_shared.h>
 #include <locale.h>
 
+#include <sys/stat.h>
+
 #ifdef __NOTHROW_T_DEFINED
 
 #ifdef __cplusplus
@@ -78,7 +80,7 @@ extern "C"
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
 		_In_                     int            _Radix
-		)
+	)
 	{
 		return _wcstoui64(_String, _EndPtr, _Radix);
 	}
@@ -290,29 +292,29 @@ extern "C"
 	}*/
 
 
-//	int __cdecl __stdio_common_vswprintf(
-//		_In_                                    unsigned __int64 _Options,
-//		_Out_writes_z_(_BufferCount)            wchar_t*         _Buffer,
-//		_In_                                    size_t           _BufferCount,
-//		_In_z_ _Printf_format_string_params_(2) wchar_t const*   _Format,
-//		_In_opt_                                _locale_t        _Locale,
-//		va_list          _ArgList
-//	)
-//	{
-//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
-//	}
-//
-//	int __cdecl __stdio_common_vswprintf_s(
-//		_In_                                    unsigned __int64 _Options,
-//		_Out_writes_z_(_BufferCount)            wchar_t*         _Buffer,
-//		_In_                                    size_t           _BufferCount,
-//		_In_z_ _Printf_format_string_params_(2) wchar_t const*   _Format,
-//		_In_opt_                                _locale_t        _Locale,
-//		va_list          _ArgList
-//	)
-//	{
-//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_s_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
-//	}
+	//	int __cdecl __stdio_common_vswprintf(
+	//		_In_                                    unsigned __int64 _Options,
+	//		_Out_writes_z_(_BufferCount)            wchar_t*         _Buffer,
+	//		_In_                                    size_t           _BufferCount,
+	//		_In_z_ _Printf_format_string_params_(2) wchar_t const*   _Format,
+	//		_In_opt_                                _locale_t        _Locale,
+	//		va_list          _ArgList
+	//	)
+	//	{
+	//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
+	//	}
+	//
+	//	int __cdecl __stdio_common_vswprintf_s(
+	//		_In_                                    unsigned __int64 _Options,
+	//		_Out_writes_z_(_BufferCount)            wchar_t*         _Buffer,
+	//		_In_                                    size_t           _BufferCount,
+	//		_In_z_ _Printf_format_string_params_(2) wchar_t const*   _Format,
+	//		_In_opt_                                _locale_t        _Locale,
+	//		va_list          _ArgList
+	//	)
+	//	{
+	//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_s_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
+	//	}
 
 #ifdef _ATL_XP_TARGETING
 
@@ -439,7 +441,7 @@ extern "C"
 #endif
 
 #ifdef _X86_
-	#include <math.h>
+#include <math.h>
 	double __cdecl _acos_default(_In_ double _X)
 	{
 		return acos(_X);
@@ -449,7 +451,7 @@ extern "C"
 	{
 		return asin(_X);
 	}
-	
+
 	double __cdecl _atan_default(_In_ double _X)
 	{
 		return atan(_X);
@@ -479,7 +481,7 @@ extern "C"
 	{
 		return tan(_X);
 	}
-	
+
 	double __cdecl _log_default(_In_ double _X)
 	{
 		return log(_X);
@@ -493,10 +495,10 @@ extern "C"
 
 	__declspec(dllimport) void __cdecl _lock(
 		int locknum
-		);
+	);
 	__declspec(dllimport) void __cdecl _unlock(
-			int locknum
-		);
+		int locknum
+	);
 
 
 	static __inline bool IsInternalStream(_iobuf_MSVCRT* const stream)
@@ -534,7 +536,7 @@ extern "C"
 	{
 		_VALIDATE_RETURN_ERRCODE(public_stream != nullptr, EINVAL);
 
-		
+
 		if (base)
 		{
 			*base = &(((_iobuf_MSVCRT*)public_stream)->_base);
@@ -564,14 +566,14 @@ extern "C"
 	)
 	{
 		_VALIDATE_RETURN(buffer != nullptr, EINVAL, 0)
-		_VALIDATE_RETURN(max_size != 0, EINVAL, 0)
-		*buffer = '\0';
+			_VALIDATE_RETURN(max_size != 0, EINVAL, 0)
+			*buffer = '\0';
 
 		_VALIDATE_RETURN(format != nullptr, EINVAL, 0)
-		_VALIDATE_RETURN(timeptr != nullptr, EINVAL, 0)
+			_VALIDATE_RETURN(timeptr != nullptr, EINVAL, 0)
 
-		size_t Count = 0;
-		
+			size_t Count = 0;
+
 		unsigned int const lc_time_cp = ___lc_codepage_func();
 
 		auto ch_format = WideCharToMultiByte(lc_time_cp, 0, format, -1, 0,0, nullptr, nullptr);
@@ -583,7 +585,7 @@ extern "C"
 		auto formatA = (char*)malloc(ch_format);
 		//开辟2倍缓冲区
 		auto BufferA = (char*)malloc(max_size * 2);
-		
+
 		if (formatA==nullptr|| BufferA==nullptr)
 		{
 			//内存不足
@@ -690,6 +692,204 @@ extern "C"
 	{
 		return _Gettnames();
 	}
+
+	//
+	extern "C++"
+	{
+		//通过文件句柄获取_stat64
+		static __inline int __cdecl _tstat64(
+			_In_z_ int     _FileHandle,
+			_Out_  struct _stat64* _Stat
+		)
+		{
+			return _fstat64(_FileHandle, _Stat);
+		}
+
+		//通过ASCII路径获取_stat64
+		static __inline int __cdecl _tstat64(
+			_In_z_ char const*     _FileName,
+			_Out_  struct _stat64* _Stat
+		)
+		{
+			return _stat64(_FileName, _Stat);
+		}
+
+		//通过Unicode路径获取_stat64
+		static __inline int __cdecl _tstat64(
+			_In_z_ wchar_t const*     _FileName,
+			_Out_  struct _stat64* _Stat
+		)
+		{
+			return _wstat64(_FileName, _Stat);
+		}
+
+
+		template<class File, class _statT >
+		__inline int __cdecl common_stat(
+			_In_z_ File       _FileName,
+			_Out_  _statT* _Stat
+		)
+		{
+			_VALIDATE_CLEAR_OSSERR_RETURN(_Stat != nullptr, EINVAL, -1);
+
+			struct _stat64 _StatTmp;
+			auto result = _tstat64(_FileName, &_StatTmp);
+			if (result != 0)
+			{
+				//获取成功，开始转换数据
+				_Stat->st_dev = _StatTmp.st_dev;
+				_Stat->st_ino = _StatTmp.st_ino;
+				_Stat->st_mode = _StatTmp.st_mode;
+				_Stat->st_nlink = _StatTmp.st_nlink;
+				_Stat->st_uid = _StatTmp.st_uid;
+				_Stat->st_gid = _StatTmp.st_gid;
+				_Stat->st_rdev = _StatTmp.st_rdev;
+				_Stat->st_size = _StatTmp.st_size;
+				_Stat->st_atime = _StatTmp.st_atime;
+				_Stat->st_mtime = _StatTmp.st_mtime;
+				_Stat->st_ctime = _StatTmp.st_ctime;
+			}
+
+			return result;
+		}
+	}
+
+	//_fstat已经改名为_fstat32
+#pragma push_macro("_fstat")
+#undef _fstat
+	__declspec(dllimport) int __cdecl _fstat(
+		_In_  int             _FileHandle,
+		_Out_ struct _stat32* _Stat
+	);
+
+	int __cdecl _fstat32(
+		_In_  int             _FileHandle,
+		_Out_ struct _stat32* _Stat
+	)
+	{
+		return _fstat(_FileHandle, _Stat);
+	}
+#pragma pop_macro("_fstat")
+
+	//_fstati64已经改名为_fstat32i64
+#pragma push_macro("_fstati64")
+#undef _fstati64
+	__declspec(dllimport) int __cdecl _fstati64(
+		_In_  int                _FileHandle,
+		_Out_ struct _stat32i64* _Stat
+	);
+
+	int __cdecl _fstat32i64(
+		_In_  int                _FileHandle,
+		_Out_ struct _stat32i64* _Stat
+	)
+	{
+		return _fstati64(_FileHandle, _Stat);
+	}
+#pragma pop_macro("_fstati64")
+
+
+	//msvcrt不支持_fstat64i32，不过我们可以用_fstat64转换
+	int __cdecl _fstat64i32(
+		_In_  int                _FileHandle,
+		_Out_ struct _stat64i32* _Stat
+	)
+	{
+		return common_stat(_FileHandle, _Stat);
+	}
+
+
+
+	//_stat已经改名为_stat32
+#pragma push_macro("_stat")
+#undef _stat
+	__declspec(dllimport) int __cdecl _stat(
+		_In_z_ char const*     _FileName,
+		_Out_  struct _stat32* _Stat
+	);
+
+	int __cdecl _stat32(
+		_In_z_ char const*     _FileName,
+		_Out_  struct _stat32* _Stat
+	)
+	{
+		return _stat(_FileName, _Stat);
+	}
+#pragma pop_macro("_stat")
+
+
+	//_stati64已经改名为_stat32i64
+#pragma push_macro("_stati64")
+#undef _stati64
+	__declspec(dllimport) int __cdecl _stati64(
+		_In_z_ char const*     _FileName,
+		_Out_  struct _stat32i64* _Stat
+	);
+
+	int __cdecl _stat32i64(
+		_In_z_ char const*        _FileName,
+		_Out_  struct _stat32i64* _Stat
+	)
+	{
+		return _stati64(_FileName, _Stat);
+	}
+#pragma pop_macro("_stati64")
+
+
+	//msvcrt不支持_stat64i32，不过我们可以用_stat64转换
+	int __cdecl _stat64i32(
+		_In_z_ char const*        _FileName,
+		_Out_  struct _stat64i32* _Stat
+	)
+	{
+		return common_stat(_FileName, _Stat);
+	}
+
+
+	//_wstat已经改名为_wstat32，做转发
+#pragma push_macro("_wstat")
+#undef _wstat
+	__declspec(dllimport) int __cdecl _wstat(
+		_In_z_ wchar_t const*  _FileName,
+		_Out_  struct _stat32* _Stat
+	);
+
+	int __cdecl _wstat32(
+		_In_z_ wchar_t const*  _FileName,
+		_Out_  struct _stat32* _Stat
+	)
+	{
+		return _wstat(_FileName, _Stat);
+	}
+#pragma pop_macro("_wstat")
+
+	//_wstati64已经改名为_wstat32i64，做转发
+#pragma push_macro("_wstati64")
+#undef _wstati64
+	__declspec(dllimport) int __cdecl _wstati64(
+		_In_z_ wchar_t const*     _FileName,
+		_Out_  struct _stat32i64* _Stat
+	);
+
+	int __cdecl _wstat32i64(
+		_In_z_ wchar_t const*     _FileName,
+		_Out_  struct _stat32i64* _Stat
+	)
+	{
+		return _wstati64(_FileName, _Stat);
+	}
+#pragma pop_macro("_wstati64")
+
+	//msvcrt不支持_wstat64i32，不过我们可以用_wstat64转换
+	int __cdecl _wstat64i32(
+		_In_z_ wchar_t const*     _FileName,
+		_Out_  struct _stat64i32* _Stat
+	)
+	{
+		return common_stat(_FileName, _Stat);
+	}
+
+
 }
 
 #ifdef __cplusplus
