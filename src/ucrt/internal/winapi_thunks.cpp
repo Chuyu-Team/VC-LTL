@@ -52,8 +52,9 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _Out_opt_ PDWORD   length
     );
 
-#ifdef NONE
+#ifdef _ATL_XP_TARGETING
 
+#define _NO_APPLY(a,b)
 
 #define _ACRT_APPLY_TO_LATE_BOUND_MODULES(_APPLY)                                                        \
     _APPLY(api_ms_win_core_datetime_l1_1_1,              "api-ms-win-core-datetime-l1-1-1"             ) \
@@ -77,7 +78,6 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _APPLY(api_ms_win_appmodel_runtime_l1_1_2,           "api-ms-win-appmodel-runtime-l1-1-2"          ) \
     _APPLY(user32,                                       "user32"                                      )
 
-#define _NO_APPLY(a,b)
 
 
 #define _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)                                                                                                     \
@@ -102,8 +102,8 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(InitializeCriticalSectionEx,                 ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
     _NO_APPLY(IsValidLocaleName,                           ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(LCMapStringEx,                               ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
-    _NO_APPLY(LCIDToLocaleName,                            ({ api_ms_win_core_localization_obsolete_l1_2_0, kernel32                                   })) \
-    _NO_APPLY(LocaleNameToLCID,                            ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
+    _APPLY(LCIDToLocaleName,                            ({ api_ms_win_core_localization_obsolete_l1_2_0, kernel32                                   })) \
+    _APPLY(LocaleNameToLCID,                            ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(LocateXStateFeature,                         ({ api_ms_win_core_xstate_l2_1_0,                kernel32                                   })) \
     _NO_APPLY(MessageBoxA,                                 ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
     _NO_APPLY(MessageBoxW,                                 ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
@@ -160,52 +160,52 @@ namespace
 // If a handle is null, we have not yet attempted to load that module.  If a
 // handle is -1 (INVALID_HANDLE_VALUE), we have attempted to load the module
 // but the attempt failed.
-//static HMODULE module_handles[module_id_count];
+static HMODULE module_handles[module_id_count];
 
 // This table stores the function pointers that we have loaded dynamically.  The
 // function pointers are stored in encoded form via __crt_fast_encode_ponter.  If
 // a function pointer is an encoded null pointer, we have not yet attempted to
 // get that function pointer.  If a function pointer is an encoded -1, we have
 // attempted to get that function pointer but the attempt failed.
-//static void* encoded_function_pointers[function_id_count];
+static void* encoded_function_pointers[function_id_count];
 
 
 
-//extern "C" bool __cdecl __acrt_initialize_winapi_thunks()
-//{
-//    void* const encoded_nullptr = __crt_fast_encode_pointer(nullptr);
-//
-//    for (void*& p : encoded_function_pointers)
-//    {
-//        p = encoded_nullptr;
-//    }
-//
-//    return true;
-//}
+extern "C" bool __cdecl __acrt_initialize_winapi_thunks()
+{
+    void* const encoded_nullptr = __crt_fast_encode_pointer(nullptr);
 
-//extern "C" bool __cdecl __acrt_uninitialize_winapi_thunks(bool const terminating)
-//{
-//    // If the process is terminating, there's no need to free any module handles
-//    if (terminating)
-//    {
-//        return true;
-//    }
-//
-//    for (HMODULE& module : module_handles)
-//    {
-//        if (module)
-//        {
-//            if (module != INVALID_HANDLE_VALUE)
-//            {
-//                FreeLibrary(module);
-//            }
-//
-//            module = nullptr;
-//        }
-//    }
-//
-//    return true;
-//}
+    for (void*& p : encoded_function_pointers)
+    {
+        p = encoded_nullptr;
+    }
+
+    return true;
+}
+
+extern "C" bool __cdecl __acrt_uninitialize_winapi_thunks(bool const terminating)
+{
+    // If the process is terminating, there's no need to free any module handles
+    if (terminating)
+    {
+        return true;
+    }
+
+    for (HMODULE& module : module_handles)
+    {
+        if (module)
+        {
+            if (module != INVALID_HANDLE_VALUE)
+            {
+                FreeLibrary(module);
+            }
+
+            module = nullptr;
+        }
+    }
+
+    return true;
+}
 
 
 
@@ -701,7 +701,7 @@ extern "C" int WINAPI __acrt_LCMapStringEx(
     //{
     //    return lc_map_string_ex(locale_name, flags, source, source_count, destination, destination_count, version, reserved, sort_handle);
     //}
-#pragma warning(disable:__WARNING_PRECONDITION_NULLTERMINATION_VIOLATION) // 26035 LCMapStringW annotation is presently incorrect 11/26/2014 Jaykrell
+//#pragma warning(disable:__WARNING_PRECONDITION_NULLTERMINATION_VIOLATION) // 26035 LCMapStringW annotation is presently incorrect 11/26/2014 Jaykrell
     return LCMapStringW(__acrt_LocaleNameToLCID(locale_name, 0), flags, source, source_count, destination, destination_count);
 #else
 	return LCMapStringEx(locale_name, flags, source, source_count, destination, destination_count, version, reserved, sort_handle);
@@ -709,36 +709,36 @@ extern "C" int WINAPI __acrt_LCMapStringEx(
 }
 
 extern "C" int WINAPI __acrt_LCIDToLocaleName(
-    LCID   const locale,
-    LPWSTR const name,
-    int    const name_count,
-    DWORD  const flags
-    )
+	LCID   const locale,
+	LPWSTR const name,
+	int    const name_count,
+	DWORD  const flags
+)
 {
 #ifdef _ATL_XP_TARGETING
-    //if (auto const lcid_to_locale_name = try_get_LCIDToLocaleName())
-    //{
-    //    return lcid_to_locale_name(locale, name, name_count, flags);
-    //}
+	if (auto const lcid_to_locale_name = try_get_LCIDToLocaleName())
+	{
+		return lcid_to_locale_name(locale, name, name_count, flags);
+	}
 
-    return __acrt_DownlevelLCIDToLocaleName(locale, name, name_count);
+	return __acrt_DownlevelLCIDToLocaleName(locale, name, name_count);
 #else
 	return LCIDToLocaleName(locale, name, name_count, flags);
 #endif
 }
 
 extern "C" LCID WINAPI __acrt_LocaleNameToLCID(
-    LPCWSTR const name,
-    DWORD   const flags
-    )
+	LPCWSTR const name,
+	DWORD   const flags
+)
 {
 #ifdef _ATL_XP_TARGETING
-   /* if (auto const locale_name_to_lcid = try_get_LocaleNameToLCID())
-    {
-        return locale_name_to_lcid(name, flags);
-    }*/
+		if (auto const locale_name_to_lcid = try_get_LocaleNameToLCID())
+		{
+			return locale_name_to_lcid(name, flags);
+		}
 
-    return __acrt_DownlevelLocaleNameToLCID(name);
+	return __acrt_DownlevelLocaleNameToLCID(name);
 #else
 	return LocaleNameToLCID(name, flags);
 #endif

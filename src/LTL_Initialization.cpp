@@ -3,21 +3,21 @@
 #include <corecrt_internal.h>
 
 
-//#pragma section(".CRT$XIU", long, read)
-//#pragma section(".CRT$XPU", long, read)
-
 static void __cdecl __LTL_Unitialization() throw()
 {
 	__acrt_uninitialize_locks(false);
 
-	//__acrt_uninitialize_winapi_thunks(false);
+#ifdef _ATL_XP_TARGETING
+	__acrt_uninitialize_winapi_thunks(false);
+#endif
 }
 
 EXTERN_C int __cdecl __LTL_Initialization() throw()
 {
-
-	//__acrt_initialize_winapi_thunks();
-
+#ifdef _ATL_XP_TARGETING
+	//需要支持XP时才需要初始化，Vista以上系统直接使用新接口
+	__acrt_initialize_winapi_thunks();
+#endif
 	
 	__acrt_initialize_locks();
 
@@ -28,10 +28,4 @@ EXTERN_C int __cdecl __LTL_Initialization() throw()
 }
 
 
-//#pragma init_seg(".CRT$XIU")
-//static auto ____LTL_Initialization = __LTL_Initialization();
 _CRTALLOC(".CRT$XIC") static _PIFV ___Initialization =  __LTL_Initialization;
-//_CRTALLOC(".CRT$XPU") _PVFV _____LTL_Unitialization[] = { __LTL_Unitialization };
-
-
-//#pragma comment(linker, "/merge:.CRT=.rdata")
