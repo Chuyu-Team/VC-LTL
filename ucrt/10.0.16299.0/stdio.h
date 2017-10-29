@@ -72,7 +72,7 @@ typedef __int64 fpos_t;
 #if _CRT_FUNCTIONS_REQUIRED
 
     _Check_return_opt_
-    _ACRTIMP errno_t __cdecl _get_stream_buffer_pointers(
+    extern errno_t __cdecl _get_stream_buffer_pointers(
         _In_      FILE*   _Stream,
         _Out_opt_ char*** _Base,
         _Out_opt_ char*** _Pointer,
@@ -457,11 +457,11 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     // I/O Synchronization and _nolock family of I/O functions
     //
     //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    _ACRTIMP void __cdecl _lock_file(
+	extern void __cdecl _lock_file(
         _Inout_ FILE* _Stream
         );
 
-    _ACRTIMP void __cdecl _unlock_file(
+	extern void __cdecl _unlock_file(
         _Inout_ FILE* _Stream
         );
 
