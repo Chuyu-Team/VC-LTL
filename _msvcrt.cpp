@@ -440,55 +440,80 @@ extern "C"
 
 #ifdef _X86_
 #include <math.h>
+
+#pragma function(acos)
 	double __cdecl _acos_default(_In_ double _X)
 	{
 		return acos(_X);
 	}
+#pragma intrinsic(acos)
 
+#pragma function(asin)
 	double __cdecl _asin_default(_In_ double _X)
 	{
 		return asin(_X);
-	}
 
+	}
+#pragma intrinsic(asin)
+
+#pragma function(atan)
 	double __cdecl _atan_default(_In_ double _X)
 	{
 		return atan(_X);
-	}
 
+	}
+#pragma intrinsic(atan)
+
+#pragma function(cos)
 	double __cdecl _cos_default(_In_ double _X)
 	{
 		return cos(_X);
-	}
 
+	}
+#pragma intrinsic(cos)
+
+	#pragma function(exp)
 	double __cdecl _exp_default(_In_ double _X)
 	{
 		return exp(_X);
 	}
+#pragma intrinsic(exp)
 
+#pragma function(pow)
 	double __cdecl _pow_default(_In_ double _X, _In_ double _Y)
 	{
 		return pow(_X, _Y);
 	}
+#pragma intrinsic(pow)
 
+#pragma function(sin)
 	double __cdecl _sin_default(_In_ double _X)
 	{
 		return sin(_X);
 	}
+#pragma intrinsic(sin)
 
+#pragma function(tan)
 	double __cdecl _tan_default(_In_ double _X)
 	{
 		return tan(_X);
 	}
+#pragma intrinsic(tan)
 
+#pragma function(log)
 	double __cdecl _log_default(_In_ double _X)
 	{
 		return log(_X);
 	}
+#pragma intrinsic(log)
 
+#pragma function(log10)
 	double __cdecl _log10_default(_In_ double _X)
 	{
 		return log10(_X);
 	}
+#pragma intrinsic(log10)
+
 #endif
 
 	__declspec(dllimport) void __cdecl _lock(
