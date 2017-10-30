@@ -15,7 +15,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 * 无缝使用最新C/C++库以及最新编译器，无需使用陈旧的类库或者编译器，尽情的使用最新规范！
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
 * 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧~
-* 支持C++基础类库支持，比如vector、set、iostream、stringstream、cin、cout……（目前暂时初步支持，如果存在编译不通过的情况，还请帮忙纠正或者提交BUG）
+* 完善的C++基础类库支持，比如vector、set、iostream、stringstream、cin、cout……（目前刚刚支持，如果存在编译不通过的情况，还请帮忙纠正或者提交BUG）
 
 ## 支持平台
 ### 支持的IDE
@@ -102,20 +102,22 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 * 由于WinXP本身BUG，vsprintf相关函数无法正常支持`%xll`。当你需要兼容XP时，请优先考虑使用`%I64x`代替。vsprintf_s相关版本不存在此问题。
 
 #### 6.2 已知与VC-LTL兼容的项目
+此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容一下项目。
 
-duilib(https://github.com/duilib/duilib)
-FastCopy(https://ipmsg.org/tools/fastcopy.html.en)
-winpck(http://www.winpak.com/en/home/)
-RapidXml(http://rapidxml.sourceforge.net/)
-jsoncpp(https://github.com/open-source-parsers/jsoncpp)
-icu(99%兼容，暂时需要定义U_USE_STRTOD_L宏才完全正常)(http://source.icu-project.org/repos/icu/trunk)
-SQLite(http://www.sqlite.org/download.html)
-LuaJIT(http://luajit.org/)
+* [duilib](https://github.com/duilib/duilib)
+* [FastCopy](https://ipmsg.org/tools/fastcopy.html.en)
+* [WinPCK](http://www.winpak.com/en/home/)
+* [RapidXml](http://rapidxml.sourceforge.net/)
+* [JsonCPP](https://github.com/open-source-parsers/jsoncpp)
+* [icu](http://source.icu-project.org/repos/icu/trunk) `99%兼容，暂时需要定义U_USE_STRTOD_L宏才能编译通过`
+* [SQLite](http://www.sqlite.org/download.html)
+* [LuaJIT](http://luajit.org/)
 
+> 其他更多等你来反馈
 
 ## Changes：
 
-2.0.0.1 待定
+2.0.0.1 2017-10-29 22:23
 * 新增iostream、stringstream支持
 * 解决使用_fstat32、_fstat32i64、_fstat64i32、_stat32、_stat32i64、_stat64i32、_wstat32、_wstat32i64、_wstat64i32导致编译不通过问题
 * 修正 __acrt_iob_func 始终返回输入流问题
