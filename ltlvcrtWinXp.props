@@ -3,6 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
+    <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
+    <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(SolutionDir)VC-LTL</VC_LTL_Root>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
   </PropertyGroup>
@@ -10,12 +12,12 @@
     <Link>
       <AdditionalDependencies>$(msvcrt_winxp_obj);%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
-      <AdditionalLibraryDirectories>$(SolutionDir)VC-LTL\$(PlatformShortName);$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName);$(SolutionDir)VC-LTL\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>_ATL_XP_TARGETING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\include;$(SolutionDir)VC-LTL\VC\$(PlatformToolsetVersion)\atlmfc\include;$(SolutionDir)VC-LTL\ucrt\$(TargetUniversalCRTVersion);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\include;$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />
