@@ -913,6 +913,171 @@ extern "C"
 	}
 
 
+	//获取文件位置
+	__int64 __cdecl _ftelli64(
+		_Inout_ FILE* _Stream
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_Stream != nullptr, EINVAL, -1);
+
+		_lock_file(_Stream);
+		auto result = _ftelli64_nolock(_Stream);
+		_unlock_file(_Stream);
+		return result;
+	}
+
+	typedef struct {
+		long osfhnd;    /* underlying OS file HANDLE */ //CreateFile返回的句柄
+		char osfile;    /* attributes of file (e.g., open in text mode?) */
+		char pipech;    /* one char buffer for handles opened on pipes */
+#ifdef _MT
+		int lockinitflag;
+		CRITICAL_SECTION lock;
+#endif  /* _MT */
+	}   ioinfo;
+
+	__declspec(dllimport) ioinfo* __pioinfo[];
+
+	//获取文件位置不加锁版
+	__int64 __cdecl _ftelli64_nolock(
+		_Inout_ FILE* _Stream
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_Stream != nullptr, EINVAL, -1);
+
+		auto pFile = (_iobuf_MSVCRT*)_Stream;
+
+		auto fh = _fileno(_Stream);
+		if (pFile->_cnt < 0)
+		{
+			pFile->_cnt = 0;
+		}
+
+		auto const lowio_position = _lseeki64(fh, 0, SEEK_CUR);
+		if (lowio_position < 0)
+			return -1;
+
+		//!has_big_buffer
+		if (!(pFile->_flag & 0x108))
+			return lowio_position - pFile->_cnt;
+
+
+		auto buffer_offset = static_cast<__int64>(pFile->_base - pFile->_ptr);
+
+		auto& ioinfo = __pioinfo[fh >> 5][fh & 0x1F];
+
+		if (pFile->_flag & /*0x3*/(_IOWRITE | _IOREAD))
+		{
+			if (ioinfo.osfile & /*0x80*/FTEXT)
+			{
+				for (auto _base = pFile->_base; _base < pFile->_ptr;++_base)
+				{
+					if (*_base == '\n')
+					{
+						++buffer_offset;
+					}
+				}
+			}
+		}
+		// Otherwise, if the file is not in read/write mode, ftell cannot proceed:
+		else if ((pFile->_flag&/*0xff*/_IOUPDATE)==0)
+		{
+			errno = EINVAL;
+			return -1;
+		}
+
+		// If the current lowio position is at the beginning of the file, the stdio
+		// position is whatever the offset is:
+		if (lowio_position == 0)
+			return buffer_offset;
+
+		if (pFile->_flag & /*0x1*/_IOREAD)
+		{
+			//return common_ftell_read_mode_nolock(stream, lowio_position, buffer_offset);
+
+			// If the buffer has been exhausted, then the current lowio position is also
+			// the current stdio position:
+			if (pFile->_cnt == 0)
+				return lowio_position;
+
+			// The lowio position points one-past-the-end of the current stdio buffer.
+			// We need to find the position of the beginning of the buffer.  To start,
+			// we compute the number of bytes in the buffer.  Note that we cannot just
+			// use the buffer size, because the buffer will not be full if EOF is
+			// readhed before the buffer is full.
+			auto bytes_read = pFile->_cnt + buffer_offset;
+
+			// If this is a binary mode stream, we can simply subtract this from the
+			// lowio position, and combine it with the buffer offset to get the stdio
+			// position:
+			if ((ioinfo.osfile & /*0x80*/FTEXT)==0)
+			{
+				return lowio_position - bytes_read + buffer_offset;
+			}
+
+			// If this is a text mode stream, we need to adjust the number of bytes that
+			// were read into the buffer to account for newline translation.
+			//
+			// If we are _not_ at EOF, the number of untranslated characters read is the
+			// buffer size.  However, if we are not at EOF, the buffer may not be full,
+			// so we need to scan the buffer to count newline characters.  (Note:  we
+			// only count newline characters if the stream is at EOF, because doing so
+			// is more expensive than seeking to the end and seeking back).
+
+			// Seek to the end of the file.  If the current position is the end of the
+			// file, then scan the buffer for newlines and adjust bytes_read:
+			if (_lseeki64(fh, 0, SEEK_END) == lowio_position)
+			{
+				char const* const buffer_first = stream->_base;
+				char const* const buffer_last = buffer_first + bytes_read;
+				for (char const* it = buffer_first; it != buffer_last; ++it)
+				{
+					// We do not know whether the character preceding a newline was a
+					// carriage reutrn, but assume that it was:
+					if (*it == '\n')
+						++bytes_read;
+				}
+
+				// If the last byte was a ^Z, that character will not be present in the
+				// buffer (it is omitted by lowio):
+				if (pFile->_flag & 0x2000/*ctrl_z*/)
+					++bytes_read;
+
+			}
+			// Otherwise, the current position is not at the end of the file; we need to
+			// seek back to the original position and compute the size of the buffer:
+			else
+			{
+				if (_lseeki64(fh, lowio_position, SEEK_SET) == -1)
+					return -1;
+
+				// If the number of bytes read is smaller than the small buffer and was
+				// not user-provided, the buffer size was set to _SMALL_BUFSIZ during
+				// the last call to __acrt_stdio_refill_and_read_{narrow,wide}_nolock:
+				if (bytes_read <= _SMALL_BUFSIZ/* 512*/ &&
+					(pFile->_flag& 0x8/*has_crt_buffer*/) &&
+					!(pFile->_flag& 0x400)/*stream.has_setvbuf_buffer()*/)
+				{
+					bytes_read = _SMALL_BUFSIZ;
+				}
+				// Otherwise, the buffer size is what is stated in the stream object:
+				else
+				{
+					bytes_read = stream->_bufsiz;
+				}
+
+				// If the first byte in the untranslated buffer was a '\n', we assume it
+				// was preceded by a '\r', which was discarded by the previous read
+				// operation:
+				if (/*_osfile(fh)*/ioinfo.osfile & FCRLF)
+					++bytes_read;
+			}
+
+			return lowio_position - bytes_read + buffer_offset;
+		}
+
+		return lowio_position + buffer_offset;
+	}
 }
 
 #ifdef __cplusplus
