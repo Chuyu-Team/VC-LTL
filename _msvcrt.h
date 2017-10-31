@@ -113,15 +113,13 @@
 //导入C++库
 #pragma comment(lib,"ltlcprt" __ltlversionxp ".lib")
 
-#if !defined(_NO__LTL_Initialization) && defined(_ATL_XP_TARGETING)
+#if defined(_NO__LTL_Initialization)
 /*
-__LTL_Initialization用于初始化 initialization.cpp 全局构造
+__LTL_Initialization用于初始化 LTL_Initialization.cpp 全局构造
 
 你可以定义 _NO__LTL_Initialization 来移除 LTL 初始化
 
 但是当你使用iostrean以及_lock_locales相关功能时将导致程序崩溃
-
-目前仅需要在支持XP时才需要初始化
 
 */
 #ifdef _M_IX86

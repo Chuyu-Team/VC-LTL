@@ -2,7 +2,6 @@
 
 #include <corecrt_internal.h>
 
-#ifdef _ATL_XP_TARGETING
 static void __cdecl __LTL_Unitialization() throw()
 {
 	//__acrt_uninitialize_locks(false);
@@ -28,5 +27,3 @@ EXTERN_C int __cdecl __LTL_Initialization() throw()
 
 
 _CRTALLOC(".CRT$XIC") static _PIFV ___Initialization =  __LTL_Initialization;
-
-#endif
