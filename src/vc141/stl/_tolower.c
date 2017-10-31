@@ -156,9 +156,14 @@ _CRTIMP2_PURE _Ctypevec __CLRCALL_PURE_OR_CDECL _Getctype()
             ctype._Table = (const short *)__pctype_func();
             ctype._Delfl = 0;
         }
-        ctype._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
-        if (ctype._LocaleName)
-            ctype._LocaleName = _wcsdup_dbg(ctype._LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+
+		wchar_t _LocaleName[LOCALE_NAME_MAX_LENGTH];
+
+        //ctype._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
+		if (__acrt_LCIDToLocaleName(___lc_handle_func()[LC_COLLATE], _LocaleName, _countof(_LocaleName), 0))
+			ctype._LocaleName = _wcsdup_dbg(ctype._LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+		else
+			ctype._LocaleName = NULL;
 
         return (ctype);
 }

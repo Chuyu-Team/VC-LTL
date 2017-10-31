@@ -268,10 +268,10 @@ extern "C++"
 
 #else // ^^^ _DEBUG ^^^ // vvv !_DEBUG vvv
 
-    #define _calloc_crt   _calloc_base
-    #define _free_crt     _free_base
-    #define _malloc_crt   _malloc_base
-    #define _realloc_crt  _realloc_base
+    #define _calloc_crt   calloc
+    #define _free_crt     free
+    #define _malloc_crt   malloc
+    #define _realloc_crt  realloc
 
     // Within the Universal CRT, we must call _msize_base and _recalloc_base.
     // These functions are internal implementation details (not exported).  We
