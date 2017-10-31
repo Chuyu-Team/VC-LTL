@@ -15,6 +15,15 @@ extern LCID WINAPI __acrt_LocaleNameToLCID(
 	DWORD   const flags
 );
 
+extern VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time);
+
+
+extern BOOL WINAPI __crtInitOnceExecuteOnce(
+	_Inout_     PINIT_ONCE    InitOnce,
+	_In_        PINIT_ONCE_FN InitFn,
+	_Inout_opt_ PVOID         Parameter,
+	_Out_opt_   LPVOID        *Context
+);
 
 int __cdecl __crtCompareStringA
 (

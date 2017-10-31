@@ -46,7 +46,8 @@ static xtime xtime_diff(const xtime *xt, const xtime *now)
 	}
 
 #include <wrapwin.h>
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
   #define EPOCH	0x19DB1DED53E8000i64
 
@@ -56,7 +57,7 @@ static xtime xtime_diff(const xtime *xt, const xtime *now)
 long long _Xtime_get_ticks()
 	{	/* get system time in 100-nanosecond intervals since the epoch */
 	FILETIME ft;
-	__crtGetSystemTimePreciseAsFileTime(&ft);
+	__acrt_GetSystemTimePreciseAsFileTime(&ft);
 	return ((((long long)ft.dwHighDateTime) << 32)
 		+ (long long)ft.dwLowDateTime - EPOCH);
 	}

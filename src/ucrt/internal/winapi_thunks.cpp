@@ -94,7 +94,7 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(GetLastActivePopup,                          ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
     _NO_APPLY(GetLocaleInfoEx,                             ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(GetProcessWindowStation,                     ({ ext_ms_win_ntuser_windowstation_l1_1_0,       user32                                     })) \
-    _NO_APPLY(GetSystemTimePreciseAsFileTime,              ({ api_ms_win_core_sysinfo_l1_2_1                                                           })) \
+    _APPLY(GetSystemTimePreciseAsFileTime,              ({ api_ms_win_core_sysinfo_l1_2_1                                                           })) \
     _NO_APPLY(GetTimeFormatEx,                             ({ api_ms_win_core_datetime_l1_1_1,              kernel32                                   })) \
     _NO_APPLY(GetUserDefaultLocaleName,                    ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(GetUserObjectInformationW,                   ({ ext_ms_win_ntuser_windowstation_l1_1_0,       user32                                     })) \
@@ -114,7 +114,8 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(AppPolicyGetShowDeveloperDiagnostic,         ({ api_ms_win_appmodel_runtime_l1_1_2                                                       })) \
     _NO_APPLY(AppPolicyGetWindowingModel,                  ({ api_ms_win_appmodel_runtime_l1_1_2                                                       })) \
     _NO_APPLY(SetThreadStackGuarantee,                     ({ api_ms_win_core_processthreads_l1_1_2,        kernel32                                   })) \
-    _NO_APPLY(SystemFunction036,                           ({ api_ms_win_security_systemfunctions_l1_1_0,   advapi32                                   }))
+    _NO_APPLY(SystemFunction036,                           ({ api_ms_win_security_systemfunctions_l1_1_0,   advapi32                                   }))\
+    _APPLY(InitOnceExecuteOnce,                           ({ api_ms_win_core_synch_l1_2_0,                  kernel32                                   }))
 
 namespace
 {
@@ -585,17 +586,18 @@ extern "C" int WINAPI __acrt_GetLocaleInfoEx(
 #endif
 }
 
-__if_exists(try_get_GetSystemTimePreciseAsFileTime)
+extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time)
 {
-	extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time)
+#ifdef _ATL_XP_TARGETING
+	if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
 	{
-		if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
-		{
-			return get_system_time_precise_as_file_time(system_time);
-		}
-
-		return GetSystemTimeAsFileTime(system_time);
+		return get_system_time_precise_as_file_time(system_time);
 	}
+
+	return GetSystemTimeAsFileTime(system_time);
+#else
+	return GetSystemTimePreciseAsFileTime(system_time);
+#endif
 }
 
 extern "C" int WINAPI __acrt_GetTimeFormatEx(
@@ -1093,4 +1095,60 @@ EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr)
 			__crt_maximum_pointer_shift - (__security_cookie % __crt_maximum_pointer_shift)
 		) ^ __security_cookie
 		);
+}
+
+
+EXTERN_C BOOL WINAPI __crtInitOnceExecuteOnce(
+	_Inout_     PINIT_ONCE    InitOnce,
+	_In_        PINIT_ONCE_FN InitFn,
+	_Inout_opt_ PVOID         Parameter,
+	_Out_opt_   LPVOID        *Context
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return InitOnceExecuteOnce(InitOnce, InitFn, Parameter, Context);
+#else
+	if(auto const pInitOnceExecuteOnce = try_get_InitOnceExecuteOnce())
+	{
+		return pInitOnceExecuteOnce(InitOnce, InitFn, Parameter, Context);
+	}
+
+
+	//目标系统不支持，切换到XP兼容模式
+	for (;;)
+	{
+		switch (InterlockedCompareExchange((volatile size_t*)InitOnce, 1, 0))
+		{
+		case 2:
+			//同步完成，并且其他线程已经操作成功
+			return TRUE;
+			break;
+		case 1:
+			//尚未完成，继续等待
+			break;
+		case 0:
+			//同步完成，确认是处，调用指定函数
+			{
+			BOOL bRet = InitFn(InitOnce, Parameter, Context) == TRUE;
+				//函数调用完成
+
+			if (InterlockedExchange((volatile size_t*)InitOnce, bRet ? 2 : 0)==1)
+			{
+				return bRet;
+			}
+
+			}
+		default:
+			//同步完成，但是发生错误
+			goto __Error;
+			break;
+		}
+	}
+
+__Error:
+
+	SetLastError(ERROR_INVALID_DATA);
+	return FALSE;
+
+#endif
 }

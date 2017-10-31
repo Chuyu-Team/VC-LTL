@@ -1,7 +1,8 @@
 /* xonce.cpp -- _Execute_once function */
 #include <mutex>
 
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
 _STD_BEGIN
 _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Execute_once(
