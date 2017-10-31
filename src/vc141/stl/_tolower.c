@@ -161,7 +161,7 @@ _CRTIMP2_PURE _Ctypevec __CLRCALL_PURE_OR_CDECL _Getctype()
 
         //ctype._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
 		if (__acrt_LCIDToLocaleName(___lc_handle_func()[LC_COLLATE], _LocaleName, _countof(_LocaleName), 0))
-			ctype._LocaleName = _wcsdup_dbg(ctype._LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+			ctype._LocaleName = _wcsdup_dbg(_LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
 		else
 			ctype._LocaleName = NULL;
 

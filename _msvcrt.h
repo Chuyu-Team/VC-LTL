@@ -113,7 +113,7 @@
 //导入C++库
 #pragma comment(lib,"ltlcprt" __ltlversionxp ".lib")
 
-#if defined(_NO__LTL_Initialization)
+#if !defined(_NO__LTL_Initialization)
 /*
 __LTL_Initialization用于初始化 LTL_Initialization.cpp 全局构造
 
