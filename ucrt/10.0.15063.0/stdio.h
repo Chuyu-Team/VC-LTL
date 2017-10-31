@@ -31,7 +31,7 @@ _CRT_BEGIN_C_HEADER
  * Number of entries in _iob[] (declared below). Note that _NSTREAM_ must be
  * greater than or equal to _IOB_ENTRIES.
  */
-#define _IOB_ENTRIES 3
+#define _IOB_ENTRIES 20
 
 #define EOF    (-1)
 
@@ -283,7 +283,7 @@ typedef __int64 fpos_t;
 
     _Success_(return != -1)
     _Check_return_
-    _ACRTIMP __int64 __cdecl _ftelli64(
+    extern __int64 __cdecl _ftelli64(
         _Inout_ FILE* _Stream
         );
 

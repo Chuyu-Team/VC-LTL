@@ -118,34 +118,21 @@ enum : long
 // Internal Stream Types (__crt_stdio_stream and friends)
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-struct __crt_stdio_stream_data
+struct __crt_stdio_stream_data : public FILE
 {
-    union
-    {
-        FILE  _public_file;
-        char* _ptr;
-    };
-    
-    char*            _base;
-    int              _cnt;
-    long             _flags;
-    long             _file;
-    int              _charbuf;
-    int              _bufsiz;
-    char*            _tmpfname;
     CRITICAL_SECTION _lock;
 };
 
 // Ensure that __crt_stdio_stream_data* and FILE* pointers are freely convertible:
-static_assert(
-    offsetof(__crt_stdio_stream_data, _public_file) == 0,
-    "FILE member of __crt_stdio_stream_data is not at offset zero."
-    );
+//static_assert(
+//    offsetof(__crt_stdio_stream_data, _public_file) == 0,
+//    "FILE member of __crt_stdio_stream_data is not at offset zero."
+//    );
 
-static_assert(
-    sizeof(FILE) == sizeof(void*),
-    "FILE structure has unexpected size."
-    );
+//static_assert(
+//    sizeof(FILE) == sizeof(void*),
+//    "FILE structure has unexpected size."
+//    );
 
 
 class __crt_stdio_stream
@@ -168,7 +155,7 @@ public:
     }
 
     bool  valid()         const throw() { return _stream != nullptr;     }
-    FILE* public_stream() const throw() { return &_stream->_public_file; }
+    FILE* public_stream() const throw() { return _stream; }
 
 
 
