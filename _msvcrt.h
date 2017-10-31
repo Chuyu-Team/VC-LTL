@@ -70,11 +70,10 @@
 #error "vc-ltl 并不支持当前目标平台，请切换目标平台版本至 10240/14393/15063（推荐）。切换目标平台仅仅是切换了Windows SDK/UCRT版本，这并不影响你兼容老版本Windows（包括Windows XP）。"
 #elif _UCRT_VERISON == 10240
 
-#ifdef _USING_V110_SDK71_
-#pragma message(_ltlfilelen "warning: 由于Windows XP工具集强制使用陈旧的10240 UCRT，推荐使用ltlvcrtWinXp.props属性，然后迁徙目标平台到Windows 10 15063，从而使用最新15063 UCRT。此过程并不影响你兼容XP。")
-#else
-#pragma message(_ltlfilelen "warning: 10240 ucrt 存在的目的仅用于兼容Windows XP工具集正常编译，而你的程序并未采用XP兼容，强烈建议你迁徙目标平台到Windows 10 15063。")
+#ifndef _USING_V110_SDK71_
+#pragma message(_ltlfilelen "warning: 10240 ucrt 存在的目的仅用于兼容Windows XP工具集正常编译，而你的程序并未采用XP兼容，强烈建议你迁徙目标平台到Windows 10 16299。")
 #endif
+
 #elif _UCRT_VERISON == 10586
 #error "warning: 10586 ucrt 已经停止支持，请升级到15063 UCRT或者更高。"
 #elif _UCRT_VERISON == 14393
