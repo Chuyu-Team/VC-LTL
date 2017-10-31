@@ -351,12 +351,21 @@ extern "C"
 		return tmp;
 	}
 
+	__time32_t __cdecl _time32(
+		_Out_opt_ __time32_t* _Time
+	)
+	{
+		__time64_t tmp = gettime();
+		if (_Time)
+			*_Time = tmp;
+
+		return tmp;
+	}
+
 	__time64_t __cdecl _time64(
 		_Out_opt_ __time64_t* _Time
 	)
 	{
-		__time64_t gettime();
-
 		__time64_t tmp = gettime();
 		if (_Time)
 			*_Time = tmp;
