@@ -11,6 +11,7 @@
 #include <vcruntime_exception.h>
 #include <crtdbg.h>
 #include <corecrt_wtime.h>
+#include <corecrt_io.h>
 
 #include <stdio.h>
 #include <internal_shared.h>
@@ -361,6 +362,47 @@ extern "C"
 			*_Time = tmp;
 
 		return tmp;
+	}
+
+	int __cdecl _fseeki64(
+		_Inout_ FILE*   _Stream,
+		_In_    __int64 _Offset,
+		_In_    int     _Origin
+	)
+	{
+		if ((_Stream->_flags & 0x83) == 0 || ( _Origin != SEEK_SET &&_Origin != SEEK_CUR && _Origin != SEEK_END ))
+		{
+			//无效参数
+			errno = EINVAL;
+			return -1;
+		}
+
+		
+		//锁定文件
+		_lock_file(_Stream);
+
+		//unset_flags(_IOEOF);
+		_Stream->_flags = _Stream->_flags & 0xFFFFFFEF;
+
+		// If seeking relative to the current location, then convert to a seek
+		// relative to the beginning of the file.  This accounts for buffering,
+		// etc., by letting fseek() tell us where we are:
+		if (_Origin == SEEK_CUR)
+		{
+			_Offset += _ftelli64(_Stream);
+			_Origin = SEEK_SET;
+		}
+
+		//触发内部缓存刷新机制
+		auto result = fseek(_Stream, 0, SEEK_CUR);
+
+		if (result == 0)
+			result = _lseeki64(_Stream->_file, _Offset, _Origin) == -1 ? -1 : 0;
+
+		//解锁文件
+		_unlock_file(_Stream);
+
+		return result;
 	}
 
 #endif

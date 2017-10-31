@@ -267,7 +267,7 @@ _ACRTIMP int __cdecl fseek(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTIMP int __cdecl _fseeki64(
+_ACRTXPIMP int __cdecl _fseeki64(
     _Inout_ FILE*   _Stream,
     _In_    __int64 _Offset,
     _In_    int     _Origin
