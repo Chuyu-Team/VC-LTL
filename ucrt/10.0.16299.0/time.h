@@ -57,7 +57,7 @@ struct _timespec64
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // Nonzero if Daylight Savings Time is used
-_ACRTIMP int _daylight;
+_ACRTIMP extern int _daylight;
 
 _Check_return_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_daylight)
 __inline int* __cdecl __daylight(void)
@@ -66,7 +66,7 @@ __inline int* __cdecl __daylight(void)
 }
 
 // Offset for Daylight Savings Time
-_ACRTIMP long _dstbias;
+_ACRTIMP extern long _dstbias;
 
 _Check_return_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_dstbias)
 __inline long* __cdecl __dstbias(void)
@@ -75,7 +75,7 @@ __inline long* __cdecl __dstbias(void)
 }
 
 // Difference in seconds between GMT and local time
-_ACRTIMP long _timezone;
+_ACRTIMP extern long _timezone;
 
 _Check_return_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_timezone)
 __inline long* __cdecl __timezone(void)
@@ -84,7 +84,7 @@ __inline long* __cdecl __timezone(void)
 }
 
 // Standard and Daylight Savings Time time zone names
-_ACRTIMP char** _tzname;
+_ACRTIMP extern char** _tzname;
 
 _Check_return_ _Deref_ret_z_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_tzname)
 __inline char** __cdecl __tzname(void)

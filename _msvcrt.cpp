@@ -55,7 +55,7 @@ extern "C"
 	};
 
 
-	__declspec(dllimport) _iobuf _iob[_IOB_ENTRIES];
+	__declspec(dllimport) extern _iobuf _iob[_IOB_ENTRIES];
 
 	FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
