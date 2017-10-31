@@ -221,12 +221,18 @@ _Check_return_opt_ _ACRTIMP int __cdecl _set_error_mode(_In_ int _Mode);
     _ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
     _ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
+	_ACRTIMP extern char const* _sys_errlist[];
     // This is non-const for backwards compatibility; do not modify it.
-    _ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void);
-    #define _sys_errlist (__sys_errlist())
+	__inline _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void)
+	{
+		return (char**)_sys_errlist;
+	}
 
-    _ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) int * __cdecl __sys_nerr(void);
-    #define _sys_nerr (*__sys_nerr())
+	_ACRTIMP extern const int _sys_nerr;
+	__inline _CRT_INSECURE_DEPRECATE(strerror) int * __cdecl __sys_nerr(void)
+	{
+		return (int*)&_sys_nerr;
+	}
 
     _ACRTIMP void __cdecl perror(_In_opt_z_ char const* _ErrMsg);
 #endif // _CRT_FUNCTIONS_REQUIRED

@@ -12,4 +12,7 @@ _dstbias DATA
 
 __uncaught_exception
 
+_getpid
 
+_sys_nerr DATA
+_sys_errlist DATA

@@ -4,7 +4,6 @@ LIBRARY msvcrt.dll
 
 EXPORTS
 
-
 ;以下导出符号微软原生没有提供
 _environ DATA
 _wenviron DATA
@@ -12,3 +11,8 @@ _wenviron DATA
 _dstbias DATA
 
 __uncaught_exception
+
+_getpid
+
+_sys_nerr DATA
+_sys_errlist DATA
