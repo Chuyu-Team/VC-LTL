@@ -52,9 +52,17 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _Out_opt_ PDWORD   length
     );
 
-#ifdef _ATL_XP_TARGETING
+#ifndef _NONE_
 
 #define _NO_APPLY(a,b)
+
+//_NO_APPLY_Vista 在Vista以及以上平台不应用
+#ifdef _ATL_XP_TARGETING
+#define _NO_APPLY_Vista _APPLY
+#else
+#define _NO_APPLY_Vista(a,b)
+#endif
+
 
 #define _ACRT_APPLY_TO_LATE_BOUND_MODULES(_APPLY)                                                        \
     _APPLY(api_ms_win_core_datetime_l1_1_1,              "api-ms-win-core-datetime-l1-1-1"             ) \
@@ -94,7 +102,7 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(GetLastActivePopup,                          ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
     _NO_APPLY(GetLocaleInfoEx,                             ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(GetProcessWindowStation,                     ({ ext_ms_win_ntuser_windowstation_l1_1_0,       user32                                     })) \
-    _APPLY(GetSystemTimePreciseAsFileTime,              ({ api_ms_win_core_sysinfo_l1_2_1                                                           })) \
+    _NO_APPLY_Vista(GetSystemTimePreciseAsFileTime,        ({ api_ms_win_core_sysinfo_l1_2_1                                                           })) \
     _NO_APPLY(GetTimeFormatEx,                             ({ api_ms_win_core_datetime_l1_1_1,              kernel32                                   })) \
     _NO_APPLY(GetUserDefaultLocaleName,                    ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(GetUserObjectInformationW,                   ({ ext_ms_win_ntuser_windowstation_l1_1_0,       user32                                     })) \
@@ -102,8 +110,8 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(InitializeCriticalSectionEx,                 ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
     _NO_APPLY(IsValidLocaleName,                           ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(LCMapStringEx,                               ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
-    _APPLY(LCIDToLocaleName,                            ({ api_ms_win_core_localization_obsolete_l1_2_0, kernel32                                   })) \
-    _APPLY(LocaleNameToLCID,                            ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
+    _NO_APPLY_Vista(LCIDToLocaleName,                      ({ api_ms_win_core_localization_obsolete_l1_2_0, kernel32                                   })) \
+    _NO_APPLY_Vista(LocaleNameToLCID,                      ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(LocateXStateFeature,                         ({ api_ms_win_core_xstate_l2_1_0,                kernel32                                   })) \
     _NO_APPLY(MessageBoxA,                                 ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
     _NO_APPLY(MessageBoxW,                                 ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
@@ -114,8 +122,17 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(AppPolicyGetShowDeveloperDiagnostic,         ({ api_ms_win_appmodel_runtime_l1_1_2                                                       })) \
     _NO_APPLY(AppPolicyGetWindowingModel,                  ({ api_ms_win_appmodel_runtime_l1_1_2                                                       })) \
     _NO_APPLY(SetThreadStackGuarantee,                     ({ api_ms_win_core_processthreads_l1_1_2,        kernel32                                   })) \
-    _NO_APPLY(SystemFunction036,                           ({ api_ms_win_security_systemfunctions_l1_1_0,   advapi32                                   }))\
-    _APPLY(InitOnceExecuteOnce,                           ({ api_ms_win_core_synch_l1_2_0,                  kernel32                                   }))
+    _NO_APPLY(SystemFunction036,                           ({ api_ms_win_security_systemfunctions_l1_1_0,   advapi32                                   })) \
+    _APPLY(InitOnceExecuteOnce,                            ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(InitializeConditionVariable,                    ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(SleepConditionVariableCS,                       ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(WakeConditionVariable,                          ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(WakeAllConditionVariable,                       ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(InitializeSRWLock,                              ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(AcquireSRWLockExclusive,                        ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(TryAcquireSRWLockExclusive,                     ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _APPLY(ReleaseSRWLockExclusive,                        ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _APPLY(SleepConditionVariableSRW,                      ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   }))
 
 namespace
 {
@@ -1152,3 +1169,196 @@ __Error:
 
 #endif
 }
+
+
+EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
+	_Out_ PCONDITION_VARIABLE ConditionVariable
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return InitializeConditionVariable(ConditionVariable);
+#else
+	if (auto const pInitializeConditionVariable = try_get_InitializeConditionVariable())
+	{
+		return pInitializeConditionVariable(ConditionVariable);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
+	_Inout_ PCONDITION_VARIABLE ConditionVariable,
+	_Inout_ PCRITICAL_SECTION   CriticalSection,
+	_In_    DWORD               dwMilliseconds
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return SleepConditionVariableCS(ConditionVariable, CriticalSection, dwMilliseconds);
+#else
+	if (auto const pSleepConditionVariableCS = try_get_SleepConditionVariableCS())
+	{
+		return pSleepConditionVariableCS(ConditionVariable, CriticalSection, dwMilliseconds);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+EXTERN_C void WINAPI __crtWakeConditionVariable(
+	_Inout_ PCONDITION_VARIABLE ConditionVariable
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return WakeConditionVariable(ConditionVariable);
+#else
+	if (auto const pWakeConditionVariable = try_get_WakeConditionVariable())
+	{
+		return pWakeConditionVariable(ConditionVariable);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+EXTERN_C VOID __crtWakeAllConditionVariable(
+	_Inout_ PCONDITION_VARIABLE ConditionVariable
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return WakeAllConditionVariable(ConditionVariable);
+#else
+	if (auto const pWakeAllConditionVariable = try_get_WakeAllConditionVariable())
+	{
+		return pWakeAllConditionVariable(ConditionVariable);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+EXTERN_C VOID WINAPI __crtInitializeSRWLock(
+	_Out_ PSRWLOCK SRWLock
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return InitializeSRWLock(SRWLock);
+#else
+	if (auto const pInitializeSRWLock = try_get_InitializeSRWLock())
+	{
+		return pInitializeSRWLock(SRWLock);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
+	_Inout_ PSRWLOCK SRWLock
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return AcquireSRWLockExclusive(SRWLock);
+#else
+	if (auto const pAcquireSRWLockExclusive = try_get_AcquireSRWLockExclusive())
+	{
+		return pAcquireSRWLockExclusive(SRWLock);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
+	_Inout_ PSRWLOCK SRWLock
+)
+{
+	if (auto const pTryAcquireSRWLockExclusive = try_get_TryAcquireSRWLockExclusive())
+	{
+		return pTryAcquireSRWLockExclusive(SRWLock);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+}
+
+
+EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
+	_Inout_ PSRWLOCK SRWLock
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return ReleaseSRWLockExclusive(SRWLock);
+#else
+	if (auto const pReleaseSRWLockExclusive = try_get_ReleaseSRWLockExclusive())
+	{
+		return pReleaseSRWLockExclusive(SRWLock);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+
+EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
+	_Inout_ PCONDITION_VARIABLE ConditionVariable,
+	_Inout_ PSRWLOCK            SRWLock,
+	_In_    DWORD               dwMilliseconds,
+	_In_    ULONG               Flags
+)
+{
+#ifndef _ATL_XP_TARGETING
+	return SleepConditionVariableSRW(ConditionVariable, SRWLock, dwMilliseconds, Flags);
+#else
+	if (auto const pSleepConditionVariableSRW = try_get_SleepConditionVariableSRW())
+	{
+		return pSleepConditionVariableSRW(ConditionVariable, SRWLock, dwMilliseconds, Flags);
+	}
+	else
+	{
+		//不存在接口则崩溃处理
+		abort();
+	}
+#endif
+}
+
+
+EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available()
+{
+
+	// TryAcquireSRWLockExclusive ONLY available on Win7+
+	//DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNTRYACQUIRESRWLOCKEXCLUSIVE, TryAcquireSRWLockExclusive, pfTryAcquireSRWLockExclusive);
+	return try_get_TryAcquireSRWLockExclusive() != nullptr;
+}
+
+#ifdef _ATL_XP_TARGETING
+EXTERN_C BOOLEAN __cdecl are_vista_sync_apis_available()
+{
+	// InitializeConditionVariable ONLY available on Vista+
+	//DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNINITIALIZECONDITIONVARIABLE, InitializeConditionVariable, pfInitializeConditionVariable);
+	return try_get_InitializeConditionVariable() != nullptr;
+}
+#endif

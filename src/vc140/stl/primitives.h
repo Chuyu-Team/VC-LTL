@@ -16,7 +16,8 @@
 #include <crtdefs.h>
 #include <windows.h>
 #include <stdlib.h>
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 #include <new>
 #include <exception>
 
@@ -66,7 +67,7 @@ namespace details
     public:
         stl_critical_section_vista()
         {
-            __crtInitializeCriticalSectionEx(&_M_critical_section, 4000, 0);
+			InitializeCriticalSectionAndSpinCount(&_M_critical_section, 4000);
         }
 
         stl_critical_section_vista(const stl_critical_section_vista&) = delete;
@@ -316,27 +317,31 @@ namespace details
 
 #pragma warning(pop)
 
-    inline bool are_win7_sync_apis_available()
-    {
-        #if _STL_WIN32_WINNT >= _WIN32_WINNT_WIN7
-        return true;
-        #else
-        // TryAcquireSRWLockExclusive ONLY available on Win7+
-        DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNTRYACQUIRESRWLOCKEXCLUSIVE, TryAcquireSRWLockExclusive, pfTryAcquireSRWLockExclusive);
-        return pfTryAcquireSRWLockExclusive != nullptr;
-        #endif
-    }
+	EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available();
+	//{
+ //       #if _STL_WIN32_WINNT >= _WIN32_WINNT_WIN7
+ //       return true;
+ //       #else
+ //       // TryAcquireSRWLockExclusive ONLY available on Win7+
+ //       DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNTRYACQUIRESRWLOCKEXCLUSIVE, TryAcquireSRWLockExclusive, pfTryAcquireSRWLockExclusive);
+ //       return pfTryAcquireSRWLockExclusive != nullptr;
+ //       #endif
+ //   }
 
-    inline bool are_vista_sync_apis_available()
-    {
-        #if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
-        return true;
-        #else
-        // InitializeConditionVariable ONLY available on Vista+
-        DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNINITIALIZECONDITIONVARIABLE, InitializeConditionVariable, pfInitializeConditionVariable);
-        return pfInitializeConditionVariable != nullptr;
-        #endif
-    }
+#if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
+#define are_vista_sync_apis_available() true
+#else
+	EXTERN_C BOOLEAN __cdecl are_vista_sync_apis_available();
+#endif
+	//{
+ //       #if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
+ //       return true;
+ //       #else
+ //       // InitializeConditionVariable ONLY available on Vista+
+ //       DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNINITIALIZECONDITIONVARIABLE, InitializeConditionVariable, pfInitializeConditionVariable);
+ //       return pfInitializeConditionVariable != nullptr;
+ //       #endif
+ //   }
 
     inline void create_stl_critical_section(stl_critical_section_interface *p)
     {
