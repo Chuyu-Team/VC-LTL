@@ -6,6 +6,7 @@
 // Critical sections used for synchronization in the CoreCRT.
 //
 #include <corecrt_internal.h>
+#include "..\..\src\winapi_thunks.h"
 
 
 
@@ -49,33 +50,27 @@
 //    return true;
 //}
 
-extern "C" __declspec(dllimport) void __cdecl _lock(
-	int locknum
-);
-extern "C" __declspec(dllimport) void __cdecl _unlock(
-	int locknum
-);
 
 
-extern "C" void __cdecl __acrt_lock(_In_ __acrt_lock_id _Lock)
-{
-    //EnterCriticalSection(&__acrt_lock_table[_Lock]);
-	_lock(_Lock + 8);
-}
-
-extern "C" void __cdecl __acrt_unlock(_In_ __acrt_lock_id _Lock)
-{
-    //LeaveCriticalSection(&__acrt_lock_table[_Lock]);
-	_unlock(_Lock + 8);
-}
+//extern "C" void __cdecl __acrt_lock(_In_ __acrt_lock_id _Lock)
+//{
+//    //EnterCriticalSection(&__acrt_lock_table[_Lock]);
+//	_lock(_Lock);
+//}
+//
+//extern "C" void __cdecl __acrt_unlock(_In_ __acrt_lock_id _Lock)
+//{
+//    //LeaveCriticalSection(&__acrt_lock_table[_Lock]);
+//	_unlock(_Lock);
+//}
 
 extern "C" void __cdecl _lock_locales()
 {
 	//__acrt_eagerly_load_locale_apis();
-	_lock(__acrt_locale_lock + 8);
+	_lock(__acrt_locale_lock);
 }
 
 extern "C" void __cdecl _unlock_locales()
 {
-	_unlock(__acrt_locale_lock + 8);
+	_unlock(__acrt_locale_lock);
 }

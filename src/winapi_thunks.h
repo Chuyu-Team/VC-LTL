@@ -124,4 +124,43 @@ int __cdecl __crtLCMapStringA
 );
 
 
+/* Lock symbols */
+
+#define _SIGNAL_LOCK    0       /* lock for signal()                */
+#define _IOB_SCAN_LOCK  1       /* _iob[] table lock                */
+#define _TMPNAM_LOCK    2       /* lock global tempnam variables    */
+#define _CONIO_LOCK     3       /* lock for conio routines          */
+#define _HEAP_LOCK      4       /* lock for heap allocator routines */
+#define _UNDNAME_LOCK   5       /* lock for unDName() routine       */
+#define _TIME_LOCK      6       /* lock for time functions          */
+#define _ENV_LOCK       7       /* lock for environment variables   */
+#define _EXIT_LOCK1     8       /* lock #1 for exit code            */
+#define _POPEN_LOCK     9       /* lock for _popen/_pclose database */
+#define _LOCKTAB_LOCK   10      /* lock to protect semaphore lock table */
+#define _OSFHND_LOCK    11      /* lock to protect _osfhnd array    */
+#define _SETLOCALE_LOCK 12      /* lock for locale handles, etc.    */
+#define _MB_CP_LOCK     13      /* lock for multibyte code page     */
+#define _TYPEINFO_LOCK  14      /* lock for type_info access        */
+#define _DEBUG_LOCK     15      /* lock for debug global structs    */
+
+#define _STREAM_LOCKS   16      /* Table of stream locks            */
+
+extern "C" __declspec(dllimport) void __cdecl _lock(
+	int locknum
+);
+extern "C" __declspec(dllimport) void __cdecl _unlock(
+	int locknum
+);
+
+EXTERN_C void _amsg_exit(
+	int rterrnum
+);
+
+#define MakeMiniVersion(v1,v2) (DWORD)(v2|(v1<<16))
+#define MakeVersion(v1,v2,v3,v4) (UINT64)(((UINT64)(v4))|((UINT64)v3<<16)|((UINT64)v2<<32)|((UINT64)v1<<48))
+
+DWORD __LTL_GetOsMinVersion();
+
+UINT64 __LTL_GetOsVersion();
+
 EXTERN_C_END

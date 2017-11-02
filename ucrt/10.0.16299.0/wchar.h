@@ -47,7 +47,7 @@ typedef wchar_t _Wint_t;
         );
 
     _Check_return_opt_
-    _ACRTIMP _locale_t __cdecl _wcreate_locale(
+    extern _locale_t __cdecl _wcreate_locale(
         _In_   int            _Category,
         _In_z_ wchar_t const* _Locale
         );

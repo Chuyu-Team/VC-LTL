@@ -399,7 +399,7 @@ typedef struct __crt_locale_strings
     wchar_t szLocaleName[LOCALE_NAME_MAX_LENGTH];
 } __crt_locale_strings;
 
-typedef struct __crt_lc_time_data
+typedef struct _lc_time_data_msvcrt
 {
     char*    wday_abbr [ 7];
     char*    wday      [ 7];
@@ -409,8 +409,13 @@ typedef struct __crt_lc_time_data
     char*    ww_sdatefmt;
     char*    ww_ldatefmt;
     char*    ww_timefmt;
+
+	LCID ww_lcid;  //for msvcrt等效_W_ww_locale_name
+
     int      ww_caltype;
     long     refcount;
+
+	//以下成员仅Win7以及更高版本存在
     wchar_t* _W_wday_abbr [ 7];
     wchar_t* _W_wday      [ 7];
     wchar_t* _W_month_abbr[12];
@@ -419,8 +424,8 @@ typedef struct __crt_lc_time_data
     wchar_t* _W_ww_sdatefmt;
     wchar_t* _W_ww_ldatefmt;
     wchar_t* _W_ww_timefmt;
-    wchar_t* _W_ww_locale_name;
-} __crt_lc_time_data;
+    //wchar_t* _W_ww_locale_name;
+} _lc_time_data_msvcrt, __crt_lc_time_data;
 
 typedef struct __crt_ctype_compatibility_data
 {
@@ -428,23 +433,28 @@ typedef struct __crt_ctype_compatibility_data
     int           is_clike;
 } __crt_ctype_compatibility_data;
 
-typedef struct __crt_qualified_locale_data
+typedef struct _setloc_struct_msvcrt
 {
     // Static data for qualified locale code
-    wchar_t const* pchLanguage;
-    wchar_t const* pchCountry;
+    char const*    pchLanguage;
+	char const*    pchCountry;
     int            iLocState;
     int            iPrimaryLen;
     BOOL           bAbbrevLanguage;
     BOOL           bAbbrevCountry;
+	LCID           lcidLanguage;
+	LCID           lcidCountry;
+	/* expand_locale static variables */
+	LC_ID          _cacheid; //等效_cacheLocaleName
+
     UINT           _cachecp;
-    wchar_t        _cachein [MAX_LC_LEN];
-    wchar_t        _cacheout[MAX_LC_LEN];
+	char           _cachein [MAX_LC_LEN];
+	char           _cacheout[MAX_LC_LEN];
 
     // Static data for LC_CTYPE
     __crt_ctype_compatibility_data _Loc_c[5];
-    wchar_t                        _cacheLocaleName[LOCALE_NAME_MAX_LENGTH];
-} __crt_qualified_locale_data;
+    //wchar_t                        _cacheLocaleName[LOCALE_NAME_MAX_LENGTH];
+} _setloc_struct_msvcrt,_setloc_struct,__crt_qualified_locale_data;
 
 typedef struct __crt_qualified_locale_data_downlevel
 {
@@ -454,44 +464,47 @@ typedef struct __crt_qualified_locale_data_downlevel
     LCID lcidCountry;
 } __crt_qualified_locale_data_downlevel;
 
-typedef struct __crt_multibyte_data
+typedef struct _multibyte_data_msvcrt
 {
     long           refcount;
     int            mbcodepage;
     int            ismbcodepage;
+	int mblcid; //for msvcrt
     unsigned short mbulinfo[6];
     unsigned char  mbctype[257];
     unsigned char  mbcasemap[256];
-    wchar_t const* mblocalename;
-} __crt_multibyte_data;
+    //wchar_t const* mblocalename;
+} _multibyte_data_msvcrt, _multibyte_data,__crt_multibyte_data;
 
-typedef struct __crt_locale_refcount
-{
-    char*    locale;
-    wchar_t* wlocale;
-    long*    refcount;
-    long*    wrefcount;
-} __crt_locale_refcount;
+////定义转移至corecrt.h
+//typedef struct __crt_locale_refcount
+//{
+//    char*    locale;
+//    wchar_t* wlocale;
+//    long*    refcount;
+//    long*    wrefcount;
+//} __crt_locale_refcount;
 
-typedef struct __crt_locale_data
-{
-    __crt_locale_data_public  _public;
-    long                      refcount;
-    unsigned int              lc_collate_cp;
-    unsigned int              lc_time_cp;
-    int                       lc_clike;
-    __crt_locale_refcount     lc_category[6];
-    long*                     lconv_intl_refcount;
-    long*                     lconv_num_refcount;
-    long*                     lconv_mon_refcount;
-    struct lconv*             lconv;
-    long*                     ctype1_refcount;
-    unsigned short*           ctype1;
-    unsigned char const*      pclmap;
-    unsigned char const*      pcumap;
-    __crt_lc_time_data const* lc_time_curr;
-    wchar_t*                  locale_name[6];
-} __crt_locale_data;
+//定义转移至corecrt.h
+//typedef struct __crt_locale_data
+//{
+//    __crt_locale_data_public  _public;
+//    long                      refcount;
+//    unsigned int              lc_collate_cp;
+//    unsigned int              lc_time_cp;
+//    int                       lc_clike;
+//    __crt_locale_refcount     lc_category[6];
+//    long*                     lconv_intl_refcount;
+//    long*                     lconv_num_refcount;
+//    long*                     lconv_mon_refcount;
+//    struct lconv*             lconv;
+//    long*                     ctype1_refcount;
+//    unsigned short*           ctype1;
+//    unsigned char const*      pclmap;
+//    unsigned char const*      pcumap;
+//    __crt_lc_time_data const* lc_time_curr;
+//    wchar_t*                  locale_name[6];
+//} __crt_locale_data;
 
 // Unusual: < 0 => string length
 //           else scan up to specified size or string length, whichever comes first
@@ -744,7 +757,7 @@ __inline int __CRTDECL __acrt_isleadbyte_l_noupdate(
     _In_ _locale_t const locale
     )
 {
-    return locale->locinfo->_public._locale_pctype[(unsigned char)c] & _LEADBYTE;
+    return locale->locinfo->_locale_pctype[(unsigned char)c] & _LEADBYTE;
 }
 
 
@@ -795,51 +808,175 @@ typedef struct __acrt_thread_parameter
 // AppCRT Per-Thread Data
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-typedef struct __acrt_ptd
+typedef struct _ptd_msvcrt
 {
+	unsigned long   _tid;       /* thread ID */
+
+
+	uintptr_t _thandle;         /* thread handle */
+
+	int                  _terrno;          // errno value
+	unsigned long        _tdoserrno;       // _doserrno value
+	unsigned int    _fpds;      /* Floating Point data segment */
+
+	//unsigned long   _holdrand;  /* rand() seed value */
+	unsigned int         _rand_state;      // Previous value of rand()
+
+	//char *      _token;         /* ptr to strtok() token */
+	//wchar_t *   _wtoken;        /* ptr to wcstok() token */
+	//unsigned char * _mtoken;    /* ptr to _mbstok() token */
+	
+	// Per-thread strtok(), wcstok(), and mbstok() data:
+	char*                _strtok_token;
+	wchar_t*             _wcstok_token;
+	unsigned char*       _mbstok_token;
+
+	// Per-thread error message data:
+	char*      _strerror_buffer;            // Pointer to strerror()  / _strerror()  buffer _errmsg
+	wchar_t*   _wcserror_buffer;            // Pointer to _wcserror() / __wcserror() buffer _werrmsg
+
+	//char *      _namebuf0;      /* ptr to tmpnam() buffer */
+	//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
+	// Per-thread tmpnam() data:
+	char*                _tmpnam_narrow_buffer;
+	wchar_t*             _tmpnam_wide_buffer;
+
+	char *      _namebuf1;      /* ptr to tmpfile() buffer */
+	wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
+	//char *      _asctimebuf;    /* ptr to asctime() buffer */
+	//wchar_t *   _wasctimebuf;   /* ptr to _wasctime() buffer */
+	//void *      _gmtimebuf;     /* ptr to gmtime() structure */
+	//char *      _cvtbuf;        /* ptr to ecvt()/fcvt buffer */
+
+	// Per-thread time library data:
+	char*                _asctime_buffer;  // Pointer to asctime() buffer
+	wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
+	struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
+
+	char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
+
+
+	//unsigned char _con_ch_buf[MB_LEN_MAX];
+	/* ptr to putch() buffer */
+	//unsigned short _ch_buf_used;   /* if the _con_ch_buf is used */
+
+	// The buffer used by _putch(), and the flag indicating whether the buffer
+	// is currently in use or not.
+	unsigned char  _putch_buffer[MB_LEN_MAX];
+	unsigned short _putch_buffer_used;
+
+								   /* following fields are needed by _beginthread code */
+	void *      _initaddr;      /* initial user thread address */
+	void *      _initarg;       /* initial user thread argument */
+
+								/* following three fields are needed to support signal handling and
+								* runtime errors */
+	void *      _pxcptacttab;   /* ptr to exception-action table */
+	void *      _tpxcptinfoptrs; /* ptr to exception info pointers */
+	int         _tfpecode;      /* float point exception code */
+
+								/* pointer to the copy of the multibyte character information used by
+								* the thread */
+	//struct __crt_multibyte_data*  ptmbcinfo;
+	_multibyte_data_msvcrt*                  _multibyte_info;
+
+	/* pointer to the copy of the locale informaton used by the thead */
+	//__crt_locale_data*  ptlocinfo;
+	_locale_data_msvcrt*                     _locale_info;
+
+	int                                    _own_locale;   // If 1, this thread owns its locale
+
+								/* following field is needed by NLG routines */
+	unsigned long   _NLG_dwCode;
+
+	/*
+	* Per-Thread data needed by C++ Exception Handling
+	*/
+	terminate_handler      _terminate;    // terminate() routine
+	void *      _unexpected;    /* unexpected() routine */
+	void *      _translator;    /* S.E. translator */
+	void *      _purecall;      /* called when pure virtual happens */
+	void *      _curexception;  /* current exception */
+	void *      _curcontext;    /* current exception context */
+	int         _ProcessingThrow; /* for uncaught_exception */
+	void *              _curexcspec;    /* for handling exceptions thrown from std::unexpected */
+#if defined (_M_IA64) || defined (_M_AMD64)
+	void *      _pExitContext;
+	void *      _pUnwindContext;
+	void *      _pFrameInfoChain;
+	unsigned __int64    _ImageBase;
+#if defined (_M_IA64)
+	unsigned __int64    _TargetGp;
+#endif  /* defined (_M_IA64) */
+	unsigned __int64    _ThrowImageBase;
+	void *      _pForeignException;
+#elif defined (_M_IX86)
+	void *      _pFrameInfoChain;
+#endif  /* defined (_M_IX86) */
+	__crt_qualified_locale_data            _setloc_data;
+
+#ifdef _M_IX86
+	void *      _encode_ptr;    /* EncodePointer() routine */
+	void *      _decode_ptr;    /* DecodePointer() routine */
+#endif  /* _M_IX86 */
+
+	void *      _reserved1;     /* nothing */
+	void *      _reserved2;     /* nothing */
+	void *      _reserved3;     /* nothing */
+
+	int _cxxReThrow;        /* Set to True if it's a rethrown C++ Exception */
+
+	unsigned long __initDomain;     /* initial domain used by _beginthread[ex] for managed function */
+
+
+#if 0
+	//**************************************************华丽的分割线***************************************************************
+
+
+
     // These three data members support signal handling and runtime errors
     struct __crt_signal_action_t* _pxcptacttab;     // Pointer to the exception-action table
     EXCEPTION_POINTERS*           _tpxcptinfoptrs;  // Pointer to the exception info pointers
     int                           _tfpecode;        // Last floating point exception code
 
-    terminate_handler  _terminate;  // terminate() routine
+    //terminate_handler  _terminate;  // terminate() routine
 
-    int                  _terrno;          // errno value
-    unsigned long        _tdoserrno;       // _doserrno value
+    //int                  _terrno;          // errno value
+    //unsigned long        _tdoserrno;       // _doserrno value
 
-    unsigned int         _rand_state;      // Previous value of rand()
+    //unsigned int         _rand_state;      // Previous value of rand()
 
     // Per-thread strtok(), wcstok(), and mbstok() data:
-    char*                _strtok_token;
-    unsigned char*       _mbstok_token;
-    wchar_t*             _wcstok_token;
+    //char*                _strtok_token;
+    //unsigned char*       _mbstok_token;
+    //wchar_t*             _wcstok_token;
 
     // Per-thread tmpnam() data:
-    char*                _tmpnam_narrow_buffer;
-    wchar_t*             _tmpnam_wide_buffer;
+    //char*                _tmpnam_narrow_buffer;
+    //wchar_t*             _tmpnam_wide_buffer;
 
     // Per-thread time library data:
-    char*                _asctime_buffer;  // Pointer to asctime() buffer
-    wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
-    struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
+    //char*                _asctime_buffer;  // Pointer to asctime() buffer
+    //wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
+    //struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
 
-    char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
+    //char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
 
     // Per-thread error message data:
-    char*      _strerror_buffer;            // Pointer to strerror()  / _strerror()  buffer
-    wchar_t*   _wcserror_buffer;            // Pointer to _wcserror() / __wcserror() buffer
+    //char*      _strerror_buffer;            // Pointer to strerror()  / _strerror()  buffer
+    //wchar_t*   _wcserror_buffer;            // Pointer to _wcserror() / __wcserror() buffer
 
     // Locale data:
-    __crt_multibyte_data*                  _multibyte_info;
-    __crt_locale_data*                     _locale_info;
-    __crt_qualified_locale_data            _setloc_data;
+    //__crt_multibyte_data*                  _multibyte_info;
+    //__crt_locale_data*                     _locale_info;
+    //__crt_qualified_locale_data            _setloc_data;
     __crt_qualified_locale_data_downlevel* _setloc_downlevel_data;
-    int                                    _own_locale;   // If 1, this thread owns its locale
+    //int                                    _own_locale;   // If 1, this thread owns its locale
 
     // The buffer used by _putch(), and the flag indicating whether the buffer
     // is currently in use or not.
-    unsigned char  _putch_buffer[MB_LEN_MAX];
-    unsigned short _putch_buffer_used;
+    //unsigned char  _putch_buffer[MB_LEN_MAX];
+    //unsigned short _putch_buffer_used;
 
     // The thread-local invalid parameter handler
     _invalid_parameter_handler _thread_local_iph;
@@ -848,10 +985,21 @@ typedef struct __acrt_ptd
     // then this points to the context with which the thread was created.  If
     // this thread was not started by the CRT, this pointer is null.
     __acrt_thread_parameter* _beginthread_context;
+#endif
+} _ptd_msvcrt,__acrt_ptd;
 
-} __acrt_ptd;
+extern "C" __declspec(dllimport) void __cdecl _lock(
+	int locknum
+);
+extern "C" __declspec(dllimport) void __cdecl _unlock(
+	int locknum
+);
 
-__acrt_ptd* __cdecl __acrt_getptd(void);
+
+EXTERN_C __acrt_ptd __cdecl _getptd_noexit(void);
+
+
+EXTERN_C __acrt_ptd* __cdecl __acrt_getptd(void);
 __acrt_ptd* __cdecl __acrt_getptd_head(void);
 __acrt_ptd* __cdecl __acrt_getptd_noexit(void);
 void        __cdecl __acrt_freeptd(void);
@@ -869,21 +1017,21 @@ int  __cdecl __acrt_errno_from_os_error(unsigned long);
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 typedef enum __acrt_lock_id
 {
-    __acrt_heap_lock,
-    __acrt_debug_lock,
-    __acrt_exit_lock,
-    __acrt_signal_lock,
-    __acrt_locale_lock,
-    __acrt_multibyte_cp_lock,
-    __acrt_time_lock,
-    __acrt_lowio_index_lock,
-    __acrt_stdio_index_lock,
-    __acrt_conio_lock,
-    __acrt_popen_lock,
-    __acrt_environment_lock,
-    __acrt_tempnam_lock,
-    __acrt_os_exit_lock,
-    __acrt_lock_count
+    __acrt_heap_lock = 4,
+    __acrt_debug_lock =15,
+    __acrt_exit_lock=8,
+    __acrt_signal_lock =0,
+    __acrt_locale_lock =12,
+    __acrt_multibyte_cp_lock=13,
+    __acrt_time_lock=6,
+    //__acrt_lowio_index_lock,
+    //__acrt_stdio_index_lock,
+    __acrt_conio_lock =3,
+    __acrt_popen_lock=9,
+    __acrt_environment_lock=7,
+    __acrt_tempnam_lock=2,
+    //__acrt_os_exit_lock,
+    //__acrt_lock_count
 } __acrt_lock_id;
 
 #define _CORECRT_SPINCOUNT 4000
@@ -906,9 +1054,9 @@ extern "C++"
         -> decltype(action())
     {
         return __crt_seh_guarded_call<decltype(action())>()(
-            [lock_id]() { __acrt_lock(lock_id); },
+            [lock_id]() { _lock(lock_id); },
             action,
-            [lock_id]() { __acrt_unlock(lock_id); });
+            [lock_id]() { _unlock(lock_id); });
     }
 }
 #endif

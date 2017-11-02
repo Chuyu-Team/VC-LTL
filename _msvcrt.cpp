@@ -386,7 +386,7 @@ extern "C"
 			return -1;
 		}
 
-		
+
 		//锁定文件
 		_lock_file(_Stream);
 
@@ -509,7 +509,7 @@ extern "C"
 	}
 #pragma intrinsic(cos)
 
-	#pragma function(exp)
+#pragma function(exp)
 	double __cdecl _exp_default(_In_ double _X)
 	{
 		return exp(_X);
@@ -967,17 +967,37 @@ extern "C"
 		}
 	}
 
-//	typedef struct {
-//		long osfhnd;    /* underlying OS file HANDLE */ //CreateFile返回的句柄
-//		char osfile;    /* attributes of file (e.g., open in text mode?) */
-//		char pipech;    /* one char buffer for handles opened on pipes */
-//#ifdef _MT
-//		int lockinitflag;
-//		CRITICAL_SECTION lock;
-//#endif  /* _MT */
-//	}   ioinfo;
-//
-//	__declspec(dllimport) ioinfo* __pioinfo[];
+	//	typedef struct {
+	//		long osfhnd;    /* underlying OS file HANDLE */ //CreateFile返回的句柄
+	//		char osfile;    /* attributes of file (e.g., open in text mode?) */
+	//		char pipech;    /* one char buffer for handles opened on pipes */
+	//#ifdef _MT
+	//		int lockinitflag;
+	//		CRITICAL_SECTION lock;
+	//#endif  /* _MT */
+	//	}   ioinfo;
+	//
+	//	__declspec(dllimport) ioinfo* __pioinfo[];
+	struct _ptd_msvcrt;
+
+	_ptd_msvcrt * __cdecl _getptd_noexit(void);
+
+
+	void _amsg_exit(
+		int rterrnum
+	);
+
+	_ptd_msvcrt * __cdecl __acrt_getptd(void)  /* return address of per-thread CRT data */
+	{
+		auto ptd = _getptd_noexit();
+
+		if (!ptd)
+		{
+			_amsg_exit(16);
+		}
+
+		return ptd;
+	}
 }
 
 #ifdef __cplusplus

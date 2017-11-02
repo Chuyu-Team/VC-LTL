@@ -80,7 +80,7 @@ extern void __cdecl _lock_locales(void);
 extern void __cdecl _unlock_locales(void);
 
 _Check_return_opt_
-_ACRTIMP int __cdecl _configthreadlocale(
+extern int __cdecl _configthreadlocale(
     _In_ int _Flag
     );
 
@@ -94,15 +94,15 @@ _Check_return_opt_
 _ACRTIMP struct lconv* __cdecl localeconv(void);
 
 _Check_return_opt_
-_ACRTIMP _locale_t __cdecl _get_current_locale(void);
+extern _locale_t __cdecl _get_current_locale(void);
 
 _Check_return_opt_
-_ACRTIMP _locale_t __cdecl _create_locale(
+extern _locale_t __cdecl _create_locale(
     _In_   int         _Category,
     _In_z_ char const* _Locale
     );
 
-_ACRTIMP void __cdecl _free_locale(
+extern void __cdecl _free_locale(
     _In_opt_ _locale_t _Locale
     );
 
@@ -114,7 +114,7 @@ _ACRTIMP wchar_t* __cdecl _wsetlocale(
     );
 
 _Check_return_opt_
-_ACRTIMP _locale_t __cdecl _wcreate_locale(
+extern _locale_t __cdecl _wcreate_locale(
     _In_   int            _Category,
     _In_z_ wchar_t const* _Locale
     );
