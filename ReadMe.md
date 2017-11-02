@@ -15,7 +15,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 * 无缝使用最新C/C++库以及最新编译器，无需使用陈旧的类库或者编译器，尽情的使用最新规范！
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
 * 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧~
-* 完善的C++基础类库支持，比如vector、set、iostream、stringstream、cin、cout……（目前刚刚支持，如果存在编译不通过的情况，还请帮忙纠正或者提交BUG）
+* 完善的C++基础类库支持，比如vector、set、iostream、stringstream、cin、cout……（如果存在编译不通过的情况，还请帮忙纠正或者提交BUG）
 
 ## 支持平台
 ### 支持的IDE
@@ -41,7 +41,19 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 > 由此所见，采用VC-LTL编译后的程序能兼容Windows XP以上所有操作系统。
 
 ## 使用方法：
-### 1. 将内容解压到工程目录VC-LTL
+### 1. 配置VC-LTL加载路径
+你可以在 1.1 或者1.2中任意选择一种VC-LTL加载方式
+
+#### 1.1 通过配置共享VC-LTL
+VC-LTL属性表优先从注册表加载路径。如果你希望在多个工程中共享VC-LTL那么此方法会比较友好。
+
+比如，你将VC-LTL下载至`D:\Src\VC-LTL`，然后创建注册表 `HKEY_CURRENT_USER\Code\VC-LTL`，并且添加名称为 `Root`，数据为`D:\Src\VC-LTL`的 值（REG_SZ） 。
+
+然后将其他在使用属性表（ltlvcrt.props/ltlvcrtWinXp.props），VC-LTL会优先从此目录加载。
+
+如果你并不希望使用注册表，那么可以考虑 1.2
+
+#### 1.2 将内容解压到工程目录VC-LTL
 比如你的Sln文件在 D:\MySln\MySln.sln，这时你把VC-LTL整个目录复制到D:\MySln\VC-LTL即可。
 
 
@@ -109,7 +121,7 @@ msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
 * [WinPCK](http://www.winpak.com/en/home/)
 * [RapidXml](http://rapidxml.sourceforge.net/)
 * [JsonCPP](https://github.com/open-source-parsers/jsoncpp)
-* [icu](http://source.icu-project.org/repos/icu/trunk) `99%兼容，暂时需要定义U_USE_STRTOD_L宏才能编译通过`
+* [icu](http://source.icu-project.org/repos/icu/trunk)
 * [SQLite](http://www.sqlite.org/download.html)
 * [LuaJIT](http://luajit.org/)
 
