@@ -1143,6 +1143,7 @@ EXTERN_C BOOL WINAPI __crtInitOnceExecuteOnce(
 			break;
 		case 1:
 			//尚未完成，继续等待
+			Sleep(0);
 			break;
 		case 0:
 			//同步完成，确认是处，调用指定函数
