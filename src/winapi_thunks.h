@@ -145,14 +145,14 @@ int __cdecl __crtLCMapStringA
 
 #define _STREAM_LOCKS   16      /* Table of stream locks            */
 
-extern "C" __declspec(dllimport) void __cdecl _lock(
+__declspec(dllimport) void __cdecl _lock(
 	int locknum
 );
-extern "C" __declspec(dllimport) void __cdecl _unlock(
+__declspec(dllimport) void __cdecl _unlock(
 	int locknum
 );
 
-EXTERN_C void _amsg_exit(
+void _amsg_exit(
 	int rterrnum
 );
 
