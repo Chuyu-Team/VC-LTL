@@ -44,10 +44,10 @@ extern "C"
 		return true;
 	}
 
-	void __std_terminate(void)
+	/*void __std_terminate(void)
 	{
 		terminate();
-	}
+	}*/
 
 
 	struct __crt_stdio_stream_data :public _iobuf
@@ -63,14 +63,14 @@ extern "C"
 		return &_iob[in];
 	}
 
-	unsigned long long __cdecl wcstoull(
+	/*unsigned long long __cdecl wcstoull(
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
 		_In_                     int            _Radix
 	)
 	{
 		return _wcstoui64(_String, _EndPtr, _Radix);
-	}
+	}*/
 
 	//系统自带有double，用此将其转换为float
 	float __cdecl strtof(
@@ -442,44 +442,44 @@ extern "C"
 #endif
 
 	//总是返回ture，因为老版本没有此函数，不过以前的 _matherr内部他会判断是否存在
-	bool __acrt_has_user_matherr()
+	bool __cdecl __acrt_has_user_matherr()
 	{
 		return true;
 	}
 
-	int __CRTDECL _matherr(_Inout_ struct _exception* _Except);
+	/*int __CRTDECL _matherr(_Inout_ struct _exception* _Except);
 
 	int __acrt_invoke_user_matherr(_Inout_ struct _exception* _Except)
 	{
 		return _matherr(_Except);
-	}
+	}*/
 
-	long long __cdecl wcstoll(
+	/*long long __cdecl wcstoll(
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
 		_In_                     int            _Radix
 	)
 	{
 		return _wcstoi64(_String, _EndPtr, _Radix);
-	}
+	}*/
 
-	long long __cdecl strtoll(
+	/*long long __cdecl strtoll(
 		_In_z_                   char const* _String,
 		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
 		_In_                     int         _Radix
 	)
 	{
 		return _strtoi64(_String, _EndPtr, _Radix);
-	}
+	}*/
 
-	unsigned long long __cdecl strtoull(
+	/*unsigned long long __cdecl strtoull(
 		_In_z_                   char const* _String,
 		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
 		_In_                     int         _Radix
 	)
 	{
 		return _strtoui64(_String, _EndPtr, _Radix);
-	}
+	}*/
 
 
 #ifdef _ATL_XP_TARGETING
@@ -500,83 +500,83 @@ extern "C"
 	}
 #endif
 
-#ifdef _X86_
-#include <math.h>
+//#ifdef _X86_
+//#include <math.h>
 
-#pragma function(acos)
-	double __cdecl _acos_default(_In_ double _X)
-	{
-		return acos(_X);
-	}
-#pragma intrinsic(acos)
+//#pragma function(acos)
+//	double __cdecl _acos_default(_In_ double _X)
+//	{
+//		return acos(_X);
+//	}
+//#pragma intrinsic(acos)
 
-#pragma function(asin)
-	double __cdecl _asin_default(_In_ double _X)
-	{
-		return asin(_X);
+//#pragma function(asin)
+//	double __cdecl _asin_default(_In_ double _X)
+//	{
+//		return asin(_X);
+//
+//	}
+//#pragma intrinsic(asin)
 
-	}
-#pragma intrinsic(asin)
+//#pragma function(atan)
+//	double __cdecl _atan_default(_In_ double _X)
+//	{
+//		return atan(_X);
+//
+//	}
+//#pragma intrinsic(atan)
 
-#pragma function(atan)
-	double __cdecl _atan_default(_In_ double _X)
-	{
-		return atan(_X);
+//#pragma function(cos)
+//	double __cdecl _cos_default(_In_ double _X)
+//	{
+//		return cos(_X);
+//
+//	}
+//#pragma intrinsic(cos)
 
-	}
-#pragma intrinsic(atan)
+//#pragma function(exp)
+//	double __cdecl _exp_default(_In_ double _X)
+//	{
+//		return exp(_X);
+//	}
+//#pragma intrinsic(exp)
 
-#pragma function(cos)
-	double __cdecl _cos_default(_In_ double _X)
-	{
-		return cos(_X);
+//#pragma function(pow)
+//	double __cdecl _pow_default(_In_ double _X, _In_ double _Y)
+//	{
+//		return pow(_X, _Y);
+//	}
+//#pragma intrinsic(pow)
 
-	}
-#pragma intrinsic(cos)
+//#pragma function(sin)
+//	double __cdecl _sin_default(_In_ double _X)
+//	{
+//		return sin(_X);
+//	}
+//#pragma intrinsic(sin)
 
-#pragma function(exp)
-	double __cdecl _exp_default(_In_ double _X)
-	{
-		return exp(_X);
-	}
-#pragma intrinsic(exp)
+//#pragma function(tan)
+//	double __cdecl _tan_default(_In_ double _X)
+//	{
+//		return tan(_X);
+//	}
+//#pragma intrinsic(tan)
 
-#pragma function(pow)
-	double __cdecl _pow_default(_In_ double _X, _In_ double _Y)
-	{
-		return pow(_X, _Y);
-	}
-#pragma intrinsic(pow)
+//#pragma function(log)
+//	double __cdecl _log_default(_In_ double _X)
+//	{
+//		return log(_X);
+//	}
+//#pragma intrinsic(log)
 
-#pragma function(sin)
-	double __cdecl _sin_default(_In_ double _X)
-	{
-		return sin(_X);
-	}
-#pragma intrinsic(sin)
+//#pragma function(log10)
+//	double __cdecl _log10_default(_In_ double _X)
+//	{
+//		return log10(_X);
+//	}
+//#pragma intrinsic(log10)
 
-#pragma function(tan)
-	double __cdecl _tan_default(_In_ double _X)
-	{
-		return tan(_X);
-	}
-#pragma intrinsic(tan)
-
-#pragma function(log)
-	double __cdecl _log_default(_In_ double _X)
-	{
-		return log(_X);
-	}
-#pragma intrinsic(log)
-
-#pragma function(log10)
-	double __cdecl _log10_default(_In_ double _X)
-	{
-		return log10(_X);
-	}
-#pragma intrinsic(log10)
-
-#endif
+//#endif
 
 	__declspec(dllimport) void __cdecl _lock(
 		int locknum
@@ -782,7 +782,7 @@ extern "C"
 	extern "C++"
 	{
 		//通过文件句柄获取_stat64
-		static __inline int __cdecl _tstat64(
+		static __forceinline int __cdecl _tstat64(
 			_In_z_ int     _FileHandle,
 			_Out_  struct _stat64* _Stat
 		)
@@ -791,7 +791,7 @@ extern "C"
 		}
 
 		//通过ASCII路径获取_stat64
-		static __inline int __cdecl _tstat64(
+		static __forceinline int __cdecl _tstat64(
 			_In_z_ char const*     _FileName,
 			_Out_  struct _stat64* _Stat
 		)
@@ -800,7 +800,7 @@ extern "C"
 		}
 
 		//通过Unicode路径获取_stat64
-		static __inline int __cdecl _tstat64(
+		static __forceinline int __cdecl _tstat64(
 			_In_z_ wchar_t const*     _FileName,
 			_Out_  struct _stat64* _Stat
 		)
@@ -810,7 +810,7 @@ extern "C"
 
 
 		template<class File, class _statT >
-		static __inline int __cdecl common_stat(
+		static __forceinline int __cdecl common_stat(
 			_In_z_ File       _FileName,
 			_Out_  _statT* _Stat
 		)
@@ -840,38 +840,38 @@ extern "C"
 	}
 
 	//_fstat已经改名为_fstat32
-#pragma push_macro("_fstat")
-#undef _fstat
-	__declspec(dllimport) int __cdecl _fstat(
-		_In_  int             _FileHandle,
-		_Out_ struct _stat32* _Stat
-	);
-
-	int __cdecl _fstat32(
-		_In_  int             _FileHandle,
-		_Out_ struct _stat32* _Stat
-	)
-	{
-		return _fstat(_FileHandle, _Stat);
-	}
-#pragma pop_macro("_fstat")
+//#pragma push_macro("_fstat")
+//#undef _fstat
+//	__declspec(dllimport) int __cdecl _fstat(
+//		_In_  int             _FileHandle,
+//		_Out_ struct _stat32* _Stat
+//	);
+//
+//	int __cdecl _fstat32(
+//		_In_  int             _FileHandle,
+//		_Out_ struct _stat32* _Stat
+//	)
+//	{
+//		return _fstat(_FileHandle, _Stat);
+//	}
+//#pragma pop_macro("_fstat")
 
 	//_fstati64已经改名为_fstat32i64
-#pragma push_macro("_fstati64")
-#undef _fstati64
-	__declspec(dllimport) int __cdecl _fstati64(
-		_In_  int                _FileHandle,
-		_Out_ struct _stat32i64* _Stat
-	);
-
-	int __cdecl _fstat32i64(
-		_In_  int                _FileHandle,
-		_Out_ struct _stat32i64* _Stat
-	)
-	{
-		return _fstati64(_FileHandle, _Stat);
-	}
-#pragma pop_macro("_fstati64")
+//#pragma push_macro("_fstati64")
+//#undef _fstati64
+//	__declspec(dllimport) int __cdecl _fstati64(
+//		_In_  int                _FileHandle,
+//		_Out_ struct _stat32i64* _Stat
+//	);
+//
+//	int __cdecl _fstat32i64(
+//		_In_  int                _FileHandle,
+//		_Out_ struct _stat32i64* _Stat
+//	)
+//	{
+//		return _fstati64(_FileHandle, _Stat);
+//	}
+//#pragma pop_macro("_fstati64")
 
 
 	//msvcrt不支持_fstat64i32，不过我们可以用_fstat64转换
@@ -886,39 +886,39 @@ extern "C"
 
 
 	//_stat已经改名为_stat32
-#pragma push_macro("_stat")
-#undef _stat
-	__declspec(dllimport) int __cdecl _stat(
-		_In_z_ char const*     _FileName,
-		_Out_  struct _stat32* _Stat
-	);
-
-	int __cdecl _stat32(
-		_In_z_ char const*     _FileName,
-		_Out_  struct _stat32* _Stat
-	)
-	{
-		return _stat(_FileName, _Stat);
-	}
-#pragma pop_macro("_stat")
+//#pragma push_macro("_stat")
+//#undef _stat
+//	__declspec(dllimport) int __cdecl _stat(
+//		_In_z_ char const*     _FileName,
+//		_Out_  struct _stat32* _Stat
+//	);
+//
+//	int __cdecl _stat32(
+//		_In_z_ char const*     _FileName,
+//		_Out_  struct _stat32* _Stat
+//	)
+//	{
+//		return _stat(_FileName, _Stat);
+//	}
+//#pragma pop_macro("_stat")
 
 
 	//_stati64已经改名为_stat32i64
-#pragma push_macro("_stati64")
-#undef _stati64
-	__declspec(dllimport) int __cdecl _stati64(
-		_In_z_ char const*     _FileName,
-		_Out_  struct _stat32i64* _Stat
-	);
-
-	int __cdecl _stat32i64(
-		_In_z_ char const*        _FileName,
-		_Out_  struct _stat32i64* _Stat
-	)
-	{
-		return _stati64(_FileName, _Stat);
-	}
-#pragma pop_macro("_stati64")
+//#pragma push_macro("_stati64")
+//#undef _stati64
+//	__declspec(dllimport) int __cdecl _stati64(
+//		_In_z_ char const*     _FileName,
+//		_Out_  struct _stat32i64* _Stat
+//	);
+//
+//	int __cdecl _stat32i64(
+//		_In_z_ char const*        _FileName,
+//		_Out_  struct _stat32i64* _Stat
+//	)
+//	{
+//		return _stati64(_FileName, _Stat);
+//	}
+//#pragma pop_macro("_stati64")
 
 
 	//msvcrt不支持_stat64i32，不过我们可以用_stat64转换
@@ -932,38 +932,38 @@ extern "C"
 
 
 	//_wstat已经改名为_wstat32，做转发
-#pragma push_macro("_wstat")
-#undef _wstat
-	__declspec(dllimport) int __cdecl _wstat(
-		_In_z_ wchar_t const*  _FileName,
-		_Out_  struct _stat32* _Stat
-	);
-
-	int __cdecl _wstat32(
-		_In_z_ wchar_t const*  _FileName,
-		_Out_  struct _stat32* _Stat
-	)
-	{
-		return _wstat(_FileName, _Stat);
-	}
-#pragma pop_macro("_wstat")
+//#pragma push_macro("_wstat")
+//#undef _wstat
+//	__declspec(dllimport) int __cdecl _wstat(
+//		_In_z_ wchar_t const*  _FileName,
+//		_Out_  struct _stat32* _Stat
+//	);
+//
+//	int __cdecl _wstat32(
+//		_In_z_ wchar_t const*  _FileName,
+//		_Out_  struct _stat32* _Stat
+//	)
+//	{
+//		return _wstat(_FileName, _Stat);
+//	}
+//#pragma pop_macro("_wstat")
 
 	//_wstati64已经改名为_wstat32i64，做转发
-#pragma push_macro("_wstati64")
-#undef _wstati64
-	__declspec(dllimport) int __cdecl _wstati64(
-		_In_z_ wchar_t const*     _FileName,
-		_Out_  struct _stat32i64* _Stat
-	);
-
-	int __cdecl _wstat32i64(
-		_In_z_ wchar_t const*     _FileName,
-		_Out_  struct _stat32i64* _Stat
-	)
-	{
-		return _wstati64(_FileName, _Stat);
-	}
-#pragma pop_macro("_wstati64")
+//#pragma push_macro("_wstati64")
+//#undef _wstati64
+//	__declspec(dllimport) int __cdecl _wstati64(
+//		_In_z_ wchar_t const*     _FileName,
+//		_Out_  struct _stat32i64* _Stat
+//	);
+//
+//	int __cdecl _wstat32i64(
+//		_In_z_ wchar_t const*     _FileName,
+//		_Out_  struct _stat32i64* _Stat
+//	)
+//	{
+//		return _wstati64(_FileName, _Stat);
+//	}
+//#pragma pop_macro("_wstati64")
 
 	//msvcrt不支持_wstat64i32，不过我们可以用_wstat64转换
 	int __cdecl _wstat64i32(
@@ -1008,7 +1008,7 @@ extern "C"
 	_ptd_msvcrt * __cdecl _getptd_noexit(void);
 
 
-	void _amsg_exit(
+	__declspec(dllimport) void _amsg_exit(
 		int rterrnum
 	);
 
