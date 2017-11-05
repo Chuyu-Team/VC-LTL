@@ -10,7 +10,7 @@
 #include <intrin.h>  
 #include <vcruntime_exception.h>
 #include <crtdbg.h>
-#include <corecrt_wtime.h>
+#include <time.h>
 #include <corecrt_io.h>
 
 #include <stdio.h>
@@ -371,6 +371,71 @@ extern "C"
 			*_Time = tmp;
 
 		return tmp;
+	}
+
+
+	errno_t __cdecl _get_daylight(
+		_Out_ int* _Daylight
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_Daylight != nullptr, EINVAL, -1);
+
+		*_Daylight = _daylight;
+
+		return 0;
+	}
+
+	errno_t __cdecl _get_dstbias(
+		_Out_ long* _DaylightSavingsBias
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_DaylightSavingsBias != nullptr, EINVAL, -1);
+
+		*_DaylightSavingsBias = _dstbias;
+		return 0;
+	}
+
+	errno_t __cdecl _get_timezone(
+		_Out_ long* _TimeZone
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_TimeZone != nullptr, EINVAL, -1);
+
+		*_TimeZone = _timezone;
+		return 0;
+	}
+
+	errno_t __cdecl _get_tzname(
+		_Out_                        size_t* _ReturnValue,
+		_Out_writes_z_(_SizeInBytes) char*   _Buffer,
+		_In_                         size_t  _SizeInBytes,
+		_In_                         int     _Index
+	)
+	{
+		_VALIDATE_RETURN_ERRCODE(
+			(_Buffer != nullptr && _SizeInBytes > 0) ||
+			(_Buffer == nullptr && _SizeInBytes == 0),
+			EINVAL);
+
+		if (_Buffer != nullptr)
+			_Buffer[0] = '\0';
+
+		_VALIDATE_RETURN_ERRCODE(_ReturnValue != nullptr, EINVAL);
+		_VALIDATE_RETURN_ERRCODE(_Index == 0 || _Index == 1, EINVAL);
+
+		// _tzname is correctly inited at startup, so no need to check if
+		// CRT init finished.
+		*_ReturnValue = strlen(_tzname[_Index]) + 1;
+
+		// If the buffer pointer is null, the caller is interested only in the size
+		// of the string, not in the actual value of the string:
+		if (_Buffer == nullptr)
+			return 0;
+
+		if (*_ReturnValue > _SizeInBytes)
+			return ERANGE;
+
+		return strcpy_s(_Buffer, _SizeInBytes, _tzname[_Index]);
 	}
 
 

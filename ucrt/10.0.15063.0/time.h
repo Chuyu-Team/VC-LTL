@@ -93,22 +93,22 @@ __inline char** __cdecl __tzname(void)
 }
 
  _Success_(_Daylight != 0)
-_ACRTIMP errno_t __cdecl _get_daylight(
+extern errno_t __cdecl _get_daylight(
     _Out_ int* _Daylight
     );
 
 _Success_(_DaylightSavingsBias != 0)
-_ACRTIMP errno_t __cdecl _get_dstbias(
+extern errno_t __cdecl _get_dstbias(
     _Out_ long* _DaylightSavingsBias
     );
 
  _Success_(_TimeZone != 0)
-_ACRTIMP errno_t __cdecl _get_timezone(
+extern errno_t __cdecl _get_timezone(
     _Out_ long* _TimeZone
     );
 
 _Success_(return == 0)
-_ACRTIMP errno_t __cdecl _get_tzname(
+extern errno_t __cdecl _get_tzname(
     _Out_                        size_t* _ReturnValue,
     _Out_writes_z_(_SizeInBytes) char*   _Buffer,
     _In_                         size_t  _SizeInBytes,
