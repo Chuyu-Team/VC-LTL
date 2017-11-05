@@ -85,6 +85,55 @@ _wstat32i64 PROC
 jmp __imp__wstati64
 _wstat32i64 ENDP
 
+;新编译器_findfirst已经改名为_findfirst32
+extern __imp__findfirst:qword
+_findfirst32 PROC
+jmp __imp__findfirst
+_findfirst32 ENDP
+
+;新编译器_findnext已经改名为_findnext32
+extern __imp__findnext:qword
+_findnext32 PROC
+jmp __imp__findnext
+_findnext32 ENDP
+
+;新编译器_findfirsti64已经改名为_findfirst32i64
+extern __imp__findfirsti64:qword
+_findfirst32i64 PROC
+jmp __imp__findfirsti64
+_findfirst32i64 ENDP
+
+;新编译器_findnexti64已经改名为_findnext32i64
+extern __imp__findnexti64:qword
+_findnext32i64 PROC
+jmp __imp__findnexti64
+_findnext32i64 ENDP
+
+;新编译器_wfindfirst已经改名为_wfindfirst32
+extern __imp__wfindfirst:qword
+_wfindfirst32 PROC
+jmp __imp__wfindfirst
+_wfindfirst32 ENDP
+
+;新编译器_wfindnext已经改名为_wfindnext32
+extern __imp__wfindnext:qword
+_wfindnext32 PROC
+jmp __imp__wfindnext
+_wfindnext32 ENDP
+
+;新编译器_wfindfirsti64已经改名为_wfindfirst32i64
+extern __imp__wfindfirsti64:qword
+_wfindfirst32i64 PROC
+jmp __imp__wfindfirsti64
+_wfindfirst32i64 ENDP
+
+
+;新编译器_wfindnexti64已经改名为_wfindnext32i64
+extern __imp__wfindnexti64:qword
+_wfindnext32i64 PROC
+jmp __imp__wfindnexti64
+_wfindnext32i64 ENDP
+
 _TEXT	ENDS
 
 END

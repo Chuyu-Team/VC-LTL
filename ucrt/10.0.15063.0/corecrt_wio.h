@@ -118,14 +118,14 @@ _ACRTIMP int __cdecl _wcreat(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _wfindfirst32(
+extern intptr_t __cdecl _wfindfirst32(
     _In_z_ wchar_t const*         _FileName,
     _Out_  struct _wfinddata32_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP int __cdecl _wfindnext32(
+extern int __cdecl _wfindnext32(
     _In_  intptr_t               _FindHandle,
     _Out_ struct _wfinddata32_t* _FindData
     );
@@ -158,14 +158,14 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _wfindfirst32i64(
+extern intptr_t __cdecl _wfindfirst32i64(
     _In_z_ wchar_t const*            _FileName,
     _Out_  struct _wfinddata32i64_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _wfindfirst64i32(
+extern intptr_t __cdecl _wfindfirst64i32(
     _In_z_ wchar_t const*            _FileName,
     _Out_  struct _wfinddata64i32_t* _FindData
     );
@@ -179,14 +179,14 @@ _ACRTIMP intptr_t __cdecl _wfindfirst64(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP int __cdecl _wfindnext32i64(
+extern int __cdecl _wfindnext32i64(
     _In_  intptr_t                  _FindHandle,
     _Out_ struct _wfinddata32i64_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP int __cdecl _wfindnext64i32(
+extern int __cdecl _wfindnext64i32(
     _In_  intptr_t                  _FindHandle,
     _Out_ struct _wfinddata64i32_t* _FindData
     );

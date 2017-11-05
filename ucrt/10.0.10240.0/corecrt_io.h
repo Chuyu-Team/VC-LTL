@@ -171,14 +171,14 @@ _ACRTIMP long __cdecl _filelength(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _findfirst32(
+extern intptr_t __cdecl _findfirst32(
     _In_z_ char const*           _FileName,
     _Out_  struct _finddata32_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP int __cdecl _findnext32(
+extern int __cdecl _findnext32(
     _In_  intptr_t              _FindHandle,
     _Out_ struct _finddata32_t* _FindData
     );
@@ -300,14 +300,14 @@ _ACRTIMP __int64 __cdecl _filelengthi64(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _findfirst32i64(
+extern intptr_t __cdecl _findfirst32i64(
     _In_z_ char const*              _FileName,
     _Out_  struct _finddata32i64_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _findfirst64i32(
+extern intptr_t __cdecl _findfirst64i32(
     _In_z_ char const*              _FileName,
     _Out_  struct _finddata64i32_t* _FindData
     );
@@ -321,14 +321,14 @@ _ACRTIMP intptr_t __cdecl _findfirst64(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP int __cdecl _findnext32i64(
+extern int __cdecl _findnext32i64(
     _In_  intptr_t                 _FindHandle,
     _Out_ struct _finddata32i64_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP int __cdecl _findnext64i32(
+extern int __cdecl _findnext64i32(
     _In_  intptr_t                 _FindHandle,
     _Out_ struct _finddata64i32_t* _FindData
     );

@@ -777,68 +777,64 @@ extern "C"
 	{
 		return _Gettnames();
 	}
-
-	//
-	extern "C++"
+	
+	//通过文件句柄获取_stat64
+	extern "C++" static __forceinline int __cdecl _tstat64(
+		_In_z_ int     _FileHandle,
+		_Out_  struct _stat64* _Stat
+	)
 	{
-		//通过文件句柄获取_stat64
-		static __forceinline int __cdecl _tstat64(
-			_In_z_ int     _FileHandle,
-			_Out_  struct _stat64* _Stat
-		)
-		{
-			return _fstat64(_FileHandle, _Stat);
-		}
-
-		//通过ASCII路径获取_stat64
-		static __forceinline int __cdecl _tstat64(
-			_In_z_ char const*     _FileName,
-			_Out_  struct _stat64* _Stat
-		)
-		{
-			return _stat64(_FileName, _Stat);
-		}
-
-		//通过Unicode路径获取_stat64
-		static __forceinline int __cdecl _tstat64(
-			_In_z_ wchar_t const*     _FileName,
-			_Out_  struct _stat64* _Stat
-		)
-		{
-			return _wstat64(_FileName, _Stat);
-		}
-
-
-		template<class File, class _statT >
-		static __forceinline int __cdecl common_stat(
-			_In_z_ File       _FileName,
-			_Out_  _statT* _Stat
-		)
-		{
-			_VALIDATE_CLEAR_OSSERR_RETURN(_Stat != nullptr, EINVAL, -1);
-
-			struct _stat64 _StatTmp;
-			auto result = _tstat64(_FileName, &_StatTmp);
-			if (result != 0)
-			{
-				//获取成功，开始转换数据
-				_Stat->st_dev = _StatTmp.st_dev;
-				_Stat->st_ino = _StatTmp.st_ino;
-				_Stat->st_mode = _StatTmp.st_mode;
-				_Stat->st_nlink = _StatTmp.st_nlink;
-				_Stat->st_uid = _StatTmp.st_uid;
-				_Stat->st_gid = _StatTmp.st_gid;
-				_Stat->st_rdev = _StatTmp.st_rdev;
-				_Stat->st_size = _StatTmp.st_size;
-				_Stat->st_atime = _StatTmp.st_atime;
-				_Stat->st_mtime = _StatTmp.st_mtime;
-				_Stat->st_ctime = _StatTmp.st_ctime;
-			}
-
-			return result;
-		}
+		return _fstat64(_FileHandle, _Stat);
 	}
 
+	//通过ASCII路径获取_stat64
+	extern "C++" static __forceinline int __cdecl _tstat64(
+		_In_z_ char const*     _FileName,
+		_Out_  struct _stat64* _Stat
+	)
+	{
+		return _stat64(_FileName, _Stat);
+	}
+
+	//通过Unicode路径获取_stat64
+	extern "C++" static __forceinline int __cdecl _tstat64(
+		_In_z_ wchar_t const*     _FileName,
+		_Out_  struct _stat64* _Stat
+	)
+	{
+		return _wstat64(_FileName, _Stat);
+	}
+
+
+	extern "C++" template<class File, class _statT >
+	static __forceinline int __cdecl common_stat(
+		_In_z_ File       _FileName,
+		_Out_  _statT* _Stat
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_Stat != nullptr, EINVAL, -1);
+
+		struct _stat64 _StatTmp;
+		auto result = _tstat64(_FileName, &_StatTmp);
+		if (result != 0)
+		{
+			//获取成功，开始转换数据
+			_Stat->st_dev = _StatTmp.st_dev;
+			_Stat->st_ino = _StatTmp.st_ino;
+			_Stat->st_mode = _StatTmp.st_mode;
+			_Stat->st_nlink = _StatTmp.st_nlink;
+			_Stat->st_uid = _StatTmp.st_uid;
+			_Stat->st_gid = _StatTmp.st_gid;
+			_Stat->st_rdev = _StatTmp.st_rdev;
+			_Stat->st_size = _StatTmp.st_size;
+			_Stat->st_atime = _StatTmp.st_atime;
+			_Stat->st_mtime = _StatTmp.st_mtime;
+			_Stat->st_ctime = _StatTmp.st_ctime;
+		}
+
+		return result;
+	}
+	
 	//_fstat已经改名为_fstat32
 //#pragma push_macro("_fstat")
 //#undef _fstat
@@ -974,6 +970,127 @@ extern "C"
 		return common_stat(_FileName, _Stat);
 	}
 
+	//通过ASCII文件名搜索
+	extern "C++" __forceinline intptr_t __cdecl _tfindfirst(
+		_In_z_ char const*            _FileName,
+		_Out_  struct __finddata64_t* _FindData
+	)
+	{
+		return _findfirst64(_FileName, _FindData);
+	}
+
+	//通过Unicode路径搜索
+	extern "C++" __forceinline intptr_t __cdecl _tfindfirst(
+		_In_z_ wchar_t const*         _FileName,
+		_Out_  struct _wfinddata64_t* _FindData
+	)
+	{
+		return _wfindfirst64(_FileName, _FindData);
+	}
+
+	extern "C++" template<class __finddata,class File,class Type>
+	__forceinline intptr_t __cdecl common_findfirst(
+		_In_z_ File              _FileName,
+		_Out_  Type* _FindData
+	)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_FileName != nullptr && _FindData != nullptr, EINVAL, -1);
+
+		__finddata finddataT;
+		auto _FindHandle = _tfindfirst(_FileName, &finddataT);
+		if (_FindHandle != -1)
+		{
+			_FindData->attrib = finddataT.attrib;
+			_FindData->time_create = finddataT.time_create;
+			_FindData->time_access = finddataT.time_access;
+			_FindData->time_write = finddataT.time_write;
+			_FindData->size = finddataT.size;
+
+			static_assert(sizeof(_FindData->name) == sizeof(finddataT.name),"名称缓冲区必须完全一致！");
+
+			memcpy(_FindData->name, finddataT.name, sizeof(finddataT.name));
+		}
+
+		return _FindHandle;
+	}
+
+	//msvcrt不支持_findfirst64i32，不过我们可以用_findfirst64转换
+	intptr_t __cdecl _findfirst64i32(
+		_In_z_ char const*              _FileName,
+		_Out_  struct _finddata64i32_t* _FindData
+	)
+	{
+		return common_findfirst<__finddata64_t>(_FileName, _FindData);
+	}
+
+	//msvcrt不支持_wfindfirst64i32，不过我们可以用_wfindfirst64转换
+	intptr_t __cdecl _wfindfirst64i32(
+		_In_z_ wchar_t const*            _FileName,
+		_Out_  struct _wfinddata64i32_t* _FindData
+	)
+	{
+		return common_findfirst<_wfinddata64_t>(_FileName, _FindData);
+	}
+
+
+
+	extern "C++" __forceinline int __cdecl _tfindnext(
+		_In_  intptr_t                 _FindHandle,
+		_Out_ struct __finddata64_t* _FindData
+	)
+	{
+		return _findnext64(_FindHandle, _FindData);
+	}
+
+	extern "C++" __forceinline int __cdecl _tfindnext(
+		_In_  intptr_t                  _FindHandle,
+		_Out_ struct _wfinddata64_t* _FindData
+	)
+	{
+		return _wfindnext64(_FindHandle, _FindData);
+	}
+
+	extern "C++" template<class __finddata, class Type>
+	__forceinline intptr_t __cdecl common_findnext(
+			_In_  intptr_t                 _FindHandle,
+			_Out_  Type* _FindData
+		)
+	{
+		_VALIDATE_CLEAR_OSSERR_RETURN(_FindHandle != -1 && _FindData != nullptr, EINVAL, -1);
+
+		__finddata finddataT;
+		auto result = _tfindnext(_FindHandle, &finddataT);
+		if (result == 0)
+		{
+			_FindData->attrib = finddataT.attrib;
+			_FindData->time_create = finddataT.time_create;
+			_FindData->time_access = finddataT.time_access;
+			_FindData->time_write = finddataT.time_write;
+			_FindData->size = finddataT.size;
+
+			static_assert(sizeof(_FindData->name) == sizeof(finddataT.name), "名称缓冲区必须完全一致！");
+
+			memcpy(_FindData->name, finddataT.name, sizeof(finddataT.name));
+		}
+
+		return result;
+	}
+
+	int __cdecl _findnext64i32(
+		_In_  intptr_t                 _FindHandle,
+		_Out_ struct _finddata64i32_t* _FindData
+	)
+	{
+		return common_findnext<__finddata64_t>(_FindHandle, _FindData);
+	}
+
+	int __cdecl _wfindnext64i32(
+		_In_  intptr_t                  _FindHandle,
+		_Out_ struct _wfinddata64i32_t* _FindData
+	)
+	{
+		return common_findnext<_wfinddata64_t>(_FindHandle, _FindData);
+	}
 
 	//msvcrt没有_ftelli64，不过好在有fgetpos
 	__int64 __cdecl _ftelli64(

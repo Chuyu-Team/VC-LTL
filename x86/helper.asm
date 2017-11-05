@@ -87,6 +87,54 @@ jmp __imp___wstati64
 __wstat32i64 ENDP
 
 
+;新编译器_findfirst已经改名为_findfirst32
+extern __imp___findfirst:dword
+__findfirst32 PROC
+jmp __imp___findfirst
+__findfirst32 ENDP
+
+;新编译器_findnext已经改名为_findnext32
+extern __imp___findnext:dword
+__findnext32 PROC
+jmp __imp___findnext
+__findnext32 ENDP
+
+;新编译器_findfirsti64已经改名为_findfirst32i64
+extern __imp___findfirsti64:dword
+__findfirst32i64 PROC
+jmp __imp___findfirsti64
+__findfirst32i64 ENDP
+
+;新编译器_findnexti64已经改名为_findnext32i64
+extern __imp___findnexti64:dword
+__findnext32i64 PROC
+jmp __imp___findnexti64
+__findnext32i64 ENDP
+
+;新编译器_wfindfirst已经改名为_wfindfirst32
+extern __imp___wfindfirst:dword
+__wfindfirst32 PROC
+jmp __imp___wfindfirst
+__wfindfirst32 ENDP
+
+;新编译器_wfindnext已经改名为_wfindnext32
+extern __imp___wfindnext:dword
+__wfindnext32 PROC
+jmp __imp___wfindnext
+__wfindnext32 ENDP
+
+;新编译器_wfindfirsti64已经改名为_wfindfirst32i64
+extern __imp___wfindfirsti64:dword
+__wfindfirst32i64 PROC
+jmp __imp___wfindfirsti64
+__wfindfirst32i64 ENDP
+
+
+;新编译器_wfindnexti64已经改名为_wfindnext32i64
+extern __imp___wfindnexti64:dword
+__wfindnext32i64 PROC
+jmp __imp___wfindnexti64
+__wfindnext32i64 ENDP
 
 ;以下函数仅32位存在
 
