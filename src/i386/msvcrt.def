@@ -42,4 +42,7 @@ __threadhandle
 __threadid
 __unDNameEx
 _unloaddll
-
+__CxxFrameHandler2
+_get_pgmptr
+_get_wpgmptr
+_seh_longjmp_unwind4
