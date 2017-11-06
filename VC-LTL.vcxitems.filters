@@ -2996,9 +2996,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)_msvcrt.cpp">
-      <Filter>源代码</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)VC\140\include\delayhlp.cpp">
       <Filter>源代码\VC\140\include</Filter>
     </ClCompile>
@@ -3007,12 +3004,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib">
-      <Filter>Libx86</Filter>
-    </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib">
-      <Filter>Libx64</Filter>
-    </Library>
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib">
       <Filter>Libx64</Filter>
     </Library>
@@ -3810,12 +3801,6 @@
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xxatomic">
       <Filter>源代码\VC\141\include</Filter>
     </None>
-    <None Include="$(MSBuildThisFileDirectory)x64\helper.asm">
-      <Filter>Libx64</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)x86\helper.asm">
-      <Filter>Libx86</Filter>
-    </None>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrt.props" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\atlmfc\include\afx.inl">
       <Filter>源代码\VC\141\atlmfc\include</Filter>
@@ -3890,12 +3875,6 @@
       <Filter>源代码\VC\141\atlmfc\include</Filter>
     </None>
     <None Include="$(MSBuildThisFileDirectory)ltlvcrtWinXp.props" />
-    <None Include="$(MSBuildThisFileDirectory)x64\msvcrt.def">
-      <Filter>Libx64</Filter>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)x86\msvcrt.def">
-      <Filter>Libx86</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc">

@@ -16,7 +16,6 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)VC\140\include\delayhlp.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)VC\141\include\delayhlp.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)_msvcrt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\assert.h" />
@@ -1011,9 +1010,7 @@
     <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlxp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\vc.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_vista.lib" />
     <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_vista.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
@@ -1282,10 +1279,6 @@
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xtree" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xutility" />
     <None Include="$(MSBuildThisFileDirectory)VC\141\include\xxatomic" />
-    <None Include="$(MSBuildThisFileDirectory)x64\helper.asm" />
-    <None Include="$(MSBuildThisFileDirectory)x64\msvcrt.def" />
-    <None Include="$(MSBuildThisFileDirectory)x86\helper.asm" />
-    <None Include="$(MSBuildThisFileDirectory)x86\msvcrt.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MSBuildThisFileDirectory)VC\140\atlmfc\include\about_.rc" />
