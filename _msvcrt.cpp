@@ -378,7 +378,7 @@ extern "C"
 		_Out_ int* _Daylight
 	)
 	{
-		_VALIDATE_CLEAR_OSSERR_RETURN(_Daylight != nullptr, EINVAL, -1);
+		_VALIDATE_RETURN_ERRCODE(_Daylight != nullptr, EINVAL);
 
 		*_Daylight = _daylight;
 
@@ -389,7 +389,7 @@ extern "C"
 		_Out_ long* _DaylightSavingsBias
 	)
 	{
-		_VALIDATE_CLEAR_OSSERR_RETURN(_DaylightSavingsBias != nullptr, EINVAL, -1);
+		_VALIDATE_RETURN_ERRCODE(_DaylightSavingsBias != nullptr, EINVAL);
 
 		*_DaylightSavingsBias = _dstbias;
 		return 0;
@@ -399,7 +399,7 @@ extern "C"
 		_Out_ long* _TimeZone
 	)
 	{
-		_VALIDATE_CLEAR_OSSERR_RETURN(_TimeZone != nullptr, EINVAL, -1);
+		_VALIDATE_RETURN_ERRCODE(_TimeZone != nullptr, EINVAL);
 
 		*_TimeZone = _timezone;
 		return 0;
