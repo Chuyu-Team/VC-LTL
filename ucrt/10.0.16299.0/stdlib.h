@@ -245,10 +245,10 @@ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) _ACRTIMP wchar_t** __cdecl __p__wp
 _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP int*      __cdecl __p__fmode  (void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_pgmptr ) extern char*    _pgmptr;
-    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) extern wchar_t* _wpgmptr;
+    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_pgmptr ) _ACRTIMP extern char*    _pgmptr;
+    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) _ACRTIMP extern wchar_t* _wpgmptr;
     #ifndef _CORECRT_BUILD
-        _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) extern int      _fmode;
+        _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP extern int      _fmode;
     #endif
 #else
     #define _pgmptr  (*__p__pgmptr ())
@@ -513,17 +513,25 @@ _ACRTIMP double __cdecl _strtod_l(
     );
 
 _Check_return_
-_ACRTIMP long double __cdecl strtold(
+__inline long double __cdecl strtold(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
-    );
+    )
+{
+	//VS中long double与double等价
+	return strtod(_String, _EndPtr);
+}
 
 _Check_return_
-_ACRTIMP long double __cdecl _strtold_l(
+__inline long double __cdecl _strtold_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_opt_                 _locale_t   _Locale
-    );
+    )
+{
+	//VS中long double与double等价
+	return _strtod_l(_String, _EndPtr, _Locale);
+}
 
 _Check_return_
 _ACRTIMP long __cdecl strtol(

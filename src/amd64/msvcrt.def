@@ -13,6 +13,9 @@ _dstbias DATA
 __uncaught_exception
 
 _getpid
-
-_sys_nerr DATA
-_sys_errlist DATA
+__p__pgmptr
+__p__wpgmptr
+__p__acmdln
+__p__wcmdln
+__p__mbctype
+__p__mbcasemap

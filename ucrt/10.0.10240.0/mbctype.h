@@ -20,8 +20,8 @@ _Check_return_ _ACRTIMP unsigned char* __cdecl __p__mbctype(void);
 _Check_return_ _ACRTIMP unsigned char* __cdecl __p__mbcasemap(void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    extern unsigned char _mbctype[];
-    extern unsigned char _mbcasemap[];
+    _ACRTIMP extern unsigned char _mbctype[];
+	_ACRTIMP extern unsigned char _mbcasemap[];
 #else
     #define _mbctype   (__p__mbctype())
     #define _mbcasemap (__p__mbcasemap())
