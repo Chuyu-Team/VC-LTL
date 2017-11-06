@@ -14,12 +14,12 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 ## 亮点
 * 无缝使用最新C/C++库以及最新编译器，无需使用陈旧的类库或者编译器，尽情的使用最新规范！
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
-* 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧~
-* 拥有比微软原版更好的兼容性，妥妥的兼容Windows XP RTM，不在因为兼容性问题而对新编译器说“NO”！
-* 完全的开放代码，广泛的接受用户意见，也希望大家能不断的 pull requests，让VC-LTL更上一层楼。
+* 支持编译器最新特性，异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧！
+* 拥有比微软原版更好的兼容性，即使想兼容Windows XP RTM也可以安心的对新编译器说“Yes”
+* 完全的开放代码，广泛的接受用户意见，希望大家能踊跃的 pull requests，为VC-LTL添砖加瓦。
 
 
-心动了吗？让我们一起跟VS 2008说拜拜！
+让我们一起跟VS 2008说拜拜！
 
 
 ## 支持平台
@@ -41,7 +41,7 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 * Windows 8.1 RTM, Windows 2012 R2 RTM
 * Windows 10, Windows 2016
 
-> 由此所见，采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
+> 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
 
 ## 使用方法：
 ### 1. 配置VC-LTL加载路径
@@ -50,47 +50,21 @@ VC LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 #### 1.1 通过配置共享VC-LTL
 VC-LTL属性表优先从注册表加载路径。如果你希望在多个工程中共享VC-LTL那么此方法会比较友好。
 
-比如，你将VC-LTL下载至`D:\Src\VC-LTL`，然后创建注册表 `HKEY_CURRENT_USER\Code\VC-LTL`，并且添加名称为 `Root`，数据为`D:\Src\VC-LTL`的 值（REG_SZ） 。
+假如，你将VC-LTL下载至`D:\Src\VC-LTL`，然后创建注册表 `HKEY_CURRENT_USER\Code\VC-LTL`，并且添加名称为 `Root`，数据为`D:\Src\VC-LTL`的 值（REG_SZ） 。
 
-然后将其他在使用属性表（ltlvcrt.props/ltlvcrtWinXp.props），VC-LTL会优先从此目录加载。
-
-如果你并不希望使用注册表，那么可以考虑 1.2
+> 如果你并不希望使用注册表，那么可以考虑 1.2
 
 #### 1.2 将内容解压到工程目录VC-LTL
-比如你的Sln文件在 D:\MySln\MySln.sln，这时你把VC-LTL整个目录复制到D:\MySln\VC-LTL即可。
+假如，你的Sln文件在 D:\MySln\MySln.sln，这时你把VC-LTL整个目录复制到D:\MySln\VC-LTL即可。
 
+> 如果你已经选择使用 1.1 描述的方式，那么你可以无视本节内容。
 
 ### 2. 重定向C/C++库到VC LTL
 我将相关库引用设置封装在了`VC-LTL\ltlvcrt.props`，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
+
 PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 
-如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么可以手动在Release配置中添加以下设置（2.1 ~ 2.6）
-
-#### 2.1 C/C++ - 附加包含目录（AdditionalIncludeDirectories）的最上方添加以下内容：
-* $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\include
-* $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\atlmfc\include
-* $(SolutionDir)VC-LTL\ucrt\\$(TargetUniversalCRTVersion)
-
-#### 2.2 链接器 - 附加库目录（AdditionalLibraryDirectories）增加：
-* $(SolutionDir)VC-LTL\\$(PlatformShortName)
-* $(SolutionDir)VC-LTL\VC\\$(PlatformToolsetVersion)\lib\\$(PlatformShortName)
-* $(SolutionDir)VC-LTL\ucrt\\$(TargetUniversalCRTVersion)\lib\\$(PlatformShortName)
-
-#### 2.3 在 C/C++ - 预处理器 增加：
-（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
-_ATL_XP_TARGETING
-
-#### 2.4 在 C/C++ - 命令行 增加：
-（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
-`/Zc:threadSafeInit-` 禁用线程安全静态初始化，这是编译器本身的BUG，否则Windows XP在全局变量中使用静态变量会导致程序崩溃。
-
-#### 2.5 在链接器 - 输入 - 附加依赖项 增加：
-（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
-msvcrt_winxp.obj（WinXP 32）/msvcrt_win2003.obj（WinXP 64）
-
-#### 2.6 在链接器 - 系统 - 所需的最低版本 增加：
-（仅在需要支持XP时才需要做，不需要支持XP直接无视此步骤！）<br>
-5.01
+> 如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么请手工将属性表的设置转移到你的工程配置中。
 
 ### 3. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
