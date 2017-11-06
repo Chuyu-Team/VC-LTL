@@ -40,9 +40,9 @@ jmp __imp__strtoui64
 strtoull ENDP
 
 ;_matherr 与 __acrt_invoke_user_matherr行为完全等价
-extern __imp__matherr:qword
+extern _matherr:qword
 __acrt_invoke_user_matherr PROC
-jmp __imp__matherr
+jmp _matherr
 __acrt_invoke_user_matherr ENDP
 
 
