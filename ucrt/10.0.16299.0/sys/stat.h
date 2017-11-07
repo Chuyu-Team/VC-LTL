@@ -150,17 +150,37 @@ struct _stat64
     #define _wstati64   _wstat64
 #endif
 
-
-
-extern int __cdecl _fstat32(
+#pragma push_macro("_fstat")
+#undef _fstat
+_ACRTIMP int __cdecl _fstat(
     _In_  int             _FileHandle,
     _Out_ struct _stat32* _Stat
     );
 
-extern int __cdecl _fstat32i64(
+__inline int __cdecl _fstat32(
+    _In_  int             _FileHandle,
+    _Out_ struct _stat32* _Stat
+    )
+{
+	return _fstat(_FileHandle, _Stat);
+}
+#pragma pop_macro("_fstat")
+
+#pragma push_macro("_fstati64")
+#undef _fstati64
+_ACRTIMP int __cdecl _fstati64(
     _In_  int                _FileHandle,
     _Out_ struct _stat32i64* _Stat
     );
+
+__inline int __cdecl _fstat32i64(
+    _In_  int                _FileHandle,
+    _Out_ struct _stat32i64* _Stat
+    )
+{
+	return _fstati64(_FileHandle, _Stat);
+}
+#pragma pop_macro("_fstati64")
 
 extern int __cdecl _fstat64i32(
     _In_  int                _FileHandle,
@@ -172,15 +192,38 @@ _ACRTIMP int __cdecl _fstat64(
     _Out_ struct _stat64* _Stat
     );
 
-extern int __cdecl _stat32(
+#pragma push_macro("_stat")
+#undef _stat
+_ACRTIMP int __cdecl _stat(
     _In_z_ char const*     _FileName,
     _Out_  struct _stat32* _Stat
     );
 
-extern int __cdecl _stat32i64(
+__inline int __cdecl _stat32(
+    _In_z_ char const*     _FileName,
+    _Out_  struct _stat32* _Stat
+    )
+{
+	return _stat(_FileName, _Stat);
+}
+#pragma pop_macro("_stat")
+
+#pragma push_macro("_stati64")
+#undef _stati64
+_ACRTIMP int __cdecl _stati64(
     _In_z_ char const*        _FileName,
     _Out_  struct _stat32i64* _Stat
     );
+
+__inline int __cdecl _stat32i64(
+    _In_z_ char const*        _FileName,
+    _Out_  struct _stat32i64* _Stat
+    )
+{
+	return _stati64(_FileName, _Stat);
+}
+#pragma pop_macro("_stati64")
+
 
 extern int __cdecl _stat64i32(
     _In_z_ char const*        _FileName,
@@ -192,15 +235,37 @@ _ACRTIMP int __cdecl _stat64(
     _Out_  struct _stat64* _Stat
     );
 
-extern int __cdecl _wstat32(
+#pragma push_macro("_wstat")
+#undef _wstat
+_ACRTIMP int __cdecl _wstat(
     _In_z_ wchar_t const*  _FileName,
     _Out_  struct _stat32* _Stat
     );
 
-extern int __cdecl _wstat32i64(
+__inline int __cdecl _wstat32(
+    _In_z_ wchar_t const*  _FileName,
+    _Out_  struct _stat32* _Stat
+    )
+{
+	return _wstat(_FileName, _Stat);
+}
+#pragma pop_macro("_wstat")
+
+#pragma push_macro("_wstati64")
+#undef _wstati64
+_ACRTIMP int __cdecl _wstati64(
     _In_z_ wchar_t const*     _FileName,
     _Out_  struct _stat32i64* _Stat
     );
+
+__inline int __cdecl _wstat32i64(
+    _In_z_ wchar_t const*     _FileName,
+    _Out_  struct _stat32i64* _Stat
+    )
+{
+	return _wstati64(_FileName, _Stat);
+}
+#pragma pop_macro("_wstati64")
 
 extern int __cdecl _wstat64i32(
     _In_z_ wchar_t const*     _FileName,

@@ -545,11 +545,21 @@ _ACRTIMP long __cdecl _strtol_l(
     );
 
 _Check_return_
-extern long long __cdecl strtoll(
+_ACRTIMP __int64 __cdecl _strtoi64(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix
     );
+
+_Check_return_
+__inline long long __cdecl strtoll(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix
+    )
+{
+	return _strtoi64(_String, _EndPtr, _Radix);
+}
 
 _Check_return_
 _ACRTIMP long long __cdecl _strtoll_l(
@@ -575,11 +585,21 @@ _ACRTIMP unsigned long __cdecl _strtoul_l(
     );
 
 _Check_return_
-extern unsigned long long __cdecl strtoull(
+_ACRTIMP unsigned __int64 __cdecl _strtoui64(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix
     );
+
+_Check_return_
+__inline unsigned long long __cdecl strtoull(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix
+    )
+{
+	return _strtoui64(_String, _EndPtr, _Radix);
+}
 
 _Check_return_
 _ACRTIMP unsigned long long __cdecl _strtoull_l(

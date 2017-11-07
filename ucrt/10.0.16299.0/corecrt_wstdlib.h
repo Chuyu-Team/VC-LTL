@@ -141,12 +141,22 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                 _locale_t      _Locale
         );
 
+	_Check_return_
+	_ACRTIMP __int64 __cdecl _wcstoi64(
+		_In_z_                   wchar_t const* _String,
+		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+		_In_                     int            _Radix
+		);
+
     _Check_return_
-    extern long long __cdecl wcstoll(
+    __inline long long __cdecl wcstoll(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_                     int            _Radix
-        );
+        )
+	{
+		return _wcstoi64(_String, _EndPtr, _Radix);
+	}
 
     _Check_return_
     _ACRTIMP long long __cdecl _wcstoll_l(
@@ -172,11 +182,21 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    extern unsigned long long __cdecl wcstoull(
+    _ACRTIMP unsigned __int64 __cdecl _wcstoui64(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_                     int            _Radix
         );
+
+    _Check_return_
+    __inline unsigned long long __cdecl wcstoull(
+        _In_z_                   wchar_t const* _String,
+        _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+        _In_                     int            _Radix
+        )
+	{
+		return _wcstoui64(_String, _EndPtr, _Radix);
+	}
 
     _Check_return_
     _ACRTIMP unsigned long long __cdecl _wcstoull_l(

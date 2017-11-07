@@ -171,19 +171,41 @@ struct __finddata64_t
         _In_ int _FileHandle
         );
 
-    _Success_(return != -1)
-    _Check_return_
-    extern intptr_t __cdecl _findfirst32(
+	#pragma push_macro("_findfirst")
+	#undef _findfirst
+	_ACRTIMP intptr_t __cdecl _findfirst(
         _In_z_ char const*           _FileName,
         _Out_  struct _finddata32_t* _FindData
         );
 
     _Success_(return != -1)
     _Check_return_
-    extern int __cdecl _findnext32(
+    __inline intptr_t __cdecl _findfirst32(
+        _In_z_ char const*           _FileName,
+        _Out_  struct _finddata32_t* _FindData
+        )
+	{
+		return _findfirst(_FileName, _FindData);
+	}
+	#pragma pop_macro("_findfirst")
+
+	#pragma push_macro("_findnext")
+	#undef _findnext
+	_ACRTIMP int __cdecl _findnext(
         _In_  intptr_t              _FindHandle,
         _Out_ struct _finddata32_t* _FindData
         );
+
+    _Success_(return != -1)
+    _Check_return_
+    __inline int __cdecl _findnext32(
+        _In_  intptr_t              _FindHandle,
+        _Out_ struct _finddata32_t* _FindData
+        )
+	{
+		return _findnext(_FindHandle, _FindData);
+	}
+	#pragma pop_macro("_findnext")
 
     _Check_return_opt_
     _ACRTIMP int __cdecl _findclose(
@@ -300,12 +322,23 @@ struct __finddata64_t
         _In_ int _FileHandle
         );
 
-    _Success_(return != -1)
-    _Check_return_
-    extern intptr_t __cdecl _findfirst32i64(
+	#pragma push_macro("_findfirsti64")
+	#undef _findfirsti64
+	_ACRTIMP intptr_t __cdecl _findfirsti64(
         _In_z_ char const*              _FileName,
         _Out_  struct _finddata32i64_t* _FindData
         );
+
+    _Success_(return != -1)
+    _Check_return_
+    __inline intptr_t __cdecl _findfirst32i64(
+        _In_z_ char const*              _FileName,
+        _Out_  struct _finddata32i64_t* _FindData
+        )
+	{
+		return _findfirsti64(_FileName, _FindData);
+	}
+	#pragma pop_macro("_findfirsti64")
 
     _Success_(return != -1)
     _Check_return_
@@ -321,12 +354,23 @@ struct __finddata64_t
         _Out_  struct __finddata64_t* _FindData
         );
 
-    _Success_(return != -1)
-    _Check_return_
-    extern int __cdecl _findnext32i64(
+	#pragma push_macro("_findnexti64")
+	#undef _findnexti64
+	_ACRTIMP int __cdecl _findnexti64(
         _In_  intptr_t                 _FindHandle,
         _Out_ struct _finddata32i64_t* _FindData
         );
+
+    _Success_(return != -1)
+    _Check_return_
+    __inline int __cdecl _findnext32i64(
+        _In_  intptr_t                 _FindHandle,
+        _Out_ struct _finddata32i64_t* _FindData
+        )
+	{
+		return _findnexti64(_FindHandle, _FindData);
+	}
+	#pragma pop_macro("_findnexti64")
 
     _Success_(return != -1)
     _Check_return_
