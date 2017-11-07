@@ -18,6 +18,7 @@
 #include <locale.h>
 
 #include <sys/stat.h>
+#include <corecrt_math.h>
 
 #ifdef __NOTHROW_T_DEFINED
 
@@ -1204,6 +1205,53 @@ extern "C"
 		}
 
 		return ptd;
+	}
+
+	float __cdecl _strtof_l(
+		_In_z_                   char const* _String,
+		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
+		_In_opt_                 _locale_t   _Locale
+	)
+	{
+		return _strtod_l(_String, _EndPtr, _Locale);
+	}
+
+
+	extern "C++" __forceinline double __cdecl _tatof(char const* const string)
+	{
+		return atof(string);
+	}
+
+	extern "C++" template<class FloatingType,class TCHAR>
+	__inline int __cdecl common_atof(FloatingType& _Result,const TCHAR* _String)
+	{
+
+		_Result = _tatof(_String);
+
+		switch (fpclassify(_Result))
+		{
+		case FP_SUBNORMAL:
+			//如果为太小，则设置为下溢
+			return _UNDERFLOW;
+			break;
+		case FP_INFINITE:
+			//如果为无穷，则设置为上溢
+			return _OVERFLOW;
+			break;
+		default:
+			//其他情况设置为0
+			return 0;
+			break;
+		}
+	}
+
+
+	//msvcrt没有_atoflt，但是我们可以使用atof转换
+	int __cdecl _atoflt(_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String)
+	{
+		_VALIDATE_RETURN(_Result != nullptr, EINVAL, _DOMAIN);
+
+		return common_atof(_Result->f, _String);
 	}
 }
 

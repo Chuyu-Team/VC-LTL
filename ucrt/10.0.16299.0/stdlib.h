@@ -460,7 +460,7 @@ _Check_return_ _ACRTIMP long      __cdecl _atol_l  (_In_z_ char const* _String, 
 _Check_return_ _ACRTIMP long long __cdecl _atoll_l (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP __int64   __cdecl _atoi64_l(_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 
-_Check_return_ _ACRTIMP int __cdecl _atoflt (_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String);
+_Check_return_ extern int __cdecl _atoflt (_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String);
 _Check_return_ _ACRTIMP int __cdecl _atodbl (_Out_ _CRT_DOUBLE* _Result, _In_z_ char*       _String);
 _Check_return_ _ACRTIMP int __cdecl _atoldbl(_Out_ _LDOUBLE*    _Result, _In_z_ char*       _String);
 
@@ -493,7 +493,7 @@ extern float __cdecl strtof(
     );
 
 _Check_return_
-_ACRTIMP float __cdecl _strtof_l(
+extern float __cdecl _strtof_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_opt_                 _locale_t   _Locale
