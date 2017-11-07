@@ -329,14 +329,14 @@ _ACRTXPIMP __time64_t __cdecl _time64(
 
 _Success_(return != 0)
 _Check_return_
-_ACRTIMP int __cdecl _timespec32_get(
+extern int __cdecl _timespec32_get(
     _Out_ struct _timespec32* _Ts,
     _In_  int                 _Base
     );
 
 _Success_(return != 0)
 _Check_return_
-_ACRTIMP int __cdecl _timespec64_get(
+extern int __cdecl _timespec64_get(
     _Out_ struct _timespec64* _Ts,
     _In_  int                 _Base
     );

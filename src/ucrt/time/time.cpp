@@ -22,9 +22,13 @@ static int __cdecl common_timespec_get(TimeSpecType* const ts, int const base) t
     if (base != TIME_UTC)
         return 0;
 
-    __crt_filetime_union system_time{};
-    __acrt_GetSystemTimePreciseAsFileTime(&system_time._filetime);
-
+    __crt_filetime_union system_time;
+    //__acrt_GetSystemTimePreciseAsFileTime(&system_time._filetime);
+#ifdef _ATL_XP_TARGETING
+	GetSystemTimeAsFileTime(&system_time._filetime);
+#else
+	GetSystemTimePreciseAsFileTime(&system_time._filetime);
+#endif
     __time64_t const filetime_scale{10 * 1000 * 1000}; // 100ns units
 
     __time64_t const epoch_time{static_cast<__time64_t>(system_time._scalar) - _EPOCH_BIAS};
@@ -70,6 +74,8 @@ static TimeType __cdecl common_time(TimeType* const result) throw()
     return ts.tv_sec;
 }
 
+#ifdef _ATL_XP_TARGETING
+
 extern "C" __time32_t __cdecl _time32(__time32_t* const result)
 {
     return common_time(result);
@@ -79,3 +85,5 @@ extern "C" __time64_t __cdecl _time64(__time64_t* const result)
 {
     return common_time(result);
 }
+
+#endif

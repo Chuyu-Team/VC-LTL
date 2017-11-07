@@ -338,43 +338,6 @@ extern "C"
 		return 0;
 	}
 
-
-	static __inline __time64_t gettime()
-	{
-		FILETIME FileTime;
-
-		GetSystemTimeAsFileTime(&FileTime);
-
-		__time64_t tmp = ((__time64_t)FileTime.dwHighDateTime << 32) | FileTime.dwLowDateTime;
-
-		tmp = (tmp - 116444736000000000) / 10000000;
-
-		return tmp;
-	}
-
-	__time32_t __cdecl _time32(
-		_Out_opt_ __time32_t* _Time
-	)
-	{
-		__time64_t tmp = gettime();
-		if (_Time)
-			*_Time = tmp;
-
-		return tmp;
-	}
-
-	__time64_t __cdecl _time64(
-		_Out_opt_ __time64_t* _Time
-	)
-	{
-		__time64_t tmp = gettime();
-		if (_Time)
-			*_Time = tmp;
-
-		return tmp;
-	}
-
-
 	errno_t __cdecl _get_daylight(
 		_Out_ int* _Daylight
 	)
