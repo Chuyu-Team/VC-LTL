@@ -155,10 +155,14 @@ _ACRTIMP unsigned long __cdecl _wcstoul_l(
     );
 
 _Check_return_
-_ACRTIMP long double __cdecl wcstold(
+__inline long double __cdecl wcstold(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr
-    );
+    )
+{
+	static_assert(sizeof(long double) == sizeof(double), "Error sizeof(long double)!=sizeof(double)");
+	return wcstod(_String, _EndPtr);
+}
 
 _Check_return_
 _ACRTIMP long double __cdecl _wcstold_l(
@@ -209,17 +213,6 @@ _ACRTIMP long __cdecl _wtol(
 
 _Check_return_
 _ACRTIMP long __cdecl _wtol_l(
-    _In_z_   wchar_t const* _String,
-    _In_opt_ _locale_t      _Locale
-    );
-
-_Check_return_
-_ACRTIMP long long __cdecl _wtoll(
-    _In_z_ wchar_t const* _String
-    );
-
-_Check_return_
-_ACRTIMP long long __cdecl _wtoll_l(
     _In_z_   wchar_t const* _String,
     _In_opt_ _locale_t      _Locale
     );
@@ -335,6 +328,23 @@ __inline unsigned long long __cdecl _wcstoull_l(
     )
 {
 	return _wcstoui64_l(_String, _EndPtr, _Radix, _Locale);
+}
+
+_Check_return_
+__inline long long __cdecl _wtoll(
+    _In_z_ wchar_t const* _String
+    )
+{
+	return _wtoi64(_String);
+}
+
+_Check_return_
+__inline long long __cdecl _wtoll_l(
+    _In_z_   wchar_t const* _String,
+    _In_opt_ _locale_t      _Locale
+    )
+{
+	return _wtoi64_l(_String, _Locale);
 }
 
 #pragma push_macro("_wfullpath")
