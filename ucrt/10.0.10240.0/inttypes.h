@@ -37,12 +37,12 @@ typedef _Lldiv_t imaxdiv_t;
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _Check_return_
-_ACRTIMP intmax_t __cdecl imaxabs(
+extern intmax_t __cdecl imaxabs(
     _In_ intmax_t _Number
     );
 
 _Check_return_
-_ACRTIMP imaxdiv_t __cdecl imaxdiv(
+extern imaxdiv_t __cdecl imaxdiv(
     _In_ intmax_t _Numerator,
     _In_ intmax_t _Denominator
     );

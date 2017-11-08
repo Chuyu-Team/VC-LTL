@@ -293,7 +293,7 @@ typedef struct _lldiv_t
 
 _Check_return_ int       __cdecl abs   (_In_ int       _Number);
 _Check_return_ long      __cdecl labs  (_In_ long      _Number);
-_Check_return_ long long __cdecl llabs (_In_ long long _Number);
+_Check_return_ long long __cdecl llabs(_In_ long long _Number);
 _Check_return_ __int64   __cdecl _abs64(_In_ __int64   _Number);
 
 _Check_return_ unsigned short   __cdecl _byteswap_ushort(_In_ unsigned short   _Number);
@@ -302,7 +302,7 @@ _Check_return_ unsigned __int64 __cdecl _byteswap_uint64(_In_ unsigned __int64 _
 
 _Check_return_ _ACRTIMP div_t   __cdecl div  (_In_ int       _Numerator, _In_ int       _Denominator);
 _Check_return_ _ACRTIMP ldiv_t  __cdecl ldiv (_In_ long      _Numerator, _In_ long      _Denominator);
-_Check_return_ _ACRTIMP lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ long long _Denominator);
+_Check_return_ extern lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ long long _Denominator);
 
 // These functions have declspecs in their declarations in the Windows headers,
 // which cause PREfast to fire 6540.

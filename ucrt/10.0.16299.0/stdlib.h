@@ -222,7 +222,7 @@ _Check_return_opt_ _ACRTIMP int __cdecl _set_error_mode(_In_ int _Mode);
     _ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
 	_ACRTIMP extern char const* _sys_errlist[];
-	// This is non-const for backwards compatibility; do not modify it.
+    // This is non-const for backwards compatibility; do not modify it.
 	__inline _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void)
 	{
 		return (char**)_sys_errlist;
@@ -302,7 +302,7 @@ _Check_return_ unsigned __int64 __cdecl _byteswap_uint64(_In_ unsigned __int64 _
 
 _Check_return_ _ACRTIMP div_t   __cdecl div  (_In_ int       _Numerator, _In_ int       _Denominator);
 _Check_return_ _ACRTIMP ldiv_t  __cdecl ldiv (_In_ long      _Numerator, _In_ long      _Denominator);
-_Check_return_ _ACRTIMP lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ long long _Denominator);
+_Check_return_ extern lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ long long _Denominator);
 
 // These functions have declspecs in their declarations in the Windows headers,
 // which cause PREfast to fire 6540.
@@ -1204,15 +1204,15 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 		return &__wargv;
 	}
 
-    //#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    //    extern int       __argc;
-    //    extern char**    __argv;
-    //    extern wchar_t** __wargv;
-    //#else
-    //    #define __argc  (*__p___argc())  // Pointer to number of command line arguments
-    //    #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
-    //    #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
-    //#endif
+	//#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+	//    extern int       __argc;
+	//    extern char**    __argv;
+	//    extern wchar_t** __wargv;
+	//#else
+	//    #define __argc  (*__p___argc())  // Pointer to number of command line arguments
+	//    #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
+	//    #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
+	//#endif
 
 	_ACRTIMP extern char **    _environ;
 	_ACRTIMP extern wchar_t ** _wenviron;
@@ -1230,15 +1230,15 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         #define _CRT_V12_LEGACY_FUNCTIONALITY
     #endif
 
-    //#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
-    //    // Deprecated symbol: Do not expose environment global pointers unless
-    //    // legacy access is specifically requested
-    //    #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
-    //    #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
-    //#else
-    //    #define _environ  (*__p__environ())  // Pointer to narrow environment table
-    //    #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
-    //#endif
+	//#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
+	//    // Deprecated symbol: Do not expose environment global pointers unless
+	//    // legacy access is specifically requested
+	//    #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
+	//    #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
+	//#else
+	//    #define _environ  (*__p__environ())  // Pointer to narrow environment table
+	//    #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
+	//#endif
 
 
 
