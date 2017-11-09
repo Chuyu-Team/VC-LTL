@@ -8,19 +8,19 @@
 #include <cstdlib>
 #include <xtr1common>
 
-#pragma pack(push,_CRT_PACKING)
-#pragma warning(push,_STL_WARNING_LEVEL)
-#pragma warning(disable: _STL_DISABLED_WARNINGS)
-#pragma push_macro("new")
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ #pragma push_macro("new")
  #undef new
 
 _STD_BEGIN
 template<class _Ty1,
 	class _Ty2>
 	using _Common_float_type_t =
-	conditional_t<is_same<_Ty1, long double>::value || is_same<_Ty2, long double>::value, long double,
-	conditional_t<is_same<_Ty1, float>::value && is_same<_Ty2, float>::value, float,
-	double>>;	// find type for two-argument math function
+		conditional_t<is_same<_Ty1, long double>::value || is_same<_Ty2, long double>::value, long double,
+		conditional_t<is_same<_Ty1, float>::value && is_same<_Ty2, float>::value, float,
+		double>>;	// find type for two-argument math function
 _STD_END
 
 #define _CRTDEFAULT
@@ -63,26 +63,22 @@ template<class _Ty1, \
 
 #define _GENERIC_MATH1X_Thunks(FUN, FUN_NEW, ARG2, CRTTYPE) \
 extern "C" _Check_return_ CRTTYPE double __cdecl FUN(_In_ double, _In_ double); \
-template<class _Ty> inline \
-	typename _STD enable_if< _STD is_integral<_Ty>::value, double>::type \
-	FUN_NEW(_Ty _Left, ARG2 _Arg2) \
+template<class _Ty, \
+	class = _STD enable_if_t< _STD is_integral<_Ty>::value>> inline \
+	double FUN_NEW(_Ty _Left, ARG2 _Arg2) \
 	{ \
-	return (_CSTD FUN((double)_Left, _Arg2)); \
+	return (_CSTD FUN(static_cast<double>(_Left), _Arg2)); \
 	}
 
-
 #define _GENERIC_MATH2_CALL_Thunks(FUN, FUN_NEW, CRTTYPE, CALL_OPT) \
-extern "C" _Check_return_ CRTTYPE double CALL_OPT FUN( \
-	_In_ double, _In_ double); \
+extern "C" _Check_return_ CRTTYPE double CALL_OPT FUN(_In_ double, _In_ double); \
 template<class _Ty1, \
-	class _Ty2> inline \
-	typename _STD enable_if< _STD is_arithmetic<_Ty1>::value \
-		&& _STD is_arithmetic<_Ty2>::value, \
-			typename _STD _Common_float_type<_Ty1, _Ty2>::type>::type \
-	FUN_NEW(_Ty1 _Left, _Ty2 _Right) \
+	class _Ty2, \
+	class = _STD enable_if_t< _STD is_arithmetic<_Ty1>::value && _STD is_arithmetic<_Ty2>::value>> inline \
+	_STD _Common_float_type_t<_Ty1, _Ty2> FUN_NEW(_Ty1 _Left, _Ty2 _Right) \
 	{ \
-	typedef typename _STD _Common_float_type<_Ty1, _Ty2>::type type; \
-	return (_CSTD FUN((type)_Left, (type)_Right)); \
+	typedef _STD _Common_float_type_t<_Ty1, _Ty2> type; \
+	return (_CSTD FUN(static_cast<type>(_Left), static_cast<type>(_Right))); \
 	}
 
 #define _GENERIC_MATH2_Thunks(FUN,FUN_NEW, CRTTYPE) \
@@ -223,7 +219,7 @@ _GENERIC_MATH1(trunc, _CRTDEFAULT)
 #undef _GENERIC_MATH2_CALL
 #undef _GENERIC_MATH2
 
-#pragma pop_macro("new")
+ #pragma pop_macro("new")
  #pragma warning(pop)
  #pragma pack(pop)
 #endif /* RC_INVOKED */
