@@ -317,7 +317,7 @@ lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt
 ::lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\amd64\ilogbf.obj
 ::lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\amd64\ilogb.obj
 lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\amd64\frexp.obj
-lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\amd64\fpsr.obj
+::lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\amd64\fpsr.obj
 
 ::lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\amd64\fpexcept.obj
 
