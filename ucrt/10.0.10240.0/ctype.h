@@ -24,38 +24,35 @@ _CRT_BEGIN_C_HEADER
 _Check_return_ _ACRTIMP int __cdecl _isctype(_In_ int _C, _In_ int _Type);
 _Check_return_ _ACRTIMP int __cdecl _isctype_l(_In_ int _C, _In_ int _Type, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isalpha(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _isalpha_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isalpha_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isupper(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _isupper_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isupper_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl islower(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _islower_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _islower_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 
 _When_(_Param_(1) == 0, _Post_equal_to_(0))
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isdigit(_In_ int _C);
 
-_Check_return_ _ACRTIMP int __cdecl _isdigit_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isdigit_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int __cdecl isxdigit(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _isxdigit_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isxdigit_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 
 _When_(_Param_(1) == 0, _Post_equal_to_(0))
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isspace(_In_ int _C);
 
 _Check_return_ _ACRTIMP int __cdecl _isspace_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int __cdecl ispunct(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _ispunct_l(_In_ int _C, _In_opt_ _locale_t _Locale);
-_Check_return_ __inline int __cdecl isblank(_In_ int _C)
-{
-	return _C == 0x20 || _C == '\t';
-}
-_Check_return_ _ACRTIMP int __cdecl _isblank_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ extern int __cdecl _ispunct_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ extern int __cdecl isblank(_In_ int _C);
+_Check_return_ extern int __cdecl _isblank_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isalnum(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _isalnum_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isalnum_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int __cdecl isprint(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _isprint_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isprint_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int __cdecl isgraph(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _isgraph_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isgraph_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int __cdecl iscntrl(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _iscntrl_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iscntrl_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 
 _When_(_Param_(1) == 0, _Post_equal_to_(0))
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl toupper(_In_ int _C);
@@ -92,7 +89,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
         #endif
 
         #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-            extern int __mb_cur_max;
+            _ACRTIMP extern int __mb_cur_max;
         #else
             #define __mb_cur_max (___mb_cur_max_func())
         #endif
