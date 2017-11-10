@@ -101,7 +101,7 @@ typedef __int64 fpos_t;
 
         _Check_return_opt_
         _Success_(return != 0)
-        _ACRTIMP size_t __cdecl fread_s(
+        extern size_t __cdecl fread_s(
             _Out_writes_bytes_to_(_BufferSize, _ElementSize * _ElementCount)   void*  _Buffer,
             _In_range_(>=, _ElementSize * _ElementCount)                       size_t _BufferSize,
             _In_                                                               size_t _ElementSize,
