@@ -43,12 +43,13 @@ extern "C" int __cdecl _mbbtype_l(
     _locale_t     const locale
     )
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
+	mbstring_thunks(locale);
 
     switch(ctype)
     {
     case _MBC_LEAD:
-        if (_ismbbtrail_l(c, locale_update.GetLocaleT()))
+        if (_ismbbtrail_l(c, nullptr))
             return _MBC_TRAIL;
 
         else
@@ -58,10 +59,10 @@ extern "C" int __cdecl _mbbtype_l(
     case _MBC_SINGLE:
     case _MBC_ILLEGAL:
     default:
-        if (_ismbblead_l(c, locale_update.GetLocaleT()))
+        if (_ismbblead_l(c, nullptr))
             return _MBC_LEAD;
 
-        else if (_ismbbprint_l(c, locale_update.GetLocaleT()))
+        else if (_ismbbprint_l(c, nullptr))
             return _MBC_SINGLE;
 
         else
@@ -69,7 +70,7 @@ extern "C" int __cdecl _mbbtype_l(
     }
 }
 
-extern "C" int __cdecl _mbbtype(unsigned char const c, int const ctype)
-{
-    return _mbbtype_l(c, ctype, nullptr);
-}
+//extern "C" int __cdecl _mbbtype(unsigned char const c, int const ctype)
+//{
+//    return _mbbtype_l(c, ctype, nullptr);
+//}

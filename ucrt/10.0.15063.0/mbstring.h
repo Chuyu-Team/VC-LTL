@@ -18,7 +18,19 @@ _CRT_BEGIN_C_HEADER
     #define _FILE_DEFINED
     typedef struct _iobuf
     {
-        void* _Placeholder;
+		union
+		{
+			void* _Placeholder;
+			char* _ptr;
+		};
+
+		int   _cnt;
+		char *_base;
+		long   _flags;
+		long   _file;
+		int   _charbuf;
+		int   _bufsiz;
+		char *_tmpfname;
     } FILE;
 #endif
 
@@ -59,7 +71,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _DCRTIMP int __cdecl _mbbtype_l(
+    extern int __cdecl _mbbtype_l(
         _In_     unsigned char _C,
         _In_     int           _CType,
         _In_opt_ _locale_t     _Locale
