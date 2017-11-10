@@ -32,8 +32,8 @@ _CRT_BEGIN_C_HEADER
     _ACRTIMP const wctype_t*       __cdecl __pwctype_func(void);
 
     #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        extern const unsigned short* _pctype;
-        extern const wctype_t*       _pwctype;
+        _ACRTIMP extern const unsigned short* _pctype;
+		_ACRTIMP extern const wctype_t*       _pwctype;
     #else
         #define _pctype  (__pctype_func())
         #define _pwctype (__pwctype_func())
@@ -63,7 +63,7 @@ _CRT_BEGIN_C_HEADER
 _Check_return_ _ACRTIMP int __cdecl iswalnum  (_In_ wint_t _C);
 _Check_return_ _ACRTIMP int __cdecl iswalpha  (_In_ wint_t _C);
 _Check_return_ _ACRTIMP int __cdecl iswascii  (_In_ wint_t _C);
-_Check_return_ _ACRTIMP int __cdecl iswblank  (_In_ wint_t _C);
+_Check_return_ extern int __cdecl iswblank  (_In_ wint_t _C);
 _Check_return_ _ACRTIMP int __cdecl iswcntrl  (_In_ wint_t _C);
 
 _When_(_Param_(1) == 0, _Post_equal_to_(0))
@@ -76,23 +76,23 @@ _Check_return_ _ACRTIMP int __cdecl iswpunct  (_In_ wint_t _C);
 _Check_return_ _ACRTIMP int __cdecl iswspace  (_In_ wint_t _C);
 _Check_return_ _ACRTIMP int __cdecl iswupper  (_In_ wint_t _C);
 _Check_return_ _ACRTIMP int __cdecl iswxdigit (_In_ wint_t _C);
-_Check_return_ _ACRTIMP int __cdecl __iswcsymf(_In_ wint_t _C);
-_Check_return_ _ACRTIMP int __cdecl __iswcsym (_In_ wint_t _C);
+_Check_return_ extern int __cdecl __iswcsymf(_In_ wint_t _C);
+_Check_return_ extern int __cdecl __iswcsym (_In_ wint_t _C);
 
-_Check_return_ _ACRTIMP int __cdecl _iswalnum_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswalpha_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswblank_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswcntrl_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswdigit_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswgraph_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswlower_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswprint_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswpunct_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswspace_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswupper_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswxdigit_l(_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswcsymf_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int __cdecl _iswcsym_l  (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswalnum_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswalpha_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ extern int __cdecl _iswblank_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswcntrl_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswdigit_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswgraph_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswlower_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswprint_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswpunct_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswspace_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswupper_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _iswxdigit_l(_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ extern int __cdecl _iswcsymf_l (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ extern int __cdecl _iswcsym_l  (_In_ wint_t _C, _In_opt_ _locale_t _Locale);
 
 
 _Check_return_ _ACRTIMP wint_t __cdecl towupper(_In_ wint_t _C);
@@ -106,7 +106,7 @@ _Check_return_ _ACRTIMP int    __cdecl _iswctype_l(_In_ wint_t _C, _In_ wctype_t
 
 #ifdef _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
     _Check_return_ _ACRTIMP int __cdecl isleadbyte(_In_ int _C);
-    _Check_return_ _ACRTIMP int __cdecl _isleadbyte_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _ACRTXPIMP int __cdecl _isleadbyte_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 
     _CRT_OBSOLETE(iswctype) _DCRTIMP int __cdecl is_wctype(_In_ wint_t _C, _In_ wctype_t _Type);
 #endif
