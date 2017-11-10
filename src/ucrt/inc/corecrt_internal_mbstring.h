@@ -19,21 +19,26 @@ _CRT_BEGIN_C_HEADER
  // Multibyte full-width-latin upper/lower info
 #define NUM_ULINFO 6
 
+#define mbstring_thunks(p) \
+const unsigned char* mbctype;\
+const unsigned short*_locale_pctype;\
+if(p){mbctype=(p)->mbcinfo->mbctype;_locale_pctype=(p)->locinfo->_locale_pctype;}\
+else{mbctype=_mbctype;_locale_pctype=__PCTYPE_FUNC;}
 
 #define _ismbbtruelead(_lb,_ch) (!(_lb) && _ismbblead((_ch)))
 
 /* internal use macros since tolower/toupper are locale-dependent */
-#define _mbbisupper(_c) ((_mbctype.value()[(_c) + 1] & _SBUP) == _SBUP)
-#define _mbbislower(_c) ((_mbctype.value()[(_c) + 1] & _SBLOW) == _SBLOW)
+#define _mbbisupper(_c) ((_mbctype[(_c) + 1] & _SBUP) == _SBUP)
+#define _mbbislower(_c) ((_mbctype[(_c) + 1] & _SBLOW) == _SBLOW)
 
-#define _mbbtolower(_c) (_mbbisupper(_c) ? _mbcasemap.value()[_c] : _c)
-#define _mbbtoupper(_c) (_mbbislower(_c) ? _mbcasemap.value()[_c] : _c)
+#define _mbbtolower(_c) (_mbbisupper(_c) ? _mbcasemap[_c] : _c)
+#define _mbbtoupper(_c) (_mbbislower(_c) ? _mbcasemap[_c] : _c)
 
 #define _ismbbtruelead_l(_lb,_ch,p)   (!(_lb) && _ismbblead_l((_ch), p))
-#define _mbbisupper_l(_c, p)      ((p->mbcinfo->mbctype[(_c) + 1] & _SBUP) == _SBUP)
-#define _mbbislower_l(_c, p)      ((p->mbcinfo->mbctype[(_c) + 1] & _SBLOW) == _SBLOW)
-#define _mbbtolower_l(_c, p)      (_mbbisupper_l(_c, p) ? p->mbcinfo->mbcasemap[_c] : _c)
-#define _mbbtoupper_l(_c, p)      (_mbbislower_l(_c, p) ? p->mbcinfo->mbcasemap[_c] : _c)
+#define _mbbisupper_l(_c, p)      ((mbctype[(_c) + 1] & _SBUP) == _SBUP)
+#define _mbbislower_l(_c, p)      ((mbctype[(_c) + 1] & _SBLOW) == _SBLOW)
+#define _mbbtolower_l(_c, p)      (_mbbisupper_l(_c, p) ? mbcasemap[_c] : _c)
+#define _mbbtoupper_l(_c, p)      (_mbbislower_l(_c, p) ? mbcasemap[_c] : _c)
 
 /* define full-width-latin upper/lower ranges */
 
@@ -58,24 +63,24 @@ _CRT_BEGIN_C_HEADER
 #define _MBKIGOUEXCEPT  0x817f  // Exception
 
 // Macros used in the implementation of the classification functions.
-#define _ismbbalnum_l(_c, pt)  ((((pt)->locinfo->_public._locale_pctype)[(unsigned char)(_c)] & \
+#define _ismbbalnum_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
                                 (_ALPHA|_DIGIT)) || \
-                                (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MS))
-#define _ismbbalpha_l(_c, pt)  ((((pt)->locinfo->_public._locale_pctype)[(unsigned char)(_c)] & \
+                                ((mbctype+1)[(unsigned char)(_c)] & _MS))
+#define _ismbbalpha_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
                             (_ALPHA)) || \
-                            (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MS))
-#define _ismbbgraph_l(_c, pt)  ((((pt)->locinfo->_public._locale_pctype)[(unsigned char)(_c)] & \
+                            ((mbctype+1)[(unsigned char)(_c)] & _MS))
+#define _ismbbgraph_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
                             (_PUNCT|_ALPHA|_DIGIT)) || \
-                            (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & (_MS|_MP)))
-#define _ismbbprint_l(_c, pt)  ((((pt)->locinfo->_public._locale_pctype)[(unsigned char)(_c)] & \
+                            ((mbctype+1)[(unsigned char)(_c)] & (_MS|_MP)))
+#define _ismbbprint_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
                             (_BLANK|_PUNCT|_ALPHA|_DIGIT)) || \
-                            (((pt)->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & (_MS|_MP)))
-#define _ismbbpunct_l(_c, pt)  ((((pt)->locinfo->_public._locale_pctype)[(unsigned char)(_c)] & _PUNCT) || \
-                                (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MP))
-#define _ismbbblank_l(_c, pt)  (((_c) == '\t') ? _BLANK : (((pt)->locinfo->_public._locale_pctype)[(unsigned char)(_c)] & _BLANK) || \
-                               (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MP))
-#define _ismbblead_l(_c, p)   ((p->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & _M1)
-#define _ismbbtrail_l(_c, p)  ((p->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & _M2)
+                            ((mbctype + 1)[(unsigned char)(_c)] & (_MS|_MP)))
+#define _ismbbpunct_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & _PUNCT) || \
+                                ((mbctype+1)[(unsigned char)(_c)] & _MP))
+#define _ismbbblank_l(_c, pt)  (((_c) == '\t') ? _BLANK : ((_locale_pctype)[(unsigned char)(_c)] & _BLANK) || \
+                               ((mbctype+1)[(unsigned char)(_c)] & _MP))
+#define _ismbblead_l(_c, p)   ((mbctype + 1)[(unsigned char)(_c)] & _M1)
+#define _ismbbtrail_l(_c, p)  ((mbctype + 1)[(unsigned char)(_c)] & _M2)
 
 
 
@@ -87,11 +92,24 @@ extern "C" inline int __cdecl __dcrt_multibyte_check_type(
     bool           const expected
     )
 {
-    // Return false if we are not in a supported multibyte codepage:
-    if (!locale->mbcinfo->ismbcodepage)
-        return FALSE;
+	int code_page;
 
-    int const code_page = locale->mbcinfo->mbcodepage;
+	if (locale)
+	{
+		// Return false if we are not in a supported multibyte codepage:
+		if (!locale->mbcinfo->ismbcodepage)
+			return FALSE;
+
+		code_page = locale->mbcinfo->mbcodepage;
+	}
+	else
+	{
+		code_page = _getmbcp();
+
+		// Return false if we are not in a supported multibyte codepage:
+		if(code_page==0)
+			return FALSE;
+	}
 
     char const bytes[] = { (c >> 8) & 0xff, c & 0xff };
 

@@ -50,7 +50,7 @@ extern "C" BOOL __cdecl __acrt_GetStringTypeA(
     BOOL            const error
     )
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     // Convert string and return the requested information. Note that
     // we are converting to a wide character string so there is not a
@@ -63,7 +63,7 @@ extern "C" BOOL __cdecl __acrt_GetStringTypeA(
     // Use __lc_codepage for conversion if code_page not specified:
     int const actual_code_page = code_page != 0
         ? code_page
-        : locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage;
+        : (locale ? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func());
 
     // Find out how big a buffer we need:
     int const required_extent = MultiByteToWideChar(

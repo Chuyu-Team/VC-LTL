@@ -36,22 +36,26 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcpunct_l(unsigned int const c, _locale_t const locale)
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     if (c <= 0x00FF)
     {
-        return _ismbbpunct_l(c, locale_update.GetLocaleT());
+		mbstring_thunks(locale);
+
+        return _ismbbpunct_l(c, locale);
     }
 
-    return __dcrt_multibyte_check_type(c, locale_update.GetLocaleT(), _PUNCT, true);
+    return __dcrt_multibyte_check_type(c, locale, _PUNCT, true);
 }
+#endif
 
-extern "C" int __cdecl _ismbcpunct(unsigned int const c)
-{
-    return _ismbcpunct_l(c, nullptr);
-}
+//extern "C" int __cdecl _ismbcpunct(unsigned int const c)
+//{
+//    return _ismbcpunct_l(c, nullptr);
+//}
 
 /***
 * _ismbcblank - Test if character is blank (MBCS)
@@ -76,14 +80,15 @@ extern "C" int __cdecl _ismbcpunct(unsigned int const c)
 
 extern "C" int __cdecl _ismbcblank_l(unsigned int const c, _locale_t const locale)
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     if (c <= 0x00FF)
     {
-        return _ismbbblank_l(c, locale_update.GetLocaleT());
+		mbstring_thunks(locale)
+        return _ismbbblank_l(c, locale);
     }
 
-    return __dcrt_multibyte_check_type(c, locale_update.GetLocaleT(), _BLANK, true);
+    return __dcrt_multibyte_check_type(c, locale, _BLANK, true);
 }
 
 extern "C" int __cdecl _ismbcblank(unsigned int const c)

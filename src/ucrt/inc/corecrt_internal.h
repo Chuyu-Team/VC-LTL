@@ -99,9 +99,9 @@ extern "C++"
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #ifdef __cplusplus
-    extern __crt_state_management::dual_state_global<int>               _fmode;
-    extern __crt_state_management::dual_state_global<unsigned char*>    _mbctype;
-    extern __crt_state_management::dual_state_global<unsigned char*>    _mbcasemap;
+    _ACRTIMP extern int           _fmode;
+	_ACRTIMP extern unsigned char _mbctype[];
+	_ACRTIMP extern unsigned char _mbcasemap[];
 #endif
 
 
@@ -683,22 +683,22 @@ BOOL __cdecl __acrt_get_qualified_locale_downlevel(
 
 // Global variable that is nonzero if the locale has been changed on any thread.
 // Do not touch this global variable; call __acrt_locale_changed instead.
-extern long __acrt_locale_changed_data;
+//extern long __acrt_locale_changed_data;
 
-#ifdef __cplusplus
+//#ifdef __cplusplus
 
     // Returns true if the locale has been changed on any thread.
-    __inline bool __cdecl __acrt_locale_changed()
-    {
+//    __inline bool __cdecl __acrt_locale_changed()
+//    {
         // No need for __crt_interlocked_read, since __acrt_locale_changed_data
         // is a 4 byte natural aligned memory, guaranteed to be atomic
         // accessed on all platforms.
-        return __acrt_locale_changed_data != FALSE;
-    }
+//        return __acrt_locale_changed_data != FALSE;
+//    }
 
-#endif
+//#endif
 
-void __cdecl __acrt_set_locale_changed(void);
+//void __cdecl __acrt_set_locale_changed(void);
 
 
 // Non-NLS language and country/region string tables:
@@ -1829,57 +1829,57 @@ extern "C++"
         _Inout_ __crt_multibyte_data** const data
         );
 
-    class _LocaleUpdate
-    {
-    public:
+    //class _LocaleUpdate
+    //{
+    //public:
 
-        _LocaleUpdate(_locale_t const locale) throw()
-            : _updated(false)
-        {
-            if (locale)
-            {
-                _locale_pointers = *locale;
-            }
-            else if (!__acrt_locale_changed())
-            {
-                _locale_pointers = __acrt_initial_locale_pointers;
-            }
-            else
-            {
-                _ptd = __acrt_getptd();
-                _locale_pointers.locinfo = _ptd->_locale_info;
-                _locale_pointers.mbcinfo = _ptd->_multibyte_info;
+    //    _LocaleUpdate(_locale_t const locale) throw()
+    //        : _updated(false)
+    //    {
+    //        if (locale)
+    //        {
+    //            _locale_pointers = *locale;
+    //        }
+    //        else if (!__acrt_locale_changed())
+    //        {
+    //            _locale_pointers = __acrt_initial_locale_pointers;
+    //        }
+    //        else
+    //        {
+    //            _ptd = __acrt_getptd();
+    //            _locale_pointers.locinfo = _ptd->_locale_info;
+    //            _locale_pointers.mbcinfo = _ptd->_multibyte_info;
 
-                __acrt_update_locale_info   (_ptd, &_locale_pointers.locinfo);
-                __acrt_update_multibyte_info(_ptd, &_locale_pointers.mbcinfo);
-                if ((_ptd->_own_locale & _PER_THREAD_LOCALE_BIT) == 0)
-                {
-                    _ptd->_own_locale |= _PER_THREAD_LOCALE_BIT;
-                    _updated = true;
-                }
-            }
-        }
+    //            __acrt_update_locale_info   (_ptd, &_locale_pointers.locinfo);
+    //            __acrt_update_multibyte_info(_ptd, &_locale_pointers.mbcinfo);
+    //            if ((_ptd->_own_locale & _PER_THREAD_LOCALE_BIT) == 0)
+    //            {
+    //                _ptd->_own_locale |= _PER_THREAD_LOCALE_BIT;
+    //                _updated = true;
+    //            }
+    //        }
+    //    }
 
-        ~_LocaleUpdate() throw()
-        {
-            if (_updated)
-            {
-                _ptd->_own_locale = _ptd->_own_locale & ~_PER_THREAD_LOCALE_BIT;
-            }
-        }
+    //    ~_LocaleUpdate() throw()
+    //    {
+    //        if (_updated)
+    //        {
+    //            _ptd->_own_locale = _ptd->_own_locale & ~_PER_THREAD_LOCALE_BIT;
+    //        }
+    //    }
 
-        _locale_t GetLocaleT() throw()
-        {
-            return &_locale_pointers;
-        }
+    //    _locale_t GetLocaleT() throw()
+    //    {
+    //        return &_locale_pointers;
+    //    }
 
-    private:
+    //private:
 
-        __acrt_ptd*           _ptd;
-        __crt_locale_pointers _locale_pointers;
-        bool                  _updated;
+    //    __acrt_ptd*           _ptd;
+    //    __crt_locale_pointers _locale_pointers;
+    //    bool                  _updated;
 
-    };
+    //};
 
 
 

@@ -1126,7 +1126,7 @@ _CRT_BEGIN_C_HEADER
     _Check_return_ _DCRTIMP int __cdecl _ismbclower(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcprint(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcpunct(_In_ unsigned int _C);
-    _Check_return_ _DCRTIMP int __cdecl _ismbcblank(_In_ unsigned int _C);
+    _Check_return_   extern int __cdecl _ismbcblank(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcspace(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcupper(_In_ unsigned int _C);
 
@@ -1137,8 +1137,8 @@ _CRT_BEGIN_C_HEADER
     _Check_return_ _DCRTIMP int __cdecl _ismbclegal_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
     _Check_return_ _DCRTIMP int __cdecl _ismbclower_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
     _Check_return_ _DCRTIMP int __cdecl _ismbcprint_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _DCRTIMP int __cdecl _ismbcpunct_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _DCRTIMP int __cdecl _ismbcblank_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _ACRTXPIMP int __cdecl _ismbcpunct_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_     extern int __cdecl _ismbcblank_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
     _Check_return_ _DCRTIMP int __cdecl _ismbcspace_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
     _Check_return_ _DCRTIMP int __cdecl _ismbcupper_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
 
@@ -1189,8 +1189,8 @@ _Check_return_ _DCRTIMP int __cdecl _ismbblead (_In_ unsigned int _Ch);
 _Check_return_ _DCRTIMP int __cdecl _ismbbtrail(_In_ unsigned int _Ch);
 
 _When_(_Ch == 0, _Post_equal_to_(0))
-_Check_return_ _DCRTIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
-_Check_return_ _DCRTIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
 
 _Check_return_
 _DCRTIMP int __cdecl _ismbslead(
