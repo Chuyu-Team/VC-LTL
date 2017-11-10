@@ -279,7 +279,7 @@ _ACRTIMP size_t __cdecl strftime(
 
 _Success_(return > 0)
 _Check_return_wat_
-_ACRTIMP size_t __cdecl _strftime_l(
+extern size_t __cdecl _strftime_l(
     _Out_writes_z_(_MaxSize)      char*            _Buffer,
     _In_                          size_t           _MaxSize,
     _In_z_ _Printf_format_string_ char const*      _Format,

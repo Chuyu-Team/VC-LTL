@@ -120,7 +120,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTIMP double __cdecl _wcstod_l(
+    extern double __cdecl _wcstod_l(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_opt_                 _locale_t      _Locale
@@ -180,7 +180,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTIMP float __cdecl _wcstof_l(
+    extern float __cdecl _wcstof_l(
         _In_z_                   wchar_t const* _String,
         _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
         _In_opt_                 _locale_t      _Locale
