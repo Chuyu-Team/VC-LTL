@@ -30,11 +30,11 @@ typedef void (__CRTDECL* terminate_function)();
 
     #ifndef _M_CEE_PURE
 
-        _ACRTIMP terminate_handler __cdecl set_terminate(
+        extern terminate_handler __cdecl set_terminate(
             _In_opt_ terminate_handler _NewTerminateHandler
             ) throw();
 
-        _ACRTIMP terminate_handler __cdecl _get_terminate();
+		extern terminate_handler __cdecl _get_terminate();
 
     #endif
 
