@@ -122,10 +122,12 @@ extern "C" int (__cdecl _ismbbalnum_l) (unsigned int tst, _locale_t plocinfo)
 //        return x_ismbbtype_l(nullptr,tst,(_ALPHA | _DIGIT), _MS);
 //}
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbalpha_l) (unsigned int tst, _locale_t plocinfo)
 {
         return x_ismbbtype_l(plocinfo,tst,_ALPHA, _MS);
 }
+#endif
 
 //extern "C" int (__cdecl _ismbbalpha) (unsigned int tst)
 //{
