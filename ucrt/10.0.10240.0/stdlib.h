@@ -49,7 +49,7 @@ _ACRTIMP void __cdecl _swab(
 
 _ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
 _ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
-_ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
+  extern __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
 _ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
 _ACRTIMP __declspec(noreturn) void __cdecl abort(void);
 
