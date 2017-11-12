@@ -73,7 +73,7 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 
 //EXTERN_C bool __cdecl __crt_are_vista_sync_apis_available();
 
-int __cdecl __crtCompareStringA
+__declspec(dllimport) int __cdecl __crtCompareStringA
 (
     _In_opt_ _locale_t _Plocinfo,
     _In_ LCID     _Locale,
@@ -85,7 +85,7 @@ int __cdecl __crtCompareStringA
     _In_ int      _Code_page
 );
 
-int __cdecl __crtCompareStringW
+__declspec(dllimport) int __cdecl __crtCompareStringW
 (
     _In_ LCID     _Locale,
     _In_ DWORD    _DwCmpFlags,
@@ -96,7 +96,7 @@ int __cdecl __crtCompareStringW
 );
 
 
-int __cdecl __crtLCMapStringW
+__declspec(dllimport) int __cdecl __crtLCMapStringW
 (
     _In_ LCID _Locale,
     _In_ DWORD _DWMapFlag,
@@ -107,10 +107,10 @@ int __cdecl __crtLCMapStringW
 );
 
 
-LCID* ___lc_handle_func(void);
+__declspec(dllimport) LCID* ___lc_handle_func(void);
 
 
-int __cdecl __crtLCMapStringA
+__declspec(dllimport) int __cdecl __crtLCMapStringA
 (
 	_In_opt_ _locale_t _Plocinfo,
 	_In_ LCID _Locale,
@@ -152,7 +152,7 @@ __declspec(dllimport) void __cdecl _unlock(
 	int locknum
 );
 
-void _amsg_exit(
+__declspec(dllimport) void _amsg_exit(
 	int rterrnum
 );
 
