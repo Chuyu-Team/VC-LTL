@@ -426,7 +426,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(
     #undef _wdupenv_s
 
     _Check_return_wat_
-    _DCRTIMP errno_t __cdecl _wdupenv_s(
+    extern errno_t __cdecl _wdupenv_s(
         _Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ wchar_t**      _Buffer,
         _Out_opt_                                                                   size_t*        _BufferCount,
         _In_z_                                                                      wchar_t const* _VarName

@@ -1266,7 +1266,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         #endif
 
         _Check_return_opt_
-        _DCRTIMP errno_t __cdecl _dupenv_s(
+        extern errno_t __cdecl _dupenv_s(
             _Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ char**      _Buffer,
             _Out_opt_                                                                   size_t*     _BufferCount,
             _In_z_                                                                      char const* _VarName
