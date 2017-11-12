@@ -40,7 +40,7 @@ struct _EXCEPTION_POINTERS;
 
         typedef void (__cdecl* _se_translator_function)(unsigned int, struct _EXCEPTION_POINTERS*);
 
-        _VCRTIMP _se_translator_function __cdecl _set_se_translator(
+		extern _se_translator_function __cdecl _set_se_translator(
             _In_opt_ _se_translator_function _NewSETranslator
             );
 
