@@ -99,7 +99,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
 
     _Check_return_opt_
     _Success_(return != 0)
-    _ACRTIMP wchar_t* __cdecl _getws_s(
+    extern wchar_t* __cdecl _getws_s(
         _Out_writes_z_(_BufferCount) wchar_t* _Buffer,
         _In_                         size_t   _BufferCount
         );

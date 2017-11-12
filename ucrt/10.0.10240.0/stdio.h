@@ -116,7 +116,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
         );
 
     _Success_(return != 0)
-    _ACRTIMP char* __cdecl gets_s(
+    extern char* __cdecl gets_s(
         _Out_writes_z_(_Size) char*   _Buffer,
         _In_                  rsize_t _Size
         );
