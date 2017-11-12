@@ -427,6 +427,25 @@ struct __finddata64_t
 
 
 
+	#ifdef __cplusplus
+
+		// These function do not validate pmode; use _sopen_s instead.
+		extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
+		extern int __CRTDECL _open(
+			_In_z_ char const* const _FileName,
+			_In_   int         const _OFlag,
+			_In_   int         const _PMode = 0
+			);
+
+		extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
+		extern int __CRTDECL _sopen(
+			_In_z_ char const* const _FileName,
+			_In_   int         const _OFlag,
+			_In_   int         const _ShFlag,
+			_In_   int         const _PMode = 0
+			);
+
+	#else
 
         _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
         _ACRTIMP int __cdecl _open(
@@ -441,6 +460,7 @@ struct __finddata64_t
             _In_   int         _ShareFlag,
             ...);
 
+	#endif
 
 
 
