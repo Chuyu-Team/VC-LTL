@@ -101,7 +101,7 @@ _ACRTIMP int __cdecl _waccess(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _waccess_s(
+_ACRTXPIMP errno_t __cdecl _waccess_s(
     _In_z_ wchar_t const* _FileName,
     _In_   int            _AccessMode
     );

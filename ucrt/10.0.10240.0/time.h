@@ -132,7 +132,7 @@ _ACRTIMP char* __cdecl asctime(
 #if __STDC_WANT_SECURE_LIB__
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl asctime_s(
+    _ACRTXPIMP errno_t __cdecl asctime_s(
         _Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*            _Buffer,
         _In_range_(>=,26)                                   size_t           _SizeInBytes,
         _In_                                                struct tm const* _Tm

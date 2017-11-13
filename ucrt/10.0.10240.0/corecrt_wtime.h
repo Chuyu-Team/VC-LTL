@@ -47,7 +47,7 @@ _ACRTIMP wchar_t* __cdecl _wasctime(
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wasctime_s(
+_ACRTXPIMP errno_t __cdecl _wasctime_s(
     _Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*         _Buffer,
     _In_range_(>=,26)                                     size_t           _SizeInWords,
     _In_                                                  struct tm const* _Tm
