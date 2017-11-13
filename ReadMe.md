@@ -102,9 +102,12 @@ PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 * [SQLite](http://www.sqlite.org/download.html)
 * [LuaJIT](http://luajit.org/)
 
-> 其他更多等你来反馈
-
 ## Changes：
+
+2.0.0.3 待定
+* Vista编译模式，CRT函数覆盖率达到90%以上（已达成目标）
+* XP编译模式，CRT函数覆盖率达到80%以上（正在进行）
+
 
 2.0.0.2 2017-11-05 14:14
 * 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持
