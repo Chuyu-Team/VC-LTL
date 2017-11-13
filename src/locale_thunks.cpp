@@ -15,7 +15,7 @@
 #include <mbctype.h>
 
 
-static class LocaleAutoUpdate
+class LocaleAutoUpdate
 {
 public:
 	__acrt_ptd* ptd;
