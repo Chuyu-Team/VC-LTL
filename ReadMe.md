@@ -88,7 +88,7 @@ PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
 
 #### 6.1 已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。
-* 由于WinXP本身BUG，vsprintf相关函数无法正常支持`%xll`。当你需要兼容XP时，请优先考虑使用`%I64x`代替。vsprintf_s相关版本不存在此问题。
+* 由于WinXP本身BUG，vsprintf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。vsprintf_s相关版本不存在此问题。
 
 #### 6.2 已知与VC-LTL兼容的项目
 此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容一下项目。
