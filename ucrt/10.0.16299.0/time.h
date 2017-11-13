@@ -151,12 +151,12 @@ _ACRTIMP clock_t __cdecl clock(void);
 _Ret_z_
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_ctime32_s)
-_ACRTIMP char* __cdecl _ctime32(
+_ACRTXPIMP char* __cdecl _ctime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _ctime32_s(
+_ACRTXPIMP errno_t __cdecl _ctime32_s(
     _Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
     _In_range_(>=,26)                                   size_t            _SizeInBytes,
     _In_                                                __time32_t const* _Time
@@ -176,7 +176,7 @@ _ACRTIMP char* __cdecl _ctime64(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _ctime64_s(
+_ACRTXPIMP errno_t __cdecl _ctime64_s(
     _Out_writes_z_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
     _In_range_(>=,26)                                     size_t            _SizeInBytes,
     _In_                                                  __time64_t const* _Time
@@ -202,12 +202,12 @@ _ACRTXPIMP double __cdecl _difftime64(
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_gmtime32_s)
-_ACRTIMP struct tm* __cdecl _gmtime32(
+_ACRTXPIMP struct tm* __cdecl _gmtime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _gmtime32_s(
+_ACRTXPIMP errno_t __cdecl _gmtime32_s(
     _Out_ struct tm*        _Tm,
     _In_  __time32_t const* _Time
     );
@@ -219,19 +219,19 @@ _ACRTIMP struct tm* __cdecl _gmtime64(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _gmtime64_s(
+_ACRTXPIMP errno_t __cdecl _gmtime64_s(
     _Out_ struct tm*        _Tm,
     _In_  __time64_t const* _Time
     );
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_localtime32_s)
-_ACRTIMP struct tm* __cdecl _localtime32(
+_ACRTXPIMP struct tm* __cdecl _localtime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _localtime32_s(
+_ACRTXPIMP errno_t __cdecl _localtime32_s(
     _Out_ struct tm*        _Tm,
     _In_  __time32_t const* _Time
     );
@@ -249,17 +249,17 @@ _ACRTXPIMP errno_t __cdecl _localtime64_s(
     );
 
 _Check_return_
-_ACRTIMP __time32_t __cdecl _mkgmtime32(
+_ACRTXPIMP __time32_t __cdecl _mkgmtime32(
     _Inout_ struct tm* _Tm
     );
 
 _Check_return_
-_ACRTIMP __time64_t __cdecl _mkgmtime64(
+_ACRTXPIMP __time64_t __cdecl _mkgmtime64(
     _Inout_ struct tm* _Tm
     );
 
 _Check_return_opt_
-_ACRTIMP __time32_t __cdecl _mktime32(
+_ACRTXPIMP __time32_t __cdecl _mktime32(
     _Inout_ struct tm* _Tm
     );
 

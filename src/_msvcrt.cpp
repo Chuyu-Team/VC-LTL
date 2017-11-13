@@ -304,9 +304,18 @@ extern "C"
 	//		return _Buffer == NULL ? _vscwprintf_l(_Format, _Locale, _ArgList) : _vswprintf_s_l(_Buffer, _BufferCount, _Format, _Locale, _ArgList);
 	//	}
 
+	// Maximum local time adjustment (GMT + 13 Hours, DST -0 Hours)
+#define _MAX_LOCAL_TIME (13 * 60 * 60)
+
+	// Minimum local time adjustment (GMT - 11 Hours, DST - 1 Hours)
+#define _MIN_LOCAL_TIME (-12 * 60 * 60)
+
+	// Number of seconds from 00:00:00, 01/01/1970 UTC to 23:59:59, 01/18/2038 UTC
+#define _MAX_TIME32 0x7fffd27f
+
 #ifdef _ATL_XP_TARGETING
 	extern "C++" template<typename time_t>
-	__forceinline double __cdecl commem_difftime(
+	__forceinline double __cdecl common_difftime(
 		_In_ time_t _Time1,
 		_In_ time_t _Time2
 		)
@@ -324,7 +333,7 @@ extern "C"
 		_In_ __time32_t _Time2
 		)
 	{
-		return commem_difftime(_Time1, _Time2);
+		return common_difftime(_Time1, _Time2);
 	}
 
 	double __cdecl _difftime64(
@@ -332,26 +341,73 @@ extern "C"
 		_In_ __time64_t _Time2
 		)
 	{
-		return commem_difftime(_Time1, _Time2);
+		return common_difftime(_Time1, _Time2);
 	}
 
-	__declspec(dllimport) struct tm* __cdecl _localtime64(
-		_In_ __time64_t const* _Time
-	);
+
+	struct tm* __cdecl _localtime32(
+		_In_ __time32_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN(_Time != nullptr, EINVAL,nullptr);
+
+		// Check for illegal time_t value:
+		if (*_Time <0 || *_Time > _MAX_TIME32)
+		{
+			errno = EINVAL;
+			return nullptr;
+		}
+		__time64_t _Time64 = *_Time;
+
+		return _localtime64(&_Time64);
+	}
+
+	extern "C++" __forceinline struct tm* __cdecl _localtime_t(_In_ __time32_t const* _Time)
+	{
+		return _localtime32(_Time);
+	}
+
+	extern "C++" __forceinline struct tm* __cdecl _localtime_t(_In_ __time64_t const* _Time)
+	{
+		return _localtime64(_Time);
+	}
+
+	extern "C++" template<typename time_t>
+	__forceinline errno_t __cdecl common_localtime_s(
+		_Out_ struct tm*        _Tm,
+		_In_  time_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Tm != nullptr, EINVAL);
+		memset(_Tm, 0xff, sizeof(*_Tm));
+
+		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
+
+
+#pragma warning(suppress : 4996)
+		const struct tm* t = _localtime_t(_Time);
+		if (!t)
+			return errno;
+
+		*_Tm = *t;
+
+		return 0;
+	}
+
+	errno_t __cdecl _localtime32_s(
+		_Out_ struct tm*        _Tm,
+		_In_  __time32_t const* _Time
+		)
+	{
+		return common_localtime_s(_Tm, _Time);
+	}
 
 	errno_t __cdecl _localtime64_s(
 		_Out_ struct tm*        _Tm,
 		_In_  __time64_t const* _Time
-	)
+		)
 	{
-#pragma warning(suppress : 4996)
-		const struct tm* t = _localtime64(_Time);
-		if (!t)
-			return errno;
-
-		memcpy(_Tm, t, sizeof(struct tm));
-
-		return 0;
+		return common_localtime_s(_Tm, _Time);
 	}
 
 	errno_t __cdecl _get_daylight(
@@ -1564,6 +1620,208 @@ extern "C"
 			return errno;
 
 		return strcpy_s(_Buffer, _SizeInBytes, szTime);
+	}
+
+
+	char* __cdecl _ctime32(
+		_In_ __time32_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN(_Time != nullptr, EINVAL, nullptr);
+
+		// Check for illegal time_t value:
+		if (*_Time <0 || *_Time > _MAX_TIME32)
+		{
+			errno = EINVAL;
+			return nullptr;
+		}
+		__time64_t _Time64 = *_Time;
+
+		return _ctime64(&_Time64);
+	}
+
+	extern "C++" template<typename time_t>
+	__forceinline errno_t __cdecl common_ctime_s(
+		_Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
+		_In_range_(>= , 26)                                   size_t            _SizeInBytes,
+		_In_                                                time_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(
+			_Buffer != nullptr && _SizeInBytes > 0,
+			EINVAL
+		)
+
+		*_Buffer = NULL;
+
+		_VALIDATE_RETURN_ERRCODE(_SizeInBytes >= 26, EINVAL)
+
+		auto tm = _localtime_t(_Time);
+		if (!tm)
+			return errno;
+
+		return asctime_s(_Buffer, _SizeInBytes, tm);
+	}
+
+	errno_t __cdecl _ctime32_s(
+		_Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
+		_In_range_(>= , 26)                                   size_t            _SizeInBytes,
+		_In_                                                __time32_t const* _Time
+		)
+	{
+		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
+	}
+
+	errno_t __cdecl _ctime64_s(
+		_Out_writes_z_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
+		_In_range_(>= , 26)                                     size_t            _SizeInBytes,
+		_In_                                                  __time64_t const* _Time
+		)
+	{
+		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
+	}
+
+	struct tm* __cdecl _gmtime32(
+		_In_ __time32_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN(_Time != nullptr, EINVAL,nullptr);
+
+		// Check for illegal time_t value:
+		if (*_Time < _MIN_LOCAL_TIME || *_Time > _MAX_TIME32 + _MAX_LOCAL_TIME)
+		{
+			errno = EINVAL;
+			return nullptr;
+		}
+
+		__time64_t _Time64 = *_Time;
+
+		return _gmtime64(&_Time64);
+	}
+
+	extern "C++" __forceinline struct tm* __cdecl _gmtime_t(
+		_In_  __time32_t const* _Time
+		)
+	{
+		return _gmtime32(_Time);
+	}
+
+	extern "C++" __forceinline  struct tm* __cdecl _gmtime_t(
+		_In_  __time64_t const* _Time
+		)
+	{
+		return _gmtime64(_Time);
+	}
+
+	extern "C++" template<typename time_t>
+	__forceinline errno_t __cdecl common_gmtime_t_s(
+		_Out_ struct tm*        _Tm,
+		_In_  time_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Tm != nullptr, EINVAL);
+
+		memset(_Tm, 0xff, sizeof(*_Tm));
+
+		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
+
+
+		auto tm = _gmtime_t(_Time);
+		if (!tm)
+			return errno;
+
+		*_Tm = *tm;
+		return 0;
+	}
+
+	errno_t __cdecl _gmtime32_s(
+		_Out_ struct tm*        _Tm,
+		_In_  __time32_t const* _Time
+		)
+	{
+		return common_gmtime_t_s(_Tm, _Time);
+	}
+
+	errno_t __cdecl _gmtime64_s(
+		_Out_ struct tm*        _Tm,
+		_In_  __time64_t const* _Time
+		)
+	{
+		return common_gmtime_t_s(_Tm, _Time);
+	}
+
+
+	__time64_t __cdecl _mkgmtime64(
+		_Inout_ struct tm* _Tm
+		)
+	{
+		_VALIDATE_RETURN(_Tm != nullptr, EINVAL, -1);
+
+		auto tbtemp = *_Tm;
+
+		auto time = _mktime64(&tbtemp);
+		if (time == -1)
+		{
+			return -1;
+		}
+
+		//修正本地时间与UTC时间的差异
+		time -= _timezone;
+
+		if (_Tm->tm_isdst > 0 || (_Tm->tm_isdst < 0 && tbtemp.tm_isdst > 0))
+		{
+			time -= _dstbias;
+		}
+
+		auto tm = _gmtime64(&time);
+		if (!tm)
+			return -1;
+
+		*_Tm = *tm;
+
+		return time;
+	}
+
+	__time32_t __cdecl _mkgmtime32(
+		_Inout_ struct tm* _Tm
+		)
+	{
+		auto tbtemp = *_Tm;
+		auto Time = _mkgmtime64(&tbtemp);
+		if (Time == -1)
+			return -1;
+
+		// Check for illegal time_t value:
+		if (Time > _MAX_TIME32 + _MAX_LOCAL_TIME)
+		{
+			errno = EINVAL;
+			return -1;
+		}
+
+		*_Tm = tbtemp;
+
+		return Time;
+	}
+
+	__time32_t __cdecl _mktime32(
+		_Inout_ struct tm* _Tm
+		)
+	{
+		auto tbtemp = *_Tm;
+		auto Time = _mktime64(&tbtemp);
+		if (Time == -1)
+			return -1;
+
+		// Check for illegal time_t value:
+		if (Time > _MAX_TIME32)
+		{
+			errno = EINVAL;
+			return -1;
+		}
+
+		*_Tm = tbtemp;
+
+		return Time;
 	}
 
 #endif
