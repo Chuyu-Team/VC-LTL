@@ -189,7 +189,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(
     )
 
 _Check_return_
-_ACRTIMP double __cdecl _difftime32(
+_ACRTXPIMP double __cdecl _difftime32(
     _In_ __time32_t _Time1,
     _In_ __time32_t _Time2
     );

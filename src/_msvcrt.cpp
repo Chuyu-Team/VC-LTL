@@ -305,11 +305,11 @@ extern "C"
 	//	}
 
 #ifdef _ATL_XP_TARGETING
-
-	double __cdecl _difftime64(
-		_In_ __time64_t _Time1,
-		_In_ __time64_t _Time2
-	)
+	extern "C++" template<typename time_t>
+	__forceinline double __cdecl commem_difftime(
+		_In_ time_t _Time1,
+		_In_ time_t _Time2
+		)
 	{
 		if (!(_Time2 >= 0 && _Time1 >= 0))
 		{
@@ -317,6 +317,22 @@ extern "C"
 			return 0;
 		}
 		return static_cast<double>(_Time1 - _Time2);
+	}
+
+	double __cdecl _difftime32(
+		_In_ __time32_t _Time1,
+		_In_ __time32_t _Time2
+		)
+	{
+		return commem_difftime(_Time1, _Time2);
+	}
+
+	double __cdecl _difftime64(
+		_In_ __time64_t _Time1,
+		_In_ __time64_t _Time2
+		)
+	{
+		return commem_difftime(_Time1, _Time2);
 	}
 
 	__declspec(dllimport) struct tm* __cdecl _localtime64(
