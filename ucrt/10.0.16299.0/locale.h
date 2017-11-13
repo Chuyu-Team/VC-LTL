@@ -127,7 +127,7 @@ struct tm;
 
     _ACRTIMP wchar_t**    __cdecl ___lc_locale_name_func(void);
     _ACRTIMP unsigned int __cdecl ___lc_codepage_func   (void);
-    _ACRTIMP unsigned int __cdecl ___lc_collate_cp_func (void);
+    _ACRTXPIMP unsigned int __cdecl ___lc_collate_cp_func (void);
 
 
 

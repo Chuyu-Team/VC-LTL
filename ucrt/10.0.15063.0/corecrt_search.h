@@ -23,7 +23,7 @@ _CRT_BEGIN_C_HEADER
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_
-    _ACRTIMP void* __cdecl bsearch_s(
+    _ACRTXPIMP void* __cdecl bsearch_s(
         _In_                                               void const* _Key,
         _In_reads_bytes_(_NumOfElements * _SizeOfElements) void const* _Base,
         _In_                                               rsize_t     _NumOfElements,
@@ -32,7 +32,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                                           void*       _Context
         );
 
-    _ACRTIMP void __cdecl qsort_s(
+    _ACRTXPIMP void __cdecl qsort_s(
         _Inout_updates_bytes_(_NumOfElements * _SizeOfElements) void*   _Base,
         _In_                                                    rsize_t _NumOfElements,
         _In_                                                    rsize_t _SizeOfElements,

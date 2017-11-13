@@ -45,7 +45,7 @@ _CRT_BEGIN_C_HEADER
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _itow_s(
+_ACRTXPIMP errno_t __cdecl _itow_s(
     _In_                         int      _Value,
     _Out_writes_z_(_BufferCount) wchar_t* _Buffer,
     _In_                         size_t   _BufferCount,
@@ -68,7 +68,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _ltow_s(
+_ACRTXPIMP errno_t __cdecl _ltow_s(
     _In_                         long     _Value,
     _Out_writes_z_(_BufferCount) wchar_t* _Buffer,
     _In_                         size_t   _BufferCount,
@@ -90,7 +90,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _ultow_s(
+_ACRTXPIMP errno_t __cdecl _ultow_s(
     _In_                         unsigned long _Value,
     _Out_writes_z_(_BufferCount) wchar_t*      _Buffer,
     _In_                         size_t        _BufferCount,
@@ -218,7 +218,7 @@ _ACRTIMP long __cdecl _wtol_l(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _i64tow_s(
+_ACRTXPIMP errno_t __cdecl _i64tow_s(
     _In_                         __int64  _Value,
     _Out_writes_z_(_BufferCount) wchar_t* _Buffer,
     _In_                         size_t   _BufferCount,
@@ -233,7 +233,7 @@ _ACRTIMP wchar_t* __cdecl _i64tow(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _ui64tow_s(
+_ACRTXPIMP errno_t __cdecl _ui64tow_s(
     _In_                         unsigned __int64 _Value,
     _Out_writes_z_(_BufferCount) wchar_t*         _Buffer,
     _In_                         size_t           _BufferCount,
@@ -361,7 +361,7 @@ _ACRTIMP _CRTALLOCATOR wchar_t* __cdecl _wfullpath(
 #pragma pop_macro("_wfullpath")
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wmakepath_s(
+_ACRTXPIMP errno_t __cdecl _wmakepath_s(
     _Out_writes_z_(_BufferCount) wchar_t*       _Buffer,
     _In_                         size_t         _BufferCount,
     _In_opt_z_                   wchar_t const* _Drive,
@@ -401,7 +401,7 @@ _ACRTIMP void __cdecl _wsplitpath(
     _Pre_maybenull_ _Post_z_ wchar_t*       _Ext
     );
 
-_ACRTIMP errno_t __cdecl _wsplitpath_s(
+_ACRTXPIMP errno_t __cdecl _wsplitpath_s(
     _In_z_                             wchar_t const* _FullPath,
     _Out_writes_opt_z_(_DriveCount)    wchar_t*       _Drive,
     _In_                               size_t         _DriveCount,

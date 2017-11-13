@@ -29,7 +29,7 @@ _CRT_BEGIN_C_HEADER
     #endif
 
     _ACRTIMP const unsigned short* __cdecl __pctype_func(void);
-    _ACRTIMP const wctype_t*       __cdecl __pwctype_func(void);
+    _ACRTXPIMP const wctype_t*       __cdecl __pwctype_func(void);
 
     #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
         _ACRTIMP extern const unsigned short* _pctype;

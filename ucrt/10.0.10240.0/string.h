@@ -217,7 +217,7 @@ size_t __cdecl strlen(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strlwr_s(
+_ACRTXPIMP errno_t __cdecl _strlwr_s(
     _Inout_updates_z_(_Size) char*  _String,
     _In_                     size_t _Size
     );
@@ -387,7 +387,7 @@ _ACRTIMP char* __cdecl _strnset(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strnset_s(
+_ACRTXPIMP errno_t __cdecl _strnset_s(
     _Inout_updates_z_(_SizeInBytes) char*  _String,
     _In_                            size_t _SizeInBytes,
     _In_                            int    _Value,
@@ -420,7 +420,7 @@ _ACRTIMP char* __cdecl _strrev(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strset_s(
+_ACRTXPIMP errno_t __cdecl _strset_s(
     _Inout_updates_z_(_DestinationSize) char*  _Destination,
     _In_                                size_t _DestinationSize,
     _In_                                int    _Value
@@ -456,7 +456,7 @@ _ACRTIMP char* __cdecl strtok(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strupr_s(
+_ACRTXPIMP errno_t __cdecl _strupr_s(
     _Inout_updates_z_(_Size) char*  _String,
     _In_                     size_t _Size
     );

@@ -99,7 +99,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_           _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbscat_s(
+    _ACRTXPIMP errno_t __cdecl _mbscat_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _SizeInBytes,
         _In_z_                          unsigned char const* _Src
@@ -178,7 +178,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_ _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbscpy_s(
+    _ACRTXPIMP errno_t __cdecl _mbscpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _In_z_                       unsigned char const* _Src
@@ -309,7 +309,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_ _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbslwr_s(
+    _ACRTXPIMP errno_t __cdecl _mbslwr_s(
         _Inout_updates_opt_z_(_SizeInBytes) unsigned char* _String,
         _In_                                size_t         _SizeInBytes
         );
@@ -343,7 +343,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                 _locale_t,     _Locale
         )
 
-    _DCRTIMP errno_t __cdecl _mbsnbcat_s(
+    _ACRTXPIMP errno_t __cdecl _mbsnbcat_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _SizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -432,7 +432,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                   _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbsnbcpy_s(
+    _ACRTXPIMP errno_t __cdecl _mbsnbcpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _In_z_                       unsigned char const* _Src,
@@ -508,7 +508,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_ _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbsnbset_s(
+    _ACRTXPIMP errno_t __cdecl _mbsnbset_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Dst,
         _In_                            size_t         _SizeInBytes,
         _In_                            unsigned int   _C,
@@ -555,7 +555,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                      _locale_t,     _Locale
         )
 
-    _DCRTIMP errno_t __cdecl _mbsncat_s(
+    _ACRTXPIMP errno_t __cdecl _mbsncat_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _SizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -644,7 +644,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_ _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbsncpy_s(
+    _ACRTXPIMP errno_t __cdecl _mbsncpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _In_z_                       unsigned char const* _Src,
@@ -744,7 +744,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbsnset_s(
+    _ACRTXPIMP errno_t __cdecl _mbsnset_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Dst,
         _In_                            size_t         _SizeInBytes,
         _In_                            unsigned int   _Val,
@@ -826,7 +826,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_  _locale_t      _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbsset_s(
+    _ACRTXPIMP errno_t __cdecl _mbsset_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Dst,
         _In_                            size_t         _SizeInBytes,
         _In_                            unsigned int   _Val
@@ -920,7 +920,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _DCRTIMP unsigned char* __cdecl _mbstok_s(
+    _ACRTXPIMP unsigned char* __cdecl _mbstok_s(
         _Inout_opt_z_                 unsigned char*       _Str,
         _In_z_                        unsigned char const* _Delim,
         _Inout_ _Deref_prepost_opt_z_ unsigned char**      _Context
@@ -934,7 +934,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                      _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbsupr_s(
+    _ACRTXPIMP errno_t __cdecl _mbsupr_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Str,
         _In_                            size_t         _SizeInBytes
         );
@@ -992,7 +992,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_              _locale_t            _Locale
         );
 
-    _DCRTIMP errno_t __cdecl _mbccpy_s(
+    _ACRTXPIMP errno_t __cdecl _mbccpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _Out_opt_                    int*                 _PCopied,

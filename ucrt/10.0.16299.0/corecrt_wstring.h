@@ -335,7 +335,7 @@ _Check_return_ _ACRTIMP int __cdecl _wcsnicmp_l(
     _In_opt_                   _locale_t      _Locale
     );
 
-_Check_return_wat_ _ACRTIMP errno_t __cdecl _wcsnset_s(
+_Check_return_wat_ _ACRTXPIMP errno_t __cdecl _wcsnset_s(
     _Inout_updates_z_(_SizeInWords) wchar_t* _Destination,
     _In_                            size_t   _SizeInWords,
     _In_                            wchar_t  _Value,
@@ -361,7 +361,7 @@ _ACRTIMP wchar_t* __cdecl _wcsrev(
     _Inout_z_ wchar_t* _String
     );
 
-_Check_return_wat_ _ACRTIMP errno_t __cdecl _wcsset_s(
+_Check_return_wat_ _ACRTXPIMP errno_t __cdecl _wcsset_s(
     _Inout_updates_z_(_SizeInWords) wchar_t* _Destination,
     _In_                            size_t   _SizeInWords,
     _In_                            wchar_t  _Value
@@ -380,7 +380,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
     _In_                     wchar_t, _Value
     )
 
-_Check_return_wat_ _ACRTIMP errno_t __cdecl _wcslwr_s(
+_Check_return_wat_ _ACRTXPIMP errno_t __cdecl _wcslwr_s(
     _Inout_updates_z_(_SizeInWords) wchar_t* _String,
     _In_                            size_t   _SizeInWords
     );
@@ -416,7 +416,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wcsupr_s(
+_ACRTXPIMP errno_t __cdecl _wcsupr_s(
     _Inout_updates_z_(_Size) wchar_t* _String,
     _In_                     size_t   _Size
     );

@@ -211,8 +211,8 @@ _Check_return_opt_ _ACRTIMP int __cdecl _set_error_mode(_In_ int _Mode);
 _ACRTIMP int* __cdecl _errno(void);
 #define errno (*_errno())
 
-_ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
-_ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
+_ACRTXPIMP errno_t __cdecl _set_errno(_In_ int _Value);
+_ACRTXPIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 
 _ACRTIMP unsigned long* __cdecl __doserrno(void);
 #define _doserrno (*__doserrno())
@@ -646,7 +646,7 @@ __inline unsigned long long __cdecl _strtoull_l(
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl _itoa_s(
+_ACRTXPIMP errno_t __cdecl _itoa_s(
     _In_                         int    _Value,
     _Out_writes_z_(_BufferCount) char*  _Buffer,
     _In_                         size_t _BufferCount,
@@ -670,7 +670,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl _ltoa_s(
+_ACRTXPIMP errno_t __cdecl _ltoa_s(
     _In_                         long   _Value,
     _Out_writes_z_(_BufferCount) char*  _Buffer,
     _In_                         size_t _BufferCount,
@@ -693,7 +693,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl _ultoa_s(
+_ACRTXPIMP errno_t __cdecl _ultoa_s(
     _In_                         unsigned long _Value,
     _Out_writes_z_(_BufferCount) char*         _Buffer,
     _In_                         size_t        _BufferCount,
@@ -716,7 +716,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl _i64toa_s(
+_ACRTXPIMP errno_t __cdecl _i64toa_s(
     _In_                         __int64 _Value,
     _Out_writes_z_(_BufferCount) char*   _Buffer,
     _In_                         size_t  _BufferCount,
@@ -733,7 +733,7 @@ _ACRTIMP char* __cdecl _i64toa(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl _ui64toa_s(
+_ACRTXPIMP errno_t __cdecl _ui64toa_s(
     _In_                         unsigned __int64 _Value,
     _Out_writes_z_(_BufferCount) char*            _Buffer,
     _In_                         size_t           _BufferCount,
@@ -761,7 +761,7 @@ _ACRTIMP char* __cdecl _ui64toa(
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _ecvt_s(
+_ACRTXPIMP errno_t __cdecl _ecvt_s(
     _Out_writes_z_(_BufferCount) char* _Buffer,
     _In_  size_t                       _BufferCount,
     _In_  double                       _Value,
@@ -818,7 +818,7 @@ _ACRTIMP char* __cdecl _fcvt(
     );
 
 _Success_(return == 0)
-_ACRTIMP errno_t __cdecl _gcvt_s(
+_ACRTXPIMP errno_t __cdecl _gcvt_s(
     _Out_writes_z_(_BufferCount) char*  _Buffer,
     _In_                         size_t _BufferCount,
     _In_                         double _Value,
@@ -1097,7 +1097,7 @@ _ACRTIMP _CRTALLOCATOR char* __cdecl _fullpath(
 #pragma pop_macro("_fullpath")
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _makepath_s(
+_ACRTXPIMP errno_t __cdecl _makepath_s(
     _Out_writes_z_(_BufferCount) char*       _Buffer,
     _In_                         size_t      _BufferCount,
     _In_opt_z_                   char const* _Drive,
@@ -1134,7 +1134,7 @@ _ACRTIMP void __cdecl _splitpath(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _splitpath_s(
+_ACRTXPIMP errno_t __cdecl _splitpath_s(
     _In_z_                             char const* _FullPath,
     _Out_writes_opt_z_(_DriveCount)    char*       _Drive,
     _In_                               size_t      _DriveCount,
