@@ -257,14 +257,14 @@ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP int*      __cdecl __p__fm
 #endif
 
 _Success_(return == 0)
-_ACRTIMP errno_t __cdecl _get_pgmptr (_Outptr_result_z_ char**    _Value);
+_ACRTXPIMP errno_t __cdecl _get_pgmptr (_Outptr_result_z_ char**    _Value);
 
 _Success_(return == 0)
-_ACRTIMP errno_t __cdecl _get_wpgmptr(_Outptr_result_z_ wchar_t** _Value);
+_ACRTXPIMP errno_t __cdecl _get_wpgmptr(_Outptr_result_z_ wchar_t** _Value);
 
-_ACRTIMP errno_t __cdecl _set_fmode  (_In_              int       _Mode );
+_ACRTXPIMP errno_t __cdecl _set_fmode  (_In_              int       _Mode );
 
-_ACRTIMP errno_t __cdecl _get_fmode  (_Out_             int*      _PMode);
+_ACRTXPIMP errno_t __cdecl _get_fmode  (_Out_             int*      _PMode);
 
 
 

@@ -19,24 +19,25 @@ extern "C" {
 // user code is executed.  There are cases where any or all of the pointers may
 // be null during execution.  Do not assume that they are non-null.
 
-int       __argc   = 0;       // The number of arguments in __argv or __wargv
-char**    __argv   = nullptr; // The arguments as narrow strings
-wchar_t** __wargv  = nullptr; // The arguments as wide strings
-char*     _pgmptr  = nullptr; // The name of the program as a narrow string
-wchar_t*  _wpgmptr = nullptr; // The name of the program as a wide string
-char*     _acmdln  = nullptr; // The raw command line as a narrow string
-wchar_t*  _wcmdln  = nullptr; // The raw command line as a wide string
+_ACRTIMP extern int       __argc;       // The number of arguments in __argv or __wargv
+_ACRTIMP extern  char**    __argv; // The arguments as narrow strings
+_ACRTIMP extern  wchar_t** __wargv; // The arguments as wide strings
+_ACRTIMP extern  char*     _pgmptr; // The name of the program as a narrow string
+_ACRTIMP extern  wchar_t*  _wpgmptr; // The name of the program as a wide string
+_ACRTIMP extern  char*     _acmdln; // The raw command line as a narrow string
+_ACRTIMP extern  wchar_t*  _wcmdln; // The raw command line as a wide string
 
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 
-int*       __cdecl __p___argc()   { return &__argc;   }
-char***    __cdecl __p___argv()   { return &__argv;   }
-wchar_t*** __cdecl __p___wargv()  { return &__wargv;  }
-char**     __cdecl __p__pgmptr()  { return &_pgmptr;  }
-wchar_t**  __cdecl __p__wpgmptr() { return &_wpgmptr; }
-char**     __cdecl __p__acmdln()  { return &_acmdln;  }
-wchar_t**  __cdecl __p__wcmdln()  { return &_wcmdln;  }
+//int*       __cdecl __p___argc()   { return &__argc;   }
+//char***    __cdecl __p___argv()   { return &__argv;   }
+//wchar_t*** __cdecl __p___wargv()  { return &__wargv;  }
+//char**     __cdecl __p__pgmptr()  { return &_pgmptr;  }
+//wchar_t**  __cdecl __p__wpgmptr() { return &_wpgmptr; }
+//char**     __cdecl __p__acmdln()  { return &_acmdln;  }
+//wchar_t**  __cdecl __p__wcmdln()  { return &_wcmdln;  }
 
+#ifdef _ATL_XP_TARGETING
 errno_t __cdecl _get_wpgmptr(wchar_t** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result   != nullptr, EINVAL);
@@ -45,7 +46,9 @@ errno_t __cdecl _get_wpgmptr(wchar_t** const result)
     *result = _wpgmptr;
     return 0;
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 errno_t __cdecl _get_pgmptr(char** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result  != nullptr, EINVAL);
@@ -53,22 +56,23 @@ errno_t __cdecl _get_pgmptr(char** const result)
     *result = _pgmptr;
     return 0;
 }
+#endif
 
 _END_SECURE_CRT_DEPRECATION_DISABLE
 
 
 
-bool __cdecl __acrt_initialize_command_line()
-{
-    _acmdln = GetCommandLineA();
-    _wcmdln = GetCommandLineW();
-    return true;
-}
-
-bool __cdecl __acrt_uninitialize_command_line(bool const /* terminating */)
-{
-    return true;
-}
+//bool __cdecl __acrt_initialize_command_line()
+//{
+//    _acmdln = GetCommandLineA();
+//    _wcmdln = GetCommandLineW();
+//    return true;
+//}
+//
+//bool __cdecl __acrt_uninitialize_command_line(bool const /* terminating */)
+//{
+//    return true;
+//}
 
 
 
