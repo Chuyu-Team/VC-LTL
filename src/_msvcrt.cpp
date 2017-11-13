@@ -311,7 +311,7 @@ extern "C"
 #define _MIN_LOCAL_TIME (-12 * 60 * 60)
 
 	// Number of seconds from 00:00:00, 01/01/1970 UTC to 23:59:59, 01/18/2038 UTC
-#define _MAX_TIME32 0x7fffd27f
+#define _MAX_TIME32 0x7fffd27fll
 
 #ifdef _ATL_XP_TARGETING
 	extern "C++" template<typename time_t>

@@ -473,13 +473,13 @@ extern "C++" {
     // Fast alternatives to the encode/decode pointer functions that do not use
     // the EncodePointer and DecodePointer functions.
     template <typename T>
-    T __crt_fast_decode_pointer(T const p) throw()
+	__forceinline T __crt_fast_decode_pointer(T const p) throw()
     {
 		return reinterpret_cast<T>(__CRT_DecodePointer(p));
 	}
 
     template <typename T>
-    T __crt_fast_encode_pointer(T const p) throw()
+	__forceinline T __crt_fast_encode_pointer(T const p) throw()
     {
 		return reinterpret_cast<T>(__CRT_EncodePointer(p));
 	}
@@ -504,13 +504,13 @@ extern "C++" {
 
 
     template <typename T>
-    T __crt_get_proc_address(HMODULE const m, char const* const f) throw()
+	__forceinline T __crt_get_proc_address(HMODULE const m, char const* const f) throw()
     {
         return reinterpret_cast<T>(::GetProcAddress(m, f));
     }
 
     template <typename T, typename V>
-    T* __crt_interlocked_exchange_pointer(T* const volatile* target, V const value) throw()
+	__forceinline T* __crt_interlocked_exchange_pointer(T* const volatile* target, V const value) throw()
     {
         // This is required to silence a spurious unreferenced formal parameter
         // warning.
@@ -520,7 +520,7 @@ extern "C++" {
     }
 
     template <typename T, typename E, typename C>
-    T __crt_interlocked_compare_exchange(T* const volatile target, E const exchange, C const comparand) throw()
+	__forceinline T __crt_interlocked_compare_exchange(T* const volatile target, E const exchange, C const comparand) throw()
     {
         UNREFERENCED_PARAMETER(exchange);  // These are required to silence spurious
         UNREFERENCED_PARAMETER(comparand); // unreferenced formal parameter warnings.
@@ -531,7 +531,7 @@ extern "C++" {
     }
 
     template <typename T, typename E, typename C>
-    T* __crt_interlocked_compare_exchange_pointer(T* const volatile* target, E const exchange, C const comparand) throw()
+	__forceinline T* __crt_interlocked_compare_exchange_pointer(T* const volatile* target, E const exchange, C const comparand) throw()
     {
         UNREFERENCED_PARAMETER(exchange);  // These are required to silence spurious
         UNREFERENCED_PARAMETER(comparand); // unreferenced formal parameter warnings.
@@ -541,14 +541,14 @@ extern "C++" {
     }
 
     template <typename T>
-    T __crt_interlocked_read(T* const volatile target) throw()
+    __forceinline T __crt_interlocked_read(T* const volatile target) throw()
     {
         static_assert(sizeof(T) == sizeof(LONG), "Type being read must be same size as a LONG.");
         return __crt_interlocked_compare_exchange(target, 0, 0);
     }
 
     template <typename T>
-    T* __crt_interlocked_read_pointer(T* const volatile* target) throw()
+	__forceinline T* __crt_interlocked_read_pointer(T* const volatile* target) throw()
     {
         return __crt_interlocked_compare_exchange_pointer(target, nullptr, nullptr);
     }
