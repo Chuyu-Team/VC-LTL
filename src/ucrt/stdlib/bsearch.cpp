@@ -79,7 +79,7 @@ void* __fileDECL bsearch(
     char const* hi = reinterpret_cast<char const*>(base) + (num - 1) * width;
 
     // Reentrancy diligence: Save (and unset) global-state mode to the stack before making callout to 'compare'
-    __crt_state_management::scoped_global_state_reset saved_state;
+    //__crt_state_management::scoped_global_state_reset saved_state;
 
     // We allow a nullptr key here because it breaks some older code and because
     // we do not dereference this ourselves so we can't be sure that it's a

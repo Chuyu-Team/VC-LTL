@@ -13,6 +13,7 @@
 #include <wchar.h>
 #include <limits.h>
 #include <stdio.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *errno_t _mbrtowc_s_l() - Helper function to convert multibyte char to wide character.
@@ -72,12 +73,28 @@ static errno_t __cdecl _mbrtowc_s_l(
         return 0;
     }
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
     
-    const int locale_mb_cur_max = _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max;
+	int locale_mb_cur_max;
+	LCID locale;
+	unsigned int _locale_lc_codepage;
+
+	if (plocinfo)
+	{
+		locale_mb_cur_max = plocinfo->locinfo->_locale_mb_cur_max;
+		locale = plocinfo->locinfo->lc_handle[LC_CTYPE];
+		_locale_lc_codepage = plocinfo->locinfo->_locale_lc_codepage;
+	}
+	else
+	{
+		locale_mb_cur_max = ___mb_cur_max_func();
+		locale = ___lc_handle_func()[LC_CTYPE];
+		_locale_lc_codepage = ___lc_codepage_func();
+	}
+
     _ASSERTE(locale_mb_cur_max == 1 || locale_mb_cur_max == 2);
 
-    if (_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr)
+    if (/*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/locale==0)
     {
         _ASSIGN_IF_NOT_NULL(dst, (wchar_t) (unsigned char) *s);
         _ASSIGN_IF_NOT_NULL(pRetValue, 1);
@@ -90,7 +107,7 @@ static errno_t __cdecl _mbrtowc_s_l(
         ((char *) pmbst)[1] = *s;
         if (locale_mb_cur_max <= 1 ||
             (MultiByteToWideChar(
-            _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+            _locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             (char *) pmbst,
             2,
@@ -108,7 +125,7 @@ static errno_t __cdecl _mbrtowc_s_l(
         _ASSIGN_IF_NOT_NULL(pRetValue, locale_mb_cur_max);
         return 0;
     }
-    else if (_isleadbyte_l((unsigned char) *s, _loc_update.GetLocaleT()))
+    else if (_isleadbyte_l((unsigned char) *s, plocinfo))
     {
         /* multi-byte char */
         if (n < (size_t) locale_mb_cur_max)
@@ -119,7 +136,7 @@ static errno_t __cdecl _mbrtowc_s_l(
             return 0;
         }
         else if (locale_mb_cur_max <= 1 ||
-            (MultiByteToWideChar(_loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+            (MultiByteToWideChar(_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             static_cast<int>(__min(strlen(s), INT_MAX)),
@@ -142,7 +159,7 @@ static errno_t __cdecl _mbrtowc_s_l(
     else {
         /* single byte char */
         if (MultiByteToWideChar(
-            _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+            _locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             1,
@@ -174,6 +191,7 @@ static errno_t __cdecl _mbrtowc_s_l(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" wint_t __cdecl btowc(
     int c
     )
@@ -194,6 +212,7 @@ extern "C" wint_t __cdecl btowc(
         return (retValue < 0 ? WEOF : wc);
     }
 }
+#endif
 
 
 /***
@@ -209,6 +228,7 @@ extern "C" wint_t __cdecl btowc(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl mbrlen(
     const char *s,
     size_t n,
@@ -221,6 +241,7 @@ extern "C" size_t __cdecl mbrlen(
     _mbrtowc_s_l(&retValue, nullptr, s, n, (pst != nullptr ? pst : &mbst), nullptr);
     return retValue;
 }
+#endif
 
 
 /***
@@ -236,6 +257,7 @@ extern "C" size_t __cdecl mbrlen(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl mbrtowc(
     wchar_t *dst,
     const char *s,
@@ -256,7 +278,7 @@ extern "C" size_t __cdecl mbrtowc(
     }
     return retValue;
 }
-
+#endif
 
 /***
 *size_t mbsrtowcs(wcs, ps, n, pst) - translate multibyte string to wide,
@@ -289,7 +311,7 @@ static size_t __cdecl _mbsrtowcs_helper(
     const char *s = *ps;
     int i = 0;
     size_t nwc = 0;
-    _LocaleUpdate _loc_update(nullptr);
+    //_LocaleUpdate _loc_update(nullptr);
 
     if (pst == nullptr)
     {
@@ -302,7 +324,7 @@ static size_t __cdecl _mbsrtowcs_helper(
         {
             /* translate but don't store */
             wchar_t wc;
-            _mbrtowc_s_l(&i, &wc, s, INT_MAX, pst, _loc_update.GetLocaleT());
+            _mbrtowc_s_l(&i, &wc, s, INT_MAX, pst, nullptr);
             if (i < 0)
             {
                 return (size_t) - 1;
@@ -317,7 +339,7 @@ static size_t __cdecl _mbsrtowcs_helper(
     for (; 0 < n; ++nwc, s += i, ++wcs, --n)
     {
         /* translate and store */
-        _mbrtowc_s_l(&i, wcs, s, INT_MAX, pst, _loc_update.GetLocaleT());
+        _mbrtowc_s_l(&i, wcs, s, INT_MAX, pst, nullptr);
         if (i < 0)
         {
             /* encountered invalid sequence */
@@ -336,6 +358,7 @@ static size_t __cdecl _mbsrtowcs_helper(
     return nwc;
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl mbsrtowcs(
     wchar_t *wcs,
     const char **ps,
@@ -347,7 +370,7 @@ extern "C" size_t __cdecl mbsrtowcs(
 
     return _mbsrtowcs_helper(wcs, ps, n, pst);
 }
-
+#endif
 
 /***
 *errno_t mbsrtowcs_s() - Convert multibyte char string to wide char string.
@@ -375,6 +398,7 @@ extern "C" size_t __cdecl mbsrtowcs(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl mbsrtowcs_s(
     size_t *pRetValue,
     wchar_t *dst,
@@ -430,3 +454,4 @@ extern "C" errno_t __cdecl mbsrtowcs_s(
 
     return 0;
 }
+#endif

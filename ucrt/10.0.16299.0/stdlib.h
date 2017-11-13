@@ -931,7 +931,7 @@ _ACRTIMP int __cdecl mbtowc(
     );
 
 _Success_(return != -1)
-_ACRTIMP int __cdecl _mbtowc_l(
+_ACRTXPIMP int __cdecl _mbtowc_l(
     _Pre_notnull_ _Post_z_               wchar_t*    _DstCh,
     _In_reads_or_z_opt_(_SrcSizeInBytes) char const* _SrcCh,
     _In_                                 size_t      _SrcSizeInBytes,

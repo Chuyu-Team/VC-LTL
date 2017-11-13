@@ -52,17 +52,17 @@ extern _locale_t __cdecl _wcreate_locale(
 
 
 
-_ACRTIMP wint_t __cdecl btowc(
+_ACRTXPIMP wint_t __cdecl btowc(
     _In_ int _Ch
     );
 
-_ACRTIMP size_t __cdecl mbrlen(
+_ACRTXPIMP size_t __cdecl mbrlen(
     _In_reads_bytes_opt_(_SizeInBytes) _Pre_opt_z_ char const* _Ch,
     _In_                                           size_t      _SizeInBytes,
     _Inout_                                        mbstate_t*  _State
     );
 
-_ACRTIMP size_t __cdecl mbrtowc(
+_ACRTXPIMP size_t __cdecl mbrtowc(
     _Pre_maybenull_ _Post_z_                       wchar_t*    _DstCh,
     _In_reads_bytes_opt_(_SizeInBytes) _Pre_opt_z_ char const* _SrcCh,
     _In_                                           size_t      _SizeInBytes,
@@ -70,7 +70,7 @@ _ACRTIMP size_t __cdecl mbrtowc(
     );
 
 _Success_(return == 0)
-_ACRTIMP errno_t __cdecl mbsrtowcs_s(
+_ACRTXPIMP errno_t __cdecl mbsrtowcs_s(
     _Out_opt_                         size_t*      _Retval,
     _Out_writes_opt_z_(_Size)         wchar_t*     _Dst,
     _In_                              size_t       _Size,
@@ -90,7 +90,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE(
-    _Success_(return == 0) _ACRTIMP, mbsrtowcs,
+    _Success_(return == 0) _ACRTXPIMP, mbsrtowcs,
     _Out_writes_opt_z_(_Count),           wchar_t,      _Dest,
     _Deref_pre_opt_z_                 char const**, _PSrc,
     _In_                              size_t,       _Count,
