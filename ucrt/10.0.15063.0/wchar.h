@@ -100,7 +100,7 @@ typedef wchar_t _Wint_t;
         )
 
     _Success_(return == 0)
-    _ACRTIMP errno_t __cdecl wcrtomb_s(
+    _ACRTXPIMP errno_t __cdecl wcrtomb_s(
         _Out_opt_                        size_t*    _Retval,
         _Out_writes_opt_z_(_SizeInBytes) char*      _Dst,
         _In_                             size_t     _SizeInBytes,
@@ -118,14 +118,14 @@ typedef wchar_t _Wint_t;
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_2_SIZE(
-        _ACRTIMP, wcrtomb,
+        _ACRTXPIMP, wcrtomb,
         _Pre_maybenull_ _Post_z_, char,       _Dest,
         _In_                      wchar_t,    _Source,
         _Inout_opt_              mbstate_t*, _State
         )
 
     _Success_(return == 0)
-    _ACRTIMP errno_t __cdecl wcsrtombs_s(
+    _ACRTXPIMP errno_t __cdecl wcsrtombs_s(
         _Out_opt_                                         size_t*         _Retval,
         _Out_writes_bytes_to_opt_(_SizeInBytes, *_Retval) char*           _Dst,
         _In_                                              size_t          _SizeInBytes,
@@ -145,14 +145,14 @@ typedef wchar_t _Wint_t;
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE(
-        _ACRTIMP, wcsrtombs,
+        _ACRTXPIMP, wcsrtombs,
         _Pre_maybenull_ _Post_z_, char,            _Dest,
         _Inout_ _Deref_prepost_z_ wchar_t const**, _PSource,
         _In_                      size_t,          _Count,
         _Inout_opt_               mbstate_t*,      _State
         )
 
-    _ACRTIMP int __cdecl wctob(
+    _ACRTXPIMP int __cdecl wctob(
         _In_ wint_t _WCh
         );
 

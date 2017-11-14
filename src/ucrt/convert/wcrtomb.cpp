@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <locale.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *errno_t _wcrtomb_s_l() - Helper function to convert wide character to multibyte character.
@@ -48,22 +49,25 @@ static errno_t __cdecl _wcrtomb_s_l(
     __out_bcount_z_opt(destination_count)   char*       const   destination,
                                             size_t      const   destination_count,
                                             wchar_t     const   wchar,
-                                            mbstate_t*  const   state,
-                                            _locale_t   const   locale
+                                            mbstate_t*  const   state/*,
+                                            _locale_t   const   locale*/
     )
 {
     _ASSERTE(destination != nullptr && destination_count > 0);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
+	
     _ASSERTE(
-        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 1 ||
-        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 2);
+		___mb_cur_max_func() == 1 ||
+		___mb_cur_max_func() == 2);
 
     if (state)
         state->_Wchar = 0;
 
-    if (!locale_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE])
+	
+
+    if (!___lc_handle_func()[LC_CTYPE])
     {
         if (wchar > 255) // Validate high byte
         {
@@ -79,10 +83,10 @@ static errno_t __cdecl _wcrtomb_s_l(
 
         return 0;
     }
-
+	
     BOOL default_used{};
     int const size = WideCharToMultiByte(
-        locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+		___lc_codepage_func(),
         0,
         &wchar,
         1,
@@ -118,6 +122,7 @@ static errno_t __cdecl _wcrtomb_s_l(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl wcrtomb_s(
     size_t*    const return_value,
     char*      const destination,
@@ -136,11 +141,11 @@ extern "C" errno_t __cdecl wcrtomb_s(
     if (destination == nullptr)
     {
         char buf[MB_LEN_MAX];
-        e = _wcrtomb_s_l(&int_return_value, buf, MB_LEN_MAX, wchar, state, nullptr);
+        e = _wcrtomb_s_l(&int_return_value, buf, MB_LEN_MAX, wchar, state);
     }
     else
     {
-        e = _wcrtomb_s_l(&int_return_value, destination, destination_count, wchar, state, nullptr);
+        e = _wcrtomb_s_l(&int_return_value, destination, destination_count, wchar, state);
     }
 
     if (return_value != nullptr)
@@ -148,7 +153,9 @@ extern "C" errno_t __cdecl wcrtomb_s(
 
     return e;
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl wcrtomb(
     char*      const destination,
     wchar_t    const wchar,
@@ -159,6 +166,7 @@ extern "C" size_t __cdecl wcrtomb(
     wcrtomb_s(&return_value, destination, (destination == nullptr ? 0 : MB_LEN_MAX), wchar, state);
     return return_value;
 }
+#endif
 
 /***
 *errno_t wcsrtombs_s(retValue, destination, destination_count, pwcs, n, state) - translate wide char string to multibyte
@@ -190,14 +198,14 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     int i = 0;
     size_t nc = 0;
     wchar_t const* wcs = *source;
-    _LocaleUpdate locale_update(nullptr);
+    //_LocaleUpdate locale_update(nullptr);
 
     if (!destination)
     {
         for (; ; nc += i, ++wcs)
         {
             /* translate but don't store */
-            _wcrtomb_s_l(&i, buf, MB_LEN_MAX, *wcs, state, locale_update.GetLocaleT());
+            _wcrtomb_s_l(&i, buf, MB_LEN_MAX, *wcs, state);
             if (i <= 0)
             {
                 return static_cast<size_t>(-1);
@@ -209,12 +217,14 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
         }
     }
 
+	auto _locale_mb_cur_max = ___mb_cur_max_func();
+
     for (; 0 < n; nc += i, ++wcs, destination += i, n -= i)
     {
         /* translate and store */
         char *t = nullptr;
 
-        if (n < (size_t)locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max)
+        if (n < (size_t)_locale_mb_cur_max)
         {
             t = buf;
         }
@@ -223,7 +233,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
             t = destination;
         }
 
-        _wcrtomb_s_l(&i, t, MB_LEN_MAX, *wcs, state, locale_update.GetLocaleT());
+        _wcrtomb_s_l(&i, t, MB_LEN_MAX, *wcs, state);
         if (i <= 0)
         {
             /* encountered invalid sequence */
@@ -256,6 +266,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     return nc;
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl wcsrtombs(
     char*           const destination,
     wchar_t const** const source,
@@ -265,6 +276,7 @@ extern "C" size_t __cdecl wcsrtombs(
 {
     return internal_wcsrtombs(destination, source, n, state);
 }
+#endif
 
 /***
 *errno_t wcstombs_s() - Convert wide char string to multibyte char string.
@@ -292,6 +304,7 @@ extern "C" size_t __cdecl wcsrtombs(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl wcsrtombs_s(
     size_t*         const return_value,
     char*           const destination,
@@ -349,10 +362,11 @@ extern "C" errno_t __cdecl wcsrtombs_s(
 
     return 0;
 }
-
+#endif
 
 
 // Converts a wide character into a one-byte character
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl wctob(wint_t const wchar)
 {
     if (wchar == WEOF)
@@ -361,9 +375,10 @@ extern "C" int __cdecl wctob(wint_t const wchar)
     int  return_value = -1;
     char local_buffer[MB_LEN_MAX];
 
-    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, nullptr, nullptr);
+    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, nullptr);
     if (e == 0 && return_value == 1)
         return local_buffer[0];
 
     return EOF;
 }
+#endif
