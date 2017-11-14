@@ -18,6 +18,9 @@
 #include <locale.h>
 
 #include <sys/stat.h>
+#include <sys/timeb.h>
+#include <sys/utime.h>  
+
 #include <corecrt_math.h>
 
 #ifdef __NOTHROW_T_DEFINED
@@ -28,6 +31,39 @@ extern "C++"
 	namespace std
 	{
 		const nothrow_t nothrow;
+	}
+
+
+	__forceinline errno_t __cdecl _tcscpy_s(
+		_Out_writes_z_(_SizeInBytes) char*       _Destination,
+		_In_                         rsize_t     _SizeInBytes,
+		_In_z_                       char const* _Source
+		)
+	{
+		return strcpy_s(_Destination, _SizeInBytes, _Source);
+	}
+
+	__forceinline errno_t __cdecl _tcscpy_s(
+		_Out_writes_z_(_SizeInBytes) wchar_t*       _Destination,
+		_In_                         rsize_t     _SizeInBytes,
+		_In_z_                       wchar_t const* _Source
+		)
+	{
+		return wcscpy_s(_Destination, _SizeInBytes, _Source);
+	}
+
+	__forceinline size_t __cdecl _tcslen(
+		_In_z_ char const* _Str
+		)
+	{
+		return strlen(_Str);
+	}
+
+	__forceinline size_t __cdecl _tcslen(
+		_In_z_ wchar_t const* _String
+		)
+	{
+		return wcslen(_String);
 	}
 }
 #endif
@@ -1383,21 +1419,6 @@ extern "C"
 		return _wgetenv(_VarName);
 	}
 
-
-	extern "C++" __forceinline size_t __cdecl _tcslen(
-		_In_z_ char const* _Str
-		)
-	{
-		return strlen(_Str);
-	}
-
-	extern "C++" __forceinline size_t __cdecl _tcslen(
-		_In_z_ wchar_t const* _String
-		)
-	{
-		return wcslen(_String);
-	}
-
 	extern "C++" template<class TCHAR>
 	__forceinline errno_t __cdecl common_tdupenv_s_nolock(
 		_Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ TCHAR**      _Buffer,
@@ -1640,27 +1661,78 @@ extern "C"
 		return _ctime64(&_Time64);
 	}
 
-	extern "C++" template<typename time_t>
+	wchar_t* __cdecl _wctime32(
+		_In_ __time32_t const* _Time
+		)
+	{
+		_VALIDATE_RETURN(_Time != nullptr, EINVAL, nullptr);
+
+		// Check for illegal time_t value:
+		if (*_Time <0 || *_Time > _MAX_TIME32)
+		{
+			errno = EINVAL;
+			return nullptr;
+		}
+		__time64_t _Time64 = *_Time;
+
+		return _wctime64(&_Time64);
+	}
+
+	extern "C++" __forceinline void __cdecl _ctime_t(
+		_In_ __time32_t const* _Time,
+		char* & szTime
+		)
+	{
+		szTime= _ctime32(_Time);
+	}
+
+	extern "C++" __forceinline void __cdecl _ctime_t(
+		_In_ __time64_t const* _Time,
+		char* & szTime
+		)
+	{
+		szTime= _ctime64(_Time);
+	}
+
+	extern "C++" __forceinline void __cdecl _ctime_t(
+		_In_ __time32_t const* _Time,
+		wchar_t* & szTime
+	)
+	{
+		szTime = _wctime32(_Time);
+	}
+
+	extern "C++" __forceinline void __cdecl _ctime_t(
+		_In_ __time64_t const* _Time,
+		wchar_t* & szTime
+	)
+	{
+		szTime = _wctime64(_Time);
+	}
+
+	extern "C++" template<typename time_t,typename TCHAR>
 	__forceinline errno_t __cdecl common_ctime_s(
-		_Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
-		_In_range_(>= , 26)                                   size_t            _SizeInBytes,
+		_Out_writes_(_SizeInBytes) _Post_readable_size_(26) TCHAR*             _Buffer,
+		_In_range_(>= , 26)                                   size_t            _Size,
 		_In_                                                time_t const* _Time
 		)
 	{
 		_VALIDATE_RETURN_ERRCODE(
-			_Buffer != nullptr && _SizeInBytes > 0,
+			_Buffer != nullptr && _Size > 0,
 			EINVAL
-		)
+		);
 
 		*_Buffer = NULL;
 
-		_VALIDATE_RETURN_ERRCODE(_SizeInBytes >= 26, EINVAL)
+		_VALIDATE_RETURN_ERRCODE(_Size >= 26, EINVAL);
 
-		auto tm = _localtime_t(_Time);
-		if (!tm)
+		TCHAR* szTime;
+
+		_ctime_t(_Time, szTime);
+		if (!szTime)
 			return errno;
 
-		return asctime_s(_Buffer, _SizeInBytes, tm);
+		return _tcscpy_s(_Buffer, _Size, szTime);
 	}
 
 	errno_t __cdecl _ctime32_s(
@@ -1679,6 +1751,24 @@ extern "C"
 		)
 	{
 		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
+	}
+
+	errno_t __cdecl _wctime32_s(
+		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
+		_In_  _In_range_(>= , 26)                              size_t            _SizeInWords,
+		_In_                                                  __time32_t const* _Time
+		)
+	{
+		return common_ctime_s(_Buffer, _SizeInWords, _Time);
+	}
+
+	errno_t __cdecl _wctime64_s(
+		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
+		_In_  _In_range_(>= , 26)                              size_t            _SizeInWords,
+		_In_                                                  __time64_t const* _Time
+		)
+	{
+		return common_ctime_s(_Buffer, _SizeInWords, _Time);
 	}
 
 	struct tm* __cdecl _gmtime32(
@@ -1824,6 +1914,208 @@ extern "C"
 		return Time;
 	}
 
+	extern "C++" template<typename TCHAR>
+	__forceinline errno_t __cdecl common_getenv_s_nolock(
+		_Out_                            size_t*     _RequiredCount,
+		_Out_writes_opt_z_(_BufferCount) TCHAR*       _Buffer,
+		_In_                             rsize_t     _BufferCount,
+		_In_z_                           TCHAR const* _VarName
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_RequiredCount != nullptr, EINVAL);
+		*_RequiredCount = 0;
+
+		_VALIDATE_RETURN_ERRCODE(
+			(_Buffer != nullptr && _BufferCount >  0) ||
+			(_Buffer == nullptr && _BufferCount == 0), EINVAL);
+
+		if (_Buffer)
+			_Buffer[0] = '\0';
+
+		const auto value = _tgetenv(_VarName);
+		if (!value)
+			return 0;
+
+		auto RequiredCount = _tcslen(value) + 1;
+		*_RequiredCount = RequiredCount;
+		if (_BufferCount == 0)
+			return 0;
+
+		// The buffer is too small; we return an error code and the caller can have
+		// the opportunity to try again with a larger buffer:
+		if (RequiredCount > _BufferCount)
+			return ERANGE;
+
+		memcpy(_Buffer, value, RequiredCount * sizeof(TCHAR));
+
+		return 0;
+	}
+
+	extern "C++" template<typename TCHAR>
+	__forceinline errno_t __cdecl common_getenv_s(
+		_Out_                            size_t*     _RequiredCount,
+		_Out_writes_opt_z_(_BufferCount) TCHAR*       _Buffer,
+		_In_                             rsize_t     _BufferCount,
+		_In_z_                           TCHAR const* _VarName
+		)
+	{
+		_lock(/*_ENV_LOCK*/7);
+
+		auto result = common_getenv_s_nolock(_RequiredCount, _Buffer, _BufferCount, _VarName);
+
+		_unlock(/*_ENV_LOCK*/7);
+
+		return result;
+	}
+
+	errno_t __cdecl getenv_s(
+        _Out_                            size_t*     _RequiredCount,
+        _Out_writes_opt_z_(_BufferCount) char*       _Buffer,
+        _In_                             rsize_t     _BufferCount,
+        _In_z_                           char const* _VarName
+        )
+	{
+		return common_getenv_s(_RequiredCount, _Buffer, _BufferCount, _VarName);
+	}
+
+	errno_t __cdecl _wgetenv_s(
+		_Out_                            size_t*        _RequiredCount,
+		_Out_writes_opt_z_(_BufferCount) wchar_t*       _Buffer,
+		_In_                             size_t         _BufferCount,
+		_In_z_                           wchar_t const* _VarName
+		)
+	{
+		return common_getenv_s(_RequiredCount, _Buffer, _BufferCount, _VarName);
+	}
+
+	errno_t __cdecl fopen_s(
+		_Outptr_result_maybenull_ FILE**      _Stream,
+		_In_z_                    char const* _FileName,
+		_In_z_                    char const* _Mode
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Stream != nullptr, EINVAL);
+
+		return (*_Stream = fopen(_FileName, _Mode)) ? 0 : errno;
+	}
+
+	errno_t __cdecl _wfopen_s(
+		_Outptr_result_maybenull_ FILE**         _Stream,
+		_In_z_                    wchar_t const* _FileName,
+		_In_z_                    wchar_t const* _Mode
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Stream != nullptr, EINVAL);
+
+		return (*_Stream = _wfopen(_FileName, _Mode)) ? 0 : errno;
+	}
+
+	errno_t __cdecl freopen_s(
+		_Outptr_result_maybenull_ FILE**      _Stream,
+		_In_z_                    char const* _FileName,
+		_In_z_                    char const* _Mode,
+		_Inout_                   FILE*       _OldStream
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Stream != nullptr, EINVAL);
+
+		return (*_Stream = freopen(_FileName, _Mode, _OldStream)) ? 0 : errno;
+	}
+
+	errno_t __cdecl _wfreopen_s(
+		_Outptr_result_maybenull_ FILE**         _Stream,
+		_In_z_                    wchar_t const* _FileName,
+		_In_z_                    wchar_t const* _Mode,
+		_Inout_                   FILE*          _OldStream
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Stream != nullptr, EINVAL);
+		
+		return (*_Stream = _wfreopen(_FileName, _Mode, _OldStream)) ? 0 : errno;
+	}
+
+	errno_t __cdecl _ftime32_s(
+		_Out_ struct __timeb32* _Time
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
+
+
+		__timeb64 _Time64;
+		_ftime64(&_Time64);
+
+		_Time->time = _Time64.time;
+		_Time->millitm = _Time64.millitm;
+		_Time->timezone = _Time64.timezone;
+		_Time->dstflag = _Time64.dstflag;
+		return 0;
+	}
+
+	errno_t __cdecl _ftime64_s(
+		_Out_ struct __timeb64* _Time
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
+
+		_ftime64(_Time);
+
+		return 0;
+	}
+
+	void __cdecl _ftime32(
+		_Out_ struct __timeb32* _Time
+		)
+	{
+		_ftime32_s(_Time);
+	}
+
+	int __cdecl _futime32(
+		_In_     int                 _FileHandle,
+		_In_opt_ struct __utimbuf32* _Time
+		)
+	{
+		__utimbuf64 _Time64;
+
+		if (_Time)
+		{
+			_Time64.actime = _Time->actime;
+			_Time64.modtime = _Time->modtime;
+		}
+
+		return _futime64(_FileHandle, _Time ? &_Time64 : nullptr);
+	}
+
+	int __cdecl _utime32(
+		_In_z_   char const*         _FileName,
+		_In_opt_ struct __utimbuf32* _Time
+		)
+	{
+		__utimbuf64 _Time64;
+
+		if (_Time)
+		{
+			_Time64.actime = _Time->actime;
+			_Time64.modtime = _Time->modtime;
+		}
+
+		return _utime64(_FileName, _Time ? &_Time64 : nullptr);
+	}
+
+	int __cdecl _wutime32(
+		_In_z_   wchar_t const*      _FileName,
+		_In_opt_ struct __utimbuf32* _Time
+		)
+	{
+		__utimbuf64 _Time64;
+
+		if (_Time)
+		{
+			_Time64.actime = _Time->actime;
+			_Time64.modtime = _Time->modtime;
+		}
+
+		return _wutime64(_FileName, _Time ? &_Time64 : nullptr);
+	}
 #endif
 }
 

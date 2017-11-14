@@ -996,12 +996,15 @@ extern "C" __declspec(dllimport) void __cdecl _unlock(
 );
 
 
-EXTERN_C __acrt_ptd __cdecl _getptd_noexit(void);
+EXTERN_C __acrt_ptd* __cdecl _getptd_noexit(void);
 
 
 EXTERN_C __acrt_ptd* __cdecl __acrt_getptd(void);
 __acrt_ptd* __cdecl __acrt_getptd_head(void);
-__acrt_ptd* __cdecl __acrt_getptd_noexit(void);
+__forceinline __acrt_ptd* __cdecl __acrt_getptd_noexit(void)
+{
+	return _getptd_noexit();
+}
 void        __cdecl __acrt_freeptd(void);
 
 

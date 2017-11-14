@@ -145,7 +145,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl _wfopen_s(
+    _ACRTXPIMP errno_t __cdecl _wfopen_s(
         _Outptr_result_maybenull_ FILE**         _Stream,
         _In_z_                    wchar_t const* _FileName,
         _In_z_                    wchar_t const* _Mode
@@ -160,7 +160,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl _wfreopen_s(
+    _ACRTXPIMP errno_t __cdecl _wfreopen_s(
         _Outptr_result_maybenull_ FILE**         _Stream,
         _In_z_                    wchar_t const* _FileName,
         _In_z_                    wchar_t const* _Mode,

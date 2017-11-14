@@ -217,8 +217,8 @@ _ACRTXPIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 _ACRTIMP unsigned long* __cdecl __doserrno(void);
 #define _doserrno (*__doserrno())
 
-_ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-_ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+_ACRTXPIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+_ACRTXPIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
 _ACRTIMP extern char const* _sys_errlist[];
 // This is non-const for backwards compatibility; do not modify it.
@@ -1161,7 +1161,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 
     _Check_return_opt_
     _Success_(return == 0)
-    _DCRTIMP errno_t __cdecl getenv_s(
+	_ACRTXPIMP errno_t __cdecl getenv_s(
         _Out_                            size_t*     _RequiredCount,
         _Out_writes_opt_z_(_BufferCount) char*       _Buffer,
         _In_                             rsize_t     _BufferCount,

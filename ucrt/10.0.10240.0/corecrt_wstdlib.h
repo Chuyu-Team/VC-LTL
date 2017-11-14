@@ -441,7 +441,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(
 
     _Success_(return == 0)
     _Check_return_wat_
-    _DCRTIMP errno_t __cdecl _wgetenv_s(
+    _ACRTXPIMP errno_t __cdecl _wgetenv_s(
         _Out_                            size_t*        _RequiredCount,
         _Out_writes_opt_z_(_BufferCount) wchar_t*       _Buffer,
         _In_                             size_t         _BufferCount,

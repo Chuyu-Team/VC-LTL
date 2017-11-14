@@ -24,8 +24,8 @@ _CRT_BEGIN_C_HEADER
     _ACRTIMP unsigned long* __cdecl __doserrno(void);
     #define _doserrno (*__doserrno())
 
-    _ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-    _ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+    _ACRTXPIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+    _ACRTXPIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 #endif // _CRT_FUNCTIONS_REQUIRED
 
 

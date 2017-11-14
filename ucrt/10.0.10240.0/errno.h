@@ -25,8 +25,8 @@ _ACRTXPIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 _ACRTIMP unsigned long* __cdecl __doserrno(void);
 #define _doserrno (*__doserrno())
 
-_ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-_ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+_ACRTXPIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+_ACRTXPIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
 
 

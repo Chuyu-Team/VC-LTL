@@ -120,28 +120,29 @@ extern "C" int __cdecl __acrt_errno_from_os_error(unsigned long const oserrno)
 
 
 // These safely set and get the value of the calling thread's errno
-extern "C" errno_t _set_errno(int const value)
-{
-    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
-    if (!ptd)
-        return ENOMEM;
+//extern "C" errno_t _set_errno(int const value)
+//{
+//    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
+//    if (!ptd)
+//        return ENOMEM;
+//
+//    errno = value;
+//    return 0;
+//}
 
-    errno = value;
-    return 0;
-}
-
-extern "C" errno_t _get_errno(int* const result)
-{
-    _VALIDATE_RETURN_NOERRNO(result != nullptr, EINVAL);
-
-    // Unlike most of our globals, this one is guaranteed to give some answer
-    *result = errno;
-    return 0;
-}
+//extern "C" errno_t _get_errno(int* const result)
+//{
+//    _VALIDATE_RETURN_NOERRNO(result != nullptr, EINVAL);
+//
+//    // Unlike most of our globals, this one is guaranteed to give some answer
+//    *result = errno;
+//    return 0;
+//}
 
 
 
 // These safely set and get the value of the calling thread's doserrno
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t _set_doserrno(unsigned long const value)
 {
     __acrt_ptd* const ptd{__acrt_getptd_noexit()};
@@ -151,7 +152,9 @@ extern "C" errno_t _set_doserrno(unsigned long const value)
     _doserrno = value;
     return 0;
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t _get_doserrno(unsigned long* const result)
 {
     _VALIDATE_RETURN_NOERRNO(result != nullptr, EINVAL);
@@ -160,28 +163,28 @@ extern "C" errno_t _get_doserrno(unsigned long* const result)
     *result = _doserrno;
     return 0;
 }
-
+#endif
 
 
 // These return pointers to the calling thread's errno and doserrno values,
 // respectively, and are used to implement errno and _doserrno in the header.
-static int           errno_no_memory   {ENOMEM};
-static unsigned long doserrno_no_memory{ERROR_NOT_ENOUGH_MEMORY};
-
-extern "C" int* __cdecl _errno()
-{
-    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
-    if (!ptd)
-        return &errno_no_memory;
-
-    return &ptd->_terrno;
-}
-
-extern "C" unsigned long* __cdecl __doserrno()
-{
-    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
-    if (!ptd)
-        return &doserrno_no_memory;
-
-    return &ptd->_tdoserrno;
-}
+//static int           errno_no_memory   {ENOMEM};
+//static unsigned long doserrno_no_memory{ERROR_NOT_ENOUGH_MEMORY};
+//
+//extern "C" int* __cdecl _errno()
+//{
+//    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
+//    if (!ptd)
+//        return &errno_no_memory;
+//
+//    return &ptd->_terrno;
+//}
+//
+//extern "C" unsigned long* __cdecl __doserrno()
+//{
+//    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
+//    if (!ptd)
+//        return &doserrno_no_memory;
+//
+//    return &ptd->_tdoserrno;
+//}

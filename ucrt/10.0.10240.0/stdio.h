@@ -91,7 +91,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl fopen_s(
+    _ACRTXPIMP errno_t __cdecl fopen_s(
         _Outptr_result_maybenull_ FILE**      _Stream,
         _In_z_                    char const* _FileName,
         _In_z_                    char const* _Mode
@@ -108,7 +108,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
         );
     
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl freopen_s(
+    _ACRTXPIMP errno_t __cdecl freopen_s(
         _Outptr_result_maybenull_ FILE**      _Stream,
         _In_z_                    char const* _FileName,
         _In_z_                    char const* _Mode,

@@ -144,7 +144,7 @@ _ACRTIMP FILE* __cdecl _wfopen(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wfopen_s(
+_ACRTXPIMP errno_t __cdecl _wfopen_s(
     _Outptr_result_maybenull_ FILE**         _Stream,
     _In_z_                    wchar_t const* _FileName,
     _In_z_                    wchar_t const* _Mode
@@ -159,7 +159,7 @@ _ACRTIMP FILE* __cdecl _wfreopen(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wfreopen_s(
+_ACRTXPIMP errno_t __cdecl _wfreopen_s(
     _Outptr_result_maybenull_ FILE**         _Stream,
     _In_z_                    wchar_t const* _FileName,
     _In_z_                    wchar_t const* _Mode,
