@@ -58,7 +58,7 @@ _ACRTIMP void __cdecl qsort(
     );
 
 _Check_return_
-_ACRTIMP void* __cdecl _lfind_s(
+_ACRTXPIMP void* __cdecl _lfind_s(
     _In_                                                  void const*   _Key,
     _In_reads_bytes_((*_NumOfElements) * _SizeOfElements) void const*   _Base,
     _Inout_                                               unsigned int* _NumOfElements,
@@ -77,7 +77,7 @@ _ACRTIMP void* __cdecl _lfind(
     );
 
 _Check_return_
-_ACRTIMP void* __cdecl _lsearch_s(
+_ACRTXPIMP void* __cdecl _lsearch_s(
     _In_                                                        void const*   _Key,
     _Inout_updates_bytes_((*_NumOfElements ) * _SizeOfElements) void*         _Base,
     _Inout_                                                     unsigned int* _NumOfElements,
