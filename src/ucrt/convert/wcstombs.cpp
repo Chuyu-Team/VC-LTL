@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *size_t __cdecl wcsncnt - count wide characters in a string, up to n.
@@ -101,11 +102,29 @@ static size_t __cdecl _wcstombs_l_helper (
 
     /* if destination string exists, fill it in */
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
+	LCID locale;
+	int _locale_mb_cur_max;
+	int _locale_lc_codepage;
+
+	if (plocinfo)
+	{
+		locale = plocinfo->locinfo->lc_handle[LC_CTYPE];
+		_locale_mb_cur_max = plocinfo->locinfo->_locale_mb_cur_max;
+		_locale_lc_codepage = plocinfo->locinfo->_locale_lc_codepage;
+	}
+	else
+	{
+		locale = ___lc_handle_func()[LC_CTYPE];
+		_locale_mb_cur_max = ___mb_cur_max_func();
+
+		_locale_lc_codepage = ___lc_codepage_func();
+	}
+
 
     if (s)
     {
-        if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr )
+        if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/ locale==0)
         {
             /* C locale: easy and fast */
             /* Actually, there are such wchar_t characters which are > 255,
@@ -131,14 +150,14 @@ static size_t __cdecl _wcstombs_l_helper (
             return count;
         } else {
 
-            if (1 == _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max)
+            if (1 == _locale_mb_cur_max)
             {
                 /* If SBCS, one wchar_t maps to one char */
 
                 /* WideCharToMultiByte will compare past nullptr - reset n */
                 if (n > 0)
                     n = wcsncnt(pwcs, n);
-                if ( ((count = WideCharToMultiByte( _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+                if ( ((count = WideCharToMultiByte( _locale_lc_codepage,
                                                     0,
                                                     pwcs,
                                                     (int)n,
@@ -162,7 +181,7 @@ static size_t __cdecl _wcstombs_l_helper (
                 /* If MBCS, wchar_t to char mapping unknown */
 
                 /* Assume that usually the buffer is large enough */
-                if ( ((count = WideCharToMultiByte( _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+                if ( ((count = WideCharToMultiByte( _locale_lc_codepage,
                                                     0,
                                                     pwcs,
                                                     -1,
@@ -184,8 +203,8 @@ static size_t __cdecl _wcstombs_l_helper (
                 /* buffer not large enough, must do char by char */
                 while (count < n)
                 {
-                    int mb_cur_max = _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max;
-                    if ( ((retval = WideCharToMultiByte( _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+                    int mb_cur_max = _locale_mb_cur_max;
+                    if ( ((retval = WideCharToMultiByte( _locale_lc_codepage,
                                                          0,
                                                          pwcs,
                                                          1,
@@ -222,7 +241,7 @@ static size_t __cdecl _wcstombs_l_helper (
         }
     }
     else { /* s == nullptr, get size only, pwcs must be NUL-terminated */
-        if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr )
+        if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/locale==0)
         {
             size_t len = 0;
             for (wchar_t *pw = (wchar_t *)pwcs; *pw != 0; pw++)  /* validate high byte */
@@ -238,7 +257,7 @@ static size_t __cdecl _wcstombs_l_helper (
             return len;
         }
         else {
-            if ( ((count = WideCharToMultiByte( _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+            if ( ((count = WideCharToMultiByte( _locale_lc_codepage,
                                                 0,
                                                 pwcs,
                                                 -1,
@@ -258,6 +277,7 @@ static size_t __cdecl _wcstombs_l_helper (
 
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl _wcstombs_l (
         char * s,
         const wchar_t * pwcs,
@@ -267,15 +287,16 @@ extern "C" size_t __cdecl _wcstombs_l (
 {
     return _wcstombs_l_helper(s, pwcs, n, plocinfo);
 }
+#endif
 
-extern "C" size_t __cdecl wcstombs (
-        char * s,
-        const wchar_t * pwcs,
-        size_t n
-        )
-{
-    return _wcstombs_l_helper(s, pwcs, n, nullptr);
-}
+//extern "C" size_t __cdecl wcstombs (
+//        char * s,
+//        const wchar_t * pwcs,
+//        size_t n
+//        )
+//{
+//    return _wcstombs_l_helper(s, pwcs, n, nullptr);
+//}
 
 /***
 *errno_t wcstombs_s() - Convert wide char string to multibyte char string.
@@ -302,6 +323,7 @@ extern "C" size_t __cdecl wcstombs (
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _wcstombs_s_l (
         size_t *pConvertedChars,
         char * dst,
@@ -368,7 +390,9 @@ extern "C" errno_t __cdecl _wcstombs_s_l (
 
     return retvalue;
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl wcstombs_s (
         size_t *pConvertedChars,
         char * dst,
@@ -379,3 +403,4 @@ extern "C" errno_t __cdecl wcstombs_s (
 {
     return _wcstombs_s_l(pConvertedChars, dst, sizeInBytes, src, n, nullptr);
 }
+#endif

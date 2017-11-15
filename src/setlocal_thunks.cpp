@@ -591,3 +591,11 @@ void __cdecl _free_locale(
 		_free_crt(plocinfo);
 	}
 }
+
+EXTERN_C int __cdecl ___mb_cur_max_l_func(_locale_t locale)
+{
+	return locale == nullptr
+		? ___mb_cur_max_func()
+		: locale->locinfo->_locale_mb_cur_max;
+
+}

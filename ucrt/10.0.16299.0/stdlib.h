@@ -877,7 +877,7 @@ _ACRTIMP char* __cdecl _gcvt(
     _ACRTIMP int __cdecl ___mb_cur_max_func(void);
 
     _Post_satisfies_(return > 0 && return < MB_LEN_MAX)
-    _ACRTIMP int __cdecl ___mb_cur_max_l_func(_locale_t _Locale);
+    _ACRTXPIMP int __cdecl ___mb_cur_max_l_func(_locale_t _Locale);
 #endif
 
 
@@ -1027,7 +1027,7 @@ _ACRTIMP errno_t __cdecl _wctomb_s_l(
     _In_opt_                         _locale_t _Locale);
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl wcstombs_s(
+_ACRTXPIMP errno_t __cdecl wcstombs_s(
     _Out_opt_                                                          size_t*        _PtNumOfCharConverted,
     _Out_writes_bytes_to_opt_(_DstSizeInBytes, *_PtNumOfCharConverted) char*          _Dst,
     _In_                                                               size_t         _DstSizeInBytes,
@@ -1051,7 +1051,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_SIZE(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wcstombs_s_l(
+_ACRTXPIMP errno_t __cdecl _wcstombs_s_l(
     _Out_opt_                                                          size_t*        _PtNumOfCharConverted,
     _Out_writes_bytes_to_opt_(_DstSizeInBytes, *_PtNumOfCharConverted) char*          _Dst,
     _In_                                                               size_t         _DstSizeInBytes,
@@ -1070,7 +1070,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE_EX(
-    _ACRTIMP, _wcstombs_l, _wcstombs_s_l,
+    _ACRTXPIMP, _wcstombs_l, _wcstombs_s_l,
     _Out_writes_opt_z_(_Size)  char,
     _Out_writes_(_MaxCount),   char,           _Dest,
     _In_z_                     wchar_t const*, _Source,

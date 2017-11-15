@@ -99,7 +99,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
         _Post_satisfies_(return > 0 && return < 5)
         _ACRTIMP int __cdecl ___mb_cur_max_func(void);
         _Post_satisfies_(return > 0 && return < 5)
-        _ACRTIMP int __cdecl ___mb_cur_max_l_func(_locale_t _Locale);
+        _ACRTXPIMP int __cdecl ___mb_cur_max_l_func(_locale_t _Locale);
     #endif
 
 
