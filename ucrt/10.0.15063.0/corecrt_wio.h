@@ -243,7 +243,7 @@ _ACRTIMP int __cdecl _wfindnext64(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wsopen_s(
+_ACRTXPIMP errno_t __cdecl _wsopen_s(
     _Out_  int*           _FileHandle,
     _In_z_ wchar_t const* _FileName,
     _In_   int            _OpenFlag,
@@ -262,7 +262,7 @@ _ACRTIMP errno_t __cdecl _wsopen_dispatch(
 
 
 
-#if defined __cplusplus
+#if defined __cplusplus && !defined __Build_LTL
 
     // These functions do not validate pmode; use _wsopen_s instead.
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_wsopen_s)

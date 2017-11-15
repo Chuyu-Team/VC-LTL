@@ -397,7 +397,7 @@ _ACRTIMP __int64 __cdecl _telli64(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _sopen_s(
+_ACRTXPIMP errno_t __cdecl _sopen_s(
     _Out_  int*        _FileHandle,
     _In_z_ char const* _FileName,
     _In_   int         _OpenFlag,
@@ -425,7 +425,7 @@ _ACRTIMP errno_t __cdecl _sopen_dispatch(
 
 
 
-#ifdef __cplusplus
+#ifdef __cplusplus && !defined __Build_LTL
 
     // These function do not validate pmode; use _sopen_s instead.
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)

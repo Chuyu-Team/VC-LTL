@@ -2226,6 +2226,47 @@ extern "C"
 
 		return 0;
 	}
+
+	errno_t __cdecl _sopen_s(
+		_Out_  int*        _FileHandle,
+		_In_z_ char const* _FileName,
+		_In_   int         _OpenFlag,
+		_In_   int         _ShareFlag,
+		_In_   int         _PermissionMode
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_FileHandle != nullptr, EINVAL);
+		*_FileHandle = -1;
+
+		_VALIDATE_RETURN_ERRCODE(_FileName != nullptr, EINVAL);
+
+
+		_VALIDATE_RETURN_ERRCODE((_PermissionMode & (~(_S_IREAD | _S_IWRITE))) == 0, EINVAL);
+
+
+		return (*_FileHandle = sopen(_FileName, _OpenFlag, _ShareFlag, _PermissionMode)) == -1 ? errno : 0;
+	}
+
+	errno_t __cdecl _wsopen_s(
+		_Out_  int*           _FileHandle,
+		_In_z_ wchar_t const* _FileName,
+		_In_   int            _OpenFlag,
+		_In_   int            _ShareFlag,
+		_In_   int            _PermissionFlag
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_FileHandle != nullptr, EINVAL);
+		*_FileHandle = -1;
+
+		_VALIDATE_RETURN_ERRCODE(_FileName != nullptr, EINVAL);
+
+		
+		_VALIDATE_RETURN_ERRCODE((_PermissionFlag & (~(_S_IREAD | _S_IWRITE))) == 0, EINVAL);
+	
+
+		return (*_FileHandle = _wsopen(_FileName, _OpenFlag, _ShareFlag, _PermissionFlag)) == -1 ? errno : 0;
+	}
+
 #endif
 }
 
