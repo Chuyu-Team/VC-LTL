@@ -161,7 +161,7 @@ _ACRTIMP char*  __cdecl _strerror(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strerror_s(
+_ACRTXPIMP errno_t __cdecl _strerror_s(
     _Out_writes_z_(_SizeInBytes) char*       _Buffer,
     _In_                         size_t      _SizeInBytes,
     _In_opt_z_                   char const* _ErrorMessage

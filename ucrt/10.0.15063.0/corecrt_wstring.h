@@ -280,7 +280,7 @@ _ACRTIMP wchar_t* __cdecl _wcserror(
     );
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wcserror_s(
+_ACRTXPIMP errno_t __cdecl _wcserror_s(
     _Out_writes_opt_z_(_SizeInWords) wchar_t* _Buffer,
     _In_                             size_t   _SizeInWords,
     _In_                             int      _ErrorNumber
@@ -299,7 +299,7 @@ _ACRTIMP wchar_t* __cdecl __wcserror(
     _In_opt_z_ wchar_t const* _String
     );
 
-_Check_return_wat_ _ACRTIMP_ALT errno_t __cdecl __wcserror_s(
+_Check_return_wat_ _ACRTXPIMP errno_t __cdecl __wcserror_s(
     _Out_writes_opt_z_(_SizeInWords) wchar_t*       _Buffer,
     _In_                             size_t         _SizeInWords,
     _In_z_                           wchar_t const* _ErrorMessage

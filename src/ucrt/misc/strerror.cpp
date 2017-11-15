@@ -93,15 +93,15 @@ static Character* __cdecl common_strerror(int const error_number)
     return buffer;
 }
 
-extern "C" char* __cdecl strerror(int const error_number)
-{
-    return common_strerror<char>(error_number);
-}
+//extern "C" char* __cdecl strerror(int const error_number)
+//{
+//    return common_strerror<char>(error_number);
+//}
 
-extern "C" wchar_t* __cdecl _wcserror(int const error_number)
-{
-    return common_strerror<wchar_t>(error_number);
-}
+//extern "C" wchar_t* __cdecl _wcserror(int const error_number)
+//{
+//    return common_strerror<wchar_t>(error_number);
+//}
 
 
 
@@ -127,6 +127,7 @@ static errno_t __cdecl common_strerror_s(
     return result == STRUNCATE ? 0 : result;
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl strerror_s(
     char*  const buffer,
     size_t const buffer_count,
@@ -135,7 +136,9 @@ extern "C" errno_t __cdecl strerror_s(
 {
     return common_strerror_s(buffer, buffer_count, error_number);
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _wcserror_s(
     wchar_t* const buffer,
     size_t   const buffer_count,
@@ -144,3 +147,4 @@ extern "C" errno_t __cdecl _wcserror_s(
 {
     return common_strerror_s(buffer, buffer_count, error_number);
 }
+#endif
