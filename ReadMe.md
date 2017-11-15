@@ -55,9 +55,9 @@ VC-LTL属性表优先从注册表加载路径。如果你希望在多个工程�
 双击后，cmd脚本会在 HKCU\Code\VC-LTL 创建注册表。
 
 
-随后将属性表（ltlvcrt.props 以及 ltlvcrtWinXp.props）复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`ltlvcrt.props`即可。
+随后将属性表 `ltlvcrt.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `ltlvcrt.props` 即可。
 
-PS：如果需要支持XP，那么请选择`ltlvcrtWinXp.props`。
+PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者直接使用 `ltlvcrtWinXp.props`。
 
 
 #### 1.2 通过目录独享VC-LTL
@@ -66,11 +66,12 @@ PS：如果需要支持XP，那么请选择`ltlvcrtWinXp.props`。
 假如，你的Sln文件在 D:\MySln\MySln.sln，这时你把VC-LTL整个目录复制到D:\MySln\VC-LTL即可。
 
 
-随后打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL\ltlvcrt.props`即可。
+随后打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `VC-LTL\ltlvcrt.props` 即可。
 
-PS：如果需要支持XP，那么请选择`VC-LTL\ltlvcrtWinXp.props`。
+PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者直接使用 `ltlvcrtWinXp.props`。
 
-> 如果你不希望使用ltlvcrt.props/ltlvcrtWinXp.props属性表，那么请手工将属性表的设置转移到你的工程配置中。
+> 如果你不希望使用 `ltlvcrt.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
+
 
 ### 2. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
