@@ -427,7 +427,7 @@ struct __finddata64_t
 
 
 
-	#ifdef __cplusplus && !defined __Build_LTL
+	#if defined __cplusplus && !defined __Build_LTL
 
 		// These function do not validate pmode; use _sopen_s instead.
 		extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
