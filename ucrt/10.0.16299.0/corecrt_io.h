@@ -236,7 +236,7 @@ struct __finddata64_t
 
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl _mktemp_s(
+    _ACRTXPIMP errno_t __cdecl _mktemp_s(
         _Inout_updates_z_(_Size) char*  _TemplateName,
         _In_                     size_t _Size
         );

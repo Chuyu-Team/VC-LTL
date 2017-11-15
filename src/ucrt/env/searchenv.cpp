@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#pragma warning(disable:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036 Prefast doesn't understand perfect forwarding so annotations are lost.
-#pragma warning(disable:__WARNING_MISSING_ZERO_TERMINATION2) // 6054 Prefast doesn't understand perfect forwarding so annotations are lost.
+//#pragma warning(disable:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036 Prefast doesn't understand perfect forwarding so annotations are lost.
+//#pragma warning(disable:__WARNING_MISSING_ZERO_TERMINATION2) // 6054 Prefast doesn't understand perfect forwarding so annotations are lost.
 
 // These functions search for a file in the paths in an environment variable.
 // The environment variable named 'environment_variable' is retrieved from the
@@ -173,7 +173,7 @@ static errno_t __cdecl common_searchenv_s(
 }
 
 
-
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _searchenv_s(
     char const* const file_name,
     char const* const environment_variable,
@@ -183,7 +183,9 @@ extern "C" errno_t __cdecl _searchenv_s(
 {
     return common_searchenv_s(file_name, environment_variable, result_buffer, result_count);
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _wsearchenv_s(
     wchar_t const* const file_name,
     wchar_t const* const environment_variable,
@@ -193,23 +195,24 @@ extern "C" errno_t __cdecl _wsearchenv_s(
 {
     return common_searchenv_s(file_name, environment_variable, result_buffer, result_count);
 }
+#endif
 
 
 
-extern "C" void __cdecl _searchenv(
-    char const* const file_name,
-    char const* const environment_variable,
-    char*       const result_buffer
-    )
-{
-    common_searchenv_s(file_name, environment_variable, result_buffer, _MAX_PATH);
-}
+//extern "C" void __cdecl _searchenv(
+//    char const* const file_name,
+//    char const* const environment_variable,
+//    char*       const result_buffer
+//    )
+//{
+//    common_searchenv_s(file_name, environment_variable, result_buffer, _MAX_PATH);
+//}
 
-extern "C" void __cdecl _wsearchenv(
-    wchar_t const* const file_name,
-    wchar_t const* const environment_variable,
-    wchar_t*       const result_buffer
-    )
-{
-    common_searchenv_s(file_name, environment_variable, result_buffer, _MAX_PATH);
-}
+//extern "C" void __cdecl _wsearchenv(
+//    wchar_t const* const file_name,
+//    wchar_t const* const environment_variable,
+//    wchar_t*       const result_buffer
+//    )
+//{
+//    common_searchenv_s(file_name, environment_variable, result_buffer, _MAX_PATH);
+//}

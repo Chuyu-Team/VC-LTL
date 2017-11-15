@@ -462,12 +462,12 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(
         );
 
     _Check_return_wat_
-    _DCRTIMP errno_t __cdecl _wputenv_s(
+    _ACRTXPIMP errno_t __cdecl _wputenv_s(
         _In_z_ wchar_t const* _Name,
         _In_z_ wchar_t const* _Value
         );
     
-    _DCRTIMP errno_t __cdecl _wsearchenv_s(
+    _ACRTXPIMP errno_t __cdecl _wsearchenv_s(
         _In_z_                       wchar_t const* _Filename,
         _In_z_                       wchar_t const* _VarName,
         _Out_writes_z_(_BufferCount) wchar_t*       _Buffer,

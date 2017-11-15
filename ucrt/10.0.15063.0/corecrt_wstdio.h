@@ -205,7 +205,7 @@ extern FILE* __cdecl __acrt_iob_func(unsigned _Ix);
 
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl _wtmpnam_s(
+    _ACRTXPIMP errno_t __cdecl _wtmpnam_s(
         _Out_writes_z_(_BufferCount) wchar_t* _Buffer,
         _In_                         size_t   _BufferCount
         );

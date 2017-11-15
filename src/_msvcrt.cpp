@@ -2116,6 +2116,116 @@ extern "C"
 
 		return _wutime64(_FileName, _Time ? &_Time64 : nullptr);
 	}
+
+	errno_t __cdecl clearerr_s(
+		_Inout_ FILE* _Stream
+		)
+	{
+		errno = 0;
+		clearerr(_Stream);
+		return errno;
+	}
+
+
+	extern "C++" __forceinline int __cdecl _tputenv(
+		_In_z_ wchar_t const* _EnvString
+		)
+	{
+		return _wputenv(_EnvString);
+	}
+
+	extern "C++" __forceinline int __cdecl _tputenv(
+		_In_z_ char const* _EnvString
+		)
+	{
+		return _putenv(_EnvString);
+	}
+
+	extern "C++" template<typename TCAHR> __forceinline errno_t __cdecl common_putenv_s(
+		_In_z_ TCAHR const* _Name,
+		_In_z_ TCAHR const* _Value
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Value != nullptr, EINVAL);
+		_VALIDATE_RETURN_ERRCODE(_Name != nullptr, EINVAL);
+
+		auto cName = _tcslen(_Name);
+		auto cValue = _tcslen(_Value);
+
+		auto _EnvString = (TCAHR*)_malloca(cName + cValue + 2 * sizeof(TCAHR));
+		if (!_EnvString)
+			return errno;
+
+		memcpy(_EnvString, _Name, cName * sizeof(TCAHR));
+		_EnvString[cName] = '=';
+		memcpy(_EnvString + cName + 1, _Value, (cValue + 1) * sizeof(TCAHR));
+
+		auto result = _tputenv(_EnvString) == 0 ? 0 : errno;
+
+		_freea(_EnvString);
+
+		return result;
+	}
+
+	errno_t __cdecl _putenv_s(
+		_In_z_ char const* _Name,
+		_In_z_ char const* _Value
+		)
+	{
+		return common_putenv_s(_Name, _Value);
+	}
+
+	errno_t __cdecl _wputenv_s(
+		_In_z_ wchar_t const* _Name,
+		_In_z_ wchar_t const* _Value
+		)
+	{
+		return common_putenv_s(_Name, _Value);
+	}
+
+	errno_t __cdecl tmpnam_s(
+		_Out_writes_z_(_Size) char*   _Buffer,
+		_In_                  rsize_t _Size
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr, EINVAL);
+
+		auto FileName = tmpnam(nullptr);
+		if (!FileName)
+			return errno;
+
+		auto cName = _tcslen(FileName) + 1;
+
+		if (cName > _Size)
+			return ERANGE;
+
+		memcpy(_Buffer, FileName, cName * sizeof(*FileName));
+		*FileName = NULL;
+
+		return 0;
+	}
+
+	errno_t __cdecl _wtmpnam_s(
+		_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
+		_In_                         size_t   _BufferCount
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr, EINVAL);
+
+		auto FileName = _wtmpnam(nullptr);
+		if (!FileName)
+			return errno;
+
+		auto cName = _tcslen(FileName) + 1;
+
+		if (cName > _BufferCount)
+			return ERANGE;
+
+		memcpy(_Buffer, FileName, cName * sizeof(*FileName));
+		*FileName = NULL;
+
+		return 0;
+	}
 #endif
 }
 

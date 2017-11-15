@@ -86,7 +86,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl clearerr_s(
+    _ACRTXPIMP errno_t __cdecl clearerr_s(
         _Inout_ FILE* _Stream
         );
 
@@ -128,7 +128,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
 
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl tmpnam_s(
+    _ACRTXPIMP errno_t __cdecl tmpnam_s(
         _Out_writes_z_(_Size) char*   _Buffer,
         _In_                  rsize_t _Size
         );

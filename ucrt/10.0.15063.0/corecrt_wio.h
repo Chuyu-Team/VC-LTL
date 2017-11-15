@@ -162,7 +162,7 @@ _ACRTIMP int __cdecl _wrename(
     _In_z_ wchar_t const* _NewFileName
     );
 
-_ACRTIMP errno_t __cdecl _wmktemp_s(
+_ACRTXPIMP errno_t __cdecl _wmktemp_s(
     _Inout_updates_z_(_SizeInWords) wchar_t* _TemplateName,
     _In_                            size_t   _SizeInWords
     );

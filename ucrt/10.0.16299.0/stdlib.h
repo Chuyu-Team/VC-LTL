@@ -1291,14 +1291,14 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
             );
 
         _Check_return_wat_
-        _DCRTIMP errno_t __cdecl _putenv_s(
+        _ACRTXPIMP errno_t __cdecl _putenv_s(
             _In_z_ char const* _Name,
             _In_z_ char const* _Value
             );
 
         #pragma warning (pop)
 
-        _DCRTIMP errno_t __cdecl _searchenv_s(
+        _ACRTXPIMP errno_t __cdecl _searchenv_s(
             _In_z_                       char const* _Filename,
             _In_z_                       char const* _VarName,
             _Out_writes_z_(_BufferCount) char*       _Buffer,
