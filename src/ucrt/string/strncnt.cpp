@@ -9,7 +9,7 @@
 #include <string.h>
 
 
-
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl __strncnt(
     char const* const string,
     size_t      const count
@@ -22,3 +22,5 @@ extern "C" size_t __cdecl __strncnt(
 
     return n;
 }
+
+#endif

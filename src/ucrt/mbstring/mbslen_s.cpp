@@ -39,6 +39,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 size_t __cdecl _mbsnlen_l(
         const unsigned char *s,
         size_t sizeInBytes,
@@ -46,9 +47,21 @@ size_t __cdecl _mbsnlen_l(
         )
 {
         size_t n, size;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
+		int ismbcodepage;
+		unsigned char*  mbctype;
+		if (plocinfo)
+		{
+			ismbcodepage = plocinfo->mbcinfo->ismbcodepage;
+			mbctype = plocinfo->mbcinfo->mbctype;
+		}
+		else
+		{
+			ismbcodepage = _getmbcp();
+			mbctype = _mbctype;
+		}
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if (ismbcodepage == 0)
             return strnlen((const char *)s, sizeInBytes);
 
         /* Note that we do not check if s == nullptr, because we do not
@@ -58,7 +71,7 @@ size_t __cdecl _mbsnlen_l(
         /* Note that sizeInBytes here is the number of bytes, not mb characters! */
         for (n = 0, size = 0; size < sizeInBytes && *s; n++, s++, size++)
         {
-            if ( _ismbblead_l(*s, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(*s, plocinfo) )
                         {
                                 size++;
                                 if (size >= sizeInBytes)
@@ -74,7 +87,9 @@ size_t __cdecl _mbsnlen_l(
 
                 return (size >= sizeInBytes ? sizeInBytes : n);
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 size_t __cdecl _mbsnlen(
         const unsigned char *s,
         size_t maxsize
@@ -82,3 +97,4 @@ size_t __cdecl _mbsnlen(
 {
     return _mbsnlen_l(s,maxsize, nullptr);
 }
+#endif

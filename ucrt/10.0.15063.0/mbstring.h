@@ -306,14 +306,14 @@ _CRT_BEGIN_C_HEADER
 
     _Check_return_
     _Post_satisfies_(return <= _String_length_(_String) && return <= _MaxCount)
-    _DCRTIMP size_t __cdecl _mbsnlen(
+    _ACRTXPIMP size_t __cdecl _mbsnlen(
         _In_z_ unsigned char const* _String,
         _In_   size_t               _MaxCount
         );
 
     _Check_return_
     _Post_satisfies_(return <= _String_length_(_String) && return <= _MaxCount)
-    _DCRTIMP size_t __cdecl _mbsnlen_l(
+    _ACRTXPIMP size_t __cdecl _mbsnlen_l(
         _In_z_   unsigned char const* _String,
         _In_     size_t               _MaxCount,
         _In_opt_ _locale_t            _Locale

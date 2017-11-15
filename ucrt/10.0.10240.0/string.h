@@ -325,7 +325,7 @@ _ACRTIMP int __cdecl _strncoll_l(
     _In_opt_                   _locale_t   _Locale
     );
 
-_ACRTIMP size_t __cdecl __strncnt(
+_ACRTXPIMP size_t __cdecl __strncnt(
     _In_reads_or_z_(_Count) char const* _String,
     _In_                    size_t      _Count
     );

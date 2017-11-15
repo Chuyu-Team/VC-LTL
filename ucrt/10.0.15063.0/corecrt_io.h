@@ -306,7 +306,7 @@ struct __finddata64_t
         );
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl _umask_s(
+    _ACRTXPIMP errno_t __cdecl _umask_s(
         _In_  int  _NewMode,
         _Out_ int* _OldMode
         );
