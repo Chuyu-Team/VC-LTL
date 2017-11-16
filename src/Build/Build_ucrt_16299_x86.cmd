@@ -583,8 +583,8 @@ lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\i386\87ctriga.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\i386\87ctran.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\mt\objfre\i386\87cdisp.obj
-lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\_strnicm.obj
-lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\_memicmp.obj
+::lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\_strnicm.obj
+::lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\_memicmp.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\wmemmove_s.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\wmemcpy_s.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\mt\objfre\i386\wcsxfrm.obj
