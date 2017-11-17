@@ -22,7 +22,7 @@ _CRT_BEGIN_C_HEADER
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _Check_return_ _ACRTIMP int __cdecl _isctype(_In_ int _C, _In_ int _Type);
-_Check_return_ _ACRTIMP int __cdecl _isctype_l(_In_ int _C, _In_ int _Type, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _isctype_l(_In_ int _C, _In_ int _Type, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isalpha(_In_ int _C);
 _Check_return_ _ACRTXPIMP int __cdecl _isalpha_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl isupper(_In_ int _C);
@@ -61,9 +61,9 @@ _When_(_Param_(1) == 0, _Post_equal_to_(0))
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl tolower(_In_ int _C);
 
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl _tolower(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _tolower_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _tolower_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int __cdecl _toupper(_In_ int _C);
-_Check_return_ _ACRTIMP int __cdecl _toupper_l(_In_ int _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int __cdecl _toupper_l(_In_ int _C, _In_opt_ _locale_t _Locale);
 
 _Check_return_ _ACRTIMP int __cdecl __isascii(_In_ int _C);
 _Check_return_ _ACRTIMP int __cdecl __toascii(_In_ int _C);
@@ -78,7 +78,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #ifndef _CTYPE_DISABLE_MACROS
- 
+
     // Maximum number of bytes in multi-byte character in the current locale
     // (also defined in stdlib.h).
     #ifndef MB_CUR_MAX

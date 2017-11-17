@@ -32,16 +32,19 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl _mbslen_l(
         const unsigned char *s,
         _locale_t plocinfo
         )
 {
         int n;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return strlen((const char *)s);
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         for (n = 0; *s; n++, s++) {
             if ( _ismbblead_l(*s, _loc_update.GetLocaleT()) ) {
@@ -52,10 +55,11 @@ extern "C" size_t __cdecl _mbslen_l(
 
         return(n);
 }
+#endif
 
-extern "C" size_t (__cdecl _mbslen)(
-        const unsigned char *s
-        )
-{
-    return _mbslen_l(s, nullptr);
-}
+//extern "C" size_t (__cdecl _mbslen)(
+//        const unsigned char *s
+//        )
+//{
+//    return _mbslen_l(s, nullptr);
+//}

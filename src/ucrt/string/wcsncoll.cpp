@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _wcsncoll() - Collate wide-character locale strings
@@ -38,6 +39,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wcsncoll_l (
         const wchar_t *_string1,
         const wchar_t *_string2,
@@ -52,20 +54,22 @@ extern "C" int __cdecl _wcsncoll_l (
         return 0;
     }
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
+	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+
+    if (_lc_collate==0)
     {
         return wcsncmp(_string1, _string2, count);
     }
 
-    if ( 0 == (ret = __acrt_CompareStringW(
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (ret = __crtCompareStringW(
+                    _lc_collate,
                                SORT_STRINGSORT,
                                _string1,
                                (int)count,
@@ -79,26 +83,27 @@ extern "C" int __cdecl _wcsncoll_l (
     return (ret - 2);
 
 }
+#endif
 
-extern "C" int __cdecl _wcsncoll (
-        const wchar_t *_string1,
-        const wchar_t *_string2,
-        size_t count
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-
-    /* validation section */
-    _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
-    _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
-    _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
-    return wcsncmp(_string1, _string2, count);
-    }
-    else
-    {
-        return _wcsncoll_l(_string1, _string2, count, nullptr);
-    }
-
-}
+//extern "C" int __cdecl _wcsncoll (
+//        const wchar_t *_string1,
+//        const wchar_t *_string2,
+//        size_t count
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//
+//    /* validation section */
+//    _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
+//    _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
+//    _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
+//    return wcsncmp(_string1, _string2, count);
+//    }
+//    else
+//    {
+//        return _wcsncoll_l(_string1, _string2, count, nullptr);
+//    }
+//
+//}
 

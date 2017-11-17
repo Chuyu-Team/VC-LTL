@@ -58,7 +58,7 @@ size_t __cdecl _mbsnlen_l(
 		else
 		{
 			ismbcodepage = _getmbcp();
-			mbctype = _mbctype;
+			mbctype = __acrt_getptd()->_multibyte_info->mbctype;
 		}
 
         if (ismbcodepage == 0)

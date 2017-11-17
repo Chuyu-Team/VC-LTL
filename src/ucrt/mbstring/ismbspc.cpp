@@ -35,19 +35,21 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcspace_l(unsigned int const c, _locale_t const locale)
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     if (c <= 0x00FF)
     {
-        return _isspace_l(c, locale_update.GetLocaleT());
+        return _isspace_l(c, locale);
     }
 
-    return __dcrt_multibyte_check_type(c, locale_update.GetLocaleT(), _SPACE, true);
+    return __dcrt_multibyte_check_type(c, locale, _SPACE, true);
 }
+#endif
 
-extern "C" int __cdecl _ismbcspace(unsigned int const c)
-{
-    return _ismbcspace_l(c, nullptr);
-}
+//extern "C" int __cdecl _ismbcspace(unsigned int const c)
+//{
+//    return _ismbcspace_l(c, nullptr);
+//}

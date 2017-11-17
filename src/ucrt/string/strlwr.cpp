@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -42,6 +43,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" char * __cdecl _strlwr_l (
         char * string,
         _locale_t plocinfo
@@ -50,32 +52,33 @@ extern "C" char * __cdecl _strlwr_l (
     _strlwr_s_l(string, (size_t)(-1), plocinfo);
     return string;
 }
+#endif
 
-extern "C" char * __cdecl _strlwr (
-        char * string
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        char * cp;
-
-        /* validation section */
-        _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
-
-        for (cp=string; *cp; ++cp)
-        {
-            if ('A' <= *cp && *cp <= 'Z')
-                *cp += 'a' - 'A';
-        }
-
-        return(string);
-    }
-    else
-    {
-        _strlwr_s_l(string, (size_t)(-1), nullptr);
-        return string;
-    }
-}
+//extern "C" char * __cdecl _strlwr (
+//        char * string
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        char * cp;
+//
+//        /* validation section */
+//        _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
+//
+//        for (cp=string; *cp; ++cp)
+//        {
+//            if ('A' <= *cp && *cp <= 'Z')
+//                *cp += 'a' - 'A';
+//        }
+//
+//        return(string);
+//    }
+//    else
+//    {
+//        _strlwr_s_l(string, (size_t)(-1), nullptr);
+//        return string;
+//    }
+//}
 
 /***
 *errno_t _strlwr_s(string, size_t) - map upper-case characters in a string to lower-case
@@ -124,7 +127,9 @@ errno_t __cdecl _strlwr_s_l_stat (
     }
     _FILL_STRING(string, sizeInBytes, stringlen + 1);
 
-    if ( plocinfo->locinfo->locale_name[LC_CTYPE] == nullptr ) {
+	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
+
+    if ( /*plocinfo->locinfo->locale_name[LC_CTYPE] == nullptr*/_lc_ctype==0) {
         char *cp;       /* traverses string for C locale conversion */
 
         for ( cp = string ; *cp ; ++cp )
@@ -134,16 +139,18 @@ errno_t __cdecl _strlwr_s_l_stat (
         return 0;
     }   /* C locale */
 
+	auto _locale_lc_codepage = plocinfo ? plocinfo->locinfo->_locale_lc_codepage : ___lc_codepage_func();
+
     /* Inquire size of dst string */
-    if ( 0 == (dstsize = __acrt_LCMapStringA(
+    if ( 0 == (dstsize = __crtLCMapStringA(
                     plocinfo,
-                    plocinfo->locinfo->locale_name[LC_CTYPE],
+                    _lc_ctype,
                     LCMAP_LOWERCASE,
                     string,
                     -1,
                     nullptr,
                     0,
-                    plocinfo->locinfo->_public._locale_lc_codepage,
+                    _locale_lc_codepage,
                     TRUE )) )
     {
         errno = EILSEQ;
@@ -165,15 +172,15 @@ errno_t __cdecl _strlwr_s_l_stat (
     }
 
     /* Map src string to dst string in alternate case */
-    if (__acrt_LCMapStringA(
+    if (__crtLCMapStringA(
                 plocinfo,
-                plocinfo->locinfo->locale_name[LC_CTYPE],
+                _lc_ctype,
                 LCMAP_LOWERCASE,
                 string,
                 -1,
                 dst.get(),
                 dstsize,
-                plocinfo->locinfo->_public._locale_lc_codepage,
+                _locale_lc_codepage,
                 TRUE ) != 0)
     {
         /* copy dst string to return string */
@@ -185,6 +192,7 @@ errno_t __cdecl _strlwr_s_l_stat (
     }
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _strlwr_s_l (
         char * string,
         size_t sizeInBytes,
@@ -192,15 +200,16 @@ extern "C" errno_t __cdecl _strlwr_s_l (
         )
 {
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
-    return _strlwr_s_l_stat(string, sizeInBytes, _loc_update.GetLocaleT());
+    return _strlwr_s_l_stat(string, sizeInBytes, plocinfo);
 }
+#endif
 
-extern "C" errno_t __cdecl _strlwr_s(
-        char * string,
-        size_t sizeInBytes
-        )
-{
-    return _strlwr_s_l(string, sizeInBytes, nullptr);
-}
+//extern "C" errno_t __cdecl _strlwr_s(
+//        char * string,
+//        size_t sizeInBytes
+//        )
+//{
+//    return _strlwr_s_l(string, sizeInBytes, nullptr);
+//}

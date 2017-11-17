@@ -32,24 +32,26 @@
 // returns nonzero if the argument c satisfies the character class property
 // encoded by the mask.  Returns zero otherwise, or for WEOF.  These functions
 // are neither locale nor codepage dependent.
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _iswctype_l(wint_t const c, wctype_t const mask, _locale_t)
 {
     return iswctype(c, mask);
 }
+#endif
 
-extern "C" int __cdecl iswctype(wint_t const c, wctype_t const mask)
-{
-    if (c == WEOF)
-        return 0;
-
-    if (c < 256)
-        return static_cast<int>(_pwctype[c] & mask);
-
-    wchar_t const wide_character = c;
-
-    wint_t char_type = 0;
-    if (GetStringTypeW(CT_CTYPE1, &wide_character, 1, &char_type) == 0)
-        return 0;
-
-    return static_cast<int>(char_type & mask);
-}
+//extern "C" int __cdecl iswctype(wint_t const c, wctype_t const mask)
+//{
+//    if (c == WEOF)
+//        return 0;
+//
+//    if (c < 256)
+//        return static_cast<int>(_pwctype[c] & mask);
+//
+//    wchar_t const wide_character = c;
+//
+//    wint_t char_type = 0;
+//    if (GetStringTypeW(CT_CTYPE1, &wide_character, 1, &char_type) == 0)
+//        return 0;
+//
+//    return static_cast<int>(char_type & mask);
+//}

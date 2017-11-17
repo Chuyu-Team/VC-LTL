@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *size_t wcsxfrm() - Transform a string using locale information
@@ -48,6 +49,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl _wcsxfrm_l (
         wchar_t *_string1,
         const wchar_t *_string2,
@@ -62,9 +64,10 @@ extern "C" size_t __cdecl _wcsxfrm_l (
     _VALIDATE_RETURN(_string1 != nullptr || _count == 0, EINVAL, INT_MAX);
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, INT_MAX);
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
+	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
+    if (_lc_collate==0)
     {
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
         wcsncpy(_string1, _string2, _count);
@@ -72,8 +75,8 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
         return wcslen(_string2);
     }
 
-    if ( 0 == (size = __acrt_LCMapStringW(
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (size = __crtLCMapStringW(
+                    _lc_collate,
                     LCMAP_SORTKEY,
                     _string2,
                     -1,
@@ -86,8 +89,8 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     {
         if ( size <= (int)_count)
         {
-            if ( 0 == (size = __acrt_LCMapStringW(
-                            _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+            if ( 0 == (size = __crtLCMapStringW(
+                            _lc_collate,
                             LCMAP_SORTKEY,
                             _string2,
                             -1,
@@ -122,14 +125,15 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
 
     return (size_t)size;
 }
+#endif
 
-extern "C" size_t __cdecl wcsxfrm (
-        wchar_t *_string1,
-        const wchar_t *_string2,
-        size_t _count
-        )
-{
-
-    return _wcsxfrm_l(_string1, _string2, _count, nullptr);
-}
+//extern "C" size_t __cdecl wcsxfrm (
+//        wchar_t *_string1,
+//        const wchar_t *_string2,
+//        size_t _count
+//        )
+//{
+//
+//    return _wcsxfrm_l(_string1, _string2, _count, nullptr);
+//}
 

@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _strnicmp(first, last, count) - compares count char of strings, ignore case
@@ -38,6 +39,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _strnicmp_l (
         const char * dst,
         const char * src,
@@ -49,14 +51,14 @@ extern "C" int __cdecl _strnicmp_l (
 
     if ( count )
     {
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-        if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr )
+        if ((plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE] == 0 )
         {
             return __ascii_strnicmp(dst, src, count);
         }
@@ -64,8 +66,8 @@ extern "C" int __cdecl _strnicmp_l (
         {
             do
             {
-                f = _tolower_l( (unsigned char)(*(dst++)), _loc_update.GetLocaleT() );
-                l = _tolower_l( (unsigned char)(*(src++)), _loc_update.GetLocaleT() );
+                f = _tolower_l( (unsigned char)(*(dst++)), plocinfo);
+                l = _tolower_l( (unsigned char)(*(src++)), plocinfo);
             }
             while (--count && f && (f == l) );
         }
@@ -74,7 +76,7 @@ extern "C" int __cdecl _strnicmp_l (
 
     return( 0 );
 }
-
+#endif
 
 #if !defined(_M_IX86) || defined(_M_HYBRID_X86_ARM64)
 
@@ -113,25 +115,25 @@ extern "C" int __cdecl __ascii_strnicmp (
 
 #endif  /* !_M_IX86 || _M_HYBRID_X86_ARM64 */
 
-extern "C" int __cdecl _strnicmp (
-        const char * dst,
-        const char * src,
-        size_t count
-        )
-{
-
-    if (!__acrt_locale_changed())
-    {
-        /* validation section */
-        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
-
-        return __ascii_strnicmp(dst, src, count);
-    }
-    else
-    {
-        return _strnicmp_l(dst, src, count, nullptr);
-    }
-
-}
+//extern "C" int __cdecl _strnicmp (
+//        const char * dst,
+//        const char * src,
+//        size_t count
+//        )
+//{
+//
+//    if (!__acrt_locale_changed())
+//    {
+//        /* validation section */
+//        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
+//
+//        return __ascii_strnicmp(dst, src, count);
+//    }
+//    else
+//    {
+//        return _strnicmp_l(dst, src, count, nullptr);
+//    }
+//
+//}

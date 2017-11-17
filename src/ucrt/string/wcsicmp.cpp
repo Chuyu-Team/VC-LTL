@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast can't see that we are checking for terminal nul.
 
@@ -36,6 +37,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wcsicmp_l (
         const wchar_t * dst,
         const wchar_t * src,
@@ -43,13 +45,15 @@ extern "C" int __cdecl _wcsicmp_l (
         )
 {
     wchar_t f,l;
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr)
+	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
+
+    if (_lc_ctype==0)
     {
         do
         {
@@ -64,38 +68,39 @@ extern "C" int __cdecl _wcsicmp_l (
     {
         do
         {
-            f = _towlower_l((unsigned short)*(dst++), _loc_update.GetLocaleT());
-            l = _towlower_l((unsigned short)*(src++), _loc_update.GetLocaleT());
+            f = _towlower_l((unsigned short)*(dst++), plocinfo);
+            l = _towlower_l((unsigned short)*(src++), plocinfo);
         }
         while ( (f) && (f == l) );
     }
     return (int)(f - l);
 }
+#endif
 
-extern "C" int __cdecl _wcsicmp (
-        const wchar_t * dst,
-        const wchar_t * src
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        wchar_t f,l;
-
-        /* validation section */
-        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
-
-        do  {
-            f = __ascii_towlower(*dst);
-            l = __ascii_towlower(*src);
-            dst++;
-            src++;
-        } while ( (f) && (f == l) );
-        return (int)(f - l);
-    }
-    else
-    {
-        return _wcsicmp_l(dst, src, nullptr);
-    }
-}
+//extern "C" int __cdecl _wcsicmp (
+//        const wchar_t * dst,
+//        const wchar_t * src
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        wchar_t f,l;
+//
+//        /* validation section */
+//        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
+//
+//        do  {
+//            f = __ascii_towlower(*dst);
+//            l = __ascii_towlower(*src);
+//            dst++;
+//            src++;
+//        } while ( (f) && (f == l) );
+//        return (int)(f - l);
+//    }
+//    else
+//    {
+//        return _wcsicmp_l(dst, src, nullptr);
+//    }
+//}
 

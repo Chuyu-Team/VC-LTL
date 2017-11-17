@@ -15,6 +15,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -38,7 +39,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbsicmp_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -46,7 +47,7 @@ extern "C" int __cdecl _mbsicmp_l(
         )
 {
         unsigned short c1, c2;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
         int    retval;
         unsigned char szResult[4];
 
@@ -54,8 +55,29 @@ extern "C" int __cdecl _mbsicmp_l(
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
-            return _stricmp_l((const char *)s1, (const char *)s2, _loc_update.GetLocaleT());
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+            return _stricmp_l((const char *)s1, (const char *)s2, plocinfo);
+
+		int mblcid;
+		int mbcodepage;
+		unsigned char*  mbcasemap;
+		unsigned char*  mbctype;
+		if (plocinfo)
+		{
+			mbcodepage = plocinfo->mbcinfo->mbcodepage;
+			mblcid = plocinfo->mbcinfo->mblcid;
+			mbcasemap = plocinfo->mbcinfo->mbcasemap;
+			mbctype = plocinfo->mbcinfo->mbctype;
+		}
+		else
+		{
+			mbcodepage = _getmbcp();
+
+			auto mbcinfo = __acrt_getptd()->_multibyte_info;
+			mblcid = mbcinfo->mblcid;
+			mbcasemap = mbcinfo->mbcasemap;
+			mbctype = mbcinfo->mbctype;
+		}
 
         for (;;)
         {
@@ -66,15 +88,15 @@ extern "C" int __cdecl _mbsicmp_l(
                     c1 = 0;
                 else
                 {
-                    retval = __acrt_LCMapStringA(
-                            _loc_update.GetLocaleT(),
-                            _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+                    retval = __crtLCMapStringA(
+                            plocinfo,
+                            mblcid,
                             LCMAP_UPPERCASE,
                             (LPCSTR)s1 - 1,
                             2,
                             (LPSTR)szResult,
                             2,
-                            _loc_update.GetLocaleT()->mbcinfo->mbcodepage,
+                            mbcodepage,
                             TRUE );
 
                     if (retval == 1)
@@ -99,15 +121,15 @@ extern "C" int __cdecl _mbsicmp_l(
                     c2 = 0;
                 else
                 {
-                    retval = __acrt_LCMapStringA(
-                            _loc_update.GetLocaleT(),
-                            _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+                    retval = __crtLCMapStringA(
+                            plocinfo,
+                            mblcid,
                             LCMAP_UPPERCASE,
                             (LPCSTR)s2 - 1,
                             2,
                             (LPSTR)szResult,
                             2,
-                            _loc_update.GetLocaleT()->mbcinfo->mbcodepage,
+                            mbcodepage,
                             TRUE );
 
                     if (retval == 1)
@@ -132,11 +154,12 @@ extern "C" int __cdecl _mbsicmp_l(
                 return(0);
         }
 }
+#endif
 
-extern "C" int (__cdecl _mbsicmp)(
-        const unsigned char *s1,
-        const unsigned char *s2
-        )
-{
-    return _mbsicmp_l(s1, s2, nullptr);
-}
+//extern "C" int (__cdecl _mbsicmp)(
+//        const unsigned char *s1,
+//        const unsigned char *s2
+//        )
+//{
+//    return _mbsicmp_l(s1, s2, nullptr);
+//}

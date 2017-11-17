@@ -15,7 +15,7 @@
 #include <corecrt_internal_securecrt.h>
 
 
-
+#ifdef _ATL_XP_TARGETING
 errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
     unsigned char *p;
@@ -26,7 +26,7 @@ errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
     _VALIDATE_STRING(_Dst, _SizeInBytes);
     _VALIDATE_POINTER_RESET_STRING(_Src, _Dst, _SizeInBytes);
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return strcat_s((char *)_Dst, _SizeInBytes, (const char *)_Src);
@@ -60,6 +60,7 @@ errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
      * an invalid MBC (lead+null), if so then clear that lead byte,
      * move the pointer back one and increase available by one.
      */
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     _ISMBBLEADPREFIX(fIsLeadPrefix, _Dst, p-1);
     if (fIsLeadPrefix)
@@ -120,3 +121,4 @@ errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
 
     _RETURN_NO_ERROR;
 }
+#endif

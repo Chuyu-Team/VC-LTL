@@ -34,19 +34,22 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcupper_l(unsigned int const c, _locale_t const locale)
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     if (c <= 0x00FF)
     {
+		unsigned char* mbctype = locale ? locale->mbcinfo->mbctype : _mbctype_func();
         return _mbbisupper_l(c, locale_update.GetLocaleT());
     }
 
-    return __dcrt_multibyte_check_type(c, locale_update.GetLocaleT(), _UPPER, true);
+    return __dcrt_multibyte_check_type(c, locale, _UPPER, true);
 }
+#endif
 
-extern "C" int __cdecl _ismbcupper(unsigned int const c)
-{
-    return _ismbcupper_l(c, nullptr);
-}
+//extern "C" int __cdecl _ismbcupper(unsigned int const c)
+//{
+//    return _ismbcupper_l(c, nullptr);
+//}

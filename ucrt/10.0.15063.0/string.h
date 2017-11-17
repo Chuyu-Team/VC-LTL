@@ -114,7 +114,7 @@ _ACRTIMP int __cdecl strcoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _strcoll_l(
+_ACRTXPIMP int __cdecl _strcoll_l(
     _In_z_   char const* _String1,
     _In_z_   char const* _String2,
     _In_opt_ _locale_t   _Locale
@@ -201,14 +201,14 @@ _ACRTIMP int __cdecl _stricoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _stricoll_l(
+_ACRTXPIMP int __cdecl _stricoll_l(
     _In_z_   char const* _String1,
     _In_z_   char const* _String2,
     _In_opt_ _locale_t   _Locale
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _stricmp_l(
+_ACRTXPIMP int __cdecl _stricmp_l(
     _In_z_   char const* _String1,
     _In_z_   char const* _String2,
     _In_opt_ _locale_t   _Locale
@@ -236,7 +236,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strlwr_s_l(
+_ACRTXPIMP errno_t __cdecl _strlwr_s_l(
     _Inout_updates_z_(_Size) char*     _String,
     _In_                     size_t    _Size,
     _In_opt_                 _locale_t _Locale
@@ -249,7 +249,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
-    char*, __RETURN_POLICY_DST, _ACRTIMP, _strlwr_l, _strlwr_s_l,
+    char*, __RETURN_POLICY_DST, _ACRTXPIMP, _strlwr_l, _strlwr_s_l,
     _Inout_updates_z_(_Size) char,
     _Inout_z_,               char,      _String,
     _In_opt_                 _locale_t, _Locale
@@ -285,7 +285,7 @@ _ACRTIMP int __cdecl _strnicmp(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _strnicmp_l(
+_ACRTXPIMP int __cdecl _strnicmp_l(
     _In_reads_or_z_(_MaxCount) char const* _String1,
     _In_reads_or_z_(_MaxCount) char const* _String2,
     _In_                       size_t      _MaxCount,
@@ -300,7 +300,7 @@ _ACRTIMP int __cdecl _strnicoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _strnicoll_l(
+_ACRTXPIMP int __cdecl _strnicoll_l(
     _In_reads_or_z_(_MaxCount) char const* _String1,
     _In_reads_or_z_(_MaxCount) char const* _String2,
     _In_                       size_t      _MaxCount,
@@ -315,7 +315,7 @@ _ACRTIMP int __cdecl _strncoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _strncoll_l(
+_ACRTXPIMP int __cdecl _strncoll_l(
     _In_reads_or_z_(_MaxCount) char const* _String1,
     _In_reads_or_z_(_MaxCount) char const* _String2,
     _In_                       size_t      _MaxCount,
@@ -458,7 +458,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _strupr_s_l(
+_ACRTXPIMP errno_t __cdecl _strupr_s_l(
     _Inout_updates_z_(_Size) char*     _String,
     _In_                     size_t    _Size,
     _In_opt_                 _locale_t _Locale
@@ -471,7 +471,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
-    char*, __RETURN_POLICY_DST, _ACRTIMP, _strupr_l, _strupr_s_l,
+    char*, __RETURN_POLICY_DST, _ACRTXPIMP, _strupr_l, _strupr_s_l,
     _Inout_updates_z_(_Size) char,
     _Inout_z_,               char,      _String,
     _In_opt_                 _locale_t, _Locale
@@ -487,7 +487,7 @@ _ACRTIMP size_t __cdecl strxfrm(
 
 _Success_(return < _MaxCount)
 _Check_return_opt_
-_ACRTIMP size_t __cdecl _strxfrm_l(
+_ACRTXPIMP size_t __cdecl _strxfrm_l(
     _Out_writes_opt_(_MaxCount) _Post_maybez_ char*       _Destination,
     _In_z_                                    char const* _Source,
     _In_ _In_range_(<=,_CRT_INT_MAX)          size_t      _MaxCount,

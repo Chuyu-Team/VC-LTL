@@ -13,6 +13,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _wcsnicmp(first, last, count) - compares count wchar_t of strings,
@@ -41,6 +42,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wcsnicmp_l (
         const wchar_t * first,
         const wchar_t * last,
@@ -57,9 +59,11 @@ extern "C" int __cdecl _wcsnicmp_l (
         _VALIDATE_RETURN(first != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(last != nullptr, EINVAL, _NLSCMPERROR);
 
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr )
+		auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
+
+        if (_lc_ctype==0)
         {
             do
             {
@@ -74,8 +78,8 @@ extern "C" int __cdecl _wcsnicmp_l (
         {
             do
             {
-                f = _towlower_l( (unsigned short)(*first),_loc_update.GetLocaleT());
-                l = _towlower_l( (unsigned short)(*last),_loc_update.GetLocaleT());
+                f = _towlower_l( (unsigned short)(*first), plocinfo);
+                l = _towlower_l( (unsigned short)(*last), plocinfo);
                 first++;
                 last++;
             }
@@ -86,41 +90,42 @@ extern "C" int __cdecl _wcsnicmp_l (
     }
     return result;
 }
+#endif
 
-extern "C" int __cdecl _wcsnicmp (
-        const wchar_t * first,
-        const wchar_t * last,
-        size_t count
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-
-        wchar_t f,l;
-        int result = 0;
-
-        if(count)
-        {
-            /* validation section */
-            _VALIDATE_RETURN(first != nullptr, EINVAL, _NLSCMPERROR);
-            _VALIDATE_RETURN(last != nullptr, EINVAL, _NLSCMPERROR);
-
-            do {
-                f = __ascii_towlower(*first);
-                l = __ascii_towlower(*last);
-                first++;
-                last++;
-            } while ( (--count) && f && (f == l) );
-
-            result = (int)(f-l);
-        }
-
-        return result;
-
-    }
-    else
-    {
-        return _wcsnicmp_l(first, last, count, nullptr);
-    }
-}
+//extern "C" int __cdecl _wcsnicmp (
+//        const wchar_t * first,
+//        const wchar_t * last,
+//        size_t count
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//
+//        wchar_t f,l;
+//        int result = 0;
+//
+//        if(count)
+//        {
+//            /* validation section */
+//            _VALIDATE_RETURN(first != nullptr, EINVAL, _NLSCMPERROR);
+//            _VALIDATE_RETURN(last != nullptr, EINVAL, _NLSCMPERROR);
+//
+//            do {
+//                f = __ascii_towlower(*first);
+//                l = __ascii_towlower(*last);
+//                first++;
+//                last++;
+//            } while ( (--count) && f && (f == l) );
+//
+//            result = (int)(f-l);
+//        }
+//
+//        return result;
+//
+//    }
+//    else
+//    {
+//        return _wcsnicmp_l(first, last, count, nullptr);
+//    }
+//}
 

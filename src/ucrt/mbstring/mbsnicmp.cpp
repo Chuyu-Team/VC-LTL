@@ -38,6 +38,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbsnicmp_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -50,9 +51,28 @@ extern "C" int __cdecl _mbsnicmp_l(
         if (n==0)
             return(0);
 
-        _LocaleUpdate _loc_update(plocinfo);
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        //_LocaleUpdate _loc_update(plocinfo);
+        if ((plocinfo? plocinfo->mbcinfo->ismbcodepage:_getmbcp()) == 0)
             return _strnicmp((const char *)s1, (const char *)s2, n);
+
+		unsigned char*  mbctype;
+		unsigned short* mbulinfo;
+		unsigned char*  mbcasemap;
+
+		if (plocinfo)
+		{
+			mbctype = plocinfo->mbcinfo->mbctype;
+			mbulinfo = plocinfo->mbcinfo->mbulinfo;
+			mbcasemap = plocinfo->mbcinfo->mbcasemap;
+		}
+		else
+		{
+			auto mbcinfo = __acrt_getptd()->_multibyte_info;
+
+			mbctype = mbcinfo->mbctype;
+			mbulinfo = mbcinfo->mbulinfo;
+			mbcasemap = mbcinfo->mbcasemap;
+		}
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
@@ -104,12 +124,13 @@ extern "C" int __cdecl _mbsnicmp_l(
 
         return(0);
 }
+#endif
 
-extern "C" int (__cdecl _mbsnicmp)(
-        const unsigned char *s1,
-        const unsigned char *s2,
-        size_t n
-        )
-{
-    return _mbsnicmp_l(s1, s2, n, nullptr);
-}
+//extern "C" int (__cdecl _mbsnicmp)(
+//        const unsigned char *s1,
+//        const unsigned char *s2,
+//        size_t n
+//        )
+//{
+//    return _mbsnicmp_l(s1, s2, n, nullptr);
+//}

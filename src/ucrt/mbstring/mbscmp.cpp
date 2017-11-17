@@ -37,7 +37,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbscmp_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -45,13 +45,15 @@ extern "C" int __cdecl _mbscmp_l(
         )
 {
         unsigned short c1, c2;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return strcmp((const char *)s1, (const char *)s2);
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         for (;;) {
 
@@ -71,11 +73,12 @@ extern "C" int __cdecl _mbscmp_l(
 
         }
 }
+#endif
 
-extern "C" int (__cdecl _mbscmp)(
-        const unsigned char *s1,
-        const unsigned char *s2
-        )
-{
-    return _mbscmp_l(s1, s2, nullptr);
-}
+//extern "C" int (__cdecl _mbscmp)(
+//        const unsigned char *s1,
+//        const unsigned char *s2
+//        )
+//{
+//    return _mbscmp_l(s1, s2, nullptr);
+//}

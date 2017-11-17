@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _memicmp(first, last, count) - compare two blocks of memory, ignore case
@@ -38,6 +39,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _memicmp_l (
         const void * first,
         const void * last,
@@ -47,13 +49,13 @@ extern "C" int __cdecl _memicmp_l (
 {
     int f = 0, l = 0;
     const char *dst = (const char *)first, *src = (const char *)last;
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(first != nullptr || count == 0, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(last != nullptr || count == 0, EINVAL, _NLSCMPERROR);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr )
+    if ((plocinfo? plocinfo->locinfo->lc_handle:___lc_handle_func())[LC_CTYPE] == 0 )
     {
         return __ascii_memicmp(first, last, count);
     }
@@ -61,13 +63,13 @@ extern "C" int __cdecl _memicmp_l (
     {
         while (count-- && f==l)
         {
-            f = _tolower_l( (unsigned char)(*(dst++)), _loc_update.GetLocaleT() );
-            l = _tolower_l( (unsigned char)(*(src++)), _loc_update.GetLocaleT() );
+            f = _tolower_l( (unsigned char)(*(dst++)), plocinfo);
+            l = _tolower_l( (unsigned char)(*(src++)), plocinfo);
         }
     }
     return ( f - l );
 }
-
+#endif
 
 #if !defined(_M_IX86) || defined(_M_HYBRID_X86_ARM64)
 
@@ -102,22 +104,22 @@ extern "C" int __cdecl __ascii_memicmp (
 
 #endif  /* !_M_IX86 || _M_HYBRID_X86_ARM64 */
 
-extern "C" int __cdecl _memicmp (
-        const void * first,
-        const void * last,
-        size_t count
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        /* validation section */
-        _VALIDATE_RETURN(first != nullptr || count == 0, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(last != nullptr || count == 0, EINVAL, _NLSCMPERROR);
-
-        return __ascii_memicmp(first, last, count);
-    }
-    else
-    {
-        return _memicmp_l(first, last, count, nullptr);
-    }
-}
+//extern "C" int __cdecl _memicmp (
+//        const void * first,
+//        const void * last,
+//        size_t count
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        /* validation section */
+//        _VALIDATE_RETURN(first != nullptr || count == 0, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(last != nullptr || count == 0, EINVAL, _NLSCMPERROR);
+//
+//        return __ascii_memicmp(first, last, count);
+//    }
+//    else
+//    {
+//        return _memicmp_l(first, last, count, nullptr);
+//    }
+//}

@@ -33,15 +33,16 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbcjistojms_l(
         unsigned int c,
         _locale_t plocinfo
     )
 {
         unsigned int h, l;
-        _LocaleUpdate _loc_update(plocinfo);
-
-        if (_loc_update.GetLocaleT()->mbcinfo->mbcodepage != _KANJI_CP)
+        //_LocaleUpdate _loc_update(plocinfo);
+		
+        if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP)
             return (c);
 
         h = (c >> 8) & 0xff;
@@ -65,12 +66,14 @@ extern "C" unsigned int __cdecl _mbcjistojms_l(
             h += 0x40;
         return (h << 8) | l;
 }
-extern "C" unsigned int (__cdecl _mbcjistojms)(
-    unsigned int c
-    )
-{
-    return _mbcjistojms_l(c, nullptr);
-}
+#endif
+
+//extern "C" unsigned int (__cdecl _mbcjistojms)(
+//    unsigned int c
+//    )
+//{
+//    return _mbcjistojms_l(c, nullptr);
+//}
 
 
 /***
@@ -91,21 +94,24 @@ extern "C" unsigned int (__cdecl _mbcjistojms)(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbcjmstojis_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
         unsigned int    h, l;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if ( _loc_update.GetLocaleT()->mbcinfo->mbcodepage != _KANJI_CP )
+        if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP )
             return (c);
 
         h = (c >> 8) & 0xff;
         l = c & 0xff;
 
         /* make sure input is valid shift-JIS */
+		auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
         if ( (!(_ismbblead_l(h, _loc_update.GetLocaleT()))) || (!(_ismbbtrail_l(l, _loc_update.GetLocaleT()))) )
         {
             errno = EILSEQ;
@@ -130,9 +136,11 @@ extern "C" unsigned int __cdecl _mbcjmstojis_l(
 
         return c;
 }
-extern "C" unsigned int (__cdecl _mbcjmstojis)(
-        unsigned int c
-        )
-{
-    return _mbcjmstojis_l(c, nullptr);
-}
+#endif
+
+//extern "C" unsigned int (__cdecl _mbcjmstojis)(
+//        unsigned int c
+//        )
+//{
+//    return _mbcjmstojis_l(c, nullptr);
+//}

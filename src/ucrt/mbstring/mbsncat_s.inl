@@ -30,7 +30,7 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsig
         _VALIDATE_POINTER_RESET_STRING(_Src, _Dst, _SizeInBytes);
     }
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return strncat_s((char *)_Dst, _SizeInBytes, (const char *)_Src, _COUNT);
@@ -57,6 +57,7 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsig
         _RETURN_DEST_NOT_NULL_TERMINATED(_Dst, _SizeInBytes);
     }
 
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     if (available < _SizeInBytes)
     {

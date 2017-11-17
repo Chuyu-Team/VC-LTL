@@ -13,4 +13,6 @@
 #endif
 
 #define _RETURN_PTR
+#ifdef _ATL_XP_TARGETING
 #include "mbscspn.cpp"
+#endif

@@ -104,7 +104,7 @@ _ACRTIMP int __cdecl _getmbcp(void);
         );
 
     _Check_return_
-    _DCRTIMP int __cdecl _ismbslead_l(
+    _ACRTXPIMP int __cdecl _ismbslead_l(
         _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
         _In_z_                           unsigned char const* _Pos,
         _In_opt_                         _locale_t            _Locale
@@ -117,7 +117,7 @@ _ACRTIMP int __cdecl _getmbcp(void);
         );
 
     _Check_return_
-    _ACRTIMP int __cdecl _ismbstrail_l(
+    _ACRTXPIMP int __cdecl _ismbstrail_l(
         _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
         _In_z_                           unsigned char const* _Pos,
         _In_opt_                         _locale_t            _Locale

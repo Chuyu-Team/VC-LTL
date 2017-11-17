@@ -43,14 +43,14 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbsbtype_l(unsigned char const* string, size_t length, _locale_t const locale)
 {
     _VALIDATE_RETURN(string != nullptr, EINVAL, _MBC_ILLEGAL);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
-    if (locale_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+    if ((locale? locale->mbcinfo->ismbcodepage : _getmbcp()) == 0)
         return _MBC_SINGLE;
 
     int chartype = _MBC_ILLEGAL;
@@ -66,13 +66,14 @@ extern "C" int __cdecl _mbsbtype_l(unsigned char const* string, size_t length, _
 
         _VALIDATE_RETURN(*string != '\0', EINVAL, _MBC_ILLEGAL);
 
-        chartype = _mbbtype_l(*string++, chartype, locale_update.GetLocaleT());
+        chartype = _mbbtype_l(*string++, chartype, locale);
     }  while (length--);
 
     return chartype;
 }
+#endif
 
-int __cdecl _mbsbtype(unsigned char const* const string, size_t const length)
-{
-    return _mbsbtype_l(string, length, nullptr);
-}
+//int __cdecl _mbsbtype(unsigned char const* const string, size_t const length)
+//{
+//    return _mbsbtype_l(string, length, nullptr);
+//}

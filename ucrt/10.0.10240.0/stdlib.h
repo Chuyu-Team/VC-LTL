@@ -857,7 +857,7 @@ _ACRTIMP char* __cdecl _gcvt(
     #endif
 
     #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        extern int __mb_cur_max;
+        _ACRTIMP extern int __mb_cur_max;
     #else
         #define __mb_cur_max (___mb_cur_max_func())
     #endif
@@ -866,7 +866,7 @@ _ACRTIMP char* __cdecl _gcvt(
     _ACRTIMP int __cdecl ___mb_cur_max_func(void);
 
     _Post_satisfies_(return > 0 && return < MB_LEN_MAX)
-    _ACRTXPIMP int __cdecl ___mb_cur_max_l_func(_locale_t);
+    extern int __cdecl ___mb_cur_max_l_func(_locale_t);
 #endif
 
 
@@ -878,7 +878,7 @@ _ACRTIMP int __cdecl mblen(
     );
 
 _Check_return_ 
-_ACRTIMP int __cdecl _mblen_l(
+_ACRTXPIMP int __cdecl _mblen_l(
     _In_reads_bytes_opt_(_MaxCount) _Pre_opt_z_ char const* _Ch,
     _In_                                        size_t      _MaxCount,
     _In_opt_                                    _locale_t   _Locale
@@ -892,21 +892,21 @@ _ACRTIMP size_t __cdecl _mbstrlen(
 
 _Check_return_
 _Post_satisfies_(return <= _String_length_(_String) || return == (size_t)-1)
-_ACRTIMP size_t __cdecl _mbstrlen_l(
+_ACRTXPIMP size_t __cdecl _mbstrlen_l(
     _In_z_   char const* _String, 
     _In_opt_ _locale_t   _Locale
     );
 
 _Check_return_
 _Post_satisfies_((return <= _String_length_(_String) && return <= _MaxCount) || return == (size_t)-1)
-_ACRTIMP size_t __cdecl _mbstrnlen(
+_ACRTXPIMP size_t __cdecl _mbstrnlen(
     _In_z_ char const* _String,
     _In_   size_t      _MaxCount
     );
 
 _Post_satisfies_((return <= _String_length_(_String) && return <= _MaxCount) || return == (size_t)-1)
 _Check_return_
-_ACRTIMP size_t __cdecl _mbstrnlen_l(
+_ACRTXPIMP size_t __cdecl _mbstrnlen_l(
     _In_z_   char const* _String,
     _In_     size_t      _MaxCount,
     _In_opt_ _locale_t   _Locale
@@ -928,7 +928,7 @@ _ACRTXPIMP int __cdecl _mbtowc_l(
     );
 
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl mbstowcs_s(
+_ACRTXPIMP errno_t __cdecl mbstowcs_s(
     _Out_opt_                                                 size_t*     _PtNumOfCharConverted,
     _Out_writes_to_opt_(_SizeInWords, *_PtNumOfCharConverted) wchar_t*    _DstBuf,
     _In_                                                      size_t      _SizeInWords,
@@ -952,7 +952,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_SIZE(
     )
 
 _Check_return_opt_
-_ACRTIMP errno_t __cdecl _mbstowcs_s_l(
+_ACRTXPIMP errno_t __cdecl _mbstowcs_s_l(
     _Out_opt_                                                 size_t*     _PtNumOfCharConverted,
     _Out_writes_to_opt_(_SizeInWords, *_PtNumOfCharConverted) wchar_t*    _DstBuf,
     _In_                                                      size_t      _SizeInWords,
@@ -971,7 +971,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE_EX(
-    _ACRTIMP, _mbstowcs_l, _mbstowcs_s_l,
+    _ACRTXPIMP, _mbstowcs_l, _mbstowcs_s_l,
     _Out_writes_opt_z_(_Size)  wchar_t,
     _Out_writes_z_(_MaxCount), wchar_t,     _Dest,
     _In_z_                     char const*, _Source,
@@ -989,7 +989,7 @@ _ACRTIMP int __cdecl wctomb(
     );
 
 _CRT_INSECURE_DEPRECATE(_wctomb_s_l)
-_ACRTIMP int __cdecl _wctomb_l(
+_ACRTXPIMP int __cdecl _wctomb_l(
     _Pre_maybenull_ _Post_z_ char*     _MbCh,
     _In_                     wchar_t   _WCh,
     _In_opt_                 _locale_t _Locale
@@ -998,7 +998,7 @@ _ACRTIMP int __cdecl _wctomb_l(
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_
-    _ACRTIMP errno_t __cdecl wctomb_s(
+    _ACRTXPIMP errno_t __cdecl wctomb_s(
         _Out_opt_                                                int*    _SizeConverted,
         _Out_writes_bytes_to_opt_(_SizeInBytes, *_SizeConverted) char*   _MbCh,
         _In_                                                     rsize_t _SizeInBytes,
@@ -1008,7 +1008,7 @@ _ACRTIMP int __cdecl _wctomb_l(
 #endif // __STDC_WANT_SECURE_LIB__
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wctomb_s_l(
+_ACRTXPIMP errno_t __cdecl _wctomb_s_l(
     _Out_opt_                        int*     _SizeConverted,
     _Out_writes_opt_z_(_SizeInBytes) char*     _MbCh,
     _In_                             size_t    _SizeInBytes,

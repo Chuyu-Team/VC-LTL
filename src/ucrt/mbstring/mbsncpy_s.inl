@@ -10,6 +10,7 @@
 *       _COUNT_IN_BYTES defined to 0 implements _mbsncpy_s
 *
 ****/
+#include <mbctype.h>
 
 errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, size_t _COUNT, _LOCALE_ARG_DECL)
 {
@@ -37,7 +38,7 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsig
     }
     _VALIDATE_POINTER_RESET_STRING(_Src, _Dst, _SizeInBytes);
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return strncpy_s((char *)_Dst, _SizeInBytes, (const char *)_Src, _COUNT);
@@ -123,6 +124,8 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsig
             /* Note that available is not decremented here. */
         }
     }
+
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     if (available == 0)
     {

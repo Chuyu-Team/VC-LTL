@@ -14,6 +14,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
 
+#ifdef _ATL_XP_TARGETING
 errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned int _Value, _LOCALE_ARG_DECL)
 {
     int mbcs_error = 0;
@@ -24,7 +25,7 @@ errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned i
     /* validation section */
     _VALIDATE_STRING(_Dst, _SizeInBytes);
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return _strset_s((char *)_Dst, _SizeInBytes, (int)_Value);
@@ -36,6 +37,8 @@ errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned i
     lowval = (unsigned char)(_Value & 0x00ff);
 
     /* ensure _Value is a valid mbchar */
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
     if ((highval != 0 && (lowval == 0 || !_ISMBBLEAD(highval))) ||
         (highval == 0 && _ISMBBLEAD(lowval)))
     {
@@ -87,3 +90,4 @@ errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned i
         _RETURN_NO_ERROR;
     }
 }
+#endif

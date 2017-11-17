@@ -51,7 +51,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
+#ifdef _ATL_XP_TARGETING
 #ifndef _RETURN_PTR
 
 extern "C" size_t __cdecl _mbscspn_l(
@@ -70,9 +70,9 @@ extern "C" const unsigned char * __cdecl _mbspbrk_l(
 
 {
         unsigned char *p, *q;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
 #ifndef _RETURN_PTR
             return strcspn((const char *)string, (const char *)charset);
 #else  /* _RETURN_PTR */
@@ -87,6 +87,8 @@ extern "C" const unsigned char * __cdecl _mbspbrk_l(
         _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
         _VALIDATE_RETURN(charset != nullptr, EINVAL, nullptr);
 #endif  /* _RETURN_PTR */
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         /* loop through the string to be inspected */
         for (q = (unsigned char *)string; *q ; q++) {
@@ -119,25 +121,26 @@ extern "C" const unsigned char * __cdecl _mbspbrk_l(
 #endif  /* _RETURN_PTR */
 
 }
+#endif
 
-#ifndef _RETURN_PTR
-
-extern "C" size_t (__cdecl _mbscspn)(
-        const unsigned char *string,
-        const unsigned char *charset
-        )
-#else  /* _RETURN_PTR */
-
-extern "C" const unsigned char * (__cdecl _mbspbrk)(
-        const unsigned char *string,
-        const unsigned char  *charset
-        )
-#endif  /* _RETURN_PTR */
-
-{
-#ifndef _RETURN_PTR
-        return _mbscspn_l(string, charset, nullptr);
-#else  /* _RETURN_PTR */
-        return _mbspbrk_l(string, charset, nullptr);
-#endif  /* _RETURN_PTR */
-}
+//#ifndef _RETURN_PTR
+//
+//extern "C" size_t (__cdecl _mbscspn)(
+//        const unsigned char *string,
+//        const unsigned char *charset
+//        )
+//#else  /* _RETURN_PTR */
+//
+//extern "C" const unsigned char * (__cdecl _mbspbrk)(
+//        const unsigned char *string,
+//        const unsigned char  *charset
+//        )
+//#endif  /* _RETURN_PTR */
+//
+//{
+//#ifndef _RETURN_PTR
+//        return _mbscspn_l(string, charset, nullptr);
+//#else  /* _RETURN_PTR */
+//        return _mbspbrk_l(string, charset, nullptr);
+//#endif  /* _RETURN_PTR */
+//}

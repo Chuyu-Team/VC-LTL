@@ -18,4 +18,6 @@
 #define _COUNT _CountInBytes
 #define _COUNT_IN_BYTES 1
 
+#ifdef _ATL_XP_TARGETING
 #include "mbsncat_s.inl"
+#endif

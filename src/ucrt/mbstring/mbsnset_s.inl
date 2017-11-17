@@ -24,7 +24,7 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, unsigned in
     }
     _VALIDATE_STRING(_Dst, _SizeInBytes);
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return _strnset_s((char *)_Dst, _SizeInBytes, (int)_Value, _COUNT);
@@ -34,6 +34,8 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, unsigned in
     available = _SizeInBytes;
     highval = (unsigned char)(_Value >> 8);
     lowval = (unsigned char)(_Value & 0x00ff);
+
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     /* ensure _Value is a valid mbchar */
     if ((highval != 0 && (lowval == 0 || !_ISMBBLEAD(highval))) ||

@@ -35,6 +35,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsrev_l(
         unsigned char *string,
         _locale_t plocinfo
@@ -43,16 +44,18 @@ extern "C" unsigned char * __cdecl _mbsrev_l(
         unsigned char *start = string;
         unsigned char *left  = string;
         unsigned char c;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (unsigned char *)_strrev((char *)string);
 
 
         /* first go through and reverse the bytes in MBCS chars */
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
         while ( *string ) {
             if ( _ismbblead_l(*string++, _loc_update.GetLocaleT()) ) {
                 if ( *string ) {
@@ -99,10 +102,11 @@ extern "C" unsigned char * __cdecl _mbsrev_l(
 
         return ( start );
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsrev)(
-        unsigned char *string
-        )
-{
-    return _mbsrev_l(string, nullptr);
-}
+//extern "C" unsigned char * (__cdecl _mbsrev)(
+//        unsigned char *string
+//        )
+//{
+//    return _mbsrev_l(string, nullptr);
+//}

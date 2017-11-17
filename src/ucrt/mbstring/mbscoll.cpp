@@ -14,7 +14,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
-
+#include "..\..\winapi_thunks.h"
 
 /***
 * _mbscoll - Collate MBCS strings
@@ -36,7 +36,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbscoll_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -44,24 +44,37 @@ extern "C" int __cdecl _mbscoll_l(
         )
 {
         int ret;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return _strcoll_l((const char *)s1, (const char *)s2, plocinfo);
 
-        if (0 == (ret = __acrt_CompareStringA(
-                        _loc_update.GetLocaleT(),
-                        _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+		int mblcid;
+		int mbcodepage;
+		if (plocinfo)
+		{
+			mblcid = plocinfo->mbcinfo->mblcid;
+			mbcodepage = plocinfo->mbcinfo->mbcodepage;
+		}
+		else
+		{
+			mblcid = __acrt_getptd()->_multibyte_info->mblcid;
+			mbcodepage = _getmbcp();
+		}
+
+        if (0 == (ret = __crtCompareStringA(
+                        plocinfo,
+                        mblcid,
                         SORT_STRINGSORT,
                         (LPCSTR)s1,
                         -1,
                         (LPSTR)s2,
                         -1,
-                        _loc_update.GetLocaleT()->mbcinfo->mbcodepage )))
+                        mbcodepage )))
         {
             errno = EINVAL;
 
@@ -71,11 +84,12 @@ extern "C" int __cdecl _mbscoll_l(
         return ret - 2;
 
 }
+#endif
 
-extern "C" int (__cdecl _mbscoll)(
-        const unsigned char *s1,
-        const unsigned char *s2
-        )
-{
-    return _mbscoll_l(s1, s2, nullptr);
-}
+//extern "C" int (__cdecl _mbscoll)(
+//        const unsigned char *s1,
+//        const unsigned char *s2
+//        )
+//{
+//    return _mbscoll_l(s1, s2, nullptr);
+//}

@@ -38,6 +38,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl _mbsnccnt_l(
         const unsigned char *string,
         size_t bcnt,
@@ -45,9 +46,11 @@ extern "C" size_t __cdecl _mbsnccnt_l(
         )
 {
         size_t n;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         _VALIDATE_RETURN(string != nullptr || bcnt == 0, EINVAL, 0);
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : _mbctype_func();
 
         for (n = 0; (bcnt-- && *string); n++, string++) {
             if ( _ismbblead_l(*string, _loc_update.GetLocaleT()) ) {
@@ -58,10 +61,12 @@ extern "C" size_t __cdecl _mbsnccnt_l(
 
         return(n);
 }
-extern "C" size_t (__cdecl _mbsnccnt)(
-        const unsigned char *string,
-        size_t bcnt
-        )
-{
-    return _mbsnccnt_l(string, bcnt, nullptr);
-}
+#endif
+
+//extern "C" size_t (__cdecl _mbsnccnt)(
+//        const unsigned char *string,
+//        size_t bcnt
+//        )
+//{
+//    return _mbsnccnt_l(string, bcnt, nullptr);
+//}

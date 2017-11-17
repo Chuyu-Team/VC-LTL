@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int strcoll() - Collate locale strings
@@ -36,6 +37,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _strcoll_l (
         const char *_string1,
         const char *_string2,
@@ -43,23 +45,25 @@ extern "C" int __cdecl _strcoll_l (
         )
 {
     int ret;
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
+	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+
+    if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr*/_lc_collate==0)
             return strcmp(_string1, _string2);
 
-    if ( 0 == (ret = __acrt_CompareStringA(
-                    _loc_update.GetLocaleT(), _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (ret = __crtCompareStringA(
+                    plocinfo, _lc_collate,
                                SORT_STRINGSORT,
                                _string1,
                                -1,
                                _string2,
                                -1,
-                    _loc_update.GetLocaleT()->locinfo->lc_collate_cp )) )
+                    plocinfo? plocinfo->locinfo->lc_collate_cp : ___lc_collate_cp_func())) )
     {
         errno = EINVAL;
         return _NLSCMPERROR;
@@ -68,11 +72,12 @@ extern "C" int __cdecl _strcoll_l (
     return (ret - 2);
 
 }
+#endif
 
-extern "C" int __cdecl strcoll (
-        const char *_string1,
-        const char *_string2
-        )
-{
-    return _strcoll_l(_string1, _string2, nullptr);
-}
+//extern "C" int __cdecl strcoll (
+//        const char *_string1,
+//        const char *_string2
+//        )
+//{
+//    return _strcoll_l(_string1, _string2, nullptr);
+//}

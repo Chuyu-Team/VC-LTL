@@ -15,7 +15,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <string.h>
-
+#include "..\..\winapi_thunks.h"
 
 /***
 * _mbsnicoll - Collate n characters of strings, ignoring case (MBCS)
@@ -40,6 +40,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbsnicoll_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -49,7 +50,7 @@ extern "C" int __cdecl _mbsnicoll_l(
 {
         int ret;
         size_t bcnt1, bcnt2;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         if (n == 0)
             return 0;
@@ -59,21 +60,23 @@ extern "C" int __cdecl _mbsnicoll_l(
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(n <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return _strnicoll_l((const char *)s1, (const char *)s2, n, plocinfo);
 
-        bcnt1 = _mbsnbcnt_l(s1, n, _loc_update.GetLocaleT());
-        bcnt2 = _mbsnbcnt_l(s2, n, _loc_update.GetLocaleT());
+        bcnt1 = _mbsnbcnt_l(s1, n, plocinfo);
+        bcnt2 = _mbsnbcnt_l(s2, n, plocinfo);
 
-        if ( 0 == (ret = __acrt_CompareStringA(
-                        _loc_update.GetLocaleT(),
-                        _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+		const auto mbcinfo = plocinfo ? plocinfo->mbcinfo : __acrt_getptd()->_multibyte_info;
+
+        if ( 0 == (ret = __crtCompareStringA(
+                        plocinfo,
+                        mbcinfo->mblcid,
                         SORT_STRINGSORT | NORM_IGNORECASE,
                         (const char *)s1,
                         (int)bcnt1,
                         (char *)s2,
                         (int)bcnt2,
-                        _loc_update.GetLocaleT()->mbcinfo->mbcodepage )) )
+                        mbcinfo->mbcodepage )) )
         {
             errno = EINVAL;
             return _NLSCMPERROR;
@@ -82,12 +85,13 @@ extern "C" int __cdecl _mbsnicoll_l(
         return ret - 2;
 
 }
+#endif
 
-extern "C" int (__cdecl _mbsnicoll)(
-        const unsigned char *s1,
-        const unsigned char *s2,
-        size_t n
-        )
-{
-    return _mbsnicoll_l(s1, s2, n, nullptr);
-}
+//extern "C" int (__cdecl _mbsnicoll)(
+//        const unsigned char *s1,
+//        const unsigned char *s2,
+//        size_t n
+//        )
+//{
+//    return _mbsnicoll_l(s1, s2, n, nullptr);
+//}

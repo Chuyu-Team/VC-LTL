@@ -219,15 +219,16 @@ static struct   {
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbbtombc_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
     int i;
-    _LocaleUpdate _loc_update(plocinfo);
-
-    if (_loc_update.GetLocaleT()->mbcinfo->mbcodepage != _KANJI_CP)
+    //_LocaleUpdate _loc_update(plocinfo);
+	
+    if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP)
         return (c);
 
     /* If c is in the ASCII range, then look up the corresponding value
@@ -256,13 +257,14 @@ extern "C" unsigned int __cdecl _mbbtombc_l(
 
         return(c);
 }
+#endif
 
-extern "C" unsigned int (__cdecl _mbbtombc)(
-    unsigned int c
-    )
-{
-    return _mbbtombc_l(c, nullptr);
-}
+//extern "C" unsigned int (__cdecl _mbbtombc)(
+//    unsigned int c
+//    )
+//{
+//    return _mbbtombc_l(c, nullptr);
+//}
 
 /***
 *unsigned int _mbctombb(c) - convert mbcvalue to mbbvalue.
@@ -281,6 +283,7 @@ extern "C" unsigned int (__cdecl _mbbtombc)(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbctombb_l(
         unsigned int c,
         _locale_t plocinfo
@@ -288,9 +291,9 @@ extern "C" unsigned int __cdecl _mbctombb_l(
 {
    int i;
    int result;
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
-    if (_loc_update.GetLocaleT()->mbcinfo->mbcodepage != _KANJI_CP)
+    if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP)
         return (c);
 
    /* Check to see if c is in the ASCII range.  */
@@ -320,10 +323,11 @@ extern "C" unsigned int __cdecl _mbctombb_l(
 
     return(c);
 }
+#endif
 
-extern "C" unsigned int (__cdecl _mbctombb)(
-    unsigned int c
-    )
-{
-    return _mbctombb_l(c, nullptr);
-}
+//extern "C" unsigned int (__cdecl _mbctombb)(
+//    unsigned int c
+//    )
+//{
+//    return _mbctombb_l(c, nullptr);
+//}

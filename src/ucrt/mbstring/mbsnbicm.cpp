@@ -40,6 +40,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 int __cdecl _mbsnbicmp_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -48,17 +49,35 @@ int __cdecl _mbsnbicmp_l(
         )
 {
         unsigned short c1, c2;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         if (n==0)
             return(0);
-
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+		
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return _strnicmp((const char *)s1, (const char *)s2, n);
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
+
+
+		unsigned short* mbulinfo;
+		unsigned char*  mbctype;
+		unsigned char*  mbcasemap;
+		if (plocinfo)
+		{
+			mbulinfo = plocinfo->mbcinfo->mbulinfo;
+			mbctype = plocinfo->mbcinfo->mbctype;
+			mbcasemap = plocinfo->mbcinfo->mbcasemap;
+		}
+		else
+		{
+			auto mbcinfo = __acrt_getptd()->_multibyte_info;
+			mbulinfo = mbcinfo->mbulinfo;
+			mbctype = mbcinfo->mbctype;
+			mbcasemap = mbcinfo->mbcasemap;
+		}
 
         while (n--) {
 
@@ -122,12 +141,13 @@ test:
 
         return(0);
 }
+#endif
 
-int (__cdecl _mbsnbicmp)(
-        const unsigned char *s1,
-        const unsigned char *s2,
-        size_t n
-        )
-{
-    return _mbsnbicmp_l(s1, s2, n, nullptr);
-}
+//int (__cdecl _mbsnbicmp)(
+//        const unsigned char *s1,
+//        const unsigned char *s2,
+//        size_t n
+//        )
+//{
+//    return _mbsnbicmp_l(s1, s2, n, nullptr);
+//}

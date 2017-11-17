@@ -36,6 +36,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
         const unsigned char *str1,
         const unsigned char *str2,
@@ -43,9 +44,9 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
         )
 {
         unsigned char *cp, *s1, *s2, *endp;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (unsigned char *)strstr((const char *)str1, (const char *)str2);
 
         /* validation section */
@@ -56,6 +57,8 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
 
         cp = (unsigned char *) str1;
         endp = (unsigned char *) (str1 + (strlen((const char *)str1) - strlen((const char *)str2)));
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         while (*cp && (cp <= endp))
         {
@@ -91,11 +94,12 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
         return(nullptr);
 
 }
+#endif
 
-extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsstr)(
-        const unsigned char *str1,
-        const unsigned char *str2
-        )
-{
-    return _mbsstr_l(str1, str2, nullptr);
-}
+//extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsstr)(
+//        const unsigned char *str1,
+//        const unsigned char *str2
+//        )
+//{
+//    return _mbsstr_l(str1, str2, nullptr);
+//}

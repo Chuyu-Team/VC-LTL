@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *size_t strxfrm() - Transform a string using locale information
@@ -52,6 +53,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl _strxfrm_l (
         char *_string1,
         const char *_string2,
@@ -61,7 +63,7 @@ extern "C" size_t __cdecl _strxfrm_l (
 {
     int dstlen;
     size_t retval = INT_MAX;   /* NON-ANSI: default if OM or API error */
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(_count <= INT_MAX, EINVAL, INT_MAX);
@@ -73,9 +75,21 @@ extern "C" size_t __cdecl _strxfrm_l (
     {
         *_string1='\0';
     }
+	LCID _lc_collate;
+	unsigned int lc_collate_cp;
+	if (plocinfo)
+	{
+		_lc_collate = plocinfo->locinfo->lc_handle[LC_COLLATE];
+		lc_collate_cp = plocinfo->locinfo->lc_collate_cp;
+	}
+	else
+	{
+		_lc_collate = ___lc_handle_func()[LC_COLLATE];
+		lc_collate_cp = ___lc_collate_cp_func();
+	}
 
-    if ( (_loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr) &&
-            (_loc_update.GetLocaleT()->locinfo->lc_collate_cp == CP_ACP) )
+    if ( (_lc_collate == 0) &&
+            (lc_collate_cp == CP_ACP) )
     {
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
         strncpy(_string1, _string2, _count);
@@ -84,15 +98,15 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     }
 
     /* Inquire size of dst string in BYTES */
-    if ( 0 == (dstlen = __acrt_LCMapStringA(
-                    _loc_update.GetLocaleT(),
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (dstlen = __crtLCMapStringA(
+                    plocinfo,
+                    _lc_collate,
                     LCMAP_SORTKEY,
                     _string2,
                     -1,
                     nullptr,
                     0,
-                    _loc_update.GetLocaleT()->locinfo->lc_collate_cp,
+                    lc_collate_cp,
                     TRUE )) )
     {
         errno = EILSEQ;
@@ -115,15 +129,15 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     }
 
     /* Map src string to dst string */
-    if ( 0 == __acrt_LCMapStringA(
-                _loc_update.GetLocaleT(),
-                _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == __crtLCMapStringA(
+                plocinfo,
+                _lc_collate,
                 LCMAP_SORTKEY,
                 _string2,
                 -1,
                 _string1,
                 (int)_count,
-                _loc_update.GetLocaleT()->locinfo->lc_collate_cp,
+                lc_collate_cp,
                 TRUE ) )
     {
         errno = EILSEQ;
@@ -134,14 +148,15 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
 
     return retval;
 }
-
-extern "C" size_t __cdecl strxfrm (
-        char *_string1,
-        const char *_string2,
-        size_t _count
-        )
-{
-
-    return _strxfrm_l(_string1, _string2, _count, nullptr);
-
-}
+#endif
+//
+//extern "C" size_t __cdecl strxfrm (
+//        char *_string1,
+//        const char *_string2,
+//        size_t _count
+//        )
+//{
+//
+//    return _strxfrm_l(_string1, _string2, _count, nullptr);
+//
+//}

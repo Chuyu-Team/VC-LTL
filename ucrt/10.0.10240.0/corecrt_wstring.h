@@ -309,7 +309,7 @@ _Check_return_ _ACRTIMP int __cdecl _wcsicmp(
     _In_z_ wchar_t const* _String2
     );
 
-_Check_return_ _ACRTIMP int __cdecl _wcsicmp_l(
+_Check_return_ _ACRTXPIMP int __cdecl _wcsicmp_l(
     _In_z_   wchar_t const* _String1,
     _In_z_   wchar_t const* _String2,
     _In_opt_ _locale_t      _Locale
@@ -321,7 +321,7 @@ _Check_return_ _ACRTIMP int __cdecl _wcsnicmp(
     _In_                       size_t         _MaxCount
     );
 
-_Check_return_ _ACRTIMP int __cdecl _wcsnicmp_l(
+_Check_return_ _ACRTXPIMP int __cdecl _wcsnicmp_l(
     _In_reads_or_z_(_MaxCount) wchar_t const* _String1,
     _In_reads_or_z_(_MaxCount) wchar_t const* _String2,
     _In_                       size_t         _MaxCount,
@@ -389,7 +389,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wcslwr_s_l(
+_ACRTXPIMP errno_t __cdecl _wcslwr_s_l(
     _Inout_updates_z_(_SizeInWords) wchar_t*  _String,
     _In_                            size_t    _SizeInWords,
     _In_opt_                        _locale_t _Locale
@@ -402,7 +402,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
-    wchar_t*, __RETURN_POLICY_DST, _ACRTIMP, _wcslwr_l, _wcslwr_s_l,
+    wchar_t*, __RETURN_POLICY_DST, _ACRTXPIMP, _wcslwr_l, _wcslwr_s_l,
     _Inout_updates_z_(_Size) wchar_t,
     _Inout_z_,               wchar_t,   _String,
     _In_opt_                 _locale_t, _Locale
@@ -425,7 +425,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     )
 
 _Check_return_wat_
-_ACRTIMP errno_t __cdecl _wcsupr_s_l(
+_ACRTXPIMP errno_t __cdecl _wcsupr_s_l(
     _Inout_updates_z_(_Size) wchar_t*  _String,
     _In_                     size_t    _Size,
     _In_opt_                 _locale_t _Locale
@@ -438,7 +438,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
-    wchar_t*, __RETURN_POLICY_DST, _ACRTIMP, _wcsupr_l, _wcsupr_s_l,
+    wchar_t*, __RETURN_POLICY_DST, _ACRTXPIMP, _wcsupr_l, _wcsupr_s_l,
     _Inout_updates_z_(_Size) wchar_t,
     _Inout_z_,               wchar_t,   _String,
     _In_opt_                 _locale_t, _Locale
@@ -454,7 +454,7 @@ _ACRTIMP size_t __cdecl wcsxfrm(
 
 _Success_(return < _MaxCount)
 _Check_return_opt_
-_ACRTIMP size_t __cdecl _wcsxfrm_l(
+_ACRTXPIMP size_t __cdecl _wcsxfrm_l(
     _Out_writes_opt_(_MaxCount) _Post_maybez_ wchar_t*       _Destination,
     _In_z_                                    wchar_t const* _Source,
     _In_ _In_range_(<= ,_CRT_INT_MAX)         size_t         _MaxCount,
@@ -468,7 +468,7 @@ _ACRTIMP int __cdecl wcscoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _wcscoll_l(
+_ACRTXPIMP int __cdecl _wcscoll_l(
     _In_z_   wchar_t const* _String1,
     _In_z_   wchar_t const* _String2,
     _In_opt_ _locale_t      _Locale
@@ -481,7 +481,7 @@ _ACRTIMP int __cdecl _wcsicoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _wcsicoll_l(
+_ACRTXPIMP int __cdecl _wcsicoll_l(
     _In_z_   wchar_t const* _String1,
     _In_z_   wchar_t const* _String2,
     _In_opt_ _locale_t      _Locale
@@ -495,7 +495,7 @@ _ACRTIMP int __cdecl _wcsncoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _wcsncoll_l(
+_ACRTXPIMP int __cdecl _wcsncoll_l(
     _In_reads_or_z_(_MaxCount) wchar_t const* _String1,
     _In_reads_or_z_(_MaxCount) wchar_t const* _String2,
     _In_                       size_t         _MaxCount,
@@ -510,7 +510,7 @@ _ACRTIMP int __cdecl _wcsnicoll(
     );
 
 _Check_return_
-_ACRTIMP int __cdecl _wcsnicoll_l(
+_ACRTXPIMP int __cdecl _wcsnicoll_l(
     _In_reads_or_z_(_MaxCount) wchar_t const* _String1,
     _In_reads_or_z_(_MaxCount) wchar_t const* _String2,
     _In_                       size_t         _MaxCount,

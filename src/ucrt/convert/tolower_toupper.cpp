@@ -10,7 +10,7 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
-
+#include "..\..\winapi_thunks.h"
 
 
 typedef bool (__cdecl internal_istype_l_type)(int, _locale_t);
@@ -41,12 +41,12 @@ static int __cdecl internal_map_upper(int const c, _locale_t const locale) throw
 template <internal_istype_l_type& IsType, internal_map_type& MapType>
 static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t const locale) throw()
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     if (static_cast<unsigned>(c) < 256)
     {
-        if (IsType(c, locale_update.GetLocaleT()))
-            return MapType(c, locale_update.GetLocaleT());
+        if (IsType(c, locale))
+            return MapType(c, locale);
 
         return c;
     }
@@ -54,7 +54,25 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
     // Convert the character to a multibyte string:
     size_t        in_count    {};
     unsigned char in_buffer[3]{};
-    if (locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max > 1 && _isleadbyte_l(c >> 8 & 0xff, locale_update.GetLocaleT()))
+
+	int _locale_mb_cur_max;
+	unsigned int _locale_lc_codepage;
+	LCID _lc_ctype;
+	if (locale)
+	{
+		_locale_mb_cur_max = locale->locinfo->_locale_mb_cur_max;
+		_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
+		_lc_ctype = locale->locinfo->lc_handle[LC_CTYPE];
+	}
+	else
+	{
+		_locale_mb_cur_max = ___mb_cur_max_func();
+		_locale_lc_codepage = ___lc_codepage_func();
+		_lc_ctype = ___lc_handle_func()[LC_CTYPE];
+	}
+
+
+    if (_locale_mb_cur_max > 1 && _isleadbyte_l(c >> 8 & 0xff, locale))
     {
         in_buffer[0] = c >> 8 & 0xff; // Put the lead byte at start of the string
         in_buffer[1] = static_cast<unsigned char>(c);
@@ -72,15 +90,15 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
 
     // Convert the wide character equivalent to the target case:
     unsigned char out_buffer[3]{};
-    int const out_count = __acrt_LCMapStringA(
-        locale_update.GetLocaleT(),
-        locale_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE],
+    int const out_count = __crtLCMapStringA(
+		locale,
+		_lc_ctype,
         map_flag,
         reinterpret_cast<char const*>(in_buffer),
         static_cast<int>(in_count),
         reinterpret_cast<char*>(out_buffer),
         static_cast<int>(_countof(out_buffer)),
-        locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+        _locale_lc_codepage,
         TRUE);
 
     if (out_count == 0)
@@ -94,39 +112,41 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
 }
 
 
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _tolower_l(int const c, _locale_t const locale)
 {
     return common_tox_l<internal_isupper_l, internal_map_lower>(c, LCMAP_LOWERCASE, locale);
 }
+#endif
 
-extern "C" int __cdecl tolower(int const c)
-{
-    return __acrt_locale_changed()
-        ? _tolower_l(c, nullptr)
-        : __ascii_tolower(c);
-}
+//extern "C" int __cdecl tolower(int const c)
+//{
+//    return __acrt_locale_changed()
+//        ? _tolower_l(c, nullptr)
+//        : __ascii_tolower(c);
+//}
 
-extern "C" int (__cdecl _tolower)(int const c)
-{
-    return c - 'A' + 'a';
-}
+//extern "C" int (__cdecl _tolower)(int const c)
+//{
+//    return c - 'A' + 'a';
+//}
 
 
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _toupper_l(int const c, _locale_t const locale)
 {
     return common_tox_l<internal_islower_l, internal_map_upper>(c, LCMAP_UPPERCASE, locale);
 }
+#endif
 
-extern "C" int __cdecl toupper(int const c)
-{
-    return __acrt_locale_changed()
-        ? _toupper_l(c, nullptr)
-        : __ascii_toupper(c);
-}
+//extern "C" int __cdecl toupper(int const c)
+//{
+//    return __acrt_locale_changed()
+//        ? _toupper_l(c, nullptr)
+//        : __ascii_toupper(c);
+//}
 
-extern "C" int (__cdecl _toupper)(int const c)
-{
-    return c - 'a' + 'A';
-}
+//extern "C" int (__cdecl _toupper)(int const c)
+//{
+//    return c - 'a' + 'A';
+//}

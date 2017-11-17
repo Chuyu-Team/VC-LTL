@@ -61,21 +61,34 @@ extern "C" int __cdecl _chvalidator_l(_locale_t const locale, int const c, int c
 //     H.......|.......|.......|.......L
 //         0       0   leadbyte trailbyte
 //
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const locale)
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
+	unsigned short const* _locale_pctype;
+	unsigned int _locale_lc_codepage;
+	if (locale)
+	{
+		_locale_pctype = locale->locinfo->_locale_pctype;
+		_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
+	}
+	else
+	{
+		_locale_pctype = __pctype_func();
+		_locale_lc_codepage = ___lc_codepage_func();
+	}
 
     // c valid between -1 and 255:
     if (c >= -1 && c <= 255)
     {
-        return locale_update.GetLocaleT()->locinfo->_public._locale_pctype[c] & mask;
+        return _locale_pctype[c] & mask;
     }
 
     size_t const buffer_count{3};
 
     int  buffer_length;
     char buffer[buffer_count];
-    if (_isleadbyte_l(c >> 8 & 0xff, locale_update.GetLocaleT()))
+    if (_isleadbyte_l(c >> 8 & 0xff, locale))
     {
         buffer[0] = (c >> 8 & 0xff); // Put lead-byte at start of the string
         buffer[1] = static_cast<char>(c);
@@ -92,12 +105,12 @@ extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const l
     
     unsigned short character_type[buffer_count]{};
     if (__acrt_GetStringTypeA(
-            locale_update.GetLocaleT(),
+            locale,
             CT_CTYPE1,
             buffer,
             buffer_length,
             character_type,
-            locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+            _locale_lc_codepage,
             TRUE
         ) == 0)
     {
@@ -106,15 +119,16 @@ extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const l
 
     return static_cast<int>(character_type[0] & mask);
 }
+#endif
 
-extern "C" int __cdecl _isctype(int const c, int const mask)
-{
-    if (!__acrt_locale_changed())
-    {
-        return __acrt_initial_locale_data._public._locale_pctype[c] & mask;
-    }
-    else
-    {
-        return _isctype_l(c, mask, nullptr);
-    }
-}
+//extern "C" int __cdecl _isctype(int const c, int const mask)
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        return __acrt_initial_locale_data._public._locale_pctype[c] & mask;
+//    }
+//    else
+//    {
+//        return _isctype_l(c, mask, nullptr);
+//    }
+//}

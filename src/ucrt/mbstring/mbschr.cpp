@@ -40,7 +40,7 @@
 *
 *******************************************************************************/
 
-
+#ifdef _ATL_XP_TARGETING
 extern "C" _CONST_RETURN unsigned char * __cdecl _mbschr_l(
         const unsigned char *string,
         unsigned int c,
@@ -48,13 +48,15 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbschr_l(
         )
 {
         unsigned short cc = '\0';
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (_CONST_RETURN unsigned char *)strchr((const char *)string, (int)c);
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         for (; (cc = *string) != '\0'; string++)
         {
@@ -74,11 +76,12 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbschr_l(
 
         return nullptr;
 }
+#endif
 
-extern "C" _CONST_RETURN unsigned char * (__cdecl _mbschr)(
-        const unsigned char *string,
-        unsigned int c
-        )
-{
-    return _mbschr_l(string, c, nullptr);
-}
+//extern "C" _CONST_RETURN unsigned char * (__cdecl _mbschr)(
+//        const unsigned char *string,
+//        unsigned int c
+//        )
+//{
+//    return _mbschr_l(string, c, nullptr);
+//}

@@ -53,6 +53,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsnbset_l(
         unsigned char *string,
         unsigned int val,
@@ -62,10 +63,10 @@ extern "C" unsigned char * __cdecl _mbsnbset_l(
 {
         unsigned char *start = string;
         unsigned char highval, lowval;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (unsigned char *)_strnset((char *)string, val, count);
 _END_SECURE_CRT_DEPRECATION_DISABLE
 
@@ -123,14 +124,15 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
 
         return( start );
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsnbset)(
-        unsigned char *string,
-        unsigned int val,
-        size_t count
-        )
-{
-_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-    return _mbsnbset_l(string, val, count, nullptr);
-_END_SECURE_CRT_DEPRECATION_DISABLE
-}
+//extern "C" unsigned char * (__cdecl _mbsnbset)(
+//        unsigned char *string,
+//        unsigned int val,
+//        size_t count
+//        )
+//{
+//_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+//    return _mbsnbset_l(string, val, count, nullptr);
+//_END_SECURE_CRT_DEPRECATION_DISABLE
+//}

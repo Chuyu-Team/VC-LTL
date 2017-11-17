@@ -17,9 +17,9 @@
 #include <errno.h>
 #include <locale.h>
 #include <limits.h>
+#include "..\..\winapi_thunks.h"
 
-
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wctomb_s_l(
     int*      const return_value,
     char*     const destination,
@@ -44,9 +44,10 @@ extern "C" int __cdecl _wctomb_s_l(
     // going to truncate destination_count:
     _VALIDATE_RETURN_ERRCODE(destination_count <= INT_MAX, EINVAL);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
+	auto _lc_ctype = (locale ? locale->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
 
-    if (!locale_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE])
+    if (!_lc_ctype)
     {
         if (wchar > 255)  // Validate high byte
         {
@@ -75,7 +76,7 @@ extern "C" int __cdecl _wctomb_s_l(
     {
         BOOL default_used{};
         int const size = WideCharToMultiByte(
-            locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
+			locale? locale->locinfo->_locale_lc_codepage:___lc_codepage_func(),
             0,
             &wchar,
             1,
@@ -105,7 +106,9 @@ extern "C" int __cdecl _wctomb_s_l(
         return 0;
     }
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl wctomb_s (
     int*    const return_value,
     char*   const destination,
@@ -115,45 +118,48 @@ extern "C" errno_t __cdecl wctomb_s (
 {
     return _wctomb_s_l(return_value, destination, destination_count, wchar, nullptr);
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wctomb_l(
     char*     const destination,
     wchar_t   const wchar,
     _locale_t const locale
     )
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     int return_value{};
     errno_t const e = _wctomb_s_l(
         &return_value,
         destination,
-        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max,
+		___mb_cur_max_l_func(locale),
         wchar,
-        locale_update.GetLocaleT());
+		locale);
 
     if (e != 0)
         return -1;
 
     return return_value;
 }
+#endif
 
 // Disable the OACR error that warns that 'MB_CUR_MAX' doesn't properly constrain buffer 'destination'.
 // wctomb() doesn't take a buffer size, so the function's contract is inherently dangerous.
-__pragma(warning(push))
-__pragma(warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY)) // 26015
-
-extern "C" int __cdecl wctomb(
-    char*   const destination,
-    wchar_t const wchar
-    )
-{
-    int return_value{};
-    errno_t const e = _wctomb_s_l(&return_value, destination, MB_CUR_MAX, wchar, nullptr);
-    if (e != 0)
-        return -1;
-
-    return return_value;
-}
-
-__pragma(warning(pop))
+//__pragma(warning(push))
+//__pragma(warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY)) // 26015
+//
+//extern "C" int __cdecl wctomb(
+//    char*   const destination,
+//    wchar_t const wchar
+//    )
+//{
+//    int return_value{};
+//    errno_t const e = _wctomb_s_l(&return_value, destination, MB_CUR_MAX, wchar, nullptr);
+//    if (e != 0)
+//        return -1;
+//
+//    return return_value;
+//}
+//
+//__pragma(warning(pop))

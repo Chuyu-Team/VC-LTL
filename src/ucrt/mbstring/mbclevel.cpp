@@ -33,25 +33,35 @@
 *
 *******************************************************************************/
 
+#define mbclevel_helper(p)\
+int mbcodepage;\
+unsigned char* mbctype;\
+if (p){	mbcodepage = p->mbcinfo->mbcodepage;mbctype = p->mbcinfo->mbctype;}\
+else{mbcodepage = _getmbcp();mbctype = __acrt_getptd()->_multibyte_info->mbctype;}
+
+
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcl0_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
+	mbclevel_helper(plocinfo);
 
-    return( (_loc_update.GetLocaleT()->mbcinfo->mbcodepage == _KANJI_CP) &&
+    return( (mbcodepage == _KANJI_CP) &&
             (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
             (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) &&
             (c < 0x889f) );
 }
+#endif
 
-extern "C" int (__cdecl _ismbcl0)(
-        unsigned int c
-        )
-{
-    return _ismbcl0_l(c, nullptr);
-}
+//extern "C" int (__cdecl _ismbcl0)(
+//        unsigned int c
+//        )
+//{
+//    return _ismbcl0_l(c, nullptr);
+//}
 
 
 /***
@@ -70,25 +80,28 @@ extern "C" int (__cdecl _ismbcl0)(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcl1_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
+	mbclevel_helper(plocinfo);
 
-    return( (_loc_update.GetLocaleT()->mbcinfo->mbcodepage == _KANJI_CP) &&
+    return( (mbcodepage == _KANJI_CP) &&
             (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
             (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) &&
             (c >= 0x889f) && (c <= 0x9872) );
 }
+#endif
 
-extern "C" int (__cdecl _ismbcl1)(
-    unsigned int c
-    )
-{
-    return _ismbcl1_l(c, nullptr);
-}
+//extern "C" int (__cdecl _ismbcl1)(
+//    unsigned int c
+//    )
+//{
+//    return _ismbcl1_l(c, nullptr);
+//}
 
 
 /***
@@ -107,21 +120,24 @@ extern "C" int (__cdecl _ismbcl1)(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcl2_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
+	mbclevel_helper(plocinfo);
 
-    return( (_loc_update.GetLocaleT()->mbcinfo->mbcodepage == _KANJI_CP) &&
+    return( (mbcodepage == _KANJI_CP) &&
             (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
             (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) &&
             (c >= 0x989f) && (c <= 0xEAA4) );
 }
-extern "C" int __cdecl _ismbcl2(
-        unsigned int c
-        )
-{
-    return _ismbcl2_l(c, nullptr);
-}
+#endif
+//extern "C" int __cdecl _ismbcl2(
+//        unsigned int c
+//        )
+//{
+//    return _ismbcl2_l(c, nullptr);
+//}

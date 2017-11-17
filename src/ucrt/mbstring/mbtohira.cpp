@@ -31,6 +31,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbctohira_l(
         unsigned int c,
         _locale_t plocinfo
@@ -44,8 +45,9 @@ extern "C" unsigned int __cdecl _mbctohira_l(
         }
         return(c);
 }
+#endif
 
-extern "C" unsigned int __cdecl _mbctohira(unsigned int c)
-{
-    return _mbctohira_l(c, nullptr);
-}
+//extern "C" unsigned int __cdecl _mbctohira(unsigned int c)
+//{
+//    return _mbctohira_l(c, nullptr);
+//}

@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _strncoll() - Collate locale strings
@@ -35,6 +36,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _strncoll_l (
         const char *_string1,
         const char *_string2,
@@ -52,22 +54,35 @@ extern "C" int __cdecl _strncoll_l (
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
+	LCID lc_collate;
+	unsigned int lc_collate_cp;
+	if (plocinfo)
+	{
+		lc_collate = plocinfo->locinfo->lc_handle[LC_COLLATE];
+		plocinfo->locinfo->lc_collate_cp;
+	}
+	else
+	{
+		lc_collate= ___lc_handle_func()[LC_COLLATE];
+		lc_collate_cp = ___lc_collate_cp_func();
+	}
+
+    if (lc_collate==0)
     {
         return strncmp(_string1, _string2, count);
     }
 
-    if ( 0 == (ret = __acrt_CompareStringA(
-                    _loc_update.GetLocaleT(),
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (ret = __crtCompareStringA(
+                    plocinfo,
+                    lc_collate,
                     SORT_STRINGSORT,
                     _string1,
                     (int)count,
                     _string2,
                     (int)count,
-                    _loc_update.GetLocaleT()->locinfo->lc_collate_cp)) )
+                    lc_collate_cp)) )
     {
         errno = EINVAL;
         return _NLSCMPERROR;
@@ -75,24 +90,25 @@ extern "C" int __cdecl _strncoll_l (
 
     return (ret - 2);
 }
+#endif
 
-extern "C" int __cdecl _strncoll (
-        const char *_string1,
-        const char *_string2,
-        size_t count
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        /* validation section */
-        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
-
-        return strncmp(_string1, _string2, count);
-    }
-    else
-    {
-        return _strncoll_l(_string1, _string2, count, nullptr);
-    }
-}
+//extern "C" int __cdecl _strncoll (
+//        const char *_string1,
+//        const char *_string2,
+//        size_t count
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        /* validation section */
+//        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
+//
+//        return strncmp(_string1, _string2, count);
+//    }
+//    else
+//    {
+//        return _strncoll_l(_string1, _string2, count, nullptr);
+//    }
+//}

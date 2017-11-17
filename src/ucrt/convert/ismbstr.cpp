@@ -19,7 +19,7 @@
 #include <locale.h>
 
 
-
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbstrail_l(
     unsigned char const*       string,
     unsigned char const*       current,
@@ -29,9 +29,21 @@ extern "C" int __cdecl _ismbstrail_l(
     _VALIDATE_RETURN(string != nullptr,  EINVAL, 0);
     _VALIDATE_RETURN(current != nullptr, EINVAL, 0);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
+	int ismbcodepage;
+	unsigned char* mbctype;
+	if (locale)
+	{
+		ismbcodepage = locale->mbcinfo->ismbcodepage;
+		mbctype = locale->mbcinfo->mbctype;
+	}
+	else
+	{
+		ismbcodepage = _getmbcp();
+		mbctype = __acrt_getptd()->_multibyte_info->mbctype;
+	}
 
-    if (locale_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+    if (ismbcodepage == 0)
         return 0;
 
     while (string <= current && *string)
@@ -49,11 +61,12 @@ extern "C" int __cdecl _ismbstrail_l(
 
     return 0;
 }
+#endif
 
-extern "C" int __cdecl _ismbstrail(
-    unsigned char const* const string,
-    unsigned char const* const current
-    )
-{
-    return _ismbstrail_l(string, current, nullptr);
-}
+//extern "C" int __cdecl _ismbstrail(
+//    unsigned char const* const string,
+//    unsigned char const* const current
+//    )
+//{
+//    return _ismbstrail_l(string, current, nullptr);
+//}

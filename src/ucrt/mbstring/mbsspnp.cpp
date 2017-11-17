@@ -12,5 +12,7 @@
     #error This file should only be compiled with _MBCS defined
 #endif
 
+#ifdef _ATL_XP_TARGETING
 #define _RETURN_PTR
 #include "mbsspn.cpp"
+#endif

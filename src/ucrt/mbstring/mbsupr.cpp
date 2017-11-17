@@ -15,6 +15,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED)
 
@@ -37,6 +38,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _mbsupr_s_l(
         unsigned char *string,
         size_t sizeInBytes,
@@ -63,7 +65,28 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
         _FILL_STRING(string, sizeInBytes, stringlen + 1);
 
         unsigned char *cp, *dst;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
+
+		int            mbcodepage;
+		unsigned char*  mbctype;
+		unsigned char*  mbcasemap;
+		int mblcid;
+		if (plocinfo)
+		{
+			mbcodepage = plocinfo->mbcinfo->mbcodepage;
+			mbctype = plocinfo->mbcinfo->mbctype;
+			mbcasemap = plocinfo->mbcinfo->mbcasemap;
+			mblcid = plocinfo->mbcinfo->mblcid;
+		}
+		else
+		{
+			mbcodepage = _getmbcp();
+			auto mbcinfo = __acrt_getptd()->_multibyte_info;
+			mbctype = mbcinfo->mbctype;
+			mbcasemap = mbcinfo->mbcasemap;
+			mblcid = mbcinfo->mblcid;
+		}
+
 
         for (cp = string, dst = string; *cp; ++cp)
         {
@@ -74,15 +97,15 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
                 int retval;
                 unsigned char ret[4];
 
-                if ( (retval = __acrt_LCMapStringA(
-                                _loc_update.GetLocaleT(),
-                                _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+                if ( (retval = __crtLCMapStringA(
+                                plocinfo,
+                                mblcid,
                                 LCMAP_UPPERCASE,
                                 (const char *)cp,
                                 2,
                                 (char *)ret,
                                 2,
-                                _loc_update.GetLocaleT()->mbcinfo->mbcodepage,
+                                mbcodepage,
                                 TRUE )) == 0 )
                 {
                     errno = EILSEQ;
@@ -108,15 +131,17 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
 
         return 0;
 }
+#endif
 
-extern "C" errno_t (__cdecl _mbsupr_s)(
-        unsigned char *string,
-        size_t sizeInBytes
-        )
-{
-    return _mbsupr_s_l(string, sizeInBytes, nullptr);
-}
+//extern "C" errno_t (__cdecl _mbsupr_s)(
+//        unsigned char *string,
+//        size_t sizeInBytes
+//        )
+//{
+//    return _mbsupr_s_l(string, sizeInBytes, nullptr);
+//}
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * (__cdecl _mbsupr_l)(
         unsigned char *string,
         _locale_t plocinfo
@@ -124,10 +149,11 @@ extern "C" unsigned char * (__cdecl _mbsupr_l)(
 {
     return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), plocinfo) == 0 ? string : nullptr);
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsupr)(
-        unsigned char *string
-        )
-{
-    return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
-}
+//extern "C" unsigned char * (__cdecl _mbsupr)(
+//        unsigned char *string
+//        )
+//{
+//    return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
+//}

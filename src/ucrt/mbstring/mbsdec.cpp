@@ -35,7 +35,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsdec_l(
         const unsigned char *string,
         const unsigned char *current,
@@ -51,9 +51,9 @@ extern "C" unsigned char * __cdecl _mbsdec_l(
         if (string >= current)
                 return(nullptr);
 
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (unsigned char *)--current;
 
         temp = current - 1;
@@ -94,16 +94,19 @@ extern "C" unsigned char * __cdecl _mbsdec_l(
  *  If even, then there are an even number of "lead bytes" preceding the
  *  single/trail byte (current - 1), indicating a single byte character.
  */
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
         while ( (string <= --temp) && (_ismbblead_l(*temp, _loc_update.GetLocaleT())) )
                 ;
 
         return (unsigned char *)(current - 1 - ((current - temp) & 0x01) );
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsdec)(
-        const unsigned char *string,
-        const unsigned char *current
-        )
-{
-    return _mbsdec_l(string, current, nullptr);
-}
+//extern "C" unsigned char * (__cdecl _mbsdec)(
+//        const unsigned char *string,
+//        const unsigned char *current
+//        )
+//{
+//    return _mbsdec_l(string, current, nullptr);
+//}

@@ -35,6 +35,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsncat_l(
         unsigned char *dst,
         const unsigned char *src,
@@ -51,10 +52,10 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
         _VALIDATE_RETURN(dst != nullptr, EINVAL, nullptr);
         _VALIDATE_RETURN(src != nullptr, EINVAL, nullptr);
 
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (unsigned char *)strncat((char *)dst, (const char *)src, cnt);
         _END_SECURE_CRT_DEPRECATION_DISABLE
 
@@ -66,10 +67,11 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
 
         /* if last char in string is a lead byte, back up pointer */
 
-        if ( _ismbslead_l(start, dst, _loc_update.GetLocaleT()) )
+        if ( _ismbslead_l(start, dst, plocinfo) )
             --dst;
 
         /* copy over the characters */
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         while (cnt--) {
             if ( _ismbblead_l(*src, _loc_update.GetLocaleT()) ) {
@@ -86,7 +88,7 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
         }
 
         /* enter final nul, if necessary */
-        if ( dst!=start && _mbsbtype_l(start, (int) ((dst - start) - 1), _loc_update.GetLocaleT()) == _MBC_LEAD )
+        if ( dst!=start && _mbsbtype_l(start, (int) ((dst - start) - 1), plocinfo) == _MBC_LEAD )
         {
             dst[-1] = '\0';
         }
@@ -97,14 +99,15 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
 
         return(start);
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsncat)(
-        unsigned char *dst,
-        const unsigned char *src,
-        size_t cnt
-        )
-{
-    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-    return _mbsncat_l(dst, src, cnt, nullptr);
-    _END_SECURE_CRT_DEPRECATION_DISABLE
-}
+//extern "C" unsigned char * (__cdecl _mbsncat)(
+//        unsigned char *dst,
+//        const unsigned char *src,
+//        size_t cnt
+//        )
+//{
+//    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+//    return _mbsncat_l(dst, src, cnt, nullptr);
+//    _END_SECURE_CRT_DEPRECATION_DISABLE
+//}

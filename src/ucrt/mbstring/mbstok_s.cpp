@@ -14,6 +14,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
 
+#ifdef _ATL_XP_TARGETING
 unsigned char * __cdecl _mbstok_s_l(unsigned char *_String, const unsigned char *_Control, unsigned char **_Context, _LOCALE_ARG_DECL)
 {
     unsigned char *token;
@@ -25,7 +26,7 @@ unsigned char * __cdecl _mbstok_s_l(unsigned char *_String, const unsigned char 
     _VALIDATE_POINTER_ERROR_RETURN(_Control, EINVAL, nullptr);
     _VALIDATE_CONDITION_ERROR_RETURN(_String != nullptr || *_Context != nullptr, EINVAL, nullptr);
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return (unsigned char*)strtok_s((char *)_String, (const char *)_Control, (char **)_Context);
@@ -39,6 +40,8 @@ unsigned char * __cdecl _mbstok_s_l(unsigned char *_String, const unsigned char 
 
     /* Find beginning of token (skip over leading delimiters). Note that
     * there is no token iff this loop sets string to point to the terminal null. */
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
     for ( ; *_String != 0; _String++)
     {
         for (ctl = _Control; *ctl != 0; ctl++)
@@ -143,5 +146,6 @@ unsigned char * __cdecl _mbstok_s_l(unsigned char *_String, const unsigned char 
         return token;
     }
 }
+#endif
 
-_REDIRECT_TO_L_VERSION_3(unsigned char *, _mbstok_s, unsigned char *, const unsigned char *, unsigned char **)
+//_REDIRECT_TO_L_VERSION_3(unsigned char *, _mbstok_s, unsigned char *, const unsigned char *, unsigned char **)

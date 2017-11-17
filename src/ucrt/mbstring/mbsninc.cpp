@@ -35,6 +35,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsninc_l(
         const unsigned char *string,
         size_t ccnt,
@@ -46,11 +47,12 @@ extern "C" unsigned char * __cdecl _mbsninc_l(
 
     return const_cast<unsigned char*>(string) + (unsigned int)_mbsnbcnt_l(string, ccnt, plocinfo);
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsninc)(
-        const unsigned char *string,
-        size_t ccnt
-        )
-{
-    return _mbsninc_l(string, ccnt, nullptr);
-}
+//extern "C" unsigned char * (__cdecl _mbsninc)(
+//        const unsigned char *string,
+//        size_t ccnt
+//        )
+//{
+//    return _mbsninc_l(string, ccnt, nullptr);
+//}

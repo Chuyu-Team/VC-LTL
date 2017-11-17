@@ -32,6 +32,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" size_t __cdecl _mbclen_l(unsigned char const* c, _locale_t locale)
 {
     /*  Don't return two if we have leadbyte, EOS.
@@ -39,11 +40,12 @@ extern "C" size_t __cdecl _mbclen_l(unsigned char const* c, _locale_t locale)
     */
     return ((_ismbblead_l)(*c, locale) && c[1] != '\0') ? 2 : 1;
 }
+#endif
 
-extern "C" size_t __cdecl _mbclen(unsigned char const* c)
-{
-    /*  Don't return two if we have leadbyte, EOS.
-        Don't assert here; too low level
-    */
-    return (_ismbblead(*c) && c[1]!='\0')  ? 2 : 1;
-}
+//extern "C" size_t __cdecl _mbclen(unsigned char const* c)
+//{
+//    /*  Don't return two if we have leadbyte, EOS.
+//        Don't assert here; too low level
+//    */
+//    return (_ismbblead(*c) && c[1]!='\0')  ? 2 : 1;
+//}

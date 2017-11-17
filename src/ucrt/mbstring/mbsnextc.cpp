@@ -35,13 +35,14 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbsnextc_l(
         const unsigned char *s,
         _locale_t plocinfo
         )
 {
         unsigned int  next = 0;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(s != nullptr, EINVAL, 0);
@@ -49,6 +50,9 @@ extern "C" unsigned int __cdecl _mbsnextc_l(
         /* don't skip forward 2 if the leadbyte is followed by EOS (dud string)
            also don't assert as we are too low-level
         */
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : _mbctype_func();
+
         if ( _ismbblead_l(*s, _loc_update.GetLocaleT()) && s[1]!='\0')
             next = ((unsigned int) *s++) << 8;
 
@@ -56,9 +60,11 @@ extern "C" unsigned int __cdecl _mbsnextc_l(
 
         return(next);
 }
-extern "C" unsigned int (__cdecl _mbsnextc)(
-        const unsigned char *s
-        )
-{
-    return _mbsnextc_l(s, nullptr);
-}
+#endif
+
+//extern "C" unsigned int (__cdecl _mbsnextc)(
+//        const unsigned char *s
+//        )
+//{
+//    return _mbsnextc_l(s, nullptr);
+//}

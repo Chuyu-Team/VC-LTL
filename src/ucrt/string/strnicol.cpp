@@ -12,7 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _strnicoll() - Collate locale strings without regard to case
@@ -38,6 +38,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _strnicoll_l (
         const char *_string1,
         const char *_string2,
@@ -46,7 +47,7 @@ extern "C" int __cdecl _strnicoll_l (
         )
 {
     int ret;
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     if (!count)
         return 0;
@@ -56,18 +57,19 @@ extern "C" int __cdecl _strnicoll_l (
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
-        return _strnicmp_l(_string1, _string2, count, _loc_update.GetLocaleT());
+	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+    if ( _lc_collate == 0 )
+        return _strnicmp_l(_string1, _string2, count, plocinfo);
 
-    if ( 0 == (ret = __acrt_CompareStringA(
-                    _loc_update.GetLocaleT(),
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (ret = __crtCompareStringA(
+                    plocinfo,
+                    _lc_collate,
                     SORT_STRINGSORT | NORM_IGNORECASE,
                     _string1,
                     (int)count,
                     _string2,
                     (int)count,
-                    _loc_update.GetLocaleT()->locinfo->lc_collate_cp)) )
+                    plocinfo? plocinfo->locinfo->lc_collate_cp : ___lc_collate_cp_func())) )
     {
         errno = EINVAL;
         return _NLSCMPERROR;
@@ -75,19 +77,20 @@ extern "C" int __cdecl _strnicoll_l (
 
     return (ret - 2);
 }
+#endif
 
-extern "C" int __cdecl _strnicoll (
-        const char *_string1,
-        const char *_string2,
-        size_t count
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        return _strnicmp(_string1, _string2, count);
-    }
-    else
-    {
-        return _strnicoll_l(_string1, _string2, count, nullptr);
-    }
-}
+//extern "C" int __cdecl _strnicoll (
+//        const char *_string1,
+//        const char *_string2,
+//        size_t count
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        return _strnicmp(_string1, _string2, count);
+//    }
+//    else
+//    {
+//        return _strnicoll_l(_string1, _string2, count, nullptr);
+//    }
+//}

@@ -54,6 +54,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsnset_l(
         unsigned char *string,
         unsigned int val,
@@ -64,7 +65,7 @@ extern "C" unsigned char * __cdecl _mbsnset_l(
         unsigned char  *start = string;
         unsigned int leadbyte = 0;
         unsigned char highval, lowval;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(string != nullptr || count == 0, EINVAL, nullptr);
@@ -74,11 +75,14 @@ extern "C" unsigned char * __cdecl _mbsnset_l(
          * a lead byte or not.
          */
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return (unsigned char *)_strnset((char *)string, val, count);
 _END_SECURE_CRT_DEPRECATION_DISABLE
 
         highval = static_cast<unsigned char>(val >> 8);
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
         if (highval != 0)
         {
 
@@ -130,14 +134,15 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
 
         return( start );
 }
+#endif
 
-unsigned char * (__cdecl _mbsnset)(
-        unsigned char *string,
-        unsigned int val,
-        size_t count
-        )
-{
-_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-    return _mbsnset_l(string, val, count, nullptr);
-_END_SECURE_CRT_DEPRECATION_DISABLE
-}
+//unsigned char * (__cdecl _mbsnset)(
+//        unsigned char *string,
+//        unsigned int val,
+//        size_t count
+//        )
+//{
+//_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+//    return _mbsnset_l(string, val, count, nullptr);
+//_END_SECURE_CRT_DEPRECATION_DISABLE
+//}

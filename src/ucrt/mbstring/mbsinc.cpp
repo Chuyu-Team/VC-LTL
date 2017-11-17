@@ -35,6 +35,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsinc_l(
         const unsigned char *current,
         _locale_t plocinfo
@@ -53,24 +54,25 @@ extern "C" unsigned char * __cdecl _mbsinc_l(
 
         return (unsigned char *)current;
 }
+#endif
 
-extern "C" unsigned char * (__cdecl _mbsinc)(
-        const unsigned char *current
-        )
-{
-        /* validation section */
-        _VALIDATE_RETURN(current != nullptr, EINVAL, nullptr);
-
-        if ( _ismbblead(*(current++)))
-        {
-            /* don't move forward two if we get leadbyte, EOS
-               also don't assert here as we are too low level
-            */
-            if(*current!='\0')
-            {
-                current++;
-            }
-        }
-
-        return (unsigned char *)current;
-}
+//extern "C" unsigned char * (__cdecl _mbsinc)(
+//        const unsigned char *current
+//        )
+//{
+//        /* validation section */
+//        _VALIDATE_RETURN(current != nullptr, EINVAL, nullptr);
+//
+//        if ( _ismbblead(*(current++)))
+//        {
+//            /* don't move forward two if we get leadbyte, EOS
+//               also don't assert here as we are too low level
+//            */
+//            if(*current!='\0')
+//            {
+//                current++;
+//            }
+//        }
+//
+//        return (unsigned char *)current;
+//}

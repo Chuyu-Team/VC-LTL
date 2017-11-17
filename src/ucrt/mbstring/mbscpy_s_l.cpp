@@ -14,7 +14,8 @@
 #include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
 
-errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
+#ifdef _ATL_XP_TARGETING
+EXTERN_C errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
     unsigned char *p;
     size_t available;
@@ -24,7 +25,7 @@ errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
     _VALIDATE_STRING(_Dst, _SizeInBytes);
     _VALIDATE_POINTER_RESET_STRING(_Src, _Dst, _SizeInBytes);
 
-    _LOCALE_UPDATE;
+    //_LOCALE_UPDATE;
     if (_LOCALE_SHORTCUT_TEST)
     {
         return strcpy_s((char *)_Dst, _SizeInBytes, (const char *)_Src);
@@ -41,6 +42,8 @@ errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
      * Only exception to that is if last mbc was invalid (leadbyte+null), which
      * is treated as null. In that case clear the copied lead byte and return ok.
      */
+
+	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     if (available == 0)
     {
@@ -74,3 +77,4 @@ errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
     _FILL_STRING(_Dst, _SizeInBytes, _SizeInBytes - available + 1);
     _RETURN_NO_ERROR;
 }
+#endif

@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _wcsnicoll() - Collate wide-character locale strings without regard to case
@@ -40,6 +41,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wcsnicoll_l (
         const wchar_t *_string1,
         const wchar_t *_string2,
@@ -59,9 +61,10 @@ extern "C" int __cdecl _wcsnicoll_l (
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
+	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
+    if (_lc_collate==0)
     {
         wchar_t f, l;
 
@@ -77,8 +80,8 @@ extern "C" int __cdecl _wcsnicoll_l (
         return (int)(f - l);
     }
 
-    if ( 0 == (ret = __acrt_CompareStringW(
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+    if ( 0 == (ret = __crtCompareStringW(
+                    _lc_collate,
                                SORT_STRINGSORT | NORM_IGNORECASE,
                                _string1,
                                (int)count,
@@ -91,35 +94,36 @@ extern "C" int __cdecl _wcsnicoll_l (
 
     return (ret - 2);
 }
+#endif
 
-extern "C" int __cdecl _wcsnicoll (
-        const wchar_t *_string1,
-        const wchar_t *_string2,
-        size_t count
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        wchar_t f, l;
-
-        /* validation section */
-        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
-
-        do
-        {
-            f = __ascii_towlower(*_string1);
-            l = __ascii_towlower(*_string2);
-            _string1++;
-            _string2++;
-        }
-        while ( (--count) && f && (f == l) );
-
-        return (int)(f - l);
-    }
-    else
-    {
-        return _wcsnicoll_l(_string1, _string2, count, nullptr);
-    }
-}
+//extern "C" int __cdecl _wcsnicoll (
+//        const wchar_t *_string1,
+//        const wchar_t *_string2,
+//        size_t count
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        wchar_t f, l;
+//
+//        /* validation section */
+//        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
+//        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
+//
+//        do
+//        {
+//            f = __ascii_towlower(*_string1);
+//            l = __ascii_towlower(*_string2);
+//            _string1++;
+//            _string2++;
+//        }
+//        while ( (--count) && f && (f == l) );
+//
+//        return (int)(f - l);
+//    }
+//    else
+//    {
+//        return _wcsnicoll_l(_string1, _string2, count, nullptr);
+//    }
+//}

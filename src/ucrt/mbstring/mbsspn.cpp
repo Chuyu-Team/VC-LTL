@@ -47,6 +47,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 #ifndef _RETURN_PTR
 extern "C" size_t __cdecl _mbsspn_l
 #else  /* _RETURN_PTR */
@@ -59,9 +60,9 @@ extern "C" unsigned char * __cdecl _mbsspnp_l
         )
 {
         unsigned char *p, *q;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
 #ifndef _RETURN_PTR
             return strspn((const char *)string, (const char *)charset);
 #else  /* _RETURN_PTR */
@@ -82,6 +83,8 @@ extern "C" unsigned char * __cdecl _mbsspnp_l
 #endif  /* _RETURN_PTR */
 
         /* loop through the string to be inspected */
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
+
         for (q = (unsigned char *)string; *q; q++) {
 
             /* loop through the charset */
@@ -111,20 +114,21 @@ extern "C" unsigned char * __cdecl _mbsspnp_l
 #endif  /* _RETURN_PTR */
 
 }
+#endif
 
-#ifndef _RETURN_PTR
-extern "C" size_t (__cdecl _mbsspn)
-#else  /* _RETURN_PTR */
-extern "C" unsigned char * (__cdecl _mbsspnp)
-#endif  /* _RETURN_PTR */
-        (
-        const unsigned char *string,
-        const unsigned char *charset
-        )
-{
-#ifndef _RETURN_PTR
-        return _mbsspn_l(string, charset, nullptr);
-#else  /* _RETURN_PTR */
-        return _mbsspnp_l(string, charset, nullptr);
-#endif  /* _RETURN_PTR */
-}
+//#ifndef _RETURN_PTR
+//extern "C" size_t (__cdecl _mbsspn)
+//#else  /* _RETURN_PTR */
+//extern "C" unsigned char * (__cdecl _mbsspnp)
+//#endif  /* _RETURN_PTR */
+//        (
+//        const unsigned char *string,
+//        const unsigned char *charset
+//        )
+//{
+//#ifndef _RETURN_PTR
+//        return _mbsspn_l(string, charset, nullptr);
+//#else  /* _RETURN_PTR */
+//        return _mbsspnp_l(string, charset, nullptr);
+//#endif  /* _RETURN_PTR */
+//}

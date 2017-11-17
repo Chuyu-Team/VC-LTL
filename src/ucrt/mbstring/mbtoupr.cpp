@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 * _mbctoupper - Convert character to upper case (MBCS)
@@ -35,6 +36,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbctoupper_l(
         unsigned int c,
         _locale_t plocinfo
@@ -42,7 +44,26 @@ extern "C" unsigned int __cdecl _mbctoupper_l(
 {
         unsigned char val[2];
         unsigned char ret[4];
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
+		unsigned char*  mbctype;
+		unsigned char*  mbcasemap;
+		int            mbcodepage;
+		int mblcid;
+		if (plocinfo)
+		{
+			mbcodepage = plocinfo->mbcinfo->mbcodepage;
+			mbctype = plocinfo->mbcinfo->mbctype;
+			mbcasemap = plocinfo->mbcinfo->mbcasemap;
+			mblcid = plocinfo->mbcinfo->mblcid;
+		}
+		else
+		{
+			mbcodepage = _getmbcp();
+			auto mbcinfo = __acrt_getptd()->_multibyte_info;
+			mbctype = mbcinfo->mbctype;
+			mbcasemap = mbcinfo->mbcasemap;
+			mblcid = mbcinfo->mblcid;
+		}
 
         if (c > 0x00FF)
         {
@@ -54,15 +75,15 @@ extern "C" unsigned int __cdecl _mbctoupper_l(
                 return c;
 
 
-            if ( __acrt_LCMapStringA(
-                        _loc_update.GetLocaleT(),
-                        _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+            if ( __crtLCMapStringA(
+                        plocinfo,
+                        mblcid,
                         LCMAP_UPPERCASE,
                         (const char *)val,
                         2,
                         (char *)ret,
                         2,
-                        _loc_update.GetLocaleT()->mbcinfo->mbcodepage,
+                        mbcodepage,
                         TRUE ) == 0 )
                 return c;
 
@@ -76,9 +97,10 @@ extern "C" unsigned int __cdecl _mbctoupper_l(
         else
             return (unsigned int)_mbbtoupper_l((int)c, _loc_update.GetLocaleT());
 }
-unsigned int (__cdecl _mbctoupper)(
-        unsigned int c
-        )
-{
-    return _mbctoupper_l(c, nullptr);
-}
+#endif
+//unsigned int (__cdecl _mbctoupper)(
+//        unsigned int c
+//        )
+//{
+//    return _mbctoupper_l(c, nullptr);
+//}

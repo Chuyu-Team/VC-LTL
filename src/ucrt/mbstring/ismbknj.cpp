@@ -31,22 +31,24 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbchira_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
-
-    return(_loc_update.GetLocaleT()->mbcinfo->mbcodepage == _KANJI_CP && c >= 0x829f && c <= 0x82f1);
+    //_LocaleUpdate _loc_update(plocinfo);
+	
+    return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x829f && c <= 0x82f1);
 }
+#endif
 
-extern "C" int __cdecl _ismbchira(
-        unsigned int c
-        )
-{
-    return _ismbchira_l(c, nullptr);
-}
+//extern "C" int __cdecl _ismbchira(
+//        unsigned int c
+//        )
+//{
+//    return _ismbchira_l(c, nullptr);
+//}
 
 
 /***
@@ -65,21 +67,23 @@ extern "C" int __cdecl _ismbchira(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbckata_l (
         unsigned int c,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
-    return(_loc_update.GetLocaleT()->mbcinfo->mbcodepage == _KANJI_CP && c >= 0x8340 && c <= 0x8396 && c != 0x837f);
+    return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x8340 && c <= 0x8396 && c != 0x837f);
 }
-extern "C" int __cdecl _ismbckata(
-        unsigned int c
-        )
-{
-    return _ismbckata_l(c, nullptr);
-}
+#endif
+//extern "C" int __cdecl _ismbckata(
+//        unsigned int c
+//        )
+//{
+//    return _ismbckata_l(c, nullptr);
+//}
 
 
 /***
@@ -100,19 +104,21 @@ extern "C" int __cdecl _ismbckata(
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcsymbol_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
-    return(_loc_update.GetLocaleT()->mbcinfo->mbcodepage == _KANJI_CP && c >= 0x8141 && c <= 0x81ac && c != 0x817f);
+    return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x8141 && c <= 0x81ac && c != 0x817f);
 }
+#endif
 
-extern "C" int (__cdecl _ismbcsymbol)(
-        unsigned int c
-        )
-{
-    return _ismbcsymbol_l(c, nullptr);
-}
+//extern "C" int (__cdecl _ismbcsymbol)(
+//        unsigned int c
+//        )
+//{
+//    return _ismbcsymbol_l(c, nullptr);
+//}

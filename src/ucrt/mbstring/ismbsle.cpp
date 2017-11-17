@@ -39,6 +39,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbslead_l(
         const unsigned char *string,
         const unsigned char *current,
@@ -49,9 +50,21 @@ extern "C" int __cdecl _ismbslead_l(
         _VALIDATE_RETURN(string != nullptr, EINVAL, 0);
         _VALIDATE_RETURN(current != nullptr, EINVAL, 0);
 
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
+		int ismbcodepage;
+		unsigned char* mbctype;
+		if (plocinfo)
+		{
+			ismbcodepage = plocinfo->mbcinfo->ismbcodepage;
+			mbctype = plocinfo->mbcinfo->mbctype;
+		}
+		else
+		{
+			ismbcodepage = _getmbcp();
+			mbctype = __acrt_getptd()->_multibyte_info->mbctype;
+		}
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if (ismbcodepage == 0)
             return 0;
 
         while (string <= current && *string) {
@@ -66,11 +79,12 @@ extern "C" int __cdecl _ismbslead_l(
 
         return 0;
 }
+#endif
 
-extern "C" int (__cdecl _ismbslead)(
-        const unsigned char *string,
-        const unsigned char *current
-        )
-{
-        return _ismbslead_l(string, current, nullptr);
-}
+//extern "C" int (__cdecl _ismbslead)(
+//        const unsigned char *string,
+//        const unsigned char *current
+//        )
+//{
+//        return _ismbslead_l(string, current, nullptr);
+//}

@@ -29,6 +29,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" void __cdecl _mbccpy_l(
         unsigned char *dst,
         const unsigned char *src,
@@ -38,11 +39,12 @@ extern "C" void __cdecl _mbccpy_l(
     /* _mbccpy_s_l sets errno */
     _mbccpy_s_l(dst, 2, nullptr, src, plocinfo);
 }
+#endif
 
-extern "C" void (__cdecl _mbccpy)(
-        unsigned char *dst,
-        const unsigned char *src
-        )
-{
-    _mbccpy_s_l(dst, 2, nullptr, src, nullptr);
-}
+//extern "C" void (__cdecl _mbccpy)(
+//        unsigned char *dst,
+//        const unsigned char *src
+//        )
+//{
+//    _mbccpy_s_l(dst, 2, nullptr, src, nullptr);
+//}

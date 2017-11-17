@@ -99,9 +99,9 @@ _Check_return_ _ACRTIMP wint_t __cdecl towupper(_In_ wint_t _C);
 _Check_return_ _ACRTIMP wint_t __cdecl towlower(_In_ wint_t _C);
 _Check_return_ _ACRTIMP int    __cdecl iswctype(_In_ wint_t _C, _In_ wctype_t _Type);
 
-_Check_return_ _ACRTIMP wint_t __cdecl _towupper_l(_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP wint_t __cdecl _towlower_l(_In_ wint_t _C, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTIMP int    __cdecl _iswctype_l(_In_ wint_t _C, _In_ wctype_t _Type, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP wint_t __cdecl _towupper_l(_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP wint_t __cdecl _towlower_l(_In_ wint_t _C, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTXPIMP int    __cdecl _iswctype_l(_In_ wint_t _C, _In_ wctype_t _Type, _In_opt_ _locale_t _Locale);
 
 
 #ifdef _CRT_USE_WINAPI_FAMILY_DESKTOP_APP

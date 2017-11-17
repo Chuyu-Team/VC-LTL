@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 * _mbsnbcoll(s1, s2, n) - Collate n bytes of two MBCS strings
@@ -37,6 +38,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbsnbcoll_l(
         const unsigned char *s1,
         const unsigned char *s2,
@@ -54,19 +56,33 @@ extern "C" int __cdecl _mbsnbcoll_l(
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(n <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
             return _strncoll_l((const char *)s1, (const char *)s2, n, plocinfo);
 
-        if ( 0 == (ret = __acrt_CompareStringA(_loc_update.GetLocaleT(),
-                                              _loc_update.GetLocaleT()->mbcinfo->mblocalename,
+		int mbcodepage;
+		int mblcid;
+
+		if (plocinfo)
+		{
+			mbcodepage = plocinfo->mbcinfo->mbcodepage;
+			mblcid = plocinfo->mbcinfo->mblcid;
+		}
+		else
+		{
+			mbcodepage = _getmbcp();
+			mblcid = __acrt_getptd()->_multibyte_info->mblcid;
+		}
+
+        if ( 0 == (ret = __crtCompareStringA(plocinfo,
+                                              mblcid,
                                               SORT_STRINGSORT,
                                               (const char *)s1,
                                               (int)n,
                                               (char *)s2,
                                               (int)n,
-                                              _loc_update.GetLocaleT()->mbcinfo->mbcodepage )) )
+                                              mbcodepage )) )
         {
             errno = EINVAL;
             return _NLSCMPERROR;
@@ -75,12 +91,13 @@ extern "C" int __cdecl _mbsnbcoll_l(
         return ret - 2;
 
 }
+#endif
 
-extern "C" int (__cdecl _mbsnbcoll)(
-        const unsigned char *s1,
-        const unsigned char *s2,
-        size_t n
-        )
-{
-    return _mbsnbcoll_l(s1, s2, n, nullptr);
-}
+//extern "C" int (__cdecl _mbsnbcoll)(
+//        const unsigned char *s1,
+//        const unsigned char *s2,
+//        size_t n
+//        )
+//{
+//    return _mbsnbcoll_l(s1, s2, n, nullptr);
+//}

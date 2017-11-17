@@ -31,6 +31,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned int __cdecl _mbctokata_l(
         unsigned int c,
         _locale_t plocinfo
@@ -43,10 +44,11 @@ extern "C" unsigned int __cdecl _mbctokata_l(
         }
         return(c);
 }
+#endif
 
-extern "C" unsigned int (__cdecl _mbctokata)(
-        unsigned int c
-        )
-{
-    return _mbctokata_l(c, nullptr);
-}
+//extern "C" unsigned int (__cdecl _mbctokata)(
+//        unsigned int c
+//        )
+//{
+//    return _mbctokata_l(c, nullptr);
+//}

@@ -101,7 +101,7 @@
     _LocaleUpdate _LocUpdate(_LOCALE_ARG)
 
 #define _ISMBBLEAD(_Character) \
-    _ismbblead_l((_Character), _LocUpdate.GetLocaleT())
+    _ismbblead_l((_Character), _LOCALE_ARG)
 
 #define _ISMBBLEADPREFIX(_Result, _StringStart, _BytePtr)               \
     {                                                                   \
@@ -118,7 +118,7 @@
     }
 
 #define _LOCALE_SHORTCUT_TEST \
-    _LocUpdate.GetLocaleT()->mbcinfo->ismbcodepage == 0
+    (_LOCALE_ARG?_LOCALE_ARG->mbcinfo->ismbcodepage : _getmbcp()) == 0
 
 /* misc */
 #define _ASSIGN_IF_NOT_NULL(_Pointer, _Value) \

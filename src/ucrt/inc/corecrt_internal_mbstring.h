@@ -19,11 +19,13 @@ _CRT_BEGIN_C_HEADER
  // Multibyte full-width-latin upper/lower info
 #define NUM_ULINFO 6
 
+#define _mbctype_func() (_getmbcp(),__acrt_getptd()->_multibyte_info->mbctype)
+
 #define mbstring_thunks(p) \
 const unsigned char* mbctype;\
 const unsigned short*_locale_pctype;\
 if(p){mbctype=(p)->mbcinfo->mbctype;_locale_pctype=(p)->locinfo->_locale_pctype;}\
-else{mbctype=_mbctype;_locale_pctype=__PCTYPE_FUNC;}
+else{mbctype=_mbctype_func();_locale_pctype=__PCTYPE_FUNC;}
 
 #define _ismbbtruelead(_lb,_ch) (!(_lb) && _ismbblead((_ch)))
 
@@ -42,13 +44,13 @@ else{mbctype=_mbctype;_locale_pctype=__PCTYPE_FUNC;}
 
 /* define full-width-latin upper/lower ranges */
 
-#define _MBUPPERLOW1_MT(p)  p->mbcinfo->mbulinfo[0]
-#define _MBUPPERHIGH1_MT(p) p->mbcinfo->mbulinfo[1]
-#define _MBCASEDIFF1_MT(p)  p->mbcinfo->mbulinfo[2]
+#define _MBUPPERLOW1_MT(p)  mbulinfo[0]
+#define _MBUPPERHIGH1_MT(p) mbulinfo[1]
+#define _MBCASEDIFF1_MT(p)  mbulinfo[2]
 
-#define _MBUPPERLOW2_MT(p)  p->mbcinfo->mbulinfo[3]
-#define _MBUPPERHIGH2_MT(p) p->mbcinfo->mbulinfo[4]
-#define _MBCASEDIFF2_MT(p)  p->mbcinfo->mbulinfo[5]
+#define _MBUPPERLOW2_MT(p)  mbulinfo[3]
+#define _MBUPPERHIGH2_MT(p) mbulinfo[4]
+#define _MBCASEDIFF2_MT(p)  mbulinfo[5]
 
 // Kanji-specific ranges
 #define _MBHIRALOW      0x829f  // Hiragana

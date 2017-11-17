@@ -14,6 +14,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -37,6 +38,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" wchar_t * __cdecl _wcslwr_l (
         wchar_t * wsrc,
         _locale_t plocinfo
@@ -45,30 +47,31 @@ extern "C" wchar_t * __cdecl _wcslwr_l (
     _wcslwr_s_l(wsrc, (size_t)(-1), plocinfo);
     return wsrc;
 }
+#endif
 
-extern "C" wchar_t * __cdecl _wcslwr (
-        wchar_t * wsrc
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        wchar_t * p;
-
-        /* validation section */
-        _VALIDATE_RETURN(wsrc != nullptr, EINVAL, nullptr);
-
-        for (p=wsrc; *p; ++p)
-        {
-            if (L'A' <= *p && *p <= L'Z')
-                *p += (wchar_t)L'a' - (wchar_t)L'A';
-        }
-    } else {
-        _wcslwr_s_l(wsrc, (size_t)(-1), nullptr);
-        return wsrc;
-    }
-
-    return(wsrc);
-}
+//extern "C" wchar_t * __cdecl _wcslwr (
+//        wchar_t * wsrc
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        wchar_t * p;
+//
+//        /* validation section */
+//        _VALIDATE_RETURN(wsrc != nullptr, EINVAL, nullptr);
+//
+//        for (p=wsrc; *p; ++p)
+//        {
+//            if (L'A' <= *p && *p <= L'Z')
+//                *p += (wchar_t)L'a' - (wchar_t)L'A';
+//        }
+//    } else {
+//        _wcslwr_s_l(wsrc, (size_t)(-1), nullptr);
+//        return wsrc;
+//    }
+//
+//    return(wsrc);
+//}
 
 /***
 *errno_t _wcslwr_s(string, size_t) - map upper-case characters in a string to lower-case
@@ -111,7 +114,9 @@ static errno_t __cdecl _wcslwr_s_l_stat (
     }
     _FILL_STRING(wsrc, sizeInWords, stringlen + 1);
 
-    if ( plocinfo->locinfo->locale_name[LC_CTYPE] == nullptr)
+	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
+
+    if (_lc_ctype==0)
     {
         for ( p = wsrc ; *p ; p++ )
         {
@@ -125,8 +130,8 @@ static errno_t __cdecl _wcslwr_s_l_stat (
     }   /* C locale */
 
     /* Inquire size of wdst string */
-    if ( (dstsize = __acrt_LCMapStringW(
-                    plocinfo->locinfo->locale_name[LC_CTYPE],
+    if ( (dstsize = __crtLCMapStringW(
+                    _lc_ctype,
                     LCMAP_LOWERCASE,
                     wsrc,
                     -1,
@@ -153,8 +158,8 @@ static errno_t __cdecl _wcslwr_s_l_stat (
     }
 
     /* Map wrc string to wide-character wdst string in alternate case */
-    if (__acrt_LCMapStringW(
-                plocinfo->locinfo->locale_name[LC_CTYPE],
+    if (__crtLCMapStringW(
+                _lc_ctype,
                 LCMAP_LOWERCASE,
                 wsrc,
                 -1,
@@ -171,22 +176,23 @@ static errno_t __cdecl _wcslwr_s_l_stat (
     }
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _wcslwr_s_l (
         wchar_t * wsrc,
         size_t sizeInWords,
         _locale_t plocinfo
         )
 {
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
-    return _wcslwr_s_l_stat(wsrc, sizeInWords, _loc_update.GetLocaleT());
+    return _wcslwr_s_l_stat(wsrc, sizeInWords, plocinfo);
 }
+#endif
 
-
-extern "C" errno_t __cdecl _wcslwr_s (
-        wchar_t * wsrc,
-        size_t sizeInWords
-        )
-{
-    return _wcslwr_s_l(wsrc, sizeInWords, nullptr);
-}
+//extern "C" errno_t __cdecl _wcslwr_s (
+//        wchar_t * wsrc,
+//        size_t sizeInWords
+//        )
+//{
+//    return _wcslwr_s_l(wsrc, sizeInWords, nullptr);
+//}

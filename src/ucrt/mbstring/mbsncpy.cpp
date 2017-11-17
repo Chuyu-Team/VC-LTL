@@ -40,6 +40,7 @@
 *******************************************************************************/
 
 #pragma warning(suppress:6101) // Returning uninitialized memory '*dst'.  A successful path through the function does not set the named _Out_ parameter.
+#ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsncpy_l(
         unsigned char *dst,
         const unsigned char *src,
@@ -48,17 +49,19 @@ extern "C" unsigned char * __cdecl _mbsncpy_l(
         )
 {
         unsigned char *start = dst;
-        _LocaleUpdate _loc_update(plocinfo);
+        //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(dst != nullptr || cnt == 0, EINVAL, nullptr);
         _VALIDATE_RETURN(src != nullptr || cnt == 0, EINVAL, nullptr);
 
         _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if (_loc_update.GetLocaleT()->mbcinfo->ismbcodepage == 0)
+        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
 #pragma warning(suppress:__WARNING_BANNED_API_USAGE)
             return (unsigned char *)strncpy((char *)dst, (const char *)src, cnt);
         _END_SECURE_CRT_DEPRECATION_DISABLE
+
+		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         while (cnt) {
 
@@ -84,13 +87,15 @@ extern "C" unsigned char * __cdecl _mbsncpy_l(
 #pragma warning(suppress:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036 REVIEW annotation mistake?
         return start;
 }
-extern "C" unsigned char * (__cdecl _mbsncpy)(
-        unsigned char *dst,
-        const unsigned char *src,
-        size_t cnt
-        )
-{
-    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-    return _mbsncpy_l(dst, src, cnt, nullptr);
-    _END_SECURE_CRT_DEPRECATION_DISABLE
-}
+#endif
+
+//extern "C" unsigned char * (__cdecl _mbsncpy)(
+//        unsigned char *dst,
+//        const unsigned char *src,
+//        size_t cnt
+//        )
+//{
+//    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+//    return _mbsncpy_l(dst, src, cnt, nullptr);
+//    _END_SECURE_CRT_DEPRECATION_DISABLE
+//}

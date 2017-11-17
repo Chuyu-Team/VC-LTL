@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include "..\..\winapi_thunks.h"
 
 /***
 *int _stricoll() - Collate locale strings without regard to case
@@ -34,6 +35,7 @@
 *
 *******************************************************************************/
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _stricoll_l (
         const char *_string1,
         const char *_string2,
@@ -41,25 +43,29 @@ extern "C" int __cdecl _stricoll_l (
         )
 {
     int ret;
-    _LocaleUpdate _loc_update(plocinfo);
+    //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
 
-    if ( _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr )
+	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+
+    if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr*/ _lc_collate == 0)
     {
         return _stricmp(_string1, _string2);
     }
 
-    if ( 0 == (ret = __acrt_CompareStringA(_loc_update.GetLocaleT(),
-                    _loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE],
+	const auto lc_collate_cp = plocinfo ? plocinfo->locinfo->lc_collate_cp : ___lc_collate_cp_func();
+
+    if ( 0 == (ret = __crtCompareStringA(plocinfo,
+                    _lc_collate,
                     SORT_STRINGSORT | NORM_IGNORECASE,
                     _string1,
                     -1,
                     _string2,
                     -1,
-                    _loc_update.GetLocaleT()->locinfo->lc_collate_cp)) )
+                    lc_collate_cp)) )
     {
         errno = EINVAL;
         return _NLSCMPERROR;
@@ -68,19 +74,20 @@ extern "C" int __cdecl _stricoll_l (
     return (ret - 2);
 
 }
+#endif
 
-extern "C" int __cdecl _stricoll (
-        const char *_string1,
-        const char *_string2
-        )
-{
-    if (!__acrt_locale_changed())
-    {
-        return _stricmp(_string1, _string2);
-    }
-    else
-    {
-        return _stricoll_l(_string1, _string2, nullptr);
-    }
-
-}
+//extern "C" int __cdecl _stricoll (
+//        const char *_string1,
+//        const char *_string2
+//        )
+//{
+//    if (!__acrt_locale_changed())
+//    {
+//        return _stricmp(_string1, _string2);
+//    }
+//    else
+//    {
+//        return _stricoll_l(_string1, _string2, nullptr);
+//    }
+//
+//}
