@@ -28,12 +28,6 @@
 #ifdef __cplusplus
 extern "C++"
 {
-	namespace std
-	{
-		const nothrow_t nothrow;
-	}
-
-
 	__forceinline errno_t __cdecl _tcscpy_s(
 		_Out_writes_z_(_SizeInBytes) char*       _Destination,
 		_In_                         rsize_t     _SizeInBytes,
