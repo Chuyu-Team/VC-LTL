@@ -201,8 +201,8 @@ extern "C++"
 
 // console_invalid_handle indicates that CONOUT$ or CONIN$ could not be created
 // console_uninitialized_handle indicates that the handle has not yet been initialized
-constexpr HANDLE _console_invalid_handle = reinterpret_cast<HANDLE>(-1);
-constexpr HANDLE _console_uninitialized_handle = reinterpret_cast<HANDLE>(-2);
+#define _console_invalid_handle  reinterpret_cast<HANDLE>(-1)
+#define _console_uninitialized_handle reinterpret_cast<HANDLE>(-2)
 
 BOOL __cdecl __dcrt_lowio_ensure_console_input_initialized(void);
 
