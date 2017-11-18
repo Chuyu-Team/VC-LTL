@@ -15,7 +15,8 @@ typedef struct
 
 #include <wrapwin.h>
 
-#include <awint.h>
+//#include <awint.h>
+#include "..\..\winapi_thunks.h"
 #include <process.h>
 
 static unsigned int _STDCALL run(void *d)
