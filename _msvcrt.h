@@ -10,13 +10,15 @@
 #error  _ltlfilelen "warning: 由于VC LTL必须在MD编译选项才能使用，请将运行调整为MD！"
 #endif
 
-#if defined(NDEBUG)&&defined(_DLL)
+#ifndef _DEBUG
 
 #include <crtversion.h>
 
 //关闭常用的pintf系列函数的内联操作，因为老版本没有__stdio_common_vswscanf系列函数
 #define _NO_CRT_STDIO_INLINE
 #define _Build_By_LTL
+
+#define _DISABLE_DEPRECATE_STATIC_CPPLIB
 
 //静态整合C++库
 #define _STATIC_CPPLIB
@@ -133,4 +135,4 @@ __LTL_Initialization用于初始化 LTL_Initialization.cpp 全局构造
 
 #endif //!_LIB
 
-#endif //NDEBUG&&_DLL
+#endif //!_DEBUG
