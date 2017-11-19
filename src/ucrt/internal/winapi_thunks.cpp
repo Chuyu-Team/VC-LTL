@@ -103,7 +103,7 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(GetLastActivePopup,                          ({ ext_ms_win_ntuser_dialogbox_l1_1_0,           user32                                     })) \
     _NO_APPLY(GetLocaleInfoEx,                             ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(GetProcessWindowStation,                     ({ ext_ms_win_ntuser_windowstation_l1_1_0,       user32                                     })) \
-    _NO_APPLY_Vista(GetSystemTimePreciseAsFileTime,        ({ api_ms_win_core_sysinfo_l1_2_1                                                           })) \
+    _APPLY(GetSystemTimePreciseAsFileTime,                 ({ api_ms_win_core_sysinfo_l1_2_1                                                           })) \
     _NO_APPLY(GetTimeFormatEx,                             ({ api_ms_win_core_datetime_l1_1_1,              kernel32                                   })) \
     _NO_APPLY(GetUserDefaultLocaleName,                    ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
     _NO_APPLY(GetUserObjectInformationW,                   ({ ext_ms_win_ntuser_windowstation_l1_1_0,       user32                                     })) \
@@ -124,16 +124,16 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(AppPolicyGetWindowingModel,                  ({ api_ms_win_appmodel_runtime_l1_1_2                                                       })) \
     _NO_APPLY(SetThreadStackGuarantee,                     ({ api_ms_win_core_processthreads_l1_1_2,        kernel32                                   })) \
     _NO_APPLY(SystemFunction036,                           ({ api_ms_win_security_systemfunctions_l1_1_0,   advapi32                                   })) \
-    _APPLY(InitOnceExecuteOnce,                            ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(InitializeConditionVariable,                    ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(SleepConditionVariableCS,                       ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _NO_APPLY_Vista(InitOnceExecuteOnce,                   ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _NO_APPLY_Vista(InitializeConditionVariable,           ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _NO_APPLY_Vista(SleepConditionVariableCS,              ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
     _APPLY(WakeConditionVariable,                          ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
     _APPLY(WakeAllConditionVariable,                       ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(InitializeSRWLock,                              ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(AcquireSRWLockExclusive,                        ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _NO_APPLY_Vista(InitializeSRWLock,                     ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _NO_APPLY_Vista(AcquireSRWLockExclusive,               ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
     _APPLY(TryAcquireSRWLockExclusive,                     ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
-    _APPLY(ReleaseSRWLockExclusive,                        ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(SleepConditionVariableSRW,                      ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   }))
+    _NO_APPLY_Vista(ReleaseSRWLockExclusive,               ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
+    _NO_APPLY_Vista(SleepConditionVariableSRW,             ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   }))
 
 namespace
 {
@@ -420,19 +420,17 @@ _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)
 
 #endif
 
-__if_exists(try_get_AreFileApisANSI)
+extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
 {
-	extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
-	{
-		if (auto const are_file_apis_ansi = try_get_AreFileApisANSI())
-		{
-			return are_file_apis_ansi();
-		}
+	return AreFileApisANSI();
+	//if (auto const are_file_apis_ansi = try_get_AreFileApisANSI())
+	//{
+	//	return are_file_apis_ansi();
+	//}
 
-		// If we were unable to get the AreFileApisANSI function, we can safely
-		// assume that the file APIs are, in fact, ANSI:
-		return TRUE;
-	}
+	//// If we were unable to get the AreFileApisANSI function, we can safely
+	//// assume that the file APIs are, in fact, ANSI:
+	//return TRUE;
 }
 
 extern "C" int WINAPI __acrt_CompareStringEx(
@@ -606,16 +604,12 @@ extern "C" int WINAPI __acrt_GetLocaleInfoEx(
 
 extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time)
 {
-#ifdef _ATL_XP_TARGETING
 	if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
 	{
 		return get_system_time_precise_as_file_time(system_time);
 	}
 
 	return GetSystemTimeAsFileTime(system_time);
-#else
-	return GetSystemTimePreciseAsFileTime(system_time);
-#endif
 }
 
 extern "C" int WINAPI __acrt_GetTimeFormatEx(

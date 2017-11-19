@@ -1049,13 +1049,13 @@ extern "C"
 
 
 	//msvcrt不支持_stat64i32，不过我们可以用_stat64转换
-	int __cdecl _stat64i32(
-		_In_z_ char const*        _FileName,
-		_Out_  struct _stat64i32* _Stat
-	)
-	{
-		return common_stat(_FileName, _Stat);
-	}
+	//int __cdecl _stat64i32(
+	//	_In_z_ char const*        _FileName,
+	//	_Out_  struct _stat64i32* _Stat
+	//)
+	//{
+	//	return common_stat(_FileName, _Stat);
+	//}
 
 
 	//_wstat已经改名为_wstat32，做转发
@@ -1093,13 +1093,13 @@ extern "C"
 //#pragma pop_macro("_wstati64")
 
 	//msvcrt不支持_wstat64i32，不过我们可以用_wstat64转换
-	int __cdecl _wstat64i32(
-		_In_z_ wchar_t const*     _FileName,
-		_Out_  struct _stat64i32* _Stat
-	)
-	{
-		return common_stat(_FileName, _Stat);
-	}
+	//int __cdecl _wstat64i32(
+	//	_In_z_ wchar_t const*     _FileName,
+	//	_Out_  struct _stat64i32* _Stat
+	//)
+	//{
+	//	return common_stat(_FileName, _Stat);
+	//}
 
 	//通过ASCII文件名搜索
 	extern "C++" __forceinline intptr_t __cdecl _tfindfirst(

@@ -298,28 +298,46 @@ static TimeType __cdecl convert_filetime_to_time_t(
         return fallback_time;
     }
 
-    SYSTEMTIME system_time;
-    SYSTEMTIME local_time;
-    if (!FileTimeToSystemTime(&file_time, &system_time) ||
-        !SystemTimeToTzSpecificLocalTime(nullptr, &system_time, &local_time))
-    {
-        // Ignore failures from these APIs, for consistency with the logic below
-        // that ignores failures in the conversion from SYSTEMTIME to time_t.
-        return -1;
-    }
+
+	//习惯转换函数，加速FTILETIME 到 time64转换
+	__time64_t const filetime_scale{ 10 * 1000 * 1000 }; // 100ns units
+
+	__time64_t const epoch_time= (*(__time64_t*)&file_time) - _EPOCH_BIAS;
+
+	__time64_t const seconds{ epoch_time / filetime_scale };
+	//__time64_t const nanoseconds{ epoch_time % filetime_scale * 100 };
+
+	if (seconds > static_cast<__time64_t>(time_traits::max_time_t))
+	{
+		return fallback_time;
+	}
+	else
+	{
+		return static_cast<TimeType>(seconds);
+	}
+
+    //SYSTEMTIME system_time;
+    //SYSTEMTIME local_time;
+    //if (!FileTimeToSystemTime(&file_time, &system_time) ||
+    //    !SystemTimeToTzSpecificLocalTime(nullptr, &system_time, &local_time))
+    //{
+    //    // Ignore failures from these APIs, for consistency with the logic below
+    //    // that ignores failures in the conversion from SYSTEMTIME to time_t.
+    //    return -1;
+    //}
 
     // If the conversion to time_t fails, it will return -1.  We'll use this as
     // the time_t value instead of failing the entire stat call, to allow callers
     // to get information about files whose time information is not representable.
     // (Callers use this API to test for file existence or to get file sizes.)
-    return time_traits::loctotime(
+    /*return time_traits::loctotime(
         local_time.wYear,
         local_time.wMonth,
         local_time.wDay,
         local_time.wHour,
         local_time.wMinute,
         local_time.wSecond,
-        -1);
+        -1);*/
 }
 
 template <typename StatStruct>
@@ -350,7 +368,8 @@ static bool __cdecl common_stat_handle_file_not_opened(
     result.st_rdev = static_cast<_dev_t>(drive_number - 1);
     result.st_dev  = static_cast<_dev_t>(drive_number - 1); // A=0, B=1, etc.
 
-    result.st_mtime = time_traits::loctotime(1980, 1, 1, 0, 0, 0, -1);
+	//这个时间很奇怪难道不应该是1970年？
+    result.st_mtime = /*time_traits::loctotime(1980, 1, 1, 0, 0, 0, -1)*/0;
     result.st_atime = result.st_mtime;
     result.st_ctime = result.st_mtime;
     return true;
@@ -550,51 +569,51 @@ extern "C" int __cdecl _wstat64i32(wchar_t const* const path, struct _stat64i32*
 
 
 
-template <typename StatStruct>
-static int __cdecl common_fstat(int const fh, StatStruct* const result) throw()
-{
-    _VALIDATE_CLEAR_OSSERR_RETURN(result != nullptr, EINVAL, -1);
-    *result = StatStruct{};
-
-    _CHECK_FH_CLEAR_OSSERR_RETURN(fh, EBADF, -1);
-    _VALIDATE_CLEAR_OSSERR_RETURN(fh >= 0 && fh < _nhandle, EBADF, -1);
-    _VALIDATE_CLEAR_OSSERR_RETURN(_osfile(fh) & FOPEN, EBADF, -1);
-    
-    return __acrt_lowio_lock_fh_and_call(fh, [&]()
-    {
-        if ((_osfile(fh) & FOPEN) == 0)
-        {
-            errno = EBADF;
-            _ASSERTE(("Invalid file descriptor. File possibly closed by a different thread",0));
-            return -1;
-        }
-
-        if (!common_stat_handle_file_opened(nullptr, fh, reinterpret_cast<HANDLE>(_osfhnd(fh)), *result))
-        {
-            *result = StatStruct{};
-            return -1;
-        }
-
-        return 0;
-    });
-}
-
-extern "C" int __cdecl _fstat32(int const fh, struct _stat32* const result)
-{
-    return common_fstat(fh, result);
-}
-
-extern "C" int __cdecl _fstat32i64(int const fh, struct _stat32i64* const result)
-{
-    return common_fstat(fh, result);
-}
-
-extern "C" int __cdecl _fstat64(int const fh, struct _stat64* const result)
-{
-    return common_fstat(fh, result);
-}
-
-extern "C" int __cdecl _fstat64i32(int const fh, struct _stat64i32* const result)
-{
-    return common_fstat(fh, result);
-}
+//template <typename StatStruct>
+//static int __cdecl common_fstat(int const fh, StatStruct* const result) throw()
+//{
+//    _VALIDATE_CLEAR_OSSERR_RETURN(result != nullptr, EINVAL, -1);
+//    *result = StatStruct{};
+//
+//    _CHECK_FH_CLEAR_OSSERR_RETURN(fh, EBADF, -1);
+//    _VALIDATE_CLEAR_OSSERR_RETURN(fh >= 0 && fh < _nhandle, EBADF, -1);
+//    _VALIDATE_CLEAR_OSSERR_RETURN(_osfile(fh) & FOPEN, EBADF, -1);
+//    
+//    return __acrt_lowio_lock_fh_and_call(fh, [&]()
+//    {
+//        if ((_osfile(fh) & FOPEN) == 0)
+//        {
+//            errno = EBADF;
+//            _ASSERTE(("Invalid file descriptor. File possibly closed by a different thread",0));
+//            return -1;
+//        }
+//
+//        if (!common_stat_handle_file_opened(nullptr, fh, reinterpret_cast<HANDLE>(_osfhnd(fh)), *result))
+//        {
+//            *result = StatStruct{};
+//            return -1;
+//        }
+//
+//        return 0;
+//    });
+//}
+//
+//extern "C" int __cdecl _fstat32(int const fh, struct _stat32* const result)
+//{
+//    return common_fstat(fh, result);
+//}
+//
+//extern "C" int __cdecl _fstat32i64(int const fh, struct _stat32i64* const result)
+//{
+//    return common_fstat(fh, result);
+//}
+//
+//extern "C" int __cdecl _fstat64(int const fh, struct _stat64* const result)
+//{
+//    return common_fstat(fh, result);
+//}
+//
+//extern "C" int __cdecl _fstat64i32(int const fh, struct _stat64i32* const result)
+//{
+//    return common_fstat(fh, result);
+//}
