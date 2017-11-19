@@ -808,6 +808,85 @@ typedef struct __acrt_thread_parameter
 // AppCRT Per-Thread Data
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+//Windows XP专用数据结构
+struct _ptd_msvcrt_xp {
+	unsigned long   _tid;       /* thread ID */
+
+
+	uintptr_t   _thandle;   /* thread handle */
+
+	int                  _terrno;          // errno value
+	unsigned long        _tdoserrno;       // _doserrno value
+	unsigned int    _fpds;      /* Floating Point data segment */
+
+	//unsigned long   _holdrand;  /* rand() seed value */
+	unsigned int         _rand_state;      // Previous value of rand()
+
+	// Per-thread strtok(), wcstok(), and mbstok() data:
+	char*                _strtok_token;
+#ifdef _WIN32
+	wchar_t*             _wcstok_token;
+#endif  /* _WIN32 */
+	unsigned char*       _mbstok_token;
+
+	// Per-thread error message data:
+	char*      _strerror_buffer;            // Pointer to strerror()  / _strerror()  buffer _errmsg
+	
+	//char *      _namebuf0;      /* ptr to tmpnam() buffer */
+	char*                _tmpnam_narrow_buffer;
+#ifdef _WIN32
+	//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
+	wchar_t*             _tmpnam_wide_buffer;
+#endif  /* _WIN32 */
+	char *      _namebuf1;      /* ptr to tmpfile() buffer */
+#ifdef _WIN32
+	wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
+#endif  /* _WIN32 */
+
+	// Per-thread time library data:
+	char*                _asctime_buffer;  // Pointer to asctime() buffer
+#ifdef _WIN32
+	wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
+#endif  /* _WIN32 */
+	struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
+	char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
+
+								/* following fields are needed by _beginthread code */
+	void *      _initaddr;      /* initial user thread address */
+	void *      _initarg;       /* initial user thread argument */
+
+								/* following three fields are needed to support signal handling and
+								* runtime errors */
+	void *      _pxcptacttab;   /* ptr to exception-action table */
+	void *      _tpxcptinfoptrs; /* ptr to exception info pointers */
+	int         _tfpecode;      /* float point exception code */
+
+								/* following field is needed by NLG routines */
+	unsigned long   _NLG_dwCode;
+
+	/*
+	* Per-Thread data needed by C++ Exception Handling
+	*/
+	terminate_handler      _terminate;    // terminate() routine
+	void *      _unexpected;    /* unexpected() routine */
+	void *      _translator;    /* S.E. translator */
+	void *      _curexception;  /* current exception */
+	void *      _curcontext;    /* current exception context */
+#if defined (_M_MRX000)
+	void *      _pFrameInfoChain;
+	void *      _pUnwindContext;
+	void *      _pExitContext;
+	int         _MipsPtdDelta;
+	int         _MipsPtdEpsilon;
+#elif defined (_M_PPC)
+	void *      _pExitContext;
+	void *      _pUnwindContext;
+	void *      _pFrameInfoChain;
+	int         _FrameInfo[6];
+#endif  /* defined (_M_PPC) */
+};
+
 typedef struct _ptd_msvcrt
 {
 	unsigned long   _tid;       /* thread ID */

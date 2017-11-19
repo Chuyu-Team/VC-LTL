@@ -9,10 +9,10 @@ _CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL uncaught_exception() _NOEXCEPT
 	return (__uncaught_exception());
 	}
 
-//_CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL uncaught_exceptions() _NOEXCEPT
-//	{	// report number of throws being handled
-//	return (__uncaught_exceptions());
-//	}
+_CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL uncaught_exceptions() _NOEXCEPT
+	{	// report number of throws being handled
+	return (__uncaught_exceptions());
+	}
 _STD_END
 
 /*

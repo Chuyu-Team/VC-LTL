@@ -54,7 +54,7 @@ struct _EXCEPTION_POINTERS;
         );
 
     _VCRTIMP bool __cdecl __uncaught_exception();
-    _VCRTIMP int  __cdecl __uncaught_exceptions();
+	_ACRTXPIMP int  __cdecl __uncaught_exceptions();
 
 #endif
 
