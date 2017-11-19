@@ -947,7 +947,7 @@ extern "C"
 
 		struct _stat64 _StatTmp;
 		auto result = _tstat64(_FileName, &_StatTmp);
-		if (result != 0)
+		if (result == 0)
 		{
 			//获取成功，开始转换数据
 			_Stat->st_dev = _StatTmp.st_dev;
