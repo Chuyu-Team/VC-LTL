@@ -546,11 +546,12 @@ extern "C++"
 	}
 	_Check_return_ __inline double __cdecl nexttoward(_In_ double _X, _In_ long double _Y)
 	{
+		static_assert(sizeof(long double) == sizeof(double), "Error sizeof(long double)!=sizeof(double)");
 		/*
 		根据文档描述，nextafter、_nextafter、nexttoward 完全等价
 		https://msdn.microsoft.com/zh-cn/library/h0dff77w.aspx
 		*/
-		return _nextafter(_X, _Y);
+		return _nextafter(_X, (double)_Y);
 	}
     _Check_return_ extern double __cdecl remainder(_In_ double _X, _In_ double _Y);
     _Check_return_ extern double __cdecl remquo(_In_ double _X, _In_ double _Y, _Out_ int* _Z);
@@ -967,14 +968,14 @@ extern "C++"
 	{
 		static_assert(sizeof(long double) == sizeof(double), "Error sizeof(long double)!=sizeof(double)");
 
-		return _nextafter(_X, _Y);
+		return _nextafter((double)_X, (double)_Y);
 	}
 
 	_Check_return_ __inline long double __cdecl nexttowardl(_In_ long double _X, _In_ long double _Y)
 	{
 		static_assert(sizeof(long double)==sizeof(double),"Error sizeof(long double)!=sizeof(double)");
 
-		return _nextafter(_X, _Y);
+		return _nextafter((double)_X, (double)_Y);
 	}
 
     _Check_return_ __inline long double __CRTDECL powl(_In_ long double _X, _In_ long double _Y)
