@@ -25,14 +25,11 @@ _global_unwind2
 _local_unwind2
 __unDNameEx
 _beep
-_except_handler2
 _get_heap_handle
 _getdllprocaddr
 _getdrives
 _getws
-_global_unwind2
 _loaddll
-_local_unwind2
 _seh_longjmp_unwind
 _seterrormode
 _setmaxstdio
@@ -40,9 +37,10 @@ _setsystime
 _sleep
 __threadhandle
 __threadid
-__unDNameEx
 _unloaddll
 __CxxFrameHandler2
 _get_pgmptr
 _get_wpgmptr
 _seh_longjmp_unwind4
+
+vsnprintf
