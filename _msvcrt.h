@@ -15,16 +15,22 @@
 #include <crtversion.h>
 
 //关闭常用的pintf系列函数的内联操作，因为老版本没有__stdio_common_vswscanf系列函数
+#ifndef _NO_CRT_STDIO_INLINE
 #define _NO_CRT_STDIO_INLINE
+#endif
+
+#ifndef _Build_By_LTL
 #define _Build_By_LTL
+#endif
 
+#ifndef _DISABLE_DEPRECATE_STATIC_CPPLIB
 #define _DISABLE_DEPRECATE_STATIC_CPPLIB
+#endif
 
+#ifndef _STATIC_CPPLIB
 //静态整合C++库
 #define _STATIC_CPPLIB
-
-#pragma comment(linker, "/nodefaultlib:msvcrt.lib")
-#pragma comment(linker, "/nodefaultlib:libcpmt.lib")
+#endif
 
 //解决某些环境不会添加 XP Mode问题
 #ifndef _ATL_XP_TARGETING
@@ -94,24 +100,10 @@
 #pragma message(_ltlfilelen "info: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
 #endif //_DISABLE_DEPRECATE_LTL_MESSAGE
 
-#ifndef _LIB
 
 #ifdef __NO_LTL_LIB
 #pragma message(_ltlfilelen "warning: 进入ltl超越模式已经弃用，此选项将将被忽略。")
 #endif
-
-//导入ltl补充库
-#pragma comment(lib,"ltl" __ltlversionxp ".lib")
-
-
-//导入VC编译器新特性
-#pragma comment(lib,"vc.lib")
-//导入UCRT新特性
-#pragma comment(lib,"ucrt.lib")
-//导入Windows Vista 动态库 msvcrt.dll
-#pragma comment(lib,"msvcrt_base.lib")
-//导入C++库
-#pragma comment(lib,"ltlcprt" __ltlversionxp ".lib")
 
 #if !defined(_NO__LTL_Initialization)
 /*
@@ -127,9 +119,6 @@ __LTL_Initialization用于初始化 LTL_Initialization.cpp 全局构造
 #else
 #pragma comment(linker,"/include:__LTL_Initialization")
 #endif
-
-#endif
-
 
 #endif //!_LIB
 

@@ -3004,10 +3004,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib">
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt.lib">
       <Filter>Libx64</Filter>
     </Library>
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib">
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt.lib">
       <Filter>Libx86</Filter>
     </Library>
     <Library Include="$(MSBuildThisFileDirectory)ucrt\10.0.10240.0\lib\x86\ucrt.lib">

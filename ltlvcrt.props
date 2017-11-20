@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <!--此配置能智能适应，当你选择WinXP平台工具集时，将自动切换到XP模式。-->
-
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
@@ -9,24 +7,31 @@
     <!--优先从注册表加载VC-LTL路径，如果注册表不存在那么通过文件搜索-->
     <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
     <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(SolutionDir)VC-LTL</VC_LTL_Root>
+    <VC_LTL_Include>$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\include;$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
-
+    
     <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
     <SupportWinXP Condition=" ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp')">true</SupportWinXP>
+    
+    <VC_IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(VC_IncludePath)</VC_IncludePath>
+    <VC_LibraryPath_x86 Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(VC_LibraryPath_x86)</VC_LibraryPath_x86>
+    <VC_LibraryPath_x64 Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(VC_LibraryPath_x86)</VC_LibraryPath_x64>
+    <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
+    <LibraryPath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions Condition=" '$(SupportWinXP)'=='true' ">_ATL_XP_TARGETING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-
+      <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL;_DISABLE_DEPRECATE_STATIC_CPPLIB;_STATIC_CPPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <!--当兼容XP时，禁用线程安全初始化。避免XP中因为初始化static对象而崩溃-->
       <AdditionalOptions Condition=" '$(SupportWinXP)'=='true' ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories Condition=" '$(SupportLTL)'=='true'">$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\include;$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'=='true')">$(msvcrt_winxp_obj);%(AdditionalDependencies)</AdditionalDependencies>
-      
-      <AdditionalLibraryDirectories Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'=='true')">$(msvcrt_winxp_obj);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'!='true')">ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

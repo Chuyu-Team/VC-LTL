@@ -1009,8 +1009,8 @@
     <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlcprtxp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\ltlxp.lib" />
     <Library Include="$(MSBuildThisFileDirectory)VC\141\lib\x86\vc.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt_base.lib" />
-    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt_base.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x64\msvcrt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)x86\msvcrt.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)ReadMe.md" />
