@@ -1423,15 +1423,27 @@ _CRT_STDIO_INLINE int __CRTDECL _vsnprintf(
 
 _Success_(return >= 0)
 _Check_return_opt_
-__inline int __CRTDECL vsnprintf(
+_ACRTXPINLINE int __CRTDECL vsnprintf(
     _Out_writes_(_BufferCount)    char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
                                   va_list           _ArgList
     )
+#ifndef _ATL_XP_TARGETING
+;
+#else
 {
-	return _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
+	auto Count = _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
+	if (Count <= 0)
+		return Count;
+
+	if (Count == _BufferCount)
+	{
+		_Buffer[Count - 1] = '\0';
+	}
+	return Count;
 }
+#endif
 
 _Success_(return >= 0)
 _Check_return_opt_ _CRT_INSECURE_DEPRECATE(_vsprintf_s_l)
@@ -1917,14 +1929,11 @@ _CRT_STDIO_INLINE int __CRTDECL _snprintf_l(
 
 _Success_(return >= 0)
 _Check_return_
-_CRT_STDIO_INLINE int __CRTDECL snprintf(
+__inline int __CRTDECL snprintf(
     _Out_writes_z_(_BufferCount)  char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
     ...)
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
 {
     int _Result;
     va_list _ArgList;
@@ -1934,7 +1943,6 @@ _CRT_STDIO_INLINE int __CRTDECL snprintf(
     __crt_va_end(_ArgList);
     return _Result;
 }
-#endif
 
 _Success_(return >= 0)
 _CRT_STDIO_INLINE int __CRTDECL _snprintf(

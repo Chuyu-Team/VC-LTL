@@ -1425,15 +1425,27 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
 
     _Success_(return >= 0)
     _Check_return_opt_
-    __inline int __CRTDECL vsnprintf(
+    _ACRTXPINLINE int __CRTDECL vsnprintf(
         _Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
         _In_                                              size_t      const _BufferCount,
         _In_z_ _Printf_format_string_                     char const* const _Format,
                                                           va_list           _ArgList
         )
-    {
-		return _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
+	#ifndef _ATL_XP_TARGETING
+	;
+	#else
+	{
+		auto Count = _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
+		if (Count <= 0)
+			return Count;
+
+		if (Count == _BufferCount)
+		{
+			_Buffer[Count - 1] = '\0';
+		}
+		return Count;
 	}
+	#endif
 
     _Success_(return >= 0)
     _Check_return_opt_ _CRT_INSECURE_DEPRECATE(_vsprintf_s_l)
