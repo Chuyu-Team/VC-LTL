@@ -83,10 +83,9 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 
 
 ### 4. 文件说明
-* ltl1.lib  VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
-* ltl1xp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
-* msvcrt_base.lib Vista msvcrt.dll删除过的导出符号表（从原版中删除了一些无用符号，并且加入了msvcrt.def导出函数）
-* msvcrt_vista.lib Vista msvcrt.dll 原版符号表（从DDK提取，仅作备份用途，无实际用途）
+* ltl.lib  VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
+* ltlxp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
+* msvcrt.lib DDK 7.1中复制的msvcrt.dll导入表，并删除了一些过时符号，加入了msvcrt.def导出函数
 * ucrt.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
 * vc.lib 从对应的VC版本编译器msvcrt.lib提取的一些原有lib不支持的函数集合。
 * ltlcprt.lib VC2015/VC2017 编译平台使用到的C++支持函数，其内容通过编译src文件夹得到
