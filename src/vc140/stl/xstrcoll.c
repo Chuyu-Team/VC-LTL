@@ -121,10 +121,11 @@ _CRTIMP2_PURE _Collvec __CLRCALL_PURE_OR_CDECL _Getcoll()
         _Collvec coll;
 
         coll._Page = ___lc_collate_cp_func();
+		auto __lc_collate = ___lc_handle_func()[LC_COLLATE];
 
 		wchar_t _LocaleName[LOCALE_NAME_MAX_LENGTH];
 
-		if (__acrt_LCIDToLocaleName(___lc_handle_func()[LC_COLLATE], _LocaleName, _countof(_LocaleName), 0))
+		if (__lc_collate&&__acrt_LCIDToLocaleName(__lc_collate, _LocaleName, _countof(_LocaleName), 0))
 			coll._LocaleName = _wcsdup_dbg(_LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
 		else
 			coll._LocaleName = NULL;
