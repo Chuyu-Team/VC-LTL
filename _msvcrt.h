@@ -71,6 +71,7 @@
 #define _ACRTXPIMPINLINE __inline
 
 #ifndef _Allow_LTL_Mode
+#pragma warning(suppress: 4068)
 #pragma detect_mismatch("_LTL_Mode", "VistaMode")
 #endif
 #endif //_ATL_XP_TARGETING
