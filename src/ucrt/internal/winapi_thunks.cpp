@@ -124,16 +124,16 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY(AppPolicyGetWindowingModel,                  ({ api_ms_win_appmodel_runtime_l1_1_2                                                       })) \
     _NO_APPLY(SetThreadStackGuarantee,                     ({ api_ms_win_core_processthreads_l1_1_2,        kernel32                                   })) \
     _NO_APPLY(SystemFunction036,                           ({ api_ms_win_security_systemfunctions_l1_1_0,   advapi32                                   })) \
-    _NO_APPLY_Vista(InitOnceExecuteOnce,                   ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _NO_APPLY_Vista(InitializeConditionVariable,           ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _NO_APPLY_Vista(SleepConditionVariableCS,              ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(WakeConditionVariable,                          ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(WakeAllConditionVariable,                       ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _NO_APPLY_Vista(InitializeSRWLock,                     ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _NO_APPLY_Vista(AcquireSRWLockExclusive,               ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _APPLY(TryAcquireSRWLockExclusive,                     ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
-    _NO_APPLY_Vista(ReleaseSRWLockExclusive,               ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   })) \
-    _NO_APPLY_Vista(SleepConditionVariableSRW,             ({ api_ms_win_core_synch_l1_2_0,                 kernel32                                   }))
+    _NO_APPLY_Vista(InitOnceExecuteOnce,                   ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(InitializeConditionVariable,           ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(SleepConditionVariableCS,              ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _APPLY(WakeConditionVariable,                          ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _APPLY(WakeAllConditionVariable,                       ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(InitializeSRWLock,                     ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(AcquireSRWLockExclusive,               ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _APPLY(TryAcquireSRWLockExclusive,                     ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(ReleaseSRWLockExclusive,               ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(SleepConditionVariableSRW,             ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
 
 namespace
 {
