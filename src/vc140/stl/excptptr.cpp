@@ -265,14 +265,16 @@ shared_ptr<__ExceptionPtr> __ExceptionPtr::_CopyException(_In_ const void * pExc
         PER_PEXCEPTOBJ(pExcept) = const_cast<void*>(pExceptObj);
 
         ThrowInfo* pTI = pThrowInfo;
-        if (pTI && (THROW_ISWINRT( (*pTI) ) ) )
-        {
-            ULONG_PTR *exceptionInfoPointer = *reinterpret_cast<ULONG_PTR**>(const_cast<void*>(pExceptObj));
-            exceptionInfoPointer--; // The pointer to the ExceptionInfo structure is stored sizeof(void*) in front of each WinRT Exception Info.
 
-            WINRTEXCEPTIONINFO* wei = reinterpret_cast<WINRTEXCEPTIONINFO*>(*exceptionInfoPointer);
-            pTI = wei->throwInfo;
-        }
+		//VC-LTL不可能运行在WinRT程序中
+        //if (pTI && (THROW_ISWINRT( (*pTI) ) ) )
+        //{
+        //    ULONG_PTR *exceptionInfoPointer = *reinterpret_cast<ULONG_PTR**>(const_cast<void*>(pExceptObj));
+        //    exceptionInfoPointer--; // The pointer to the ExceptionInfo structure is stored sizeof(void*) in front of each WinRT Exception Info.
+
+        //    WINRTEXCEPTIONINFO* wei = reinterpret_cast<WINRTEXCEPTIONINFO*>(*exceptionInfoPointer);
+        //    pTI = wei->throwInfo;
+        //}
 
         PER_PTHROW(pExcept) = pTI;
 

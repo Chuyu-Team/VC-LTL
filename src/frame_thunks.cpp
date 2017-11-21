@@ -9,6 +9,7 @@
 
 #include <corecrt_internal.h>
 #include <eh.h>
+#include "ehdata.h"
 
 EXTERN_C DWORD __cdecl __LTL_GetOsMinVersion();
 
@@ -98,4 +99,36 @@ extern "C" int* __cdecl __processing_throw()
 	{
 		return &__acrt_getptd()->_ProcessingThrow;
 	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// __AdjustPointer - Adjust the pointer to the exception object to a pointer to a
+//   base instance.
+//
+// Output:
+//     The address point of the base.
+//
+// Side-effects:
+//     NONE.
+
+extern "C" void *__AdjustPointer(
+	void *pThis,                        // Address point of exception object
+	const PMD& pmd                      // Generalized pointer-to-member
+										//   descriptor
+) {
+	char *pRet = (char *)pThis + pmd.mdisp;
+
+	if (pmd.pdisp >= 0) {
+		pRet += *(__int32 *)((char *)*(ptrdiff_t *)((char *)pThis + pmd.pdisp)
+#if defined(_WIN64)
+			+(unsigned __int64)pmd.vdisp);
+#else
+			+ pmd.vdisp);
+#endif
+		pRet += pmd.pdisp;
+	}
+
+	return pRet;
 }
