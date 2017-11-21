@@ -58,6 +58,7 @@
 #define _ACRTXPIMPINLINE extern
 
 #ifndef _Allow_LTL_Mode
+#pragma warning(suppress: 4068)
 #pragma detect_mismatch("_LTL_Mode", "XPMode")
 #endif
 
