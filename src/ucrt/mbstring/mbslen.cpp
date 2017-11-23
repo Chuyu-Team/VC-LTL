@@ -38,16 +38,17 @@ extern "C" size_t __cdecl _mbslen_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbslen(s);
+
         int n;
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return strlen((const char *)s);
 
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         for (n = 0; *s; n++, s++) {
-            if ( _ismbblead_l(*s, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(*s, plocinfo) ) {
                 if (*++s == '\0')
                     break;
             }

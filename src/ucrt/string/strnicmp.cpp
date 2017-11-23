@@ -12,7 +12,6 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
 
 /***
 *int _strnicmp(first, last, count) - compares count char of strings, ignore case
@@ -47,6 +46,9 @@ extern "C" int __cdecl _strnicmp_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _strnicmp(dst, src, count);
+
     int f,l;
 
     if ( count )
@@ -58,7 +60,7 @@ extern "C" int __cdecl _strnicmp_l (
         _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-        if ((plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE] == 0 )
+        if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
         {
             return __ascii_strnicmp(dst, src, count);
         }
@@ -66,8 +68,8 @@ extern "C" int __cdecl _strnicmp_l (
         {
             do
             {
-                f = _tolower_l( (unsigned char)(*(dst++)), plocinfo);
-                l = _tolower_l( (unsigned char)(*(src++)), plocinfo);
+                f = _tolower_l( (unsigned char)(*(dst++)), plocinfo );
+                l = _tolower_l( (unsigned char)(*(src++)), plocinfo );
             }
             while (--count && f && (f == l) );
         }

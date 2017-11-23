@@ -19,6 +19,9 @@
 
 #define _CTABSIZE   257     /* size of ctype tables */
 
+// Enclaves have no ability to create new locales.
+#ifndef _UCRT_ENCLAVE_BUILD
+
 /***
 *int __acrt_locale_initialize_ctype() - initialization for LC_CTYPE locale category.
 *
@@ -230,6 +233,8 @@ error_cleanup:
         return 0;
     }
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /* Define a number of functions which exist so, under _STATIC_CPPLIB, the
  * static multithread C++ Library libcpmt.lib can access data found in the

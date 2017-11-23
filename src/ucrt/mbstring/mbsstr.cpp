@@ -43,10 +43,13 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsstr(str1, str2);
+
         unsigned char *cp, *s1, *s2, *endp;
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (unsigned char *)strstr((const char *)str1, (const char *)str2);
 
         /* validation section */
@@ -57,8 +60,6 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
 
         cp = (unsigned char *) str1;
         endp = (unsigned char *) (str1 + (strlen((const char *)str1) - strlen((const char *)str2)));
-
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         while (*cp && (cp <= endp))
         {
@@ -78,7 +79,7 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
             /*
              * bump pointer to next char
              */
-            if ( _ismbblead_l(*(cp++), _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(*(cp++), plocinfo) )
             {
                 /*  don't move forward if we have leadbyte, EOS
                     means dud string was passed in.

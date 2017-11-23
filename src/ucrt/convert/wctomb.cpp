@@ -19,6 +19,7 @@
 #include <limits.h>
 #include "..\..\winapi_thunks.h"
 
+
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _wctomb_s_l(
     int*      const return_value,
@@ -47,6 +48,7 @@ extern "C" int __cdecl _wctomb_s_l(
     //_LocaleUpdate locale_update(locale);
 	auto _lc_ctype = (locale ? locale->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
 
+
     if (!_lc_ctype)
     {
         if (wchar > 255)  // Validate high byte
@@ -55,7 +57,7 @@ extern "C" int __cdecl _wctomb_s_l(
             {
                 memset(destination, 0, destination_count);
             }
-            
+
             return errno = EILSEQ;
         }
 
@@ -96,7 +98,7 @@ extern "C" int __cdecl _wctomb_s_l(
 
                 _VALIDATE_RETURN_ERRCODE(("Buffer too small", 0), ERANGE);
             }
-            
+
             return errno = EILSEQ;
         }
 
@@ -128,12 +130,14 @@ extern "C" int __cdecl _wctomb_l(
     )
 {
     //_LocaleUpdate locale_update(locale);
+	if (!locale)
+		return wctomb(destination, wchar);
 
     int return_value{};
     errno_t const e = _wctomb_s_l(
         &return_value,
         destination,
-		___mb_cur_max_l_func(locale),
+		locale->locinfo->_locale_mb_cur_max,
         wchar,
 		locale);
 

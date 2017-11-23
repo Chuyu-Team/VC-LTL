@@ -100,19 +100,20 @@ extern "C" unsigned int __cdecl _mbcjmstojis_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbcjmstojis(c);
+
         unsigned int    h, l;
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP )
+        if ( plocinfo->mbcinfo->mbcodepage != _KANJI_CP )
             return (c);
 
         h = (c >> 8) & 0xff;
         l = c & 0xff;
 
         /* make sure input is valid shift-JIS */
-		auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
-        if ( (!(_ismbblead_l(h, _loc_update.GetLocaleT()))) || (!(_ismbbtrail_l(l, _loc_update.GetLocaleT()))) )
+        if ( (!(_ismbblead_l(h, plocinfo))) || (!(_ismbbtrail_l(l, plocinfo))) )
         {
             errno = EILSEQ;
             return 0;

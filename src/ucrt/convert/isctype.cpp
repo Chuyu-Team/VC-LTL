@@ -65,23 +65,13 @@ extern "C" int __cdecl _chvalidator_l(_locale_t const locale, int const c, int c
 extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
-	unsigned short const* _locale_pctype;
-	unsigned int _locale_lc_codepage;
-	if (locale)
-	{
-		_locale_pctype = locale->locinfo->_locale_pctype;
-		_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
-	}
-	else
-	{
-		_locale_pctype = __pctype_func();
-		_locale_lc_codepage = ___lc_codepage_func();
-	}
+	if (!locale)
+		return _isctype(c, mask);
 
     // c valid between -1 and 255:
     if (c >= -1 && c <= 255)
     {
-        return _locale_pctype[c] & mask;
+        return locale->locinfo->_locale_pctype[c] & mask;
     }
 
     size_t const buffer_count{3};
@@ -110,7 +100,7 @@ extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const l
             buffer,
             buffer_length,
             character_type,
-            _locale_lc_codepage,
+            locale->locinfo->_locale_lc_codepage,
             TRUE
         ) == 0)
     {

@@ -192,10 +192,10 @@ public:
 
     bool has_any_of(long const flags) const throw() { return (get_flags() & flags) != 0;     }
     bool has_all_of(long const flags) const throw() { return (get_flags() & flags) == flags; }
-    
+
     bool set_flags  (long const flags) const throw() { return (_InterlockedOr(&_stream->_flags,   flags) & flags) != 0; }
     bool unset_flags(long const flags) const throw() { return (_InterlockedAnd(&_stream->_flags, ~flags) & flags) != 0; }
-    
+
     bool eof()    const throw() { return has_any_of(_IOEOF);   }
     bool error()  const throw() { return has_any_of(_IOERROR); }
     bool ctrl_z() const throw() { return has_any_of(_IOCTRLZ); }
@@ -249,13 +249,20 @@ auto __acrt_lock_stream_and_call(FILE* const stream, Action&& action) throw()
  * the number of stdio-level files which may be open simultaneously. This
  * is normally set to _NSTREAM_ by the stdio initialization code.
  */
-extern "C" extern int _nstream;
+extern "C" _ACRTIMP extern int _nstream;
 
 /*
  * Pointer to the array of pointers to FILE structures that are used
  * to manage stdio-level files.
  */
-extern "C" extern __crt_stdio_stream_data** __piob;
+extern "C" _ACRTIMP extern __crt_stdio_stream_data** __piob;
+
+// __acrt_stdio_is_initialized cannot be with the rest of
+// stdio initialization logic since referencing those symbols
+// pulls in the stdio initializers.
+//inline bool __acrt_stdio_is_initialized() {
+//    return __piob != 0;
+//}
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //
@@ -267,7 +274,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     _Success_(return != 0) char*, __RETURN_POLICY_SAME, _ACRTIMP, gets,
     _Pre_notnull_ _Post_z_ _Out_writes_z_(((size_t)-1)), char, _Buffer
     )
-    
+
 // string[0] must contain the maximum length of the string.  The number of
 // characters written is stored in string[1].  The return value is a pointer to
 // string[2] on success; nullptr on failure.
@@ -278,13 +285,13 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0_CGETS(
     _At_(_Buffer + 2, _Pre_notnull_ _Post_z_ _Out_writes_to_(_Buffer[0], _Buffer[1])),
     char, _Buffer
     )
-    
+
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     _Success_(return != 0)
     wchar_t*, __RETURN_POLICY_SAME, _ACRTIMP, _getws,
     _Pre_notnull_ _Post_z_, wchar_t, _Buffer
     )
-    
+
 // string[0] must contain the maximum length of the string.  The number of
 // characters written is stored in string[1].  The return value is a pointer to
 // string[2] on success; nullptr on failure.

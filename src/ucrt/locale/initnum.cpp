@@ -18,6 +18,9 @@
 
 extern "C" {
 
+    // Enclaves have no ability to create new locales.
+#ifndef _UCRT_ENCLAVE_BUILD
+
 static void fix_grouping(
         _Inout_z_   char *  grouping
         )
@@ -198,6 +201,8 @@ int __cdecl __acrt_locale_initialize_numeric (
     ploci->lconv = lc;
     return 0;
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /*
  *  Free the lconv numeric strings.

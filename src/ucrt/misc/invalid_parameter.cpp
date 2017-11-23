@@ -13,7 +13,7 @@ static __crt_state_management::dual_state_global<_invalid_parameter_handler> __a
 
 
 
-#ifdef _M_X64
+#if defined _M_X64 && !defined _UCRT_ENCLAVE_BUILD
 
     static void __cdecl capture_current_context(CONTEXT* const context_record) throw()
     {
@@ -42,7 +42,7 @@ static __crt_state_management::dual_state_global<_invalid_parameter_handler> __a
         }
     }
 
-#endif // _M_X64
+#endif // _M_X64 && !_UCRT_ENCLAVE_BUILD
 
 #if defined _CRT_GLOBAL_STATE_ISOLATION
 
@@ -68,15 +68,15 @@ extern "C" void __cdecl __acrt_initialize_invalid_parameter_handler(void* const 
 {
 #if defined _CRT_GLOBAL_STATE_ISOLATION
     const _invalid_parameter_handler encoded_os_iph = __crt_fast_encode_pointer(invalid_parameter_handler_continue);
-#endif    
+#endif
     const _invalid_parameter_handler iph[] =
     {
         reinterpret_cast<_invalid_parameter_handler>(encoded_null)
 #if defined _CRT_GLOBAL_STATE_ISOLATION
         ,encoded_os_iph
-#endif        
+#endif
     };
-    
+
     __acrt_invalid_parameter_handler.initialize_from_array(iph);
 }
 
@@ -133,7 +133,7 @@ extern "C" __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(
 // _invoke_watson
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#if defined _M_IX86 || defined _M_X64
+#if (defined _M_IX86 || defined _M_X64) && !defined _UCRT_ENCLAVE_BUILD
 
     extern "C" void __cdecl __acrt_call_reportfault(
         int   const debugger_hook_code,
@@ -233,7 +233,7 @@ extern "C" __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(
         TerminateProcess(GetCurrentProcess(), STATUS_INVALID_CRUNTIME_PARAMETER);
     }
 
-#else // ^^^ _M_IX86 || _M_X64 ^^^ // vvv Newer Architectures vvv //
+#else // ^^^ (_M_IX86 || _M_X64) && !_UCRT_ENCLAVE_BUILD ^^^ // vvv Newer Architectures vvv //
 
     extern "C" __declspec(noreturn) void __cdecl _invoke_watson(
         wchar_t const* const expression,

@@ -235,7 +235,9 @@ BOOL __cdecl __acrt_get_qualified_locale(const __crt_locale_strings* lpInStr, UI
     iCodePage = ProcessCodePage(lpInStr ? lpInStr->szCodePage: nullptr, _psetloc_data);
 
     //  verify codepage validity
-    if (!iCodePage || iCodePage == CP_UTF7 || iCodePage == CP_UTF8 ||
+    // In future releases CP_UTF8 will be allowed at any time, however currently it is only
+    // permitted if the system codepage is also set to UTF-8.
+    if (!iCodePage || iCodePage == CP_UTF7 || (iCodePage == CP_UTF8 && GetACP() != CP_UTF8) ||
         !IsValidCodePage((WORD)iCodePage))
         return FALSE;
 

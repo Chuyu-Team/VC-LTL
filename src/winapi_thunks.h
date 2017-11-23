@@ -1,77 +1,103 @@
 #pragma once
+#include <corecrt.h>
+#include <corecrt_internal.h>
 #include <Windows.h>
 
 EXTERN_C_START
 
-extern int WINAPI __acrt_LCIDToLocaleName(
-	LCID   const locale,
-	LPWSTR const name,
-	int    const name_count,
-	DWORD  const flags
-);
 
-extern LCID WINAPI __acrt_LocaleNameToLCID(
-	LPCWSTR const name,
-	DWORD   const flags
-);
-
-extern VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time);
-
-
+#ifdef _ATL_XP_TARGETING
 extern BOOL WINAPI __crtInitOnceExecuteOnce(
 	_Inout_     PINIT_ONCE    InitOnce,
 	_In_        PINIT_ONCE_FN InitFn,
 	_Inout_opt_ PVOID         Parameter,
 	_Out_opt_   LPVOID        *Context
 );
+#else
+#define __crtInitOnceExecuteOnce InitOnceExecuteOnce
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
 	_Out_ PCONDITION_VARIABLE ConditionVariable
 );
+#else
+#define __crtInitializeConditionVariable InitializeConditionVariable
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PCRITICAL_SECTION   CriticalSection,
 	_In_    DWORD               dwMilliseconds
 );
+#else
+#define __crtSleepConditionVariableCS SleepConditionVariableCS
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C void WINAPI __crtWakeConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 );
+#else
+#define __crtWakeConditionVariable WakeConditionVariable
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID __crtWakeAllConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 );
+#else
+#define __crtWakeAllConditionVariable WakeAllConditionVariable
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtInitializeSRWLock(
 	_Out_ PSRWLOCK SRWLock
 );
+#else
+#define __crtInitializeSRWLock InitializeSRWLock
+#endif
 
-
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
+#else
+#define __crtAcquireSRWLockExclusive AcquireSRWLockExclusive
+#endif
 
 
 EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
+#else
+#define __crtReleaseSRWLockExclusive ReleaseSRWLockExclusive
+#endif
 
-
+#ifdef _ATL_XP_TARGETING
 EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PSRWLOCK            SRWLock,
 	_In_    DWORD               dwMilliseconds,
 	_In_    ULONG               Flags
 );
+#else
+#define __crtSleepConditionVariableSRW SleepConditionVariableSRW
+#endif
 
-//EXTERN_C bool __cdecl __crt_are_win7_sync_apis_available();
+EXTERN_C bool __cdecl __crt_are_win7_sync_apis_available();
 
-//EXTERN_C bool __cdecl __crt_are_vista_sync_apis_available();
+#ifdef _ATL_XP_TARGETING
+bool __cdecl __crt_are_vista_sync_apis_available();
+#else
+#define __crt_are_vista_sync_apis_available() true
+#endif
 
 __declspec(dllimport) int __cdecl __crtCompareStringA
 (
@@ -159,8 +185,8 @@ __declspec(dllimport) void _amsg_exit(
 #define MakeMiniVersion(v1,v2) (DWORD)(v2|(v1<<16))
 #define MakeVersion(v1,v2,v3,v4) (UINT64)(((UINT64)(v4))|((UINT64)v3<<16)|((UINT64)v2<<32)|((UINT64)v1<<48))
 
-DWORD __LTL_GetOsMinVersion();
+DWORD __cdecl __LTL_GetOsMinVersion();
 
-UINT64 __LTL_GetOsVersion();
+UINT64 __cdecl __LTL_GetOsVersion();
 
 EXTERN_C_END

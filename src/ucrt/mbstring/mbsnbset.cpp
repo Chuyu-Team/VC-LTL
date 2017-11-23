@@ -61,12 +61,15 @@ extern "C" unsigned char * __cdecl _mbsnbset_l(
         _locale_t plocinfo
         )
 {
+		if(!plocinfo)
+			return _mbsnbset(string, val, count);
+
         unsigned char *start = string;
         unsigned char highval, lowval;
         //_LocaleUpdate _loc_update(plocinfo);
 
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (unsigned char *)_strnset((char *)string, val, count);
 _END_SECURE_CRT_DEPRECATION_DISABLE
 

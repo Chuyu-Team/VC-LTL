@@ -70,7 +70,7 @@ extern "C" void __cdecl abort()
 
     if (__abort_behavior & _CALL_REPORTFAULT)
     {
-        #if defined _M_ARM || defined _M_ARM64
+        #if defined _M_ARM || defined _M_ARM64 || defined _UCRT_ENCLAVE_BUILD
         __fastfail(FAST_FAIL_FATAL_APP_EXIT);
         #else
         if (IsProcessorFeaturePresent(PF_FASTFAIL_AVAILABLE))

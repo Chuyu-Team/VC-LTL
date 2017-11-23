@@ -41,6 +41,9 @@ extern "C" unsigned char * __cdecl _mbsrev_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsrev(string);
+
         unsigned char *start = string;
         unsigned char *left  = string;
         unsigned char c;
@@ -49,15 +52,13 @@ extern "C" unsigned char * __cdecl _mbsrev_l(
         /* validation section */
         _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (unsigned char *)_strrev((char *)string);
 
 
         /* first go through and reverse the bytes in MBCS chars */
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         while ( *string ) {
-            if ( _ismbblead_l(*string++, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(*string++, plocinfo) ) {
                 if ( *string ) {
                     c = *string;
                     *string = *(string - 1);

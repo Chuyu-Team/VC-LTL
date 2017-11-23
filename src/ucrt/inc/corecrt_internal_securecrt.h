@@ -118,7 +118,7 @@
     }
 
 #define _LOCALE_SHORTCUT_TEST \
-    (_LOCALE_ARG?_LOCALE_ARG->mbcinfo->ismbcodepage : _getmbcp()) == 0
+    _LOCALE_ARG->mbcinfo->ismbcodepage == 0
 
 /* misc */
 #define _ASSIGN_IF_NOT_NULL(_Pointer, _Value) \

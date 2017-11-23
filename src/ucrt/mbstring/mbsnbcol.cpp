@@ -46,6 +46,9 @@ extern "C" int __cdecl _mbsnbcoll_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsnbcoll(s1, s2, n);
+
         int ret;
 
         if (n == 0)
@@ -58,31 +61,17 @@ extern "C" int __cdecl _mbsnbcoll_l(
 
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return _strncoll_l((const char *)s1, (const char *)s2, n, plocinfo);
 
-		int mbcodepage;
-		int mblcid;
-
-		if (plocinfo)
-		{
-			mbcodepage = plocinfo->mbcinfo->mbcodepage;
-			mblcid = plocinfo->mbcinfo->mblcid;
-		}
-		else
-		{
-			mbcodepage = _getmbcp();
-			mblcid = __acrt_getptd()->_multibyte_info->mblcid;
-		}
-
         if ( 0 == (ret = __crtCompareStringA(plocinfo,
-                                              mblcid,
+                                              plocinfo->mbcinfo->mblcid,
                                               SORT_STRINGSORT,
                                               (const char *)s1,
                                               (int)n,
                                               (char *)s2,
                                               (int)n,
-                                              mbcodepage )) )
+                                              plocinfo->mbcinfo->mbcodepage )) )
         {
             errno = EINVAL;
             return _NLSCMPERROR;

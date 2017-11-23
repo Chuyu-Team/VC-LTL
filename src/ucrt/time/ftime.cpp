@@ -14,7 +14,7 @@
 
 // Cache for the minutes count for with DST status was last assessed
 // CRT_REFACTOR TODO Check synchronization of access to this global variable.
-static __time32_t elapsed_minutes_cache = 0;
+static __time64_t elapsed_minutes_cache = 0;
 
 
 
@@ -38,7 +38,7 @@ static errno_t __cdecl common_ftime_s(TimeBType* const tp) throw()
     _VALIDATE_RETURN_ERRCODE(tp != nullptr, EINVAL)
 
     __tzset();
-    
+
     long timezone = 0;
     _ERRCHECK(_get_timezone(&timezone));
     tp->timezone = static_cast<short>(timezone / 60);
@@ -48,8 +48,8 @@ static errno_t __cdecl common_ftime_s(TimeBType* const tp) throw()
 
     // Obtain the current Daylight Savings Time status.  Note that the status is
     // cached and only updated once per minute, if necessary.
-    __time32_t const current_minutes_value = static_cast<__time32_t>(system_time._scalar / 600000000i64);
-    if (current_minutes_value != elapsed_minutes_cache)
+    TimeType const current_minutes_value = static_cast<TimeType>(system_time._scalar / 600000000i64);
+    if (static_cast<__time64_t>(current_minutes_value) != elapsed_minutes_cache)
     {
         TIME_ZONE_INFORMATION tz_info;
         DWORD const tz_state = GetTimeZoneInformation(&tz_info);
@@ -79,7 +79,7 @@ static errno_t __cdecl common_ftime_s(TimeBType* const tp) throw()
 
     tp->dstflag = static_cast<short>(dstflag_cache);
     tp->millitm = static_cast<unsigned short>((system_time._scalar / 10000i64) % 1000i64);
-    tp->time    = static_cast<__time32_t>((system_time._scalar - _EPOCH_BIAS) / 10000000i64);
+    tp->time    = static_cast<TimeType>((system_time._scalar - _EPOCH_BIAS) / 10000000i64);
 
     return 0;
 }

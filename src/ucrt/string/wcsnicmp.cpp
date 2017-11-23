@@ -13,7 +13,6 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
 
 /***
 *int _wcsnicmp(first, last, count) - compares count wchar_t of strings,
@@ -50,6 +49,9 @@ extern "C" int __cdecl _wcsnicmp_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _wcsnicmp(first, last, count);
+
     wchar_t f,l;
     int result = 0;
 
@@ -61,9 +63,7 @@ extern "C" int __cdecl _wcsnicmp_l (
 
         //_LocaleUpdate _loc_update(plocinfo);
 
-		auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
-
-        if (_lc_ctype==0)
+        if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
         {
             do
             {

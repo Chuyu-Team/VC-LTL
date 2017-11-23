@@ -37,7 +37,6 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-
 #ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _mbsupr_s_l(
         unsigned char *string,
@@ -45,6 +44,9 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return  _mbsupr_s(string, sizeInBytes);
+
         size_t stringlen;
 
         /* validation section */
@@ -67,30 +69,9 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
         unsigned char *cp, *dst;
         //_LocaleUpdate _loc_update(plocinfo);
 
-		int            mbcodepage;
-		unsigned char*  mbctype;
-		unsigned char*  mbcasemap;
-		int mblcid;
-		if (plocinfo)
-		{
-			mbcodepage = plocinfo->mbcinfo->mbcodepage;
-			mbctype = plocinfo->mbcinfo->mbctype;
-			mbcasemap = plocinfo->mbcinfo->mbcasemap;
-			mblcid = plocinfo->mbcinfo->mblcid;
-		}
-		else
-		{
-			mbcodepage = _getmbcp();
-			auto mbcinfo = __acrt_getptd()->_multibyte_info;
-			mbctype = mbcinfo->mbctype;
-			mbcasemap = mbcinfo->mbcasemap;
-			mblcid = mbcinfo->mblcid;
-		}
-
-
         for (cp = string, dst = string; *cp; ++cp)
         {
-            if ( _ismbblead_l(*cp, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(*cp, plocinfo) )
             {
 
 
@@ -99,13 +80,13 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
 
                 if ( (retval = __crtLCMapStringA(
                                 plocinfo,
-                                mblcid,
+                                plocinfo->mbcinfo->mblcid,
                                 LCMAP_UPPERCASE,
                                 (const char *)cp,
                                 2,
                                 (char *)ret,
                                 2,
-                                mbcodepage,
+                                plocinfo->mbcinfo->mbcodepage,
                                 TRUE )) == 0 )
                 {
                     errno = EILSEQ;
@@ -124,7 +105,7 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
             }
             else
                 /* single byte, macro version */
-                *(dst++) = (unsigned char) _mbbtoupper_l(*cp, _loc_update.GetLocaleT());
+                *(dst++) = (unsigned char) _mbbtoupper_l(*cp, plocinfo);
         }
         /* null terminate the string */
         *dst = '\0';

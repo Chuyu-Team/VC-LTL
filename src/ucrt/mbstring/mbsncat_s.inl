@@ -10,6 +10,9 @@
 
 errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, size_t _COUNT, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _FUNC_NAME_NO_LOCALE(_Dst, _SizeInBytes, _Src, _COUNT);
+
     unsigned char *p;
     size_t available;
     BOOL fIsLeadPrefix;
@@ -57,7 +60,6 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsig
         _RETURN_DEST_NOT_NULL_TERMINATED(_Dst, _SizeInBytes);
     }
 
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     if (available < _SizeInBytes)
     {

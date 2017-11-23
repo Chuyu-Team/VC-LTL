@@ -13,30 +13,6 @@
 
 extern "C" {
 
-// This is used as the initializer if a category does not need initialization.
-static int __cdecl no_op_initialize(__crt_locale_data*)
-{
-    return 0;
-}
-
-void __cdecl __acrt_free_locale(__crt_locale_data*);
-
-_CRT_LINKER_FORCE_INCLUDE(__acrt_locale_terminator);
-
-extern __declspec(selectany) struct {
-        const wchar_t * catname;
-        wchar_t * locale;
-        int (* init)(__crt_locale_data*);
-} const __lc_category[LC_MAX-LC_MIN+1] = {
-        /* code assumes locale initialization is "__wclocalestr" */
-        { L"LC_ALL",     nullptr,                        no_op_initialize                  },
-        { L"LC_COLLATE", __acrt_wide_c_locale_string,    no_op_initialize                  },
-        { L"LC_CTYPE",   __acrt_wide_c_locale_string,    __acrt_locale_initialize_ctype    },
-        { L"LC_MONETARY",__acrt_wide_c_locale_string,    __acrt_locale_initialize_monetary },
-        { L"LC_NUMERIC", __acrt_wide_c_locale_string,    __acrt_locale_initialize_numeric  },
-        { L"LC_TIME",    __acrt_wide_c_locale_string,    __acrt_locale_initialize_time     }
-};
-
 static const char _first_127char[] = {
         1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
         18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
@@ -78,26 +54,6 @@ __crt_locale_data* __cdecl _updatetlocinfoEx_nolock(__crt_locale_data**, __crt_l
 void __cdecl __acrt_set_locale_changed()
 {
     _InterlockedExchange(&__acrt_locale_changed_data, TRUE);
-}
-
-/***
-*
-* _copytlocinfo_nolock(__crt_locale_data* ptlocid, __crt_locale_data* ptlocis)
-*
-* Purpose:
-*       Copy the contents of ptlocis to ptlocid and increase the refcount of all the
-*       elements in ptlocid after copy.
-*
-******************************************************************************/
-static void __cdecl _copytlocinfo_nolock(
-    __crt_locale_data* ptlocid,
-    __crt_locale_data* ptlocis)
-{
-    if (ptlocis != nullptr && ptlocid != nullptr && ptlocid != ptlocis) {
-        *ptlocid = *ptlocis;
-        ptlocid->refcount = 0;
-        __acrt_add_locale_ref(ptlocid);
-    }
 }
 
 /***
@@ -167,25 +123,12 @@ extern "C" void __cdecl __acrt_uninitialize_locale()
             {
                 return;
             }
-            
+
             locale = _updatetlocinfoEx_nolock(&locale, &__acrt_initial_locale_data);
         });
     });
 }
 
-/***
-* void sync_legacy_variables_lk()
-*
-* Purpose:
-*   Syncs all the legacy locale specific variables to the global locale.
-*
-*******************************************************************************/
-static __inline void sync_legacy_variables_lk()
-{
-    __acrt_lconv = __acrt_current_locale_data.value()->lconv;
-    _pctype = __acrt_current_locale_data.value()->_public._locale_pctype;
-    __mb_cur_max = __acrt_current_locale_data.value()->_public._locale_mb_cur_max;
-}
 /***
 *_free_locale() - free threadlocinfo
 *
@@ -249,6 +192,109 @@ void __cdecl _free_locale(
 
         _free_crt(plocinfo);
     }
+}
+
+/*
+* _locale_t _get_current_locale() -
+*    Gets the current locale setting.
+*
+* Purpose:
+*       Gets the current locale setting for this thread. Returns locale
+*       in form of _locale_t, which then can be used with other locale
+*       aware string functions.
+*
+*/
+
+_locale_t __cdecl _get_current_locale(void)
+{
+    __acrt_ptd* const ptd = __acrt_getptd();
+
+    auto locale_copy(_calloc_crt_t(__crt_locale_pointers, 1));
+    if (!locale_copy)
+        return nullptr; // calloc will set errno
+
+    __acrt_update_thread_locale_data();
+    __acrt_update_thread_multibyte_data();
+
+    // No one can free the data pointed to by ptlocinfo while we're copying
+    // it, since we're copying this thread's ptlocinfo, which won't be updated
+    // during the copy.  So there are no worries about it being freed from
+    // under us.  We still need a lock while adding a reference for the new
+    // copy, though, because of the race condition found in _wsetlocale.
+    locale_copy.get()->locinfo = ptd->_locale_info;
+    locale_copy.get()->mbcinfo = ptd->_multibyte_info;
+    __acrt_lock_and_call(__acrt_locale_lock, [&]
+    {
+        __acrt_add_locale_ref(locale_copy.get()->locinfo);
+    });
+
+    __acrt_lock_and_call(__acrt_multibyte_cp_lock, [&]
+    {
+        InterlockedIncrement(&locale_copy.get()->mbcinfo->refcount);
+    });
+
+    return locale_copy.detach();
+}
+
+// Enclaves do not support dynamic locales, but they support reading the default one.
+#ifndef _UCRT_ENCLAVE_BUILD
+
+// This is used as the initializer if a category does not need initialization.
+static int __cdecl no_op_initialize(__crt_locale_data*)
+{
+    return 0;
+}
+
+void __cdecl __acrt_free_locale(__crt_locale_data*);
+
+_CRT_LINKER_FORCE_INCLUDE(__acrt_locale_terminator);
+
+extern __declspec(selectany) struct {
+        const wchar_t * catname;
+        wchar_t * locale;
+        int (* init)(__crt_locale_data*);
+} const __lc_category[LC_MAX-LC_MIN+1] = {
+        /* code assumes locale initialization is "__wclocalestr" */
+        { L"LC_ALL",     nullptr,                        no_op_initialize                  },
+        { L"LC_COLLATE", __acrt_wide_c_locale_string,    no_op_initialize                  },
+        { L"LC_CTYPE",   __acrt_wide_c_locale_string,    __acrt_locale_initialize_ctype    },
+        { L"LC_MONETARY",__acrt_wide_c_locale_string,    __acrt_locale_initialize_monetary },
+        { L"LC_NUMERIC", __acrt_wide_c_locale_string,    __acrt_locale_initialize_numeric  },
+        { L"LC_TIME",    __acrt_wide_c_locale_string,    __acrt_locale_initialize_time     }
+};
+
+/***
+*
+* _copytlocinfo_nolock(__crt_locale_data* ptlocid, __crt_locale_data* ptlocis)
+*
+* Purpose:
+*       Copy the contents of ptlocis to ptlocid and increase the refcount of all the
+*       elements in ptlocid after copy.
+*
+******************************************************************************/
+static void __cdecl _copytlocinfo_nolock(
+    __crt_locale_data* ptlocid,
+    __crt_locale_data* ptlocis)
+{
+    if (ptlocis != nullptr && ptlocid != nullptr && ptlocid != ptlocis) {
+        *ptlocid = *ptlocis;
+        ptlocid->refcount = 0;
+        __acrt_add_locale_ref(ptlocid);
+    }
+}
+
+/***
+* void sync_legacy_variables_lk()
+*
+* Purpose:
+*   Syncs all the legacy locale specific variables to the global locale.
+*
+*******************************************************************************/
+static __inline void sync_legacy_variables_lk()
+{
+    __acrt_lconv = __acrt_current_locale_data.value()->lconv;
+    _pctype = __acrt_current_locale_data.value()->_public._locale_pctype;
+    __mb_cur_max = __acrt_current_locale_data.value()->_public._locale_mb_cur_max;
 }
 
 /***
@@ -344,48 +390,6 @@ _locale_t __cdecl _create_locale(
 }
 
 /*
-* _locale_t _get_current_locale() -
-*    Gets the current locale setting.
-*
-* Purpose:
-*       Gets the current locale setting for this thread. Returns locale
-*       in form of _locale_t, which then can be used with other locale
-*       aware string funcitons.
-*
-*/
-
-_locale_t __cdecl _get_current_locale(void)
-{
-    __acrt_ptd* const ptd = __acrt_getptd();
-
-    auto locale_copy(_calloc_crt_t(__crt_locale_pointers, 1));
-    if (!locale_copy)
-        return nullptr; // calloc will set errno
-
-    __acrt_update_thread_locale_data();
-    __acrt_update_thread_multibyte_data();
-
-    // No one can free the data pointed to by ptlocinfo while we're copying
-    // it, since we're copying this thread's ptlocinfo, which won't be updated
-    // during the copy.  So there are no worries about it being freed from
-    // under us.  We still need a lock while adding a reference for the new
-    // copy, though, because of the race condition found in _wsetlocale.
-    locale_copy.get()->locinfo = ptd->_locale_info;
-    locale_copy.get()->mbcinfo = ptd->_multibyte_info;
-    __acrt_lock_and_call(__acrt_locale_lock, [&]
-    {
-        __acrt_add_locale_ref(locale_copy.get()->locinfo);
-    });
-
-    __acrt_lock_and_call(__acrt_multibyte_cp_lock, [&]
-    {
-        InterlockedIncrement(&locale_copy.get()->mbcinfo->refcount);
-    });
-
-    return locale_copy.detach();
-}
-
-/*
 *char * setlocale(int category, char *locale) - Set one or all locale categories
 *
 *Purpose:
@@ -439,7 +443,7 @@ wchar_t * __cdecl _wsetlocale (
 
     /* Validate category */
     _VALIDATE_RETURN(LC_MIN <= _category && _category <= LC_MAX, EINVAL, nullptr);
-    
+
     __acrt_ptd* const ptd = __acrt_getptd();
 
     // Deadlock Avoidance:  When a new thread is created in the process, we
@@ -885,6 +889,7 @@ wchar_t * _expandlocale (
         BOOL getqloc_results = FALSE;
 
         /* begin: cache atomic section */
+        // isDownlevel should always be false as we support Vista+ now
         BOOL const isDownlevel = !__acrt_can_use_vista_locale_apis();
         if (__lc_wcstolc(&names, expr) == 0)
         {
@@ -1043,5 +1048,7 @@ LPWSTR __cdecl __acrt_copy_locale_name(LPCWSTR localeName)
     _ERRCHECK(wcsncpy_s(localeNameCopy, cch+1, localeName, cch+1));
     return localeNameCopy;
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 } // extern "C"

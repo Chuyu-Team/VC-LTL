@@ -11,6 +11,7 @@
 #include <locale.h>
 #include <corecrt_internal_mbstring.h>
 #include <mbctype.h>
+#include <winnls.h>
 
 #ifndef CRTDLL
 
@@ -242,81 +243,7 @@ extern "C" unsigned char* __cdecl __p__mbcasemap()
 
 extern "C" int __cdecl _setmbcp_nolock(int, __crt_multibyte_data*);
 
-/***
-*getSystemCP - Get system default CP if requested.
-*
-*Purpose:
-*       Get system default CP if requested.
-*
-*Entry:
-*       codepage - user requested code page/world script
-*Exit:
-*       requested code page
-*
-*Exceptions:
-*
-*******************************************************************************/
-
-static int getSystemCP (int codepage)
-{
-    _locale_t plocinfo = nullptr;
-    _LocaleUpdate _loc_update(plocinfo);
-    fSystemSet = 0;
-
-    /* get system code page values if requested */
-
-    if (codepage == _MB_CP_OEM)
-    {
-        fSystemSet = 1;
-        return GetOEMCP();
-    }
-    else if (codepage == _MB_CP_ANSI)
-    {
-        fSystemSet = 1;
-        return GetACP();
-    }
-    else if (codepage == _MB_CP_LOCALE)
-    {
-        fSystemSet = 1;
-        return _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage;
-    }
-
-    return codepage;
-}
-
-/***
-*CPtoLocaleName() - Code page to locale name.
-*
-*Purpose:
-*       Some API calls want a locale name, so convert MB CP to appropriate locale name,
-*       and then API converts back to ANSI CP for that locale name.
-*
-*Entry:
-*   codepage - code page to convert
-*Exit:
-*       returns appropriate locale name
-*       Returned locale names are stored in static structs, so they must not be deleted.
-*
-*Exceptions:
-*
-*******************************************************************************/
-
-static const wchar_t* CPtoLocaleName (int codepage)
-{
-    switch (codepage) {
-    case 932:
-        return _mb_locale_names[JAPANSE_DEFAULT_LOCALE_NAME_INDEX];
-    case 936:
-        return _mb_locale_names[CHINESE_SIMPLIFIED_LOCALE_NAME_INDEX];
-    case 949:
-        return _mb_locale_names[KOREAN_DEFAULT_LOCALE_NAME_INDEX];
-    case 950:
-        return _mb_locale_names[CHINESE_TRADITIONAL_LOCALE_NAME_INDEX];
-    }
-
-    return 0;
-}
-
+static int getSystemCP (int);
 
 /***
 *setSBCS() - Set MB code page to SBCS.
@@ -355,6 +282,290 @@ static void setSBCS (__crt_multibyte_data* ptmbci)
 
     for ( i = 0 ; i < 256 ; i++ )
         ptmbci->mbcasemap[i] = __acrt_initial_multibyte_data.mbcasemap[i];
+}
+
+/***
+*__acrt_update_thread_multibyte_data() - refresh the thread's mbc info
+*
+*Purpose:
+*       Update the current thread's reference to the multibyte character
+*       information to match the current global mbc info. Decrement the
+*       reference on the old mbc information struct and if this count is now
+*       zero (so that no threads are using it), free it.
+*
+*Entry:
+*
+*Exit:
+*       _getptd()->ptmbcinfo == current_multibyte_data (which should always be __acrt_current_multibyte_data)
+*
+*Exceptions:
+*
+*******************************************************************************/
+
+static __crt_multibyte_data* __cdecl update_thread_multibyte_data_internal(
+    __acrt_ptd*           const ptd,
+    __crt_multibyte_data** const current_multibyte_data
+    ) throw()
+{
+        __crt_multibyte_data* ptmbci = nullptr;
+
+        if ((ptd->_own_locale & __globallocalestatus) == 0 || ptd->_locale_info == nullptr)
+        {
+            __acrt_lock(__acrt_multibyte_cp_lock);
+            __try
+            {
+                ptmbci = ptd->_multibyte_info;
+                if (ptmbci != *current_multibyte_data)
+                {
+                    /*
+                     * Decrement the reference count in the old mbc info structure
+                     * and free it, if necessary
+                     */
+                    if (ptmbci != nullptr &&
+                        InterlockedDecrement(&ptmbci->refcount) == 0 &&
+                        ptmbci != &__acrt_initial_multibyte_data)
+                    {
+                        /*
+                         * Free it
+                         */
+                        _free_crt(ptmbci);
+                    }
+
+                    /*
+                     * Point to the current mbc info structure and increment its
+                     * reference count.
+                     */
+                    ptmbci = ptd->_multibyte_info = *current_multibyte_data;
+                    InterlockedIncrement(&ptmbci->refcount);
+                }
+            }
+            __finally
+            {
+                __acrt_unlock(__acrt_multibyte_cp_lock);
+            }
+        }
+        else
+        {
+            ptmbci = ptd->_multibyte_info;
+        }
+
+        if (!ptmbci)
+        {
+            abort();
+        }
+
+        return ptmbci;
+}
+
+extern "C" __crt_multibyte_data* __cdecl __acrt_update_thread_multibyte_data()
+{
+    return update_thread_multibyte_data_internal(__acrt_getptd(), &__acrt_current_multibyte_data.value());
+}
+
+/***
+*_setmbcp() - Set MBC data based on code page
+*
+*Purpose:
+*       Init MBC character type tables based on code page number. If
+*       given code page is supported, load that code page info into
+*       mbctype table. If not, query OS to find the information,
+*       otherwise set up table with single byte info.
+*
+*       Multithread Notes: First, allocate an mbc information struct. Set the
+*       mbc info in the static vars and arrays as does the single-thread
+*       version. Then, copy this info into the new allocated struct and set
+*       the current mbc info pointer (__acrt_current_multibyte_data) to point to it.
+*
+*Entry:
+*       codepage - code page to initialize MBC table
+*           _MB_CP_OEM = use system OEM code page
+*           _MB_CP_ANSI = use system ANSI code page
+*           _MB_CP_SBCS = set to single byte 'code page'
+*
+*Exit:
+*        0 = Success
+*       -1 = Error, code page not changed.
+*
+*Exceptions:
+*
+*******************************************************************************/
+
+static int __cdecl setmbcp_internal(
+    int                    const requested_codepage,
+    bool                   const is_for_crt_initialization,
+    __acrt_ptd*            const ptd,
+    __crt_multibyte_data** const current_multibyte_data
+    ) throw()
+{
+    update_thread_multibyte_data_internal(ptd, current_multibyte_data);
+    int const system_codepage = getSystemCP(requested_codepage);
+
+    // If it's not a new codepage, just return success:
+    if (system_codepage == ptd->_multibyte_info->mbcodepage)
+    {
+        return 0;
+    }
+
+    // Always allocate space so that we don't have to take a lock for any update:
+    __crt_unique_heap_ptr<__crt_multibyte_data> mb_data(_malloc_crt_t(__crt_multibyte_data, 1));
+    if (!mb_data)
+    {
+        return -1;
+    }
+
+    // Initialize the new multibyte data structure from the current multibyte
+    // data structure for this thread, resetting the reference count (since it
+    // is not actually referenced by anything yet).
+    *mb_data.get() = *ptd->_multibyte_info;
+    mb_data.get()->refcount = 0;
+
+    // Actually initialize the new multibyte data using the new codepage:
+    // CRT_REFACTOR TODO _setmbcp_nolock is a terrible name.
+    int const setmbcp_status = _setmbcp_nolock(system_codepage, mb_data.get());
+    if (setmbcp_status == -1)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
+    // At this point, we have a valid, new set of multibyte data to swap in.  If
+    // this is not the initial codepage initialization during process startup,
+    // we need to toggle the locale-changed state:
+    if (!is_for_crt_initialization)
+    {
+        __acrt_set_locale_changed();
+    }
+
+    if (InterlockedDecrement(&ptd->_multibyte_info->refcount) == 0 &&
+        ptd->_multibyte_info != &__acrt_initial_multibyte_data)
+    {
+        _free_crt(ptd->_multibyte_info);
+    }
+
+    // Update the multibyte codepage for this thread:
+    mb_data.get()->refcount = 1;
+    ptd->_multibyte_info = mb_data.detach();
+
+    // If this thread has its own locale, do not update the global codepage:
+    if ((ptd->_own_locale & _PER_THREAD_LOCALE_BIT) ||
+        (__globallocalestatus & _GLOBAL_LOCALE_BIT))
+    {
+        return setmbcp_status;
+    }
+
+    // Otherwise, update the global codepage:
+    __acrt_lock_and_call(__acrt_multibyte_cp_lock, [&]
+    {
+        memcpy_s(_mbctype.value(),   sizeof(_mbctypes[0]),   ptd->_multibyte_info->mbctype,   sizeof(ptd->_multibyte_info->mbctype));
+        memcpy_s(_mbcasemap.value(), sizeof(_mbcasemaps[0]), ptd->_multibyte_info->mbcasemap, sizeof(ptd->_multibyte_info->mbcasemap));
+
+        if (InterlockedDecrement(&(*current_multibyte_data)->refcount) == 0 &&
+            (*current_multibyte_data) != &__acrt_initial_multibyte_data)
+        {
+            _free_crt(*current_multibyte_data);
+        }
+
+        *current_multibyte_data = ptd->_multibyte_info;
+        InterlockedIncrement(&ptd->_multibyte_info->refcount);
+    });
+
+    if (is_for_crt_initialization)
+    {
+        __acrt_initial_locale_pointers.mbcinfo = *current_multibyte_data;
+    }
+
+    return setmbcp_status;
+}
+
+/* Enclaves only support built-in CP_ACP */
+#ifdef _UCRT_ENCLAVE_BUILD
+
+static int getSystemCP(int)
+{
+    return CP_ACP;
+}
+
+
+extern "C" int __cdecl _setmbcp_nolock(int, __crt_multibyte_data* ptmbci)
+{
+    setSBCS(ptmbci);
+    return 0;
+}
+
+#else /* ^^^ _UCRT_ENCLAVE_BUILD ^^^ // vvv !_UCRT_ENCLAVE_BUILD vvv */
+
+    /***
+*CPtoLocaleName() - Code page to locale name.
+*
+*Purpose:
+*       Some API calls want a locale name, so convert MB CP to appropriate locale name,
+*       and then API converts back to ANSI CP for that locale name.
+*
+*Entry:
+*   codepage - code page to convert
+*Exit:
+*       returns appropriate locale name
+*       Returned locale names are stored in static structs, so they must not be deleted.
+*
+*Exceptions:
+*
+*******************************************************************************/
+
+static const wchar_t* CPtoLocaleName (int codepage)
+{
+    switch (codepage) {
+    case 932:
+        return _mb_locale_names[JAPANSE_DEFAULT_LOCALE_NAME_INDEX];
+    case 936:
+        return _mb_locale_names[CHINESE_SIMPLIFIED_LOCALE_NAME_INDEX];
+    case 949:
+        return _mb_locale_names[KOREAN_DEFAULT_LOCALE_NAME_INDEX];
+    case 950:
+        return _mb_locale_names[CHINESE_TRADITIONAL_LOCALE_NAME_INDEX];
+    }
+
+    return 0;
+}
+
+/***
+*getSystemCP - Get system default CP if requested.
+*
+*Purpose:
+*       Get system default CP if requested.
+*
+*Entry:
+*       codepage - user requested code page/world script
+*Exit:
+*       requested code page
+*
+*Exceptions:
+*
+*******************************************************************************/
+static int getSystemCP(int codepage)
+{
+    _locale_t plocinfo = nullptr;
+    _LocaleUpdate _loc_update(plocinfo);
+    fSystemSet = 0;
+
+    /* get system code page values if requested */
+
+    if (codepage == _MB_CP_OEM)
+    {
+        fSystemSet = 1;
+        return GetOEMCP();
+    }
+    else if (codepage == _MB_CP_ANSI)
+    {
+        fSystemSet = 1;
+        return GetACP();
+    }
+    else if (codepage == _MB_CP_LOCALE)
+    {
+        fSystemSet = 1;
+        return _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage;
+    }
+
+    return codepage;
 }
 
 /***
@@ -446,199 +657,6 @@ static void setSBUpLow (__crt_multibyte_data* ptmbci)
     }
 }
 
-/***
-*__acrt_update_thread_multibyte_data() - refresh the thread's mbc info
-*
-*Purpose:
-*       Update the current thread's reference to the multibyte character
-*       information to match the current global mbc info. Decrement the
-*       reference on the old mbc information struct and if this count is now
-*       zero (so that no threads are using it), free it.
-*
-*Entry:
-*
-*Exit:
-*       _getptd()->ptmbcinfo == current_multibyte_data (which should always be __acrt_current_multibyte_data)
-*
-*Exceptions:
-*
-*******************************************************************************/
-
-static __crt_multibyte_data* __cdecl update_thread_multibyte_data_internal(
-    __acrt_ptd*           const ptd,
-    __crt_multibyte_data* const current_multibyte_data
-    ) throw()
-{
-        __crt_multibyte_data* ptmbci = nullptr;
-        
-        if ((ptd->_own_locale & __globallocalestatus) == 0 || ptd->_locale_info == nullptr)
-        {
-            __acrt_lock(__acrt_multibyte_cp_lock);
-            __try
-            {
-                ptmbci = ptd->_multibyte_info;
-                if (ptmbci != current_multibyte_data)
-                {
-                    /*
-                     * Decrement the reference count in the old mbc info structure
-                     * and free it, if necessary
-                     */
-                    if (ptmbci != nullptr &&
-                        InterlockedDecrement(&ptmbci->refcount) == 0 &&
-                        ptmbci != &__acrt_initial_multibyte_data)
-                    {
-                        /*
-                         * Free it
-                         */
-                        _free_crt(ptmbci);
-                    }
-
-                    /*
-                     * Point to the current mbc info structure and increment its
-                     * reference count.
-                     */
-                    ptmbci = ptd->_multibyte_info = current_multibyte_data;
-                    InterlockedIncrement(&ptmbci->refcount);
-                }
-            }
-            __finally
-            {
-                __acrt_unlock(__acrt_multibyte_cp_lock);
-            }
-        }
-        else
-        {
-            ptmbci = ptd->_multibyte_info;
-        }
-
-        if (!ptmbci)
-        {
-            abort();
-        }
-
-        return ptmbci;
-}
-
-extern "C" __crt_multibyte_data* __cdecl __acrt_update_thread_multibyte_data()
-{
-    return update_thread_multibyte_data_internal(__acrt_getptd(), __acrt_current_multibyte_data.value());
-}
-
-/***
-*_setmbcp() - Set MBC data based on code page
-*
-*Purpose:
-*       Init MBC character type tables based on code page number. If
-*       given code page is supported, load that code page info into
-*       mbctype table. If not, query OS to find the information,
-*       otherwise set up table with single byte info.
-*
-*       Multithread Notes: First, allocate an mbc information struct. Set the
-*       mbc info in the static vars and arrays as does the single-thread
-*       version. Then, copy this info into the new allocated struct and set
-*       the current mbc info pointer (__acrt_current_multibyte_data) to point to it.
-*
-*Entry:
-*       codepage - code page to initialize MBC table
-*           _MB_CP_OEM = use system OEM code page
-*           _MB_CP_ANSI = use system ANSI code page
-*           _MB_CP_SBCS = set to single byte 'code page'
-*
-*Exit:
-*        0 = Success
-*       -1 = Error, code page not changed.
-*
-*Exceptions:
-*
-*******************************************************************************/
-
-static int __cdecl setmbcp_internal(
-    int                    const requested_codepage,
-    bool                   const is_for_crt_initialization,
-    __acrt_ptd*            const ptd,
-    __crt_multibyte_data** const current_multibyte_data
-    ) throw()
-{
-    update_thread_multibyte_data_internal(ptd, *current_multibyte_data);
-    int const system_codepage = getSystemCP(requested_codepage);
-
-    // If it's not a new codepage, just return success:
-    if (system_codepage == ptd->_multibyte_info->mbcodepage)
-    {
-        return 0;
-    }
-
-    // Always allocate space so that we don't have to take a lock for any update:
-    __crt_unique_heap_ptr<__crt_multibyte_data> mb_data(_malloc_crt_t(__crt_multibyte_data, 1));
-    if (!mb_data)
-    {
-        return -1;
-    }
-
-    // Initialize the new multibyte data structure from the current multibyte
-    // data structure for this thread, resetting the reference count (since it
-    // is not actually referenced by anything yet).
-    *mb_data.get() = *ptd->_multibyte_info;
-    mb_data.get()->refcount = 0;
-
-    // Actually initialize the new multibyte data using the new codepage:
-    // CRT_REFACTOR TODO _setmbcp_nolock is a terrible name.
-    int const setmbcp_status = _setmbcp_nolock(system_codepage, mb_data.get());
-    if (setmbcp_status == -1)
-    {
-        errno = EINVAL;
-        return -1;
-    }
-
-    // At this point, we have a valid, new set of multibyte data to swap in.  If
-    // this is not the initial codepage initialization during process startup,
-    // we need to toggle the locale-changed state:
-    if (!is_for_crt_initialization)
-    {
-        __acrt_set_locale_changed();
-    }
-
-    if (InterlockedDecrement(&ptd->_multibyte_info->refcount) == 0 &&
-        ptd->_multibyte_info != &__acrt_initial_multibyte_data)
-    {
-        _free_crt(ptd->_multibyte_info);
-    }
-
-    // Update the multibyte codepage for this thread:
-    mb_data.get()->refcount = 1;
-    ptd->_multibyte_info = mb_data.detach();
-
-    // If this thread has its own locale, do not update the global codepage:
-    if ((ptd->_own_locale & _PER_THREAD_LOCALE_BIT) ||
-        (__globallocalestatus & _GLOBAL_LOCALE_BIT))
-    {
-        return setmbcp_status;
-    }
-
-    // Otherwise, update the global codepage:
-    __acrt_lock_and_call(__acrt_multibyte_cp_lock, [&]
-    {
-        memcpy_s(_mbctype.value(),   sizeof(_mbctypes[0]),   ptd->_multibyte_info->mbctype,   sizeof(ptd->_multibyte_info->mbctype));
-        memcpy_s(_mbcasemap.value(), sizeof(_mbcasemaps[0]), ptd->_multibyte_info->mbcasemap, sizeof(ptd->_multibyte_info->mbcasemap));
-
-        if (InterlockedDecrement(&(*current_multibyte_data)->refcount) == 0 &&
-            (*current_multibyte_data) != &__acrt_initial_multibyte_data)
-        {
-            _free_crt(*current_multibyte_data);
-        }
-
-        *current_multibyte_data = ptd->_multibyte_info;
-        InterlockedIncrement(&ptd->_multibyte_info->refcount);
-    });
-
-    if (is_for_crt_initialization)
-    {
-        __acrt_initial_locale_pointers.mbcinfo = *current_multibyte_data;
-    }
-
-    return setmbcp_status;
-}
-
 extern "C" int __cdecl _setmbcp(int const codepage)
 {
     return setmbcp_internal(codepage, false, __acrt_getptd(), &__acrt_current_multibyte_data.value());
@@ -701,13 +719,14 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
         }
 
         /*  verify codepage validity */
-        if (codepage == 0 || codepage == CP_UTF7 || codepage == CP_UTF8 ||
+        // In future releases CP_UTF8 will be allowed at any time, however currently it is only
+        // permitted if the system codepage is also set to UTF-8.
+        if (codepage == 0 || codepage == CP_UTF7 || (codepage == CP_UTF8 && GetACP() != CP_UTF8) ||
             !IsValidCodePage((WORD)codepage))
         {
             /* return failure, code page not changed */
             return -1;
         }
-
 
         /* code page not supported by CRT, try the OS */
         if (GetCPInfo(codepage, &cpInfo) != 0) {
@@ -720,7 +739,8 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
             ptmbci->mbcodepage = codepage;
             ptmbci->mblocalename = nullptr;
 
-            if (cpInfo.MaxCharSize > 1)
+            // Special case for DBCS where we know there may be a leadbyte/trailbyte pattern
+            if (cpInfo.MaxCharSize == 2)
             {
                 /* LeadByte range always terminated by two 0's */
                 for (lbptr = cpInfo.LeadByte; *lbptr && *(lbptr + 1); lbptr += 2)
@@ -762,6 +782,8 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
         /* return failure, code page not changed */
         return -1;
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /***
 *_getmbcp() - Get the current MBC code page
@@ -818,18 +840,18 @@ extern "C" bool __cdecl __acrt_initialize_multibyte()
     {
         // initialize global pointer to the current per-thread mbc information structure
         __acrt_current_multibyte_data.initialize(&__acrt_initial_multibyte_data);
-        
+
         // initialize mbc pointers
         _mbcasemap.initialize_from_array(_mbcasemaps);
         _mbctype  .initialize_from_array(_mbctypes);
-        
+
         // initialize the multibyte globals
         __acrt_ptd* const ptd_head = __acrt_getptd_head();
         for (size_t i = 0; i != __crt_state_management::state_index_count; ++i)
         {
             setmbcp_internal(_MB_CP_ANSI, true, ptd_head + i, &__acrt_current_multibyte_data.dangerous_get_state_array()[i]);
         }
-        
+
         initialized = 1;
     }
 

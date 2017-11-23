@@ -54,25 +54,7 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
     // Convert the character to a multibyte string:
     size_t        in_count    {};
     unsigned char in_buffer[3]{};
-
-	int _locale_mb_cur_max;
-	unsigned int _locale_lc_codepage;
-	LCID _lc_ctype;
-	if (locale)
-	{
-		_locale_mb_cur_max = locale->locinfo->_locale_mb_cur_max;
-		_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
-		_lc_ctype = locale->locinfo->lc_handle[LC_CTYPE];
-	}
-	else
-	{
-		_locale_mb_cur_max = ___mb_cur_max_func();
-		_locale_lc_codepage = ___lc_codepage_func();
-		_lc_ctype = ___lc_handle_func()[LC_CTYPE];
-	}
-
-
-    if (_locale_mb_cur_max > 1 && _isleadbyte_l(c >> 8 & 0xff, locale))
+    if (locale->locinfo->_locale_mb_cur_max > 1 && _isleadbyte_l(c >> 8 & 0xff, locale))
     {
         in_buffer[0] = c >> 8 & 0xff; // Put the lead byte at start of the string
         in_buffer[1] = static_cast<unsigned char>(c);
@@ -92,13 +74,13 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
     unsigned char out_buffer[3]{};
     int const out_count = __crtLCMapStringA(
 		locale,
-		_lc_ctype,
+		locale->locinfo->lc_handle[LC_CTYPE],
         map_flag,
         reinterpret_cast<char const*>(in_buffer),
         static_cast<int>(in_count),
         reinterpret_cast<char*>(out_buffer),
         static_cast<int>(_countof(out_buffer)),
-        _locale_lc_codepage,
+		locale->locinfo->_locale_lc_codepage,
         TRUE);
 
     if (out_count == 0)
@@ -115,6 +97,8 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _tolower_l(int const c, _locale_t const locale)
 {
+	if (!locale)
+		return tolower(c);
     return common_tox_l<internal_isupper_l, internal_map_lower>(c, LCMAP_LOWERCASE, locale);
 }
 #endif
@@ -135,6 +119,8 @@ extern "C" int __cdecl _tolower_l(int const c, _locale_t const locale)
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _toupper_l(int const c, _locale_t const locale)
 {
+	if (!locale)
+		return toupper(c);
     return common_tox_l<internal_islower_l, internal_map_upper>(c, LCMAP_UPPERCASE, locale);
 }
 #endif

@@ -43,6 +43,9 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
         _locale_t plocinfo
         )
 {
+		if(!plocinfo)
+			return _mbsncat(dst, src, cnt);
+
         unsigned char *start;
 
         if (!cnt)
@@ -55,7 +58,7 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
         //_LocaleUpdate _loc_update(plocinfo);
 
         _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (unsigned char *)strncat((char *)dst, (const char *)src, cnt);
         _END_SECURE_CRT_DEPRECATION_DISABLE
 
@@ -71,10 +74,9 @@ extern "C" unsigned char * __cdecl _mbsncat_l(
             --dst;
 
         /* copy over the characters */
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         while (cnt--) {
-            if ( _ismbblead_l(*src, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(*src, plocinfo) ) {
                 *dst++ = *src++;
                 if ((*dst++ = *src++) == '\0') {
                     dst[-2] = '\0';

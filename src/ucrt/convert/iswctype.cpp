@@ -50,7 +50,7 @@ extern "C" int __cdecl _iswctype_l(wint_t const c, wctype_t const mask, _locale_
 //    wchar_t const wide_character = c;
 //
 //    wint_t char_type = 0;
-//    if (GetStringTypeW(CT_CTYPE1, &wide_character, 1, &char_type) == 0)
+//    if (__acrt_GetStringTypeW(CT_CTYPE1, &wide_character, 1, &char_type) == 0)
 //        return 0;
 //
 //    return static_cast<int>(char_type & mask);

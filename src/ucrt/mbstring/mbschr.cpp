@@ -47,20 +47,21 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbschr_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbschr(string, c);
+
         unsigned short cc = '\0';
         //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
 
-        if ((plocinfo? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (_CONST_RETURN unsigned char *)strchr((const char *)string, (int)c);
-
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         for (; (cc = *string) != '\0'; string++)
         {
-            if ( _ismbblead_l(cc, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(cc, plocinfo) )
             {
                 if (*++string == '\0')
                     return nullptr;        /* error */

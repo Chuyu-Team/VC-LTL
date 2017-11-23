@@ -89,7 +89,7 @@ static Character* __cdecl common_getpath(
     Character*       result_it   = result;
     Character* const result_last = result + result_count - 1; // Leave room for \0
 
-//#pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast is confused.
+#pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast is confused.
     while (*source_it != '\0' && *source_it != ';')
     {
         if (*source_it == '"')
@@ -100,7 +100,7 @@ static Character* __cdecl common_getpath(
 
             while (*source_it != '\0' && *source_it != '"')
             {
-//#pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY) // 26015 Prefast is confused.
+#pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY) // 26015 Prefast is confused.
                 *result_it++ = *source_it++;
                 if (result_it == result_last)
                 {

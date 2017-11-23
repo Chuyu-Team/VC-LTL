@@ -101,4 +101,21 @@ BOOL WINAPI __acrt_DllMain(HINSTANCE const hInstance, DWORD const fdwReason, LPV
     return DllMainDispatch(hInstance, fdwReason, lpReserved);
 }
 
+#ifdef _UCRT_ENCLAVE_BUILD
+
+#include <enclaveids.h>
+
+const IMAGE_ENCLAVE_CONFIG __enclave_config = {
+    sizeof(IMAGE_ENCLAVE_CONFIG),
+    0,
+    0,
+    0,
+    0,
+    0,
+    { 0 },
+    ENCLAVE_IMAGE_ID_UCRT,
+};
+
+#endif
+
 } // extern "C"

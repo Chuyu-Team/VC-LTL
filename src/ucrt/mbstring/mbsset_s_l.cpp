@@ -17,6 +17,9 @@
 #ifdef _ATL_XP_TARGETING
 errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned int _Value, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _mbsset_s(_Dst, _SizeInBytes, _Value);
+
     int mbcs_error = 0;
     unsigned char *p;
     size_t available;
@@ -37,8 +40,6 @@ errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned i
     lowval = (unsigned char)(_Value & 0x00ff);
 
     /* ensure _Value is a valid mbchar */
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
     if ((highval != 0 && (lowval == 0 || !_ISMBBLEAD(highval))) ||
         (highval == 0 && _ISMBBLEAD(lowval)))
     {

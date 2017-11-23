@@ -147,7 +147,7 @@ extern "C" extern __inline int (__cdecl isblank)(int const c)
     //    ? (_isblank_l)(c, nullptr)
     //    : ((c == '\t') ? _BLANK : fast_check(c, _BLANK));
 
-	return (MB_CUR_MAX > 1 ? (((c) == '\t') ? _BLANK : _isctype(c, _BLANK)) : (((c) == '\t') ? _BLANK : __chvalidchk(c, _BLANK)));
+	return _isblank_l(c, nullptr);
 
 }
 

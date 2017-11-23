@@ -420,9 +420,9 @@ _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)
 
 #endif
 
-extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
-{
-	return AreFileApisANSI();
+//extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
+//{
+	//return AreFileApisANSI();
 	//if (auto const are_file_apis_ansi = try_get_AreFileApisANSI())
 	//{
 	//	return are_file_apis_ansi();
@@ -431,8 +431,9 @@ extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
 	//// If we were unable to get the AreFileApisANSI function, we can safely
 	//// assume that the file APIs are, in fact, ANSI:
 	//return TRUE;
-}
+//}
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int WINAPI __acrt_CompareStringEx(
     LPCWSTR          const locale_name,
     DWORD            const flags,
@@ -445,17 +446,15 @@ extern "C" int WINAPI __acrt_CompareStringEx(
     LPARAM           const param
     )
 {
-#ifdef _ATL_XP_TARGETING
+
 	/*if (auto const compare_string_ex = try_get_CompareStringEx())
 	{
 		return compare_string_ex(locale_name, flags, string1, string1_count, string2, string2_count, version, reserved, param);
 	}*/
 
 	return CompareStringW(__acrt_LocaleNameToLCID(locale_name, 0), flags, string1, string1_count, string2, string2_count);
-#else
-	return CompareStringEx(locale_name, flags, string1, string1_count, string2, string2_count, version, reserved, param);
-#endif
 }
+#endif
 
 // This has been split into its own function to work around a bug in the Dev12
 // C++ compiler where nested captureless lambdas are not convertible to the
@@ -582,25 +581,22 @@ __if_exists(try_get_GetEnabledXStateFeatures)
 	}
 }
 
-extern "C" int WINAPI __acrt_GetLocaleInfoEx(
-    LPCWSTR const locale_name,
-    LCTYPE  const lc_type,
-    LPWSTR  const data,
-    int     const data_count
-    )
-{
 #ifdef _ATL_XP_TARGETING
+extern "C" int WINAPI __acrt_GetLocaleInfoEx(
+	LPCWSTR const locale_name,
+	LCTYPE  const lc_type,
+	LPWSTR  const data,
+	int     const data_count
+)
+{
+	/*if (auto const get_locale_info_ex = try_get_GetLocaleInfoEx())
+	{
+		return get_locale_info_ex(locale_name, lc_type, data, data_count);
+	}*/
 
-    /*if (auto const get_locale_info_ex = try_get_GetLocaleInfoEx())
-    {
-        return get_locale_info_ex(locale_name, lc_type, data, data_count);
-    }*/
-
-    return GetLocaleInfoW(__acrt_LocaleNameToLCID(locale_name, 0), lc_type, data, data_count);
-#else
-	return GetLocaleInfoEx(locale_name, lc_type, data, data_count);
-#endif
+	return GetLocaleInfoW(__acrt_LocaleNameToLCID(locale_name, 0), lc_type, data, data_count);
 }
+#endif
 
 extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time)
 {
@@ -612,6 +608,7 @@ extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const sy
 	return GetSystemTimeAsFileTime(system_time);
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int WINAPI __acrt_GetTimeFormatEx(
     LPCWSTR           const locale_name,
     DWORD             const flags,
@@ -621,17 +618,15 @@ extern "C" int WINAPI __acrt_GetTimeFormatEx(
     int               const buffer_count
     )
 {
-#ifdef _ATL_XP_TARGETING
+
    /* if (auto const get_time_format_ex = try_get_GetTimeFormatEx())
     {
         return get_time_format_ex(locale_name, flags, time, format, buffer, buffer_count);
     }*/
 
     return GetTimeFormatW(__acrt_LocaleNameToLCID(locale_name, 0), flags, time, format, buffer, buffer_count);
-#else
-	return GetTimeFormatEx(locale_name, flags, time, format, buffer, buffer_count);
-#endif
 }
+#endif
 
 __if_exists(try_get_GetUserDefaultLocaleName)
 {
@@ -665,39 +660,37 @@ __if_exists(try_get_GetXStateFeaturesMask)
 	}
 }
 
-extern "C" BOOL WINAPI __acrt_InitializeCriticalSectionEx(
-    LPCRITICAL_SECTION const critical_section,
-    DWORD              const spin_count,
-    DWORD              const flags
-    )
+__if_exists(try_get_InitializeCriticalSectionEx)
 {
-    //if (auto const initialize_critical_section_ex = try_get_InitializeCriticalSectionEx())
-    //{
-    //    return initialize_critical_section_ex(critical_section, spin_count, flags);
-    //}
+	extern "C" BOOL WINAPI __acrt_InitializeCriticalSectionEx(
+		LPCRITICAL_SECTION const critical_section,
+		DWORD              const spin_count,
+		DWORD              const flags
+	)
+	{
+		if (auto const initialize_critical_section_ex = try_get_InitializeCriticalSectionEx())
+		{
+			return initialize_critical_section_ex(critical_section, spin_count, flags);
+		}
 
-    //return InitializeCriticalSectionAndSpinCount(critical_section, spin_count);
-#ifdef _ATL_XP_TARGETING
-	return InitializeCriticalSectionAndSpinCount(critical_section, spin_count);
-#else
-	return InitializeCriticalSectionEx(critical_section, spin_count, flags);
-#endif
+		return InitializeCriticalSectionAndSpinCount(critical_section, spin_count);
+	}
 }
 
+#ifdef _ATL_XP_TARGETING
 extern "C" BOOL WINAPI __acrt_IsValidLocaleName(LPCWSTR const locale_name)
 {
-#ifdef _ATL_XP_TARGETING
+
    /* if (auto const is_valid_locale_name = try_get_IsValidLocaleName())
     {
         return is_valid_locale_name(locale_name);
     }*/
 
     return IsValidLocale(__acrt_LocaleNameToLCID(locale_name, 0), LCID_INSTALLED);
-#else
-	return IsValidLocaleName(locale_name);
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int WINAPI __acrt_LCMapStringEx(
     LPCWSTR          const locale_name,
     DWORD            const flags,
@@ -710,18 +703,16 @@ extern "C" int WINAPI __acrt_LCMapStringEx(
     LPARAM           const sort_handle
     )
 {
-#ifdef _ATL_XP_TARGETING
     //if (auto const lc_map_string_ex = try_get_LCMapStringEx())
     //{
     //    return lc_map_string_ex(locale_name, flags, source, source_count, destination, destination_count, version, reserved, sort_handle);
     //}
 //#pragma warning(disable:__WARNING_PRECONDITION_NULLTERMINATION_VIOLATION) // 26035 LCMapStringW annotation is presently incorrect 11/26/2014 Jaykrell
     return LCMapStringW(__acrt_LocaleNameToLCID(locale_name, 0), flags, source, source_count, destination, destination_count);
-#else
-	return LCMapStringEx(locale_name, flags, source, source_count, destination, destination_count, version, reserved, sort_handle);
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" int WINAPI __acrt_LCIDToLocaleName(
 	LCID   const locale,
 	LPWSTR const name,
@@ -729,34 +720,29 @@ extern "C" int WINAPI __acrt_LCIDToLocaleName(
 	DWORD  const flags
 )
 {
-#ifdef _ATL_XP_TARGETING
 	if (auto const lcid_to_locale_name = try_get_LCIDToLocaleName())
 	{
 		return lcid_to_locale_name(locale, name, name_count, flags);
 	}
 
 	return __acrt_DownlevelLCIDToLocaleName(locale, name, name_count);
-#else
-	return LCIDToLocaleName(locale, name, name_count, flags);
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 extern "C" LCID WINAPI __acrt_LocaleNameToLCID(
 	LPCWSTR const name,
 	DWORD   const flags
 )
 {
-#ifdef _ATL_XP_TARGETING
-		if (auto const locale_name_to_lcid = try_get_LocaleNameToLCID())
-		{
-			return locale_name_to_lcid(name, flags);
-		}
+	if (auto const locale_name_to_lcid = try_get_LocaleNameToLCID())
+	{
+		return locale_name_to_lcid(name, flags);
+	}
 
 	return __acrt_DownlevelLocaleNameToLCID(name);
-#else
-	return LocaleNameToLCID(name, flags);
-#endif
 }
+#endif
 
 __if_exists(try_get_LocateXStateFeature)
 {
@@ -1110,6 +1096,7 @@ EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr)
 }
 
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C BOOL WINAPI __crtInitOnceExecuteOnce(
 	_Inout_     PINIT_ONCE    InitOnce,
 	_In_        PINIT_ONCE_FN InitFn,
@@ -1117,9 +1104,6 @@ EXTERN_C BOOL WINAPI __crtInitOnceExecuteOnce(
 	_Out_opt_   LPVOID        *Context
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return InitOnceExecuteOnce(InitOnce, InitFn, Parameter, Context);
-#else
 	if(auto const pInitOnceExecuteOnce = try_get_InitOnceExecuteOnce())
 	{
 		return pInitOnceExecuteOnce(InitOnce, InitFn, Parameter, Context);
@@ -1162,18 +1146,14 @@ __Error:
 
 	SetLastError(ERROR_INVALID_DATA);
 	return FALSE;
-
-#endif
 }
+#endif
 
-
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
 	_Out_ PCONDITION_VARIABLE ConditionVariable
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return InitializeConditionVariable(ConditionVariable);
-#else
 	if (auto const pInitializeConditionVariable = try_get_InitializeConditionVariable())
 	{
 		return pInitializeConditionVariable(ConditionVariable);
@@ -1183,18 +1163,16 @@ EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PCRITICAL_SECTION   CriticalSection,
 	_In_    DWORD               dwMilliseconds
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return SleepConditionVariableCS(ConditionVariable, CriticalSection, dwMilliseconds);
-#else
 	if (auto const pSleepConditionVariableCS = try_get_SleepConditionVariableCS())
 	{
 		return pSleepConditionVariableCS(ConditionVariable, CriticalSection, dwMilliseconds);
@@ -1204,16 +1182,14 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C void WINAPI __crtWakeConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return WakeConditionVariable(ConditionVariable);
-#else
 	if (auto const pWakeConditionVariable = try_get_WakeConditionVariable())
 	{
 		return pWakeConditionVariable(ConditionVariable);
@@ -1223,16 +1199,14 @@ EXTERN_C void WINAPI __crtWakeConditionVariable(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID __crtWakeAllConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return WakeAllConditionVariable(ConditionVariable);
-#else
 	if (auto const pWakeAllConditionVariable = try_get_WakeAllConditionVariable())
 	{
 		return pWakeAllConditionVariable(ConditionVariable);
@@ -1242,16 +1216,14 @@ EXTERN_C VOID __crtWakeAllConditionVariable(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtInitializeSRWLock(
 	_Out_ PSRWLOCK SRWLock
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return InitializeSRWLock(SRWLock);
-#else
 	if (auto const pInitializeSRWLock = try_get_InitializeSRWLock())
 	{
 		return pInitializeSRWLock(SRWLock);
@@ -1261,16 +1233,14 @@ EXTERN_C VOID WINAPI __crtInitializeSRWLock(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return AcquireSRWLockExclusive(SRWLock);
-#else
 	if (auto const pAcquireSRWLockExclusive = try_get_AcquireSRWLockExclusive())
 	{
 		return pAcquireSRWLockExclusive(SRWLock);
@@ -1280,8 +1250,8 @@ EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
 EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
@@ -1299,13 +1269,11 @@ EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 }
 
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return ReleaseSRWLockExclusive(SRWLock);
-#else
 	if (auto const pReleaseSRWLockExclusive = try_get_ReleaseSRWLockExclusive())
 	{
 		return pReleaseSRWLockExclusive(SRWLock);
@@ -1315,10 +1283,11 @@ EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
+#endif
 
 
+#ifdef _ATL_XP_TARGETING
 EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PSRWLOCK            SRWLock,
@@ -1326,9 +1295,6 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 	_In_    ULONG               Flags
 )
 {
-#ifndef _ATL_XP_TARGETING
-	return SleepConditionVariableSRW(ConditionVariable, SRWLock, dwMilliseconds, Flags);
-#else
 	if (auto const pSleepConditionVariableSRW = try_get_SleepConditionVariableSRW())
 	{
 		return pSleepConditionVariableSRW(ConditionVariable, SRWLock, dwMilliseconds, Flags);
@@ -1338,9 +1304,8 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 		//不存在接口则崩溃处理
 		abort();
 	}
-#endif
 }
-
+#endif
 
 EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available()
 {

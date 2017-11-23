@@ -54,7 +54,7 @@ extern "C" void __cdecl __acrt_initialize_signal_handlers(void* const encoded_nu
 
 // Gets the address of the global action for one of the signals that has a
 // global action.  Returns nullptr if the given signal does not have a global
-// action.  
+// action.
 static __crt_signal_handler_t* __cdecl get_global_action_nolock(int const signum) throw()
 {
     switch (signum)
@@ -111,6 +111,32 @@ static __crt_signal_handler_t __cdecl signal_failed(int const signum) throw()
     }
 }
 
+// Enclaves have no console, thus also no signals specific to consoles.
+#ifdef _UCRT_ENCLAVE_BUILD
+
+__inline static BOOL is_unsupported_signal(int const signum, __crt_signal_handler_t const sigact)
+{
+    return (sigact == SIG_ACK || sigact == SIG_SGE || signum == SIGINT || signum == SIGBREAK);
+}
+
+__inline static BOOL is_console_signal(int const)
+{
+    return FALSE;
+}
+
+#else /* ^^^ _UCRT_ENCLAVE_BUILD ^^^ // vvv !_UCRT_ENCLAVE_BUILD vvv */
+
+__inline static BOOL is_unsupported_signal(int const, __crt_signal_handler_t const sigact)
+{
+    return (sigact == SIG_ACK || sigact == SIG_SGE);
+}
+
+__inline static BOOL is_console_signal(int const signum)
+{
+    return (signum == SIGINT || signum == SIGBREAK);
+}
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /***
 *static BOOL WINAPI ctrlevent_capture(DWORD ctrl_type) - capture ^C and ^Break events
@@ -183,7 +209,6 @@ static BOOL WINAPI ctrlevent_capture(DWORD const ctrl_type) throw()
     // that the even is being ignored):
     return TRUE;
 }
-
 
 
 /***
@@ -262,9 +287,8 @@ extern "C" __crt_signal_handler_t __cdecl signal(int signum, __crt_signal_handle
 {
     // Check for signal actions that are supported on other platforms but not on
     // this one, and make sure the action is not SIG_DIE:
-    if (sigact == SIG_ACK || sigact == SIG_SGE)
+    if (is_unsupported_signal(signum, sigact))
         return signal_failed(signum);
-
 
     // First, handle the case where the signal does not correspond to an
     // exception in the host OS:
@@ -282,8 +306,9 @@ extern "C" __crt_signal_handler_t __cdecl signal(int signum, __crt_signal_handle
         {
             // If the signal is SIGINT or SIGBREAK make sure the handler is
             // installed to capture ^C and ^Break events:
-            bool const is_console_signal = (signum == SIGINT || signum == SIGBREAK);
-            if (is_console_signal && !console_ctrl_handler_installed)
+            // C4127: conditional expression is constant
+#pragma warning( suppress: 4127 )
+            if (is_console_signal(signum) && !console_ctrl_handler_installed)
             {
                 if (SetConsoleCtrlHandler(ctrlevent_capture, TRUE))
                 {
@@ -465,7 +490,7 @@ extern "C" int __cdecl raise(int const signum)
 
         // For signals that correspond to exceptions, set the pointer to the
         // EXCEPTION_POINTERS structure to nullptr:
-        if (signum == SIGFPE  || signum == SIGSEGV || signum == SIGILL) 
+        if (signum == SIGFPE  || signum == SIGSEGV || signum == SIGILL)
         {
             old_pxcptinfoptrs = ptd->_tpxcptinfoptrs;
             ptd->_tpxcptinfoptrs = nullptr;

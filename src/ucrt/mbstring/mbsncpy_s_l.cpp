@@ -15,6 +15,7 @@
 #include <mbstring.h>
 
 #define _FUNC_NAME _mbsncpy_s_l
+#define _FUNC_NAME_NO_LOCALE _mbsncpy_s
 #define _COUNT _CountInChars
 #define _COUNT_IN_BYTES 0
 

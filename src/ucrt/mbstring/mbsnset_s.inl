@@ -10,6 +10,9 @@
 
 errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, unsigned int _Value, size_t _COUNT, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _FUNC_NAME_NO_LOCALE(_Dst, _SizeInBytes, _Value, _COUNT);
+
     int mbcs_error = 0;
     unsigned char *p;
     size_t available;
@@ -34,8 +37,6 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, unsigned in
     available = _SizeInBytes;
     highval = (unsigned char)(_Value >> 8);
     lowval = (unsigned char)(_Value & 0x00ff);
-
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     /* ensure _Value is a valid mbchar */
     if ((highval != 0 && (lowval == 0 || !_ISMBBLEAD(highval))) ||

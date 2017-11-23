@@ -47,6 +47,9 @@ extern "C" int __cdecl _mbsncoll_l(
         _locale_t plocinfo
         )
 {
+		if(!plocinfo)
+			return _mbsncoll(s1, s2, n);
+
         int ret;
         size_t bcnt1, bcnt2;
         //_LocaleUpdate _loc_update(plocinfo);
@@ -59,23 +62,21 @@ extern "C" int __cdecl _mbsncoll_l(
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(n <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return _strncoll_l((const char *)s1, (const char *)s2, n, plocinfo);
 
         bcnt1 = _mbsnbcnt_l(s1, n, plocinfo);
         bcnt2 = _mbsnbcnt_l(s2, n, plocinfo);
 
-		auto mbcinfo = plocinfo ? plocinfo->mbcinfo : __acrt_getptd()->_multibyte_info;
-
         if ( 0 == (ret = __crtCompareStringA(
                         plocinfo,
-                        mbcinfo->mblcid,
+                        plocinfo->mbcinfo->mblcid,
                         SORT_STRINGSORT,
                         (const char *)s1,
                         (int)bcnt1,
                         (char *)s2,
                         (int)bcnt2,
-                        mbcinfo->mbcodepage )) )
+                        plocinfo->mbcinfo->mbcodepage )) )
         {
             errno = EINVAL;
             return _NLSCMPERROR;

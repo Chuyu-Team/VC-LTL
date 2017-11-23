@@ -11,7 +11,6 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast can't see that we are checking for terminal nul.
 
@@ -44,6 +43,9 @@ extern "C" int __cdecl _wcsicmp_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _wcsicmp(dst, src);
+
     wchar_t f,l;
     //_LocaleUpdate _loc_update(plocinfo);
 
@@ -51,9 +53,7 @@ extern "C" int __cdecl _wcsicmp_l (
     _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
 
-	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
-
-    if (_lc_ctype==0)
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0)
     {
         do
         {

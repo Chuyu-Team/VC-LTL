@@ -30,25 +30,15 @@ extern "C" int __cdecl _ismbstrail_l(
     _VALIDATE_RETURN(current != nullptr, EINVAL, 0);
 
     //_LocaleUpdate locale_update(locale);
-	int ismbcodepage;
-	unsigned char* mbctype;
-	if (locale)
-	{
-		ismbcodepage = locale->mbcinfo->ismbcodepage;
-		mbctype = locale->mbcinfo->mbctype;
-	}
-	else
-	{
-		ismbcodepage = _getmbcp();
-		mbctype = __acrt_getptd()->_multibyte_info->mbctype;
-	}
+	if (!locale)
+		return _ismbstrail(string, current);
 
-    if (ismbcodepage == 0)
+    if (locale->mbcinfo->ismbcodepage == 0)
         return 0;
 
     while (string <= current && *string)
     {
-        if (_ismbblead_l((*string), locale_update.GetLocaleT()))
+        if (_ismbblead_l((*string), locale))
         {
             if (++string == current) // check trail byte
                 return -1;

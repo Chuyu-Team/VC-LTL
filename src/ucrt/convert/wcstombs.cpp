@@ -124,7 +124,7 @@ static size_t __cdecl _wcstombs_l_helper (
 
     if (s)
     {
-        if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/ locale==0)
+        if (locale==0)
         {
             /* C locale: easy and fast */
             /* Actually, there are such wchar_t characters which are > 255,
@@ -203,13 +203,13 @@ static size_t __cdecl _wcstombs_l_helper (
                 /* buffer not large enough, must do char by char */
                 while (count < n)
                 {
-                    int mb_cur_max = _locale_mb_cur_max;
+                    //int mb_cur_max = _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max;
                     if ( ((retval = WideCharToMultiByte( _locale_lc_codepage,
                                                          0,
                                                          pwcs,
                                                          1,
                                                          buffer,
-                                                         __min(MB_LEN_MAX, mb_cur_max),
+                                                         __min(MB_LEN_MAX, _locale_mb_cur_max),
                                                          nullptr,
                                                          &defused )) == 0)
                          || defused )
@@ -241,7 +241,7 @@ static size_t __cdecl _wcstombs_l_helper (
         }
     }
     else { /* s == nullptr, get size only, pwcs must be NUL-terminated */
-        if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/locale==0)
+        if (locale==0)
         {
             size_t len = 0;
             for (wchar_t *pw = (wchar_t *)pwcs; *pw != 0; pw++)  /* validate high byte */

@@ -19,13 +19,6 @@ _CRT_BEGIN_C_HEADER
  // Multibyte full-width-latin upper/lower info
 #define NUM_ULINFO 6
 
-#define _mbctype_func() (_getmbcp(),__acrt_getptd()->_multibyte_info->mbctype)
-
-#define mbstring_thunks(p) \
-const unsigned char* mbctype;\
-const unsigned short*_locale_pctype;\
-if(p){mbctype=(p)->mbcinfo->mbctype;_locale_pctype=(p)->locinfo->_locale_pctype;}\
-else{mbctype=_mbctype_func();_locale_pctype=__PCTYPE_FUNC;}
 
 #define _ismbbtruelead(_lb,_ch) (!(_lb) && _ismbblead((_ch)))
 
@@ -37,20 +30,20 @@ else{mbctype=_mbctype_func();_locale_pctype=__PCTYPE_FUNC;}
 #define _mbbtoupper(_c) (_mbbislower(_c) ? _mbcasemap[_c] : _c)
 
 #define _ismbbtruelead_l(_lb,_ch,p)   (!(_lb) && _ismbblead_l((_ch), p))
-#define _mbbisupper_l(_c, p)      ((mbctype[(_c) + 1] & _SBUP) == _SBUP)
-#define _mbbislower_l(_c, p)      ((mbctype[(_c) + 1] & _SBLOW) == _SBLOW)
-#define _mbbtolower_l(_c, p)      (_mbbisupper_l(_c, p) ? mbcasemap[_c] : _c)
-#define _mbbtoupper_l(_c, p)      (_mbbislower_l(_c, p) ? mbcasemap[_c] : _c)
+#define _mbbisupper_l(_c, p)      ((p->mbcinfo->mbctype[(_c) + 1] & _SBUP) == _SBUP)
+#define _mbbislower_l(_c, p)      ((p->mbcinfo->mbctype[(_c) + 1] & _SBLOW) == _SBLOW)
+#define _mbbtolower_l(_c, p)      (_mbbisupper_l(_c, p) ? p->mbcinfo->mbcasemap[_c] : _c)
+#define _mbbtoupper_l(_c, p)      (_mbbislower_l(_c, p) ? p->mbcinfo->mbcasemap[_c] : _c)
 
 /* define full-width-latin upper/lower ranges */
 
-#define _MBUPPERLOW1_MT(p)  mbulinfo[0]
-#define _MBUPPERHIGH1_MT(p) mbulinfo[1]
-#define _MBCASEDIFF1_MT(p)  mbulinfo[2]
+#define _MBUPPERLOW1_MT(p)  p->mbcinfo->mbulinfo[0]
+#define _MBUPPERHIGH1_MT(p) p->mbcinfo->mbulinfo[1]
+#define _MBCASEDIFF1_MT(p)  p->mbcinfo->mbulinfo[2]
 
-#define _MBUPPERLOW2_MT(p)  mbulinfo[3]
-#define _MBUPPERHIGH2_MT(p) mbulinfo[4]
-#define _MBCASEDIFF2_MT(p)  mbulinfo[5]
+#define _MBUPPERLOW2_MT(p)  p->mbcinfo->mbulinfo[3]
+#define _MBUPPERHIGH2_MT(p) p->mbcinfo->mbulinfo[4]
+#define _MBCASEDIFF2_MT(p)  p->mbcinfo->mbulinfo[5]
 
 // Kanji-specific ranges
 #define _MBHIRALOW      0x829f  // Hiragana
@@ -65,24 +58,24 @@ else{mbctype=_mbctype_func();_locale_pctype=__PCTYPE_FUNC;}
 #define _MBKIGOUEXCEPT  0x817f  // Exception
 
 // Macros used in the implementation of the classification functions.
-#define _ismbbalnum_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
+#define _ismbbalnum_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
                                 (_ALPHA|_DIGIT)) || \
-                                ((mbctype+1)[(unsigned char)(_c)] & _MS))
-#define _ismbbalpha_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
+                                (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MS))
+#define _ismbbalpha_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
                             (_ALPHA)) || \
-                            ((mbctype+1)[(unsigned char)(_c)] & _MS))
-#define _ismbbgraph_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
+                            (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MS))
+#define _ismbbgraph_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
                             (_PUNCT|_ALPHA|_DIGIT)) || \
-                            ((mbctype+1)[(unsigned char)(_c)] & (_MS|_MP)))
-#define _ismbbprint_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & \
+                            (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & (_MS|_MP)))
+#define _ismbbprint_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
                             (_BLANK|_PUNCT|_ALPHA|_DIGIT)) || \
-                            ((mbctype + 1)[(unsigned char)(_c)] & (_MS|_MP)))
-#define _ismbbpunct_l(_c, pt)  (((_locale_pctype)[(unsigned char)(_c)] & _PUNCT) || \
-                                ((mbctype+1)[(unsigned char)(_c)] & _MP))
-#define _ismbbblank_l(_c, pt)  (((_c) == '\t') ? _BLANK : ((_locale_pctype)[(unsigned char)(_c)] & _BLANK) || \
-                               ((mbctype+1)[(unsigned char)(_c)] & _MP))
-#define _ismbblead_l(_c, p)   ((mbctype + 1)[(unsigned char)(_c)] & _M1)
-#define _ismbbtrail_l(_c, p)  ((mbctype + 1)[(unsigned char)(_c)] & _M2)
+                            (((pt)->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & (_MS|_MP)))
+#define _ismbbpunct_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & _PUNCT) || \
+                                (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MP))
+#define _ismbbblank_l(_c, pt)  (((_c) == '\t') ? _BLANK : (((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & _BLANK) || \
+                               (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MP))
+#define _ismbblead_l(_c, p)   ((p->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & _M1)
+#define _ismbbtrail_l(_c, p)  ((p->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & _M2)
 
 
 

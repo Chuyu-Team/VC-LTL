@@ -17,6 +17,9 @@
 #ifdef _ATL_XP_TARGETING
 unsigned char * __cdecl _mbstok_s_l(unsigned char *_String, const unsigned char *_Control, unsigned char **_Context, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _mbstok_s(_String, _Control, _Context);
+
     unsigned char *token;
     const unsigned char *ctl;
     int dbc;
@@ -40,8 +43,6 @@ unsigned char * __cdecl _mbstok_s_l(unsigned char *_String, const unsigned char 
 
     /* Find beginning of token (skip over leading delimiters). Note that
     * there is no token iff this loop sets string to point to the terminal null. */
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
     for ( ; *_String != 0; _String++)
     {
         for (ctl = _Control; *ctl != 0; ctl++)

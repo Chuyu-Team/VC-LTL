@@ -45,6 +45,9 @@ extern "C" int __cdecl _mbsnbcmp_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsnbcmp(s1, s2, n);
+
         unsigned short c1, c2;
 
         if (n==0)
@@ -52,31 +55,29 @@ extern "C" int __cdecl _mbsnbcmp_l(
 
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return strncmp((const char *)s1, (const char *)s2, n);
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
 
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         while (n--) {
 
             c1 = *s1++;
-            if ( _ismbblead_l(c1, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(c1, plocinfo) )
             {
                 if (n==0)
                 {
                     c1 = 0; /* 'naked' lead - end of string */
-                    c2 = _ismbblead_l(*s2, _loc_update.GetLocaleT()) ? 0 : *s2;
+                    c2 = _ismbblead_l(*s2, plocinfo) ? 0 : *s2;
                     goto test;
                 }
                 c1 = ( (*s1 == '\0') ? 0 : ((c1<<8) | *s1++) );
             }
 
             c2 = *s2++;
-            if ( _ismbblead_l(c2, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(c2, plocinfo) )
             {
                 if (n==0)
                 {

@@ -33,25 +33,19 @@
 *
 *******************************************************************************/
 
-#define mbclevel_helper(p)\
-int mbcodepage;\
-unsigned char* mbctype;\
-if (p){	mbcodepage = p->mbcinfo->mbcodepage;mbctype = p->mbcinfo->mbctype;}\
-else{mbcodepage = _getmbcp();mbctype = __acrt_getptd()->_multibyte_info->mbctype;}
-
-
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcl0_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _ismbcl0(c);
     //_LocaleUpdate _loc_update(plocinfo);
-	mbclevel_helper(plocinfo);
 
-    return( (mbcodepage == _KANJI_CP) &&
-            (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
-            (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) &&
+    return( (plocinfo->mbcinfo->mbcodepage == _KANJI_CP) &&
+            (_ismbblead_l(c >> 8, plocinfo)) &&
+            (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c < 0x889f) );
 }
 #endif
@@ -86,12 +80,13 @@ extern "C" int __cdecl _ismbcl1_l(
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _ismbcl1(c);
     //_LocaleUpdate _loc_update(plocinfo);
-	mbclevel_helper(plocinfo);
 
-    return( (mbcodepage == _KANJI_CP) &&
-            (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
-            (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) &&
+    return( (plocinfo->mbcinfo->mbcodepage == _KANJI_CP) &&
+            (_ismbblead_l(c >> 8, plocinfo)) &&
+            (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c >= 0x889f) && (c <= 0x9872) );
 }
 #endif
@@ -126,12 +121,13 @@ extern "C" int __cdecl _ismbcl2_l(
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _ismbcl2(c);
     //_LocaleUpdate _loc_update(plocinfo);
-	mbclevel_helper(plocinfo);
 
-    return( (mbcodepage == _KANJI_CP) &&
-            (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
-            (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) &&
+    return( (plocinfo->mbcinfo->mbcodepage == _KANJI_CP) &&
+            (_ismbblead_l(c >> 8, plocinfo)) &&
+            (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c >= 0x989f) && (c <= 0xEAA4) );
 }
 #endif

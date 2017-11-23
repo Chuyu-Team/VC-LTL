@@ -44,6 +44,9 @@ extern "C" int __cdecl _strcoll_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return strcoll(_string1, _string2);
+
     int ret;
     //_LocaleUpdate _loc_update(plocinfo);
 
@@ -51,19 +54,17 @@ extern "C" int __cdecl _strcoll_l (
     _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
 
-	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
-
-    if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_COLLATE] == nullptr*/_lc_collate==0)
+    if ( plocinfo->locinfo->lc_handle[LC_COLLATE] == 0 )
             return strcmp(_string1, _string2);
 
     if ( 0 == (ret = __crtCompareStringA(
-                    plocinfo, _lc_collate,
+                    plocinfo, plocinfo->locinfo->lc_handle[LC_COLLATE],
                                SORT_STRINGSORT,
                                _string1,
                                -1,
                                _string2,
                                -1,
-                    plocinfo? plocinfo->locinfo->lc_collate_cp : ___lc_collate_cp_func())) )
+                    plocinfo->locinfo->lc_collate_cp )) )
     {
         errno = EINVAL;
         return _NLSCMPERROR;

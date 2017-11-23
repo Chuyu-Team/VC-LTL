@@ -39,8 +39,8 @@
 *
 *******************************************************************************/
 
-#pragma warning(suppress:6101) // Returning uninitialized memory '*dst'.  A successful path through the function does not set the named _Out_ parameter.
 #ifdef _ATL_XP_TARGETING
+#pragma warning(suppress:6101) // Returning uninitialized memory '*dst'.  A successful path through the function does not set the named _Out_ parameter.
 extern "C" unsigned char * __cdecl _mbsncpy_l(
         unsigned char *dst,
         const unsigned char *src,
@@ -48,6 +48,9 @@ extern "C" unsigned char * __cdecl _mbsncpy_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsncpy(dst, src, cnt);
+
         unsigned char *start = dst;
         //_LocaleUpdate _loc_update(plocinfo);
 
@@ -56,17 +59,15 @@ extern "C" unsigned char * __cdecl _mbsncpy_l(
         _VALIDATE_RETURN(src != nullptr || cnt == 0, EINVAL, nullptr);
 
         _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
 #pragma warning(suppress:__WARNING_BANNED_API_USAGE)
             return (unsigned char *)strncpy((char *)dst, (const char *)src, cnt);
         _END_SECURE_CRT_DEPRECATION_DISABLE
 
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         while (cnt) {
 
             cnt--;
-            if ( _ismbblead_l(*src, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(*src, plocinfo) ) {
                 *dst++ = *src++;
                 if ((*dst++ = *src++) == '\0') {
                     dst[-2] = '\0';

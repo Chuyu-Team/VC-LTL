@@ -59,10 +59,16 @@ extern "C" unsigned char * __cdecl _mbsspnp_l
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+#ifndef _RETURN_PTR
+			return _mbsspn(string, charset);
+#else
+			return _mbsspnp(string, charset);
+#endif
         unsigned char *p, *q;
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
 #ifndef _RETURN_PTR
             return strspn((const char *)string, (const char *)charset);
 #else  /* _RETURN_PTR */
@@ -83,13 +89,11 @@ extern "C" unsigned char * __cdecl _mbsspnp_l
 #endif  /* _RETURN_PTR */
 
         /* loop through the string to be inspected */
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         for (q = (unsigned char *)string; *q; q++) {
 
             /* loop through the charset */
             for (p = (unsigned char *)charset; *p; p++) {
-                if ( _ismbblead_l(*p, _loc_update.GetLocaleT()) ) {
+                if ( _ismbblead_l(*p, plocinfo) ) {
                     if (((*p == *q) && (p[1] == q[1])) || p[1] == '\0')
                         break;
                     p++;
@@ -102,7 +106,7 @@ extern "C" unsigned char * __cdecl _mbsspnp_l
             if (*p == '\0')         /* end of charset? */
                 break;              /* yes, no match on this char */
 
-            if ( _ismbblead_l(*q, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(*q, plocinfo) )
                 if (*++q == '\0')
                     break;
         }

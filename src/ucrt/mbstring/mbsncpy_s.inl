@@ -10,10 +10,12 @@
 *       _COUNT_IN_BYTES defined to 0 implements _mbsncpy_s
 *
 ****/
-#include <mbctype.h>
 
 errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, size_t _COUNT, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _FUNC_NAME_NO_LOCALE(_Dst, _SizeInBytes, _Src, _COUNT);
+
     unsigned char *p;
     size_t available;
     BOOL fFoundInvalidMBC;
@@ -124,8 +126,6 @@ errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsig
             /* Note that available is not decremented here. */
         }
     }
-
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     if (available == 0)
     {

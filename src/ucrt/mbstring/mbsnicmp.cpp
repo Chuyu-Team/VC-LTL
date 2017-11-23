@@ -46,33 +46,17 @@ extern "C" int __cdecl _mbsnicmp_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsnicmp(s1, s2, n);
+
         unsigned short c1, c2;
 
         if (n==0)
             return(0);
 
         //_LocaleUpdate _loc_update(plocinfo);
-        if ((plocinfo? plocinfo->mbcinfo->ismbcodepage:_getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return _strnicmp((const char *)s1, (const char *)s2, n);
-
-		unsigned char*  mbctype;
-		unsigned short* mbulinfo;
-		unsigned char*  mbcasemap;
-
-		if (plocinfo)
-		{
-			mbctype = plocinfo->mbcinfo->mbctype;
-			mbulinfo = plocinfo->mbcinfo->mbulinfo;
-			mbcasemap = plocinfo->mbcinfo->mbcasemap;
-		}
-		else
-		{
-			auto mbcinfo = __acrt_getptd()->_multibyte_info;
-
-			mbctype = mbcinfo->mbctype;
-			mbulinfo = mbcinfo->mbulinfo;
-			mbcasemap = mbcinfo->mbcasemap;
-		}
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
@@ -81,39 +65,39 @@ extern "C" int __cdecl _mbsnicmp_l(
         while (n--) {
 
             c1 = *s1++;
-            if ( _ismbblead_l(c1, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(c1, plocinfo) ) {
                 if (*s1 == '\0')
                     c1 = 0;
                 else {
                     c1 = ((c1<<8) | *s1++);
 
-                    if ( ((c1 >= _MBUPPERLOW1_MT(_loc_update.GetLocaleT())) &&
-                          (c1 <= _MBUPPERHIGH1_MT(_loc_update.GetLocaleT()))) )
-                        c1 += _MBCASEDIFF1_MT(_loc_update.GetLocaleT());
-                    else if ( ((c1 >= _MBUPPERLOW2_MT(_loc_update.GetLocaleT())) &&
-                               (c1 <= _MBUPPERHIGH2_MT(_loc_update.GetLocaleT()))) )
-                        c1 += _MBCASEDIFF2_MT(_loc_update.GetLocaleT());
+                    if ( ((c1 >= _MBUPPERLOW1_MT(plocinfo)) &&
+                          (c1 <= _MBUPPERHIGH1_MT(plocinfo))) )
+                        c1 += _MBCASEDIFF1_MT(plocinfo);
+                    else if ( ((c1 >= _MBUPPERLOW2_MT(plocinfo)) &&
+                               (c1 <= _MBUPPERHIGH2_MT(plocinfo))) )
+                        c1 += _MBCASEDIFF2_MT(plocinfo);
                 }
             }
             else
-                c1 = _mbbtolower_l(c1, _loc_update.GetLocaleT());
+                c1 = _mbbtolower_l(c1, plocinfo);
 
             c2 = *s2++;
-            if ( _ismbblead_l(c2, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(c2, plocinfo) ) {
                 if (*s2 == '\0')
                     c2 = 0;
                 else {
                     c2 = ((c2<<8) | *s2++);
-                    if ( ((c2 >= _MBUPPERLOW1_MT(_loc_update.GetLocaleT())) &&
-                          (c2 <= _MBUPPERHIGH1_MT(_loc_update.GetLocaleT()))) )
-                        c2 += _MBCASEDIFF1_MT(_loc_update.GetLocaleT());
-                    else if ( ((c2 >= _MBUPPERLOW2_MT(_loc_update.GetLocaleT())) &&
-                               (c2 <= _MBUPPERHIGH2_MT(_loc_update.GetLocaleT()))) )
-                        c2 += _MBCASEDIFF2_MT(_loc_update.GetLocaleT());
+                    if ( ((c2 >= _MBUPPERLOW1_MT(plocinfo)) &&
+                          (c2 <= _MBUPPERHIGH1_MT(plocinfo))) )
+                        c2 += _MBCASEDIFF1_MT(plocinfo);
+                    else if ( ((c2 >= _MBUPPERLOW2_MT(plocinfo)) &&
+                               (c2 <= _MBUPPERHIGH2_MT(plocinfo))) )
+                        c2 += _MBCASEDIFF2_MT(plocinfo);
                 }
             }
             else
-                c2 = _mbbtolower_l(c2, _loc_update.GetLocaleT());
+                c2 = _mbbtolower_l(c2, plocinfo);
 
             if (c1 != c2)
                 return( (c1 > c2) ? 1 : -1 );

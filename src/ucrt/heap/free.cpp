@@ -15,7 +15,7 @@
 // Both _free_dbg and _free_base must also be marked noinline
 // to prevent identical COMDAT folding from substituting calls to free
 // with either other function or vice versa.
-extern "C" __declspec(noinline) void __cdecl free(void* const block)
+extern "C" _CRT_HYBRIDPATCHABLE __declspec(noinline) void __cdecl free(void* const block)
 {
     // Some libraries that hook memory allocation routines (such as libtcmalloc)
     // look for an appropriate place inside free to place a patch to its version

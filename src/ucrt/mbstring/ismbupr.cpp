@@ -37,12 +37,14 @@
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _ismbcupper_l(unsigned int const c, _locale_t const locale)
 {
+	if (!locale)
+		return _ismbcupper(c);
+
     //_LocaleUpdate locale_update(locale);
 
     if (c <= 0x00FF)
     {
-		unsigned char* mbctype = locale ? locale->mbcinfo->mbctype : _mbctype_func();
-        return _mbbisupper_l(c, locale_update.GetLocaleT());
+        return _mbbisupper_l(c, locale);
     }
 
     return __dcrt_multibyte_check_type(c, locale, _UPPER, true);

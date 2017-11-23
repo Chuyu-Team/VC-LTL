@@ -204,6 +204,10 @@ __forceinline static void __cdecl convert_to_fos_high_precision(
 
     *exponent = k; // k is now correct; store it for our caller
 
+    // convert_to_fos_high_precision() generates digits assuming we're formatting with %f
+    // When %e is the format specifier, adding the exponent to the number of required digits
+    // is not needed. To avoid a change in export surface, this is supported by controlling the
+    // size of the mantissa buffer by the caller (see fp_format_e()).
     uint32_t const required_digits = k >= 0 && precision <= INT_MAX
         ? k + precision
         : precision;

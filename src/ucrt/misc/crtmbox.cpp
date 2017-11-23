@@ -34,9 +34,8 @@ static int __cdecl common_show_message_box(
 {
     using traits = __crt_char_traits<Character>;
 
-    bool const show_ui = __acrt_get_developer_information_policy() == developer_information_policy_ui;
-
-    if (IsDebuggerPresent())
+    bool const debugger_attached = IsDebuggerPresent();
+    if (debugger_attached)
     {
         // Output the message to the attached debugger.  This is useful when
         // remotely debugging.
@@ -46,20 +45,23 @@ static int __cdecl common_show_message_box(
         }
 
         // We do not want to display a message box if a debugger
-        // is already attached.  Instead, let the caller know that we want to
+        // is already attached, unless it's a desktop app.
+        // Instead, let the caller know that we want to
         // directly break into the debugger:
-        if (show_ui)
+        bool const is_desktop_app = __acrt_get_windowing_model_policy() == windowing_model_policy_hwnd;
+        if (!is_desktop_app)
         {
             return IDRETRY; // Retry = Break into the debugger
         }
     }
 
+    bool const show_ui = __acrt_get_developer_information_policy() == developer_information_policy_ui;
     if (!show_ui || !__acrt_can_show_message_box())
     {
         // If we can't get the message box pointers (perhaps because running on CoreSys),
         // just abort, unless a debugger is attached--then break into the debugger instead.
         // The message string was already output to the debugger above.
-        return IsDebuggerPresent() ? IDRETRY : IDABORT;
+        return debugger_attached ? IDRETRY : IDABORT;
     }
 
     // If the current process isn't attached to a visible window station (e.g.

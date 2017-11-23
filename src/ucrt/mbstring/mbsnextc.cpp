@@ -41,6 +41,9 @@ extern "C" unsigned int __cdecl _mbsnextc_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsnextc(s);
+
         unsigned int  next = 0;
         //_LocaleUpdate _loc_update(plocinfo);
 
@@ -50,10 +53,7 @@ extern "C" unsigned int __cdecl _mbsnextc_l(
         /* don't skip forward 2 if the leadbyte is followed by EOS (dud string)
            also don't assert as we are too low-level
         */
-
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : _mbctype_func();
-
-        if ( _ismbblead_l(*s, _loc_update.GetLocaleT()) && s[1]!='\0')
+        if ( _ismbblead_l(*s, plocinfo) && s[1]!='\0')
             next = ((unsigned int) *s++) << 8;
 
         next += (unsigned int) *s;

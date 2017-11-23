@@ -44,12 +44,9 @@ int __cdecl strcmp (
         int ret = 0 ;
 
         while((ret = *(unsigned char *)src - *(unsigned char *)dst) == 0 && *dst)
+                {
                 ++src, ++dst;
+                }
 
-        if ( ret < 0 )
-                ret = -1 ;
-        else if ( ret > 0 )
-                ret = 1 ;
-
-        return( ret );
+        return ((-ret) < 0) - (ret < 0); // (if positive) - (if negative) generates branchless code
 }

@@ -45,16 +45,17 @@ extern "C" size_t __cdecl _mbsnbcnt_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsnbcnt(string, ccnt);
+
         unsigned char *p;
         //_LocaleUpdate _loc_update(plocinfo);
 
         /* validation section */
         _VALIDATE_RETURN(string != nullptr || ccnt == 0, EINVAL, 0);
 
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : _mbctype_func();
-
         for (p = (unsigned char *)string; (ccnt-- && *p); p++) {
-            if ( _ismbblead_l(*p, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(*p, plocinfo) ) {
                 if (*++p == '\0') {
                     --p;
                     break;

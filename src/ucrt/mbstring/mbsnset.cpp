@@ -62,6 +62,9 @@ extern "C" unsigned char * __cdecl _mbsnset_l(
         _locale_t plocinfo
         )
 {
+		if(!plocinfo)
+			return _mbsnset(string, val, count);
+
         unsigned char  *start = string;
         unsigned int leadbyte = 0;
         unsigned char highval, lowval;
@@ -75,14 +78,11 @@ extern "C" unsigned char * __cdecl _mbsnset_l(
          * a lead byte or not.
          */
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (unsigned char *)_strnset((char *)string, val, count);
 _END_SECURE_CRT_DEPRECATION_DISABLE
 
         highval = static_cast<unsigned char>(val >> 8);
-
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         if (highval != 0)
         {
 
@@ -106,11 +106,11 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
             }
 
             while (count-- && *string) {
-                leadbyte = _ismbbtruelead_l(leadbyte, *string, _loc_update.GetLocaleT());
+                leadbyte = _ismbbtruelead_l(leadbyte, *string, plocinfo);
                 *string++ = highval;
 
                 if (*string) {
-                    leadbyte = _ismbbtruelead_l(leadbyte, *string, _loc_update.GetLocaleT());
+                    leadbyte = _ismbbtruelead_l(leadbyte, *string, plocinfo);
                     *string++ = lowval;
                 }
                 else
@@ -123,7 +123,7 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
             /* single byte value */
 
             while (count-- && *string) {
-                leadbyte = _ismbbtruelead_l(leadbyte, *string, _loc_update.GetLocaleT());
+                leadbyte = _ismbbtruelead_l(leadbyte, *string, plocinfo);
                 *string++ = (unsigned char)val;
             }
         }

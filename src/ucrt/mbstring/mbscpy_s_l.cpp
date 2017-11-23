@@ -15,8 +15,11 @@
 #include <corecrt_internal_securecrt.h>
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
+errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _mbscpy_s(_Dst, _SizeInBytes, _Src);
+
     unsigned char *p;
     size_t available;
     BOOL fIsLeadPrefix;
@@ -42,8 +45,6 @@ EXTERN_C errno_t __cdecl _mbscpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, c
      * Only exception to that is if last mbc was invalid (leadbyte+null), which
      * is treated as null. In that case clear the copied lead byte and return ok.
      */
-
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     if (available == 0)
     {

@@ -12,7 +12,6 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
 
 /***
 *int _memicmp(first, last, count) - compare two blocks of memory, ignore case
@@ -47,6 +46,9 @@ extern "C" int __cdecl _memicmp_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _memicmp(first, last, count);
+
     int f = 0, l = 0;
     const char *dst = (const char *)first, *src = (const char *)last;
     //_LocaleUpdate _loc_update(plocinfo);
@@ -55,7 +57,7 @@ extern "C" int __cdecl _memicmp_l (
     _VALIDATE_RETURN(first != nullptr || count == 0, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(last != nullptr || count == 0, EINVAL, _NLSCMPERROR);
 
-    if ((plocinfo? plocinfo->locinfo->lc_handle:___lc_handle_func())[LC_CTYPE] == 0 )
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
     {
         return __ascii_memicmp(first, last, count);
     }
@@ -63,8 +65,8 @@ extern "C" int __cdecl _memicmp_l (
     {
         while (count-- && f==l)
         {
-            f = _tolower_l( (unsigned char)(*(dst++)), plocinfo);
-            l = _tolower_l( (unsigned char)(*(src++)), plocinfo);
+            f = _tolower_l( (unsigned char)(*(dst++)), plocinfo );
+            l = _tolower_l( (unsigned char)(*(src++)), plocinfo );
         }
     }
     return ( f - l );

@@ -123,9 +123,7 @@ static errno_t __cdecl _strupr_s_l_stat (
     }
     _FILL_STRING(string, sizeInBytes, stringlen + 1);
 
-	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
-
-    if ( _lc_ctype == 0 )
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
     {
         char *cp=string;       /* traverses string for C locale conversion */
 
@@ -141,17 +139,15 @@ static errno_t __cdecl _strupr_s_l_stat (
     }   /* C locale */
 
     /* Inquire size of dst string */
-	auto _locale_lc_codepage = plocinfo ? plocinfo->locinfo->_locale_lc_codepage : ___lc_codepage_func();
-
     if ( 0 == (dstsize = __crtLCMapStringA(
                     plocinfo,
-                    _lc_ctype,
+                    plocinfo->locinfo->lc_handle[LC_CTYPE],
                     LCMAP_UPPERCASE,
                     string,
                     -1,
                     nullptr,
                     0,
-                    _locale_lc_codepage,
+                    plocinfo->locinfo->_locale_lc_codepage,
                     TRUE )) )
     {
         errno = EILSEQ;
@@ -175,13 +171,13 @@ static errno_t __cdecl _strupr_s_l_stat (
     /* Map src string to dst string in alternate case */
     if (__crtLCMapStringA(
                 plocinfo,
-                _lc_ctype,
+                plocinfo->locinfo->lc_handle[LC_CTYPE],
                 LCMAP_UPPERCASE,
                 string,
                 -1,
                 dst.get(),
                 dstsize,
-                _locale_lc_codepage,
+                plocinfo->locinfo->_locale_lc_codepage,
                 TRUE ) != 0)
     {
         /* copy dst string to return string */
@@ -200,6 +196,9 @@ extern "C" errno_t __cdecl _strupr_s_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _strupr_s(string, sizeInBytes);
+
     //_LocaleUpdate _loc_update(plocinfo);
 
     return _strupr_s_l_stat(string, sizeInBytes, plocinfo);

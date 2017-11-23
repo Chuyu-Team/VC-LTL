@@ -42,6 +42,9 @@ extern "C" unsigned char * __cdecl _mbsdec_l(
         _locale_t plocinfo
         )
 {
+		if(!plocinfo)
+			return _mbsdec(string, current);
+
         const unsigned char *temp;
 
         /* validation section */
@@ -53,7 +56,7 @@ extern "C" unsigned char * __cdecl _mbsdec_l(
 
         //_LocaleUpdate _loc_update(plocinfo);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (unsigned char *)--current;
 
         temp = current - 1;
@@ -94,9 +97,7 @@ extern "C" unsigned char * __cdecl _mbsdec_l(
  *  If even, then there are an even number of "lead bytes" preceding the
  *  single/trail byte (current - 1), indicating a single byte character.
  */
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
-        while ( (string <= --temp) && (_ismbblead_l(*temp, _loc_update.GetLocaleT())) )
+        while ( (string <= --temp) && (_ismbblead_l(*temp, plocinfo)) )
                 ;
 
         return (unsigned char *)(current - 1 - ((current - temp) & 0x01) );

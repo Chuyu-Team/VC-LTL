@@ -46,6 +46,9 @@ extern "C" int __cdecl _mbsicmp_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsicmp(s1, s2);
+
         unsigned short c1, c2;
         //_LocaleUpdate _loc_update(plocinfo);
         int    retval;
@@ -55,34 +58,13 @@ extern "C" int __cdecl _mbsicmp_l(
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return _stricmp_l((const char *)s1, (const char *)s2, plocinfo);
-
-		int mblcid;
-		int mbcodepage;
-		unsigned char*  mbcasemap;
-		unsigned char*  mbctype;
-		if (plocinfo)
-		{
-			mbcodepage = plocinfo->mbcinfo->mbcodepage;
-			mblcid = plocinfo->mbcinfo->mblcid;
-			mbcasemap = plocinfo->mbcinfo->mbcasemap;
-			mbctype = plocinfo->mbcinfo->mbctype;
-		}
-		else
-		{
-			mbcodepage = _getmbcp();
-
-			auto mbcinfo = __acrt_getptd()->_multibyte_info;
-			mblcid = mbcinfo->mblcid;
-			mbcasemap = mbcinfo->mbcasemap;
-			mbctype = mbcinfo->mbctype;
-		}
 
         for (;;)
         {
             c1 = *s1++;
-            if ( _ismbblead_l(c1, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(c1, plocinfo) )
             {
                 if (*s1 == '\0')
                     c1 = 0;
@@ -90,13 +72,13 @@ extern "C" int __cdecl _mbsicmp_l(
                 {
                     retval = __crtLCMapStringA(
                             plocinfo,
-                            mblcid,
+                            plocinfo->mbcinfo->mblcid,
                             LCMAP_UPPERCASE,
                             (LPCSTR)s1 - 1,
                             2,
                             (LPSTR)szResult,
                             2,
-                            mbcodepage,
+                            plocinfo->mbcinfo->mbcodepage,
                             TRUE );
 
                     if (retval == 1)
@@ -112,10 +94,10 @@ extern "C" int __cdecl _mbsicmp_l(
                 }
             }
             else
-                c1 = _mbbtolower_l(c1, _loc_update.GetLocaleT());
+                c1 = _mbbtolower_l(c1, plocinfo);
 
             c2 = *s2++;
-            if ( _ismbblead_l(c2, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(c2, plocinfo) )
             {
                 if (*s2 == '\0')
                     c2 = 0;
@@ -123,13 +105,13 @@ extern "C" int __cdecl _mbsicmp_l(
                 {
                     retval = __crtLCMapStringA(
                             plocinfo,
-                            mblcid,
+                            plocinfo->mbcinfo->mblcid,
                             LCMAP_UPPERCASE,
                             (LPCSTR)s2 - 1,
                             2,
                             (LPSTR)szResult,
                             2,
-                            mbcodepage,
+                            plocinfo->mbcinfo->mbcodepage,
                             TRUE );
 
                     if (retval == 1)
@@ -145,7 +127,7 @@ extern "C" int __cdecl _mbsicmp_l(
                 }
             }
             else
-                c2 = _mbbtolower_l(c2, _loc_update.GetLocaleT());
+                c2 = _mbbtolower_l(c2, plocinfo);
 
             if (c1 != c2)
                 return( (c1 > c2) ? 1 : -1 );

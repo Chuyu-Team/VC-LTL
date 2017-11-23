@@ -10,6 +10,8 @@
 #include <stdlib.h>
 
 
+// Enclaves have no ability to create new locales.
+#ifndef _UCRT_ENCLAVE_BUILD
 
 _Success_(return != false)
 static bool __cdecl initialize_lc_time(
@@ -118,6 +120,7 @@ extern "C" int __cdecl __acrt_locale_initialize_time(
     return 0;
 }
 
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 
 static void __cdecl free_crt_array_internal(
@@ -159,7 +162,7 @@ extern "C" void __cdecl __acrt_locale_free_time(
     _free_crt(lc_time->ww_sdatefmt);
     _free_crt(lc_time->ww_ldatefmt);
     _free_crt(lc_time->ww_timefmt);
-    
+
     free_crt_array(lc_time->_W_wday_abbr);
     free_crt_array(lc_time->_W_wday);
     free_crt_array(lc_time->_W_month_abbr);

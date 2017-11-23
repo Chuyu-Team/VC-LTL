@@ -15,8 +15,11 @@
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C errno_t __cdecl _mbccpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, int *_PCopied, const unsigned char *_Src, _LOCALE_ARG_DECL)
+errno_t __cdecl _mbccpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, int *_PCopied, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _mbccpy_s(_Dst, _SizeInBytes, _PCopied, _Src);
+
     /* validation section */
     _ASSIGN_IF_NOT_NULL(_PCopied, 0);
     _VALIDATE_STRING(_Dst, _SizeInBytes);
@@ -27,7 +30,6 @@ EXTERN_C errno_t __cdecl _mbccpy_s_l(unsigned char *_Dst, size_t _SizeInBytes, i
     }
 
     //_LOCALE_UPDATE;
-	auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : _mbctype_func();
 
     /* copy */
     if (_ISMBBLEAD(*_Src))

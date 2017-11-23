@@ -9,7 +9,7 @@
 #include <corecrt_internal.h>
 #include <malloc.h>
 
-#if defined _M_IX86 || defined _M_AMD64
+#if _UCRT_HEAP_MISMATCH_ANY && (defined _M_IX86 || defined _M_AMD64)
 
     // Gets a handle to MSVCRT's private heap, if msvcrt is loaded for the
     // current process.  Otherwise returns nullptr.
@@ -57,7 +57,7 @@
         return new_msvcrt_heap_handle;
     }
 
-#endif // defined _M_IX86 || defined _M_AMD64
+#endif // _UCRT_HEAP_MISMATCH_ANY && (defined _M_IX86 || defined _M_AMD64)
 
 #if _UCRT_HEAP_MISMATCH_RECOVERY && (defined _M_IX86 || defined _M_AMD64)
 

@@ -14,6 +14,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include "..\..\winapi_thunks.h"
 
 /* defined in mbctype.h
 ; Define masks
@@ -74,6 +75,9 @@ static int __cdecl x_ismbbtype_l(_locale_t plocinfo, unsigned int, int, int) thr
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbkalnum_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbkalnum(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,0,_MS);
 }
 #endif
@@ -86,6 +90,9 @@ extern "C" int (__cdecl _ismbbkalnum_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbkprint_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbkprint(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,0,(_MS | _MP));
 }
 #endif
@@ -98,6 +105,9 @@ extern "C" int (__cdecl _ismbbkprint_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbkpunct_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbkpunct(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,0,_MP);
 }
 #endif
@@ -113,6 +123,9 @@ extern "C" int (__cdecl _ismbbkpunct_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbalnum_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (plocinfo)
+		return _ismbbalnum(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,(_ALPHA | _DIGIT), _MS);
 }
 #endif
@@ -125,6 +138,9 @@ extern "C" int (__cdecl _ismbbalnum_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbalpha_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbalpha(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,_ALPHA, _MS);
 }
 #endif
@@ -137,6 +153,9 @@ extern "C" int (__cdecl _ismbbalpha_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbgraph_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbgraph(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,(_PUNCT | _ALPHA | _DIGIT),(_MS | _MP));
 }
 #endif
@@ -149,6 +168,9 @@ extern "C" int (__cdecl _ismbbgraph_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbprint_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbprint(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,(_BLANK | _PUNCT | _ALPHA | _DIGIT),(_MS | _MP));
 }
 #endif
@@ -161,6 +183,9 @@ extern "C" int (__cdecl _ismbbprint_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbpunct_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbpunct(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,_PUNCT, _MP);
 }
 #endif
@@ -172,12 +197,16 @@ extern "C" int (__cdecl _ismbbpunct_l) (unsigned int tst, _locale_t plocinfo)
 
 extern "C" int (__cdecl _ismbbblank_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbblank(tst);
+	else
         return (tst == '\t') ? _BLANK : x_ismbbtype_l(plocinfo,tst,_BLANK, _MP);
 }
 
 extern "C" int (__cdecl _ismbbblank) (unsigned int tst)
 {
-        return (tst == '\t') ? _BLANK : x_ismbbtype_l(nullptr,tst,_BLANK, _MP);
+	return (((tst) == '\t') ? _BLANK : (__pctype_func())[(unsigned char)(tst)] & _BLANK);
+        //return (tst == '\t') ? _BLANK : x_ismbbtype_l(nullptr,tst,_BLANK, _MP);
 }
 
 
@@ -186,6 +215,9 @@ extern "C" int (__cdecl _ismbbblank) (unsigned int tst)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbblead_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbblead(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,0,_M1);
 }
 #endif
@@ -198,6 +230,9 @@ extern "C" int (__cdecl _ismbblead_l) (unsigned int tst, _locale_t plocinfo)
 #ifdef _ATL_XP_TARGETING
 extern "C" int (__cdecl _ismbbtrail_l) (unsigned int tst, _locale_t plocinfo)
 {
+	if (!plocinfo)
+		return _ismbbtrail(tst);
+	else
         return x_ismbbtype_l(plocinfo,tst,0,_M2);
 }
 #endif
@@ -214,8 +249,11 @@ extern "C" int (__cdecl _ismbbtrail_l) (unsigned int tst, _locale_t plocinfo)
 extern "C" int (__cdecl _ismbbkana_l) (unsigned int tst, _locale_t plocinfo)
 {
     //_LocaleUpdate _loc_update(plocinfo);
-    if(plocinfo==NULL ? (_getmbcp()== _KANJI_CP) : 
-		(plocinfo->mbcinfo && plocinfo->mbcinfo->mbcodepage == _KANJI_CP))
+	if (!plocinfo)
+		return _ismbbkana(tst);
+
+    if(plocinfo->mbcinfo &&
+       plocinfo->mbcinfo->mbcodepage == _KANJI_CP)
     {
         return x_ismbbtype_l(plocinfo,tst,0,(_MS | _MP));
     }
@@ -239,13 +277,12 @@ extern "C" int (__cdecl _ismbbkana_l) (unsigned int tst, _locale_t plocinfo)
 static int __cdecl x_ismbbtype_l (_locale_t plocinfo, unsigned int tst, int cmask, int kmask) throw()
 {
     //_LocaleUpdate _loc_update(plocinfo);
-	mbstring_thunks(plocinfo)
 
     /*
      * get input character and make sure < 256
      */
         tst = (unsigned int)(unsigned char)tst;
 
-        return  ((*(mbctype+1+tst)) & kmask) ||
-                ((cmask) ? ((*(_locale_pctype + tst)) & cmask) : 0);
+        return  ((*(plocinfo->mbcinfo->mbctype+1+tst)) & kmask) ||
+                ((cmask) ? ((*(plocinfo->locinfo->_locale_pctype + tst)) & cmask) : 0);
 }

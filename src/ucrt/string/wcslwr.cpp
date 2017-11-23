@@ -114,9 +114,7 @@ static errno_t __cdecl _wcslwr_s_l_stat (
     }
     _FILL_STRING(wsrc, sizeInWords, stringlen + 1);
 
-	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
-
-    if (_lc_ctype==0)
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0)
     {
         for ( p = wsrc ; *p ; p++ )
         {
@@ -131,7 +129,7 @@ static errno_t __cdecl _wcslwr_s_l_stat (
 
     /* Inquire size of wdst string */
     if ( (dstsize = __crtLCMapStringW(
-                    _lc_ctype,
+                    plocinfo->locinfo->lc_handle[LC_CTYPE],
                     LCMAP_LOWERCASE,
                     wsrc,
                     -1,
@@ -159,7 +157,7 @@ static errno_t __cdecl _wcslwr_s_l_stat (
 
     /* Map wrc string to wide-character wdst string in alternate case */
     if (__crtLCMapStringW(
-                _lc_ctype,
+                plocinfo->locinfo->lc_handle[LC_CTYPE],
                 LCMAP_LOWERCASE,
                 wsrc,
                 -1,
@@ -183,6 +181,9 @@ extern "C" errno_t __cdecl _wcslwr_s_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _wcslwr_s(wsrc, sizeInWords);
+
     //_LocaleUpdate _loc_update(plocinfo);
 
     return _wcslwr_s_l_stat(wsrc, sizeInWords, plocinfo);

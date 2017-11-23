@@ -43,13 +43,14 @@ extern "C" int __cdecl _mbbtype_l(
     _locale_t     const locale
     )
 {
+	if (!locale)
+		return _mbbtype(c, ctype);
     //_LocaleUpdate locale_update(locale);
-	mbstring_thunks(locale);
 
     switch(ctype)
     {
     case _MBC_LEAD:
-        if (_ismbbtrail_l(c, nullptr))
+        if (_ismbbtrail_l(c, locale))
             return _MBC_TRAIL;
 
         else
@@ -59,10 +60,10 @@ extern "C" int __cdecl _mbbtype_l(
     case _MBC_SINGLE:
     case _MBC_ILLEGAL:
     default:
-        if (_ismbblead_l(c, nullptr))
+        if (_ismbblead_l(c, locale))
             return _MBC_LEAD;
 
-        else if (_ismbbprint_l(c, nullptr))
+        else if (_ismbbprint_l(c, locale))
             return _MBC_SINGLE;
 
         else

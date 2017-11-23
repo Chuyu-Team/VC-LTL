@@ -18,8 +18,55 @@
 #define _ASSERT_OK
 #include <assert.h>
 
+// Assertion string components:
+#define MAXLINELEN  64 /* max length for line in message box */
+#define ASSERTBUFSZ (MAXLINELEN * 9) /* 9 lines in message box */
 
-    
+// Format of stderr for assertions:
+//
+//      Assertion failed: <expression>, file c:\test\mytest\bar.c, line 69
+//
+
+
+
+_GENERATE_TCHAR_STRING_FUNCTIONS(assert_format, "Assertion failed: %Ts, file %Ts, line %d\n")
+
+// Enclaves only support assertions sent to the debugger.
+// This mode could also be enabled for normal apps as well.
+
+#ifdef _UCRT_ENCLAVE_BUILD
+
+template <typename Character>
+__declspec(noreturn) static void __cdecl common_assert_to_debug(
+    Character const* const expression,
+    Character const* const file_name,
+    unsigned         const line_number
+    ) throw()
+{
+    using traits = __crt_char_traits<Character>;
+
+    Character assert_buffer[ASSERTBUFSZ];
+    if (traits::sntprintf_s(assert_buffer, _countof(assert_buffer), _countof(assert_buffer), get_assert_format(Character()), expression, file_name, line_number) < 0)
+    {
+        abort();
+    }
+    traits::output_debug_string(assert_buffer);
+    abort();
+}
+
+template <typename Character>
+static void __cdecl common_assert(
+    Character const* const expression,
+    Character const* const file_name,
+    unsigned         const line_number,
+    void*            const
+    ) throw()
+{
+    common_assert_to_debug(expression, file_name, line_number);
+}
+
+#else /* ^^^ _UCRT_ENCLAVE_BUILD ^^^ // vvv !_UCRT_ENCLAVE_BUILD vvv */
+
 // Format of MessageBox for assertions:
 //
 //      ================= Microsft Visual C++ Debug Library ================
@@ -43,8 +90,6 @@
 
 _GENERATE_TCHAR_STRING_FUNCTIONS(banner_text, "Microsoft Visual C++ Runtime Library")
 
-_GENERATE_TCHAR_STRING_FUNCTIONS(assert_format, "Assertion failed: %Ts, file %Ts, line %d\n")
-
 _GENERATE_TCHAR_STRING_FUNCTIONS(box_intro,        "Assertion failed!")
 _GENERATE_TCHAR_STRING_FUNCTIONS(program_intro,    "Program: ")
 _GENERATE_TCHAR_STRING_FUNCTIONS(file_intro,       "File: ")
@@ -58,14 +103,6 @@ _GENERATE_TCHAR_STRING_FUNCTIONS(newline,          "\n")
 _GENERATE_TCHAR_STRING_FUNCTIONS(double_newline,   "\n\n")
 
 _GENERATE_TCHAR_STRING_FUNCTIONS(program_name_unknown_text, "<program name unknown>")
-
-/*
- * assertion string components for message box
- */
-
-#define MAXLINELEN  64 /* max length for line in message box */
-#define ASSERTBUFSZ (MAXLINELEN * 9) /* 9 lines in message box */
-
 
 /***
 *_assert() - Display a message and abort
@@ -276,7 +313,7 @@ static void __cdecl common_assert_to_message_box_build_string(
     // Line 5: Message line:
     _ERRCHECK(traits::tcscat_s(assert_buffer, assert_buffer_count, get_expression_intro(Character())));
 
-    size_t const characters_used = 
+    size_t const characters_used =
         traits::tcslen(assert_buffer) +
         2 * double_newline_length +
         info_intro_length +
@@ -385,6 +422,8 @@ static void __cdecl common_assert(
 
     return common_assert_to_message_box(expression, file_name, line_number, return_address);
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 extern "C" void __cdecl _assert(
     char const* const expression,

@@ -476,7 +476,7 @@ typedef struct _multibyte_data_msvcrt
     //wchar_t const* mblocalename;
 } _multibyte_data_msvcrt, _multibyte_data,__crt_multibyte_data;
 
-////定义转移至corecrt.h
+//定义转移至corecrt.h
 //typedef struct __crt_locale_refcount
 //{
 //    char*    locale;
@@ -553,6 +553,14 @@ BOOL __cdecl __acrt_GetStringTypeA(
     _In_                BOOL      _BError
     );
 
+_Success_(return)
+BOOL __cdecl __acrt_GetStringTypeW(
+    _In_                DWORD       _DWInfoType,
+    _In_NLS_string_(_CchSrc) PCWCH  _LpSrcStr,
+    _In_                int         _CchSrc,
+    _Out_               LPWORD      _LpCharType
+);
+
 _Success_(return != 0)
 int __cdecl __acrt_LCMapStringA(
     _In_opt_                   _locale_t _Plocinfo,
@@ -576,7 +584,27 @@ int __cdecl __acrt_LCMapStringW(
     _In_                       int     _CchDest
     );
 
+_Success_(return != 0)
+int __cdecl __acrt_MultiByteToWideChar(
+    _In_                       UINT    _CodePage,
+    _In_                       DWORD   _DWFlags,
+    _In_                       LPCSTR  _LpMultiByteStr,
+    _In_                       int     _CbMultiByte,
+    _Out_writes_opt_(_CchWideChar) LPWSTR  _LpWideCharStr,
+    _In_                       int     _CchWideChar
+    );
 
+_Success_(return != 0)
+int __cdecl __acrt_WideCharToMultiByte(
+    _In_                       UINT    _CodePage,
+    _In_                       DWORD   _DWFlags,
+    _In_                       LPCWSTR _LpWideCharStr,
+    _In_                       int     _CchWideChar,
+    _Out_writes_opt_(_CbMultiByte) LPSTR   _LpMultiByteStr,
+    _In_                       int     _CbMultiByte,
+    _In_opt_                   LPCSTR  _LpDefaultChar,
+    _Out_opt_                  LPBOOL  _LpUsedDefaultChar
+    );
 
 // Case-insensitive ASCII comparisons
 _Check_return_
@@ -1067,18 +1095,18 @@ typedef struct _ptd_msvcrt
 #endif
 } _ptd_msvcrt,__acrt_ptd;
 
-extern "C" __declspec(dllimport) void __cdecl _lock(
+__declspec(dllimport) void __cdecl _lock(
 	int locknum
 );
-extern "C" __declspec(dllimport) void __cdecl _unlock(
+__declspec(dllimport) void __cdecl _unlock(
 	int locknum
 );
 
 
-EXTERN_C __acrt_ptd* __cdecl _getptd_noexit(void);
+__acrt_ptd* __cdecl _getptd_noexit(void);
 
 
-EXTERN_C __acrt_ptd* __cdecl __acrt_getptd(void);
+__acrt_ptd* __cdecl __acrt_getptd(void);
 __acrt_ptd* __cdecl __acrt_getptd_head(void);
 __forceinline __acrt_ptd* __cdecl __acrt_getptd_noexit(void)
 {
@@ -1221,7 +1249,9 @@ void* __cdecl _expand_base(
 #define _UCRT_HEAP_MISMATCH_RECOVERY    0
 #define _UCRT_HEAP_MISMATCH_BREAK       0
 
-#if defined _M_IX86 || defined _M_AMD64
+#define _UCRT_HEAP_MISMATCH_ANY (_UCRT_HEAP_MISMATCH_DETECTION || _UCRT_HEAP_MISMATCH_RECOVERY || _UCRT_HEAP_MISMATCH_BREAK)
+
+#if _UCRT_HEAP_MISMATCH_ANY && (defined _M_IX86 || defined _M_AMD64)
     HANDLE __cdecl __acrt_get_msvcrt_heap_handle(void);
 #endif
 
@@ -1413,8 +1443,10 @@ extern "C++"
 // AppCRT Windows API Thunks
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-BOOL WINAPI __acrt_AreFileApisANSI(void);
+//BOOL WINAPI __acrt_AreFileApisANSI(void)
+#define __acrt_AreFileApisANSI AreFileApisANSI
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_CompareStringEx(
     _In_opt_                       LPCWSTR          locale_name,
     _In_                           DWORD            flags,
@@ -1426,31 +1458,55 @@ int WINAPI __acrt_CompareStringEx(
     _Reserved_                     LPVOID           reserved,
     _Reserved_                     LPARAM           param
     );
+#else
+#define __acrt_CompareStringEx CompareStringEx
+#endif
 
+#ifdef _ATL_XP_TARGETING
 BOOL WINAPI __acrt_EnumSystemLocalesEx(
     _In_     LOCALE_ENUMPROCEX enum_proc,
     _In_     DWORD             flags,
     _In_     LPARAM            param,
     _In_opt_ LPVOID            reserved
     );
+#else
+#define __acrt_EnumSystemLocalesEx EnumSystemLocalesEx
+#endif
 
+#ifdef _ATL_XP_TARGETING
 DWORD WINAPI __acrt_FlsAlloc(
     _In_opt_ PFLS_CALLBACK_FUNCTION lpCallback
     );
+#else
+#define __acrt_FlsAlloc FlsAlloc
+#endif
 
+#ifdef _ATL_XP_TARGETING
 BOOL WINAPI __acrt_FlsFree(
     _In_ DWORD dwFlsIndex
     );
+#else
+#define __acrt_FlsFree FlsFree
+#endif
 
+#ifdef _ATL_XP_TARGETING
 PVOID WINAPI __acrt_FlsGetValue(
     _In_ DWORD dwFlsIndex
     );
+#else
+#define __acrt_FlsGetValue FlsGetValue
+#endif
 
+#ifdef _ATL_XP_TARGETING
 BOOL WINAPI __acrt_FlsSetValue(
     _In_     DWORD dwFlsIndex,
     _In_opt_ PVOID lpFlsData
     );
+#else
+#define __acrt_FlsSetValue FlsGetValue
+#endif
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_GetDateFormatEx(
     _In_opt_                       LPCWSTR           locale_name,
     _In_                           DWORD             flags,
@@ -1460,20 +1516,28 @@ int WINAPI __acrt_GetDateFormatEx(
     _In_opt_                       int               buffer_count,
     _In_opt_                       LPCWSTR           calendar
     );
+#else
+#define __acrt_GetDateFormatEx GetDateFormatEx
+#endif
 
 DWORD64 WINAPI __acrt_GetEnabledXStateFeatures(void);
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_GetLocaleInfoEx(
     _In_opt_                       LPCWSTR locale_name,
     _In_                           LCTYPE  lc_type,
     _Out_writes_opt_(data_count)   LPWSTR  data,
     _In_                           int     data_count
     );
+#else
+#define __acrt_GetLocaleInfoEx GetLocaleInfoEx
+#endif
 
 VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(
     _Out_ LPFILETIME system_time
     );
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_GetTimeFormatEx(
     _In_opt_                         LPCWSTR           locale_name,
     _In_                             DWORD             flags,
@@ -1482,11 +1546,18 @@ int WINAPI __acrt_GetTimeFormatEx(
     _Out_writes_opt_(buffer_count)   LPWSTR            buffer,
     _In_opt_                         int               buffer_count
     );
+#else
+#define __acrt_GetTimeFormatEx GetTimeFormatEx
+#endif
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_GetUserDefaultLocaleName(
     _Out_writes_(locale_name_count) LPWSTR  locale_name,
     _In_                            int     locale_name_count
     );
+#else
+#define __acrt_GetUserDefaultLocaleName GetUserDefaultLocaleName
+#endif
 
 _Must_inspect_result_
 BOOL WINAPI __acrt_GetXStateFeaturesMask(
@@ -1494,16 +1565,26 @@ BOOL WINAPI __acrt_GetXStateFeaturesMask(
     _Out_ PDWORD64 feature_mask
     );
 
-BOOL WINAPI __acrt_InitializeCriticalSectionEx(
-    _Out_ LPCRITICAL_SECTION critical_section,
-    _In_  DWORD              spin_count,
-    _In_  DWORD              flags
-    );
+#ifdef _ATL_XP_TARGETING
+//BOOL WINAPI __acrt_InitializeCriticalSectionEx(
+//    _Out_ LPCRITICAL_SECTION critical_section,
+//    _In_  DWORD              spin_count,
+//    _In_  DWORD              flags
+//    );
+#define __acrt_InitializeCriticalSectionEx(critical_section,spin_count,flags) InitializeCriticalSectionAndSpinCount(critical_section,spin_count)
+#else
+#define __acrt_InitializeCriticalSectionEx InitializeCriticalSectionEx
+#endif
 
+#ifdef _ATL_XP_TARGETING
 BOOL WINAPI __acrt_IsValidLocaleName(
     _In_ LPCWSTR locale_name
     );
+#else
+#define __acrt_IsValidLocaleName IsValidLocaleName
+#endif
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_LCMapStringEx(
     _In_opt_                            LPCWSTR          locale_name,
     _In_                                DWORD            flags,
@@ -1515,18 +1596,29 @@ int WINAPI __acrt_LCMapStringEx(
     _In_opt_                            LPVOID           reserved,
     _In_opt_                            LPARAM           sort_handle
     );
+#else
+#define __acrt_LCMapStringEx LCMapStringEx
+#endif
 
+#ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_LCIDToLocaleName(
     _In_                         LCID   locale,
     _Out_writes_opt_(name_count) LPWSTR name,
     _In_                         int    name_count,
     _In_                         DWORD  flags
     );
+#else
+#define __acrt_LCIDToLocaleName LCIDToLocaleName
+#endif
 
+#ifdef _ATL_XP_TARGETING
 DWORD WINAPI __acrt_LocaleNameToLCID(
     _In_ LPCWSTR name,
     _In_ DWORD   flags
     );
+#else
+#define __acrt_LocaleNameToLCID LocaleNameToLCID
+#endif
 
 _Success_(return != NULL)
 PVOID WINAPI __acrt_LocateXStateFeature(
@@ -1535,19 +1627,31 @@ PVOID WINAPI __acrt_LocateXStateFeature(
     _Out_opt_ PDWORD   length
     );
 
-int WINAPI __acrt_MessageBoxA(
-    _In_opt_ HWND   hwnd,
-    _In_opt_ LPCSTR text,
-    _In_opt_ LPCSTR caption,
-    _In_     UINT   type
-    );
+//int WINAPI __acrt_MessageBoxA(
+//    _In_opt_ HWND   hwnd,
+//    _In_opt_ LPCSTR text,
+//    _In_opt_ LPCSTR caption,
+//    _In_     UINT   type
+//    );
+#define __acrt_MessageBoxA MessageBoxA
 
-int WINAPI __acrt_MessageBoxW(
-    _In_opt_ HWND    hwnd,
-    _In_opt_ LPCWSTR text,
-    _In_opt_ LPCWSTR caption,
-    _In_     UINT    type
-    );
+//int WINAPI __acrt_MessageBoxW(
+//    _In_opt_ HWND    hwnd,
+//    _In_opt_ LPCWSTR text,
+//    _In_opt_ LPCWSTR caption,
+//    _In_     UINT    type
+//    );
+#define __acrt_MessageBoxW MessageBoxW
+
+//void WINAPI __acrt_OutputDebugStringA(
+//    _In_opt_ LPCSTR text
+//    );
+#define __acrt_OutputDebugStringA OutputDebugStringA
+
+//void WINAPI __acrt_OutputDebugStringW(
+//    _In_opt_ LPCWSTR text
+//    );
+#define __acrt_OutputDebugStringW OutputDebugStringW
 
 #ifdef __cplusplus
     HRESULT WINAPI __acrt_RoInitialize(
@@ -1568,31 +1672,41 @@ LONG WINAPI __acrt_AppPolicyGetThreadInitializationTypeInternal(_Out_ AppPolicyT
 LONG WINAPI __acrt_AppPolicyGetShowDeveloperDiagnosticInternal(_Out_ AppPolicyShowDeveloperDiagnostic* policy);
 LONG WINAPI __acrt_AppPolicyGetWindowingModelInternal(_Out_ AppPolicyWindowingModel* policy);
 
+
+#if defined _ATL_XP_TARGETING && defined _X86_
 BOOL WINAPI __acrt_SetThreadStackGuarantee(
     _Inout_ PULONG stack_size_in_bytes
     );
-
+#else
+#define __acrt_SetThreadStackGuarantee SetThreadStackGuarantee
+#endif
 
 bool __cdecl __acrt_can_show_message_box(void);
+#ifdef _ATL_XP_TARGETING
 bool __cdecl __acrt_can_use_vista_locale_apis(void);
+#else
+#define __acrt_can_use_vista_locale_apis() true
+#endif
 void __cdecl __acrt_eagerly_load_locale_apis(void);
 bool __cdecl __acrt_can_use_xstate_apis(void);
 HWND __cdecl __acrt_get_parent_window(void);
 bool __cdecl __acrt_is_interactive(void);
 
 
-
+#ifdef _ATL_XP_TARGETING
 LCID __cdecl __acrt_DownlevelLocaleNameToLCID(
     _In_opt_ LPCWSTR localeName
     );
+#endif
 
+#ifdef _ATL_XP_TARGETING
 _Success_(return != 0)
 int __cdecl __acrt_DownlevelLCIDToLocaleName(
     _In_      LCID   lcid,
     _Out_writes_opt_z_(cchLocaleName) LPWSTR outLocaleName,
     _In_      int    cchLocaleName
     );
-
+#endif
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //

@@ -32,7 +32,7 @@ extern "C" __declspec(noinline) size_t __cdecl _msize_base(void* const block) th
 // Both _msize_dbg and _msize_base must also be marked noinline
 // to prevent identical COMDAT folding from substituting calls to _msize
 // with either other function or vice versa.
-extern "C" __declspec(noinline) size_t __cdecl _msize(void* const block)
+extern "C" _CRT_HYBRIDPATCHABLE __declspec(noinline) size_t __cdecl _msize(void* const block)
 {
     #ifdef _DEBUG
     return _msize_dbg(block, _NORMAL_BLOCK);

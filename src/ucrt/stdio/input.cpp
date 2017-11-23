@@ -11,6 +11,9 @@
 using namespace __crt_stdio_input;
 
 
+// Enclaves do not have a file system, but they do allow in-memory operations
+// from stdio.
+#ifndef _UCRT_ENCLAVE_BUILD
 
 template <typename Character>
 static int __cdecl common_vfscanf(
@@ -66,6 +69,7 @@ extern "C" int __cdecl __stdio_common_vfwscanf(
     return common_vfscanf(options, stream, format, locale, arglist);
 }
 
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 
 template <typename Character>
@@ -83,7 +87,7 @@ static int __cdecl common_vsscanf(
     typedef input_processor<
         Character,
         string_input_adapter<Character>
-    > processor_type; 
+    > processor_type;
 
     _VALIDATE_RETURN(buffer != nullptr, EINVAL, EOF);
     _VALIDATE_RETURN(format != nullptr, EINVAL, EOF);
@@ -112,7 +116,7 @@ extern "C" int __cdecl __stdio_common_vsscanf(
     char const*      const format,
     _locale_t        const locale,
     va_list          const arglist
-    ) 
+    )
 {
     return common_vsscanf(options, buffer, buffer_count, format, locale, arglist);
 }
@@ -124,7 +128,7 @@ extern "C" int __cdecl __stdio_common_vswscanf(
     wchar_t const*   const format,
     _locale_t        const locale,
     va_list          const arglist
-    ) 
+    )
 {
     return common_vsscanf(options, buffer, buffer_count, format, locale, arglist);
 }

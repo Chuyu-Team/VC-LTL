@@ -16,8 +16,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
-    
-// The C String pointed to by string is shifted distance bytes to the right.  
+
+// The C String pointed to by string is shifted distance bytes to the right.
 // If distance is negative, the string is shifted to the left.
 // The C String pointed to by string and all shifting operations must be
 // contained within buffer_base or buffer_count.
@@ -119,7 +119,7 @@ static errno_t fp_format_e_internal(
     // 5 = exponent letter (e or E), exponent sign, three digits exponent
     // 1 = extra space for rounding
     _VALIDATE_RETURN_ERRCODE(result_buffer_count > static_cast<size_t>(3 + (precision > 0 ? precision : 0) + 5 + 1), ERANGE);
-    
+
     _LocaleUpdate locale_update(locale);
 
     // Place the output in the buffer and round.  Leave space in the buffer
@@ -221,13 +221,21 @@ static errno_t __cdecl fp_format_e(
     ) throw()
 {
     // The precision passed to __acrt_fltout is the number of fractional digits.
-    // To ensure that we get enough digits to round the result, we require a 
-    // total of precision + 1 digits, to account for the digit placed to the
-    // left of the decimal point when all digits are fractional.
+    // To ensure that we get enough digits, we require a total of precision + 1 digits,
+    // to account for the digit placed to the left of the decimal point when all digits are fractional.
     _strflt strflt;
-    __acrt_fltout(*reinterpret_cast<_CRT_DOUBLE const*>(argument), precision + 1, &strflt, scratch_buffer, scratch_buffer_count);    
+    unsigned const displayed_digits_count = precision + 1; // +1 for digit to left of decimal point
+
+    // Restrict buffer size because we know exactly how much space is needed to display %e formatted floating point numbers.
+    // With this change, we can optimize the %e path to not calculate precision past where will be displayed without
+    // modifying the binary interface of __acrt_fltout, which will calculate all digits that would be needed by %f formatting.
+    size_t const calculated_digits_count = displayed_digits_count + 1; // +1 to calculate the value after last displayed digit (for rounding)
+    size_t const scratch_buffer_restricted_count = min(calculated_digits_count + 1, scratch_buffer_count); // +1 for null terminator
+
+    __acrt_fltout(*reinterpret_cast<_CRT_DOUBLE const*>(argument), displayed_digits_count, &strflt, scratch_buffer, scratch_buffer_restricted_count);
+
     errno_t const e = __acrt_fp_strflt_to_string(
-        result_buffer + (strflt.sign == '-') + (precision > 0), 
+        result_buffer + (strflt.sign == '-') + (precision > 0),
         (result_buffer_count == static_cast<size_t>(-1)
             ? result_buffer_count
             : result_buffer_count - (strflt.sign == '-') - (precision > 0)),
@@ -317,7 +325,7 @@ static errno_t __cdecl fp_format_a(
             // exponent sign and the first digit and put the terminating 0:
             p += 3;
             *p = 0;
-        } 
+        }
         return e;
     }
 
@@ -326,7 +334,7 @@ static errno_t __cdecl fp_format_a(
     {
         *result_buffer++ = '-';
     }
-    
+
     int const hexadd = (capitals ? 'A' : 'a') - '9' - 1;
 
     // Leading digit (and set the debias):
@@ -442,7 +450,7 @@ static errno_t __cdecl fp_format_a(
     // Exponent:
     *result_buffer++ = capitals ? 'P' : 'p';
     __int64 exponent = components->_exponent - debias;
-    if (exponent >= 0) 
+    if (exponent >= 0)
     {
         *result_buffer++ = '+';
     }
@@ -555,7 +563,7 @@ static errno_t fp_format_f_internal(
     }
 
     return 0;
-} 
+}
 
 _Success_(return == 0)
 static errno_t __cdecl fp_format_f(
@@ -574,7 +582,7 @@ static errno_t __cdecl fp_format_f(
     errno_t const e = __acrt_fp_strflt_to_string(
         result_buffer + (strflt.sign == '-'),
         (result_buffer_count == static_cast<size_t>(-1) ? result_buffer_count : result_buffer_count - (strflt.sign == '-')),
-        precision + strflt.decpt, 
+        precision + strflt.decpt,
         &strflt);
 
     if (e != 0)
@@ -695,7 +703,7 @@ extern "C" errno_t __cdecl __acrt_fp_format(
     {
         __acrt_fp_class const classification = __acrt_fp_classify(*value);
         if (classification != __acrt_fp_class::finite)
-        {         
+        {
             return fp_format_nan_or_infinity(
                 classification,
                 __acrt_fp_is_negative(*value),

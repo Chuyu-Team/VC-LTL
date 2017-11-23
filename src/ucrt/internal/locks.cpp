@@ -27,7 +27,7 @@
 //{
 //    for (unsigned i = 0; i < __acrt_lock_count; ++i)
 //    {
-//        if (!InitializeCriticalSectionAndSpinCount(&__acrt_lock_table[i], _CORECRT_SPINCOUNT))
+//        if (!__acrt_InitializeCriticalSectionEx(&__acrt_lock_table[i], _CORECRT_SPINCOUNT, 0))
 //        {
 //            __acrt_uninitialize_locks(false);
 //            return false;
@@ -49,19 +49,15 @@
 //
 //    return true;
 //}
-
-
-
+//
 //extern "C" void __cdecl __acrt_lock(_In_ __acrt_lock_id _Lock)
 //{
-//    //EnterCriticalSection(&__acrt_lock_table[_Lock]);
-//	_lock(_Lock);
+//    EnterCriticalSection(&__acrt_lock_table[_Lock]);
 //}
 //
 //extern "C" void __cdecl __acrt_unlock(_In_ __acrt_lock_id _Lock)
 //{
-//    //LeaveCriticalSection(&__acrt_lock_table[_Lock]);
-//	_unlock(_Lock);
+//    LeaveCriticalSection(&__acrt_lock_table[_Lock]);
 //}
 
 extern "C" void __cdecl _lock_locales()

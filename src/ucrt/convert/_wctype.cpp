@@ -16,9 +16,11 @@
 #ifdef _ATL_XP_TARGETING
 extern "C" extern __inline int (__cdecl _isleadbyte_l)(int const c, _locale_t const locale)
 {
-	auto _locale_pctype = locale? locale->locinfo->_locale_pctype : __PCTYPE_FUNC;
+	if (!locale)
+		return isleadbyte(c);
+
     //_LocaleUpdate locale_update(locale);
-    return _locale_pctype[(unsigned char) (c)] & _LEADBYTE;
+    return locale->locinfo->_locale_pctype[(unsigned char) (c)] & _LEADBYTE;
 }
 #endif
 

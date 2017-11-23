@@ -166,6 +166,7 @@ BOOL __cdecl __acrt_get_qualified_locale_downlevel(const __crt_locale_strings* l
     iCodePage = ProcessCodePage(lpInStr ? lpInStr->szCodePage: nullptr, _psetloc_downlevel_data);
 
     //  verify codepage validity
+    // Future OS Releases will allow UTF8 by default, however it was not available downlevel.
     if (!iCodePage || iCodePage == CP_UTF7 || iCodePage == CP_UTF8 ||
         !IsValidCodePage((WORD)iCodePage))
         return FALSE;

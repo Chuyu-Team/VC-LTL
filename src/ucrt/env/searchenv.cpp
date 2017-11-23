@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#pragma warning(disable:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036 Prefast doesn't understand perfect forwarding so annotations are lost.
-//#pragma warning(disable:__WARNING_MISSING_ZERO_TERMINATION2) // 6054 Prefast doesn't understand perfect forwarding so annotations are lost.
+#pragma warning(disable:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036 Prefast doesn't understand perfect forwarding so annotations are lost.
+#pragma warning(disable:__WARNING_MISSING_ZERO_TERMINATION2) // 6054 Prefast doesn't understand perfect forwarding so annotations are lost.
 
 // These functions search for a file in the paths in an environment variable.
 // The environment variable named 'environment_variable' is retrieved from the

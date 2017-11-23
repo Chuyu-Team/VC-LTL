@@ -61,6 +61,9 @@ extern "C" size_t __cdecl _strxfrm_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return strxfrm(_string1, _string2, _count);
+
     int dstlen;
     size_t retval = INT_MAX;   /* NON-ANSI: default if OM or API error */
     //_LocaleUpdate _loc_update(plocinfo);
@@ -75,21 +78,9 @@ extern "C" size_t __cdecl _strxfrm_l (
     {
         *_string1='\0';
     }
-	LCID _lc_collate;
-	unsigned int lc_collate_cp;
-	if (plocinfo)
-	{
-		_lc_collate = plocinfo->locinfo->lc_handle[LC_COLLATE];
-		lc_collate_cp = plocinfo->locinfo->lc_collate_cp;
-	}
-	else
-	{
-		_lc_collate = ___lc_handle_func()[LC_COLLATE];
-		lc_collate_cp = ___lc_collate_cp_func();
-	}
 
-    if ( (_lc_collate == 0) &&
-            (lc_collate_cp == CP_ACP) )
+    if ( (plocinfo->locinfo->lc_handle[LC_COLLATE] == 0) &&
+            (plocinfo->locinfo->lc_collate_cp == CP_ACP) )
     {
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
         strncpy(_string1, _string2, _count);
@@ -100,13 +91,13 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     /* Inquire size of dst string in BYTES */
     if ( 0 == (dstlen = __crtLCMapStringA(
                     plocinfo,
-                    _lc_collate,
+                    plocinfo->locinfo->lc_handle[LC_COLLATE],
                     LCMAP_SORTKEY,
                     _string2,
                     -1,
                     nullptr,
                     0,
-                    lc_collate_cp,
+                    plocinfo->locinfo->lc_collate_cp,
                     TRUE )) )
     {
         errno = EILSEQ;
@@ -131,13 +122,13 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     /* Map src string to dst string */
     if ( 0 == __crtLCMapStringA(
                 plocinfo,
-                _lc_collate,
+                plocinfo->locinfo->lc_handle[LC_COLLATE],
                 LCMAP_SORTKEY,
                 _string2,
                 -1,
                 _string1,
                 (int)_count,
-                lc_collate_cp,
+                plocinfo->locinfo->lc_collate_cp,
                 TRUE ) )
     {
         errno = EILSEQ;
@@ -149,7 +140,7 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     return retval;
 }
 #endif
-//
+
 //extern "C" size_t __cdecl strxfrm (
 //        char *_string1,
 //        const char *_string2,

@@ -41,6 +41,9 @@ static wchar_t const* const report_type_messages[_CRT_ERRCNT] =
     L"Assertion Failed"
 };
 
+// Enclaves only support MODE_DEBUG for error output
+#ifndef _UCRT_ENCLAVE_BUILD
+
 static wchar_t const* __cdecl get_output_message_format(char) throw()
 {
     return L"Debug %ls!\n\nProgram: %hs%ls%ls%hs%ls%hs%ls%hs%ls%ls%hs%ls\n\n(Press Retry to debug the application)\n";
@@ -56,6 +59,8 @@ static wchar_t const* const more_info_string =
     L"\nfailure, see the Visual C++ documentation on asserts.";
 
 _GENERATE_TCHAR_STRING_FUNCTIONS(program_name_unknown_text, "<program name unknown>")
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /***
 *_CRT_REPORT_HOOK _CrtSetReportHook2() - configure client report hook in list
@@ -275,6 +280,9 @@ extern "C" int __cdecl _CrtDbgReportW(
     return result;
 }
 
+// Enclaves only support MODE_DEBUG for error output
+#if !defined _UCRT_ENCLAVE_BUILD
+
 /***
 *int __crtMessageWindow() - report to a message window
 *
@@ -455,3 +463,5 @@ extern "C" int __cdecl __acrt_MessageWindowW(
 {
     return common_message_window(report_type, return_address, file_name, line_number, module_name, user_message);
 }
+
+#endif

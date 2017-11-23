@@ -20,6 +20,9 @@
 extern "C" {
 
 
+    // Enclaves have no ability to create new locales.
+#ifndef _UCRT_ENCLAVE_BUILD
+
 static void fix_grouping(_Inout_z_ char *);
 
 /*
@@ -253,6 +256,7 @@ static void fix_grouping(
     }
 }
 
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /*
  *  Free the lconv monetary strings.

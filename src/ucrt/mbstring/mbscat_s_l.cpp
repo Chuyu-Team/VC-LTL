@@ -18,6 +18,9 @@
 #ifdef _ATL_XP_TARGETING
 errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
+	if (!_LOCALE_ARG)
+		return _mbscat_s(_Dst, _SizeInBytes, _Src);
+
     unsigned char *p;
     size_t available;
     BOOL fFoundInvalidMBC, fIsLeadPrefix;
@@ -60,7 +63,6 @@ errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsi
      * an invalid MBC (lead+null), if so then clear that lead byte,
      * move the pointer back one and increase available by one.
      */
-	const auto mbctype = _LOCALE_ARG ? _LOCALE_ARG->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
     _ISMBBLEADPREFIX(fIsLeadPrefix, _Dst, p-1);
     if (fIsLeadPrefix)

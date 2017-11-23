@@ -12,6 +12,9 @@
 using namespace __crt_stdio_output;
 
 
+// Enclaves do not have a file system, but they do allow in-memory operations
+// from stdio.
+#ifndef _UCRT_ENCLAVE_BUILD
 
 template <template <typename, typename> class Base, typename Character>
 static int __cdecl common_vfprintf(
@@ -113,6 +116,7 @@ extern "C" int __cdecl __stdio_common_vfwprintf_p(
     return common_vfprintf<positional_parameter_base>(options, stream, format, locale, arglist);
 }
 
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 
 template <template <typename, typename> class Base, typename Character>
@@ -322,7 +326,7 @@ static int __cdecl common_vsnprintf_s(
         return 0; // No work to do
 
     _VALIDATE_RETURN(buffer != nullptr && buffer_count > 0, EINVAL, -1);
-    
+
     int result = -1;
     if (buffer_count > max_count)
     {
@@ -346,7 +350,7 @@ static int __cdecl common_vsnprintf_s(
         result = common_vsprintf<format_validation_base>(options, buffer, buffer_count, format, locale, arglist);
 
         buffer[buffer_count - 1] = 0;
-        
+
         // We allow truncation if count == _TRUNCATE
         if (result == -2 && max_count == _TRUNCATE)
         {
@@ -384,7 +388,7 @@ extern "C" int __cdecl __stdio_common_vsnprintf_s(
     va_list          const arglist
     )
 {
-    return common_vsnprintf_s(options, buffer, buffer_count, max_count, format, locale, arglist);    
+    return common_vsnprintf_s(options, buffer, buffer_count, max_count, format, locale, arglist);
 }
 
 extern "C" int __cdecl __stdio_common_vsnwprintf_s(
@@ -397,7 +401,7 @@ extern "C" int __cdecl __stdio_common_vsnwprintf_s(
     va_list          const arglist
     )
 {
-    return common_vsnprintf_s(options, buffer, buffer_count, max_count, format, locale, arglist);    
+    return common_vsnprintf_s(options, buffer, buffer_count, max_count, format, locale, arglist);
 }
 
 extern "C" int __cdecl __stdio_common_vsprintf_p(

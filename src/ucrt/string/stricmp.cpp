@@ -11,7 +11,6 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast can't see that we are checking for terminal nul.
 
@@ -43,6 +42,9 @@ extern "C" int __cdecl _stricmp_l (
         _locale_t plocinfo
         )
 {
+	if (!plocinfo)
+		return _stricmp(dst, src);
+
     int f,l;
     //_LocaleUpdate _loc_update(plocinfo);
 
@@ -50,7 +52,7 @@ extern "C" int __cdecl _stricmp_l (
     _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
 
-    if ( /*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/(plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE]==0)
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
     {
         return __ascii_stricmp(dst, src);
     }
@@ -58,8 +60,8 @@ extern "C" int __cdecl _stricmp_l (
     {
         do
         {
-            f = _tolower_l( (unsigned char)(*(dst++)), plocinfo);
-            l = _tolower_l( (unsigned char)(*(src++)), plocinfo);
+            f = _tolower_l( (unsigned char)(*(dst++)), plocinfo );
+            l = _tolower_l( (unsigned char)(*(src++)), plocinfo );
         } while ( f && (f == l) );
     }
 

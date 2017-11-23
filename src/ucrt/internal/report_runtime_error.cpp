@@ -1,5 +1,5 @@
 /***
-*crt0msg.c - startup error messages
+*report_runtime_error.cpp - startup error messages
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
@@ -15,6 +15,40 @@
 
 // This is used during the expansion of the runtime error text.
 #define EOL L"\r\n"
+
+static bool __cdecl issue_debug_notification(wchar_t const* const message) throw()
+{
+    // This is referenced only in the Debug CRT build
+    UNREFERENCED_PARAMETER(message);
+
+#ifdef _DEBUG
+    switch (_CrtDbgReportW(_CRT_ERROR, nullptr, 0, nullptr, L"%ls", message))
+    {
+    case 1:
+        _CrtDbgBreak();
+        return true;
+
+    case 0:
+        return true;
+    }
+#endif // _DEBUG
+
+    return false;
+}
+
+
+
+
+// Enclaves do not support error messages outside of OutputDebugString.
+#ifdef _UCRT_ENCLAVE_BUILD
+
+extern "C" void __cdecl __acrt_report_runtime_error(wchar_t const* const message)
+{
+    // Report the error using the debug
+    issue_debug_notification(message);
+}
+
+#else /* ^^^ _UCRT_ENCLAVE_BUILD ^^^ // vvv !_UCRT_ENCLAVE_BUILD vvv */
 
 /*
  * __acrt_app_type, together with __error_mode, determine how error messages
@@ -113,28 +147,6 @@ static void write_string_to_console(wchar_t const* const wide_string) throw()
 
 
 
-static bool __cdecl issue_debug_notification(wchar_t const* const message) throw()
-{
-    // This is referenced only in the Debug CRT build
-    UNREFERENCED_PARAMETER(message);
-
-    #ifdef _DEBUG
-    switch (_CrtDbgReportW(_CRT_ERROR, nullptr, 0, nullptr, L"%ls", message))
-    {
-    case 1:
-        _CrtDbgBreak();
-        return true;
-
-    case 0:
-        return true;
-    }
-    #endif // _DEBUG
-
-    return false;
-}
-
-
-
 extern "C" void __cdecl __acrt_report_runtime_error(wchar_t const* const message)
 {
     // Before we report the error via the normal path, report the error using
@@ -175,9 +187,14 @@ extern "C" void __cdecl __acrt_report_runtime_error(wchar_t const* const message
         _ERRCHECK(wcscat_s(outmsg, _countof(outmsg), L"\n\n"));
         _ERRCHECK(wcscat_s(outmsg, _countof(outmsg), message));
 
+        // Okay to ignore return value here, this is just to display the message box.
+        // Only caller is abort() (so we shouldn't/can't handle IDABORT), so the process
+        // will end shortly.
         __acrt_show_wide_message_box(
             outmsg,
             L"Microsoft Visual C++ Runtime Library",
             MB_OK | MB_ICONHAND | MB_SETFOREGROUND | MB_TASKMODAL);
     }
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */

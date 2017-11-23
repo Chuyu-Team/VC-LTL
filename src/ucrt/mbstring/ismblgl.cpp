@@ -37,12 +37,12 @@ extern "C" int __cdecl _ismbclegal_l(
         _locale_t plocinfo
         )
 {
-	
+	if (!plocinfo)
+		return _ismbclegal(c);
         //_LocaleUpdate _loc_update(plocinfo);
-		unsigned char* mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : _mbctype_func();
 
-        return( (_ismbblead_l(c >> 8, _loc_update.GetLocaleT())) &&
-                (_ismbbtrail_l(c & 0x0ff, _loc_update.GetLocaleT())) );
+        return( (_ismbblead_l(c >> 8, plocinfo)) &&
+                (_ismbbtrail_l(c & 0x0ff, plocinfo)) );
 }
 #endif
 

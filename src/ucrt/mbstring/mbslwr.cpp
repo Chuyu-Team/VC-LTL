@@ -41,12 +41,15 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C errno_t __cdecl _mbslwr_s_l(
+errno_t __cdecl _mbslwr_s_l(
         unsigned char *string,
         size_t sizeInBytes,
         _locale_t plocinfo
         )
 {
+		if(!plocinfo)
+			return _mbslwr_s(string, sizeInBytes);
+
         size_t stringlen;
 
         /* validation section */
@@ -68,30 +71,10 @@ EXTERN_C errno_t __cdecl _mbslwr_s_l(
 
         unsigned char *cp, *dst;
         //_LocaleUpdate _loc_update(plocinfo);
-		int mblcid;
-		int mbcodepage;
-		unsigned char*  mbcasemap;
-		unsigned char*  mbctype;
-		if (plocinfo)
-		{
-			mbcodepage = plocinfo->mbcinfo->mbcodepage;
-			mblcid = plocinfo->mbcinfo->mblcid;
-			mbcasemap = plocinfo->mbcinfo->mbcasemap;
-			mbctype = plocinfo->mbcinfo->mbctype;
-		}
-		else
-		{
-			mbcodepage = _getmbcp();
-
-			auto mbcinfo = __acrt_getptd()->_multibyte_info;
-			mblcid = mbcinfo->mblcid;
-			mbcasemap = mbcinfo->mbcasemap;
-			mbctype = mbcinfo->mbctype;
-		}
 
         for (cp = string, dst = string; *cp != '\0'; ++cp)
         {
-            if (_ismbblead_l(*cp, _loc_update.GetLocaleT()))
+            if (_ismbblead_l(*cp, plocinfo))
             {
 
 
@@ -99,13 +82,13 @@ EXTERN_C errno_t __cdecl _mbslwr_s_l(
                 unsigned char ret[4];
                 if ((retval = __crtLCMapStringA(
                                 plocinfo,
-                                mblcid,
+                                plocinfo->mbcinfo->mblcid,
                                 LCMAP_LOWERCASE,
                                 (const char *)cp,
                                 2,
                                 (char *)ret,
                                 2,
-                                mbcodepage,
+                                plocinfo->mbcinfo->mbcodepage,
                                 TRUE )) == 0 )
                 {
                     errno = EILSEQ;
@@ -125,7 +108,7 @@ EXTERN_C errno_t __cdecl _mbslwr_s_l(
             else
             {
                 /* single byte, macro version */
-                *(dst++) = (unsigned char) _mbbtolower_l(*cp, _loc_update.GetLocaleT());
+                *(dst++) = (unsigned char) _mbbtolower_l(*cp, plocinfo);
             }
         }
         /* null terminate the string */
@@ -144,7 +127,7 @@ EXTERN_C errno_t __cdecl _mbslwr_s_l(
 //}
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C unsigned char * (__cdecl _mbslwr_l)(
+unsigned char * (__cdecl _mbslwr_l)(
         unsigned char *string,
         _locale_t plocinfo
         )

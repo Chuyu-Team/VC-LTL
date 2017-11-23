@@ -43,7 +43,7 @@ static size_t __cdecl common_mbstrlen_l(
 
     // Verify that all of the multibyte characters are valid:
     if (MultiByteToWideChar(
-		locale? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func(),
+            locale? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func(),
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             string,
             static_cast<int>(max_size),

@@ -39,6 +39,8 @@
 extern "C" int __cdecl _ismbcspace_l(unsigned int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
+	if (!locale)
+		return _ismbcspace(c);
 
     if (c <= 0x00FF)
     {

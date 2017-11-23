@@ -10,7 +10,7 @@
 #include <corecrt_internal.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
+
 /***
 *int mbtowc() - Convert multibyte char to wide character.
 *
@@ -46,6 +46,9 @@ extern "C" int __cdecl _mbtowc_l(
     _locale_t plocinfo
     )
 {
+	if (!plocinfo)
+		return mbtowc(pwc, s, n);
+
     if (!s || n == 0)
         /* indicate do not have state-dependent encodings,
         handle zero length string */
@@ -59,26 +62,11 @@ extern "C" int __cdecl _mbtowc_l(
         return 0;
     }
 
-	int _locale_mb_cur_max;
-	LCID locale;
-	unsigned int _locale_lc_codepage;
-	if (plocinfo)
-	{
-		_locale_mb_cur_max = plocinfo->locinfo->_locale_mb_cur_max;
-		locale = plocinfo->locinfo->lc_handle[LC_CTYPE];
-		_locale_lc_codepage = plocinfo->locinfo->_locale_lc_codepage;
-	}
-	else
-	{
-		_locale_mb_cur_max = ___mb_cur_max_func();
-		locale = ___lc_handle_func()[LC_CTYPE];
-		_locale_lc_codepage = ___lc_codepage_func();
-	}
 
     //_LocaleUpdate _loc_update(plocinfo);
-    _ASSERTE(_locale_mb_cur_max == 1 || _public._locale_mb_cur_max == 2);
+    _ASSERTE(plocinfo->locinfo->_locale_mb_cur_max == 1 || plocinfo->locinfo->_locale_mb_cur_max == 2);
 
-    if (/*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/locale==0)
+    if (plocinfo->locinfo->lc_handle[LC_CTYPE] == 0)
     {
         if (pwc)
             *pwc = (wchar_t) (unsigned char) *s;
@@ -89,26 +77,26 @@ extern "C" int __cdecl _mbtowc_l(
     {
         /* multi-byte char */
 
-        if ((_locale_mb_cur_max <= 1) || ((int) n < _locale_mb_cur_max) ||
-            (MultiByteToWideChar(_locale_lc_codepage,
+        if ((plocinfo->locinfo->_locale_mb_cur_max <= 1) || ((int) n < plocinfo->locinfo->_locale_mb_cur_max) ||
+            (MultiByteToWideChar(plocinfo->locinfo->_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
-            _locale_mb_cur_max,
+            plocinfo->locinfo->_locale_mb_cur_max,
             pwc,
             (pwc) ? 1 : 0) == 0))
         {
             /* validate high byte of mbcs char */
-            if ((n < (size_t) _locale_mb_cur_max) || (!*(s + 1)))
+            if ((n < (size_t) plocinfo->locinfo->_locale_mb_cur_max) || (!*(s + 1)))
             {
                 errno = EILSEQ;
                 return -1;
             }
         }
-        return _locale_mb_cur_max;
+        return plocinfo->locinfo->_locale_mb_cur_max;
     }
     else {
         /* single byte char */
-        if (MultiByteToWideChar(_locale_lc_codepage,
+        if (MultiByteToWideChar(plocinfo->locinfo->_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             1,

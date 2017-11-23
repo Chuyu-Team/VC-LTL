@@ -7,7 +7,7 @@
 // contained in a multibyte character.
 //
 #include <corecrt_internal.h>
-#include <locale.h>
+
 
 
 // Computes the number of bytes contained in a multibyte character.  If the string
@@ -26,60 +26,52 @@ extern "C" int __cdecl _mblen_l(
         return 0;
 
     //_LocaleUpdate locale_update(locale);
+	if (!locale)
+		return mblen(string, max_count);
 
     _ASSERTE(
-        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 1 ||
-        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 2);
+        locale->locinfo->_public._locale_mb_cur_max == 1 ||
+        locale->locinfo->_public._locale_mb_cur_max == 2);
 
     if (_isleadbyte_l(static_cast<unsigned char>(*string), locale))
     {
-		unsigned int _locale_lc_codepage;
-		int			 _locale_mb_cur_max;
-		if (locale)
-		{
-			_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
-			_locale_mb_cur_max = locale->locinfo->_locale_mb_cur_max;
-
-		}
-		else
-		{
-			_locale_lc_codepage = ___lc_codepage_func();
-			_locale_mb_cur_max = ___mb_cur_max_func();
-		}
-
         // Multi-byte character; verify that it is valid:
-        if (_locale_mb_cur_max <= 1)
+        if (locale->locinfo->_locale_mb_cur_max <= 1)
             return -1;
 
-        if (max_count > INT_MAX || static_cast<int>(max_count) < _locale_mb_cur_max)
+        if (max_count > INT_MAX || static_cast<int>(max_count) < locale->locinfo->_locale_mb_cur_max)
             return -1;
 
         int const status = MultiByteToWideChar(
-            _locale_lc_codepage,
+            locale->locinfo->_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             string,
-            _locale_mb_cur_max,
+            locale->locinfo->_locale_mb_cur_max,
             nullptr,
             0);
 
         if (status == 0)
             return -1;
 
-        return _locale_mb_cur_max;
+        return locale->locinfo->_locale_mb_cur_max;
     }
     else
     {
         // Single byte character; verify that it is valid:
-        int const status = MultiByteToWideChar(
-			locale ? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func(),
-            MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
-            string,
-            1,
-            nullptr,
-            0);
+        // CP_ACP is known to be valid for all values
+        if (locale->locinfo->_locale_lc_codepage != CP_ACP)
+        {
+            int const status = MultiByteToWideChar(
+                locale->locinfo->_locale_lc_codepage,
+                MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+                string,
+                1,
+                nullptr,
+                0);
 
-        if (status == 0)
-            return -1;
+            if (status == 0)
+                return -1;
+        }
 
         return sizeof(char);
     }

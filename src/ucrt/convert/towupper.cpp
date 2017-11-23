@@ -11,7 +11,6 @@
 #include <ctype.h>
 #include <locale.h>
 #include "..\..\winapi_thunks.h"
-#include <mbctype.h>
 
 /***
 *wint_t _towupper_l(c, ptloci) - convert wide character to upper case
@@ -38,11 +37,12 @@ extern "C" wint_t __cdecl _towupper_l (
     if (c == WEOF)
         return c;
 
+	if (!plocinfo)
+		return towupper(c);
+
     //_LocaleUpdate _loc_update(plocinfo);
 
-	auto _lc_ctype = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
-
-    if (_lc_ctype==0)
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
         return __ascii_towupper(c);
 
     /* if checking case of c does not require API call, do it */
@@ -50,13 +50,13 @@ extern "C" wint_t __cdecl _towupper_l (
         if ( !iswlower(c) ) {
             return c;
         } else {
-            return (plocinfo ? plocinfo->locinfo : (_getmbcp(), __acrt_getptd()->_locale_info))->pcumap[c];
+            return plocinfo->locinfo->pcumap[c];
         }
     }
 
     /* convert wide char to uppercase */
     if ( 0 == __crtLCMapStringW(
-                _lc_ctype,
+                plocinfo->locinfo->lc_handle[LC_CTYPE],
                 LCMAP_UPPERCASE,
                 (LPCWSTR)&c,
                 1,

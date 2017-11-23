@@ -93,6 +93,9 @@ protected:
                 // Instead, we write '?' and continue writing the string.
                 if (status.get() != EILSEQ)
                 {
+                    // *printf returns the number of characters written
+                    // set count written to -1 to indicate an error occurred
+                    *count_written = -1;
                     break;
                 }
 
@@ -334,7 +337,6 @@ public:
     enum
     {
         member_buffer_size = 1024,
-        maximum_precision  =  512
     };
 
     static_assert(member_buffer_size >= (_CVTBUFSIZE + 6) * 2, "Buffer is too small");
@@ -347,20 +349,24 @@ public:
     template <typename T>
     bool ensure_buffer_is_big_enough(size_t const count) throw()
     {
-        _VALIDATE_RETURN_NOEXC(SIZE_MAX / count / 2 >= sizeof(T), ENOMEM, false);
+        constexpr size_t max_count = SIZE_MAX / sizeof(T) / 2; // avoid runtime division
+        _VALIDATE_RETURN_NOEXC(max_count >= count, ENOMEM, false);
 
         size_t const required_size{count * sizeof(T) * 2};
 
         // Once we allocate a dynamic buffer, we no longer use the member buffer
-        if (!_dynamic_buffer && required_size <= member_buffer_size)
+        if (!_dynamic_buffer && required_size <= member_buffer_size) {
             return true;
+        }
 
-        if (required_size <= _dynamic_buffer_size)
+        if (required_size <= _dynamic_buffer_size) {
             return true;
+        }
 
         __crt_unique_heap_ptr<char> new_buffer{_malloc_crt_t(char, required_size)};
-        if (!new_buffer)
+        if (!new_buffer) {
             return false;
+        }
 
         _dynamic_buffer      = static_cast<__crt_unique_heap_ptr<char>&&>(new_buffer);
         _dynamic_buffer_size = required_size;
@@ -2533,8 +2539,7 @@ private:
         else
         {
             unset_flag(FL_LEADZERO);
-            if (_precision > formatting_buffer::maximum_precision)
-                _precision = formatting_buffer::maximum_precision;
+            _buffer.ensure_buffer_is_big_enough<Character>(_precision);
         }
 
         // If the number is zero, we do not want to print the hex prefix ("0x"),

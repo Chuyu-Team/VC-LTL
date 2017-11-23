@@ -42,47 +42,31 @@ extern "C" unsigned int __cdecl _mbctolower_l (
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbctolower(c);
+
         unsigned char val[2];
         unsigned char ret[4];
         //_LocaleUpdate _loc_update(plocinfo);
-		unsigned char*  mbctype;
-		unsigned char*  mbcasemap;
-		int            mbcodepage;
-		int mblcid;
-		if (plocinfo)
-		{
-			mbcodepage = plocinfo->mbcinfo->mbcodepage;
-			mbctype = plocinfo->mbcinfo->mbctype;
-			mbcasemap = plocinfo->mbcinfo->mbcasemap;
-			mblcid = plocinfo->mbcinfo->mblcid;
-		}
-		else
-		{
-			mbcodepage = _getmbcp();
-			auto mbcinfo = __acrt_getptd()->_multibyte_info;
-			mbctype = mbcinfo->mbctype;
-			mbcasemap = mbcinfo->mbcasemap;
-			mblcid = mbcinfo->mblcid;
-		}
 
         if (c > 0x00FF)
         {
             val[0] = (c >> 8) & 0xFF;
             val[1] = c & 0xFF;
 
-            if ( !_ismbblead_l(val[0], _loc_update.GetLocaleT()) )
+            if ( !_ismbblead_l(val[0], plocinfo) )
                 return c;
 
 
             if (__crtLCMapStringA(
                         plocinfo,
-                        mblcid,
+                        plocinfo->mbcinfo->mblcid,
                         LCMAP_LOWERCASE,
                         (const char *)val,
                         2,
                         (char *)ret,
                         2,
-                        mbcodepage,
+                        plocinfo->mbcinfo->mbcodepage,
                         TRUE ) == 0 )
                 return c;
 
@@ -94,7 +78,7 @@ extern "C" unsigned int __cdecl _mbctolower_l (
 
         }
         else
-            return (unsigned int)_mbbtolower_l((int)c, _loc_update.GetLocaleT());
+            return (unsigned int)_mbbtolower_l((int)c, plocinfo);
 }
 #endif
 

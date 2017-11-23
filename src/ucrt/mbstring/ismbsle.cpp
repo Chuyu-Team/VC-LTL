@@ -46,29 +46,20 @@ extern "C" int __cdecl _ismbslead_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _ismbslead(string, current);
+
         /* validation section */
         _VALIDATE_RETURN(string != nullptr, EINVAL, 0);
         _VALIDATE_RETURN(current != nullptr, EINVAL, 0);
 
         //_LocaleUpdate _loc_update(plocinfo);
-		int ismbcodepage;
-		unsigned char* mbctype;
-		if (plocinfo)
-		{
-			ismbcodepage = plocinfo->mbcinfo->ismbcodepage;
-			mbctype = plocinfo->mbcinfo->mbctype;
-		}
-		else
-		{
-			ismbcodepage = _getmbcp();
-			mbctype = __acrt_getptd()->_multibyte_info->mbctype;
-		}
 
-        if (ismbcodepage == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return 0;
 
         while (string <= current && *string) {
-            if ( _ismbblead_l((*string), _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l((*string), plocinfo) ) {
                 if (string++ == current)        /* check lead byte */
                     return -1;
                 if (!(*string))

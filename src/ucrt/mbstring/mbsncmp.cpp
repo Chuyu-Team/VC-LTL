@@ -47,29 +47,30 @@ extern "C" int __cdecl _mbsncmp_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsncmp(s1, s2, n);
+
         unsigned short c1, c2;
         //_LocaleUpdate _loc_update(plocinfo);
 
         if (n==0)
             return(0);
 
-        if ((plocinfo? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return strncmp((const char *)s1, (const char *)s2, n);
 
         /* validation section */
         _VALIDATE_RETURN(s1 != nullptr, EINVAL, _NLSCMPERROR);
         _VALIDATE_RETURN(s2 != nullptr, EINVAL, _NLSCMPERROR);
 
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
-
         while (n--) {
 
             c1 = *s1++;
-            if ( _ismbblead_l(c1, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(c1, plocinfo) )
                 c1 = ( (*s1 == '\0') ? 0 : ((c1<<8) | *s1++) );
 
             c2 = *s2++;
-            if ( _ismbblead_l(c2, _loc_update.GetLocaleT()) )
+            if ( _ismbblead_l(c2, plocinfo) )
                 c2 = ( (*s2 == '\0') ? 0 : ((c2<<8) | *s2++) );
 
             if (c1 != c2)

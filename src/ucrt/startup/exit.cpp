@@ -33,6 +33,20 @@ static _tls_callback_type thread_local_exit_callback_func;
 #endif
 
 
+// Enclaves have no support for managed apps
+#ifdef _UCRT_ENCLAVE_BUILD
+
+static bool __cdecl is_managed_app() throw() { return false; }
+
+static void __cdecl try_cor_exit_process(UINT const) throw() { }
+
+// This function never returns.  It causes the process to exit.
+static void __cdecl exit_or_terminate_process(UINT const return_code) throw()
+{
+    TerminateProcess(GetCurrentProcess(), return_code);
+}
+
+#else /* ^^^ _UCRT_ENCLAVE_BUILD ^^^ // vvv !_UCRT_ENCLAVE_BUILD vvv */
 
 typedef void (WINAPI* exit_process_pft)(UINT);
 
@@ -129,6 +143,7 @@ static void __cdecl exit_or_terminate_process(UINT const return_code) throw()
     ExitProcess(return_code);
 }
 
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 
 static int __cdecl atexit_exception_filter(unsigned long const _exception_code) throw()

@@ -46,22 +46,13 @@ size_t __cdecl _mbsnlen_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsnlen(s, sizeInBytes);
+
         size_t n, size;
         //_LocaleUpdate _loc_update(plocinfo);
-		int ismbcodepage;
-		unsigned char*  mbctype;
-		if (plocinfo)
-		{
-			ismbcodepage = plocinfo->mbcinfo->ismbcodepage;
-			mbctype = plocinfo->mbcinfo->mbctype;
-		}
-		else
-		{
-			ismbcodepage = _getmbcp();
-			mbctype = __acrt_getptd()->_multibyte_info->mbctype;
-		}
 
-        if (ismbcodepage == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return strnlen((const char *)s, sizeInBytes);
 
         /* Note that we do not check if s == nullptr, because we do not
@@ -95,6 +86,32 @@ size_t __cdecl _mbsnlen(
         size_t maxsize
         )
 {
-    return _mbsnlen_l(s,maxsize, nullptr);
+	size_t n, size;
+
+	if (_getmbcp() == 0)
+		return strnlen((const char *)s, maxsize);
+
+	/* Note that we do not check if s == nullptr, because we do not
+	* return errno_t...
+	*/
+
+	/* Note that sizeInBytes here is the number of bytes, not mb characters! */
+	for (n = 0, size = 0; size < maxsize && *s; n++, s++, size++)
+	{
+		if (_ismbblead(*s))
+		{
+			size++;
+			if (size >= maxsize)
+			{
+				break;
+			}
+			if (*++s == '\0')
+			{
+				break;
+			}
+		}
+	}
+
+	return (size >= maxsize ? maxsize : n);
 }
 #endif

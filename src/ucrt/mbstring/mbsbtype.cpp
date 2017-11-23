@@ -46,11 +46,14 @@
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbsbtype_l(unsigned char const* string, size_t length, _locale_t const locale)
 {
+	if (!locale)
+		return _mbsbtype(string, length);
+
     _VALIDATE_RETURN(string != nullptr, EINVAL, _MBC_ILLEGAL);
 
     //_LocaleUpdate locale_update(locale);
 
-    if ((locale? locale->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+    if (locale->mbcinfo->ismbcodepage == 0)
         return _MBC_SINGLE;
 
     int chartype = _MBC_ILLEGAL;

@@ -36,8 +36,8 @@ namespace
         }
 
         inline static type get_invalid_value() throw()
-        { 
-            return -1; 
+        {
+            return -1;
         }
     };
 
@@ -56,7 +56,7 @@ namespace
         }
     };
 
-    
+
 
     typedef __crt_unique_handle_t<file_handle_traits> scoped_file_handle;
     typedef __crt_unique_handle_t<find_handle_traits> unique_find_handle;
@@ -299,7 +299,7 @@ static TimeType __cdecl convert_filetime_to_time_t(
     }
 
 
-	//习惯转换函数，加速FTILETIME 到 time64转换
+	//修改转换函数，加速FTILETIME 到 time64转换
 	__time64_t const filetime_scale{ 10 * 1000 * 1000 }; // 100ns units
 
 	__time64_t const epoch_time= (*(__time64_t*)&file_time) - _EPOCH_BIAS;
@@ -326,18 +326,18 @@ static TimeType __cdecl convert_filetime_to_time_t(
     //    return -1;
     //}
 
-    // If the conversion to time_t fails, it will return -1.  We'll use this as
-    // the time_t value instead of failing the entire stat call, to allow callers
-    // to get information about files whose time information is not representable.
-    // (Callers use this API to test for file existence or to get file sizes.)
-    /*return time_traits::loctotime(
-        local_time.wYear,
-        local_time.wMonth,
-        local_time.wDay,
-        local_time.wHour,
-        local_time.wMinute,
-        local_time.wSecond,
-        -1);*/
+    //// If the conversion to time_t fails, it will return -1.  We'll use this as
+    //// the time_t value instead of failing the entire stat call, to allow callers
+    //// to get information about files whose time information is not representable.
+    //// (Callers use this API to test for file existence or to get file sizes.)
+    //return time_traits::loctotime(
+    //    local_time.wYear,
+    //    local_time.wMonth,
+    //    local_time.wDay,
+    //    local_time.wHour,
+    //    local_time.wMinute,
+    //    local_time.wSecond,
+    //    -1);
 }
 
 template <typename StatStruct>
@@ -364,7 +364,7 @@ static bool __cdecl common_stat_handle_file_not_opened(
     {
         return false;
     }
-    
+
     result.st_rdev = static_cast<_dev_t>(drive_number - 1);
     result.st_dev  = static_cast<_dev_t>(drive_number - 1); // A=0, B=1, etc.
 
@@ -578,7 +578,7 @@ extern "C" int __cdecl _wstat64i32(wchar_t const* const path, struct _stat64i32*
 //    _CHECK_FH_CLEAR_OSSERR_RETURN(fh, EBADF, -1);
 //    _VALIDATE_CLEAR_OSSERR_RETURN(fh >= 0 && fh < _nhandle, EBADF, -1);
 //    _VALIDATE_CLEAR_OSSERR_RETURN(_osfile(fh) & FOPEN, EBADF, -1);
-//    
+//
 //    return __acrt_lowio_lock_fh_and_call(fh, [&]()
 //    {
 //        if ((_osfile(fh) & FOPEN) == 0)

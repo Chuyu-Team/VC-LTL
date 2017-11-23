@@ -46,6 +46,9 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsrchr_l(
         _locale_t plocinfo
         )
 {
+		if (!plocinfo)
+			return _mbsrchr(str, c);
+
         char *r = nullptr;
         unsigned int cc;
         //_LocaleUpdate _loc_update(plocinfo);
@@ -53,14 +56,12 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsrchr_l(
         /* validation section */
         _VALIDATE_RETURN(str != nullptr, EINVAL, 0);
 
-        if ((plocinfo ? plocinfo->mbcinfo->ismbcodepage : _getmbcp()) == 0)
+        if (plocinfo->mbcinfo->ismbcodepage == 0)
             return (_CONST_RETURN unsigned char *)strrchr((const char *)str, c);
-
-		const auto mbctype = plocinfo ? plocinfo->mbcinfo->mbctype : __acrt_getptd()->_multibyte_info->mbctype;
 
         do {
             cc = *str;
-            if ( _ismbblead_l(cc, _loc_update.GetLocaleT()) ) {
+            if ( _ismbblead_l(cc, plocinfo) ) {
                 if(*++str) {
                     if (c == ((cc<<8)|*str))
                         r = (char *)str - 1;

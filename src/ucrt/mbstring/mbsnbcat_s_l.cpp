@@ -15,6 +15,7 @@
 #include <corecrt_internal_securecrt.h>
 
 #define _FUNC_NAME _mbsnbcat_s_l
+#define _FUNC_NAME_NO_LOCALE _mbsnbcat_s
 #define _COUNT _CountInBytes
 #define _COUNT_IN_BYTES 1
 

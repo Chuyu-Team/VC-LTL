@@ -10,22 +10,43 @@
 
 
 
-// Tests whether the low fragmentation heap is enabled
-static bool is_lfh_enabled() throw()
+// Enclaves have a different heap implementation.
+
+#ifdef _UCRT_ENCLAVE_BUILD
+
+// Tests whether the allocation contraction is possible
+__inline static bool is_contraction_possible(size_t const) throw()
 {
-    LONG heap_type = -1;
-    if (!HeapQueryInformation(
+    return FALSE;
+}
+
+#else /* ^^^ _UCRT_ENCLAVE_BUILD ^^^ // vvv !_UCRT_ENCLAVE_BUILD vvv */
+
+// Tests whether the allocation contraction is possible
+__inline static bool is_contraction_possible(size_t const old_size) throw()
+{
+    // Check if object allocated on low fragmentation heap.
+    //The LFH can only allocate blocks up to 16KB in size.
+    if (old_size <= 0x4000)
+    {
+        LONG heap_type = -1;
+        if (!HeapQueryInformation(
             __acrt_heap,
             HeapCompatibilityInformation,
             &heap_type,
             sizeof(heap_type),
             nullptr))
-    {
-        return FALSE;
+        {
+            return FALSE;
+        }
+        return heap_type != 2;
     }
-
-    return heap_type == 2;
+    // Contraction possible for objects not on the LFH
+    return TRUE;
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
+
 
 // This function implements the logic of expand().  It is called directly by the
 // _expand() function in the Release CRT, and called by the debug heap in the
@@ -48,10 +69,9 @@ extern "C" __declspec(noinline) void* __cdecl _expand_base(void* const block, si
     if (new_block != nullptr)
         return new_block;
 
-    // If a failure to contract was caused by the use of the LFH, just
-    // return the original block.  The LFH can only allocate blocks up to
-    // 16KB in size.
-    if (old_size <= 0x4000 && new_size <= old_size && is_lfh_enabled())
+    // If a failure to contract was caused by platform limitations, just
+    // return the original block.
+    if (new_size <= old_size && !is_contraction_possible(old_size))
         return block;
 
     errno = __acrt_errno_from_os_error(GetLastError());
@@ -70,7 +90,7 @@ extern "C" __declspec(noinline) void* __cdecl _expand_base(void* const block, si
 // Both _expand_dbg and _expand_base must also be marked noinline
 // to prevent identical COMDAT folding from substituting calls to _expand
 // with either other function or vice versa.
-extern "C" __declspec(noinline) void* __cdecl _expand(void* const block, size_t const size)
+extern "C" _CRT_HYBRIDPATCHABLE __declspec(noinline) void* __cdecl _expand(void* const block, size_t const size)
 {
     #ifdef _DEBUG
     return _expand_dbg(block, size, _NORMAL_BLOCK, nullptr, 0);

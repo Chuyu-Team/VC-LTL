@@ -31,13 +31,10 @@ extern "C" int __cdecl wcscmp(wchar_t const* a, wchar_t const* b)
     int result = 0;
 #pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
     while ((result = (int)(*a - *b)) == 0 && *b)
-            ++a, ++b;
+    {
+        ++a;
+        ++b;
+    }
 
-    if (result < 0)
-        return -1;
-
-    else if (result > 0)
-        return 1;
-
-    return 0;
+    return ((-result) < 0) - (result < 0); // (if positive) - (if negative) generates branchless code
 }

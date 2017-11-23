@@ -17,7 +17,7 @@
 // Both _malloc_dbg and _malloc_base must also be marked noinline
 // to prevent identical COMDAT folding from substituting calls to malloc
 // with either other function or vice versa.
-extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl malloc(size_t const size)
+extern "C" _CRT_HYBRIDPATCHABLE __declspec(noinline) _CRTRESTRICT void* __cdecl malloc(size_t const size)
 {
     #ifdef _DEBUG
     return _malloc_dbg(size, _NORMAL_BLOCK, nullptr, 0);

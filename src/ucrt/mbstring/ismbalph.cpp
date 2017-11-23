@@ -40,12 +40,12 @@
 extern "C" int __cdecl _ismbcalpha_l(unsigned int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
+	if (!locale)
+		return _ismbcalpha(c);
 
     if (c <= 0x00FF)
     {
-		mbstring_thunks(locale);
-
-        return _ismbbalpha_l(c, locale_update.GetLocaleT());
+        return _ismbbalpha_l(c, locale);
     }
 
     return __dcrt_multibyte_check_type(c, locale, _ALPHA, true);

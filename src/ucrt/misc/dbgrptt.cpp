@@ -48,6 +48,25 @@ __crt_report_hook_node<wchar_t> *_pReportHookListW;
 
 long _crtAssertBusy = -1;
 
+// Enclaves only support MODE_DEBUG for error output
+#ifdef _UCRT_ENCLAVE_BUILD
+
+int const _CrtDbgMode[_CRT_ERRCNT]
+{
+    _CRTDBG_MODE_DEBUG,
+    _CRTDBG_MODE_DEBUG,
+    _CRTDBG_MODE_DEBUG
+};
+
+_HFILE const _CrtDbgFile[_CRT_ERRCNT]
+{
+    _CRTDBG_INVALID_HFILE,
+    _CRTDBG_INVALID_HFILE,
+    _CRTDBG_INVALID_HFILE
+};
+
+#else
+
 int _CrtDbgMode[_CRT_ERRCNT]
 {
     _CRTDBG_MODE_DEBUG,
@@ -145,6 +164,8 @@ _HFILE __cdecl _CrtSetReportFile(
 
     return oldFile;
 }
+
+#endif /* _UCRT_ENCLAVE_BUILD */
 
 /***
 *_CRT_REPORT_HOOK _CrtSetReportHook() - set client report hook
@@ -254,11 +275,11 @@ int __cdecl _VCrtDbgReportA(
 
             _ERRCHECK(_itoa_s(nLine, szLineMessage, DBGRPT_MAX_MSG, 10));
 
-            OutputDebugStringA("Second Chance Assertion Failed: File ");
-            OutputDebugStringA(szFile ? szFile : "<file unknown>");
-            OutputDebugStringA(", Line ");
-            OutputDebugStringA(szLineMessage);
-            OutputDebugStringA("\n");
+            __acrt_OutputDebugStringA("Second Chance Assertion Failed: File ");
+            __acrt_OutputDebugStringA(szFile ? szFile : "<file unknown>");
+            __acrt_OutputDebugStringA(", Line ");
+            __acrt_OutputDebugStringA(szLineMessage);
+            __acrt_OutputDebugStringA("\n");
 
             _CrtDbgBreak();
             retval=-1;
@@ -385,7 +406,7 @@ int __cdecl _VCrtDbgReportA(
 
         if (_CrtDbgMode[nRptType] & _CRTDBG_MODE_DEBUG)
         {
-            OutputDebugStringA(szOutMessage);
+            __acrt_OutputDebugStringA(szOutMessage);
         }
 
         if (_CrtDbgMode[nRptType] & _CRTDBG_MODE_WNDW)
@@ -639,7 +660,7 @@ int __cdecl _VCrtDbgReportW
 
         if (_CrtDbgMode[nRptType] & _CRTDBG_MODE_DEBUG)
         {
-            OutputDebugStringW(szOutMessage);
+            __acrt_OutputDebugStringW(szOutMessage);
         }
 
         if (_CrtDbgMode[nRptType] & _CRTDBG_MODE_WNDW)

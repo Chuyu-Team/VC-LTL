@@ -43,31 +43,37 @@
 *
 *******************************************************************************/
 
+class wcrtomb_locale_t_hepler
+{
+public:
+	const int _locale_mb_cur_max = ___mb_cur_max_func();
+	const LCID __lc_ctype = ___lc_handle_func()[LC_CTYPE];
+	const unsigned int _locale_lc_codepage = ___lc_codepage_func();
+};
+
+
 _Success_(return == 0)
 static errno_t __cdecl _wcrtomb_s_l(
                                             int*        const   return_value,
     __out_bcount_z_opt(destination_count)   char*       const   destination,
                                             size_t      const   destination_count,
                                             wchar_t     const   wchar,
-                                            mbstate_t*  const   state/*,
-                                            _locale_t   const   locale*/
+                                            mbstate_t*  const   state,
+                                            wcrtomb_locale_t_hepler  const &  locale
     )
 {
     _ASSERTE(destination != nullptr && destination_count > 0);
 
     //_LocaleUpdate locale_update(locale);
 
-	
     _ASSERTE(
-		___mb_cur_max_func() == 1 ||
-		___mb_cur_max_func() == 2);
+		locale._locale_mb_cur_max == 1 ||
+		locale._locale_mb_cur_max == 2);
 
     if (state)
         state->_Wchar = 0;
 
-	
-
-    if (!___lc_handle_func()[LC_CTYPE])
+    if (!locale.__lc_ctype)
     {
         if (wchar > 255) // Validate high byte
         {
@@ -83,10 +89,10 @@ static errno_t __cdecl _wcrtomb_s_l(
 
         return 0;
     }
-	
+
     BOOL default_used{};
     int const size = WideCharToMultiByte(
-		___lc_codepage_func(),
+        locale._locale_lc_codepage,
         0,
         &wchar,
         1,
@@ -136,16 +142,18 @@ extern "C" errno_t __cdecl wcrtomb_s(
     // the fact that the destination will receive a character and not a string.
     _VALIDATE_RETURN_ERRCODE((destination == nullptr && destination_count == 0) || (destination != nullptr), EINVAL);
 
+	wcrtomb_locale_t_hepler _locale_t_hepler;
+
     errno_t e = 0;
     int     int_return_value = -1;
     if (destination == nullptr)
     {
         char buf[MB_LEN_MAX];
-        e = _wcrtomb_s_l(&int_return_value, buf, MB_LEN_MAX, wchar, state);
+        e = _wcrtomb_s_l(&int_return_value, buf, MB_LEN_MAX, wchar, state, _locale_t_hepler);
     }
     else
     {
-        e = _wcrtomb_s_l(&int_return_value, destination, destination_count, wchar, state);
+        e = _wcrtomb_s_l(&int_return_value, destination, destination_count, wchar, state, _locale_t_hepler);
     }
 
     if (return_value != nullptr)
@@ -199,13 +207,14 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     size_t nc = 0;
     wchar_t const* wcs = *source;
     //_LocaleUpdate locale_update(nullptr);
+	wcrtomb_locale_t_hepler _locale_t_hepler;
 
     if (!destination)
     {
         for (; ; nc += i, ++wcs)
         {
             /* translate but don't store */
-            _wcrtomb_s_l(&i, buf, MB_LEN_MAX, *wcs, state);
+            _wcrtomb_s_l(&i, buf, MB_LEN_MAX, *wcs, state, _locale_t_hepler);
             if (i <= 0)
             {
                 return static_cast<size_t>(-1);
@@ -217,14 +226,12 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
         }
     }
 
-	auto _locale_mb_cur_max = ___mb_cur_max_func();
-
     for (; 0 < n; nc += i, ++wcs, destination += i, n -= i)
     {
         /* translate and store */
         char *t = nullptr;
 
-        if (n < (size_t)_locale_mb_cur_max)
+        if (n < (size_t)_locale_t_hepler._locale_mb_cur_max)
         {
             t = buf;
         }
@@ -233,7 +240,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
             t = destination;
         }
 
-        _wcrtomb_s_l(&i, t, MB_LEN_MAX, *wcs, state);
+        _wcrtomb_s_l(&i, t, MB_LEN_MAX, *wcs, state, _locale_t_hepler);
         if (i <= 0)
         {
             /* encountered invalid sequence */
@@ -375,7 +382,7 @@ extern "C" int __cdecl wctob(wint_t const wchar)
     int  return_value = -1;
     char local_buffer[MB_LEN_MAX];
 
-    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, nullptr);
+    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, nullptr, wcrtomb_locale_t_hepler());
     if (e == 0 && return_value == 1)
         return local_buffer[0];
 

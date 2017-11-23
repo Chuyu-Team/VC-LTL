@@ -44,6 +44,7 @@
 *
 *******************************************************************************/
 
+//前后都没有使用到_locale_t特性，因此屏蔽处理
 _Success_(return != 0)
 _Post_satisfies_(*pRetValue <= _String_length_(s))
 static errno_t __cdecl _mbrtowc_s_l(
@@ -51,8 +52,8 @@ static errno_t __cdecl _mbrtowc_s_l(
     _Pre_maybenull_ _Out_writes_opt_z_(1)   wchar_t *       dst,
     _In_opt_z_                              const char *    s,
     _In_                                    size_t          n,
-    _Inout_                                 mbstate_t *     pmbst,
-    _In_opt_                                _locale_t       plocinfo
+    _Inout_                                 mbstate_t *     pmbst/*,
+    _In_opt_                                _locale_t       plocinfo*/
     ) throw()
 {
     _ASSERTE(pmbst != nullptr);
@@ -74,27 +75,13 @@ static errno_t __cdecl _mbrtowc_s_l(
     }
 
     //_LocaleUpdate _loc_update(plocinfo);
-    
-	int locale_mb_cur_max;
-	LCID locale;
-	unsigned int _locale_lc_codepage;
 
-	if (plocinfo)
-	{
-		locale_mb_cur_max = plocinfo->locinfo->_locale_mb_cur_max;
-		locale = plocinfo->locinfo->lc_handle[LC_CTYPE];
-		_locale_lc_codepage = plocinfo->locinfo->_locale_lc_codepage;
-	}
-	else
-	{
-		locale_mb_cur_max = ___mb_cur_max_func();
-		locale = ___lc_handle_func()[LC_CTYPE];
-		_locale_lc_codepage = ___lc_codepage_func();
-	}
+    const int locale_mb_cur_max = ___mb_cur_max_func();
+	const auto _locale_lc_codepage = ___lc_codepage_func();
 
     _ASSERTE(locale_mb_cur_max == 1 || locale_mb_cur_max == 2);
 
-    if (/*_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr*/locale==0)
+    if (___lc_handle_func()[LC_CTYPE] == 0)
     {
         _ASSIGN_IF_NOT_NULL(dst, (wchar_t) (unsigned char) *s);
         _ASSIGN_IF_NOT_NULL(pRetValue, 1);
@@ -125,7 +112,7 @@ static errno_t __cdecl _mbrtowc_s_l(
         _ASSIGN_IF_NOT_NULL(pRetValue, locale_mb_cur_max);
         return 0;
     }
-    else if (_isleadbyte_l((unsigned char) *s, plocinfo))
+    else if (isleadbyte((unsigned char) *s))
     {
         /* multi-byte char */
         if (n < (size_t) locale_mb_cur_max)
@@ -208,7 +195,7 @@ extern "C" wint_t __cdecl btowc(
         wchar_t wc = 0;
         int retValue = -1;
 
-        _mbrtowc_s_l(&retValue, &wc, &ch, 1, &mbst, nullptr);
+        _mbrtowc_s_l(&retValue, &wc, &ch, 1, &mbst/*, nullptr*/);
         return (retValue < 0 ? WEOF : wc);
     }
 }
@@ -238,7 +225,7 @@ extern "C" size_t __cdecl mbrlen(
     static mbstate_t mbst = {};
     int retValue = -1;
 
-    _mbrtowc_s_l(&retValue, nullptr, s, n, (pst != nullptr ? pst : &mbst), nullptr);
+    _mbrtowc_s_l(&retValue, nullptr, s, n, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
     return retValue;
 }
 #endif
@@ -270,11 +257,11 @@ extern "C" size_t __cdecl mbrtowc(
 
     if (s != nullptr)
     {
-        _mbrtowc_s_l(&retValue, dst, s, n, (pst != nullptr ? pst : &mbst), nullptr);
+        _mbrtowc_s_l(&retValue, dst, s, n, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
     }
     else
     {
-        _mbrtowc_s_l(&retValue, nullptr, "", 1, (pst != nullptr ? pst : &mbst), nullptr);
+        _mbrtowc_s_l(&retValue, nullptr, "", 1, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
     }
     return retValue;
 }
@@ -324,7 +311,7 @@ static size_t __cdecl _mbsrtowcs_helper(
         {
             /* translate but don't store */
             wchar_t wc;
-            _mbrtowc_s_l(&i, &wc, s, INT_MAX, pst, nullptr);
+            _mbrtowc_s_l(&i, &wc, s, INT_MAX, pst/*, _loc_update.GetLocaleT()*/);
             if (i < 0)
             {
                 return (size_t) - 1;
@@ -339,7 +326,7 @@ static size_t __cdecl _mbsrtowcs_helper(
     for (; 0 < n; ++nwc, s += i, ++wcs, --n)
     {
         /* translate and store */
-        _mbrtowc_s_l(&i, wcs, s, INT_MAX, pst, nullptr);
+        _mbrtowc_s_l(&i, wcs, s, INT_MAX, pst/*, _loc_update.GetLocaleT()*/);
         if (i < 0)
         {
             /* encountered invalid sequence */
