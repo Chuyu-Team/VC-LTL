@@ -317,7 +317,7 @@ namespace details
 
 #pragma warning(pop)
 
-	EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available();
+	//EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available()
 	//{
  //       #if _STL_WIN32_WINNT >= _WIN32_WINNT_WIN7
  //       return true;
@@ -327,12 +327,10 @@ namespace details
  //       return pfTryAcquireSRWLockExclusive != nullptr;
  //       #endif
  //   }
+	#define are_win7_sync_apis_available __crt_are_win7_sync_apis_available
 
-#if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
-#define are_vista_sync_apis_available() true
-#else
-	EXTERN_C BOOLEAN __cdecl are_vista_sync_apis_available();
-#endif
+
+	//EXTERN_C BOOLEAN __cdecl are_vista_sync_apis_available()
 	//{
  //       #if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
  //       return true;
@@ -342,6 +340,7 @@ namespace details
  //       return pfInitializeConditionVariable != nullptr;
  //       #endif
  //   }
+	#define are_vista_sync_apis_available __crt_are_vista_sync_apis_available
 
     inline void create_stl_critical_section(stl_critical_section_interface *p)
     {

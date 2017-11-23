@@ -133,7 +133,11 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY_Vista(AcquireSRWLockExclusive,               ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
     _APPLY(TryAcquireSRWLockExclusive,                     ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(ReleaseSRWLockExclusive,               ({ /*api_ms_win_core_synch_l1_1_0,*/             kernel32                                   })) \
-    _NO_APPLY_Vista(SleepConditionVariableSRW,             ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
+    _NO_APPLY_Vista(SleepConditionVariableSRW,             ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(CreateThreadpoolWork,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(FreeLibraryWhenCallbackReturns,        ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(SubmitThreadpoolWork,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(CloseThreadpoolWork,                   ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
 
 namespace
 {
@@ -1307,7 +1311,7 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 }
 #endif
 
-EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available()
+EXTERN_C BOOLEAN __cdecl __crt_are_win7_sync_apis_available()
 {
 
 	// TryAcquireSRWLockExclusive ONLY available on Win7+
@@ -1316,7 +1320,7 @@ EXTERN_C BOOLEAN __cdecl are_win7_sync_apis_available()
 }
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C BOOLEAN __cdecl are_vista_sync_apis_available()
+EXTERN_C BOOLEAN __cdecl __crt_are_vista_sync_apis_available()
 {
 	// InitializeConditionVariable ONLY available on Vista+
 	//DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNINITIALIZECONDITIONVARIABLE, InitializeConditionVariable, pfInitializeConditionVariable);
@@ -1325,6 +1329,85 @@ EXTERN_C BOOLEAN __cdecl are_vista_sync_apis_available()
 #endif
 
 
+#ifdef _ATL_XP_TARGETING
+EXTERN_C BOOLEAN __cdecl __crt__Is_vista_threadpool_supported()
+{
+	return try_get_CreateThreadpoolWork() != nullptr;
+}
+#endif
+
+__if_exists(try_get_FreeLibraryWhenCallbackReturns)
+{
+	VOID WINAPI __crtFreeLibraryWhenCallbackReturns(
+			_Inout_ PTP_CALLBACK_INSTANCE pci,
+			_In_ HMODULE mod
+		)
+	{
+		if (auto pFreeLibraryWhenCallbackReturns = try_get_FreeLibraryWhenCallbackReturns())
+		{
+			pFreeLibraryWhenCallbackReturns(pci, mod);
+		}
+		else
+		{
+			abort();
+		}
+	}
+}
+
+__if_exists(try_get_CloseThreadpoolWork)
+{
+	VOID WINAPI __crtCloseThreadpoolWork(
+			_Inout_ PTP_WORK pwk
+		)
+	{
+		if (auto pCloseThreadpoolWork = try_get_CloseThreadpoolWork())
+		{
+			pCloseThreadpoolWork(pwk);
+		}
+		else
+		{
+			abort();
+		}
+	}
+}
+
+__if_exists(try_get_SubmitThreadpoolWork)
+{
+	VOID WINAPI __crtSubmitThreadpoolWork(
+			_Inout_ PTP_WORK pwk
+		)
+	{
+		if (auto pSubmitThreadpoolWork = try_get_SubmitThreadpoolWork())
+		{
+			pSubmitThreadpoolWork(pwk);
+		}
+		else
+		{
+			abort();
+		}
+	}
+}
+
+__if_exists(try_get_CreateThreadpoolWork)
+{
+	PTP_WORK WINAPI
+		__crtCreateThreadpoolWork(
+			_In_ PTP_WORK_CALLBACK pfnwk,
+			_Inout_opt_ PVOID pv,
+			_In_opt_ PTP_CALLBACK_ENVIRON pcbe
+		)
+	{
+		if (auto pCreateThreadpoolWork = try_get_CreateThreadpoolWork())
+		{
+			return pCreateThreadpoolWork(pfnwk, pv, pcbe);
+		}
+		else
+		{
+			abort();
+			return nullptr;
+		}
+	}
+}
 
 namespace
 {

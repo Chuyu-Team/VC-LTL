@@ -13,7 +13,8 @@
 
 #include <ppltaskscheduler.h>
 #include <Windows.h>
-#include <awint.h>
+//#include <awint.h>
+#include "..\..\winapi_thunks.h"
 #include <stdexcept>
 #include <exception>
 
@@ -26,15 +27,18 @@ namespace Concurrency { namespace details {
             _Chore->_M_callback(_Chore->_M_data);
         }
 
-        bool is_vista_threadpool_supported()
-        {
-            #if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
-            return true;
-            #else
-            DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNCREATETHREADPOOLWORK, CreateThreadpoolWork, pfCreateThreadpoolWork);
-            return pfCreateThreadpoolWork != nullptr;
-            #endif // _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
-        }
+		//已经转移到winapi_thunks.h
+        //bool is_vista_threadpool_supported()
+        //{
+        //    #if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
+        //    return true;
+        //    #else
+        //    DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNCREATETHREADPOOLWORK, CreateThreadpoolWork, pfCreateThreadpoolWork);
+        //    return pfCreateThreadpoolWork != nullptr;
+        //    #endif // _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
+        //}
+		#define is_vista_threadpool_supported __crt__Is_vista_threadpool_supported
+
 
         DWORD __stdcall task_scheduler_callback_xp(LPVOID args)
         {

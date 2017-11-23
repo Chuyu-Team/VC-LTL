@@ -7,7 +7,7 @@ EXTERN_C_START
 
 
 #ifdef _ATL_XP_TARGETING
-extern BOOL WINAPI __crtInitOnceExecuteOnce(
+BOOL WINAPI __crtInitOnceExecuteOnce(
 	_Inout_     PINIT_ONCE    InitOnce,
 	_In_        PINIT_ONCE_FN InitFn,
 	_Inout_opt_ PVOID         Parameter,
@@ -18,7 +18,7 @@ extern BOOL WINAPI __crtInitOnceExecuteOnce(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
+VOID WINAPI __crtInitializeConditionVariable(
 	_Out_ PCONDITION_VARIABLE ConditionVariable
 );
 #else
@@ -26,7 +26,7 @@ EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
+BOOL WINAPI __crtSleepConditionVariableCS(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PCRITICAL_SECTION   CriticalSection,
 	_In_    DWORD               dwMilliseconds
@@ -36,7 +36,7 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C void WINAPI __crtWakeConditionVariable(
+void WINAPI __crtWakeConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 );
 #else
@@ -44,7 +44,7 @@ EXTERN_C void WINAPI __crtWakeConditionVariable(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C VOID __crtWakeAllConditionVariable(
+VOID __crtWakeAllConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 );
 #else
@@ -52,7 +52,7 @@ EXTERN_C VOID __crtWakeAllConditionVariable(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C VOID WINAPI __crtInitializeSRWLock(
+VOID WINAPI __crtInitializeSRWLock(
 	_Out_ PSRWLOCK SRWLock
 );
 #else
@@ -60,20 +60,20 @@ EXTERN_C VOID WINAPI __crtInitializeSRWLock(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
+VOID WINAPI __crtAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
 #else
 #define __crtAcquireSRWLockExclusive AcquireSRWLockExclusive
 #endif
 
-
-EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
+//Win7以上版本可用
+BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
+VOID WINAPI __crtReleaseSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
 #else
@@ -81,7 +81,7 @@ EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
+BOOL WINAPI __crtSleepConditionVariableSRW(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PSRWLOCK            SRWLock,
 	_In_    DWORD               dwMilliseconds,
@@ -91,13 +91,65 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 #define __crtSleepConditionVariableSRW SleepConditionVariableSRW
 #endif
 
-EXTERN_C bool __cdecl __crt_are_win7_sync_apis_available();
+BOOLEAN __cdecl __crt_are_win7_sync_apis_available();
 
 #ifdef _ATL_XP_TARGETING
-bool __cdecl __crt_are_vista_sync_apis_available();
+BOOLEAN __cdecl __crt_are_vista_sync_apis_available();
 #else
 #define __crt_are_vista_sync_apis_available() true
 #endif
+
+#ifdef _ATL_XP_TARGETING
+BOOLEAN __cdecl __crt__Is_vista_threadpool_supported();
+#else
+#define __crt__Is_vista_threadpool_supported() true
+#endif
+
+
+#ifdef _ATL_XP_TARGETING
+VOID
+WINAPI
+__crtFreeLibraryWhenCallbackReturns(
+	_Inout_ PTP_CALLBACK_INSTANCE pci,
+	_In_ HMODULE mod
+	);
+#else
+#define __crtFreeLibraryWhenCallbackReturns FreeLibraryWhenCallbackReturns
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID
+WINAPI
+__crtCloseThreadpoolWork(
+	_Inout_ PTP_WORK pwk
+	);
+#else
+#define __crtCloseThreadpoolWork CloseThreadpoolWork
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID
+WINAPI
+__crtSubmitThreadpoolWork(
+	_Inout_ PTP_WORK pwk
+	);
+#else
+#define __crtSubmitThreadpoolWork SubmitThreadpoolWork
+#endif
+
+#ifdef _ATL_XP_TARGETING
+PTP_WORK
+WINAPI
+__crtCreateThreadpoolWork(
+	_In_ PTP_WORK_CALLBACK pfnwk,
+	_Inout_opt_ PVOID pv,
+	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
+	);
+#else
+#define __crtCreateThreadpoolWork CreateThreadpoolWork
+#endif
+
+#define __crtQueueUserWorkItem QueueUserWorkItem
 
 __declspec(dllimport) int __cdecl __crtCompareStringA
 (
