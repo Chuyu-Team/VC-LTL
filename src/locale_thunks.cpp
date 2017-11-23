@@ -15,6 +15,7 @@
 #include <mbctype.h>
 
 
+#ifndef _ATL_XP_TARGETING
 class LocaleAutoUpdate
 {
 public:
@@ -29,18 +30,18 @@ public:
 		{
 			ptd = __acrt_getptd();
 
-			_own_locale = ptd->_own_locale;
+			_own_locale = ptd->VistaOrLater_msvcrt._own_locale;
 
 			//强制启用线程区域信息
-			ptd->_own_locale |= _PER_THREAD_LOCALE_BIT;
+			ptd->VistaOrLater_msvcrt._own_locale |= _PER_THREAD_LOCALE_BIT;
 
 			//备份当前区域信息
-			Backup.locinfo = ptd->_locale_info;
-			Backup.mbcinfo = ptd->_multibyte_info;
+			Backup.locinfo = ptd->VistaOrLater_msvcrt._locale_info;
+			Backup.mbcinfo = ptd->VistaOrLater_msvcrt._multibyte_info;
 
 			//替换当前区域信息
-			ptd->_locale_info = _Locale->locinfo;
-			ptd->_multibyte_info = _Locale->mbcinfo;
+			ptd->VistaOrLater_msvcrt._locale_info = _Locale->locinfo;
+			ptd->VistaOrLater_msvcrt._multibyte_info = _Locale->mbcinfo;
 		}
 	}
 
@@ -49,15 +50,17 @@ public:
 		if (ptd)
 		{
 			//恢复当前区域信息
-			ptd->_locale_info = Backup.locinfo;
-			ptd->_multibyte_info = Backup.mbcinfo;
+			ptd->VistaOrLater_msvcrt._locale_info = Backup.locinfo;
+			ptd->VistaOrLater_msvcrt._multibyte_info = Backup.mbcinfo;
 
 			//回滚区域线程状态
-			ptd->_own_locale = _own_locale;
+			ptd->VistaOrLater_msvcrt._own_locale = _own_locale;
 		}
 	}
 };
+#endif
 
+#ifndef _ATL_XP_TARGETING
 EXTERN_C double __cdecl _wcstod_l(
 	_In_z_                   wchar_t const* _String,
 	_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
@@ -68,7 +71,9 @@ EXTERN_C double __cdecl _wcstod_l(
 
 	return wcstod(_String, _EndPtr);
 }
+#endif
 
+#ifndef _ATL_XP_TARGETING
 EXTERN_C float __cdecl _wcstof_l(
 	_In_z_                   wchar_t const* _String,
 	_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
@@ -77,7 +82,9 @@ EXTERN_C float __cdecl _wcstof_l(
 {
 	return _wcstod_l(_String, _EndPtr, _Locale);
 }
+#endif
 
+#ifndef _ATL_XP_TARGETING
 EXTERN_C size_t __cdecl _strftime_l(
     _Out_writes_z_(_MaxSize)      char*            _Buffer,
     _In_                          size_t           _MaxSize,
@@ -90,3 +97,4 @@ EXTERN_C size_t __cdecl _strftime_l(
 
 	return strftime(_Buffer, _MaxSize, _Format, _Tm);
 }
+#endif

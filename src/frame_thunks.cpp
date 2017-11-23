@@ -38,7 +38,7 @@ extern "C" int __cdecl __uncaught_exceptions()
 	else
 #endif
 	{
-		return __acrt_getptd()->_ProcessingThrow;
+		return __acrt_getptd()->VistaOrLater_msvcrt._ProcessingThrow;
 	}
 }
 
@@ -57,12 +57,12 @@ extern "C" void** __cdecl __current_exception()
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < 0x00060000)
 	{
-		return &((_ptd_msvcrt_xp*)ptd)->_curexception;
+		return &ptd->XP_msvcrt._curexception;
 	}
 	else
 #endif
 	{
-		return &ptd->_curexception;
+		return &ptd->VistaOrLater_msvcrt._curexception;
 	}
 }
 
@@ -72,12 +72,12 @@ extern "C" void** __cdecl __current_exception_context()
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < 0x00060000)
 	{
-		return &((_ptd_msvcrt_xp*)ptd)->_curcontext;
+		return &ptd->XP_msvcrt._curcontext;
 	}
 	else
 #endif
 	{
-		return &ptd->_curcontext;
+		return &ptd->VistaOrLater_msvcrt._curcontext;
 	}
 }
 
@@ -97,7 +97,7 @@ extern "C" int* __cdecl __processing_throw()
 	else
 #endif
 	{
-		return &__acrt_getptd()->_ProcessingThrow;
+		return &__acrt_getptd()->VistaOrLater_msvcrt._ProcessingThrow;
 	}
 }
 

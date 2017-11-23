@@ -7,14 +7,19 @@
 //
 #include <corecrt_internal.h>
 #include <corecrt_terminate.h>
+#include "..\..\winapi_thunks.h"
 
 
-
-static terminate_handler __cdecl get_terminate_or_default(
+static __forceinline terminate_handler __cdecl get_terminate_or_default(
     __acrt_ptd const* const ptd
     ) throw()
 {
-    return ptd->_terminate ? ptd->_terminate : &abort;
+#ifdef _ATL_XP_TARGETING
+	if(__LTL_GetOsMinVersion() < 0x00060000)
+		return ptd->XP_msvcrt._terminate ? ptd->XP_msvcrt._terminate : &abort;
+	else
+#endif
+		return ptd->VistaOrLater_msvcrt._terminate ? ptd->VistaOrLater_msvcrt._terminate : &abort;
 }
 
 extern "C" terminate_handler __cdecl _get_terminate()

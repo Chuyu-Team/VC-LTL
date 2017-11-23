@@ -8,14 +8,19 @@
 #include <eh.h>
 #include <vcruntime_internal.h>
 #include <corecrt_internal.h>
+#include "..\..\winapi_thunks.h"
 
 
-
-static __inline unexpected_handler __cdecl get_unexpected_or_default(
+static __forceinline unexpected_handler __cdecl get_unexpected_or_default(
 	__acrt_ptd const* const ptd
     ) throw()
 {
-    return ptd->_unexpected ? (unexpected_handler)ptd->_unexpected : &terminate;
+#ifdef _ATL_XP_TARGETING
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+		return ptd->XP_msvcrt._unexpected ? (unexpected_handler)ptd->XP_msvcrt._unexpected : &terminate;
+	else
+#endif
+		return ptd->VistaOrLater_msvcrt._unexpected ? (unexpected_handler)ptd->VistaOrLater_msvcrt._unexpected : &terminate;
 }
 
 extern "C" unexpected_handler __cdecl _get_unexpected()

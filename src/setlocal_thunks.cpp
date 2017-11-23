@@ -352,6 +352,8 @@ static void __cdecl __freetlocinfo(
 	_free_crt(ptloci);
 }
 
+#ifndef _ATL_XP_TARGETING
+//WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _get_current_locale(void)
 {
 	auto retval = (__crt_locale_pointers*)calloc(sizeof(__crt_locale_pointers), 1);
@@ -368,8 +370,8 @@ EXTERN_C _locale_t __cdecl _get_current_locale(void)
 
 	auto ptd = __acrt_getptd();
 
-	retval->locinfo = ptd->_locale_info;
-	retval->mbcinfo = ptd->_multibyte_info;
+	retval->locinfo = ptd->VistaOrLater_msvcrt._locale_info;
+	retval->mbcinfo = ptd->VistaOrLater_msvcrt._multibyte_info;
 
 	//锁定区域
 	_lock(_SETLOCALE_LOCK);
@@ -391,7 +393,7 @@ EXTERN_C _locale_t __cdecl _get_current_locale(void)
 
 	return retval;
 }
-
+#endif
 
 static __forceinline char * __cdecl common_setlocale(
 	int _category,
@@ -440,30 +442,30 @@ static _locale_t __cdecl common_create_locale(
 	auto ptd = __acrt_getptd();
 
 	
-	auto _own_locale = ptd->_own_locale;
+	auto _own_locale = ptd->VistaOrLater_msvcrt._own_locale;
 
 	//启用线程locale信息
-	ptd->_own_locale |= _PER_THREAD_LOCALE_BIT;
+	ptd->VistaOrLater_msvcrt._own_locale |= _PER_THREAD_LOCALE_BIT;
 
 
-	if (common_setlocale(_category, _locale)!=nullptr && _setmbcp(ptd->_locale_info->_locale_lc_codepage)==0)
+	if (common_setlocale(_category, _locale)!=nullptr && _setmbcp(ptd->VistaOrLater_msvcrt._locale_info->_locale_lc_codepage)==0)
 	{
 		//设置区域信息成功后，获取新的区域信息
 		plocale = _get_current_locale();
 	}
 
 	//恢复线程配置状态
-	ptd->_own_locale = _own_locale;
+	ptd->VistaOrLater_msvcrt._own_locale = _own_locale;
 
 	//恢复以前的区域信息
-	if (plocaleOld->locinfo != ptd->_locale_info)
+	if (plocaleOld->locinfo != ptd->VistaOrLater_msvcrt._locale_info)
 	{
-		std::swap(plocaleOld->locinfo, ptd->_locale_info);
+		std::swap(plocaleOld->locinfo, ptd->VistaOrLater_msvcrt._locale_info);
 	}
 
-	if (plocaleOld->mbcinfo != ptd->_multibyte_info)
+	if (plocaleOld->mbcinfo != ptd->VistaOrLater_msvcrt._multibyte_info)
 	{
-		std::swap(plocaleOld->mbcinfo, ptd->_multibyte_info);
+		std::swap(plocaleOld->mbcinfo, ptd->VistaOrLater_msvcrt._multibyte_info);
 	}
 
 	//释放不需要的区域
@@ -473,7 +475,8 @@ static _locale_t __cdecl common_create_locale(
 	return plocale;
 }
 
-
+#ifndef _ATL_XP_TARGETING
+//WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _create_locale(
 	_In_   int         _Category,
 	_In_z_ char const* _Locale
@@ -481,7 +484,10 @@ EXTERN_C _locale_t __cdecl _create_locale(
 {
 	return common_create_locale(_Category, _Locale);
 }
+#endif
 
+#ifndef _ATL_XP_TARGETING
+//WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _wcreate_locale(
 	_In_   int            _category,
 	_In_z_ wchar_t const* _locale
@@ -489,7 +495,10 @@ EXTERN_C _locale_t __cdecl _wcreate_locale(
 {
 	return common_create_locale(_category, _locale);
 }
+#endif
 
+#ifndef _ATL_XP_TARGETING
+//WinXP不支持此接口
 EXTERN_C int __cdecl _configthreadlocale(int i)
 {
 	/*
@@ -506,16 +515,19 @@ EXTERN_C int __cdecl _configthreadlocale(int i)
 	* N is 0 if _ENABLE_PER_THREAD_LOCALE_NEW is not set.
 	*/
 	auto ptd = __acrt_getptd();
-	int retval = (ptd->_own_locale & _PER_THREAD_LOCALE_BIT) == 0 ? _DISABLE_PER_THREAD_LOCALE : _ENABLE_PER_THREAD_LOCALE;
+
+	auto& _own_locale = ptd->VistaOrLater_msvcrt._own_locale;
+
+	int retval = (_own_locale & _PER_THREAD_LOCALE_BIT) == 0 ? _DISABLE_PER_THREAD_LOCALE : _ENABLE_PER_THREAD_LOCALE;
 
 	switch (i)
 	{
 	case _ENABLE_PER_THREAD_LOCALE:
-		ptd->_own_locale = ptd->_own_locale | _PER_THREAD_LOCALE_BIT;
+		_own_locale = _own_locale | _PER_THREAD_LOCALE_BIT;
 		break;
 
 	case _DISABLE_PER_THREAD_LOCALE:
-		ptd->_own_locale = ptd->_own_locale & ~_PER_THREAD_LOCALE_BIT;
+		_own_locale = _own_locale & ~_PER_THREAD_LOCALE_BIT;
 		break;
 
 	case 0:
@@ -538,7 +550,7 @@ EXTERN_C int __cdecl _configthreadlocale(int i)
 	return retval;
 
 }
-
+#endif
 
 void __cdecl _free_locale(
 	_In_opt_ _locale_t plocinfo
