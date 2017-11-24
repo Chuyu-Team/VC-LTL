@@ -165,6 +165,21 @@ __crtCreateSymbolicLinkW(
 #define __crtCreateSymbolicLinkW CreateSymbolicLinkW
 #endif
 
+#ifdef _ATL_XP_TARGETING
+PVOID __fastcall __CRT_DecodePointer(
+	PVOID Ptr
+);
+
+PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
+
+#define DecodePointerDownlevel(p) __CRT_DecodePointer
+#define EncodePointerDownlevel(p) __CRT_EncodePointer
+#else
+#define DecodePointerDownlevel DecodePointer
+#define EncodePointerDownlevel EncodePointer
+#endif
+
+
 __declspec(dllimport) int __cdecl __crtCompareStringA
 (
     _In_opt_ _locale_t _Plocinfo,
