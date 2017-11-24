@@ -11,6 +11,7 @@
 #include <appmodel.h>
 #include <roapi.h>
 #include "..\..\src\winapi_thunks.h"
+#include <internal_shared.h>
 
 // Define this locally because including ntstatus.h conflicts with headers above
 #define STATUS_NOT_FOUND                 ((LONG)0xC0000225L)
@@ -1338,7 +1339,7 @@ EXTERN_C BOOLEAN __cdecl __crt__Is_vista_threadpool_supported()
 
 __if_exists(try_get_FreeLibraryWhenCallbackReturns)
 {
-	VOID WINAPI __crtFreeLibraryWhenCallbackReturns(
+	EXTERN_C VOID WINAPI __crtFreeLibraryWhenCallbackReturns(
 			_Inout_ PTP_CALLBACK_INSTANCE pci,
 			_In_ HMODULE mod
 		)
@@ -1356,7 +1357,7 @@ __if_exists(try_get_FreeLibraryWhenCallbackReturns)
 
 __if_exists(try_get_CloseThreadpoolWork)
 {
-	VOID WINAPI __crtCloseThreadpoolWork(
+	EXTERN_C VOID WINAPI __crtCloseThreadpoolWork(
 			_Inout_ PTP_WORK pwk
 		)
 	{
@@ -1373,7 +1374,7 @@ __if_exists(try_get_CloseThreadpoolWork)
 
 __if_exists(try_get_SubmitThreadpoolWork)
 {
-	VOID WINAPI __crtSubmitThreadpoolWork(
+	EXTERN_C VOID WINAPI __crtSubmitThreadpoolWork(
 			_Inout_ PTP_WORK pwk
 		)
 	{
@@ -1390,7 +1391,7 @@ __if_exists(try_get_SubmitThreadpoolWork)
 
 __if_exists(try_get_CreateThreadpoolWork)
 {
-	PTP_WORK WINAPI
+	EXTERN_C PTP_WORK WINAPI
 		__crtCreateThreadpoolWork(
 			_In_ PTP_WORK_CALLBACK pfnwk,
 			_Inout_opt_ PVOID pv,
@@ -1733,6 +1734,110 @@ namespace
 	} TEB, *PTEB;
 
 
+	typedef struct _OBJECT_ATTRIBUTES {
+		ULONG           Length;
+		HANDLE          RootDirectory;
+		PUNICODE_STRING ObjectName;
+		ULONG           Attributes;
+		PVOID           SecurityDescriptor;
+		PVOID           SecurityQualityOfService;
+	}  OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
+
+
+	typedef struct _IO_STATUS_BLOCK
+	{
+		union
+		{
+			NTSTATUS Status;
+			PVOID Pointer;
+		} DUMMYUNIONNAME;
+
+		ULONG_PTR Information;
+	} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
+
+
+	typedef enum _FILE_INFORMATION_CLASS
+	{
+		FileDirectoryInformation = 1,
+		FileFullDirectoryInformation,   // 2
+		FileBothDirectoryInformation,   // 3
+		FileBasicInformation,           // 4
+		FileStandardInformation,        // 5
+		FileInternalInformation,        // 6
+		FileEaInformation,              // 7
+		FileAccessInformation,          // 8
+		FileNameInformation,            // 9
+		FileRenameInformation,          // 10
+		FileLinkInformation,            // 11
+		FileNamesInformation,           // 12
+		FileDispositionInformation,     // 13
+		FilePositionInformation,        // 14
+		FileFullEaInformation,          // 15
+		FileModeInformation,            // 16
+		FileAlignmentInformation,       // 17
+		FileAllInformation,             // 18
+		FileAllocationInformation,      // 19
+		FileEndOfFileInformation,       // 20
+		FileAlternateNameInformation,   // 21
+		FileStreamInformation,          // 22
+		FilePipeInformation,            // 23
+		FilePipeLocalInformation,       // 24
+		FilePipeRemoteInformation,      // 25
+		FileMailslotQueryInformation,   // 26
+		FileMailslotSetInformation,     // 27
+		FileCompressionInformation,     // 28
+		FileObjectIdInformation,        // 29
+		FileCompletionInformation,      // 30
+		FileMoveClusterInformation,     // 31
+		FileQuotaInformation,           // 32
+		FileReparsePointInformation,    // 33
+		FileNetworkOpenInformation,     // 34
+		FileAttributeTagInformation,    // 35
+		FileTrackingInformation,        // 36
+		FileIdBothDirectoryInformation, // 37
+		FileIdFullDirectoryInformation, // 38
+		FileValidDataLengthInformation, // 39
+		FileShortNameInformation,       // 40
+		FileIoCompletionNotificationInformation, // 41
+		FileIoStatusBlockRangeInformation,       // 42
+		FileIoPriorityHintInformation,           // 43
+		FileSfioReserveInformation,              // 44
+		FileSfioVolumeInformation,               // 45
+		FileHardLinkInformation,                 // 46
+		FileProcessIdsUsingFileInformation,      // 47
+		FileNormalizedNameInformation,           // 48
+		FileNetworkPhysicalNameInformation,      // 49
+		FileIdGlobalTxDirectoryInformation,      // 50
+		FileIsRemoteDeviceInformation,           // 51
+		FileUnusedInformation,                   // 52
+		FileNumaNodeInformation,                 // 53
+		FileStandardLinkInformation,             // 54
+		FileRemoteProtocolInformation,           // 55
+
+		//
+		//  These are special versions of these operations (defined earlier)
+		//  which can be used by kernel mode drivers only to bypass security
+		//  access checks for Rename and HardLink operations.  These operations
+		//  are only recognized by the IOManager, a file system should never
+		//  receive these.
+		//
+		FileRenameInformationBypassAccessCheck,  // 56
+		FileLinkInformationBypassAccessCheck,    // 57
+		FileVolumeNameInformation,               // 58
+		FileIdInformation,                       // 59
+		FileIdExtdDirectoryInformation,          // 60
+		FileReplaceCompletionInformation,        // 61
+		FileHardLinkFullIdInformation,           // 62
+		FileIdExtdBothDirectoryInformation,      // 63
+		FileMaximumInformation
+
+	} FILE_INFORMATION_CLASS, *PFILE_INFORMATION_CLASS;
+
+	typedef struct _FILE_DISPOSITION_INFORMATION
+	{
+		BOOLEAN NeedDeleteFile;
+	} FILE_DISPOSITION_INFORMATION, *PFILE_DISPOSITION_INFORMATION;
+
 	EXTERN_C DWORD __LTL_GetOsMinVersion()
 	{
 		auto pPeb = ((TEB*)NtCurrentTeb())->ProcessEnvironmentBlock;
@@ -1747,4 +1852,274 @@ namespace
 
 		return MakeVersion(pPeb->OSMajorVersion, pPeb->OSMinorVersion, pPeb->OSBuildNumber, 0);
 	}
+
+	EXTERN_C NTSYSAPI
+		NTSTATUS
+		NTAPI
+		RtlAcquirePrivilege(
+			IN PULONG Privilege,
+			IN ULONG NumPriv,
+			IN ULONG Flags,
+			OUT PVOID *ReturnedState
+			);
+
+	EXTERN_C NTSYSAPI
+		NTSTATUS
+		NTAPI RtlReleasePrivilege(IN PVOID State);
+
+	EXTERN_C NTSYSAPI ULONG
+		NTAPI
+		RtlNtStatusToDosError(
+			IN NTSTATUS status
+		);
+
+	EXTERN_C NTSYSAPI ULONG NTAPI RtlDetermineDosPathNameType_U( IN PCWSTR Path );
+
+	EXTERN_C NTSYSAPI
+		BOOLEAN
+		NTAPI
+		RtlDosPathNameToNtPathName_U(
+			IN PCWSTR DosName,
+			OUT PUNICODE_STRING NtName,
+			OUT PCWSTR *DosFilePath OPTIONAL,
+			OUT PUNICODE_STRING NtFilePath OPTIONAL
+		);
+
+	EXTERN_C NTSYSAPI
+		VOID
+		NTAPI
+		RtlFreeUnicodeString(
+			PUNICODE_STRING UnicodeString
+		);
+
+	EXTERN_C NTSYSAPI NTSTATUS NTAPI NtCreateFile(
+		_Out_     PHANDLE FileHandle,
+		_In_      ACCESS_MASK DesiredAccess,
+		_In_      POBJECT_ATTRIBUTES ObjectAttributes,
+		_Out_     PIO_STATUS_BLOCK IoStatusBlock,
+		_In_opt_  PLARGE_INTEGER AllocationSize,
+		_In_      ULONG FileAttributes,
+		_In_      ULONG ShareAccess,
+		_In_      ULONG CreateDisposition,
+		_In_      ULONG CreateOptions,
+		_In_opt_  PVOID EaBuffer,
+		_In_      ULONG EaLength
+	);
+
+	EXTERN_C NTSYSAPI NTSTATUS NTAPI NtSetInformationFile(
+		_In_ HANDLE FileHandle,
+		_Out_ PIO_STATUS_BLOCK IoStatusBlock,
+		_In_ PVOID FileInformation,
+		_In_ ULONG Length,
+		_In_ FILE_INFORMATION_CLASS FileInformationClass);
+
+	EXTERN_C NTSYSAPI NTSTATUS
+		NTAPI
+		NtClose(
+			IN HANDLE hObject
+		);
+
+	enum
+	{  
+		RtlPathTypeUnknown, 
+		RtlPathTypeUncAbsolute, 
+		RtlPathTypeDriveAbsolute, 
+		RtlPathTypeDriveRelative, 
+		RtlPathTypeRooted, 
+		RtlPathTypeRelative, 
+		RtlPathTypeLocalDevice, 
+		RtlPathTypeRootLocalDevice, 
+	} RTL_PATH_TYPE;
+
+
+#ifndef SYMLINK_FLAG_RELATIVE
+	#define SYMLINK_FLAG_RELATIVE  1
+#endif
+	typedef struct _REPARSE_DATA_BUFFER {
+		ULONG  ReparseTag;
+		USHORT ReparseDataLength;
+		USHORT Reserved;
+		union {
+			struct {
+				USHORT SubstituteNameOffset;
+				USHORT SubstituteNameLength;
+				USHORT PrintNameOffset;
+				USHORT PrintNameLength;
+				ULONG Flags;
+				WCHAR PathBuffer[1];
+			} SymbolicLinkReparseBuffer;
+			struct {
+				USHORT SubstituteNameOffset;
+				USHORT SubstituteNameLength;
+				USHORT PrintNameOffset;
+				USHORT PrintNameLength;
+				WCHAR PathBuffer[1];
+			} MountPointReparseBuffer;
+			struct {
+				UCHAR  DataBuffer[1];
+			} GenericReparseBuffer;
+		} DUMMYUNIONNAME;
+	} REPARSE_DATA_BUFFER, *PREPARSE_DATA_BUFFER;
+
+#ifdef _ATL_XP_TARGETING
+
+	//XP不支持CreateSymbolicLinkW，直接使用NT API实现行为
+
+
+	EXTERN_C BOOLEAN
+		WINAPI
+		__crtCreateSymbolicLinkW(
+			_In_ LPCWSTR lpSymlinkFileName,
+			_In_ LPCWSTR lpTargetFileName,
+			_In_ DWORD dwFlags
+		)
+	{
+		if (lpSymlinkFileName == nullptr || lpTargetFileName == nullptr || (dwFlags&SYMBOLIC_LINK_FLAG_DIRECTORY) != dwFlags)
+		{
+			//参数错误
+			SetLastError(ERROR_INVALID_PARAMETER);
+			return FALSE;
+		}
+
+		ULONG Privilege = /*SE_CREATE_SYMBOLIC_LINK_PRIVILEGE*/35;
+		PVOID OldStatus=nullptr;
+		auto lStatus = RtlAcquirePrivilege(&Privilege, 1, 0, &OldStatus);
+
+		if (lStatus<0)
+		{
+			SetLastError(RtlNtStatusToDosError(lStatus));
+			return FALSE;
+		}
+
+		BOOL bRet = FALSE;
+
+		//auto& pReparseData = _calloc_crt_t(byte, MAXIMUM_REPARSE_DATA_BUFFER_SIZE);
+
+		__crt_scoped_stack_ptr_tag<wchar_t> lpFullTargetFileName=nullptr;
+
+		UNICODE_STRING NtName = {}, NtSymlinkFileName = {};
+		bool bRelative = false;
+
+		switch (RtlDetermineDosPathNameType_U(lpTargetFileName))
+		{
+		case RtlPathTypeUnknown:
+		case RtlPathTypeRooted:
+		case RtlPathTypeRelative:
+			//
+			bRelative = true;
+			NtName.Buffer = (wchar_t*)lpTargetFileName;
+			NtName.Length = NtName.MaximumLength = wcslen(lpTargetFileName) * sizeof(wchar_t);
+
+			break;
+		case RtlPathTypeDriveRelative:
+			if (auto cchFull = GetFullPathNameW(lpTargetFileName, 0, 0, nullptr))
+			{
+				lpFullTargetFileName = (wchar_t*)_malloca(cchFull * sizeof(wchar_t));
+				if (!lpFullTargetFileName._p)
+				{
+					SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+					goto _End;
+				}
+
+				lpTargetFileName = lpFullTargetFileName._p;
+			}
+
+		//case RtlPathTypeUncAbsolute:
+		//case RtlPathTypeDriveAbsolute:
+		//case RtlPathTypeLocalDevice:
+		//case RtlPathTypeRootLocalDevice:
+		default:
+			if (!RtlDosPathNameToNtPathName_U(lpTargetFileName, &NtName, nullptr, nullptr))
+			{
+				SetLastError(ERROR_INVALID_PARAMETER);
+				goto _End;
+			}
+			break;
+		}
+
+		{
+			auto cbTargetFileName = wcslen(lpTargetFileName) * sizeof(wchar_t);
+
+			auto cBuffer = NtName.Length + cbTargetFileName + UFIELD_OFFSET(REPARSE_DATA_BUFFER, SymbolicLinkReparseBuffer.PathBuffer);
+
+
+			auto& pReparseData = _malloca_crt_t(BYTE, cBuffer);
+
+			if (!pReparseData._p)
+			{
+				SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+				goto _End;
+			}
+
+			memset(pReparseData._p, 0, cBuffer);
+
+			if (bRelative)
+				((REPARSE_DATA_BUFFER*)pReparseData._p)->SymbolicLinkReparseBuffer.Flags |= SYMLINK_FLAG_RELATIVE;
+
+
+			((REPARSE_DATA_BUFFER*)pReparseData._p)->ReparseTag = IO_REPARSE_TAG_SYMLINK;
+
+			((REPARSE_DATA_BUFFER*)pReparseData._p)->ReparseDataLength = cBuffer - UFIELD_OFFSET(REPARSE_DATA_BUFFER, GenericReparseBuffer);
+
+			auto& SymbolicLinkReparseBuffer = ((REPARSE_DATA_BUFFER*)pReparseData._p)->SymbolicLinkReparseBuffer;
+
+
+			SymbolicLinkReparseBuffer.SubstituteNameOffset = SymbolicLinkReparseBuffer.PrintNameLength = wcslen(lpTargetFileName) * sizeof(wchar_t);
+			SymbolicLinkReparseBuffer.SubstituteNameLength = NtName.Length;
+
+			memcpy(SymbolicLinkReparseBuffer.PathBuffer, lpTargetFileName, SymbolicLinkReparseBuffer.PrintNameLength);
+			memcpy((byte*)(SymbolicLinkReparseBuffer.PathBuffer) + SymbolicLinkReparseBuffer.PrintNameLength, NtName.Buffer, NtName.Length);
+
+
+			
+
+			if (RtlDosPathNameToNtPathName_U(lpSymlinkFileName, &NtSymlinkFileName, nullptr, nullptr))
+			{
+				HANDLE hFile;
+
+				OBJECT_ATTRIBUTES ObjectAttributes = {sizeof(OBJECT_ATTRIBUTES),nullptr,&NtSymlinkFileName ,/*OBJ_CASE_INSENSITIVE*/0x40};
+				IO_STATUS_BLOCK IoStatusBlock;
+
+				lStatus = NtCreateFile(&hFile, FILE_WRITE_ATTRIBUTES | SYNCHRONIZE | DELETE, &ObjectAttributes, &IoStatusBlock, nullptr, FILE_ATTRIBUTE_NORMAL, 0, /*FILE_CREATE*/2, (dwFlags&SYMBOLIC_LINK_FLAG_DIRECTORY) ? 0x200021 : 0x200060, nullptr, 0);
+				if (lStatus < 0)
+				{
+					SetLastError(RtlNtStatusToDosError(lStatus));
+				}
+				else
+				{
+					DWORD cRet;
+					bRet = DeviceIoControl(hFile, FSCTL_SET_REPARSE_POINT, pReparseData._p, cBuffer, NULL, NULL, &cRet, NULL);
+					if (!bRet)
+					{
+						//设置失败则删除创建的文件
+						FILE_DISPOSITION_INFORMATION DispositionInformation;
+						DispositionInformation.NeedDeleteFile = TRUE;
+						NtSetInformationFile(hFile, &IoStatusBlock, &DispositionInformation, sizeof(DispositionInformation), FileDispositionInformation);
+					}
+
+
+					NtClose(hFile);
+				}
+
+				RtlFreeUnicodeString(&NtSymlinkFileName);
+			}
+			else
+			{
+				SetLastError(ERROR_INVALID_PARAMETER);
+			}
+
+
+			if (!bRelative)
+				RtlFreeUnicodeString(&NtName);
+
+		}
+
+
+	_End:
+
+		RtlReleasePrivilege(OldStatus);
+
+		return bRet;
+	}
+#endif
 }

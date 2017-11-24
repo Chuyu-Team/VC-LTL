@@ -18,6 +18,14 @@ lib "%libfile%" "%~dp0msvcrtdll.lib"
 
 del "%~dp0msvcrtdll.*" /q
 
+lib /def:"%~dp0ntdll.def" /out:"%~dp0ntdll_dll.lib"
+
+lib "%libfile%" "%~dp0ntdll_dll.lib"
+
+lib "%libfile%" "%~dp0ntdll_dll.lib"
+
+del "%~dp0ntdll_dll.*" /q
+
 popd
 
 pause

@@ -1,7 +1,8 @@
 // MINITHREADS
 #include <stdexcept>
 #include <windows.h>
-#include <awint.h>
+//#include <awint.h>
+#include "..\..\winapi_thunks.h"
 
 namespace stdext {
 	namespace threads {

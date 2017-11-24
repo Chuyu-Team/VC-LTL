@@ -17,7 +17,8 @@
 #include <direct.h>
 #include <string.h>
 #include <io.h>
-#include <awint.h>
+//#include <awint.h>
+#include "..\..\winapi_thunks.h"
 
 #define _FILE_ATTRIBUTE_REGULAR	\
 	(FILE_ATTRIBUTE_ARCHIVE \

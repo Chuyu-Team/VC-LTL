@@ -151,6 +151,20 @@ __crtCreateThreadpoolWork(
 
 #define __crtQueueUserWorkItem QueueUserWorkItem
 
+#define __crtInitializeCriticalSectionEx __acrt_InitializeCriticalSectionEx
+
+#ifdef _ATL_XP_TARGETING
+BOOLEAN
+WINAPI
+__crtCreateSymbolicLinkW(
+	_In_ LPCWSTR lpSymlinkFileName,
+	_In_ LPCWSTR lpTargetFileName,
+	_In_ DWORD dwFlags
+);
+#else
+#define __crtCreateSymbolicLinkW CreateSymbolicLinkW
+#endif
+
 __declspec(dllimport) int __cdecl __crtCompareStringA
 (
     _In_opt_ _locale_t _Plocinfo,

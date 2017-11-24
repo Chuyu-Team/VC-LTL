@@ -1,0 +1,21 @@
+LIBRARY ntdll.dll
+
+EXPORTS
+
+RtlAcquirePrivilege
+
+RtlReleasePrivilege
+
+RtlNtStatusToDosError
+
+RtlDetermineDosPathNameType_U
+
+RtlDosPathNameToNtPathName_U
+
+RtlFreeUnicodeString
+
+NtCreateFile
+
+NtSetInformationFile
+
+NtClose
