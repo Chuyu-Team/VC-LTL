@@ -846,7 +846,7 @@ __if_exists(try_get_RoUninitialize)
 
 __if_exists(try_get_AppPolicyGetProcessTerminationMethod)
 {
-	LONG WINAPI __acrt_AppPolicyGetProcessTerminationMethodInternal(_Out_ AppPolicyProcessTerminationMethod* policy)
+	extern "C" LONG WINAPI __acrt_AppPolicyGetProcessTerminationMethodInternal(_Out_ AppPolicyProcessTerminationMethod* policy)
 	{
 		if (auto const app_policy_get_process_terminaton_method_claims = try_get_AppPolicyGetProcessTerminationMethod())
 		{
@@ -859,7 +859,7 @@ __if_exists(try_get_AppPolicyGetProcessTerminationMethod)
 
 __if_exists(try_get_AppPolicyGetThreadInitializationType)
 {
-	LONG WINAPI __acrt_AppPolicyGetThreadInitializationTypeInternal(_Out_ AppPolicyThreadInitializationType* policy)
+	extern "C" LONG WINAPI __acrt_AppPolicyGetThreadInitializationTypeInternal(_Out_ AppPolicyThreadInitializationType* policy)
 	{
 		if (auto const app_policy_get_thread_initialization_type_claims = try_get_AppPolicyGetThreadInitializationType())
 		{
@@ -872,7 +872,7 @@ __if_exists(try_get_AppPolicyGetThreadInitializationType)
 
 __if_exists(try_get_AppPolicyGetShowDeveloperDiagnostic)
 {
-	LONG WINAPI __acrt_AppPolicyGetShowDeveloperDiagnosticInternal(_Out_ AppPolicyShowDeveloperDiagnostic* policy)
+	extern "C" LONG WINAPI __acrt_AppPolicyGetShowDeveloperDiagnosticInternal(_Out_ AppPolicyShowDeveloperDiagnostic* policy)
 	{
 		if (auto const app_policy_get_show_developer_diagnostic_claims = try_get_AppPolicyGetShowDeveloperDiagnostic())
 		{
@@ -885,7 +885,7 @@ __if_exists(try_get_AppPolicyGetShowDeveloperDiagnostic)
 
 __if_exists(try_get_AppPolicyGetWindowingModel)
 {
-	LONG WINAPI __acrt_AppPolicyGetWindowingModelInternal(_Out_ AppPolicyWindowingModel* policy)
+	extern "C" LONG WINAPI __acrt_AppPolicyGetWindowingModelInternal(_Out_ AppPolicyWindowingModel* policy)
 	{
 		if (auto const app_policy_get_windowing_model_claims = try_get_AppPolicyGetWindowingModel())
 		{
@@ -1067,12 +1067,12 @@ enum : int
 	__crt_maximum_pointer_shift = sizeof(uintptr_t) * 8
 };
 
-inline unsigned int __crt_rotate_pointer_value(unsigned int const value, int const shift) throw()
+static __forceinline unsigned int __crt_rotate_pointer_value(unsigned int const value, int const shift) throw()
 {
 	return RotateRight32(value, shift);
 }
 
-inline unsigned __int64 __crt_rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
+static __forceinline unsigned __int64 __crt_rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
 {
 	return RotateRight64(value, shift);
 }
