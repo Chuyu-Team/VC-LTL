@@ -1183,7 +1183,10 @@ EXTERN_C VOID WINAPI __crtInitializeConditionVariable(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1202,8 +1205,8 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableCS(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
-		abort();
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
 	}
 }
 #endif
@@ -1219,7 +1222,10 @@ EXTERN_C void WINAPI __crtWakeConditionVariable(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1236,7 +1242,10 @@ EXTERN_C VOID __crtWakeAllConditionVariable(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1253,7 +1262,10 @@ EXTERN_C VOID WINAPI __crtInitializeSRWLock(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1270,7 +1282,10 @@ EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1286,7 +1301,10 @@ EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1303,7 +1321,10 @@ EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1324,8 +1345,8 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 	}
 	else
 	{
-		//不存在接口则崩溃处理
-		abort();
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
 	}
 }
 #endif
@@ -1368,6 +1389,10 @@ __if_exists(try_get_FreeLibraryWhenCallbackReturns)
 		}
 		else
 		{
+			//中断程序
+			__debugbreak();
+
+			//强制退出
 			abort();
 		}
 	}
@@ -1385,6 +1410,10 @@ __if_exists(try_get_CloseThreadpoolWork)
 		}
 		else
 		{
+			//中断程序
+			__debugbreak();
+
+			//强制退出
 			abort();
 		}
 	}
@@ -1402,6 +1431,10 @@ __if_exists(try_get_SubmitThreadpoolWork)
 		}
 		else
 		{
+			//中断程序
+			__debugbreak();
+
+			//强制退出
 			abort();
 		}
 	}
@@ -1422,7 +1455,7 @@ __if_exists(try_get_CreateThreadpoolWork)
 		}
 		else
 		{
-			abort();
+			SetLastError(ERROR_INVALID_PARAMETER);
 			return nullptr;
 		}
 	}
@@ -1453,8 +1486,14 @@ EXTERN_C VOID WINAPI __crtFlushProcessWriteBuffers(void)
 	{
 		return pFlushProcessWriteBuffers();
 	}
+	else
+	{
+		//中断程序
+		__debugbreak();
 
-	//nop
+		//强制退出
+		abort();
+	}
 }
 #endif
 
@@ -1486,7 +1525,10 @@ EXTERN_C VOID WINAPI __crtSetThreadpoolTimer(
 	}
 	else
 	{
-		//强制退出程序
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1504,7 +1546,10 @@ EXTERN_C VOID WINAPI __crtSetThreadpoolWait(
 	}
 	else
 	{
-		//强制退出程序
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1519,7 +1564,10 @@ EXTERN_C VOID WINAPI __crtCloseThreadpoolWait(
 	}
 	else
 	{
-		//强制退出程序
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1535,7 +1583,10 @@ EXTERN_C VOID WINAPI __crtWaitForThreadpoolTimerCallbacks(
 	}
 	else
 	{
-		//强制退出程序
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
@@ -1568,7 +1619,10 @@ EXTERN_C VOID WINAPI __crtCloseThreadpoolTimer(
 	}
 	else
 	{
-		//强制退出程序
+		//中断程序
+		__debugbreak();
+
+		//强制退出
 		abort();
 	}
 }
