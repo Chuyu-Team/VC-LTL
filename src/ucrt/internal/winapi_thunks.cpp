@@ -58,6 +58,14 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
 
 #define _NO_APPLY(a,b)
 
+//_NO_APPLY_2003 在2003以及以上平台不应用
+#if defined _ATL_XP_TARGETING && defined _X86_
+#define _NO_APPLY_2003 _APPLY
+#else
+#define _NO_APPLY_2003(a,b)
+#endif
+
+
 //_NO_APPLY_Vista 在Vista以及以上平台不应用
 #ifdef _ATL_XP_TARGETING
 #define _NO_APPLY_Vista _APPLY
@@ -138,7 +146,17 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY_Vista(CreateThreadpoolWork,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(FreeLibraryWhenCallbackReturns,        ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(SubmitThreadpoolWork,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
-    _NO_APPLY_Vista(CloseThreadpoolWork,                   ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
+    _NO_APPLY_Vista(CloseThreadpoolWork,                   ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(SetThreadpoolTimer,                    ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_2003(GetCurrentProcessorNumber,              ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(FlushProcessWriteBuffers,              ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(GetTickCount64,                        ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(SetThreadpoolWait,                     ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(CloseThreadpoolWait,                   ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(WaitForThreadpoolTimerCallbacks,       ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(CreateThreadpoolWait,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(CloseThreadpoolTimer,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_Vista(CreateThreadpoolTimer,                 ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
 
 namespace
 {
@@ -1409,6 +1427,170 @@ __if_exists(try_get_CreateThreadpoolWork)
 		}
 	}
 }
+
+
+#if defined _ATL_XP_TARGETING && defined _X86_
+
+EXTERN_C DWORD WINAPI __crtGetCurrentProcessorNumber(void)
+{
+	if (auto pGetCurrentProcessorNumber = try_get_GetCurrentProcessorNumber())
+	{
+		return pGetCurrentProcessorNumber();
+	}
+	else
+	{
+		//如果不支持此接口，那么都假定只有一组CPU
+		return 1;
+	}
+}
+
+#endif
+
+#ifdef _ATL_XP_TARGETING
+EXTERN_C VOID WINAPI __crtFlushProcessWriteBuffers(void)
+{
+	if (auto pFlushProcessWriteBuffers = try_get_FlushProcessWriteBuffers())
+	{
+		return pFlushProcessWriteBuffers();
+	}
+
+	//nop
+}
+#endif
+
+#ifdef _ATL_XP_TARGETING
+EXTERN_C ULONGLONG WINAPI __crtGetTickCount64(VOID)
+{
+	if (auto pGetTickCount64 = try_get_GetTickCount64())
+	{
+		return pGetTickCount64();
+	}
+	else
+	{
+		return GetTickCount();
+	}
+}
+#endif
+
+#ifdef _ATL_XP_TARGETING
+EXTERN_C VOID WINAPI __crtSetThreadpoolTimer(
+	_Inout_ PTP_TIMER pti,
+	_In_opt_ PFILETIME pftDueTime,
+	_In_ DWORD msPeriod,
+	_In_opt_ DWORD msWindowLength
+)
+{
+	if (auto pSetThreadpoolTimer = try_get_SetThreadpoolTimer())
+	{
+		return pSetThreadpoolTimer(pti, pftDueTime, msPeriod, msWindowLength);
+	}
+	else
+	{
+		//强制退出程序
+		abort();
+	}
+}
+
+
+EXTERN_C VOID WINAPI __crtSetThreadpoolWait(
+	_Inout_ PTP_WAIT pwa,
+	_In_opt_ HANDLE h,
+	_In_opt_ PFILETIME pftTimeout
+)
+{
+	if (auto pSetThreadpoolWait = try_get_SetThreadpoolWait())
+	{
+		return pSetThreadpoolWait(pwa, h, pftTimeout);
+	}
+	else
+	{
+		//强制退出程序
+		abort();
+	}
+}
+
+EXTERN_C VOID WINAPI __crtCloseThreadpoolWait(
+	_Inout_ PTP_WAIT pwa
+)
+{
+	if (auto pCloseThreadpoolWait = try_get_CloseThreadpoolWait())
+	{
+		return pCloseThreadpoolWait(pwa);
+	}
+	else
+	{
+		//强制退出程序
+		abort();
+	}
+}
+
+EXTERN_C VOID WINAPI __crtWaitForThreadpoolTimerCallbacks(
+	_Inout_ PTP_TIMER pti,
+	_In_ BOOL fCancelPendingCallbacks
+)
+{
+	if (auto pWaitForThreadpoolTimerCallbacks = try_get_WaitForThreadpoolTimerCallbacks())
+	{
+		return pWaitForThreadpoolTimerCallbacks(pti, fCancelPendingCallbacks);
+	}
+	else
+	{
+		//强制退出程序
+		abort();
+	}
+}
+
+EXTERN_C PTP_WAIT WINAPI __crtCreateThreadpoolWait(
+	_In_ PTP_WAIT_CALLBACK pfnwa,
+	_Inout_opt_ PVOID pv,
+	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
+)
+{
+	if (auto pCreateThreadpoolWait = try_get_CreateThreadpoolWait())
+	{
+		return pCreateThreadpoolWait(pfnwa, pv, pcbe);
+	}
+	else
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return nullptr;
+	}
+}
+
+
+EXTERN_C VOID WINAPI __crtCloseThreadpoolTimer(
+	_Inout_ PTP_TIMER pti
+	)
+{
+	if (auto pCloseThreadpoolTimer = try_get_CloseThreadpoolTimer())
+	{
+		return pCloseThreadpoolTimer(pti);
+	}
+	else
+	{
+		//强制退出程序
+		abort();
+	}
+}
+
+EXTERN_C PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
+	_In_ PTP_TIMER_CALLBACK pfnti,
+	_Inout_opt_ PVOID pv,
+	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
+	)
+{
+	if (auto pCreateThreadpoolTimer = try_get_CreateThreadpoolTimer())
+	{
+		return pCreateThreadpoolTimer(pfnti, pv, pcbe);
+	}
+	else
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return nullptr;
+	}
+}
+
+#endif
 
 namespace
 {

@@ -180,6 +180,102 @@ PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
 #endif
 
 
+#ifdef _ATL_XP_TARGETING
+#define __crtCreateEventExW(lpEventAttributes,lpName,dwFlags,dwDesiredAccess) CreateEvent(lpEventAttributes,(dwFlags&CREATE_EVENT_MANUAL_RESET),(dwFlags&CREATE_EVENT_INITIAL_SET),lpName)
+#else
+#define __crtCreateEventExW CreateEventExW
+#endif
+
+#ifdef _ATL_XP_TARGETING
+ULONGLONG WINAPI __crtGetTickCount64(VOID);
+#else
+#define __crtGetTickCount64 GetTickCount64
+#endif
+
+#if defined _ATL_XP_TARGETING && defined _X86_
+DWORD WINAPI __crtGetCurrentProcessorNumber(void);
+#else
+#define __crtGetCurrentProcessorNumber GetCurrentProcessorNumber
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID WINAPI __crtFlushProcessWriteBuffers(void);
+#else
+#define __crtFlushProcessWriteBuffers FlushProcessWriteBuffers
+#endif
+
+#ifdef _ATL_XP_TARGETING
+#define __crtCreateSemaphoreExW(lpSemaphoreAttributes,lInitialCount,lMaximumCount,lpName,dwFlags,dwDesiredAccess) CreateSemaphoreW(lpSemaphoreAttributes,lInitialCount,lMaximumCount,lpName)
+#else
+#define __crtCreateSemaphoreExW CreateSemaphoreExW
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID WINAPI __crtSetThreadpoolTimer(
+	_Inout_ PTP_TIMER pti,
+	_In_opt_ PFILETIME pftDueTime,
+	_In_ DWORD msPeriod,
+	_In_opt_ DWORD msWindowLength
+	);
+#else
+#define __crtSetThreadpoolTimer SetThreadpoolTimer
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID WINAPI __crtSetThreadpoolWait(
+	_Inout_ PTP_WAIT pwa,
+	_In_opt_ HANDLE h,
+	_In_opt_ PFILETIME pftTimeout
+	);
+#else
+#define __crtSetThreadpoolWait SetThreadpoolWait
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID WINAPI __crtCloseThreadpoolWait(
+	_Inout_ PTP_WAIT pwa
+	);
+#else
+#define __crtCloseThreadpoolWait CloseThreadpoolWait
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID WINAPI __crtWaitForThreadpoolTimerCallbacks(
+	_Inout_ PTP_TIMER pti,
+	_In_ BOOL fCancelPendingCallbacks
+	);
+#else
+#define __crtWaitForThreadpoolTimerCallbacks WaitForThreadpoolTimerCallbacks
+#endif
+
+#ifdef _ATL_XP_TARGETING
+PTP_WAIT WINAPI __crtCreateThreadpoolWait(
+	_In_ PTP_WAIT_CALLBACK pfnwa,
+	_Inout_opt_ PVOID pv,
+	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
+	);
+#else
+#define __crtCreateThreadpoolWait CreateThreadpoolWait
+#endif
+
+#ifdef _ATL_XP_TARGETING
+VOID WINAPI __crtCloseThreadpoolTimer(
+	_Inout_ PTP_TIMER pti
+	);
+#else
+#define __crtCloseThreadpoolTimer CloseThreadpoolTimer 
+#endif
+
+#ifdef _ATL_XP_TARGETING
+PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
+	_In_ PTP_TIMER_CALLBACK pfnti,
+	_Inout_opt_ PVOID pv,
+	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
+	);
+#else
+#define __crtCreateThreadpoolTimer CreateThreadpoolTimer
+#endif
+
 __declspec(dllimport) int __cdecl __crtCompareStringA
 (
     _In_opt_ _locale_t _Plocinfo,
