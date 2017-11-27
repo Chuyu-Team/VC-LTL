@@ -13,7 +13,8 @@
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 #include "concrtinternal.h"
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
 namespace Concurrency
 {

@@ -12,7 +12,8 @@
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 #include "concrtinternal.h"
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 

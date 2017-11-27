@@ -13,7 +13,8 @@
 
 #include "concrtinternal.h"
 #include <exception>
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
 #pragma warning(disable:4297) //Function expected not to throw but does
 

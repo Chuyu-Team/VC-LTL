@@ -12,7 +12,8 @@
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #include "concrtinternal.h"
 #include <process.h>
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
 #pragma warning (push)
 #pragma warning (disable: 4702 4100)

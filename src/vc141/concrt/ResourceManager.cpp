@@ -14,7 +14,8 @@
 #include "concrtinternal.h"
 #include <float.h>
 #include <algorithm>
-#include <awint.h>
+//#include <awint.h>
+#include <winapi_thunks.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4702)
