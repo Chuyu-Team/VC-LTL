@@ -31,8 +31,8 @@
     <ClCompile>
       <PreprocessorDefinitions>_ATL_XP_TARGETING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL;_DISABLE_DEPRECATE_STATIC_CPPLIB;_STATIC_CPPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <!--当兼容XP时，禁用线程安全初始化。避免XP中因为初始化static对象而崩溃-->
-      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <!--当兼容XP时，对于非 exe 的需要禁用线程安全初始化。避免XP中在DllMain中使用TLS而崩溃-->
+      <AdditionalOptions Condition=" '$(ConfigurationType)'!='Application' ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies Condition=" '$(SupportLTL)'=='true' ">$(msvcrt_winxp_obj);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
