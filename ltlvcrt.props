@@ -20,9 +20,6 @@
     <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
     <SupportWinXP Condition=" ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp')">true</SupportWinXP>
     
-    <VC_IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(VC_IncludePath)</VC_IncludePath>
-    <VC_LibraryPath_x86 Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(VC_LibraryPath_x86)</VC_LibraryPath_x86>
-    <VC_LibraryPath_x64 Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(VC_LibraryPath_x86)</VC_LibraryPath_x64>
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
     <LibraryPath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
