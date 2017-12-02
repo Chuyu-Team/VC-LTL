@@ -30,6 +30,7 @@ VC-LTL 是一个开源的第三方修改VC库，大家都可以免费，无条�
 
 ### 支持的目标平台（UCRT版本）
 * Windows XP平台工具集（Windows 7.0 SDK & Windows 10 10240 UCRT）
+* Windows 8.1 目标平台
 * Windows 10 10240目标平台
 * Windows 10 15063目标平台（强烈建议使用16299，下个Windows SDK发布时将删除对15063的支持！）
 * Windows 10 16299目标平台（推荐使用）
@@ -76,39 +77,29 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 
 ### 2. 在工程属性（Release配置） C++ - 所有选项：
 * 【运行库】调整为 【多线程DLL/MD】
-* 【目标平台】调整为【Windows 10 10240/15063/16299（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
+* 【目标平台】调整为【8.1 / 10.0.10240.0 / 10.0.15063.0 / 10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
 
 ### 3. 重新编译你的应用程序（Release）
 现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC-LTL。
 
-
-### 4. 文件说明
-* ltl.lib  VC2015/VC2017 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
-* ltlxp.lib VC2015/VC2017 XP模式 编译平台使用到的扩展函数，其内容通过编译_msvcrt.cpp以及src文件夹得到
-* msvcrt.lib DDK 7.1中复制的msvcrt.dll导入表，并删除了一些过时符号，加入了msvcrt.def导出函数
-* ucrt.lib 从libucrt.lib提取的一些原有lib不支持的函数集合。
-* vc.lib 从对应的VC版本编译器msvcrt.lib提取的一些原有lib不支持的函数集合。
-* ltlcprt.lib VC2015/VC2017 编译平台使用到的C++支持函数，其内容通过编译src文件夹得到
-* ltlcprtxp.lib VC2015/VC2017 XP模式 编译平台使用到的C++支持函数，其内容通过编译src文件夹得到
-
-### 5. VC-LTL兼容性
+### 4. VC-LTL兼容性
 
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
-|  模块  | 一般模式 | XP工具集
-|  ----  | -------- | --------
-|   CRT  | 90.476%  | 86.301%
-|   STL  | 100%     | 100.1%（超标准支持）
-| ConcRT | 100%     | 100%
-|   ATL  | 100%     | 100%
-|   AMP  |   -      |   -
-|   MFC  |   -      |   -
+|  模块  | 一般模式 | XP工具集            | 相关文件 
+|  ----  | -------- | --------            | --------
+|   CRT  | 90.476%  | 86.301%             | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
+|   STL  | 100%     | 100.1%（超标准支持）| ltlcprt.lib，ltlcprtxp.lib
+| ConcRT | 100%     | 100%                | libconcrt.lib，libconcrtxp.lib
+|   ATL  | 100%     | 100%                | -
+|   AMP  |   -      |   -                 | -
+|   MFC  |  不支持  |   不支持            | -
 
-#### 5.1 已知问题规避
+#### 4.1 已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 以及 _l 相关版本不存在此问题。
 * 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 以及 _l 相关版本不存在此问题。
 
-#### 5.2 已知与VC-LTL兼容的项目
+#### 4.2 已知与VC-LTL兼容的项目
 此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
 
 * [duilib](https://github.com/duilib/duilib)
