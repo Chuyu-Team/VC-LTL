@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\141">
+      <UniqueIdentifier>{0e372461-9247-4fb5-b20a-069a007876ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Shared">
+      <UniqueIdentifier>{80bc9bcc-984a-41a1-b668-2e78a68ab20a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\vc141\stl\_tolower.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\_toupper.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\cout.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ios.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\iosptrs.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\locale.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\locale0.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\syserror.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\uncaught.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\wiostrea.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\wlocale.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdateord.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xgetwctype.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlocale.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlock.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xmbtowc.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xmtx.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xrngdev.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstol.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstoll.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstoul.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstoull.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstoxflt.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstrcoll.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstrxfrm.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xthrow.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xtowlower.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xtowupper.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwcscoll.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwcsxfrm.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwctomb.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\cin.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\fiopen.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\iomanip.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\cerr.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\clog.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\wcerr.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\wclog.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\wcin.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\wcout.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\thread0.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xonce.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xtime.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\cond.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\cthread.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\nothrow.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xnotify.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\excptptr.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\future.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ppltasks.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\taskscheduler.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\mutex.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\atomic.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\filesys.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\iostream.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\multprec.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\raisehan.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\sharedmutex.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\stdhndlr.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ushcerr.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ushcin.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ushclog.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ushcout.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\ushiostr.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xalloc.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xcosh.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdint.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdnorm.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdscale.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdtento.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdtest.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xdunscal.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xexp.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfcosh.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlgamma.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xrngabort.cpp">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfdint.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfdnorm.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfdscale.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfdtento.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfdtest.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfdunsca.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xferaise.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfexp.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfprec.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfsinh.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xfvalues.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlcosh.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xldint.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xldscale.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xldtento.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xldtest.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xldunsca.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlexp.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlpoly.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlprec.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlsinh.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xlvalues.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xpoly.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xprec.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xsinh.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstod.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstof.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstoflt.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstold.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xstopfx.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xvalues.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwstod.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwstof.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwstoflt.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwstold.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwstopfx.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc141\stl\xwstoxfl.c">
+      <Filter>源文件\141</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\winapi_thunks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

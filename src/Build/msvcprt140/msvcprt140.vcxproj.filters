@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\140">
+      <UniqueIdentifier>{a8aa9edd-db63-4094-bccf-917756556298}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Shared">
+      <UniqueIdentifier>{23683d3f-2d2d-47bd-a905-3eec0114fde6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\vc140\stl\_tolower.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\_toupper.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\cout.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ios.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\iosptrs.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\locale.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\locale0.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\syserror.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\uncaught.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\wiostrea.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\wlocale.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdateord.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xgetwctype.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlocale.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlock.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xmbtowc.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xmtx.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xrngdev.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstol.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstoll.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstoul.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstoull.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstoxflt.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstrxfrm.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xthrow.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xtowlower.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xtowupper.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwcscoll.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwcsxfrm.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwctomb.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstrcoll.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\fiopen.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\iomanip.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\cin.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\wcerr.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\wcin.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\wclog.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\wcout.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\cerr.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\clog.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\thread0.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xonce.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xtime.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\cond.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\cthread.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\nothrow.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xnotify.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\excptptr.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\future.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ppltasks.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\taskscheduler.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\mutex.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\atomic.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\filesys.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\iostream.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\multprec.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\raisehan.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\sharedmutex.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\stdhndlr.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ushcerr.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ushcin.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ushclog.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ushcout.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\ushiostr.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xalloc.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xcosh.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdint.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdnorm.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdscale.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdtento.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdtest.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xdunscal.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xexp.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfcosh.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlgamma.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xrngabort.cpp">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfdint.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfdnorm.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfdscale.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfdtento.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfdtest.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfdunsca.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xferaise.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfexp.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfprec.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfsinh.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xfvalues.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlcosh.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xldint.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xldscale.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xldtento.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xldtest.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xldunsca.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlexp.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlpoly.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlprec.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlsinh.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xlvalues.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xpoly.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xprec.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xsinh.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstod.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstof.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstoflt.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstold.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xstopfx.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xvalues.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwstod.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwstof.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwstoflt.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwstold.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwstopfx.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vc140\stl\xwstoxfl.c">
+      <Filter>源文件\140</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\winapi_thunks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
