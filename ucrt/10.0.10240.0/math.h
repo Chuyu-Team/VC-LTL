@@ -483,11 +483,8 @@ _Check_return_ _ACRTIMP double    __cdecl _cabs(_In_ struct _complex _Complex_va
 _Check_return_ extern double    __cdecl cbrt(_In_ double _X);
 _Check_return_ _ACRTIMP double    __cdecl ceil(_In_ double _X);
 _Check_return_ _ACRTIMP double    __cdecl _chgsign(_In_ double _X);
+_Check_return_ _ACRTIMP double    __cdecl copysign(_In_ double _Number, _In_ double _Sign);
 _Check_return_ _ACRTIMP double    __cdecl _copysign(_In_ double _Number, _In_ double _Sign);
-_Check_return_ __inline double    __cdecl copysign(_In_ double _Number, _In_ double _Sign)
-{
-	return _copysign(_Number, _Sign);
-}
 _Check_return_ extern double    __cdecl erf(_In_ double _X);
 _Check_return_ extern double    __cdecl erfc(_In_ double _X);
 _Check_return_ extern double    __cdecl exp2(_In_ double _X);
@@ -498,15 +495,8 @@ _Check_return_ extern double    __cdecl fma(_In_ double _X, _In_ double _Y, _In_
 _Check_return_ extern double    __cdecl fmax(_In_ double _X, _In_ double _Y);
 _Check_return_ extern double    __cdecl fmin(_In_ double _X, _In_ double _Y);
 _Check_return_ _ACRTIMP double    __cdecl frexp(_In_ double _X, _Out_ int* _Y);
+_Check_return_ _ACRTIMP double    __cdecl hypot(_In_ double _X, _In_ double _Y);
 _Check_return_ _ACRTIMP double    __cdecl _hypot(_In_ double _X, _In_ double _Y);
-_Check_return_ __inline double    __cdecl hypot(_In_ double _X, _In_ double _Y)
-{
-	/*
-	根据文档描述，二个函数行为完全一致
-	https://msdn.microsoft.com/zh-cn/library/a9yb3dbt.aspx
-	*/
-	return _hypot(_X, _Y);
-}
 _Check_return_ extern int       __cdecl ilogb(_In_ double _X);
 _Check_return_ _ACRTIMP double    __cdecl ldexp(_In_ double _X, _In_ int _Y);
 _Check_return_ extern double    __cdecl lgamma(_In_ double _X);
@@ -523,25 +513,8 @@ int __CRTDECL _matherr(_Inout_ struct _exception* _Except);
 _Check_return_ _ACRTIMP double __cdecl modf(_In_ double _X, _Out_ double* _Y);
 _Check_return_ extern double __cdecl nan(_In_ char const* _X);
 _Check_return_ extern double __cdecl nearbyint(_In_ double _X);
-
-_Check_return_ _ACRTIMP double __cdecl _nextafter(_In_ double _X, _In_ double _Y);
-_Check_return_ __inline double __cdecl nextafter(_In_ double _X, _In_ double _Y)
-{
-	/*
-	根据文档描述，nextafter、_nextafter、nexttoward 完全等价
-	https://msdn.microsoft.com/zh-cn/library/h0dff77w.aspx
-	*/
-	return _nextafter(_X, _Y);
-}
-_Check_return_ __inline double __cdecl nexttoward(_In_ double _X, _In_ long double _Y)
-{
-	static_assert(sizeof(long double) == sizeof(double), "Error sizeof(long double)!=sizeof(double)");
-	/*
-	根据文档描述，nextafter、_nextafter、nexttoward 完全等价
-	https://msdn.microsoft.com/zh-cn/library/h0dff77w.aspx
-	*/
-	return _nextafter(_X, (double)_Y);
-}
+_Check_return_ _ACRTIMP double __cdecl nextafter(_In_ double _X, _In_ double _Y);
+_Check_return_ _ACRTIMP double __cdecl nexttoward(_In_ double _X, _In_ long double _Y);
 _Check_return_ extern double __cdecl remainder(_In_ double _X, _In_ double _Y);
 _Check_return_ extern double __cdecl remquo(_In_ double _X, _In_ double _Y, _Out_ int* _Z);
 _Check_return_ extern double __cdecl rint(_In_ double _X);
@@ -951,19 +924,8 @@ _Check_return_ __inline long double __CRTDECL modfl(_In_ long double _X, _Out_ l
 
 _Check_return_ extern long double __cdecl nanl(_In_ char const* _X);
 _Check_return_ extern long double __cdecl nearbyintl(_In_ long double _X);
-_Check_return_ __inline long double __cdecl nextafterl(_In_ long double _X, _In_ long double _Y)
-{
-	static_assert(sizeof(long double) == sizeof(double), "Error sizeof(long double)!=sizeof(double)");
-
-	return _nextafter((double)_X, (double)_Y);
-}
-
-_Check_return_ __inline long double __cdecl nexttowardl(_In_ long double _X, _In_ long double _Y)
-{
-	static_assert(sizeof(long double)==sizeof(double),"Error sizeof(long double)!=sizeof(double)");
-
-	return _nextafter((double)_X, (double)_Y);
-}
+_Check_return_ _ACRTIMP long double __cdecl nextafterl(_In_ long double _X, _In_ long double _Y);
+_Check_return_ _ACRTIMP long double __cdecl nexttowardl(_In_ long double _X, _In_ long double _Y);
 
 _Check_return_ __inline long double __CRTDECL powl(_In_ long double _X, _In_ long double _Y)
 {

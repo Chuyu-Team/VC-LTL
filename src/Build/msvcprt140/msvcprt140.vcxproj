@@ -23,7 +23,7 @@
     <ProjectGuid>{46778B32-F91D-4D4E-BD56-CBCF8B8F08E8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>msvcprt140</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>msvcprt140</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -49,7 +49,7 @@ _ACRTIMP void __cdecl _swab(
 
 _ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
 _ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
-  extern __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
+_ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
 _ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
 _ACRTIMP __declspec(noreturn) void __cdecl abort(void);
 
@@ -447,20 +447,14 @@ typedef struct
 _Check_return_                    _ACRTIMP double    __cdecl atof   (_In_z_ char const* _String);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int       __cdecl atoi   (_In_z_ char const* _String);
 _Check_return_                    _ACRTIMP long      __cdecl atol   (_In_z_ char const* _String);
+_Check_return_                    _ACRTIMP long long __cdecl atoll  (_In_z_ char const* _String);
 _Check_return_                    _ACRTIMP __int64   __cdecl _atoi64(_In_z_ char const* _String);
-_Check_return_                    __inline long long __cdecl atoll  (_In_z_ char const* _String)
-{
-	return _atoi64(_String);
-}
 
 _Check_return_ _ACRTIMP double    __cdecl _atof_l  (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int       __cdecl _atoi_l  (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP long      __cdecl _atol_l  (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTIMP long long __cdecl _atoll_l (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP __int64   __cdecl _atoi64_l(_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
-_Check_return_ __inline long long __cdecl _atoll_l (_In_z_ char const* _String, _In_opt_ _locale_t _Locale)
-{
-	return _atoi64_l(_String, _Locale);
-}
 
 _Check_return_ extern int __cdecl _atoflt (_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String);
 _Check_return_ _ACRTIMP int __cdecl _atodbl (_Out_ _CRT_DOUBLE* _Result, _In_z_ char*       _String);
@@ -551,6 +545,21 @@ _ACRTIMP long __cdecl _strtol_l(
     );
 
 _Check_return_
+_ACRTIMP long long __cdecl strtoll(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix
+    );
+
+_Check_return_
+_ACRTIMP long long __cdecl _strtoll_l(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix,
+    _In_opt_                 _locale_t   _Locale
+    );
+
+_Check_return_
 _ACRTIMP unsigned long __cdecl strtoul(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
@@ -559,6 +568,21 @@ _ACRTIMP unsigned long __cdecl strtoul(
 
 _Check_return_
 _ACRTIMP unsigned long __cdecl _strtoul_l(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix,
+    _In_opt_                 _locale_t   _Locale
+    );
+
+_Check_return_
+_ACRTIMP unsigned long long __cdecl strtoull(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix
+    );
+
+_Check_return_
+_ACRTIMP unsigned long long __cdecl _strtoull_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix,
@@ -594,48 +618,6 @@ _ACRTIMP unsigned __int64 __cdecl _strtoui64_l(
     _In_                     int         _Radix,
     _In_opt_                 _locale_t   _Locale
     );
-
-_Check_return_
-__inline long long __cdecl strtoll(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix
-    )
-{
-	return _strtoi64(_String, _EndPtr, _Radix);
-}
-
-_Check_return_
-__inline long long __cdecl _strtoll_l(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix,
-    _In_opt_                 _locale_t   _Locale
-    )
-{
-	return _strtoi64_l(_String, _EndPtr, _Radix, _Locale);
-}
-
-_Check_return_
-__inline unsigned long long __cdecl strtoull(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix
-    )
-{
-	return _strtoui64(_String, _EndPtr, _Radix);
-}
-
-_Check_return_
-__inline unsigned long long __cdecl _strtoull_l(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix,
-    _In_opt_                 _locale_t   _Locale
-    )
-{
-	return _strtoui64_l(_String, _EndPtr, _Radix, _Locale);
-}
 
 
 

@@ -140,6 +140,21 @@ _ACRTIMP long __cdecl _wcstol_l(
     );
 
 _Check_return_
+_ACRTIMP long long __cdecl wcstoll(
+    _In_z_                   wchar_t const* _String,
+    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+    _In_                     int            _Radix
+    );
+
+_Check_return_
+_ACRTIMP long long __cdecl _wcstoll_l(
+    _In_z_                   wchar_t const* _String,
+    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+    _In_                     int            _Radix,
+    _In_opt_                 _locale_t      _Locale
+    );
+
+_Check_return_
 _ACRTIMP unsigned long __cdecl wcstoul(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
@@ -148,6 +163,21 @@ _ACRTIMP unsigned long __cdecl wcstoul(
 
 _Check_return_
 _ACRTIMP unsigned long __cdecl _wcstoul_l(
+    _In_z_                   wchar_t const* _String,
+    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+    _In_                     int            _Radix,
+    _In_opt_                 _locale_t      _Locale
+    );
+
+_Check_return_
+_ACRTIMP unsigned long long __cdecl wcstoull(
+    _In_z_                   wchar_t const* _String,
+    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
+    _In_                     int            _Radix
+    );
+
+_Check_return_
+_ACRTIMP unsigned long long __cdecl _wcstoull_l(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
     _In_                     int            _Radix,
@@ -213,6 +243,17 @@ _ACRTIMP long __cdecl _wtol(
 
 _Check_return_
 _ACRTIMP long __cdecl _wtol_l(
+    _In_z_   wchar_t const* _String,
+    _In_opt_ _locale_t      _Locale
+    );
+
+_Check_return_
+_ACRTIMP long long __cdecl _wtoll(
+    _In_z_ wchar_t const* _String
+    );
+
+_Check_return_
+_ACRTIMP long long __cdecl _wtoll_l(
     _In_z_   wchar_t const* _String,
     _In_opt_ _locale_t      _Locale
     );
@@ -287,65 +328,6 @@ _ACRTIMP unsigned __int64 __cdecl _wcstoui64_l(
     _In_                     int            _Radix,
     _In_opt_                 _locale_t      _Locale
     );
-
-_Check_return_
-__inline long long __cdecl wcstoll(
-    _In_z_                   wchar_t const* _String,
-    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
-    _In_                     int            _Radix
-    )
-{
-	return _wcstoi64(_String, _EndPtr, _Radix);
-}
-
-_Check_return_
-__inline long long __cdecl _wcstoll_l(
-    _In_z_                   wchar_t const* _String,
-    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
-    _In_                     int            _Radix,
-    _In_opt_                 _locale_t      _Locale
-    )
-{
-	return _wcstoi64_l(_String, _EndPtr, _Radix, _Locale);
-}
-
-_Check_return_
-__inline unsigned long long __cdecl wcstoull(
-    _In_z_                   wchar_t const* _String,
-    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
-    _In_                     int            _Radix
-    )
-{
-	return _wcstoui64(_String, _EndPtr, _Radix);
-}
-
-_Check_return_
-__inline unsigned long long __cdecl _wcstoull_l(
-    _In_z_                   wchar_t const* _String,
-    _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
-    _In_                     int            _Radix,
-    _In_opt_                 _locale_t      _Locale
-    )
-{
-	return _wcstoui64_l(_String, _EndPtr, _Radix, _Locale);
-}
-
-_Check_return_
-__inline long long __cdecl _wtoll(
-    _In_z_ wchar_t const* _String
-    )
-{
-	return _wtoi64(_String);
-}
-
-_Check_return_
-__inline long long __cdecl _wtoll_l(
-    _In_z_   wchar_t const* _String,
-    _In_opt_ _locale_t      _Locale
-    )
-{
-	return _wtoi64_l(_String, _Locale);
-}
 
 #pragma push_macro("_wfullpath")
 #undef _wfullpath

@@ -50,7 +50,7 @@ _ACRTIMP void __cdecl _swab(
 #if _CRT_FUNCTIONS_REQUIRED
     _ACRTIMP __declspec(noreturn) void __cdecl exit(_In_ int _Code);
     _ACRTIMP __declspec(noreturn) void __cdecl _exit(_In_ int _Code);
-	  extern __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
+	_ACRTIMP __declspec(noreturn) void __cdecl _Exit(_In_ int _Code);
     _ACRTIMP __declspec(noreturn) void __cdecl quick_exit(_In_ int _Code);
     _ACRTIMP __declspec(noreturn) void __cdecl abort(void);
 #endif // _CRT_FUNCTIONS_REQUIRED
@@ -218,8 +218,8 @@ _Check_return_opt_ _ACRTIMP int __cdecl _set_error_mode(_In_ int _Mode);
     _ACRTIMP unsigned long* __cdecl __doserrno(void);
     #define _doserrno (*__doserrno())
 
-    _ACRTXPIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-    _ACRTXPIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+	_ACRTXPIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+	_ACRTXPIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
 	_ACRTIMP extern char const* _sys_errlist[];
     // This is non-const for backwards compatibility; do not modify it.
@@ -293,7 +293,7 @@ typedef struct _lldiv_t
 
 _Check_return_ int       __cdecl abs   (_In_ int       _Number);
 _Check_return_ long      __cdecl labs  (_In_ long      _Number);
-_Check_return_ long long __cdecl llabs(_In_ long long _Number);
+_Check_return_ long long __cdecl llabs (_In_ long long _Number);
 _Check_return_ __int64   __cdecl _abs64(_In_ __int64   _Number);
 
 _Check_return_ unsigned short   __cdecl _byteswap_ushort(_In_ unsigned short   _Number);
@@ -451,20 +451,14 @@ typedef struct
 _Check_return_                    _ACRTIMP double    __cdecl atof   (_In_z_ char const* _String);
 _Check_return_ _CRT_JIT_INTRINSIC _ACRTIMP int       __cdecl atoi   (_In_z_ char const* _String);
 _Check_return_                    _ACRTIMP long      __cdecl atol   (_In_z_ char const* _String);
+_Check_return_                    _ACRTIMP long long __cdecl atoll  (_In_z_ char const* _String);
 _Check_return_                    _ACRTIMP __int64   __cdecl _atoi64(_In_z_ char const* _String);
-_Check_return_                    __inline long long __cdecl atoll  (_In_z_ char const* _String)
-{
-	return _atoi64(_String);
-}
 
 _Check_return_ _ACRTIMP double    __cdecl _atof_l  (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP int       __cdecl _atoi_l  (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP long      __cdecl _atol_l  (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
+_Check_return_ _ACRTIMP long long __cdecl _atoll_l (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP __int64   __cdecl _atoi64_l(_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
-_Check_return_ __inline long long __cdecl _atoll_l (_In_z_ char const* _String, _In_opt_ _locale_t _Locale)
-{
-	return _atoi64_l(_String, _Locale);
-}
 
 _Check_return_ extern int __cdecl _atoflt (_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String);
 _Check_return_ _ACRTIMP int __cdecl _atodbl (_Out_ _CRT_DOUBLE* _Result, _In_z_ char*       _String);
@@ -555,6 +549,21 @@ _ACRTIMP long __cdecl _strtol_l(
     );
 
 _Check_return_
+_ACRTIMP long long __cdecl strtoll(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix
+    );
+
+_Check_return_
+_ACRTIMP long long __cdecl _strtoll_l(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix,
+    _In_opt_                 _locale_t   _Locale
+    );
+
+_Check_return_
 _ACRTIMP unsigned long __cdecl strtoul(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
@@ -563,6 +572,21 @@ _ACRTIMP unsigned long __cdecl strtoul(
 
 _Check_return_
 _ACRTIMP unsigned long __cdecl _strtoul_l(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix,
+    _In_opt_                 _locale_t   _Locale
+    );
+
+_Check_return_
+_ACRTIMP unsigned long long __cdecl strtoull(
+    _In_z_                   char const* _String,
+    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
+    _In_                     int         _Radix
+    );
+
+_Check_return_
+_ACRTIMP unsigned long long __cdecl _strtoull_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix,
@@ -598,48 +622,6 @@ _ACRTIMP unsigned __int64 __cdecl _strtoui64_l(
     _In_                     int         _Radix,
     _In_opt_                 _locale_t   _Locale
     );
-
-_Check_return_
-__inline long long __cdecl strtoll(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix
-    )
-{
-	return _strtoi64(_String, _EndPtr, _Radix);
-}
-
-_Check_return_
-__inline long long __cdecl _strtoll_l(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix,
-    _In_opt_                 _locale_t   _Locale
-    )
-{
-	return _strtoi64_l(_String, _EndPtr, _Radix, _Locale);
-}
-
-_Check_return_
-__inline unsigned long long __cdecl strtoull(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix
-    )
-{
-	return _strtoui64(_String, _EndPtr, _Radix);
-}
-
-_Check_return_
-__inline unsigned long long __cdecl _strtoull_l(
-    _In_z_                   char const* _String,
-    _Out_opt_ _Deref_post_z_ char**      _EndPtr,
-    _In_                     int         _Radix,
-    _In_opt_                 _locale_t   _Locale
-    )
-{
-	return _strtoui64_l(_String, _EndPtr, _Radix, _Locale);
-}
 
 
 
@@ -1176,7 +1158,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 
     _Check_return_opt_
     _Success_(return == 0)
-    _ACRTXPIMP errno_t __cdecl getenv_s(
+	_ACRTXPIMP errno_t __cdecl getenv_s(
         _Out_                            size_t*     _RequiredCount,
         _Out_writes_opt_z_(_BufferCount) char*       _Buffer,
         _In_                             rsize_t     _BufferCount,
@@ -1191,11 +1173,11 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 	_ACRTIMP extern wchar_t** __wargv;
 
 
-	__inline int*       __cdecl __p___argc(void)
+	__inline int*       __cdecl __p___argc (void)
 	{
 		return &__argc;
 	}
-	__inline char***    __cdecl __p___argv(void)
+	__inline char***    __cdecl __p___argv (void)
 	{
 		return &__argv;
 	}
@@ -1204,20 +1186,20 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 		return &__wargv;
 	}
 
-	/*#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        extern int       __argc;
-        extern char**    __argv;
-        extern wchar_t** __wargv;
-    #else
-        #define __argc  (*__p___argc())  // Pointer to number of command line arguments
-        #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
-        #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
-    #endif*/
+	//#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+	//    extern int       __argc;
+	//    extern char**    __argv;
+	//    extern wchar_t** __wargv;
+	//#else
+	//    #define __argc  (*__p___argc())  // Pointer to number of command line arguments
+	//    #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
+	//    #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
+	//#endif
 
 	_ACRTIMP extern char **    _environ;
 	_ACRTIMP extern wchar_t ** _wenviron;
 
-	__inline char***    __cdecl __p__environ(void)
+	__inline char***    __cdecl __p__environ (void)
 	{
 		return &_environ;
 	}
@@ -1230,15 +1212,15 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         #define _CRT_V12_LEGACY_FUNCTIONALITY
     #endif
 
-    /*#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
-        // Deprecated symbol: Do not expose environment global pointers unless
-        // legacy access is specifically requested
-        #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
-        #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
-    #else
-        #define _environ  (*__p__environ())  // Pointer to narrow environment table
-        #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
-    #endif*/
+	//#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
+	//    // Deprecated symbol: Do not expose environment global pointers unless
+	//    // legacy access is specifically requested
+	//    #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
+	//    #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
+	//#else
+	//    #define _environ  (*__p__environ())  // Pointer to narrow environment table
+	//    #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
+	//#endif
 
 
 

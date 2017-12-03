@@ -169,41 +169,19 @@ _ACRTIMP long __cdecl _filelength(
     _In_ int _FileHandle
     );
 
-#pragma push_macro("_findfirst")
-#undef _findfirst
-_ACRTIMP intptr_t __cdecl _findfirst(
+_Success_(return != -1)
+_Check_return_
+_ACRTIMP intptr_t __cdecl _findfirst32(
     _In_z_ char const*           _FileName,
     _Out_  struct _finddata32_t* _FindData
     );
 
 _Success_(return != -1)
 _Check_return_
-__inline intptr_t __cdecl _findfirst32(
-    _In_z_ char const*           _FileName,
-    _Out_  struct _finddata32_t* _FindData
-    )
-{
-	return _findfirst(_FileName, _FindData);
-}
-#pragma pop_macro("_findfirst")
-
-#pragma push_macro("_findnext")
-#undef _findnext
-_ACRTIMP int __cdecl _findnext(
+_ACRTIMP int __cdecl _findnext32(
     _In_  intptr_t              _FindHandle,
     _Out_ struct _finddata32_t* _FindData
     );
-
-_Success_(return != -1)
-_Check_return_
-__inline int __cdecl _findnext32(
-    _In_  intptr_t              _FindHandle,
-    _Out_ struct _finddata32_t* _FindData
-    )
-{
-	return _findnext(_FindHandle, _FindData);
-}
-#pragma pop_macro("_findnext")
 
 _Check_return_opt_
 _ACRTIMP int __cdecl _findclose(
@@ -320,23 +298,12 @@ _ACRTIMP __int64 __cdecl _filelengthi64(
     _In_ int _FileHandle
     );
 
-#pragma push_macro("_findfirsti64")
-#undef _findfirsti64
-_ACRTIMP intptr_t __cdecl _findfirsti64(
+_Success_(return != -1)
+_Check_return_
+_ACRTIMP intptr_t __cdecl _findfirst32i64(
     _In_z_ char const*              _FileName,
     _Out_  struct _finddata32i64_t* _FindData
     );
-
-_Success_(return != -1)
-_Check_return_
-__inline intptr_t __cdecl _findfirst32i64(
-    _In_z_ char const*              _FileName,
-    _Out_  struct _finddata32i64_t* _FindData
-    )
-{
-	return _findfirsti64(_FileName, _FindData);
-}
-#pragma pop_macro("_findfirsti64")
 
 _Success_(return != -1)
 _Check_return_
@@ -352,23 +319,12 @@ _ACRTIMP intptr_t __cdecl _findfirst64(
     _Out_  struct __finddata64_t* _FindData
     );
 
-#pragma push_macro("_findnexti64")
-#undef _findnexti64
-_ACRTIMP int __cdecl _findnexti64(
+_Success_(return != -1)
+_Check_return_
+_ACRTIMP int __cdecl _findnext32i64(
     _In_  intptr_t                 _FindHandle,
     _Out_ struct _finddata32i64_t* _FindData
     );
-
-_Success_(return != -1)
-_Check_return_
-__inline int __cdecl _findnext32i64(
-    _In_  intptr_t                 _FindHandle,
-    _Out_ struct _finddata32i64_t* _FindData
-    )
-{
-	return _findnexti64(_FindHandle, _FindData);
-}
-#pragma pop_macro("_findnexti64")
 
 _Success_(return != -1)
 _Check_return_
@@ -429,14 +385,14 @@ _ACRTIMP errno_t __cdecl _sopen_dispatch(
 
     // These function do not validate pmode; use _sopen_s instead.
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
-    extern int __CRTDECL _open(
+    _ACRTIMP int __CRTDECL _open(
         _In_z_ char const* const _FileName,
         _In_   int         const _OFlag,
         _In_   int         const _PMode = 0
         );
 
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
-    extern int __CRTDECL _sopen(
+    _ACRTIMP int __CRTDECL _sopen(
         _In_z_ char const* const _FileName,
         _In_   int         const _OFlag,
         _In_   int         const _ShFlag,

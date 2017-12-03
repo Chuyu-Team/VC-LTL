@@ -28,11 +28,11 @@ struct _EXCEPTION_POINTERS;
 
 #ifdef __cplusplus
 
-    extern __declspec(noreturn) void __cdecl unexpected() noexcept(false);
+    _VCRTIMP __declspec(noreturn) void __cdecl unexpected() noexcept(false);
 
     #ifndef _M_CEE_PURE
 
-        extern unexpected_handler __cdecl set_unexpected(
+        _VCRTIMP unexpected_handler __cdecl set_unexpected(
             _In_opt_ unexpected_handler _NewUnexpectedHandler
             ) throw();
 
@@ -40,7 +40,7 @@ struct _EXCEPTION_POINTERS;
 
         typedef void (__cdecl* _se_translator_function)(unsigned int, struct _EXCEPTION_POINTERS*);
 
-		extern _se_translator_function __cdecl _set_se_translator(
+		_VCRTIMP _se_translator_function __cdecl _set_se_translator(
             _In_opt_ _se_translator_function _NewSETranslator
             );
 

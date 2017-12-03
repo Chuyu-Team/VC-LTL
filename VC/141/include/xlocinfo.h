@@ -152,7 +152,7 @@ _Success_(return != 0)
 _Ret_z_
 extern wchar_t *__cdecl _W_Getmonths(void);
 
-extern void *__cdecl _W_Gettnames(void);
+_ACRTIMP void *__cdecl _W_Gettnames(void);
 
 _Success_(return > 0)
 extern size_t __cdecl _Wcsftime(_Out_writes_z_(_Maxsize) wchar_t *,

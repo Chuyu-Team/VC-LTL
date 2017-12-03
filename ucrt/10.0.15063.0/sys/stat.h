@@ -150,37 +150,17 @@ struct _stat64
     #define _wstati64   _wstat64
 #endif
 
-#pragma push_macro("_fstat")
-#undef _fstat
-_ACRTIMP int __cdecl _fstat(
+
+
+_ACRTIMP int __cdecl _fstat32(
     _In_  int             _FileHandle,
     _Out_ struct _stat32* _Stat
     );
 
-__inline int __cdecl _fstat32(
-    _In_  int             _FileHandle,
-    _Out_ struct _stat32* _Stat
-    )
-{
-	return _fstat(_FileHandle, _Stat);
-}
-#pragma pop_macro("_fstat")
-
-#pragma push_macro("_fstati64")
-#undef _fstati64
-_ACRTIMP int __cdecl _fstati64(
+_ACRTIMP int __cdecl _fstat32i64(
     _In_  int                _FileHandle,
     _Out_ struct _stat32i64* _Stat
     );
-
-__inline int __cdecl _fstat32i64(
-    _In_  int                _FileHandle,
-    _Out_ struct _stat32i64* _Stat
-    )
-{
-	return _fstati64(_FileHandle, _Stat);
-}
-#pragma pop_macro("_fstati64")
 
 extern int __cdecl _fstat64i32(
     _In_  int                _FileHandle,

@@ -1,0 +1,200 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                                                                                                     ;
+;                                                                                                     ;
+;  32位转发器模块文件，由于新版本CRT更改了某些函数的声明，因此定义此文件将新函数调用自动转发到老函数  ;
+;                                                                                                     ;
+;                                                                                                     ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+[Symbols]
+
+;新CRT中，调用__acrt_invoke_user_matherr来进行原有_matherr逻辑
+___acrt_invoke_user_matherr=__matherr
+
+
+;__std_terminate 内部就是调用了 terminate()，做个转发，等价下吧 
+__imp____std_terminate=__imp_?terminate@@YAXXZ
+___std_terminate=?terminate@@YAXXZ
+
+
+;新版本新增_Exit，但是行为跟_exit一致
+__imp___Exit=__imp___exit
+__Exit=__exit
+
+;_open C++重载
+__imp_?_open@@YAHQBDHH@Z=__imp___open
+?_open@@YAHQBDHH@Z=__open
+
+
+;新版本中_set_se_translator规范变成了C
+__imp___set_se_translator=__imp_?_set_se_translator@@YAP6AXIPAU_EXCEPTION_POINTERS@@@ZP6AXI0@Z@Z
+__set_se_translator=?_set_se_translator@@YAP6AXIPAU_EXCEPTION_POINTERS@@@ZP6AXI0@Z@Z
+
+;_sopen C++版重载
+__imp_?_sopen@@YAHQBDHHH@Z=__imp___sopen
+?_sopen@@YAHQBDHHH@Z=__sopen
+
+;_wopen C++版重载
+__imp_?_wopen@@YAHPB_WHH@Z=__imp___wopen
+?_wopen@@YAHPB_WHH@Z=__wopen
+
+;_wsopen C++版重载
+__imp_?_wsopen@@YAHPB_WHHH@Z=__imp___wsopen
+?_wsopen@@YAHPB_WHHH@Z=__wsopen
+
+;新版本中set_terminate 规范变成了C
+__imp__set_terminate=__imp_?set_terminate@@YAP6AXXZP6AXXZ@Z
+_set_terminate=?set_terminate@@YAP6AXXZP6AXXZ@Z
+
+;新版本中set_unexpected规范变成了C
+__imp__set_unexpected=__imp_?set_unexpected@@YAP6AXXZP6AXXZ@Z
+_set_unexpected=?set_unexpected@@YAP6AXXZP6AXXZ@Z
+
+;新版本中terminate规范变成了C
+__imp__terminate=__imp_?terminate@@YAXXZ
+_terminate=__imp_?terminate@@YAXXZ
+
+;新版本中unexpected规范变成了C
+__imp__unexpected=__imp_?unexpected@@YAXXZ
+_unexpected=?unexpected@@YAXXZ
+
+
+;_W_Gettnames转发到_Gettnames
+__imp___W_Gettnames=__imp___Gettnames
+__W_Gettnames=__Gettnames
+
+;_findfirst已经改名为_findfirst32
+__imp___findfirst32=__imp___findfirst
+__findfirst32=__findfirst
+
+;_findnext已经改名为_findnext32
+__imp___findnext32=__imp___findnext
+__findnext32=__findnext
+
+;_findfirsti64已经改名为_findfirst32i64
+__imp___findfirst32i64=__imp___findfirsti64
+__findfirst32i64=__findfirsti64
+
+;_findnexti64已经改名为_findnext32i64
+__imp___findnext32i64=__imp___findnexti64
+__findnext32i64=__findnexti64
+
+;_fstat已经改名为_fstat32
+__imp___fstat32=__imp___fstat
+__fstat32=__fstat
+
+;_fstati64已经改名为_fstat32i64
+__imp___fstat32i64=__imp___fstati64
+__fstat32i64=__fstati64
+
+;_copysign已经改名为copysign
+__imp__copysign=__imp___copysign
+_copysign=__copysign
+
+;_hypot已经改名为hypot
+;https://msdn.microsoft.com/zh-cn/library/a9yb3dbt.aspx
+__imp__hypot=__imp___hypot
+_hypot=__hypot
+
+;_nextafter已经改名为nextafter
+;https://msdn.microsoft.com/zh-cn/library/h0dff77w.aspx
+__imp__nextafter=__imp___nextafter
+_nextafter=__nextafter
+
+;nexttoward与_nextafter等价
+;https://msdn.microsoft.com/zh-cn/library/h0dff77w.aspx
+__imp__nexttoward=__imp___nextafter
+_nexttoward=__nextafter
+
+;nextafterl与_nextafter等价（double == long double）
+__imp__nextafterl=__imp___nextafter
+_nextafterl=__nextafter
+
+;nexttowardl与_nextafter等价（double == long double）
+__imp__nexttowardl=__imp___nextafter
+_nexttowardl=__nextafter
+
+;wcstoll与_wcstoi64等价（long long == __int64）
+__imp__wcstoll=__imp___wcstoi64
+_wcstoll=__wcstoi64
+
+;_wcstoll_l与_wcstoi64_l等价（long long == __int64）
+__imp___wcstoll_l=__imp___wcstoi64_l
+__wcstoll_l=__wcstoi64_l
+
+;wcstoull与_wcstoui64等价（unsigned long long == unsigned __int64）
+__imp__wcstoull=__imp___wcstoui64
+_wcstoull=__wcstoui64
+
+;_wcstoull_l与_wcstoui64_l等价（unsigned long long == unsigned __int64）
+__imp___wcstoull_l=__imp___wcstoui64_l
+__wcstoull_l=__wcstoui64_l
+
+;_wtoll与_wtoi64等价（long long == __int64）
+__imp___wtoll=__imp___wtoi64
+__wtoll=__wtoi64
+
+;_wtoll_l与_wtoi64_l等价（long long == __int64）
+__imp___wtoll_l=__imp___wtoi64_l
+__wtoll_l=__wtoi64_l
+
+;atoll与_atoi64等价（long long == __int64）
+__imp__atoll=__imp___atoi64
+_atoll=__atoi64
+
+;_atoll_l与_atoi64_l等价（long long == __int64）
+__imp___atoll_l=__imp___atoi64_l
+__atoll_l=__atoi64_l
+
+;strtoll与_strtoi64等价（long long == __int64）
+__imp__strtoll=__imp___strtoi64
+_strtoll=__strtoi64
+
+;_strtoll_l与_strtoi64_l等价（long long == __int64）
+__imp___strtoll_l=__imp___strtoi64_l
+__strtoll_l=__strtoi64_l
+
+;strtoull与_strtoui64等价（unsignedlong long == unsigned __int64）
+__imp__strtoull=__imp___strtoui64
+_strtoull=__strtoui64
+
+;_strtoull_l与_strtoui64_l等价（unsignedlong long == unsigned __int64）
+__imp___strtoull_l=__imp___strtoui64_l
+__strtoull_l=__strtoui64_l
+
+
+
+
+
+
+; 数学函数转发
+__imp___acos_default=__imp__acos
+__acos_default=_acos
+
+__imp___asin_default=__imp__asin
+__asin_default=_asin
+
+__imp___atan_default=__imp__atan
+__atan_default=_atan
+
+__imp___cos_default=__imp__cos
+__cos_default=_cos
+
+__imp___exp_default=__imp__exp
+__exp_default=_exp
+
+__imp___log_default=__imp__log
+__log_default=_log
+
+__imp___log10_default=__imp__log10
+__log10_default=_log10
+
+__imp___pow_default=__imp__pow
+__pow_default=_pow
+
+__imp___sin_default=__imp__sin
+__sin_default=_sin
+
+__imp___tan_default=__imp__tan
+__tan_default=_tan

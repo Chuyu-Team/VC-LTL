@@ -266,14 +266,14 @@ _ACRTIMP errno_t __cdecl _wsopen_dispatch(
 
     // These functions do not validate pmode; use _wsopen_s instead.
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_wsopen_s)
-    extern int __CRTDECL _wopen(
+    _ACRTIMP int __CRTDECL _wopen(
         _In_z_ wchar_t const* _FileName,
         _In_   int            _OFlag,
         _In_   int            _PMode = 0
         );
 
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_wsopen_s)
-    extern int __CRTDECL _wsopen(
+    _ACRTIMP int __CRTDECL _wsopen(
         _In_z_ wchar_t const* _FileName,
         _In_   int            _OFlag,
         _In_   int            _ShFlag,

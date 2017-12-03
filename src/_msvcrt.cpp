@@ -904,10 +904,10 @@ extern "C"
 		}
 	}
 
-	void* __cdecl _W_Gettnames()
+	/*void* __cdecl _W_Gettnames()
 	{
 		return _Gettnames();
-	}
+	}*/
 	
 	//通过文件句柄获取_stat64
 	extern "C++" static __forceinline int __cdecl _tstat64(

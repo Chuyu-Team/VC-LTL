@@ -151,7 +151,7 @@ struct tm;
     _Ret_z_
     extern wchar_t* __cdecl _W_Getmonths(void);
 
-	extern void*    __cdecl _W_Gettnames(void);
+	_ACRTIMP void*    __cdecl _W_Gettnames(void);
 
     _Success_(return > 0)
     _ACRTIMP size_t __cdecl _Strftime(
