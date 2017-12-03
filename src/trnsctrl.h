@@ -22,8 +22,6 @@
 #ifndef _INC_TRNSCTRL
 #define _INC_TRNSCTRL
 
-#define _CRTBLD
-
 #ifndef _CRTBLD
 /*
 * This is an internal C runtime header file. It is used when building
