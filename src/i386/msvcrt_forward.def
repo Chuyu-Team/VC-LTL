@@ -80,6 +80,22 @@ __findfirst32i64=__findfirsti64
 __imp___findnext32i64=__imp___findnexti64
 __findnext32i64=__findnexti64
 
+;_wfindfirst已经改名为_wfindfirst32
+__imp___wfindfirst32=__imp___wfindfirst
+__wfindfirst32=__wfindfirst
+
+;_wfindnext已经改名为_wfindnext32
+__imp___wfindnext32=__imp___wfindnext
+__wfindnext32=__wfindnext
+
+;_wfindfirsti64已经改名为_wfindfirst32i64
+__imp___wfindfirst32i64=__imp___wfindfirsti64
+__wfindfirst32i64=__wfindfirsti64
+
+;_wfindnexti64已经改名为_wfindnext32i64
+__imp___wfindnext32i64=__imp___wfindnexti64
+__wfindnext32i64=__wfindnexti64
+
 ;_fstat已经改名为_fstat32
 __imp___fstat32=__imp___fstat
 __fstat32=__fstat
