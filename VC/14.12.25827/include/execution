@@ -1,0 +1,1824 @@
+// execution standard header
+// Copyright (c) Microsoft Corporation. All rights reserved.
+#pragma once
+#ifndef _EXECUTION_
+#define _EXECUTION_
+#ifndef RC_INVOKED
+#include <algorithm>
+#include <atomic>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <queue>
+#include <vector>
+
+#if !_HAS_CXX17
+ #error Parallel algorithms are only available with C++17.
+#endif /* _HAS_CXX17 */
+
+_EXPERIMENTAL_PARALLEL_ALGORITHMS typedef int _Experimental_parallel_algorithms;
+typedef _Experimental_parallel_algorithms _Using_parallel_algorithms;
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+#pragma push_macro("new")
+#undef new
+
+_EXTERN_C
+// If on XP, returns 1 (disabling parallelism); otherwise, returns the number of
+// hardware threads available.
+_Check_return_
+unsigned int __stdcall __std_parallel_algorithms_hw_threads() _NOEXCEPT;
+
+// Vista thread pool interface; __std_parallel_algorithms_hw_threads must be called on the current
+// thread before calling any of the below.
+#ifdef _M_CEE
+using __std_TP_WORK = void;
+using __std_TP_CALLBACK_INSTANCE = void;
+using __std_TP_CALLBACK_ENVIRON = void;
+#else /* ^^^ _M_CEE ^^^ // vvv !_M_CEE vvv */
+struct __std_TP_WORK; // not defined
+struct __std_TP_CALLBACK_INSTANCE; // not defined
+struct __std_TP_CALLBACK_ENVIRON; // not defined
+#endif /* _M_CEE */
+
+using __std_PTP_WORK = __std_TP_WORK *;
+using __std_PTP_CALLBACK_INSTANCE = __std_TP_CALLBACK_INSTANCE *;
+using __std_PTP_CALLBACK_ENVIRON = __std_TP_CALLBACK_ENVIRON *;
+
+using __std_PTP_WORK_CALLBACK = void (__stdcall *)(
+	_Inout_     __std_PTP_CALLBACK_INSTANCE,
+	_Inout_opt_ void *,
+	_Inout_     __std_PTP_WORK
+	);
+
+_Check_return_
+__std_PTP_WORK __stdcall __std_create_threadpool_work(
+	_In_        __std_PTP_WORK_CALLBACK,
+	_Inout_opt_ void *,
+	_In_opt_    __std_PTP_CALLBACK_ENVIRON
+	) _NOEXCEPT;
+
+void __stdcall __std_submit_threadpool_work(
+	_Inout_ __std_PTP_WORK
+	) _NOEXCEPT;
+
+void __stdcall __std_bulk_submit_threadpool_work(
+	_Inout_ __std_PTP_WORK,
+	_In_    size_t
+	) _NOEXCEPT;
+
+void __stdcall __std_close_threadpool_work(
+	_Inout_ __std_PTP_WORK
+	) _NOEXCEPT;
+
+void __stdcall __std_wait_for_threadpool_work_callbacks(
+	_Inout_ __std_PTP_WORK,
+	_In_    int
+	) _NOEXCEPT;
+_END_EXTERN_C
+
+_STD_BEGIN
+constexpr size_t _Oversubscription_multiplier = 32;
+
+namespace execution {
+class sequenced_policy
+		: public _Sequenced_policy_tag
+	{	// request for sequential execution with termination
+	};
+
+_INLINE_VAR constexpr sequenced_policy seq{/* unspecified */};
+
+class parallel_policy
+		: public _Parallel_policy_tag
+	{	// request for parallel execution with termination
+	};
+
+_INLINE_VAR constexpr parallel_policy par{/* unspecified */};
+
+class parallel_unsequenced_policy
+		: public _Parallel_unsequenced_policy_tag
+	{	// request for parallel execution without thread identity with termination
+		// at this time, equivalent to parallel_policy
+	};
+
+_INLINE_VAR constexpr parallel_unsequenced_policy par_unseq{/* unspecified */};
+}	// namespace execution
+
+template<>
+	struct is_execution_policy<execution::sequenced_policy>
+		: true_type
+	{	// sequenced_policy is an execution policy
+	};
+
+template<>
+	struct is_execution_policy<execution::parallel_policy>
+		: true_type
+	{	// parallel_policy is an execution policy
+	};
+
+template<>
+	struct is_execution_policy<execution::parallel_unsequenced_policy>
+		: true_type
+	{	// parallel_unsequenced_policy is an execution policy
+	};
+
+		// STRUCT _Parallelism_resources_exhausted
+struct _Parallelism_resources_exhausted
+	: exception
+	{
+	virtual const char * __CLR_OR_THIS_CALL what() const _NOEXCEPT override
+		{	// return pointer to message string
+		return ("Insufficient resources were available to use additional parallelism.");
+		}
+
+ #if !_HAS_EXCEPTIONS
+protected:
+	virtual void _Doraise() const
+		{	// perform class-specific exception handling
+		_RAISE(*this);
+		}
+ #endif /* !_HAS_EXCEPTIONS */
+	};
+
+		// ENUM CLASS _Cancellation_status
+enum class _Cancellation_status : bool
+	{
+	_Running,
+	_Canceled
+	};
+
+		// STRUCT _Cancellation_token
+struct _Cancellation_token
+	{
+	atomic<_Cancellation_status> _Is_canceled_impl{_Cancellation_status::_Running};
+
+	bool _Is_canceled() const
+		{
+		return (_Is_canceled_impl.load() == _Cancellation_status::_Canceled);
+		}
+
+	bool _Is_cancelled_relaxed() const
+		{
+		return (_Is_canceled_impl.load(memory_order_relaxed) == _Cancellation_status::_Canceled);
+		}
+
+	void _Cancel()
+		{
+		_Is_canceled_impl.store(_Cancellation_status::_Canceled);
+		}
+
+	_Cancellation_status _Status() const
+		{
+		return (_Is_canceled_impl.load());
+		}
+	};
+
+
+		// CLASS _Work_ptr
+class _Work_ptr
+	{
+public:
+	template<class _Operation,
+		enable_if_t<!is_same_v<remove_cv_t<_Operation>, _Work_ptr>, int> = 0>
+		explicit _Work_ptr(_Operation& _Op)
+		: _Ptp_work(__std_create_threadpool_work(
+			&_Operation::_Threadpool_callback, _STD addressof(_Op), 0))
+		{	// register work with the thread pool
+		if (!_Ptp_work)
+			{
+			_THROW(_Parallelism_resources_exhausted{});
+			}
+		}
+
+	_Work_ptr(const _Work_ptr&) = delete;
+	_Work_ptr& operator=(const _Work_ptr&) = delete;
+
+	~_Work_ptr() _NOEXCEPT
+		{
+		__std_wait_for_threadpool_work_callbacks(_Ptp_work, true);
+		__std_close_threadpool_work(_Ptp_work);
+		}
+
+	void _Submit() const _NOEXCEPT
+		{
+		__std_submit_threadpool_work(_Ptp_work);
+		}
+
+	void _Submit(const size_t _Submissions) const _NOEXCEPT
+		{
+		__std_bulk_submit_threadpool_work(_Ptp_work, _Submissions);
+		}
+
+private:
+	__std_PTP_WORK _Ptp_work;
+	};
+
+		// STRUCT TEMPLATE _Parallelism_allocator
+struct _Parallelism_allocate_traits
+	{
+	static constexpr bool _Try_aligned_allocation = true;
+
+	[[noreturn]] static void _Fail()
+		{
+		_THROW(_Parallelism_resources_exhausted{});
+		}
+
+	_DECLSPEC_ALLOCATOR static void * _Get_bytes(const size_t _Bytes, const size_t _Align)
+		{
+		void * _Ptr;
+
+		(void)_Align;
+ #if _HAS_ALIGNED_NEW
+		if (_Align > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+			{
+			_Ptr = ::operator new(_Bytes, align_val_t{_Align}, nothrow);
+			}
+		else
+ #endif /* _HAS_ALIGNED_NEW */
+			{
+			_Ptr = ::operator new(_Bytes, nothrow);
+			}
+
+		if (!_Ptr)
+			{
+			_Fail();
+			}
+
+		return (_Ptr);
+		}
+	};
+
+template<class _Ty = void>
+	struct _Parallelism_allocator
+	{
+	using value_type = _Ty;
+
+	_Parallelism_allocator() = default;
+
+	template<class _Other>
+		constexpr _Parallelism_allocator(const _Parallelism_allocator<_Other>&) _NOEXCEPT
+		{
+		}
+
+	_Ty * allocate(const size_t _Count)
+		{
+		return (static_cast<_Ty *>(_Allocate<_Parallelism_allocate_traits>(_Count, sizeof(_Ty), alignof(_Ty))));
+		}
+
+	void deallocate(_Ty * const _Ptr, const size_t _Count)
+		{
+		_Deallocate(_Ptr, _Count, sizeof(_Ty), alignof(_Ty));
+		}
+
+	template<class _Other>
+		bool operator==(const _Parallelism_allocator<_Other>&) const _NOEXCEPT
+		{
+		return (true);
+		}
+
+	template<class _Other>
+		bool operator!=(const _Parallelism_allocator<_Other>&) const _NOEXCEPT
+		{
+		return (false);
+		}
+	};
+
+template<class _Ty>
+	using _Parallel_vector = vector<_Ty, _Parallelism_allocator<_Ty>>;
+
+template<class _Ty>
+	struct _Generalized_sum_drop
+	{	// drop off point for GENERALIZED_SUM intermediate results
+	_Ty * _Data;
+	size_t _Slots;
+	atomic<size_t> _Frontier;
+
+	explicit _Generalized_sum_drop(const size_t _Slots)
+		: _Data(static_cast<_Ty *>(_Allocate<_Parallelism_allocate_traits>(_Slots, sizeof(_Ty), alignof(_Ty)))),
+		_Slots(_Slots),
+		_Frontier(0)
+		{
+		}
+
+	~_Generalized_sum_drop() _NOEXCEPT
+		{	// pre: the caller has synchronized with all threads that modify _Data.
+		_Destroy_range(begin(), end());
+		_Deallocate(_Data, _Slots, sizeof(_Ty), alignof(_Ty));
+		}
+
+	template<class... _Args>
+		void _Add_result(_Args&&... _Vals) _NOEXCEPT // enforces termination
+		{	// constructs a _Ty in place with _Vals parameters perfectly forwarded
+			// pre: the number of results added is less than the size the drop was constructed with
+		const size_t _Target = _Frontier++;
+		_Construct_in_place(_Data[_Target], _STD forward<_Args>(_Vals)...);
+		}
+
+	_Ty * begin()
+		{
+		return (_Data);
+		}
+
+	_Ty * end()
+		{
+		return (_Data + _Frontier.load(memory_order_relaxed));
+		}
+	};
+
+		// CLASS TEMPLATE _Work_stealing_deque
+template<class _Ty>
+	struct alignas(_Ty) alignas(size_t) alignas(_Atomic_counter_t) _Circular_buffer
+	{	// work stealing deque extent type
+	static_assert(is_trivial_v<_Ty>, "Work stealing deques work only with trivial operations");
+
+	size_t _Log_size;
+	_Atomic_counter_t _Ref_count;
+
+	void _Release()
+		{
+		static_assert(is_trivially_destructible_v<_Circular_buffer>,
+			"global delete requires trivial destruction");
+		if (_MT_DECR(_Ref_count) == 0)
+			{
+			::operator delete(this);
+			}
+		}
+
+	static _Circular_buffer * _Allocate_circular_buffer(const size_t _New_log_size)
+		{	// allocate a circular buffer with space for 2^_New_log_size elements
+		if (_New_log_size >= 32)
+			{
+			_THROW(_Parallelism_resources_exhausted{});
+			}
+
+		const size_t _Count = static_cast<size_t>(1) << _New_log_size;
+		constexpr size_t _Max_bytes = static_cast<size_t>(-1) - sizeof(_Circular_buffer);
+		if (_Max_bytes / sizeof(_Ty) < _Count)
+			{
+			_THROW(_Parallelism_resources_exhausted{});
+			}
+
+		const size_t _Result_bytes = _Count * sizeof(_Ty) + sizeof(_Circular_buffer);
+		static_assert(alignof(_Ty) <= alignof(max_align_t), "incapable of supporting the requested alignment");
+		const auto _Result = static_cast<_Circular_buffer *>(::operator new(_Result_bytes));
+		_Result->_Log_size = _New_log_size;
+		_Result->_Ref_count = 1;
+		return (_Result);
+		}
+
+	static _Circular_buffer * _New_circular_buffer()
+		{	// allocate a circular buffer with a default number of elements
+		return (_Allocate_circular_buffer(6)); // start with 64 elements
+		}
+
+	_Ty * _Get_base()
+		{	// get the base address where the _Ty instances are stored
+		return (reinterpret_cast<_Ty *>(this + 1));
+		}
+
+	const _Ty * _Get_base() const
+		{	// get the base address where the _Ty instances are stored
+		return (reinterpret_cast<const _Ty *>(this + 1));
+		}
+
+	_Ty& _Subscript(const size_t _Idx)
+		{	// get a reference to the _Idxth element
+		const auto _Mask = (static_cast<size_t>(1) << _Log_size) - static_cast<size_t>(1);
+		return (_Get_base()[_Idx & _Mask]);
+		}
+
+	const _Ty& _Subscript(const size_t _Idx) const
+		{	// get a reference to the _Idxth element
+		const auto _Mask = (static_cast<size_t>(1) << _Log_size) - static_cast<size_t>(1);
+		return (_Get_base()[_Idx & _Mask]);
+		}
+
+	_Circular_buffer * _Grow(const size_t _Bottom, const size_t _Top) const
+		{	// create a bigger _Circular_buffer suitable for use by a _Work_stealing_deque<_Ty>
+			// with bounds _Bottom and _Top
+		const size_t _New_log_size = _Log_size + 1;
+		_Circular_buffer * _Result = _Allocate_circular_buffer(_New_log_size);
+		for (size_t _Idx = _Top; _Idx < _Bottom; ++_Idx)
+			{
+			_Result->_Subscript(_Idx) = _Subscript(_Idx);
+			}
+
+		return (_Result);
+		}
+	};
+
+#pragma warning(push)
+#pragma warning(disable: 4324) // structure was padded due to alignment specifier
+template<class _Ty>
+	class alignas(hardware_destructive_interference_size) _Work_stealing_deque
+	{	// thread-local work-stealing deque which allows efficient access from a single owner
+		// thread at the "bottom" of the queue, and any thread access to the "top" of the queue
+		// originally described in the paper "Dynamic Circular Work-Stealing Deque" by
+		// David Chase and Yossi Lev
+public:
+	_Work_stealing_deque() = default;
+	_Work_stealing_deque(const _Work_stealing_deque&) = delete;
+	_Work_stealing_deque& operator=(const _Work_stealing_deque&) = delete;
+
+	~_Work_stealing_deque() _NOEXCEPT
+		{
+		_Segment->_Release();
+		}
+
+	void _Push_bottom(_Ty& _Val)
+		{	// attempts to push _Val onto the bottom of this queue
+			// may be accessed by owning thread only
+		auto _Local_b = _Bottom.load();
+		if (_Local_b == SIZE_MAX)
+			{	// we assume that any input range won't be divided into more than SIZE_MAX
+				// subproblems; treat overflow of that kind as OOM
+			_THROW(_Parallelism_resources_exhausted{});
+			}
+
+		auto _Local_t = _Top.load();
+		auto _Size = _Local_b - _Local_t;
+		if (_Size >= (static_cast<size_t>(1) << _Segment->_Log_size))
+			{
+			auto _New_segment = _Segment->_Grow(_Local_b, _Local_t);
+			_Circular_buffer<_Ty> * _Detached_segment;
+				{
+				lock_guard<mutex> _Lck(_Segment_lock);
+				_Detached_segment = _STD exchange(_Segment, _New_segment);
+				}	// unlock
+
+			_Detached_segment->_Release();
+			}
+
+		_Segment->_Subscript(_Local_b) = _Val;
+		_Bottom.store(_Local_b + 1U);
+		}
+
+	bool _Steal(_Ty& _Val)
+		{	// attempt to pop an item from the top of this deque
+			// may be accessed by any thread
+			// returns false if the deque was empty and _Val is indeterminate; otherwise, returns
+			// true and sets _Val to the element retrieved from the top of the deque.
+		auto _Local_t = _Top.load();
+		size_t _Local_b;
+		size_t _Desired_t;
+		do
+			{
+			_Local_b = _Bottom.load();
+			if (_Local_b <= _Local_t)
+				{	// deque was empty
+				return (false);
+				}
+
+			_Circular_buffer<_Ty> * _Stealing_segment;
+				{
+				lock_guard<mutex> _Lck(_Segment_lock);
+				_Stealing_segment = _Segment;
+				_MT_INCR(_Stealing_segment->_Ref_count);
+				}
+
+			_Val = _Stealing_segment->_Subscript(_Local_t); // speculative read/write data race
+			_Stealing_segment->_Release();
+			// The above is technically prohibited by the C++ memory model, but
+			// happens to be well defined on all hardware this implementation
+			// targets. Hardware with trap representations or similar must not
+			// use this implementation.
+			_Desired_t = _Local_t + 1U;
+			}
+		while (!_Top.compare_exchange_strong(_Local_t, _Desired_t)); // if a data race occurred, try again
+
+		return (true);
+		}
+
+	bool _Try_pop_bottom(_Ty& _Val)
+		{	// attempt to pop an item from the bottom of this deque into _Val
+			// may be accessed by owning thread only
+		auto _Local_b = _Bottom.load();
+		if (_Local_b == 0)
+			{	// queue never contained any elements (should never happen)
+			return (false);
+			}
+
+		--_Local_b;
+		_Bottom.store(_Local_b);
+		auto _Local_t = _Top.load();
+		if (_Local_b < _Local_t)
+			{	// all elements were stolen before we got here
+			_Bottom.store(_Local_t);
+			return (false);
+			}
+
+		// memory model says following load is OK, since _Push_bottom can't run concurrently
+		_Val = _Segment->_Subscript(_Local_b);
+
+		if (_Local_b > _Local_t)
+			{	// other threads only look at top, so we get the bottom
+				// without synchronization
+			return (true);
+			}
+
+		// We're trying to read the last element that another thread may be
+		// trying to steal; see who gets to keep the element through _Top
+		// (effectively, steal from ourselves)
+		auto _Desired_top = _Local_t + 1U;
+		if (_Top.compare_exchange_strong(_Local_t, _Desired_top))
+			{
+			_Bottom.store(_Desired_top);
+			return (true);
+			}
+		else
+			{
+			_Bottom.store(_Local_t);
+			return (false);
+			}
+		}
+
+private:
+	atomic<size_t> _Bottom{0};	// modified by only owning thread
+	atomic<size_t> _Top{0};	// modified by all threads
+	_Guarded_by_(_Segment_lock) _Circular_buffer<_Ty> * _Segment{_Circular_buffer<_Ty>::_New_circular_buffer()};
+	mutex _Segment_lock{};
+	};
+#pragma warning(pop)
+
+		// STRUCT TEMPLATE _Work_stealing_membership
+enum class _Steal_result
+	{
+	_Success,
+	_Abort,
+	_Done
+	};
+
+template<class _Ty>
+	struct _Work_stealing_team;
+
+template<class _Ty>
+	struct _Work_stealing_membership
+	{	// thread-local "ticket" that team members use to talk with a _Work_stealing_team
+	using _Diff = typename _Ty::difference_type;
+
+	size_t _Id;
+	_Work_stealing_team<_Ty> * _Team;
+	_Diff _Work_complete;
+
+	void _Push_bottom(_Ty& _Val)
+		{
+		_Team->_Queues[_Id]._Push_bottom(_Val);
+		}
+
+	bool _Try_pop_bottom(_Ty& _Val) _NOEXCEPT
+		{
+		return (_Team->_Queues[_Id]._Try_pop_bottom(_Val));
+		}
+
+	_Steal_result _Steal(_Ty& _Val) _NOEXCEPT
+		{
+		_Diff _Remaining;
+		const auto _Completed_this_time = _STD exchange(_Work_complete, 0);
+		if (_Completed_this_time == 0)
+			{
+			_Remaining = _Team->_Remaining_work.load();
+			}
+		else
+			{
+			_Remaining = _Team->_Remaining_work -= _Completed_this_time;
+			}
+
+		if (_Remaining == 0)
+			{
+			return (_Steal_result::_Done);
+			}
+
+		size_t _High = _Team->_Queues_used.load() + 1;
+		size_t _Idx = _Id;
+		for (;;)
+			{
+			if (_Idx == 0)
+				{
+				_Idx = _High;
+				}
+
+			--_Idx;
+			if (_Idx == _Id)
+				{
+				return (_Steal_result::_Abort);
+				}
+
+			if (_Team->_Queues[_Idx]._Steal(_Val))
+				{
+				return (_Steal_result::_Success);
+				}
+			}
+		}
+
+	void _Leave() _NOEXCEPT
+		{
+		_Team->_Leave_team(_Id);
+		}
+	};
+
+		// STRUCT TEMPLATE _Work_stealing_team
+template<class _Ty>
+	struct _Work_stealing_team
+	{	// inter-thread communication for threads working on a single task
+	using _Diff = typename _Ty::difference_type;
+
+	static _Parallel_vector<size_t> _Get_queues(const size_t _Queue_count)
+		{
+		_Parallel_vector<size_t> _Result(_Queue_count);
+		_STD iota(_Result.begin(), _Result.end(), static_cast<size_t>(0));
+		return (_Result);
+		}
+
+	_Work_stealing_team(size_t _Threads, _Diff _Total_work)
+		: _Queues(_Threads),
+		_Queues_used(0),
+		_Remaining_work(_Total_work),
+		_Available_mutex(),
+		_Available_queues(greater<>{}, _Get_queues(_Threads))
+		{	// register work with the thread pool
+		}
+
+	_Work_stealing_membership<_Ty> _Join_team() _NOEXCEPT
+		{
+		size_t _Id;
+			{
+			lock_guard<mutex> _Lck(_Available_mutex);
+			_Id = _Available_queues.top();
+			_Available_queues.pop();
+			}	// unlock
+
+		// set _Queues_used to the high water mark of queues used
+		size_t _High_water = _Queues_used.load();
+		while (_High_water < _Id
+			&& !_Queues_used.compare_exchange_weak(_High_water, _Id))
+			{	// keep trying
+			}
+
+		return (_Work_stealing_membership<_Ty>{_Id, this, 0});
+		}
+
+	void _Leave_team(size_t _Id) _NOEXCEPT
+		{
+		lock_guard<mutex> _Lck(_Available_mutex);
+		_Available_queues.push(_Id);
+		}
+
+	_Parallel_vector<_Work_stealing_deque<_Ty>> _Queues;
+	atomic<size_t> _Queues_used;
+	atomic<_Diff> _Remaining_work;
+
+	mutex _Available_mutex;
+	priority_queue<size_t, _Parallel_vector<size_t>, greater<>> _Available_queues;
+	};
+
+		// STRUCT _Static_partition_key
+struct _Static_partition_key
+	{	// "pointer" identifying a static partition
+	size_t _Chunk_number;
+	size_t _Start_at;
+	size_t _Size;
+
+	static _Static_partition_key _Invalid()
+		{	// get the invalid sentinel key
+		return {static_cast<size_t>(-1), 0, 0};
+		}
+
+	explicit operator bool() const
+		{	// test if this is a valid key
+		return (_Chunk_number != static_cast<size_t>(-1));
+		}
+	};
+
+		// STRUCT _Static_partition_team
+struct _Static_partition_team
+	{	// common data for all static partitioned ops
+	size_t _Count;
+	size_t _Chunks;
+	size_t _Chunk_size;
+	size_t _Unchunked_items;
+	atomic<size_t> _Consumed_chunks;
+
+	_Static_partition_team(const size_t _Count_, const size_t _Chunks_)
+		: _Count{_Count_},
+		_Chunks{_Chunks_},
+		_Chunk_size{_Count / _Chunks},
+		_Unchunked_items{_Count % _Chunks},
+		_Consumed_chunks{0}
+		{	// calculate common data for statically partitioning iterator ranges
+			// pre: _Count >= _Chunks
+			// pre: _Chunks >= 1
+		}
+
+	_Static_partition_key _Get_next_key()
+		{	// retrieves the next static partition key to process, if it exists;
+			// otherwise, retrieves an invalid partition key
+		const auto _This_chunk = _Consumed_chunks++;
+		if (_This_chunk < _Chunks)
+			{
+			size_t _This_chunk_start_at = _This_chunk * _Chunk_size;
+			size_t _This_chunk_size = _Chunk_size;
+			if (_This_chunk < _Unchunked_items)
+				{	// chunks at index lower than _Unchunked_items get an extra item,
+					// and need to shift forward by all their predecessors' extra items
+				_This_chunk_start_at += _This_chunk;
+				++_This_chunk_size;
+				}
+			else
+				{	// chunks without an extra item need to account for all the extra items
+				_This_chunk_start_at += _Unchunked_items;
+				}
+
+			return {_This_chunk, _This_chunk_start_at, _This_chunk_size};
+			}
+
+		return (_Static_partition_key::_Invalid());
+		}
+	};
+
+		// STRUCT TEMPLATE _Static_partition_range
+template<class _FwdIt>
+	struct _Iterator_range
+	{	// record of a partition of work
+	_FwdIt _First;
+	_FwdIt _Last;
+	};
+
+template<class _FwdIt,
+	bool = _Is_ranit_v<_FwdIt>>
+	struct _Static_partition_range;
+
+template<class _RanIt>
+	struct _Static_partition_range<_RanIt, true>
+	{
+	_RanIt _Start_at;
+	using _Chunk_type = _Iterator_range<_RanIt>;
+
+	_RanIt _Populate(const _Static_partition_team& _Team, _RanIt _First)
+		{	// statically partition a random-access iterator range and return next(_First, _Team._Count)
+			// pre: _Populate hasn't yet been called on this instance
+		_Start_at = _First;
+		return (_First + _Team._Count);
+		}
+
+	bool _Populate(const _Static_partition_team& _Team, _RanIt _First, _RanIt _Last)
+		{	// statically partition a random-access iterator range and check if the partition ends at _Last
+			// pre: _Populate hasn't yet been called on this instance
+		_Start_at = _First;
+		return (_Team._Count == static_cast<size_t>(_Last - _First));
+		}
+
+	_Chunk_type _Get_chunk(const _Static_partition_key _Key) const
+		{	// get a static partition chunk from a random-access range
+			// pre: _Key was generated by the _Static_partition_team instance passed to a previous call to _Populate
+		const auto _First = _Start_at + _Key._Start_at;
+		return {_First, _First + _Key._Size};
+		}
+	};
+
+template<class _FwdIt>
+	struct _Static_partition_range<_FwdIt, false>
+	{
+	_Parallel_vector<_Unchecked_t<_FwdIt>> _Division_points;
+	using _Chunk_type = _Iterator_range<_Unchecked_t<_FwdIt>>;
+
+	_FwdIt _Populate(const _Static_partition_team& _Team, _FwdIt _First)
+		{	// statically partition a forward iterator range and return next(_First, _Team._Count)
+			// pre: _Populate hasn't yet been called on this instance
+		auto _Chunks = _Team._Chunks;
+		_Division_points.resize(_Chunks + 1);
+		auto _Chunk_size = _Team._Chunk_size;
+		auto _Unchunked_items = _Team._Unchunked_items;
+		auto _Result = _Division_points.begin();
+		*_Result = _Unchecked(_First);
+		for (size_t _Idx = 0; _Idx < _Unchunked_items; ++_Idx)
+			{	// record bounds of chunks with an extra item
+			_STD advance(_First, _Chunk_size + 1);
+			*++_Result = _Unchecked(_First);
+			}
+
+		for (size_t _Idx = _Unchunked_items; _Idx < _Chunks; ++_Idx)
+			{	// record bounds of chunks with no extra item
+			_STD advance(_First, _Chunk_size);
+			*++_Result = _Unchecked(_First);
+			}
+
+		return (_First);
+		}
+
+	bool _Populate(const _Static_partition_team& _Team, _FwdIt _First, _FwdIt _Last)
+		{	// statically partition a forward iterator range and check if it ends at _Last
+			// pre: _Populate hasn't yet been called on this instance
+		auto _Chunks = _Team._Chunks;
+		_Division_points.resize(_Chunks + 1);
+		auto _Chunk_size = _Team._Chunk_size;
+		auto _Unchunked_items = _Team._Unchunked_items;
+		auto _Result = _Division_points.begin();
+		*_Result = _Unchecked(_First);
+		for (size_t _Idx = 0; _Idx < _Unchunked_items; ++_Idx)
+			{	// record bounds of chunks with an extra item
+			for (size_t _This_chunk_size = _Chunk_size + 1; 0 < _This_chunk_size; --_This_chunk_size)
+				{
+				if (_First == _Last)
+					{
+					return (false);
+					}
+
+				++_First;
+				}
+
+			*++_Result = _Unchecked(_First);
+			}
+
+		for (size_t _Idx = _Unchunked_items; _Idx < _Chunks; ++_Idx)
+			{	// record bounds of chunks with no extra item
+			for (size_t _This_chunk_size = _Chunk_size; 0 < _This_chunk_size; --_This_chunk_size)
+				{
+				if (_First == _Last)
+					{
+					return (false);
+					}
+
+				++_First;
+				}
+
+			*++_Result = _Unchecked(_First);
+			}
+
+		return (_First == _Last);
+		}
+
+	_Chunk_type _Get_chunk(const _Static_partition_key _Key) const
+		{	// get a static partition chunk from a forward range
+			// pre: _Key was generated by the _Static_partition_team instance passed to a previous call to _Populate
+		return {_Division_points[_Key._Chunk_number], _Division_points[_Key._Chunk_number + 1]};
+		}
+	};
+
+		// PARALLEL FUNCTION TEMPLATE all_of
+template<bool _Invert,
+	class _FwdIt,
+	class _Pr>
+	struct _Static_partitioned_all_of_family
+	{	// all_of/any_of/none_of task scheduled on the system thread pool
+	_Static_partition_team _Team;
+	_Static_partition_range<_FwdIt> _Basis;
+	_Pr _Pred;
+	_Cancellation_token _Cancel_token;
+
+	_Static_partitioned_all_of_family(_FwdIt _First, const size_t _Count, const size_t _Chunks, _Pr _Pred_)
+		: _Team{_Count, _Chunks},
+		_Basis{},
+		_Pred(_Pred_),
+		_Cancel_token{}
+		{
+		_Basis._Populate(_Team, _First);
+		}
+
+	_Cancellation_status _Process_chunk()
+		{	// test a chunk of input for a counterexample, and return whether processing must continue
+		if (_Cancel_token._Is_canceled())
+			{
+			return (_Cancellation_status::_Canceled);
+			}
+
+		const auto _Key = _Team._Get_next_key();
+		if (!_Key)
+			{
+			return (_Cancellation_status::_Canceled);
+			}
+
+		auto _Range = _Basis._Get_chunk(_Key);
+		auto _First = _Range._First;
+		const auto _Last = _Range._Last;
+		for (; _First != _Last; ++_First)
+			{
+			if (_Pred(*_First) ? _Invert : !_Invert)
+				{
+				_Cancel_token._Cancel();
+				return (_Cancellation_status::_Canceled);
+				}
+			}
+
+		return (_Cancellation_status::_Running);
+		}
+
+	static void __stdcall _Threadpool_callback(__std_PTP_CALLBACK_INSTANCE, void * _Context,
+			__std_PTP_WORK) _NOEXCEPT // enforces termination
+		{	// callback from the system thread pool to do work
+		(void)static_cast<_Static_partitioned_all_of_family *>(_Context)->_Process_chunk();
+		}
+	};
+
+template<bool _Invert,
+	class _FwdIt,
+	class _Pr> inline
+	bool _All_of_family_parallel(_FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if all elements in [_First, _Last) satisfy _Pred (or !_Pred if _Invert is true) in parallel
+	const size_t _Hw_threads = __std_parallel_algorithms_hw_threads();
+	if (_Hw_threads > 1)
+		{	// parallelize on multiprocessor machines...
+		const size_t _Count = _STD distance(_First, _Last);
+		if (_Count >= 2)
+			{	// ...  with at least 2 elements
+			const size_t _Threads = _Min_value(_Count, _Hw_threads);
+			const size_t _Chunks = _Min_value(_Count, _Threads * _Oversubscription_multiplier);
+			_TRY_BEGIN
+				// note that we chunk work for the foreground thread (unlike in, say, for_each) because
+				// oversubscription chunks provide cancellation points if a counterexample is found
+				_Static_partitioned_all_of_family<_Invert, _FwdIt, _Pr> _Operation{_First, _Count, _Chunks, _Pred};
+					{
+					const _Work_ptr _Work{_Operation};
+					_Work._Submit(_Chunks);
+					while (_Operation._Process_chunk() == _Cancellation_status::_Running)
+						{	// process while there are chunks remaining
+						}
+					}	// join with _Work_ptr threads
+
+				return (!_Operation._Cancel_token._Is_cancelled_relaxed());
+			_CATCH(const _Parallelism_resources_exhausted&)
+				// fall through to serial case below
+			_CATCH_END
+			}
+		}
+
+	for (; _First != _Last; ++_First)
+		{
+		if (_Pred(*_First) ? _Invert : !_Invert)
+			{
+			return (false);
+			}
+		}
+
+	return (true);
+	}
+
+template<class _FwdIt,
+	class _Pr> inline
+	bool _All_of_unchecked(_Sequenced_policy_tag, const _FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if all elements in [_First, _Last) satisfy _Pred sequentially
+	return (_STD all_of(_First, _Last, _Pred));
+	}
+
+template<class _FwdIt,
+	class _Pr> inline
+	bool _All_of_unchecked(_Parallel_policy_tag, const _FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if all elements in [_First, _Last) satisfy _Pred in parallel
+	return (_All_of_family_parallel<false>(_First, _Last, _Pred));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	bool all_of(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Pr _Pred) _NOEXCEPT // enforces termination
+	{	// test if all elements in [_First, _Last) satisfy _Pred with the indicated execution policy
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	return (_All_of_unchecked(_Exec, _Unchecked(_First), _Unchecked(_Last), _Pass_fn(_Pred)));
+	}
+
+		// PARALLEL FUNCTION TEMPLATE any_of
+template<class _FwdIt,
+	class _Pr> inline
+	bool _Any_of_unchecked(_Sequenced_policy_tag, const _FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if any element in [_First, _Last) satisfies _Pred sequentially
+	return (_STD any_of(_First, _Last, _Pred));
+	}
+
+template<class _FwdIt,
+	class _Pr> inline
+	bool _Any_of_unchecked(_Parallel_policy_tag, const _FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if any element in [_First, _Last) satisfies _Pred in parallel
+	return (!_All_of_family_parallel<true>(_First, _Last, _Pred));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	bool any_of(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Pr _Pred) _NOEXCEPT // enforces termination
+	{	// test if any element in [_First, _Last) satisfies _Pred with the indicated execution policy
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	return (_Any_of_unchecked(_Exec, _Unchecked(_First), _Unchecked(_Last), _Pass_fn(_Pred)));
+	}
+
+		// PARALLEL FUNCTION TEMPLATE none_of
+template<class _FwdIt,
+	class _Pr> inline
+	bool _None_of_unchecked(_Sequenced_policy_tag, const _FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if no element in [_First, _Last) satisfies _Pred sequentially
+	return (_STD none_of(_First, _Last, _Pred));
+	}
+
+template<class _FwdIt,
+	class _Pr> inline
+	bool _None_of_unchecked(_Parallel_policy_tag, const _FwdIt _First, const _FwdIt _Last, _Pr _Pred)
+	{	// test if no element in [_First, _Last) satisfies _Pred in parallel
+	return (_All_of_family_parallel<true>(_First, _Last, _Pred));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	bool none_of(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Pr _Pred) _NOEXCEPT // enforces termination
+	{	// test if no element in [_First, _Last) satisfies _Pred with the indicated execution policy
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	return (_None_of_unchecked(_Exec, _Unchecked(_First), _Unchecked(_Last), _Pass_fn(_Pred)));
+	}
+
+		// PARALLEL FUNCTION TEMPLATE for_each
+template<class _FwdIt,
+	class _Fn> inline
+	void _For_each_ivdep(_FwdIt _First, const _FwdIt _Last, _Fn _Func)
+	{	// perform function for each element [_First, _Last) assuming independent loop bodies
+#pragma loop(ivdep)
+	for (; _First != _Last; ++_First)
+		{
+		_Func(*_First);
+		}
+	}
+
+template<class _FwdIt,
+	class _Fn> inline
+	void _For_each_unchecked(_Sequenced_policy_tag, _FwdIt _First, const _FwdIt _Last, _Fn _Func)
+	{	// perform function for each element [_First, _Last) sequentially
+	for (; _First != _Last; ++_First)
+		{
+		_Func(*_First);
+		}
+	}
+
+template<class _FwdIt,
+	class _Fn>
+	struct _Static_partitioned_for_each
+	{	// for_each task scheduled on the system thread pool
+	_Static_partition_team _Team;
+	_Static_partition_range<_FwdIt> _Basis;
+	_Fn _Func;
+
+	_Static_partitioned_for_each(const size_t _Count, const size_t _Chunks, _Fn _Fx)
+		: _Team{_Count, _Chunks},
+		_Func(_Fx)
+		{
+		}
+
+	static void __stdcall _Threadpool_callback(__std_PTP_CALLBACK_INSTANCE, void * _Context,
+			__std_PTP_WORK) _NOEXCEPT // enforces termination
+		{	// callback from the system thread pool to do work
+		auto * const _This = static_cast<_Static_partitioned_for_each *>(_Context);
+		const auto _Key = _This->_Team._Get_next_key();
+		if (_Key)
+			{
+			const auto _This_chunk = _This->_Basis._Get_chunk(_Key);
+			_For_each_ivdep(_This_chunk._First, _This_chunk._Last, _This->_Func);
+			}
+		}
+	};
+
+template<class _FwdIt,
+	class _Fn> inline
+	void _For_each_unchecked(_Parallel_policy_tag,
+		const _FwdIt _First, const _FwdIt _Last, _Fn _Func)
+	{	// perform function for each element [_First, _Last) in parallel
+	const size_t _Hw_threads = __std_parallel_algorithms_hw_threads();
+	if (_Hw_threads > 1)
+		{	// parallelize on multiprocessor machines...
+		const size_t _Count = _STD distance(_First, _Last);
+		if (_Count >= 2)
+			{	// ...  with at least 2 elements
+			const size_t _Threads = _Min_value(_Hw_threads, _Count);
+			const size_t _Foreground_work = _Count / _Threads + (_Count % _Threads != 0);
+			const size_t _Background_work = _Count - _Foreground_work;
+			const size_t _Background_chunks = _Min_value(_Background_work,
+				(_Threads - 1) * _Oversubscription_multiplier);
+			_TRY_BEGIN
+				_Static_partitioned_for_each<_FwdIt, _Fn> _Operation{_Background_work, _Background_chunks, _Func};
+				_FwdIt _First_par = _Operation._Basis._Populate(_Operation._Team, _First);
+				const _Work_ptr _Work{_Operation};
+				_Work._Submit(_Background_chunks); // fire _Background_chunks background tasks at the thread pool
+				_For_each_ivdep(_First_par, _Last, _Func);
+
+				while (auto _Stolen_key = _Operation._Team._Get_next_key())
+					{	// keep processing remaining chunks to comply with N4687 [intro.progress]/14
+					auto _Stolen_chunk = _Operation._Basis._Get_chunk(_Stolen_key);
+					_For_each_ivdep(_Stolen_chunk._First, _Stolen_chunk._Last, _Func);
+					}
+
+				return;
+			_CATCH(const _Parallelism_resources_exhausted&)
+				// fall through to serial case below
+			_CATCH_END
+			}
+		}
+
+	_For_each_ivdep(_First, _Last, _Func);
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Fn,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	void for_each(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Fn _Func) _NOEXCEPT // enforces termination
+	{	// perform function for each element [_First, _Last) with the indicated execution policy
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	_For_each_unchecked(_Exec, _Unchecked(_First), _Unchecked(_Last), _Pass_fn(_Func));
+	}
+
+		// PARALLEL FUNCTION TEMPLATE for_each_n
+template<class _FwdIt,
+	class _Diff,
+	class _Fn> inline
+	_FwdIt _For_each_n_ivdep(_FwdIt _First, _Diff _Count, _Fn _Func)
+	{	// perform function for each element [_First, _First + _Count) assuming independent loop bodies
+#pragma loop(ivdep)
+	for (; 0 < _Count; --_Count, (void)++_First)
+		{
+		_Func(*_First);
+		}
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Fn> inline
+	_FwdIt _For_each_n_unchecked(_Sequenced_policy_tag, _FwdIt _First, _Diff _Count, _Fn _Func)
+	{	// perform function for each element [_First, _First + _Count) sequentially
+	for (; 0 < _Count; --_Count, (void)++_First)
+		{
+		_Func(*_First);
+		}
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Fn> inline
+	_FwdIt _For_each_n_unchecked(_Parallel_policy_tag,
+		const _FwdIt _First, const _Diff _Count, _Fn _Func)
+	{	// perform function for each element [_First, _First + _Count) in parallel
+	const size_t _Hw_threads = __std_parallel_algorithms_hw_threads();
+	if (_Hw_threads > 1 && _Count >= 2)
+		{	// parallelize on multiprocessor machines with at least 2 elements
+		const size_t _Threads = _Min_value(_Hw_threads, static_cast<size_t>(_Count));
+		const size_t _Foreground_work = _Count / _Threads + (_Count % _Threads != 0);
+		const size_t _Background_work = _Count - _Foreground_work;
+		const size_t _Background_chunks = _Min_value(_Background_work,
+			(_Threads - 1) * _Oversubscription_multiplier);
+		_TRY_BEGIN
+			_Static_partitioned_for_each<_FwdIt, _Fn> _Operation{_Background_work, _Background_chunks, _Func};
+			_FwdIt _First_par = _Operation._Basis._Populate(_Operation._Team, _First);
+			const _Work_ptr _Work{_Operation};
+			_Work._Submit(_Background_chunks); // fire _Background_chunks background tasks at the thread pool
+			_FwdIt _Result{_For_each_n_ivdep(_First_par, _Foreground_work, _Func)};
+			while (auto _Stolen_key = _Operation._Team._Get_next_key())
+				{	// keep processing remaining chunks to comply with N4687 [intro.progress]/14
+				auto _Stolen_chunk = _Operation._Basis._Get_chunk(_Stolen_key);
+				_For_each_ivdep(_Stolen_chunk._First, _Stolen_chunk._Last, _Func);
+				}
+
+			return (_Result);
+		_CATCH(const _Parallelism_resources_exhausted&)
+			// fall through to serial case below
+		_CATCH_END
+		}
+
+	return (_For_each_n_ivdep(_First, _Count, _Func));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Diff,
+	class _Fn,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	_FwdIt for_each_n(_ExPo&& _Exec, _FwdIt _First, const _Diff _Count_raw, _Fn _Func)
+		_NOEXCEPT // enforces termination
+	{	// perform function for each element [_First, _First + _Count)
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_Algorithm_int_t<_Diff> _Count = _Count_raw;
+	return (_Rechecked(_First,
+		_For_each_n_unchecked(_Exec, _Unchecked_n(_First, _Count), _Count, _Pass_fn(_Func))));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _SourceTy,
+	size_t _SourceSize,
+	class _Diff,
+	class _Fn,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	_SourceTy * for_each_n(_ExPo&& _Exec, _SourceTy (&_First)[_SourceSize], const _Diff _Count_raw,
+		_Fn _Func) _NOEXCEPT
+	{	// perform function for each element [_First, _First + _Count)
+	_Algorithm_int_t<_Diff> _Count = _Count_raw;
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	return (_For_each_n_unchecked(_Exec, _First, _Count, _Pass_fn(_Func)));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// PARALLEL FUNCTION TEMPLATE equal
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr>
+	struct _Static_partitioned_equal
+	{
+	_Static_partition_team _Team;
+	_Static_partition_range<_FwdIt1> _Left_basis;
+	_Static_partition_range<_FwdIt2> _Right_basis;
+	_Pr _Pred;
+	_Cancellation_token _Cancel_token;
+
+	_Static_partitioned_equal(const size_t _Count, const size_t _Chunks, _Pr _Pred_)
+		: _Team{_Count, _Chunks},
+		_Left_basis{},
+		_Right_basis{},
+		_Pred(_Pred_),
+		_Cancel_token{}
+		{
+		}
+
+	_Cancellation_status _Process_chunk()
+		{	// test a chunk of input for equality, and return whether processing must continue
+		if (_Cancel_token._Is_canceled())
+			{
+			return (_Cancellation_status::_Canceled);
+			}
+
+		const auto _Key = _Team._Get_next_key();
+		if (!_Key)
+			{
+			return (_Cancellation_status::_Canceled);
+			}
+
+		const auto _Range1 = _Left_basis._Get_chunk(_Key);
+		const auto _Range2 = _Right_basis._Get_chunk(_Key);
+		if (_Equal_unchecked(_Range1._First, _Range1._Last, _Range2._First, _Pred))
+			{
+			return (_Cancellation_status::_Running);
+			}
+
+		_Cancel_token._Cancel();
+		return (_Cancellation_status::_Canceled);
+		}
+
+	static void __stdcall _Threadpool_callback(__std_PTP_CALLBACK_INSTANCE, void * _Context,
+			__std_PTP_WORK) _NOEXCEPT // enforces termination
+		{	// callback from the system thread pool to do work
+		(void)static_cast<_Static_partitioned_equal *>(_Context)->_Process_chunk();
+		}
+	};
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Equal_parallel(_Sequenced_policy_tag, _FwdIt1 _First1, _FwdIt1 _Last1, _FwdIt2 _First2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, serially
+	return (_Equal_no_deprecate(_First1, _Last1, _First2, _Pred));
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Equal_parallel(_Parallel_policy_tag, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		const _FwdIt2 _First2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, in parallel
+	const size_t _Hw_threads = __std_parallel_algorithms_hw_threads();
+	if (_Hw_threads > 1)
+		{
+		const size_t _Count = _STD distance(_First1, _Last1);
+		if (_Count >= 2)
+			{
+			auto _UFirst2 = _Unchecked_n(_First2, _Count);
+			const size_t _Threads = _Min_value(_Count, _Hw_threads);
+			const size_t _Chunks = _Min_value(_Count, _Threads * _Oversubscription_multiplier);
+			_TRY_BEGIN
+				// note that we chunk work for the foreground thread (unlike in, say, for_each) because
+				// oversubscription chunks provide cancellation points if an inequality is found
+				_Static_partitioned_equal<_FwdIt1, decltype(_UFirst2), _Pr> _Operation{_Count, _Chunks, _Pred};
+				_Operation._Left_basis._Populate(_Operation._Team, _First1);
+				_Operation._Right_basis._Populate(_Operation._Team, _UFirst2);
+
+					{
+					const _Work_ptr _Work{_Operation};
+					_Work._Submit(_Chunks);
+					while (_Operation._Process_chunk() == _Cancellation_status::_Running)
+						{	// process while there are chunks remaining
+						}
+					}	// join with _Work_ptr threads
+
+				return (!_Operation._Cancel_token._Is_cancelled_relaxed());
+			_CATCH(const _Parallelism_resources_exhausted&)
+				return (_Equal_unchecked(_First1, _Last1, _UFirst2, _Pred));
+			_CATCH_END
+			}
+		}
+
+	return (_Equal_no_deprecate(_First1, _Last1, _First2, _Pred));
+	}
+
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	bool equal(_ExPo&& _Exec, _FwdIt1 _First1, _FwdIt1 _Last1, _FwdIt2 _First2, _Pr _Pred)
+		_NOEXCEPT // Enforces termination
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	_DEPRECATE_UNCHECKED(equal, _First2);
+	_DEBUG_RANGE(_First1, _Last1);
+	return (_Equal_parallel(_STD forward<_ExPo>(_Exec), _Unchecked(_First1), _Unchecked(_Last1),
+		_First2, _Pass_fn(_Pred)));
+	}
+
+#if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _FwdIt1,
+	class _RightTy,
+	size_t _RightSize,
+	class _Pr,
+	enable_if_t<is_execution_policy_v<decay_t<_ExPo>> && !is_same_v<_RightTy *, _Pr>, int>/* = 0 */> inline
+	bool equal(_ExPo&& _Exec, _FwdIt1 _First1, _FwdIt1 _Last1, _RightTy (&_First2)[_RightSize], _Pr _Pred)
+		_NOEXCEPT // Enforces termination
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_DEBUG_RANGE(_First1, _Last1);
+	return (_Equal_parallel(_STD forward<_ExPo>(_Exec), _Unchecked(_First1), _Unchecked(_Last1),
+		_Array_iterator<_RightTy, _RightSize>(_First2), _Pass_fn(_Pred)));
+	}
+#endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Equal_unchecked(_Sequenced_policy_tag, _FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, _Last2) using _Pred, serially
+	return (_Equal_unchecked(_First1, _Last1, _First2, _Last2, _Pred,
+		_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>()));
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Equal_unchecked(_Parallel_policy_tag, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		const _FwdIt2 _First2, const _FwdIt2 _Last2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, _Last2) using _Pred, in parallel
+	const size_t _Hw_threads = __std_parallel_algorithms_hw_threads();
+	if (_Hw_threads > 1)
+		{
+		const size_t _Count = _Distance_any(_First1, _Last1, _First2, _Last2);
+		if (_Count >= 2)
+			{
+			const size_t _Threads = _Min_value(_Count, _Hw_threads);
+			const size_t _Chunks = _Min_value(_Count, _Threads * _Oversubscription_multiplier);
+			_TRY_BEGIN
+				// note that we chunk work for the foreground thread (unlike in, say, for_each) because
+				// oversubscription chunks provide cancellation points if an inequality is found
+				_Static_partitioned_equal<_FwdIt1, _FwdIt2, _Pr> _Operation{_Count, _Chunks, _Pred};
+				if (!_Operation._Left_basis._Populate(_Operation._Team, _First1, _Last1))
+					{	// left sequence didn't have length _Count
+					return (false);
+					}
+
+				if (!_Operation._Right_basis._Populate(_Operation._Team, _First2, _Last2))
+					{	// right sequence didn't have length _Count
+					return (false);
+					}
+
+					{
+					const _Work_ptr _Work{_Operation};
+					_Work._Submit(_Chunks);
+					while (_Operation._Process_chunk() == _Cancellation_status::_Running)
+						{	// process while there are chunks remaining
+						}
+					}	// join with _Work_ptr threads
+
+				return (!_Operation._Cancel_token._Is_cancelled_relaxed());
+			_CATCH(const _Parallelism_resources_exhausted&)
+				// fall through to _Equal_unchecked below
+			_CATCH_END
+			}
+		}
+
+	return (_Equal_unchecked(_First1, _Last1, _First2, _Last2, _Pred,
+		_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>()));
+	}
+
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	bool equal(_ExPo&& _Exec, _FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred) _NOEXCEPT
+	{	// compare [_First1, _Last1) to [_First2, _Last2) using _Pred
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	_DEBUG_RANGE(_First1, _Last1);
+	_DEBUG_RANGE(_First2, _Last2);
+	return (_Equal_unchecked(_STD forward<_ExPo>(_Exec),
+		_Unchecked(_First1), _Unchecked(_Last1),
+		_Unchecked(_First2), _Unchecked(_Last2), _Pass_fn(_Pred)));
+	}
+
+		// PARALLEL FUNCTION TEMPLATE replace
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	void replace(_ExPo&& _Exec,
+		_FwdIt _First, _FwdIt _Last, const _Ty& _Oldval, const _Ty& _Newval) _NOEXCEPT
+	{	// replace each matching _Oldval with _Newval
+	_STD for_each(_STD forward<_ExPo>(_Exec), _First, _Last, [&](auto&& _Value) {
+		if (_STD forward<decltype(_Value)>(_Value) == _Oldval)
+			{
+			_STD forward<decltype(_Value)>(_Value) = _Newval;
+			}
+		});
+	}
+
+		// PARALLEL FUNCTION TEMPLATE replace_if
+template<class _ExPo,
+	class _FwdIt,
+	class _Pr,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo>/* = 0 */> inline
+	void replace_if(_ExPo&& _Exec,
+		_FwdIt _First, _FwdIt _Last, _Pr _Pred, const _Ty& _Val) _NOEXCEPT
+	{	// replace each satisfying _Pred with _Val
+	_STD for_each(_STD forward<_ExPo>(_Exec), _First, _Last,
+		[&_Val, _Lambda_pred = _Pass_fn(_Pred)](auto&& _Value) mutable {
+		if (_Lambda_pred(_STD forward<decltype(_Value)>(_Value)))
+			{
+			_STD forward<decltype(_Value)>(_Value) = _Val;
+			}
+		});
+	}
+
+		// PARALLEL FUNCTION TEMPLATE reduce
+template<class _Ty,
+	class _FwdIt,
+	class _Fn> inline
+	_Ty _Reduce_at_least_two1(const _FwdIt _First, const _FwdIt _Last, _Fn _Reduction, false_type)
+	{	// return reduction with no initial value, general case
+		// pre: distance(_First, _Last) >= 2
+	auto _Next = _First;
+	_Ty _Val{_Reduction(*_First, *++_Next)};
+	while (++_Next != _Last)
+		{
+		_Val = _Reduction(_STD move(_Val), *_Next);
+		}
+
+	return (_Val);
+	}
+
+template<class _Ty,
+	class _FwdIt,
+	class _Fn> inline
+	_Ty _Reduce_at_least_two1(_FwdIt _First, _FwdIt _Last, _Fn, true_type)
+	{	// return reduction with no initial value, plus arithmetic on contiguous ranges case
+	return (_Reduce_unchecked1(_First, _Last, static_cast<_Ty>(0), plus<>{}, true_type{}));
+	}
+
+template<class _Ty,
+	class _FwdIt,
+	class _Fn> inline
+	_Ty _Reduce_at_least_two(_FwdIt _First, _FwdIt _Last, _Fn _Reduction)
+	{	// return reduction with no initial value, choose optimization
+		// pre: distance(_First, _Last) >= 2
+	return (_Reduce_at_least_two1<_Ty>(_First, _Last, _Reduction,
+		_Plus_on_arithmetic_ranges_reduction_t<_FwdIt, _Ty, _Fn>{}));
+	}
+
+template<class _FwdIt,
+	class _Ty,
+	class _Fn>
+	struct _Static_partitioned_reduce
+	{	// reduction task scheduled on the system thread pool
+	_Static_partition_team _Team;
+	_Static_partition_range<_FwdIt> _Basis;
+	_Fn _Reduction;
+	_Generalized_sum_drop<_Ty> _Results;
+
+	_Static_partitioned_reduce(const size_t _Background_work, const size_t _Background_chunks, _Fn _Reduction)
+		: _Team{_Background_work, _Background_chunks},
+		_Basis{},
+		_Reduction(_Reduction),
+		_Results{_Background_chunks}
+		{
+		}
+
+	static void __stdcall _Threadpool_callback(__std_PTP_CALLBACK_INSTANCE, void * _Context,
+			__std_PTP_WORK) _NOEXCEPT // enforces termination
+		{	// callback from the system thread pool to do work
+		const auto _This = static_cast<_Static_partitioned_reduce *>(_Context);
+		const auto _Key = _This->_Team._Get_next_key();
+		if (_Key)
+			{
+			const auto _This_chunk = _This->_Basis._Get_chunk(_Key);
+			_This->_Results._Add_result(
+				_Reduce_at_least_two<_Ty>(_This_chunk._First, _This_chunk._Last, _This->_Reduction));
+			}
+		}
+	};
+
+template<class _FwdIt,
+	class _Ty,
+	class _Fn>
+	_Ty _Reduce_unchecked(_Sequenced_policy_tag, _FwdIt _First, _FwdIt _Last, _Ty _Val, _Fn _Reduction)
+	{	// return reduction, serial
+	return (_Reduce_unchecked(_First, _Last, _STD move(_Val), _Reduction));
+	}
+
+template<class _FwdIt,
+	class _Ty,
+	class _Fn>
+	_Ty _Reduce_unchecked(_Parallel_policy_tag, _FwdIt _First, _FwdIt _Last, _Ty _Val, _Fn _Reduction)
+	{	// return reduction, parallelized
+	if (_First == _Last)
+		{
+		return (_Val);
+		}
+
+	const size_t _Hw_threads = __std_parallel_algorithms_hw_threads();
+	if (_Hw_threads > 1)
+		{	// parallelize on multiprocessor machines...
+		const size_t _Count = _STD distance(_First, _Last);
+		const size_t _Foreground_work = _Count / _Hw_threads;
+		const size_t _Background_work = _Count - _Foreground_work;
+
+		// parallel reduction chunks require at least 2 elements to form the first accumulator for each chunk
+		const size_t _Max_background_chunks = _Background_work >> 1;	// TRANSITION, VSO#433486
+		const size_t _Desired_background_chunks = (_Hw_threads - 1) * _Oversubscription_multiplier;
+		const size_t _Background_chunks = _Min_value(_Desired_background_chunks, _Max_background_chunks);
+		if (_Background_chunks != 0)
+			{
+			_TRY_BEGIN
+				_Static_partitioned_reduce<_FwdIt, _Ty, _Fn> _Operation{
+					_Background_work, _Background_chunks, _Reduction};
+
+				_FwdIt _First_par = _Operation._Basis._Populate(_Operation._Team, _First);
+					{
+					const _Work_ptr _Work{_Operation};
+					_Work._Submit(_Background_chunks);
+
+					_Val = _Reduce_unchecked(_First_par, _Last, _STD move(_Val), _Reduction);
+					while (auto _Stolen_key = _Operation._Team._Get_next_key())
+						{	// keep processing remaining chunks to comply with N4687 [intro.progress]/14
+						auto _Chunk = _Operation._Basis._Get_chunk(_Stolen_key);
+						_Val = _Reduce_unchecked(_Chunk._First, _Chunk._Last, _STD move(_Val), _Reduction);
+						}
+					}	// join with _Work_ptr threads
+
+				auto& _Results = _Operation._Results;
+				return (_Reduce_unchecked(_Results.begin(), _Results.end(), _STD move(_Val), _Reduction));
+			_CATCH(const _Parallelism_resources_exhausted&)
+				// fall through to serial case below
+			_CATCH_END
+			}
+		}
+
+	return (_Reduce_unchecked(_First, _Last, _STD move(_Val), _Reduction));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	class _Fn,
+	_Enable_if_execution_policy_t<_ExPo> /* = 0 */> inline
+	_Ty reduce(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Ty _Val, _Fn _Reduction) _NOEXCEPT
+	{	// return parallelized reduction (accumulation allowing use of the commutative and associative properties)
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	return (_Reduce_unchecked(_STD forward<_ExPo>(_Exec),
+		_Unchecked(_First), _Unchecked(_Last), _STD move(_Val), _Pass_fn(_Reduction)));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo> /* = 0 */> inline
+	_Ty reduce(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Ty _Val) _NOEXCEPT
+	{	// return parallelized reduction (sum allowing use of the commutative and associative properties)
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	return (_Reduce_unchecked(_STD forward<_ExPo>(_Exec),
+		_Unchecked(_First), _Unchecked(_Last), _STD move(_Val), plus<>{}));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	_Enable_if_execution_policy_t<_ExPo> /* = 0 */> inline
+	_Iter_value_t<_FwdIt> reduce(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last) _NOEXCEPT
+	{	// return parallelized reduction (sum from 0 allowing use of the commutative and associative properties)
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	_DEBUG_RANGE(_First, _Last);
+	return (_Reduce_unchecked(_STD forward<_ExPo>(_Exec),
+		_Unchecked(_First), _Unchecked(_Last), _Iter_value_t<_FwdIt>{}, plus<>{}));
+	}
+
+
+		// PARALLEL FUNCTION TEMPLATE sort
+template<class _Diff>
+	struct _Sort_work_item_impl
+	{	// data describing an individual sort work item
+	using difference_type = _Diff;
+
+	_Diff _Offset;
+	_Diff _Size;
+	_Diff _Ideal;
+	};
+
+template<class _RanIt>
+	using _Sort_work_item = _Sort_work_item_impl<_Iter_diff_t<_RanIt>>;
+
+template<class _RanIt,
+	class _Pr>
+	bool _Process_sort_work_item(const _RanIt _Basis, _Pr _Pred, _Sort_work_item<_RanIt>& _Wi,
+		_Sort_work_item<_RanIt>& _Right_fork_wi,
+		_Iter_diff_t<_RanIt>& _Work_complete) _NOEXCEPT // enforces termination
+	{	// processes the sort work item, _Wi, relative to _Basis
+		// if the sort is divided into quicksort sub-problems:
+		//   the return value is true
+		//   _Wi contains the left sub-problem; the caller should continue with this
+		//   _Right_fork_wi contains the right sub-problem; the caller should allow this to be stolen
+		// otherwise:
+		//   the return value is false
+		//   _Wi's range is completely sorted
+		//   _Right_fork_wi is unmodified
+	constexpr auto _Diffsort_max = static_cast<_Iter_diff_t<_RanIt>>(_ISORT_MAX);
+	auto _Size = _Wi._Size;
+	auto _First = _Basis + _Wi._Offset;
+	auto _Last = _First + _Size;
+	auto _Ideal = _Wi._Ideal;
+	if (_Size <= _Diffsort_max)
+		{
+		_Insertion_sort_unchecked(_First, _Last, _Pred);
+		_Work_complete += _Size;
+		return (false);
+		}
+
+	if (0 < _Ideal)
+		{	// divide and conquer by partitioning (quicksort)
+		auto _Mid = _Partition_by_median_guess_unchecked(_First, _Last, _Pred);
+		auto _New_ideal = (_Ideal >> 1) + (_Ideal >> 2);	// allow 1.5 log2(N) divisions
+		_Wi._Size = _Mid.first - _First;
+		_Wi._Ideal = _New_ideal;
+		_Right_fork_wi = {_Mid.second - _Basis, _Last - _Mid.second, _New_ideal};
+		_Work_complete += _Mid.second - _Mid.first;
+		return (true);
+		}
+
+	// too many divisions; heap sort
+	_Make_heap_unchecked(_First, _Last, _Pred);
+	_Sort_heap_unchecked(_First, _Last, _Pred);
+	_Work_complete += _Size;
+	return (false);
+	}
+
+template<class _RanIt,
+	class _Pr> inline
+	void _Process_sort_queue(_RanIt _Basis, _Pr _Pred,
+		_Work_stealing_membership<_Sort_work_item<_RanIt>>& _My_ticket,
+		_Sort_work_item<_RanIt>& _Wi) _NOEXCEPT
+	{
+	_Sort_work_item<_RanIt> _Right_fork_wi;
+	do
+		{	// process work items in the local queue
+		while (_Process_sort_work_item(_Basis, _Pred, _Wi, _Right_fork_wi, _My_ticket._Work_complete))
+			{
+			_TRY_BEGIN
+				_My_ticket._Push_bottom(_Right_fork_wi);
+			_CATCH(const _Parallelism_resources_exhausted&)
+				// local queue is full and memory can't be acquired, process _Right_fork_wi serially
+				auto _First = _Basis + _Right_fork_wi._Offset;
+				_Sort_unchecked(_First, _First + _Right_fork_wi._Size, _Right_fork_wi._Ideal, _Pred);
+				_My_ticket._Work_complete += _Right_fork_wi._Size;
+			_CATCH_END
+			}
+		}
+	while (_My_ticket._Try_pop_bottom(_Wi));
+	}
+
+template<class _RanIt,
+	class _Pr>
+	struct _Sort_operation
+	{	// context for background threads
+	_RanIt _Basis;
+	_Pr _Pred;
+	_Work_stealing_team<_Sort_work_item<_RanIt>> _Team;
+
+	_Sort_operation(_RanIt _First, _Pr _Pred_arg, size_t _Threads, _Iter_diff_t<_RanIt> _Count)
+		: _Basis(_First),
+		_Pred(_Pred_arg),
+		_Team(_Threads, _Count)
+		{
+		}
+
+	static void __stdcall _Threadpool_callback(__std_PTP_CALLBACK_INSTANCE, void * _Context, __std_PTP_WORK _Work)
+			_NOEXCEPT // Enforces termination
+		{
+		auto * const _This = static_cast<_Sort_operation *>(_Context);
+		const auto _Basis = _This->_Basis;
+		const auto _Pred = _This->_Pred;
+		auto& _Team = _This->_Team;
+		auto _My_ticket = _Team._Join_team();
+		_Sort_work_item<_RanIt> _Wi;
+		for (;;)
+			{
+			switch (_My_ticket._Steal(_Wi))
+				{
+				case _Steal_result::_Success:
+					_Process_sort_queue(_Basis, _Pred, _My_ticket, _Wi);
+					break;
+				case _Steal_result::_Abort:
+					_My_ticket._Leave();
+					__std_submit_threadpool_work(_Work);
+					return;
+				case _Steal_result::_Done:
+					return;
+				}
+			}
+		}
+	};
+
+template<class _RanIt,
+	class _Pr> inline
+	void _Sort_unchecked(_Sequenced_policy_tag, _RanIt _First, _RanIt _Last,
+		_Iter_diff_t<_RanIt> _Ideal, _Pr _Pred)
+	{	// order [_First, _Last), using _Pred, serially
+	_Sort_unchecked(_First, _Last, _Ideal, _Pred); // in <algorithm>
+	}
+
+template<class _RanIt,
+	class _Pr> inline
+	void _Sort_unchecked(_Parallel_policy_tag, _RanIt _First, _RanIt _Last,
+		_Iter_diff_t<_RanIt> _Ideal, _Pr _Pred)
+	{	// order [_First, _Last), using _Pred, in parallel
+	using _Diff = _Iter_diff_t<_RanIt>;
+	constexpr auto _Diffsort_max = static_cast<_Diff>(_ISORT_MAX);
+	unsigned long _Threads;
+	if (_Ideal > _Diffsort_max && (_Threads = __std_parallel_algorithms_hw_threads()) > 1)
+		{	// parallelize when input is large enough and we aren't on a uniprocessor machine
+		_TRY_BEGIN
+			_Sort_operation<_RanIt, _Pr> _Operation(_First, _Pred, _Threads, _Ideal); // throws
+			const _Work_ptr _Work{_Operation}; // throws
+			auto& _Team = _Operation._Team;
+			auto _My_ticket = _Team._Join_team();
+			_Work._Submit(_Threads - 1);
+			_Sort_work_item<_RanIt> _Wi{0, _Ideal, _Ideal};
+			_Steal_result _Sr;
+			do
+				{
+				_Process_sort_queue(_First, _Pred, _My_ticket, _Wi);
+
+				do
+					{
+					_Sr = _My_ticket._Steal(_Wi);
+					}
+				while (_Sr == _Steal_result::_Abort);
+				}
+			while (_Sr != _Steal_result::_Done);
+			return;
+		_CATCH(const _Parallelism_resources_exhausted&)
+			// fall through to _Sort_unchecked, below
+		_CATCH_END
+		}
+
+	_Sort_unchecked(_First, _Last, _Ideal, _Pred);
+	}
+
+template<class _ExPo,
+	class _RanIt,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo> /* = 0 */> inline
+	void sort(_ExPo&& _Exec, _RanIt _First, _RanIt _Last, _Pr _Pred) _NOEXCEPT // enforces termination
+	{	// order [_First, _Last), using _Pred
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	_Sort_unchecked(_Exec, _UFirst, _ULast, _ULast - _UFirst, _Pass_fn(_Pred));
+	}
+
+template<class _ExPo,
+	class _RanIt,
+	_Enable_if_execution_policy_t<_ExPo> /* = 0 */> inline
+	void sort(_ExPo&& _Exec, _RanIt _First, _RanIt _Last) _NOEXCEPT // enforces termination
+	{	// order [_First, _Last), using operator<
+	_STD sort(_STD forward<_ExPo>(_Exec), _First, _Last, less<>{});
+	}
+_STD_END
+#pragma pop_macro("new")
+#pragma warning(pop)
+#pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _EXECUTION_ */

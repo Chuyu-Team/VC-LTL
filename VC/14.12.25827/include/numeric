@@ -1,0 +1,479 @@
+// numeric standard header
+#pragma once
+#ifndef _NUMERIC_
+#define _NUMERIC_
+#ifndef RC_INVOKED
+#include <xutility>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ #pragma push_macro("new")
+ #undef new
+_STD_BEGIN
+		// FUNCTION TEMPLATE accumulate
+template<class _InIt,
+	class _Ty,
+	class _Fn> inline
+	_Ty accumulate(_InIt _First, _InIt _Last, _Ty _Val, _Fn _Func)
+	{	// return sum of _Val and all in [_First, _Last), using _Func
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	for (; _UFirst != _ULast; ++_UFirst)
+		{
+		_Val = _Func(_Val, *_UFirst);
+		}
+
+	return (_Val);
+	}
+
+template<class _InIt,
+	class _Ty> inline
+	_Ty accumulate(_InIt _First, _InIt _Last, _Ty _Val)
+	{	// return sum of _Val and all in [_First, _Last)
+	return (_STD accumulate(_First, _Last, _Val, plus<>()));
+	}
+
+#if _HAS_CXX17
+		// FUNCTION TEMPLATE reduce
+template<class _InIt,
+	class _Ty,
+	class _Fn>
+	using _Plus_on_arithmetic_ranges_reduction_t = _Conjunction_t<
+		is_pointer<_InIt>,
+		is_arithmetic<_Ty>,
+		is_arithmetic<_Iter_value_t<_InIt>>,
+		disjunction<
+			is_same<plus<>, _Fn>,
+			is_same<plus<_Ty>, _Fn>,
+			is_same<plus<_Iter_value_t<_InIt>>, _Fn>>>;
+
+template<class _InIt,
+	class _Ty,
+	class _Fn> inline
+	_Ty _Reduce_unchecked1(_InIt _First, _InIt _Last, _Ty _Val, _Fn _Reduction, false_type)
+	{	// return reduction, general case
+	for (; _First != _Last; ++_First)
+		{
+		_Val = _Reduction(_STD move(_Val), *_First);
+		}
+
+	return (_Val);
+	}
+
+#pragma float_control(precise, off, push)
+template<class _InIt,
+	class _Ty,
+	class _Fn> inline
+	_Ty _Reduce_unchecked1(_InIt _First, _InIt _Last, _Ty _Val, _Fn, true_type)
+	{	// return reduction, plus arithmetic on contiguous ranges case
+#pragma loop(ivdep)
+	for (; _First != _Last; ++_First)
+		{
+		_Val += *_First;
+		}
+
+	return (_Val);
+	}
+#pragma float_control(pop)
+
+template<class _InIt,
+	class _Ty,
+	class _Fn> inline
+	_Ty _Reduce_unchecked(_InIt _First, _InIt _Last, _Ty _Val, _Fn _Reduction)
+	{	// return reduction, choose optimization
+	return (_Reduce_unchecked1(_First, _Last, _STD move(_Val), _Reduction,
+		_Plus_on_arithmetic_ranges_reduction_t<_InIt, _Ty, _Fn>{}));
+	}
+
+template<class _InIt,
+	class _Ty,
+	class _Fn> inline
+	_Ty reduce(_InIt _First, _InIt _Last, _Ty _Val, _Fn _Reduction)
+	{	// return reduction (accumulation allowing use of the commutative and associative properties)
+	_DEBUG_RANGE(_First, _Last);
+	return (_Reduce_unchecked(_Unchecked(_First), _Unchecked(_Last), _STD move(_Val), _Pass_fn(_Reduction)));
+	}
+
+template<class _InIt,
+	class _Ty> inline
+	_Ty reduce(_InIt _First, _InIt _Last, _Ty _Val)
+	{	// return reduction (sum allowing use of the commutative and associative properties)
+	_DEBUG_RANGE(_First, _Last);
+	return (_Reduce_unchecked(_Unchecked(_First), _Unchecked(_Last), _STD move(_Val), plus<>{}));
+	}
+
+template<class _InIt> inline
+	_Iter_value_t<_InIt> reduce(_InIt _First, _InIt _Last)
+	{	// return reduction (sum from 0 allowing use of the commutative and associative properties)
+	_DEBUG_RANGE(_First, _Last);
+	return (_Reduce_unchecked(_Unchecked(_First), _Unchecked(_Last), _Iter_value_t<_InIt>{}, plus<>{}));
+	}
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	class _Fn,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_Ty reduce(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Ty _Val, _Fn _Reduction) _NOEXCEPT;
+
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_Ty reduce(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last, _Ty _Val) _NOEXCEPT;
+
+template<class _ExPo,
+	class _FwdIt,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_Iter_value_t<_FwdIt> reduce(_ExPo&& _Exec, _FwdIt _First, _FwdIt _Last) _NOEXCEPT;
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE inner_product WITH BINOPS
+template<class _InIt1,
+	class _InIt2,
+	class _Ty,
+	class _Fn1,
+	class _Fn2> inline
+	_Ty _Inner_product_no_deprecate(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Ty _Val,
+		_Fn1 _Func1, _Fn2 _Func2)
+	{	// return inner product of sequences, using _Func1 and _Func2, no deprecation warnings
+	_DEBUG_RANGE(_First1, _Last1);
+	auto _UFirst1 = _Unchecked(_First1);
+	const auto _ULast1 = _Unchecked(_Last1);
+	auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance<_InIt1>(_UFirst1, _ULast1));
+	for (; _UFirst1 != _ULast1; ++_UFirst1, (void)++_UFirst2)
+		{
+		_Val = _Func1(_Val, _Func2(*_UFirst1, *_UFirst2));
+		}
+
+	return (_Val);
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Ty,
+	class _Fn1,
+	class _Fn2> inline
+	_Ty inner_product(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Ty _Val,
+		_Fn1 _Func1, _Fn2 _Func2)
+	{	// return inner product of sequences, using _Func1 and _Func2
+	_DEPRECATE_UNCHECKED(inner_product, _First2);
+	return (_Inner_product_no_deprecate(_First1, _Last1, _First2, _Val,
+		_Pass_fn(_Func1), _Pass_fn(_Func2)));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt1,
+	class _RightTy,
+	size_t _RightSize,
+	class _Ty,
+	class _Fn1,
+	class _Fn2> inline
+	_Ty inner_product(_InIt1 _First1, _InIt1 _Last1, _RightTy (&_First2)[_RightSize], _Ty _Val,
+		_Fn1 _Func1, _Fn2 _Func2)
+	{	// return inner product of sequences, using _Func1 and _Func2
+	return (_Inner_product_no_deprecate(_First1, _Last1,
+		_Array_iterator<_RightTy, _RightSize>(_First2), _Val,
+		_Pass_fn(_Func1), _Pass_fn(_Func2)));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE inner_product
+template<class _InIt1,
+	class _InIt2,
+	class _Ty> inline
+	_Ty inner_product(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _Ty _Val)
+	{	// return inner product of sequences
+	return (_STD inner_product(_First1, _Last1, _First2, _Val,
+		plus<>(), multiplies<>()));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt1,
+	class _RightTy,
+	size_t _RightSize,
+	class _Ty> inline
+	_Ty inner_product(_InIt1 _First1, _InIt1 _Last1, _RightTy (&_First2)[_RightSize], _Ty _Val)
+	{	// return inner product of sequences
+	return (_STD inner_product(_First1, _Last1, _First2, _Val,
+		plus<>(), multiplies<>()));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE partial_sum WITH BINOP
+template<class _InIt,
+	class _OutIt,
+	class _Fn> inline
+	_OutIt _Partial_sum_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn _Func)
+	{	// compute partial sums into _Dest, using _Func, no deprecation warnings
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
+
+	if (_UFirst != _ULast)
+		{
+		_Iter_value_t<_InIt> _Val = *_UFirst;
+		for (*_UDest = _Val; ++_UFirst != _ULast; *++_UDest = _Val)
+			{
+			_Val = _Func(_Val, *_UFirst);
+			}
+
+		++_UDest;
+		}
+
+	return (_Rechecked(_Dest, _UDest));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Fn> inline
+	_OutIt partial_sum(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn _Func)
+	{	// compute partial sums into _Dest, using _Func
+	_DEPRECATE_UNCHECKED(partial_sum, _Dest);
+	return (_Partial_sum_no_deprecate(_First, _Last, _Dest, _Pass_fn(_Func)));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _DestTy,
+	size_t _DestSize,
+	class _Fn> inline
+	_DestTy *partial_sum(_InIt _First, _InIt _Last, _DestTy (&_Dest)[_DestSize], _Fn _Func)
+	{	// compute partial sums into _Dest, using _Func
+	return (_Unchecked(
+		_Partial_sum_no_deprecate(_First, _Last,
+			_Array_iterator<_DestTy, _DestSize>(_Dest), _Pass_fn(_Func))));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE partial_sum
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt partial_sum(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// compute partial sums into _Dest
+	return (_STD partial_sum(_First, _Last, _Dest, plus<>()));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _DestTy,
+	size_t _DestSize> inline
+	_DestTy *partial_sum(_InIt _First, _InIt _Last, _DestTy (&_Dest)[_DestSize])
+	{	// compute partial sums into _Dest
+	return (_STD partial_sum(_First, _Last, _Dest, plus<>()));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE adjacent_difference WITH BINOP
+template<class _InIt,
+	class _OutIt,
+	class _Fn> inline
+	_OutIt _Adjacent_difference_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn _Func)
+	{	// compute adjacent differences into _Dest, using _Func, no deprecation warnings
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
+	using _UInIt = _Unchecked_t<_InIt>;
+
+	if (_UFirst != _ULast)
+		{
+		_Iter_value_t<_UInIt> _Val = *_UFirst;
+		*_UDest = _Val;
+		while (++_UFirst != _ULast)
+			{	// compute another difference
+			_Iter_value_t<_UInIt> _Tmp = *_UFirst;
+			*++_UDest = _Func(_Tmp, _Val);
+			_Val = _STD move(_Tmp);
+			}
+
+		++_UDest;
+		}
+
+	return (_Rechecked(_Dest, _UDest));
+	}
+
+template<class _InIt,
+	class _OutIt,
+	class _Fn> inline
+	_OutIt adjacent_difference(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Fn _Func)
+	{	// compute adjacent differences into _Dest, using _Func
+	_DEPRECATE_UNCHECKED(adjacent_difference, _Dest);
+	return (_Adjacent_difference_no_deprecate(_First, _Last, _Dest, _Pass_fn(_Func)));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _DestTy,
+	size_t _DestSize,
+	class _Fn> inline
+	_DestTy *adjacent_difference(_InIt _First, _InIt _Last, _DestTy (&_Dest)[_DestSize], _Fn _Func)
+	{	// compute adjacent differences into _Dest, using _Func
+	return (_Unchecked(
+		_Adjacent_difference_no_deprecate(_First, _Last,
+			_Array_iterator<_DestTy, _DestSize>(_Dest), _Pass_fn(_Func))));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE adjacent_difference
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt adjacent_difference(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// compute adjacent differences into _Dest
+	return (_STD adjacent_difference(_First, _Last, _Dest,
+		minus<>()));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _DestTy,
+	size_t _DestSize> inline
+	_DestTy *adjacent_difference(_InIt _First, _InIt _Last, _DestTy (&_Dest)[_DestSize])
+	{	// compute adjacent differences into _Dest
+	return (_STD adjacent_difference(_First, _Last, _Dest,
+		minus<>()));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+		// FUNCTION TEMPLATE iota
+template<class _FwdIt,
+	class _Ty> inline
+	void iota(_FwdIt _First, _FwdIt _Last, _Ty _Val)
+	{	// compute increasing sequence into [_First, _Last)
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	for (; _UFirst != _ULast; ++_UFirst, (void)++_Val)
+		{
+		*_UFirst = _Val;
+		}
+	}
+
+#if _HAS_CXX17
+	// FUNCTION TEMPLATE _Abs_u
+template<class _Signed,
+	enable_if_t<is_signed_v<_Signed>, int> = 0>
+	constexpr make_unsigned_t<_Signed> _Abs_u(const _Signed _Val) _NOEXCEPT
+	{	// computes absolute value of _Val as an unsigned value
+	using _Unsigned = make_unsigned_t<_Signed>;
+	if (_Val < 0)
+		{
+		return (static_cast<_Unsigned>(0) - static_cast<_Unsigned>(_Val));
+		}
+
+	return (static_cast<_Unsigned>(_Val));
+	}
+
+template<class _Unsigned,
+	enable_if_t<is_unsigned_v<_Unsigned>, int> = 0>
+	constexpr _Unsigned _Abs_u(const _Unsigned _Val) _NOEXCEPT
+	{	// computes absolute value of _Val as an unsigned value
+	return (_Val);
+	}
+
+	// FUNCTION TEMPLATE _Stl_bitscan_forward
+template<class _Unsigned>
+	constexpr unsigned long _Stl_bitscan_forward(_Unsigned _Mask) _NOEXCEPT
+	{	// find the index of the least significant set bit
+		// _BitScanForward isn't constexpr... yet :)
+	static_assert(is_unsigned_v<_Unsigned>, "Bitscan only works on bits");
+	unsigned long _Count = 0;
+	if (_Mask != 0)
+		{
+		while ((_Mask & 1U) == 0)
+			{
+			_Mask >>= 1;
+			++_Count;
+			}
+		}
+
+	return (_Count);
+	}
+
+	// FUNCTION TEMPLATE gcd
+template<class _Mt,
+	class _Nt>
+	constexpr common_type_t<_Mt, _Nt> gcd(const _Mt _Mx, const _Nt _Nx) _NOEXCEPT // Strengthened
+	{	// calculate greatest common divisor
+	static_assert(_Is_nonbool_integral<_Mt>::value && _Is_nonbool_integral<_Nt>::value,
+		"GCD requires nonbool integral types");
+
+	using _Common = common_type_t<_Mt, _Nt>;
+	using _Common_unsigned = make_unsigned_t<_Common>;
+	_Common_unsigned _Mx_magnitude = _Abs_u(_Mx);
+	_Common_unsigned _Nx_magnitude = _Abs_u(_Nx);
+	if (_Mx_magnitude == 0U)
+		{
+		return (static_cast<_Common>(_Nx_magnitude));
+		}
+
+	if (_Nx_magnitude == 0U)
+		{
+		return (static_cast<_Common>(_Mx_magnitude));
+		}
+
+	const auto _Mx_trailing_zeroes = _Stl_bitscan_forward(_Mx_magnitude);
+	const auto _Common_factors_of_2 = _Min_value(_Mx_trailing_zeroes,
+		_Stl_bitscan_forward(_Nx_magnitude));
+	_Nx_magnitude >>= _Common_factors_of_2;
+	_Mx_magnitude >>= _Mx_trailing_zeroes;
+	do
+		{
+		_Nx_magnitude >>= _Stl_bitscan_forward(_Nx_magnitude);
+		if (_Mx_magnitude > _Nx_magnitude)
+			{
+			_Common_unsigned _Temp = _Mx_magnitude;
+			_Mx_magnitude = _Nx_magnitude;
+			_Nx_magnitude = _Temp;
+			}
+
+		_Nx_magnitude -= _Mx_magnitude;
+		}
+	while (_Nx_magnitude != 0U);
+
+	return (static_cast<_Common>(_Mx_magnitude << _Common_factors_of_2));
+	}
+
+	// FUNCTION TEMPLATE lcm
+template<class _Mt,
+	class _Nt>
+	constexpr common_type_t<_Mt, _Nt> lcm(const _Mt _Mx, const _Nt _Nx) _NOEXCEPT // Strengthened
+	{	// calculate least common multiple
+	static_assert(_Is_nonbool_integral<_Mt>::value && _Is_nonbool_integral<_Nt>::value,
+		"LCM requires nonbool integral types");
+	using _Common = common_type_t<_Mt, _Nt>;
+	using _Common_unsigned = make_unsigned_t<_Common>;
+	const _Common_unsigned _Mx_magnitude = _Abs_u(_Mx);
+	const _Common_unsigned _Nx_magnitude = _Abs_u(_Nx);
+	if (_Mx_magnitude == 0 || _Nx_magnitude == 0)
+		{
+		return (static_cast<_Common>(0));
+		}
+
+	return (static_cast<_Common>((_Mx_magnitude / _STD gcd(_Mx_magnitude, _Nx_magnitude))
+		* _Nx_magnitude));
+	}
+#endif /* _HAS_CXX17 */
+_STD_END
+ #pragma pop_macro("new")
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _NUMERIC_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
