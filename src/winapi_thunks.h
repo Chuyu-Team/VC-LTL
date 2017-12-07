@@ -152,6 +152,7 @@ __crtCreateThreadpoolWork(
 #define __crtQueueUserWorkItem QueueUserWorkItem
 
 #define __crtInitializeCriticalSectionEx __acrt_InitializeCriticalSectionEx
+#define __crtGetSystemTimePreciseAsFileTime __acrt_GetSystemTimePreciseAsFileTime
 
 #ifdef _ATL_XP_TARGETING
 BOOLEAN

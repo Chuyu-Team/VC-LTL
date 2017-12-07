@@ -1,4 +1,4 @@
-set lib="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.11.25503\bin\HostX86\x86\lib.exe"
+set lib="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.12.25827\bin\HostX86\x86\lib.exe"
 
 set libfile=%~dp0..\..\x86\msvcrt.lib
 

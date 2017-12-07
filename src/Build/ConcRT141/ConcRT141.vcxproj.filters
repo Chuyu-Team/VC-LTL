@@ -15,181 +15,181 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\vc141\concrt\UMSWrapper.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSThreadVirtualProcessor.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSThreadVirtualProcessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Agent.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Agent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\CacheLocalScheduleGroup.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\CacheLocalScheduleGroup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\cds_cache_aligned_allocator.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\cds_cache_aligned_allocator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Chores.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Chores.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\concurrent_hash.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\concurrent_hash.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\concurrent_queue.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\concurrent_queue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\concurrent_vector.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\concurrent_vector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Context.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Context.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ContextBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ContextBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\CurrentScheduler.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\CurrentScheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\event.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\event.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Exceptions.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Exceptions.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ExecutionResource.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ExecutionResource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ExternalContextBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ExternalContextBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\FairScheduleGroup.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\FairScheduleGroup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\FreeThreadProxy.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\FreeThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\FreeVirtualProcessorRoot.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\FreeVirtualProcessorRoot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\HillClimbing.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\HillClimbing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\InternalContextBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\InternalContextBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\location.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\location.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Platform.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Platform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ppl.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ppl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\RealizedChore.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\RealizedChore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ResourceManager.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ResourceManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\rtlocks.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\rtlocks.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ScheduleGroupBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ScheduleGroupBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SchedulerBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SchedulerBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SchedulerPolicyBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SchedulerPolicyBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SchedulerProxy.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SchedulerProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SchedulingNode.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SchedulingNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SchedulingRing.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SchedulingRing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SearchAlgorithms.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SearchAlgorithms.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\staticinits.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\staticinits.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\SubAllocator.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\SubAllocator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\TaskCollection.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\TaskCollection.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\TaskCollectionBase.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\TaskCollectionBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ThreadProxy.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ThreadProxyFactoryManager.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ThreadProxyFactoryManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ThreadScheduler.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ThreadScheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\ThreadVirtualProcessor.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\ThreadVirtualProcessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Timer.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Trace.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Trace.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\Transmogrificator.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\Transmogrificator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\TransmogrifiedPrimary.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\TransmogrifiedPrimary.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSBackgroundPoller.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSBackgroundPoller.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSFreeThreadProxy.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSFreeThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSFreeVirtualProcessorRoot.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSFreeVirtualProcessorRoot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSSchedulerProxy.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSSchedulerProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSSchedulingContext.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSSchedulingContext.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSThreadInternalContext.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSThreadInternalContext.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSThreadProxy.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\UMSThreadScheduler.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\UMSThreadScheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\utils.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\VirtualProcessor.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\VirtualProcessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\VirtualProcessorRoot.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\VirtualProcessorRoot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\WinRTWrapper.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\WinRTWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\concrt\WorkQueue.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\concrt\WorkQueue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

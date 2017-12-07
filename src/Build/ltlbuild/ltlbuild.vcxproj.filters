@@ -81,7 +81,7 @@
     <ClCompile Include="..\..\ucrt\misc\terminate.cpp">
       <Filter>源文件\urct</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\vcruntime\unexpected.cpp">
+    <ClCompile Include="..\..\$(VCToolsVersion)\vcruntime\unexpected.cpp">
       <Filter>源文件\vc141</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vc140\vcruntime\unexpected.cpp">

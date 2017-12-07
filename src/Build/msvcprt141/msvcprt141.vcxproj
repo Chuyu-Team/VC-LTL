@@ -78,27 +78,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc$(PlatformToolsetVersion)\vcruntime;$(SolutionDir)vc$(PlatformToolsetVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)vc141\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprtxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc$(PlatformToolsetVersion)\vcruntime;$(SolutionDir)vc$(PlatformToolsetVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)vc141\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc$(PlatformToolsetVersion)\vcruntime;$(SolutionDir)vc$(PlatformToolsetVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)vc141\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprtxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc$(PlatformToolsetVersion)\vcruntime;$(SolutionDir)vc$(PlatformToolsetVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)vc141\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
     <ClCompile>
@@ -107,7 +107,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRTBLD;_STL_CONCRT_SUPPORT=1;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -129,7 +129,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRTBLD;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -151,7 +151,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRTBLD;_STL_CONCRT_SUPPORT=1;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -172,7 +172,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRTBLD;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -190,129 +190,129 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\vc141\stl\atomic.c" />
-    <ClCompile Include="..\..\vc141\stl\cerr.cpp" />
-    <ClCompile Include="..\..\vc141\stl\cin.cpp" />
-    <ClCompile Include="..\..\vc141\stl\clog.cpp" />
-    <ClCompile Include="..\..\vc141\stl\cond.c">
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\atomic.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cerr.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cin.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\clog.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cond.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\stl\cout.cpp" />
-    <ClCompile Include="..\..\vc141\stl\cthread.c" />
-    <ClCompile Include="..\..\vc141\stl\excptptr.cpp" />
-    <ClCompile Include="..\..\vc141\stl\filesys.cpp" />
-    <ClCompile Include="..\..\vc141\stl\fiopen.cpp" />
-    <ClCompile Include="..\..\vc141\stl\future.cpp" />
-    <ClCompile Include="..\..\vc141\stl\iomanip.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ios.cpp" />
-    <ClCompile Include="..\..\vc141\stl\iosptrs.cpp" />
-    <ClCompile Include="..\..\vc141\stl\iostream.cpp" />
-    <ClCompile Include="..\..\vc141\stl\locale.cpp" />
-    <ClCompile Include="..\..\vc141\stl\locale0.cpp" />
-    <ClCompile Include="..\..\vc141\stl\multprec.cpp" />
-    <ClCompile Include="..\..\vc141\stl\mutex.c">
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cout.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cthread.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\excptptr.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\filesys.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\fiopen.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\future.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\iomanip.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ios.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\iosptrs.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\iostream.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\locale.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\locale0.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\multprec.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\mutex.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\vc141\stl\nothrow.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ppltasks.cpp" />
-    <ClCompile Include="..\..\vc141\stl\raisehan.cpp" />
-    <ClCompile Include="..\..\vc141\stl\sharedmutex.cpp" />
-    <ClCompile Include="..\..\vc141\stl\stdhndlr.cpp" />
-    <ClCompile Include="..\..\vc141\stl\syserror.cpp" />
-    <ClCompile Include="..\..\vc141\stl\taskscheduler.cpp" />
-    <ClCompile Include="..\..\vc141\stl\thread0.cpp" />
-    <ClCompile Include="..\..\vc141\stl\uncaught.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ushcerr.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ushcin.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ushclog.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ushcout.cpp" />
-    <ClCompile Include="..\..\vc141\stl\ushiostr.cpp" />
-    <ClCompile Include="..\..\vc141\stl\wcerr.cpp" />
-    <ClCompile Include="..\..\vc141\stl\wcin.cpp" />
-    <ClCompile Include="..\..\vc141\stl\wclog.cpp" />
-    <ClCompile Include="..\..\vc141\stl\wcout.cpp" />
-    <ClCompile Include="..\..\vc141\stl\wiostrea.cpp" />
-    <ClCompile Include="..\..\vc141\stl\wlocale.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xalloc.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xcosh.c" />
-    <ClCompile Include="..\..\vc141\stl\xdateord.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xdint.c" />
-    <ClCompile Include="..\..\vc141\stl\xdnorm.c" />
-    <ClCompile Include="..\..\vc141\stl\xdscale.c" />
-    <ClCompile Include="..\..\vc141\stl\xdtento.c" />
-    <ClCompile Include="..\..\vc141\stl\xdtest.c" />
-    <ClCompile Include="..\..\vc141\stl\xdunscal.c" />
-    <ClCompile Include="..\..\vc141\stl\xexp.c" />
-    <ClCompile Include="..\..\vc141\stl\xfcosh.c" />
-    <ClCompile Include="..\..\vc141\stl\xfdint.c" />
-    <ClCompile Include="..\..\vc141\stl\xfdnorm.c" />
-    <ClCompile Include="..\..\vc141\stl\xfdscale.c" />
-    <ClCompile Include="..\..\vc141\stl\xfdtento.c" />
-    <ClCompile Include="..\..\vc141\stl\xfdtest.c" />
-    <ClCompile Include="..\..\vc141\stl\xfdunsca.c" />
-    <ClCompile Include="..\..\vc141\stl\xferaise.c" />
-    <ClCompile Include="..\..\vc141\stl\xfexp.c" />
-    <ClCompile Include="..\..\vc141\stl\xfprec.c" />
-    <ClCompile Include="..\..\vc141\stl\xfsinh.c" />
-    <ClCompile Include="..\..\vc141\stl\xfvalues.c" />
-    <ClCompile Include="..\..\vc141\stl\xgetwctype.c" />
-    <ClCompile Include="..\..\vc141\stl\xlcosh.c" />
-    <ClCompile Include="..\..\vc141\stl\xldint.c" />
-    <ClCompile Include="..\..\vc141\stl\xldscale.c" />
-    <ClCompile Include="..\..\vc141\stl\xldtento.c" />
-    <ClCompile Include="..\..\vc141\stl\xldtest.c" />
-    <ClCompile Include="..\..\vc141\stl\xldunsca.c" />
-    <ClCompile Include="..\..\vc141\stl\xlexp.c" />
-    <ClCompile Include="..\..\vc141\stl\xlgamma.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xlocale.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xlock.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xlpoly.c" />
-    <ClCompile Include="..\..\vc141\stl\xlprec.c" />
-    <ClCompile Include="..\..\vc141\stl\xlsinh.c" />
-    <ClCompile Include="..\..\vc141\stl\xlvalues.c" />
-    <ClCompile Include="..\..\vc141\stl\xmbtowc.c" />
-    <ClCompile Include="..\..\vc141\stl\xmtx.c" />
-    <ClCompile Include="..\..\vc141\stl\xnotify.c" />
-    <ClCompile Include="..\..\vc141\stl\xonce.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xpoly.c" />
-    <ClCompile Include="..\..\vc141\stl\xprec.c" />
-    <ClCompile Include="..\..\vc141\stl\xrngabort.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xrngdev.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xsinh.c" />
-    <ClCompile Include="..\..\vc141\stl\xstod.c" />
-    <ClCompile Include="..\..\vc141\stl\xstof.c" />
-    <ClCompile Include="..\..\vc141\stl\xstoflt.c" />
-    <ClCompile Include="..\..\vc141\stl\xstol.c" />
-    <ClCompile Include="..\..\vc141\stl\xstold.c" />
-    <ClCompile Include="..\..\vc141\stl\xstoll.c" />
-    <ClCompile Include="..\..\vc141\stl\xstopfx.c" />
-    <ClCompile Include="..\..\vc141\stl\xstoul.c" />
-    <ClCompile Include="..\..\vc141\stl\xstoull.c" />
-    <ClCompile Include="..\..\vc141\stl\xstoxflt.c" />
-    <ClCompile Include="..\..\vc141\stl\xstrcoll.c" />
-    <ClCompile Include="..\..\vc141\stl\xstrxfrm.c" />
-    <ClCompile Include="..\..\vc141\stl\xthrow.cpp" />
-    <ClCompile Include="..\..\vc141\stl\xtime.c" />
-    <ClCompile Include="..\..\vc141\stl\xtowlower.c" />
-    <ClCompile Include="..\..\vc141\stl\xtowupper.c" />
-    <ClCompile Include="..\..\vc141\stl\xvalues.c" />
-    <ClCompile Include="..\..\vc141\stl\xwcscoll.c" />
-    <ClCompile Include="..\..\vc141\stl\xwcsxfrm.c" />
-    <ClCompile Include="..\..\vc141\stl\xwctomb.c" />
-    <ClCompile Include="..\..\vc141\stl\xwstod.c" />
-    <ClCompile Include="..\..\vc141\stl\xwstof.c" />
-    <ClCompile Include="..\..\vc141\stl\xwstoflt.c" />
-    <ClCompile Include="..\..\vc141\stl\xwstold.c" />
-    <ClCompile Include="..\..\vc141\stl\xwstopfx.c" />
-    <ClCompile Include="..\..\vc141\stl\xwstoxfl.c" />
-    <ClCompile Include="..\..\vc141\stl\_tolower.c" />
-    <ClCompile Include="..\..\vc141\stl\_toupper.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\nothrow.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ppltasks.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\raisehan.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\sharedmutex.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\stdhndlr.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\syserror.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\taskscheduler.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\thread0.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\uncaught.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushcerr.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushcin.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushclog.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushcout.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushiostr.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wcerr.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wcin.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wclog.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wcout.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wiostrea.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wlocale.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xalloc.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xcosh.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdateord.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdint.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdnorm.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdscale.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdtento.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdtest.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdunscal.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xexp.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfcosh.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdint.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdnorm.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdscale.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdtento.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdtest.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdunsca.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xferaise.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfexp.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfprec.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfsinh.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfvalues.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xgetwctype.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlcosh.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldint.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldscale.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldtento.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldtest.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldunsca.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlexp.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlgamma.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlocale.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlock.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlpoly.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlprec.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlsinh.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlvalues.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xmbtowc.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xmtx.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xnotify.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xonce.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xpoly.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xprec.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xrngabort.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xrngdev.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xsinh.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstod.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstof.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoflt.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstol.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstold.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoll.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstopfx.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoul.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoull.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoxflt.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstrcoll.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstrxfrm.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xthrow.cpp" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xtime.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xtowlower.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xtowupper.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xvalues.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwcscoll.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwcsxfrm.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwctomb.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstod.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstof.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstoflt.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstold.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstopfx.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstoxfl.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\_tolower.c" />
+    <ClCompile Include="..\..\$(VCToolsVersion)\stl\_toupper.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\winapi_thunks.h" />

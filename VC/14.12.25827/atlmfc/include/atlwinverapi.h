@@ -81,6 +81,7 @@
 #pragma pack(push,_ATL_PACKING)
 namespace ATL
 {
+#ifdef _NOT_USED_LTL_Locale
 
 #if (NTDDI_VERSION < NTDDI_VISTA) || defined(_USING_V110_SDK71_) || defined(_ATL_XP_TARGETING)
 struct _ATL_LCID_TO_LOCALENAME
@@ -704,11 +705,29 @@ _Success_(return != 0) inline int __cdecl _AtlDownlevelLCIDToLocaleName(_In_ LCI
 }
 #endif
 
+#else
+
+EXTERN_C int WINAPI __acrt_LCMapStringEx(
+	LPCWSTR          const locale_name,
+	DWORD            const flags,
+	LPCWSTR          const source,
+	int              const source_count,
+	LPWSTR           const destination,
+	int              const destination_count,
+	LPNLSVERSIONINFO const version,
+	LPVOID           const reserved,
+	LPARAM           const sort_handle
+);
+
+#endif
 inline int __cdecl _AtlLCMapStringEx(_In_z_ LPCWSTR lpLocaleName, _In_ DWORD dwMapFlags, _In_reads_(cchSrc) LPCWSTR lpSrcStr, _In_ int cchSrc, _Out_writes_opt_(cchDest) LPWSTR lpDestStr, _In_ int cchDest, _In_opt_ LPNLSVERSIONINFO lpVersionInformation, _In_opt_ LPVOID lpReserved, _In_opt_ LPARAM sortHandle)
 {
 #if (NTDDI_VERSION >= NTDDI_VISTA) && !defined(_USING_V110_SDK71_) && !defined(_ATL_XP_TARGETING)
 	return LCMapStringEx(lpLocaleName, dwMapFlags, lpSrcStr, cchSrc, lpDestStr, cchDest, lpVersionInformation, lpReserved, sortHandle);
 #else
+
+#ifdef _NOT_USED_LTL_Locale
+
 	// use LCMapStringEx if it is available (only on Vista+)...
 	typedef int (__stdcall *PFNLCMAPSTRINGEX)(LPCWSTR, DWORD, LPCWSTR, int, LPWSTR, int, LPNLSVERSIONINFO, LPVOID, LPARAM);
 	IFDYNAMICGETCACHEDFUNCTIONTYPEDEF(L"kernel32.dll", PFNLCMAPSTRINGEX, "LCMapStringEx", pfLCMapStringEx)
@@ -718,6 +737,11 @@ inline int __cdecl _AtlLCMapStringEx(_In_z_ LPCWSTR lpLocaleName, _In_ DWORD dwM
 
 	// ...otherwise fall back to using LCMapString.
 	return LCMapStringW(_AtlDownlevelLocaleNameToLCID(lpLocaleName), dwMapFlags, lpSrcStr, cchSrc, lpDestStr, cchDest);
+#else
+	//使用LTL内部区域转换函数，减少代码冗余，定义_NOT_USED_LTL_Locale宏可以重新切换到原有逻辑，但是代码将更大
+	return __acrt_LCMapStringEx(lpLocaleName, dwMapFlags, lpSrcStr, cchSrc, lpDestStr, cchDest, lpVersionInformation, lpReserved, sortHandle);
+#endif //!_NOT_USED_LTL_Locale
+
 #endif
 }
 
