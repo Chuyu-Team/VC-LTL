@@ -14,10 +14,14 @@
     <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">..\VC-LTL</VC_LTL_Root>
 
     <VC_LTL_Include Condition=" '$(VCToolsVersion)'=='' ">$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\include;$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Include Condition=" '$(VCToolsVersion)'!='' ">$(VC_LTL_Root)\VC\$(VCToolsVersion)\include;$(VC_LTL_Root)\VC\$(VCToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
+    <!--14.10.25017、14.11.25503强制使用14.11.25503工具集-->
+    <VC_LTL_Include Condition=" ('$(VCToolsVersion)'=='14.10.25017') Or ('$(VCToolsVersion)'=='14.11.25503')">$(VC_LTL_Root)\VC\14.11.25503\include;$(VC_LTL_Root)\VC\14.11.25503\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VCToolsVersion)\include;$(VC_LTL_Root)\VC\$(VCToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
 
     <VC_LTL_Library Condition=" '$(VCToolsVersion)'=='' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
-    <VC_LTL_Library Condition=" '$(VCToolsVersion)'!='' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VCToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <!--14.10.25017、14.11.25503强制使用14.11.25503工具集-->
+    <VC_LTL_Library Condition="('$(VCToolsVersion)'=='14.10.25017') Or ('$(VCToolsVersion)'=='14.11.25503')">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\14.11.25503\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VC_LTL_Library Condition=" '$(VC_LTL_Library)'=='' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VCToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
 
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>

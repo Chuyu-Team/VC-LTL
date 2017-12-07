@@ -42,9 +42,12 @@
 
 
 #if _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==0
-#define __ltlversion "140"
+//Vistual Studio 2015
 #elif _VC_CRT_MAJOR_VERSION ==14 && (_VC_CRT_MINOR_VERSION== 10||_VC_CRT_MINOR_VERSION==11)
-#define __ltlversion "141"
+//Vistual Studio 2017 14.10或者14.11
+#pragma message(_ltlfilelen "warning: 此工具集已经停止维护，强烈建议你请升级到最新Vistual Studio 2017然后继续！")
+#elif _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==12
+//Vistual Studio 2017 14.12
 #else
 #error "暂不支持此版本的CRT库"
 #endif
@@ -80,7 +83,7 @@
 #error "vc-ltl 并不支持当前目标平台，请切换目标平台版本至 10240/14393/15063（推荐）。切换目标平台仅仅是切换了Windows SDK/UCRT版本，这并不影响你兼容老版本Windows（包括Windows XP）。"
 #elif _UCRT_VERISON == 10240
 
-#if !defined _USING_V110_SDK71_ && !defined _DISABLE_DEPRECATE_LTL_MESSAGE
+#if !defined _ATL_XP_TARGETING && !defined _DISABLE_DEPRECATE_LTL_MESSAGE
 #pragma message(_ltlfilelen "warning: 10240 ucrt 存在的目的仅用于兼容Windows XP工具集正常编译，而你的程序并未采用XP兼容，强烈建议你迁徙目标平台到Windows 10 16299。")
 #endif
 
