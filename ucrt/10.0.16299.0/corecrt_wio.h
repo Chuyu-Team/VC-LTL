@@ -165,7 +165,7 @@ _ACRTIMP intptr_t __cdecl _wfindfirst32i64(
 
 _Success_(return != -1)
 _Check_return_
-_ACRTIMP intptr_t __cdecl _wfindfirst64i32(
+extern intptr_t __cdecl _wfindfirst64i32(
     _In_z_ wchar_t const*            _FileName,
     _Out_  struct _wfinddata64i32_t* _FindData
     );
