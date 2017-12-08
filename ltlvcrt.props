@@ -23,8 +23,8 @@
 
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
-    
-    <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
+
+    <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
     <SupportWinXP Condition=" ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp')">true</SupportWinXP>
     
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
