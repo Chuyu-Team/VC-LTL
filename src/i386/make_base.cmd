@@ -16,19 +16,16 @@ echo É¾³ýmsvcrt.dllµ¼³ö·ûºÅ
 
 %lib% "%libfile%" "%~dp0msvcrtdll.lib"
 
+%lib% "%libfile%" "%~dp0msvcrtdll.lib"
+
 del "%~dp0msvcrtdll.*" /q
 
-%lib% /def:"%~dp0ntdll.def" /out:"%~dp0ntdll_dll.lib"
-
-%lib% "%libfile%" "%~dp0ntdll_dll.lib"
 
 "%~dp0..\YYLib.exe" /MACHINE:x86 /def:"%~dp0msvcrt_forward.def"  /out:"%~dp0forward\msvcrt_forward.obj"
 
 pushd "%~dp0"
 
 %lib% "%libfile%" "forward\msvcrt_forward.obj"
-
-del "%~dp0ntdll_dll.*" /q
 
 popd
 

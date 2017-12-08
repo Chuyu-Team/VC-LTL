@@ -13,6 +13,10 @@
 #include "..\..\src\winapi_thunks.h"
 #include <internal_shared.h>
 
+#ifdef _ATL_XP_TARGETING
+#pragma comment(lib,"ntdll.lib")
+#endif
+
 // Define this locally because including ntstatus.h conflicts with headers above
 #define STATUS_NOT_FOUND                 ((LONG)0xC0000225L)
 
