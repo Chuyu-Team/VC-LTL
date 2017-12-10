@@ -185,12 +185,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -211,7 +212,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -237,12 +238,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -263,7 +265,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -291,11 +293,12 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -315,7 +318,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -339,11 +342,12 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;_ATL_XP_TARGETING;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -363,7 +367,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;__NO_LTL_LIB;_ATL_XP_TARGETING;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED=26018;__WARNING_INCORRECT_VALIDATION=26014;__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION=26036;__WARNING_BANNED_API_USAGE=28728;__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY=26015;__WARNING_DEREF_NULL_PTR=6011;__WARNING_MISSING_ZERO_TERMINATION2=6054;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -383,6 +387,72 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_array_align.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_array_align_nothrow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_array_size_align.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_scalar_align.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_scalar_align_nothrow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_scalar_size_align.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_array_align.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_array_align_nothrow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_scalar_align.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_scalar_align_nothrow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\throw_bad_alloc.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\frame_thunks.cpp" />
     <ClCompile Include="..\..\LTL_Initialization.cpp">
       <RemoveUnreferencedCodeData Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">false</RemoveUnreferencedCodeData>

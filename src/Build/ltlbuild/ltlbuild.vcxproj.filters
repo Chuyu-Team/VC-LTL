@@ -462,5 +462,38 @@
     <ClCompile Include="..\..\ucrt\internal\string_utilities.cpp">
       <Filter>源文件\urct</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_scalar_align_nothrow.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_scalar_align.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\throw_bad_alloc.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_array_align.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_array_align_nothrow.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_array_size_align.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_array_align.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\new_array_align_nothrow.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_scalar_size_align.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_scalar_align.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\14.12.25827\vcruntime\delete_scalar_align_nothrow.cpp">
+      <Filter>源文件\vc141</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

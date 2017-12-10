@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#if defined(NDEBUG)&&defined(_DLL)&&defined(__NO_LTL_LIB)
+#if defined(NDEBUG)&&defined(_DLL)&&defined(_Build_By_LTL)
 #include <vcruntime_new.h>
 #include <corecrt_terminate.h>
 #include <stdlib.h>
