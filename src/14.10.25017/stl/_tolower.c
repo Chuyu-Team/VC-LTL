@@ -49,20 +49,27 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         unsigned char outbuffer[3];
 
         UINT codepage;
-        const wchar_t *locale_name;
+
+		LCID _Locale;
+
+        //const wchar_t *locale_name;
 
         if (ploc == 0)
         {
-            locale_name = ___lc_locale_name_func()[LC_CTYPE];
+            //locale_name = ___lc_locale_name_func()[LC_CTYPE];
+			_Locale = ___lc_handle_func()[LC_CTYPE];
+
             codepage = ___lc_codepage_func();
         }
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
             codepage = ploc->_Page;
         }
 
-        if (locale_name == NULL)
+        //if (locale_name == NULL)
+		if(_Locale==0)
         {
             if ( (c >= 'A') && (c <= 'Z') )
                 c = c + ('a' - 'A');
@@ -103,7 +110,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         }
 
         /* convert wide char to lowercase */
-        if (0 == (size = __crtLCMapStringA(locale_name, LCMAP_LOWERCASE,
+        if (0 == (size = __crtLCMapStringA(NULL, _Locale, LCMAP_LOWERCASE,
             (const char *)inbuffer, size, (char *)outbuffer, 3, codepage, TRUE)))
         {
             return c;
@@ -148,9 +155,16 @@ _CRTIMP2_PURE _Ctypevec __CLRCALL_PURE_OR_CDECL _Getctype()
             ctype._Table = (const short *)__pctype_func();
             ctype._Delfl = 0;
         }
-        ctype._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
-        if (ctype._LocaleName)
-            ctype._LocaleName = _wcsdup_dbg(ctype._LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+
+		wchar_t _LocaleName[LOCALE_NAME_MAX_LENGTH];
+
+        //ctype._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
+		auto __lc_collate = ___lc_handle_func()[LC_COLLATE];
+
+		if (__lc_collate&&__acrt_LCIDToLocaleName(__lc_collate, _LocaleName, _countof(_LocaleName), 0))
+			ctype._LocaleName = _wcsdup_dbg(_LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+		else
+			ctype._LocaleName = NULL;
 
         return (ctype);
 }

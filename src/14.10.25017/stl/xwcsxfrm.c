@@ -64,18 +64,22 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm (
         size_t _n2 = _end2 - _string2;
         size_t size = (size_t)-1;
         unsigned char *bbuffer=NULL;
-        const wchar_t *locale_name;
+        //const wchar_t *locale_name;
+		LCID _Locale;
 
         if (ploc == 0)
         {
-            locale_name = ___lc_locale_name_func()[LC_COLLATE];
+            //locale_name = ___lc_locale_name_func()[LC_COLLATE];
+			_Locale = ___lc_handle_func()[LC_COLLATE];
         }
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
         }
 
-        if (locale_name == NULL)
+        //if (locale_name == NULL)
+		if (_Locale == 0)
         {
             if (_n2 <= _n1)
             {
@@ -96,7 +100,7 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm (
 
             if (NULL != (bbuffer = (unsigned char *)_malloc_crt(_n1)))
             {
-                if (0 == (size = __crtLCMapStringW(locale_name,
+                if (0 == (size = __crtLCMapStringW(_Locale,
                                                    LCMAP_SORTKEY,
                                                    _string2,
                                                    (int)_n2,
@@ -105,7 +109,7 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm (
                 {
                     /* buffer not big enough, get size required. */
 
-                    if (0 == (size = __crtLCMapStringW(locale_name,
+                    if (0 == (size = __crtLCMapStringW(_Locale,
                                                        LCMAP_SORTKEY,
                                                        _string2,
                                                        (int)_n2,

@@ -21,8 +21,9 @@
 #include <stddef.h>
 #include <stdexcept>
 #include <trnsctrl.h>
-#include <unknwn.h>
-#include <windows.h>
+#include <Unknwn.h>
+#include <Windows.h>
+#include "..\..\winapi_thunks.h"
 
 // Pre-V4 managed exception code
 #define MANAGED_EXCEPTION_CODE  0XE0434F4D
@@ -265,18 +266,20 @@ shared_ptr<__ExceptionPtr> __ExceptionPtr::_CopyException(_In_ const void * pExc
         PER_PEXCEPTOBJ(pExcept) = const_cast<void*>(pExceptObj);
 
         ThrowInfo* pTI = pThrowInfo;
-        if (pTI && (THROW_ISWINRT( (*pTI) ) ) )
-        {
-            ULONG_PTR *exceptionInfoPointer = *reinterpret_cast<ULONG_PTR**>(const_cast<void*>(pExceptObj));
-            exceptionInfoPointer--; // The pointer to the ExceptionInfo structure is stored sizeof(void*) in front of each WinRT Exception Info.
 
-            WINRTEXCEPTIONINFO* wei = reinterpret_cast<WINRTEXCEPTIONINFO*>(*exceptionInfoPointer);
-            pTI = wei->throwInfo;
-        }
+		//VC-LTL不可能运行在WinRT程序中
+        //if (pTI && (THROW_ISWINRT( (*pTI) ) ) )
+        //{
+        //    ULONG_PTR *exceptionInfoPointer = *reinterpret_cast<ULONG_PTR**>(const_cast<void*>(pExceptObj));
+        //    exceptionInfoPointer--; // The pointer to the ExceptionInfo structure is stored sizeof(void*) in front of each WinRT Exception Info.
+
+        //    WINRTEXCEPTIONINFO* wei = reinterpret_cast<WINRTEXCEPTIONINFO*>(*exceptionInfoPointer);
+        //    pTI = wei->throwInfo;
+        //}
 
         PER_PTHROW(pExcept) = pTI;
 
-#if _EH_RELATIVE_OFFSETS && !defined(_M_CEE_PURE)
+#if _EH_RELATIVE_TYPEINFO && !defined(_M_CEE_PURE)
         PVOID ThrowImageBase = RtlPcToFileHeader((PVOID)pTI, &ThrowImageBase);
         PER_PTHROWIB(pExcept) = ThrowImageBase;
 #endif
@@ -375,7 +378,7 @@ __ExceptionPtr::__ExceptionPtr(_In_ const EHExceptionRecord * pExcept, bool norm
             terminate();
         }
         // we want to encode the ThrowInfo pointer for security reasons
-        PER_PTHROW(&this->m_EHRecord) = (ThrowInfo*) EncodePointer((void*)pThrow);
+        PER_PTHROW(&this->m_EHRecord) = (ThrowInfo*) EncodePointerDownlevel((void*)pThrow);
 
         // we finally got the type info we want
 #if _EH_RELATIVE_OFFSETS && !defined(_M_CEE_PURE)
@@ -428,7 +431,7 @@ __ExceptionPtr::~__ExceptionPtr()
     {
         // this is a C++ exception
         // we need to delete the actual exception object
-        ThrowInfo* pThrow= (ThrowInfo*) DecodePointer((void*)PER_PTHROW(pExcept));
+        ThrowInfo* pThrow= (ThrowInfo*) DecodePointerDownlevel((void*)PER_PTHROW(pExcept));
         if ( pThrow == NULL )
         {
             // No ThrowInfo exists.  If this were a C++ exception, something must have corrupted it.
@@ -500,7 +503,7 @@ __ExceptionPtr::~__ExceptionPtr()
         // the exception object is on the stack and will call
         // the appropriate dtor (if there's one), but won't
         // delete the memory.
-        ThrowInfo* pThrow= (ThrowInfo*) DecodePointer((void*)PER_PTHROW(pExcept));
+        ThrowInfo* pThrow= (ThrowInfo*) DecodePointerDownlevel((void*)PER_PTHROW(pExcept));
         if (    PER_PEXCEPTOBJ(pExcept) == NULL ||
                 pThrow == NULL ||
                 pThrow->pCatchableTypeArray == NULL ||
