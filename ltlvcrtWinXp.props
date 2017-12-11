@@ -3,8 +3,6 @@
 <!--此配置用于强制切换到XP模式，不论你选择什么 平台工具集。-->
 
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Label="PropertySheets" />
-  <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <!--先判断Sln目录是否已经有了VC-LTL，如果已经存在，那么优先使用本地工程中的VC-LTL-->
     <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(SolutionDir)VC-LTL\_msvcrt.h')) ">$(SolutionDir)VC-LTL</VC_LTL_Root>
@@ -12,16 +10,31 @@
     <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
     <!--如果还是没有，那么走最极端方案，开启翻滚模式-->
     <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">..\VC-LTL</VC_LTL_Root>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" ('$(VCToolsVersion)'=='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
+    <!--计算机已经安装Visual Studio 2015 Update3 KB3165756 ?-->
+    <VC-LTLUsedToolsVersion>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
-    <VC_LTL_Include Condition=" '$(VCToolsVersion)'=='' ">$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\include;$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
-    <!--14.10.25017、14.11.25503强制使用14.11.25503工具集-->
-    <VC_LTL_Include Condition=" ('$(VCToolsVersion)'=='14.10.25017') Or ('$(VCToolsVersion)'=='14.11.25503')">$(VC_LTL_Root)\VC\14.11.25503\include;$(VC_LTL_Root)\VC\14.11.25503\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VCToolsVersion)\include;$(VC_LTL_Root)\VC\$(VCToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
+    <!--计算机已经安装Visual Studio 2015 Update3 ?-->
+    <VC-LTLUsedToolsVersion>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
-    <VC_LTL_Library Condition=" '$(VCToolsVersion)'=='' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
-    <!--14.10.25017、14.11.25503强制使用14.11.25503工具集-->
-    <VC_LTL_Library Condition="('$(VCToolsVersion)'=='14.10.25017') Or ('$(VCToolsVersion)'=='14.11.25503')">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\14.11.25503\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
-    <VC_LTL_Library Condition=" '$(VC_LTL_Library)'=='' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VCToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+
+    <!--如果找不到，那么指定为当前支持的最低版本-->
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">14.0.24210</VC-LTLUsedToolsVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" ('$(VCToolsVersion)'!='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
+    <!--如果目标不存在，这指向为当前VC-LTL支持的最高版本-->
+    <VC-LTLUsedToolsVersion Condition=" !Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >14.12.25827</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">$(VCToolsVersion)</VC-LTLUsedToolsVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Library Condition=" '$(VC_LTL_Library)'==''">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
 
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
