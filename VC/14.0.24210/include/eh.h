@@ -36,7 +36,7 @@ struct _EXCEPTION_POINTERS;
             _In_opt_ unexpected_handler _NewUnexpectedHandler
             ) throw();
 
-        _VCRTIMP unexpected_handler __cdecl _get_unexpected();
+		extern unexpected_handler __cdecl _get_unexpected();
 
         typedef void (__cdecl* _se_translator_function)(unsigned int, struct _EXCEPTION_POINTERS*);
 
@@ -54,7 +54,7 @@ struct _EXCEPTION_POINTERS;
         );
 
     _VCRTIMP bool __cdecl __uncaught_exception();
-    _VCRTIMP int  __cdecl __uncaught_exceptions();
+    extern int  __cdecl __uncaught_exceptions();
 
 #endif
 
