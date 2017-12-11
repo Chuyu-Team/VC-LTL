@@ -17,6 +17,7 @@
 #include <locale.h>
 #include <mbctype.h>
 #include <windows.h>
+#include <winapi_thunks.h>
 
 /***
 *int _Wcrtomb() - Convert wide character to multibyte character.
@@ -135,8 +136,9 @@ _CRTIMP2_PURE _Cvtvec __CLRCALL_PURE_OR_CDECL _Getcvt()
 
         cvt._Page = ___lc_codepage_func();
         cvt._Mbcurmax = ___mb_cur_max_func();
-        cvt._Isclocale = ___lc_locale_name_func()[LC_CTYPE] == NULL;
-
+        //cvt._Isclocale = ___lc_locale_name_func()[LC_CTYPE] == NULL;
+		cvt._Isclocale = ___lc_handle_func()[LC_CTYPE] == 0;
+		
         if (!cvt._Isclocale)
             for (idx = 0; idx < 256; ++idx)
                 if (_ismbblead(idx))

@@ -72,20 +72,23 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Strxfrm (
         int dstlen;
         size_t retval = (size_t)-1;   /* NON-ANSI: default if OM or API error */
         UINT codepage;
-        const wchar_t *locale_name;
+        //const wchar_t *locale_name;
+		LCID _Locale;
 
         if (ploc == 0)
         {
-            locale_name = ___lc_locale_name_func()[LC_COLLATE];
+            //locale_name = ___lc_locale_name_func()[LC_COLLATE];
+			_Locale = ___lc_handle_func()[LC_COLLATE];
             codepage = ___lc_collate_cp_func();
         }
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
             codepage = ploc->_Page;
         }
 
-        if ((locale_name == NULL) &&
+        if ((/*locale_name*/_Locale == 0) &&
             (codepage == CP_ACP))
         {
             if (_n2 <= _n1)
@@ -97,7 +100,7 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Strxfrm (
         else
         {
             /* Inquire size of dst string in BYTES */
-            if (0 != (dstlen = __crtLCMapStringA(locale_name,
+            if (0 != (dstlen = __crtLCMapStringA(NULL,_Locale,
                                                  LCMAP_SORTKEY,
                                                  _string2,
                                                  (int)_n2,
@@ -112,7 +115,7 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Strxfrm (
                 if (dstlen <= (int)(_n1))
                 {
                     /* Map src string to dst string */
-                    __crtLCMapStringA(locale_name,
+                    __crtLCMapStringA(NULL,_Locale,
                                       LCMAP_SORTKEY,
                                       _string2,
                                       (int)_n2,
