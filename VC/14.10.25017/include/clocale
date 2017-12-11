@@ -1,0 +1,19 @@
+// clocale standard header
+#pragma once
+#ifndef _CLOCALE_
+#define _CLOCALE_
+#include <yvals.h>
+#include <locale.h>
+
+ #ifndef RC_INVOKED
+_STD_BEGIN
+using _CSTD lconv; using _CSTD localeconv; using _CSTD setlocale;
+_STD_END
+ #endif /* RC_INVOKED */
+
+#endif /* _CLOCALE_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

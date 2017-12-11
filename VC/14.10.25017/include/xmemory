@@ -1,0 +1,281 @@
+// xmemory internal header (from <memory>)
+#pragma once
+#ifndef _XMEMORY_
+#define _XMEMORY_
+#ifndef RC_INVOKED
+#include <xmemory0>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+		// FUNCTION TEMPLATE get_temporary_buffer
+template<class _Ty> inline
+	pair<_Ty *, ptrdiff_t> get_temporary_buffer(ptrdiff_t _Count) _NOEXCEPT
+	{	// get raw temporary buffer of up to _Count elements
+	if (static_cast<size_t>(_Count) <= static_cast<size_t>(-1) / sizeof(_Ty))
+		{
+		for (; 0 < _Count; _Count /= 2)
+			{
+			_Ty * _Pbuf = static_cast<_Ty *>(::operator new(static_cast<size_t>(_Count) * sizeof(_Ty), nothrow));
+			if (_Pbuf)
+				{
+				return {_Pbuf, _Count};
+				}
+			}
+		}
+
+	return {nullptr_t{}, 0};
+	}
+
+		// FUNCTION TEMPLATE return_temporary_buffer
+template<class _Ty> inline
+	void return_temporary_buffer(_Ty *_Pbuf)
+	{	// delete raw temporary buffer
+	::operator delete(_Pbuf);
+	}
+
+		// FUNCTION TEMPLATE _Uninitialized_move_unchecked
+template<class _InIt,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_move_unchecked1(_InIt _First, _InIt _Last,
+		_FwdIt _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _Last) to raw [_Dest, ...), no special optimization
+	_FwdIt _Next = _Dest;
+
+	_TRY_BEGIN
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		{
+		_Construct_in_place(*_Dest, _STD move(*_First));
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _Dest);
+	_RERAISE;
+	_CATCH_END
+
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_move_unchecked1(_InIt _First, _InIt _Last,
+		_FwdIt _Dest, _Really_trivial_ptr_iterator_tag)
+	{	// move [_First, _Last) to raw [_Dest, ...), memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
+	}
+
+template<class _InIt,
+	class _FwdIt> inline
+	_FwdIt _Uninitialized_move_unchecked(_InIt _First, _InIt _Last,
+		_FwdIt _Dest)
+	{	// move [_First, _Last) to raw [_Dest, ...), choose optimization
+	return (_Uninitialized_move_unchecked1(_First, _Last, _Dest, _Ptr_move_cat(_First, _Dest)));
+	}
+
+
+		// TEMPLATE FUNCTION _Uninitialized_copy WITH ALLOCATOR
+template<class _InIt,
+	class _FwdIt,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_copy_al_unchecked(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al, _General_ptr_iterator_tag, _Any_tag)
+	{	// copy [_First, _Last) to raw _Dest, using _Al, no special optimization
+	_FwdIt _Next = _Dest;
+
+	_TRY_BEGIN
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		{
+		_Al.construct(_Unfancy(_Dest), *_First);
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _Dest, _Al);
+	_RERAISE;
+	_CATCH_END
+
+	return (_Dest);
+	}
+
+template<class _Ty1,
+	class _Ty2,
+	class _Alloc> inline
+	_Ty2 *_Uninitialized_copy_al_unchecked(_Ty1 *_First, _Ty1 *_Last, _Ty2 *_Dest,
+		_Wrap_alloc<_Alloc>&, _Really_trivial_ptr_iterator_tag, true_type)
+	{	// copy [_First, _Last) to raw _Dest, using default _Alloc construct, memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
+	}
+
+template<class _InIt,
+	class _FwdIt,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_copy(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al)
+	{	// copy [_First, _Last) to raw _Dest, using _Al
+		// note: only called internally from elsewhere in the STL, debug checks
+		// and deprecation warnings omitted
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked(_Dest);
+	return (_Rechecked(_Dest,
+		_Uninitialized_copy_al_unchecked(_UFirst, _ULast, _UDest, _Al,
+			_Ptr_copy_cat(_UFirst, _UDest),
+			_Uses_default_construct_t<_Alloc, decltype(_Unfancy(_UDest)), decltype(*_UFirst)>())));
+	}
+
+		// TEMPLATE FUNCTION _Uninitialized_move WITH ALLOCATOR
+template<class _InIt,
+	class _FwdIt,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_move_al_unchecked(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al, _General_ptr_iterator_tag, _Any_tag)
+	{	// move [_First, _Last) to raw _Dest, using _Al, no special optimization
+	_FwdIt _Next = _Dest;
+
+	_TRY_BEGIN
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		{
+		_Al.construct(_Unfancy(_Dest), _STD move(*_First));
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _Dest, _Al);
+	_RERAISE;
+	_CATCH_END
+
+	return (_Dest);
+	}
+
+template<class _Ty1,
+	class _Ty2,
+	class _Alloc> inline
+	_Ty2 *_Uninitialized_move_al_unchecked(_Ty1 *_First, _Ty1 *_Last, _Ty2 *_Dest,
+		_Wrap_alloc<_Alloc>&, _Really_trivial_ptr_iterator_tag, true_type)
+	{	// move [_First, _Last) to raw _Dest, using default _Alloc construct, memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
+	}
+
+template<class _InIt,
+	class _FwdIt,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_move(_InIt _First, _InIt _Last, _FwdIt _Dest,
+		_Wrap_alloc<_Alloc>& _Al)
+	{	// move [_First, _Last) to raw _Dest, using _Al
+		// note: only called internally from elsewhere in the STL, debug checks
+		// and deprecation warnings omitted
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked(_Dest);
+	return (_Rechecked(_Dest,
+		_Uninitialized_move_al_unchecked(_UFirst, _ULast, _UDest, _Al,
+			_Ptr_move_cat(_UFirst, _UDest),
+			_Uses_default_construct_t<_Alloc, decltype(_Unfancy(_UDest)), decltype(_STD move(*_UFirst))>())));
+	}
+
+		// TEMPLATE FUNCTION _Uninitialized_fill_n WITH ALLOCATOR
+template<class _FwdIt,
+	class _Diff,
+	class _Alloc> inline
+	_FwdIt _Uninit_alloc_fill_n1(_FwdIt _First, _Diff _Count, const _Iter_value_t<_FwdIt>& _Val,
+		_Wrap_alloc<_Alloc>& _Al, false_type)
+	{	// copy _Count copies of _Val to raw _First, using _Al, no special optimization
+	_FwdIt _Next = _First;
+
+	_TRY_BEGIN
+	for (; 0 < _Count; --_Count, (void)++_First)
+		{
+		_Al.construct(_Unfancy(_First), _Val);
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _First, _Al);
+	_RERAISE;
+	_CATCH_END
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Alloc> inline
+	_FwdIt _Uninit_alloc_fill_n1(_FwdIt _First, _Diff _Count, const _Iter_value_t<_FwdIt>& _Val,
+		_Wrap_alloc<_Alloc>&, true_type)
+	{	// copy _Count copies of _Val to raw _First, using default _Alloc construct, memset optimization
+	_CSTD memset(_First, _Val, _Count);
+	return (_First + _Count);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_fill_n(_FwdIt _First, _Diff _Count,
+		const _Iter_value_t<_FwdIt>& _Val, _Wrap_alloc<_Alloc>& _Al)
+	{	// copy _Count copies of _Val to raw _First, using _Al
+	return (_Uninit_alloc_fill_n1(_First, _Count, _Val, _Al,
+		_Conjunction_t<decltype(_Fill_memset_is_safe(_First, _Val)),
+			_Uses_default_construct<_Alloc, decltype(_Unfancy(_First)), decltype(_Val)>>()));
+	}
+
+		// TEMPLATE FUNCTION _Uninitialized_default_fill_n WITH ALLOCATOR
+template<class _FwdIt,
+	class _Diff,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_default_fill_n1(_FwdIt _First, _Diff _Count,
+		_Wrap_alloc<_Alloc>& _Al, false_type)
+	{	// value-initialize _Count objects to raw _First, using _Al, no special optimization
+	_FwdIt _Next = _First;
+
+	_TRY_BEGIN
+	for (; 0 < _Count; --_Count, (void)++_First)
+		{
+		_Al.construct(_Unfancy(_First));
+		}
+
+	_CATCH_ALL
+	_Destroy_range(_Next, _First, _Al);
+	_RERAISE;
+	_CATCH_END
+
+	return (_First);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_default_fill_n1(_FwdIt _First, _Diff _Count,
+		_Wrap_alloc<_Alloc>&, true_type)
+	{	// value-initialize _Count objects to raw _First, using default _Alloc construct, all-bits-zero type
+	_CSTD memset(_First, 0, _Count * sizeof(_Iter_value_t<_FwdIt>));
+	return (_First + _Count);
+	}
+
+template<class _FwdIt,
+	class _Diff,
+	class _Alloc> inline
+	_FwdIt _Uninitialized_default_fill_n(_FwdIt _First, _Diff _Count,
+		_Wrap_alloc<_Alloc>& _Al)
+	{	// value-initialize _Count objects to raw _First, using _Al
+	typedef _Iter_value_t<_FwdIt> _Ty;
+	return (_Uninitialized_default_fill_n1(_First, _Count, _Al,
+		_Conjunction_t<
+			is_pointer<_FwdIt>,
+			is_scalar<_Ty>,
+			negation<is_volatile<_Ty>>,
+			negation<is_member_pointer<_Ty>>,
+			_Uses_default_construct<_Alloc, decltype(_Unfancy(_First))>>()));
+	}
+_STD_END
+
+ #pragma pop_macro("new")
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _XMEMORY_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
