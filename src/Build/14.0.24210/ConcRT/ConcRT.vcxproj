@@ -19,72 +19,73 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\vc140\concrt\Agent.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\CacheLocalScheduleGroup.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\cds_cache_aligned_allocator.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Chores.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\concurrent_hash.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\concurrent_queue.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\concurrent_vector.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Context.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ContextBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\CurrentScheduler.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\event.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Exceptions.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ExecutionResource.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ExternalContextBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\FairScheduleGroup.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\FreeThreadProxy.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\FreeVirtualProcessorRoot.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\HillClimbing.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\InternalContextBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\location.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Platform.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ppl.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\RealizedChore.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ResourceManager.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\rtlocks.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ScheduleGroupBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SchedulerBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SchedulerPolicyBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SchedulerProxy.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SchedulingNode.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SchedulingRing.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SearchAlgorithms.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\staticinits.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\SubAllocator.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\TaskCollection.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\TaskCollectionBase.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ThreadProxy.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ThreadProxyFactoryManager.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ThreadScheduler.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\ThreadVirtualProcessor.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Timer.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Trace.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\Transmogrificator.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\TransmogrifiedPrimary.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSBackgroundPoller.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSFreeThreadProxy.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSFreeVirtualProcessorRoot.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSSchedulerProxy.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSSchedulingContext.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSThreadInternalContext.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSThreadProxy.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSThreadScheduler.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSThreadVirtualProcessor.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\UMSWrapper.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\utils.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\VirtualProcessor.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\VirtualProcessorRoot.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\WinRTWrapper.cpp" />
-    <ClCompile Include="..\..\vc140\concrt\WorkQueue.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Agent.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\CacheLocalScheduleGroup.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\cds_cache_aligned_allocator.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Chores.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\concurrent_hash.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\concurrent_queue.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\concurrent_vector.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Context.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ContextBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\CurrentScheduler.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\event.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Exceptions.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ExecutionResource.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ExternalContextBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\FairScheduleGroup.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\FreeThreadProxy.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\FreeVirtualProcessorRoot.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\HillClimbing.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\InternalContextBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\location.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Platform.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ppl.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\RealizedChore.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ResourceManager.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\rtlocks.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ScheduleGroupBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SchedulerBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SchedulerPolicyBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SchedulerProxy.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SchedulingNode.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SchedulingRing.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SearchAlgorithms.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\staticinits.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\SubAllocator.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\TaskCollection.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\TaskCollectionBase.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ThreadProxy.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ThreadProxyFactoryManager.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ThreadScheduler.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\ThreadVirtualProcessor.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Timer.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Trace.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\Transmogrificator.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\TransmogrifiedPrimary.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSBackgroundPoller.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSFreeThreadProxy.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSFreeVirtualProcessorRoot.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSSchedulerProxy.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSSchedulingContext.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSThreadInternalContext.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSThreadProxy.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSThreadScheduler.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSThreadVirtualProcessor.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\UMSWrapper.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\utils.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\VirtualProcessor.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\VirtualProcessorRoot.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\WinRTWrapper.cpp" />
+    <ClCompile Include="$(SolutionDir)14.0.24210\concrt\WorkQueue.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{C824FB61-A6FF-4F63-BE07-B3991F327646}</ProjectGuid>
+    <ProjectGuid>{BAB2C32C-E9C7-43ED-B061-4429C905AEF5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ConcRT140</RootNamespace>
+    <RootNamespace>ConcRT</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <VC-LTLUsedToolsVersion>14.0.24210</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'" Label="Configuration">
@@ -122,44 +123,44 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v140|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v140|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc140\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrtxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc140\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrt</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc140\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrtxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vc140\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrt</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(PlatformToolsetVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">
     <ClCompile>

@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ltl">
+      <UniqueIdentifier>{e6b1dad1-0b82-48f2-93ab-9096d1c4f8d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ucrt">
+      <UniqueIdentifier>{79741654-df6d-49c8-86d1-7945e9d9b39f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ucrt\WinXP">
+      <UniqueIdentifier>{8ed1c487-3d6e-4e58-8ec0-592861afc06e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\winapi_thunks.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\locks.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\setlocal_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\_msvcrt.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\time\time.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\c16rtomb.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\c32rtomb.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\wctrans.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\wctype.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\locale_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\_ctype.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\_wctype.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbbtype.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\terminate.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\LTL_Initialization.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\isctype.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbalnm.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbalph.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbdgt.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbgrph.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbknj.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismblgl.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismblwr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbprn.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbsle.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbspc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\ismbstr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbupr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\iswctype.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\_mbslen.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\startup\argv_data.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\stdlib\bsearch_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\env\getpath.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\locale\lcidtoname_downlevel.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\stdlib\lfind_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\stdlib\lsearch_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbccpy.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbccpy_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbscpy_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbclen.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\mblen.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\mbrtowc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbscat_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbscmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbscoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbscspn.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbschr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsdec.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsicmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsicoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsinc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbslen.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbslen_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbslwr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcat.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcat_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcnt.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcol.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcpy.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbcpy_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbicm.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbico.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbset.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnbset_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsncat.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsncat_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnccnt.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsncmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsncoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsncpy.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsncpy_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnextc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnicmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnicol.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsninc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnset.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsnset_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbspbrk.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsrchr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsrev.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsset.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsset_s_l.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsspn.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsspnp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsstr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbstok.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbstok_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\mbstowcs.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsupr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbtohira.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbtokata.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbtolwr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbtoupr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\mbtowc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\memicmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strxfrm.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbclevel.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsbtype.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\lowio\mktemp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\env\searchenv.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\lowio\setmode.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strcoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\strerror.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\stricmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\stricoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strlwr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strncnt.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strncoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strnicmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strnicol.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\strupr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\tojisjms.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\tolower_toupper.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\tombbmbc.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\towlower.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\towupper.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\wcrtomb.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcscoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsicmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsicoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcslwr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsncnt.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsncoll.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsnicmp.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsnicol.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\wcstombs.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsupr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\string\wcsxfrm.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\wctomb.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbpunc.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbbyte.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\mbrtoc16.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\mbrtoc32.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\locale\GetStringTypeA.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\frame_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\errno.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\filesystem\stat.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\string_utilities.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -20,10 +20,11 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{7401960B-8982-44E5-90BE-0879E7938188}</ProjectGuid>
+    <ProjectGuid>{59B3674A-F6D0-43DC-95BC-9F4DEC03DCD7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>msvcprt141</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <VC-LTLUsedToolsVersion>14.11.25503</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'" Label="Configuration">
@@ -61,42 +62,42 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VCToolsVersion)\vcruntime;$(SolutionDir)$(VCToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VCToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VCToolsVersion)\lib\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
@@ -187,135 +188,132 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\atomic.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cerr.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cin.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\clog.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cond.c">
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\atomic.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\cerr.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\cin.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\clog.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\cond.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cout.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\cthread.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\excptptr.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\filesys.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\fiopen.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\future.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\iomanip.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ios.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\iosptrs.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\iostream.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\locale.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\locale0.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\multprec.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\mutex.c">
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\cout.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\cthread.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\excptptr.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\filesys.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\fiopen.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\future.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\iomanip.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ios.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\iosptrs.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\iostream.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\locale.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\locale0.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\multprec.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\mutex.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\nothrow.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ppltasks.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\raisehan.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\sharedmutex.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\stdhndlr.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\syserror.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\taskscheduler.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\thread0.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\uncaught.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushcerr.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushcin.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushclog.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushcout.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\ushiostr.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wcerr.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wcin.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wclog.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wcout.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wiostrea.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\wlocale.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xalloc.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xcosh.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdateord.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdint.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdnorm.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdscale.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdtento.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdtest.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xdunscal.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xexp.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfcosh.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdint.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdnorm.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdscale.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdtento.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdtest.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfdunsca.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xferaise.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfexp.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfprec.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfsinh.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xfvalues.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xgetwctype.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlcosh.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldint.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldscale.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldtento.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldtest.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xldunsca.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlexp.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlgamma.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlocale.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlock.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlpoly.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlprec.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlsinh.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xlvalues.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xmbtowc.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xmtx.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xnotify.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xonce.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xpoly.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xprec.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xrngabort.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xrngdev.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xsinh.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstod.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstof.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoflt.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstol.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstold.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoll.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstopfx.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoul.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoull.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstoxflt.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstrcoll.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xstrxfrm.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xthrow.cpp" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xtime.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xtowlower.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xtowupper.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xvalues.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwcscoll.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwcsxfrm.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwctomb.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstod.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstof.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstoflt.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstold.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstopfx.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\xwstoxfl.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\_tolower.c" />
-    <ClCompile Include="..\..\$(VCToolsVersion)\stl\_toupper.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\nothrow.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ppltasks.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\raisehan.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\sharedmutex.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\stdhndlr.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\syserror.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\taskscheduler.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\thread0.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\uncaught.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ushcerr.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ushcin.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ushclog.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ushcout.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\ushiostr.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\wcerr.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\wcin.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\wclog.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\wcout.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\wiostrea.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\wlocale.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xalloc.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xcosh.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdateord.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdint.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdnorm.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdscale.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdtento.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdtest.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xdunscal.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xexp.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfcosh.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfdint.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfdnorm.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfdscale.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfdtento.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfdtest.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfdunsca.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xferaise.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfexp.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfprec.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfsinh.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xfvalues.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xgetwctype.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlcosh.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xldint.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xldscale.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xldtento.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xldtest.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xldunsca.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlexp.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlgamma.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlocale.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlock.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlpoly.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlprec.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlsinh.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xlvalues.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xmbtowc.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xmtx.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xnotify.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xonce.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xpoly.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xprec.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xrngabort.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xrngdev.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xsinh.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstod.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstof.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstoflt.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstol.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstold.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstoll.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstopfx.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstoul.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstoull.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstoxflt.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstrcoll.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xstrxfrm.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xthrow.cpp" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xtime.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xtowlower.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xtowupper.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xvalues.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwcscoll.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwcsxfrm.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwctomb.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwstod.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwstof.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwstoflt.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwstold.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwstopfx.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\xwstoxfl.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\_tolower.c" />
+    <ClCompile Include="$(SolutionDir)14.11.25503\stl\_toupper.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\winapi_thunks.h" />
+    <ClInclude Include="$(SolutionDir)winapi_thunks.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
