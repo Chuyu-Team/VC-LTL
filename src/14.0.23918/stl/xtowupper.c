@@ -16,7 +16,7 @@ _CRTIMP2_PURE wchar_t __CLRCALL_PURE_OR_CDECL _Towupper(wchar_t _Ch,
 		if (L'a' <= _Ch && _Ch <= L'z')
 			_Res = (wchar_t)(_Ch - L'a' + L'A');
 		}
-	else if (__crtLCMapStringW(_Ctype->_LocaleName, LCMAP_UPPERCASE,
+	else if (__crtLCMapStringW(__acrt_LocaleNameToLCID(_Ctype->_LocaleName,0), LCMAP_UPPERCASE,
 			&_Ch, 1, &_Res, 1) == 0)
 		_Res = _Ch;
 	return (_Res);

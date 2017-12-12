@@ -317,26 +317,27 @@ _FS_DLL int __CLRCALL_PURE_OR_CDECL _Set_last_write_time(const TCHAR *_Fname,
 	if (_Handle == INVALID_HANDLE_VALUE)
 		return (0);
 
-	FILE_BASIC_INFO _Finfo;
-	if (!__crtGetFileInformationByHandleEx(_Handle, FileBasicInfo,
-		&_Finfo, sizeof(_Finfo)))
-		{	// can't get file info, fail
-		CloseHandle(_Handle);
-		return (0);
-		}
+	//FILE_BASIC_INFO _Finfo;
+	//if (!__crtGetFileInformationByHandleEx(_Handle, FileBasicInfo,
+	//	&_Finfo, sizeof(_Finfo)))
+	//	{	// can't get file info, fail
+	//	CloseHandle(_Handle);
+	//	return (0);
+	//	}
 	// convert to FILETIME and set
 	_ULonglong _Wtime = (_ULonglong)_When + WIN_TICKS_FROM_EPOCH;
-	_Finfo.LastWriteTime.QuadPart = _Wtime;
+	//_Finfo.LastWriteTime.QuadPart = _Wtime;
 
-	if (!__crtSetFileInformationByHandle(_Handle, FileBasicInfo,
-		&_Finfo, sizeof(_Finfo)))
-		{	// can't set file info, fail
-		CloseHandle(_Handle);
-		return (0);
-		}
+	//if (!__crtSetFileInformationByHandle(_Handle, FileBasicInfo,
+	//	&_Finfo, sizeof(_Finfo)))
+	//	{	// can't set file info, fail
+	//	CloseHandle(_Handle);
+	//	return (0);
+	//	}
+	int _Result = SetFileTime(_Handle, nullptr, nullptr, (FILETIME*)&_Wtime);
 
 	CloseHandle(_Handle);
-	return (1);
+	return _Result;
 
 	}
 

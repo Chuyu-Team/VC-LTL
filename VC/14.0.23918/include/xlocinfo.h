@@ -137,10 +137,10 @@ _CRTIMP size_t __cdecl _Strftime(_Out_writes_(_Maxsize) char *,
 	_In_ size_t _Maxsize, _In_z_ _Printf_format_string_ const char *,
 	_In_ const struct tm *, void *);
 
-_CRTIMP wchar_t *__cdecl _W_Getdays(void);
-_CRTIMP wchar_t *__cdecl _W_Getmonths(void);
+extern wchar_t *__cdecl _W_Getdays(void);
+extern wchar_t *__cdecl _W_Getmonths(void);
 _CRTIMP void *__cdecl _W_Gettnames(void);
-_CRTIMP size_t __cdecl _Wcsftime(_Out_writes_(_Maxsize) wchar_t *,
+extern size_t __cdecl _Wcsftime(_Out_writes_(_Maxsize) wchar_t *,
 	_In_ size_t _Maxsize, _In_z_ _Printf_format_string_ const wchar_t *,
 	_In_ const struct tm *, void *);
 _END_C_LIB_DECL

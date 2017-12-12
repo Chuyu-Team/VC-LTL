@@ -21,7 +21,7 @@ _CRT_BEGIN_C_HEADER
 struct __std_exception_data
 {
     char const* _What;
-    bool        _DoFree;
+    int        _DoFree;
 };
 
 _VCRTIMP void __cdecl __std_exception_copy(
@@ -35,64 +35,41 @@ _VCRTIMP void __cdecl __std_exception_destroy(
 
 _CRT_END_C_HEADER
 
-
-
-namespace std {
-
 class exception
 {
 public:
 
-    exception() throw()
-        : _Data()
-    {
-    }
+	exception() throw();
 
-    explicit exception(char const* const _Message) throw()
-        : _Data()
-    {
-        __std_exception_data _InitData = { _Message, true };
-        __std_exception_copy(&_InitData, &_Data);
-    }
+	explicit exception(char const* const& _Message) throw();
 
-    exception(char const* const _Message, int) throw()
-        : _Data()
-    {
-        _Data._What = _Message;
-    }
+	exception(char const* const& _Message, int) throw()
+#ifndef _ATL_XP_TARGETING
+		;
+#else
+		:_Data{ _Message,0}
+	{
 
-    exception(exception const& _Other) throw()
-        : _Data()
-    {
-        __std_exception_copy(&_Other._Data, &_Data);
-    }
+	}
+#endif
 
-    exception& operator=(exception const& _Other) throw()
-    {
-        if (this == &_Other)
-        {
-            return *this;
-        }
+	exception(exception const& _Other) throw();
 
-        __std_exception_destroy(&_Data);
-        __std_exception_copy(&_Other._Data, &_Data);
-        return *this;
-    }
+	exception& operator=(exception const& _Other) throw();
 
-    virtual ~exception() throw()
-    {
-        __std_exception_destroy(&_Data);
-    }
+	virtual ~exception() throw();
 
-    virtual char const* what() const
-    {
-        return _Data._What ? _Data._What : "Unknown exception";
-    }
+	virtual char const* what() const;
 
 private:
 
-    __std_exception_data _Data;
+	__std_exception_data _Data;
 };
+
+
+namespace std {
+
+using ::exception;
 
 class bad_exception
     : public exception

@@ -56,20 +56,24 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Strcoll (
         UINT codepage;
         int n1 = (int)(_end1 - _string1);
         int n2 = (int)(_end2 - _string2);
-        const wchar_t *locale_name;
+        //const wchar_t *locale_name;
+		LCID _Locale;
 
         if (ploc == 0)
         {
-            locale_name = ___lc_locale_name_func()[LC_COLLATE];
+            //locale_name = ___lc_locale_name_func()[LC_COLLATE];
+			_Locale = ___lc_handle_func()[LC_COLLATE];
             codepage = ___lc_collate_cp_func();
         }
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
             codepage = ploc->_Page;
         }
 
-        if (locale_name == NULL)
+        //if (locale_name == NULL)
+		if(_Locale==0)
         {
             int ans;
             ans = memcmp(_string1, _string2, n1 < n2 ? n1 : n2);
@@ -77,7 +81,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Strcoll (
         }
         else
         {
-            if ( 0 == (ret = __crtCompareStringA( locale_name,
+            if ( 0 == (ret = __crtCompareStringA(NULL, _Locale,
                                                   SORT_STRINGSORT,
                                                   _string1,
                                                   n1,
@@ -116,9 +120,14 @@ _CRTIMP2_PURE _Collvec __CLRCALL_PURE_OR_CDECL _Getcoll()
         _Collvec coll;
 
         coll._Page = ___lc_collate_cp_func();
-        coll._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
-        if (coll._LocaleName)
-            coll._LocaleName = _wcsdup_dbg(coll._LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+		auto __lc_collate = ___lc_handle_func()[LC_COLLATE];
+
+		wchar_t _LocaleName[LOCALE_NAME_MAX_LENGTH];
+
+		if (__lc_collate&&__acrt_LCIDToLocaleName(__lc_collate, _LocaleName, _countof(_LocaleName), 0))
+			coll._LocaleName = _wcsdup_dbg(_LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+		else
+			coll._LocaleName = NULL;
 
         return (coll);
 }
