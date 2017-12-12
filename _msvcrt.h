@@ -43,11 +43,15 @@
 
 #if _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==0
 //Vistual Studio 2015
-#elif _VC_CRT_MAJOR_VERSION ==14 && (_VC_CRT_MINOR_VERSION== 10||_VC_CRT_MINOR_VERSION==11)
-//Vistual Studio 2017 14.10或者14.11
-#pragma message(_ltlfilelen "warning: 此工具集已经停止维护，强烈建议你请升级到最新Vistual Studio 2017然后继续！")
-#elif _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==12
-//Vistual Studio 2017 14.12
+#if _VC_CRT_BUILD_VERSION!=24225
+#pragma message(_ltlfilelen "warning: 此工具集已经停止维护，强烈建议你请升级到最新Vistual Studio 2015 Update3 KB3165756或者更高版本然后继续！")
+#endif
+#elif _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION >= 10 && _VC_CRT_MINOR_VERSION < 20
+//Vistual Studio 2017
+#if _VC_CRT_MINOR_VERSION!=12
+#pragma message(_ltlfilelen "warning: 此工具集已经停止维护，强烈建议你请升级到最新Vistual Studio 2017 15.5或者更高版本然后继续！")
+#endif
+
 #else
 #error "暂不支持此版本的CRT库"
 #endif
