@@ -22,8 +22,8 @@
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
 
-    <!--如果找不到，那么指定为当前支持的最低版本-->
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">14.0.24210</VC-LTLUsedToolsVersion>
+    <!--如果找不到，那么指定为当前支持的最低版本 2015 Update2-->
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">14.0.23918</VC-LTLUsedToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" ('$(VCToolsVersion)'!='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
