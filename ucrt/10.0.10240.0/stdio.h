@@ -1620,20 +1620,20 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL vsnprintf_s(
+    __inline int __CRTDECL vsnprintf_s(
         _Out_writes_z_(_BufferCount)  char*       const _Buffer,
         _In_                          size_t      const _BufferCount,
         _In_                          size_t      const _MaxCount,
         _In_z_ _Printf_format_string_ char const* const _Format,
                                       va_list           _ArgList
         )
-#if defined _NO_CRT_STDIO_INLINE
-;
-#else
     {
+#ifndef _ATL_XP_TARGETING
         return _vsnprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
-    }
+#else
+		return _vsnprintf_s(_Buffer, _BufferCount, _MaxCount, _Format, _ArgList);
 #endif
+    }
     
     __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(
         _Success_(return >= 0)
