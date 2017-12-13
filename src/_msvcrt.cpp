@@ -439,10 +439,11 @@ extern "C"
 	{
 		return common_localtime_s(_Tm, _Time);
 	}
+#endif
 
 	errno_t __cdecl _get_daylight(
 		_Out_ int* _Daylight
-	)
+		)
 	{
 		_VALIDATE_RETURN_ERRCODE(_Daylight != nullptr, EINVAL);
 
@@ -453,7 +454,7 @@ extern "C"
 
 	errno_t __cdecl _get_dstbias(
 		_Out_ long* _DaylightSavingsBias
-	)
+		)
 	{
 		_VALIDATE_RETURN_ERRCODE(_DaylightSavingsBias != nullptr, EINVAL);
 
@@ -463,7 +464,7 @@ extern "C"
 
 	errno_t __cdecl _get_timezone(
 		_Out_ long* _TimeZone
-	)
+		)
 	{
 		_VALIDATE_RETURN_ERRCODE(_TimeZone != nullptr, EINVAL);
 
@@ -476,7 +477,7 @@ extern "C"
 		_Out_writes_z_(_SizeInBytes) char*   _Buffer,
 		_In_                         size_t  _SizeInBytes,
 		_In_                         int     _Index
-	)
+		)
 	{
 		_VALIDATE_RETURN_ERRCODE(
 			(_Buffer != nullptr && _SizeInBytes > 0) ||
@@ -504,7 +505,7 @@ extern "C"
 		return strcpy_s(_Buffer, _SizeInBytes, _tzname[_Index]);
 	}
 
-
+#ifdef _ATL_XP_TARGETING
 	/*
 	
 	Windows XP的msvcrt没有这个接口，不过我们可以使用其他接口模拟实现该功能。
