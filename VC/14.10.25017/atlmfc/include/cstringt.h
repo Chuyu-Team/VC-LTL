@@ -684,10 +684,7 @@ public:
 		_Out_ _Post_z_ LPWSTR pszBuffer,
 		_In_ _Printf_format_string_ LPCWSTR pszFormat, va_list args) throw()
 	{
-#pragma warning(suppress : 4995)
-#pragma warning(suppress : 4996)
-#pragma warning(suppress : 6386)
-#pragma warning(suppress : 28719)
+#pragma warning(suppress : 4995 4996 6386 28719)
 		return vswprintf(pszBuffer, pszFormat, args);
 	}
 	static int __cdecl Format(
