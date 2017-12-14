@@ -61,6 +61,7 @@ Global
 		Build\VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems*{939ec7f0-b12a-467f-9778-32c6ff9c208e}*SharedItemsImports = 9
 		Build\VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems*{b15a58c3-0f33-4c91-af0a-c2619780420e}*SharedItemsImports = 4
 		Build\VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems*{cb9502d7-50b1-4159-a5d2-08ede3f38bc3}*SharedItemsImports = 4
+		Build\VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems*{cd3109db-31a0-45d0-9751-c052a242541c}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		v140|x64 = v140|x64
