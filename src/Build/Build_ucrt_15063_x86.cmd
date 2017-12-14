@@ -8,12 +8,12 @@ set libfile=%~dp0..\..\ucrt\10.0.15063.0\lib\x86\ucrt.lib
 copy "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.15063.0\ucrt\x86\libucrt.lib" "%libfile%" /y
 
 
-pushd "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.11.25503\bin\HostX86\x86"
+@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
 
 
 
-lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\crtw32\misc\dll\objfre\i386\guard_support.obj
-lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\crtw32\misc\dll\objfre\i386\cfgcheckthunk.obj
+::lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\crtw32\misc\dll\objfre\i386\guard_support.obj
+::lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\crtw32\misc\dll\objfre\i386\cfgcheckthunk.obj
 ::lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\notamd64\mt\objfre\i386\remainder_.obj
 ::lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\notamd64\mt\objfre\i386\remainderf_.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\notamd64\mt\objfre\i386\ieeemisc.obj
@@ -824,5 +824,3 @@ lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\convert\mt\objfre\i386\atoldbl.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\convert\mt\objfre\i386\atof.obj
 lib "%libfile%" /remove:d:\rs2.obj.x86fre\minkernel\crts\ucrt\src\appcrt\dll\mt\objfre\i386\empty.obj
-
-popd

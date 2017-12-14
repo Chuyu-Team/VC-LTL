@@ -3,7 +3,7 @@ set libfile=%~dp0..\..\ucrt\10.0.16299.0\lib\x64\ucrt.lib
 
 copy "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.16299.0\ucrt\x64\libucrt.lib" "%libfile%" /y
 
-pushd "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.11.25503\bin\HostX64\x64"
+@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
 
 
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\objfre\amd64\empty.obj
@@ -722,7 +722,7 @@ lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\m
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\logbf.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\modf.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\modff.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\remainder_piby2.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\remainder_piby2.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\sinh.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\sinhf.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\sqrt.obj
@@ -740,7 +740,7 @@ lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\m
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\amd64_arm_arm64\mt\objfre\amd64\strrev.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\string\amd64_arm_arm64\mt\objfre\amd64\strset.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\debug.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\exp_special.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\exp_special.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\filter.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\filter_simd.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\fmodf.obj
@@ -749,16 +749,13 @@ lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\m
 
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\ieee.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\ieeemisc.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\log2.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\log_special.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\pow_special.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\log2.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\log_special.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\pow_special.obj
 ::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\remainder.obj
 ::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\remainderf.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\remainder_piby2f.obj
-lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\sincos_special.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\remainder_piby2f.obj
+::lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\sincos_special.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\xmmi2_fp_emul.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\xmmi_fp_emul.obj
 lib "%libfile%" /remove:d:\rs2.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\amd64\mt\objfre\amd64\_exp.obj
-
-
-popd
