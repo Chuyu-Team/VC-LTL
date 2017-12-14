@@ -104,7 +104,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_11033
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\x86\std_nothrow.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\x86\throw_bad_alloc.obj
 
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\x86\thread_safe_statics.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\x86\thread_safe_statics.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\x86\dll_dllmain.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\x86\dll_dllmain_stub.obj
