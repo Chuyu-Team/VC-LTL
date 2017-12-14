@@ -354,6 +354,12 @@
     <ClCompile Include="$(SolutionDir)14.12.25827\stl\_toupper.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\14.12.25827\stl\vector_algorithms.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\14.12.25827\stl\parallel_algorithms.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h">

@@ -311,6 +311,8 @@
     <ClCompile Include="$(SolutionDir)14.12.25827\stl\xwstoxfl.c" />
     <ClCompile Include="$(SolutionDir)14.12.25827\stl\_tolower.c" />
     <ClCompile Include="$(SolutionDir)14.12.25827\stl\_toupper.c" />
+    <ClCompile Include="..\..\..\14.12.25827\stl\parallel_algorithms.cpp" />
+    <ClCompile Include="..\..\..\14.12.25827\stl\vector_algorithms.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h" />
