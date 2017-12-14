@@ -291,7 +291,7 @@ _ACRTIMP int* __cdecl __fpecode(void);
 #define _fpecode (*__fpecode())
 
 _Check_return_
-_ACRTIMP int __cdecl __fpe_flt_rounds(void);
+extern int __cdecl __fpe_flt_rounds(void);
 
 #define FLT_ROUNDS   (__fpe_flt_rounds())
 #define _DBL_ROUNDS  FLT_ROUNDS
