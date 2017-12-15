@@ -1,4 +1,4 @@
-// This is a part of the Active Template Library.
+Ôªø// This is a part of the Active Template Library.
 // Copyright (C) Microsoft Corporation
 // All rights reserved.
 //
@@ -148,7 +148,7 @@ typedef _Return_type_success_(return==ERROR_SUCCESS) LONG LSTATUS;
 namespace ATL
 {
 #ifdef _ATL_XP_TARGETING
-	//WinXP SP2 ≤≈÷ß≥÷ EncodePointer “‘º∞ DecodePointer
+	//WinXP SP2 ÊâçÊîØÊåÅ EncodePointer ‰ª•Âèä DecodePointer
 	EXTERN_C PVOID __fastcall __CRT_DecodePointer(PVOID Ptr);
 
 	EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);

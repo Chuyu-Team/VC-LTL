@@ -1,4 +1,4 @@
-//
+ï»¿//
 // corecrt.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -144,7 +144,7 @@ extern "C++"
 #define _CRT_SIZE_MAX ((size_t)-1)
 
 #ifdef _ATL_XP_TARGETING
-//Windows XPµÄmsvcrtÓĞBUG£¬ÄÚ²¿32Î»´ø·ûºÅÕûĞÎ¡£Òò´ËÍâ²¿×î´óÖ»ÔÊĞí0x3FFFFFFF
+//Windows XPçš„msvcrtæœ‰BUGï¼Œå†…éƒ¨32ä½å¸¦ç¬¦å·æ•´å½¢ã€‚å› æ­¤å¤–éƒ¨æœ€å¤§åªå…è®¸0x3FFFFFFF
 #define _CRT_STDIO_SIZE_MAX 0x3FFFFFFF
 #else
 #define _CRT_STDIO_SIZE_MAX _CRT_SIZE_MAX

@@ -1,4 +1,4 @@
-// This is a part of the Active Template Library.
+ï»¿// This is a part of the Active Template Library.
 // Copyright (C) Microsoft Corporation
 // All rights reserved.
 //
@@ -738,7 +738,7 @@ inline int __cdecl _AtlLCMapStringEx(_In_z_ LPCWSTR lpLocaleName, _In_ DWORD dwM
 	// ...otherwise fall back to using LCMapString.
 	return LCMapStringW(_AtlDownlevelLocaleNameToLCID(lpLocaleName), dwMapFlags, lpSrcStr, cchSrc, lpDestStr, cchDest);
 #else
-	//Ê¹ÓÃLTLÄÚ²¿ÇøÓò×ª»»º¯Êı£¬¼õÉÙ´úÂëÈßÓà£¬¶¨Òå_NOT_USED_LTL_Localeºê¿ÉÒÔÖØĞÂÇĞ»»µ½Ô­ÓĞÂß¼­£¬µ«ÊÇ´úÂë½«¸ü´ó
+	//ä½¿ç”¨LTLå†…éƒ¨åŒºåŸŸè½¬æ¢å‡½æ•°ï¼Œå‡å°‘ä»£ç å†—ä½™ï¼Œå®šä¹‰_NOT_USED_LTL_Localeå®å¯ä»¥é‡æ–°åˆ‡æ¢åˆ°åŸæœ‰é€»è¾‘ï¼Œä½†æ˜¯ä»£ç å°†æ›´å¤§
 	return __acrt_LCMapStringEx(lpLocaleName, dwMapFlags, lpSrcStr, cchSrc, lpDestStr, cchDest, lpVersionInformation, lpReserved, sortHandle);
 #endif //!_NOT_USED_LTL_Locale
 
