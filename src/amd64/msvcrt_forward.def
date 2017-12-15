@@ -31,6 +31,27 @@ __imp_?_open@@YAHQEBDHH@Z=__imp__open
 __imp__set_se_translator=__imp_?_set_se_translator@@YAP6AXIPEAU_EXCEPTION_POINTERS@@@ZP6AXI0@Z@Z
 _set_se_translator=?_set_se_translator@@YAP6AXIPEAU_EXCEPTION_POINTERS@@@ZP6AXI0@Z@Z
 
+
+;新版本中_query_new_handler规范变成了C
+__imp__query_new_handler=__imp_?_query_new_handler@@YAP6AH_K@ZXZ
+_query_new_handler=?_query_new_handler@@YAP6AH_K@ZXZ
+
+
+;新版本中_set_new_handler规范变成了C
+__imp__set_new_handler=__imp_?_set_new_handler@@YAP6AH_K@ZP6AH0@Z@Z
+_set_new_handler=?_set_new_handler@@YAP6AH_K@ZP6AH0@Z@Z
+
+
+;新版本中_query_new_mode规范变成了C
+__imp__query_new_mode=__imp_?_query_new_mode@@YAHXZ
+_query_new_mode=?_query_new_mode@@YAHXZ
+
+
+;新版本中_set_new_mode规范变成了C
+__imp__set_new_mode=__imp_?_set_new_mode@@YAHH@Z
+_set_new_mode=?_set_new_mode@@YAHH@Z
+
+
 ;_sopen C++版重载
 __imp_?_sopen@@YAHQEBDHHH@Z=__imp__sopen
 ?_sopen@@YAHQEBDHHH@Z=_sopen

@@ -44,3 +44,5 @@ _get_wpgmptr
 _seh_longjmp_unwind4
 
 vsnprintf
+
+?_query_new_mode@@YAHXZ
