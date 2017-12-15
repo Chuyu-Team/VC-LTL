@@ -1,4 +1,4 @@
-//
+Ôªø//
 // stdlib.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -518,7 +518,7 @@ __inline long double __cdecl strtold(
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
     )
 {
-	//VS÷–long double”Îdoubleµ»º€
+	//VS‰∏≠long double‰∏édoubleÁ≠â‰ª∑
 	return strtod(_String, _EndPtr);
 }
 
@@ -529,7 +529,7 @@ __inline long double __cdecl _strtold_l(
     _In_opt_                 _locale_t   _Locale
     )
 {
-	//VS÷–long double”Îdoubleµ»º€
+	//VS‰∏≠long double‰∏édoubleÁ≠â‰ª∑
 	return _strtod_l(_String, _EndPtr, _Locale);
 }
 

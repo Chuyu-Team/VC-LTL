@@ -1,4 +1,4 @@
-//
+ï»¿//
 // corecrt_math.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -550,7 +550,7 @@ extern "C++"
 		/*
 		
 		  X | x x x x x x x x | x x x x x x x x x x x x x x x x x x x x x x x
-		·ûºÅ        Ö¸Êı                          Î²Êı
+		ç¬¦å·        æŒ‡æ•°                          å°¾æ•°
 		 1           8                             23
 
 		*/

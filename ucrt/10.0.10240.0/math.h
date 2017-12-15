@@ -1,4 +1,4 @@
-//
+ï»¿//
 // math.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -539,7 +539,7 @@ _Check_return_ __inline float     __cdecl _chgsignf(_In_ float _X)
 	/*
 		
 		X | x x x x x x x x | x x x x x x x x x x x x x x x x x x x x x x x
-	·ûºÅ        Ö¸Êı                          Î²Êı
+	ç¬¦å·        æŒ‡æ•°                          å°¾æ•°
 		1           8                             23
 
 	*/
