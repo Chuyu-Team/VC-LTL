@@ -4,7 +4,7 @@ set libfile=%~dp0..\..\VC\14.12.25827\lib\x64\vc.lib
 copy "%~dp0lib\x64\msvcrt.lib" "%libfile%" /y
 
 
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_cpu_disp_.obj

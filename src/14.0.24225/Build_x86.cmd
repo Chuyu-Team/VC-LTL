@@ -4,7 +4,7 @@ set libfile=%~dp0..\..\VC\14.0.24225\lib\x86\vc.lib
 copy "%~dp0lib\x86\msvcrt.lib" "%libfile%" /y
 
 
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
 
 
 
