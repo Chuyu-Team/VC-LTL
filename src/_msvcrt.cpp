@@ -146,94 +146,94 @@ extern "C"
 	//}
 //#define _CRT_DEBUGGER_HOOK(a) (0)
 
-	void __cdecl __scrt_fastfail(unsigned const code)
-	{
-		// First see if __fastfail is available, and invoke it if it is.  This will
-		// always be availbale on ARM and is always available on Windows 8 and above.
-		if (IsProcessorFeaturePresent(PF_FASTFAIL_AVAILABLE))
-			__fastfail(code);
-
-		// If __fastfail is not available, fall back to raising an exception that
-		// bypasses all exception handlers (via a call to the unhandled exception
-		// filter.
-
-		// Notify the debugger if attached.
-		//_CRT_DEBUGGER_HOOK(0);
-
-		CONTEXT context_record = {};
-
-#if defined _M_IX86
-
-		__asm
-		{
-			mov dword ptr[context_record.Eax], eax
-			mov dword ptr[context_record.Ecx], ecx
-			mov dword ptr[context_record.Edx], edx
-			mov dword ptr[context_record.Ebx], ebx
-			mov dword ptr[context_record.Esi], esi
-			mov dword ptr[context_record.Edi], edi
-			mov word ptr[context_record.SegSs], ss
-			mov word ptr[context_record.SegCs], cs
-			mov word ptr[context_record.SegDs], ds
-			mov word ptr[context_record.SegEs], es
-			mov word ptr[context_record.SegFs], fs
-			mov word ptr[context_record.SegGs], gs
-			pushfd
-			pop[context_record.EFlags]
-		}
-
-		context_record.ContextFlags = CONTEXT_CONTROL;
-		context_record.Eip = reinterpret_cast<ULONG>(_ReturnAddress());
-		context_record.Esp = reinterpret_cast<ULONG>(_AddressOfReturnAddress());
-		context_record.Ebp = *(reinterpret_cast<ULONG*>(_AddressOfReturnAddress()) - 1);
-
-#elif defined _M_X64
-
-		RtlCaptureContext(&context_record);
-
-		ULONG64 const control_pc = context_record.Rip;
-
-		ULONG64 image_base;
-		PRUNTIME_FUNCTION const function_entry = RtlLookupFunctionEntry(control_pc, &image_base, nullptr);
-
-		if (function_entry)
-		{
-			ULONG64 establisher_frame;
-			PVOID   handler_data;
-			RtlVirtualUnwind(
-				UNW_FLAG_NHANDLER,
-				image_base,
-				control_pc,
-				function_entry,
-				&context_record,
-				&handler_data,
-				&establisher_frame,
-				nullptr);
-		}
-
-		context_record.Rip = reinterpret_cast<ULONGLONG>(_ReturnAddress());
-		context_record.Rsp = reinterpret_cast<ULONGLONG>(_AddressOfReturnAddress()) + 8;
-
-#endif
-
-		EXCEPTION_RECORD exception_record = {};
-		exception_record.ExceptionCode = STATUS_FATAL_APP_EXIT;
-		exception_record.ExceptionFlags = EXCEPTION_NONCONTINUABLE;
-		exception_record.ExceptionAddress = _ReturnAddress();
-
-		bool const was_debugger_present = IsDebuggerPresent() == TRUE;
-
-		// Raise an exception that bypasses all exception handlers:
-		EXCEPTION_POINTERS exception_pointers = { &exception_record, &context_record };
-
-		SetUnhandledExceptionFilter(nullptr);
-		LONG const result = UnhandledExceptionFilter(&exception_pointers);
-
-		// If no handler was found and no debugger was previously attached, then make
-		// sure we notify the debugger.
-		//if (result == EXCEPTION_CONTINUE_SEARCH && !was_debugger_present)
-		//	_CRT_DEBUGGER_HOOK(0);
-	}
+//	void __cdecl __scrt_fastfail(unsigned const code)
+//	{
+//		// First see if __fastfail is available, and invoke it if it is.  This will
+//		// always be availbale on ARM and is always available on Windows 8 and above.
+//		if (IsProcessorFeaturePresent(PF_FASTFAIL_AVAILABLE))
+//			__fastfail(code);
+//
+//		// If __fastfail is not available, fall back to raising an exception that
+//		// bypasses all exception handlers (via a call to the unhandled exception
+//		// filter.
+//
+//		// Notify the debugger if attached.
+//		//_CRT_DEBUGGER_HOOK(0);
+//
+//		CONTEXT context_record = {};
+//
+//#if defined _M_IX86
+//
+//		__asm
+//		{
+//			mov dword ptr[context_record.Eax], eax
+//			mov dword ptr[context_record.Ecx], ecx
+//			mov dword ptr[context_record.Edx], edx
+//			mov dword ptr[context_record.Ebx], ebx
+//			mov dword ptr[context_record.Esi], esi
+//			mov dword ptr[context_record.Edi], edi
+//			mov word ptr[context_record.SegSs], ss
+//			mov word ptr[context_record.SegCs], cs
+//			mov word ptr[context_record.SegDs], ds
+//			mov word ptr[context_record.SegEs], es
+//			mov word ptr[context_record.SegFs], fs
+//			mov word ptr[context_record.SegGs], gs
+//			pushfd
+//			pop[context_record.EFlags]
+//		}
+//
+//		context_record.ContextFlags = CONTEXT_CONTROL;
+//		context_record.Eip = reinterpret_cast<ULONG>(_ReturnAddress());
+//		context_record.Esp = reinterpret_cast<ULONG>(_AddressOfReturnAddress());
+//		context_record.Ebp = *(reinterpret_cast<ULONG*>(_AddressOfReturnAddress()) - 1);
+//
+//#elif defined _M_X64
+//
+//		RtlCaptureContext(&context_record);
+//
+//		ULONG64 const control_pc = context_record.Rip;
+//
+//		ULONG64 image_base;
+//		PRUNTIME_FUNCTION const function_entry = RtlLookupFunctionEntry(control_pc, &image_base, nullptr);
+//
+//		if (function_entry)
+//		{
+//			ULONG64 establisher_frame;
+//			PVOID   handler_data;
+//			RtlVirtualUnwind(
+//				UNW_FLAG_NHANDLER,
+//				image_base,
+//				control_pc,
+//				function_entry,
+//				&context_record,
+//				&handler_data,
+//				&establisher_frame,
+//				nullptr);
+//		}
+//
+//		context_record.Rip = reinterpret_cast<ULONGLONG>(_ReturnAddress());
+//		context_record.Rsp = reinterpret_cast<ULONGLONG>(_AddressOfReturnAddress()) + 8;
+//
+//#endif
+//
+//		EXCEPTION_RECORD exception_record = {};
+//		exception_record.ExceptionCode = STATUS_FATAL_APP_EXIT;
+//		exception_record.ExceptionFlags = EXCEPTION_NONCONTINUABLE;
+//		exception_record.ExceptionAddress = _ReturnAddress();
+//
+//		bool const was_debugger_present = IsDebuggerPresent() == TRUE;
+//
+//		// Raise an exception that bypasses all exception handlers:
+//		EXCEPTION_POINTERS exception_pointers = { &exception_record, &context_record };
+//
+//		SetUnhandledExceptionFilter(nullptr);
+//		LONG const result = UnhandledExceptionFilter(&exception_pointers);
+//
+//		// If no handler was found and no debugger was previously attached, then make
+//		// sure we notify the debugger.
+//		//if (result == EXCEPTION_CONTINUE_SEARCH && !was_debugger_present)
+//		//	_CRT_DEBUGGER_HOOK(0);
+//	}
 
 	//void __cdecl __std_exception_copy(
 	//	__std_exception_data const* const from,
@@ -275,7 +275,7 @@ extern "C"
 	//	data->_What = nullptr;
 	//}
 
-	void __cdecl _invalid_parameter(
+	/*void __cdecl _invalid_parameter(
 		_In_opt_z_ wchar_t const*,
 		_In_opt_z_ wchar_t const*,
 		_In_opt_z_ wchar_t const*,
@@ -287,7 +287,7 @@ extern "C"
 	{
 		_invalid_parameter(nullptr, nullptr, nullptr, 0, 0);
 		_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
-	}
+	}*/
 
 	/*errno_t __CRTDECL wmemcpy_s(
 		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
@@ -1050,13 +1050,13 @@ extern "C"
 
 
 	//msvcrt不支持_stat64i32，不过我们可以用_stat64转换
-	//int __cdecl _stat64i32(
-	//	_In_z_ char const*        _FileName,
-	//	_Out_  struct _stat64i32* _Stat
-	//)
-	//{
-	//	return common_stat(_FileName, _Stat);
-	//}
+	int __cdecl _stat64i32(
+		_In_z_ char const*        _FileName,
+		_Out_  struct _stat64i32* _Stat
+	)
+	{
+		return common_stat(_FileName, _Stat);
+	}
 
 
 	//_wstat已经改名为_wstat32，做转发
@@ -1094,13 +1094,13 @@ extern "C"
 //#pragma pop_macro("_wstati64")
 
 	//msvcrt不支持_wstat64i32，不过我们可以用_wstat64转换
-	//int __cdecl _wstat64i32(
-	//	_In_z_ wchar_t const*     _FileName,
-	//	_Out_  struct _stat64i32* _Stat
-	//)
-	//{
-	//	return common_stat(_FileName, _Stat);
-	//}
+	int __cdecl _wstat64i32(
+		_In_z_ wchar_t const*     _FileName,
+		_Out_  struct _stat64i32* _Stat
+	)
+	{
+		return common_stat(_FileName, _Stat);
+	}
 
 	//通过ASCII文件名搜索
 	extern "C++" __forceinline intptr_t __cdecl _tfindfirst(
@@ -1574,6 +1574,15 @@ extern "C"
 
 		_unlock(0x10);
 		return result;
+	}
+
+	//此函数什么都不做，仅供编译通过处理，因此任何调用abort函数必定静默退出。
+	unsigned int __cdecl _set_abort_behavior(
+		_In_ unsigned int _Flags,
+		_In_ unsigned int _Mask
+		)
+	{
+		return 0;
 	}
 
 #ifdef _ATL_XP_TARGETING

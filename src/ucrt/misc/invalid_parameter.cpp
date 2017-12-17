@@ -9,8 +9,9 @@
 
 
 
-static __crt_state_management::dual_state_global<_invalid_parameter_handler> __acrt_invalid_parameter_handler;
+static _invalid_parameter_handler __acrt_invalid_parameter_handler = nullptr;
 
+static thread_local _invalid_parameter_handler _thread_local_iph=nullptr;
 
 
 #if defined _M_X64 && !defined _UCRT_ENCLAVE_BUILD
@@ -64,21 +65,21 @@ static __crt_state_management::dual_state_global<_invalid_parameter_handler> __a
 
 #endif
 
-extern "C" void __cdecl __acrt_initialize_invalid_parameter_handler(void* const encoded_null)
-{
-#if defined _CRT_GLOBAL_STATE_ISOLATION
-    const _invalid_parameter_handler encoded_os_iph = __crt_fast_encode_pointer(invalid_parameter_handler_continue);
-#endif
-    const _invalid_parameter_handler iph[] =
-    {
-        reinterpret_cast<_invalid_parameter_handler>(encoded_null)
-#if defined _CRT_GLOBAL_STATE_ISOLATION
-        ,encoded_os_iph
-#endif
-    };
-
-    __acrt_invalid_parameter_handler.initialize_from_array(iph);
-}
+//extern "C" void __cdecl __acrt_initialize_invalid_parameter_handler(void* const encoded_null)
+//{
+//#if defined _CRT_GLOBAL_STATE_ISOLATION
+//    const _invalid_parameter_handler encoded_os_iph = __crt_fast_encode_pointer(invalid_parameter_handler_continue);
+//#endif
+//    const _invalid_parameter_handler iph[] =
+//    {
+//        reinterpret_cast<_invalid_parameter_handler>(encoded_null)
+//#if defined _CRT_GLOBAL_STATE_ISOLATION
+//        ,encoded_os_iph
+//#endif
+//    };
+//
+//    __acrt_invalid_parameter_handler.initialize_from_array(iph);
+//}
 
 
 
@@ -95,14 +96,13 @@ extern "C" void __cdecl _invalid_parameter(
     uintptr_t      const reserved
     )
 {
-    __acrt_ptd* const ptd = __acrt_getptd_noexit();
-    if (ptd && ptd->_thread_local_iph)
+    if (_thread_local_iph)
     {
-        ptd->_thread_local_iph(expression, function_name, file_name, line_number, reserved);
+        _thread_local_iph(expression, function_name, file_name, line_number, reserved);
         return;
     }
 
-    _invalid_parameter_handler const global_handler = __crt_fast_decode_pointer(__acrt_invalid_parameter_handler.value());
+    auto& global_handler = __acrt_invalid_parameter_handler;
     if (global_handler)
     {
         global_handler(expression, function_name, file_name, line_number, reserved);
@@ -263,34 +263,24 @@ extern "C" __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 extern "C" _invalid_parameter_handler __cdecl _set_invalid_parameter_handler(_invalid_parameter_handler const new_handler)
 {
-    _invalid_parameter_handler const old_handler = __crt_fast_decode_pointer(__acrt_invalid_parameter_handler.value());
-    __acrt_invalid_parameter_handler.value() = __crt_fast_encode_pointer(new_handler);
-    return old_handler;
+	return __crt_interlocked_exchange_pointer(&__acrt_invalid_parameter_handler, new_handler);
 }
 
 extern "C" _invalid_parameter_handler __cdecl _get_invalid_parameter_handler()
 {
-    return __crt_fast_decode_pointer(__acrt_invalid_parameter_handler.value());
+    return __acrt_invalid_parameter_handler;
 }
 
 
 
 extern "C" _invalid_parameter_handler __cdecl _set_thread_local_invalid_parameter_handler(_invalid_parameter_handler const new_handler)
 {
-    __acrt_ptd* const ptd = __acrt_getptd();
-
-    _invalid_parameter_handler const old_handler = ptd->_thread_local_iph;
-    ptd->_thread_local_iph = new_handler;
+    _invalid_parameter_handler const old_handler = _thread_local_iph;
+    _thread_local_iph = new_handler;
     return old_handler;
 }
 
 extern "C" _invalid_parameter_handler __cdecl _get_thread_local_invalid_parameter_handler()
 {
-    __acrt_ptd* const ptd = __acrt_getptd_noexit();
-    if (!ptd)
-    {
-        return nullptr;
-    }
-
-    return ptd->_thread_local_iph;
+    return _thread_local_iph;
 }

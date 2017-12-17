@@ -21,5 +21,8 @@
     <ClCompile Include="$(SolutionDir)14.11.25503\vcruntime\unexpected.cpp">
       <Filter>源文件\vc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\14.11.25503\vcruntime\utility_desktop.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

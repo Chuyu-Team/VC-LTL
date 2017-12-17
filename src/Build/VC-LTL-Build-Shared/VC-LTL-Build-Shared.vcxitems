@@ -25,6 +25,8 @@
       <RemoveUnreferencedCodeData Condition="'$(Configuration)|$(Platform)'=='v140|x64'">false</RemoveUnreferencedCodeData>
       <RemoveUnreferencedCodeData Condition="'$(Configuration)|$(Platform)'=='v141|x64'">false</RemoveUnreferencedCodeData>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_advanced.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_IAT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\setlocal_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\locale_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\c16rtomb.cpp" />
@@ -131,7 +133,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\filesystem\stat.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\locks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\string_utilities.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\winapi_thunks.cpp" />
@@ -578,6 +579,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\errno.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\invalid_parameter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\strerror.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">true</ExcludedFromBuild>

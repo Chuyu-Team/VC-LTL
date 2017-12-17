@@ -1,4 +1,4 @@
-//
+﻿//
 // stdlib.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -57,6 +57,7 @@ _ACRTIMP __declspec(noreturn) void __cdecl abort(void);
 #define _WRITE_ABORT_MSG  0x1 // debug only, has no effect in release
 #define _CALL_REPORTFAULT 0x2
 
+_CRT_DEPRECATE_TEXT("温馨提示：VC-LTL中该函数功能并不生效，仅作编译通过处理。任何abort调用都将静默退出程序。")
 _ACRTIMP unsigned int __cdecl _set_abort_behavior(
     _In_ unsigned int _Flags,
     _In_ unsigned int _Mask
@@ -514,7 +515,7 @@ __inline long double __cdecl strtold(
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
     )
 {
-	//VS��long double��double�ȼ�
+	//VS中long double与double等价
 	return strtod(_String, _EndPtr);
 }
 
@@ -525,7 +526,7 @@ __inline long double __cdecl _strtold_l(
     _In_opt_                 _locale_t   _Locale
     )
 {
-	//VS��long double��double�ȼ�
+	//VS中long double与double等价
 	return _strtod_l(_String, _EndPtr, _Locale);
 }
 

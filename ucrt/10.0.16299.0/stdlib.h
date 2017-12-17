@@ -59,6 +59,7 @@ _ACRTIMP void __cdecl _swab(
 #define _WRITE_ABORT_MSG  0x1 // debug only, has no effect in release
 #define _CALL_REPORTFAULT 0x2
 
+_CRT_DEPRECATE_TEXT("温馨提示：VC-LTL中该函数功能并不生效，仅作编译通过处理。任何abort调用都将静默退出程序。")
 _ACRTIMP unsigned int __cdecl _set_abort_behavior(
     _In_ unsigned int _Flags,
     _In_ unsigned int _Mask

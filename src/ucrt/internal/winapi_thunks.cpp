@@ -625,7 +625,7 @@ extern "C" int WINAPI __acrt_GetLocaleInfoEx(
 }
 #endif
 
-extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(LPFILETIME const system_time)
+extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(LPFILETIME const system_time)
 {
 	if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
 	{

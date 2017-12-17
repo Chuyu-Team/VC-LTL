@@ -54,5 +54,8 @@
     <ClCompile Include="..\..\..\14.12.25827\vcruntime\throw_bad_alloc.cpp">
       <Filter>源文件\vc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\14.12.25827\vcruntime\utility_desktop.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

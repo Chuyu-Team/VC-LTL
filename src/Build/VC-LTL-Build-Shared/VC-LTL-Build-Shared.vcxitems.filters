@@ -423,11 +423,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\errno.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\filesystem\stat.cpp">
-      <Filter>ucrt</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\string_utilities.cpp">
       <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\invalid_parameter.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_advanced.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_IAT.cpp">
+      <Filter>ltl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
