@@ -125,6 +125,22 @@ _fstat32=_fstat
 __imp__fstat32i64=__imp__fstati64
 _fstat32i64=_fstati64
 
+;_stat已经改名为_stat32
+_stat32=_stat
+__imp__stat32=__imp__stat
+
+;_stati64已经改名为_stat32i64
+_stat32i64=_stati64
+__imp__stat32i64=__imp__stati64
+
+;_wstat已经改名为_wstat32
+_wstat32=_wstat
+__imp__wstat32=__imp__wstat
+
+;_wstati64已经改名为_wstat32i64
+_wstat32i64=_wstati64
+__imp__wstat32i64=__imp__wstati64
+
 ;_copysign已经改名为copysign
 __imp_copysign=__imp__copysign
 copysign=_copysign

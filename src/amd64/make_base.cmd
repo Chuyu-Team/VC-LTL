@@ -13,6 +13,7 @@ lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\obj
 lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\objfre\amd64\ehvcccvb.obj
 lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\objfre\amd64\ehvccctr.obj
 lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\objfre\amd64\ehveccvb.obj
+lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\misc\dlllib\objfre\amd64\invarg.obj
 
 
 lib /def:"%~dp0msvcrt.def" /out:"%~dp0msvcrtdll.lib"
@@ -22,13 +23,8 @@ lib "%libfile%" "%~dp0msvcrtdll.lib"
 del "%~dp0msvcrtdll.*" /q
 
 
-"%~dp0..\YYLib.exe" /MACHINE:x64 /def:"%~dp0msvcrt_forward.def"  /out:"%~dp0forward\msvcrt_forward.obj"
 
-pushd "%~dp0"
-
-lib "%libfile%" "forward\msvcrt_forward.obj"
-
-
-popd
+"%~dp0..\YYLib.exe" /MACHINE:x64 /def:"%~dp0msvcrt_advanced.def"  /out:"%~dp0..\..\x64\msvcrt_advanced.obj"
+"%~dp0..\YYLib.exe" /MACHINE:x64 /def:"%~dp0msvcrt_light.def"  /out:"%~dp0..\..\x64\msvcrt_light.obj"
 
 pause
