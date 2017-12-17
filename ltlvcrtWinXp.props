@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<!--此配置用于强制切换到XP模式，不论你选择什么 平台工具集。-->
+<!--
+
+作者：mingkuang
+修改日期：2017-12-17
+
+此配置用于强制切换到XP模式，不论你选择什么 平台工具集。
+
+你可以在父属性表定义 $(VC_LTL_Root)，自定义VC-LTL根目录
+
+你可以在父属性表定义 $(VC-LTLUsedToolsVersion)，来调整默认运行库版本
+
+你可以在父属性表定义 $(DisableAdvancedSupport)=true 来关闭VC-LTL增强支持。关闭增强支持后。程序体积将变得更小，但是某些编译器新特性将丢失。一些中小型项目可以考虑使用。
+
+-->
 
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
@@ -38,6 +51,9 @@
 
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
+    
+    <msvcrt_forward Condition=" ('$(msvcrt_forward)'=='') And ('$(DisableAdvancedSupport)'=='true') ">msvcrt_light.obj</msvcrt_forward>
+    <msvcrt_forward Condition=" '$(msvcrt_forward)'==''">msvcrt_advanced.obj</msvcrt_forward>
 
     <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
 
@@ -52,7 +68,7 @@
       <AdditionalOptions Condition=" '$(ConfigurationType)'!='Application' ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true' ">$(msvcrt_winxp_obj);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true' ">$(msvcrt_winxp_obj);$(msvcrt_forward);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x86' ">5.01</MinimumRequiredVersion>
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x64' ">5.02</MinimumRequiredVersion>
     </Link>
