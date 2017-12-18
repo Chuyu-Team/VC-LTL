@@ -231,6 +231,9 @@ __imp___get_thread_local_invalid_parameter_handler=__imp___get_thread_local_inva
 __set_abort_behavior=__set_abort_behavior_downlevel
 __imp___set_abort_behavior=__imp___set_abort_behavior_downlevel
 
+__fstat64i32=__fstat64i32_downlevel
+__imp___fstat64i32=__imp___fstat64i32_downlevel
+
 
 
 ; 数学函数转发

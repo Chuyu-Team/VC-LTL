@@ -1003,7 +1003,7 @@ extern "C"
 
 
 	//msvcrt不支持_fstat64i32，不过我们可以用_fstat64转换
-	int __cdecl _fstat64i32_light(
+	int __cdecl _fstat64i32_downlevel(
 		_In_  int                _FileHandle,
 		_Out_ struct _stat64i32* _Stat
 	)
