@@ -39,7 +39,7 @@ _VCRT_DEFINE_IAT_SYMBOL(_get_FMA3_enable);
 //_VCRT_DEFINE_IAT_SYMBOL(abort_advanced);
 //_VCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior_advanced);
 
-_VCRT_DEFINE_IAT_SYMBOL(_fstat64i32_light);
+_VCRT_DEFINE_IAT_SYMBOL(_fstat64i32_downlevel);
 _VCRT_DEFINE_IAT_SYMBOL(_stat64i32_light);
 _VCRT_DEFINE_IAT_SYMBOL(_wstat64i32_light);
 
