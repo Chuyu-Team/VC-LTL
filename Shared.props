@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--用于统一加载配置。-->
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--如果当前项目根目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(ProjectDir)VC-LTL\_msvcrt.h')) ">$(ProjectDir)VC-LTL</VC_LTL_Root>
+
+    <!--当前解决方案根目录存在VC-LTL?-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And ('$(SolutionDir)'!='') And (Exists('$(SolutionDir)VC-LTL\_msvcrt.h')) ">$(SolutionDir)VC-LTL</VC_LTL_Root>
+
+    <!--如果当前项目父目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(ProjectDir)..\VC-LTL\_msvcrt.h')) ">$(ProjectDir)..\VC-LTL</VC_LTL_Root>
+
+    <!--如果本地工程没有，那么继续尝试通过注册表获取VC-LTL路径-->
+    <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
+  </PropertyGroup>
+  
+  <ImportGroup Label="PropertySheets">
+    <!--加载VC-LTL属性表-->
+    <Import Project="$(VC_LTL_Root)\ltlvcrt.props" Condition=" '$(VC_LTL_Root)'!='' "/>
+  </ImportGroup>
+</Project>
