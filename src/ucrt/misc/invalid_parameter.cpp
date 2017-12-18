@@ -261,26 +261,26 @@ extern "C" __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(
 // Handler Accessors
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-extern "C" _invalid_parameter_handler __cdecl _set_invalid_parameter_handler(_invalid_parameter_handler const new_handler)
+extern "C" _invalid_parameter_handler __cdecl _set_invalid_parameter_handler_downlevel(_invalid_parameter_handler const new_handler)
 {
 	return __crt_interlocked_exchange_pointer(&__acrt_invalid_parameter_handler, new_handler);
 }
 
-extern "C" _invalid_parameter_handler __cdecl _get_invalid_parameter_handler()
+extern "C" _invalid_parameter_handler __cdecl _get_invalid_parameter_handler_downlevel()
 {
     return __acrt_invalid_parameter_handler;
 }
 
 
 
-extern "C" _invalid_parameter_handler __cdecl _set_thread_local_invalid_parameter_handler(_invalid_parameter_handler const new_handler)
+extern "C" _invalid_parameter_handler __cdecl _set_thread_local_invalid_parameter_handler_downlevel(_invalid_parameter_handler const new_handler)
 {
     _invalid_parameter_handler const old_handler = _thread_local_iph;
     _thread_local_iph = new_handler;
     return old_handler;
 }
 
-extern "C" _invalid_parameter_handler __cdecl _get_thread_local_invalid_parameter_handler()
+extern "C" _invalid_parameter_handler __cdecl _get_thread_local_invalid_parameter_handler_downlevel()
 {
     return _thread_local_iph;
 }

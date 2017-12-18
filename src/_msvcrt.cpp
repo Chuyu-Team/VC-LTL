@@ -1003,7 +1003,7 @@ extern "C"
 
 
 	//msvcrt不支持_fstat64i32，不过我们可以用_fstat64转换
-	int __cdecl _fstat64i32(
+	int __cdecl _fstat64i32_light(
 		_In_  int                _FileHandle,
 		_Out_ struct _stat64i32* _Stat
 	)
@@ -1050,7 +1050,7 @@ extern "C"
 
 
 	//msvcrt不支持_stat64i32，不过我们可以用_stat64转换
-	int __cdecl _stat64i32(
+	int __cdecl _stat64i32_light(
 		_In_z_ char const*        _FileName,
 		_Out_  struct _stat64i32* _Stat
 	)
@@ -1094,7 +1094,7 @@ extern "C"
 //#pragma pop_macro("_wstati64")
 
 	//msvcrt不支持_wstat64i32，不过我们可以用_wstat64转换
-	int __cdecl _wstat64i32(
+	int __cdecl _wstat64i32_light(
 		_In_z_ wchar_t const*     _FileName,
 		_Out_  struct _stat64i32* _Stat
 	)
@@ -1577,7 +1577,7 @@ extern "C"
 	}
 
 	//此函数什么都不做，仅供编译通过处理，因此任何调用abort函数必定静默退出。
-	unsigned int __cdecl _set_abort_behavior(
+	unsigned int __cdecl _set_abort_behavior_downlevel(
 		_In_ unsigned int _Flags,
 		_In_ unsigned int _Mask
 		)

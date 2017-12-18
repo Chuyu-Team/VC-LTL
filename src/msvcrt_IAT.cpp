@@ -39,28 +39,19 @@ _VCRT_DEFINE_IAT_SYMBOL(_get_FMA3_enable);
 //_VCRT_DEFINE_IAT_SYMBOL(abort_advanced);
 //_VCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior_advanced);
 
-_VCRT_DEFINE_IAT_SYMBOL(_fstat64i32);
+_VCRT_DEFINE_IAT_SYMBOL(_fstat64i32_light);
+_VCRT_DEFINE_IAT_SYMBOL(_stat64i32_light);
+_VCRT_DEFINE_IAT_SYMBOL(_wstat64i32_light);
 
 _VCRT_DEFINE_IAT_SYMBOL(_stat32_advanced);
 _VCRT_DEFINE_IAT_SYMBOL(_stat32i64_advanced);
-_VCRT_DEFINE_IAT_SYMBOL(_stat64i32);
 _VCRT_DEFINE_IAT_SYMBOL(_stat64i32_advanced);
 _VCRT_DEFINE_IAT_SYMBOL(_stat64_advanced);
 
 _VCRT_DEFINE_IAT_SYMBOL(_wstat32_advanced);
 _VCRT_DEFINE_IAT_SYMBOL(_wstat32i64_advanced);
-_VCRT_DEFINE_IAT_SYMBOL(_wstat64i32);
 _VCRT_DEFINE_IAT_SYMBOL(_wstat64i32_advanced);
 _VCRT_DEFINE_IAT_SYMBOL(_wstat64_advanced);
-
-
-_VCRT_DEFINE_IAT_SYMBOL(_set_invalid_parameter_handler);
-
-_VCRT_DEFINE_IAT_SYMBOL(_get_invalid_parameter_handler);
-
-_VCRT_DEFINE_IAT_SYMBOL(_set_thread_local_invalid_parameter_handler);
-
-_VCRT_DEFINE_IAT_SYMBOL(_get_thread_local_invalid_parameter_handler);
 
 _VCRT_DEFINE_IAT_SYMBOL(_purecall_advanced);
 
@@ -68,7 +59,16 @@ _VCRT_DEFINE_IAT_SYMBOL(_set_purecall_handler_advanced);
 
 _VCRT_DEFINE_IAT_SYMBOL(_get_purecall_handler_advanced);
 
-_VCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior);
+
+_VCRT_DEFINE_IAT_SYMBOL(_set_invalid_parameter_handler_downlevel);
+
+_VCRT_DEFINE_IAT_SYMBOL(_get_invalid_parameter_handler_downlevel);
+
+_VCRT_DEFINE_IAT_SYMBOL(_set_thread_local_invalid_parameter_handler_downlevel);
+
+_VCRT_DEFINE_IAT_SYMBOL(_get_thread_local_invalid_parameter_handler_downlevel);
+
+_VCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior_downlevel);
 
 
 
