@@ -102,14 +102,16 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 #### 4.2 已知与VC-LTL兼容的项目
 此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
 
-* [duilib](https://github.com/duilib/duilib)
-* [FastCopy](https://ipmsg.org/tools/fastcopy.html.en)
-* [WinPCK](http://www.winpak.com/en/home/)
-* [RapidXml](http://rapidxml.sourceforge.net/)
-* [JsonCPP](https://github.com/open-source-parsers/jsoncpp)
-* [icu](http://source.icu-project.org/repos/icu/trunk)
-* [SQLite](http://www.sqlite.org/download.html)
-* [LuaJIT](http://luajit.org/)
+|  项目                                                        | 一般模式 | XP工具集 
+| [duilib](https://github.com/duilib/duilib)                   |    √    | √
+| [FastCopy](https://ipmsg.org/tools/fastcopy.html.en)         |    √    | √
+| [WinPCK](http://www.winpak.com/en/home/)                     |    √    | √
+| [RapidXml](http://rapidxml.sourceforge.net/)                 |    √    | √
+| [JsonCPP](https://github.com/open-source-parsers/jsoncpp)    |    √    | √
+| [icu](http://source.icu-project.org/repos/icu/trunk)         |    √    | X（需要禁用_create_locale）
+| [SQLite](http://www.sqlite.org/download.html)                |    √    | √
+| [LuaJIT](http://luajit.org/)                                 |    √    | √
+| [Qt](https://www.qt.io/)                                     |    √    | X
 
 ## Changes：
 
