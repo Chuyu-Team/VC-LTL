@@ -103,6 +103,7 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
 
 |  项目                                                        | 一般模式 | XP工具集 
+|  ---                                                         | -------- | --------
 | [duilib](https://github.com/duilib/duilib)                   |    √    | √
 | [FastCopy](https://ipmsg.org/tools/fastcopy.html.en)         |    √    | √
 | [WinPCK](http://www.winpak.com/en/home/)                     |    √    | √
