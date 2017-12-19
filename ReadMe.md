@@ -59,18 +59,17 @@ VC-LTL属性表优先从注册表加载路径。如果你希望在多个工程�
 
 随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
 
-PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 把22行的 `$(VC_LTL_Root)\ltlvcrt.props` 修改为 `$(VC_LTL_Root)\ltlvcrtWinXp.props`。
+PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 把 `$(VC_LTL_Root)\ltlvcrt.props` 修改为 `$(VC_LTL_Root)\ltlvcrtWinXp.props`。
 
 
 #### 1.2 通过目录独享VC-LTL
 > 此方案不利于源代码共享，我们优先推荐你使用 1.1 中描述的方式。
 
-假如，你的Sln文件在 D:\MySln\MySln.sln，这时你把VC-LTL整个目录复制到D:\MySln\VC-LTL即可。
+假如，你的Sln文件在	`D:\MySln\MySln.sln`，这时你把VC-LTL放在 `D:\VC-LTL` 或者 `D:\MySln\VC-LTL`。
 
+随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
 
-随后打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `VC-LTL\Shared.props` 即可。
-
-PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者直接使用 `ltlvcrtWinXp.props`。
+PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 把 `$(VC_LTL_Root)\ltlvcrt.props` 修改为 `$(VC_LTL_Root)\ltlvcrtWinXp.props`。
 
 > 如果你不希望使用 `Shared.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
 
@@ -109,7 +108,7 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 | [WinPCK](http://www.winpak.com/en/home/)                     |    √    | √
 | [RapidXml](http://rapidxml.sourceforge.net/)                 |    √    | √
 | [JsonCPP](https://github.com/open-source-parsers/jsoncpp)    |    √    | √
-| [icu](http://source.icu-project.org/repos/icu/trunk)         |    √    | X（需要禁用_create_locale）
+| [icu](http://source.icu-project.org/repos/icu/trunk)         |    √    | √（但是需要禁用_create_locale）
 | [SQLite](http://www.sqlite.org/download.html)                |    √    | √
 | [LuaJIT](http://luajit.org/)                                 |    √    | √
 | [Qt](https://www.qt.io/)                                     |    √    | X
