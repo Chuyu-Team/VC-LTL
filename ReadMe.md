@@ -59,7 +59,7 @@ VC-LTL属性表优先从注册表加载路径。如果你希望在多个工程�
 
 随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
 
-PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 把 `$(VC_LTL_Root)\ltlvcrt.props` 修改为 `$(VC_LTL_Root)\ltlvcrtWinXp.props`。
+PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
 
 
 #### 1.2 通过目录独享VC-LTL
@@ -69,7 +69,7 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 
 随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
 
-PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 把 `$(VC_LTL_Root)\ltlvcrt.props` 修改为 `$(VC_LTL_Root)\ltlvcrtWinXp.props`。
+PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
 
 > 如果你不希望使用 `Shared.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
 
@@ -87,7 +87,7 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 
 |  模块  | 一般模式 | XP工具集            | 相关文件 
 |  ----  | -------- | --------            | --------
-|   CRT  | 91.259%  | 87.084%             | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，WinXP_Support.lib，ucrt.lib，vc.lib
+|   CRT  | 91.259%  | 87.084%             | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
 |   STL  | 100%     | 100.1%（超标准支持）| ltlcprt.lib，ltlcprtxp.lib
 | ConcRT | 100%     | 100%                | libconcrt.lib，libconcrtxp.lib
 |   ATL  | 100%     | 100%                | -
@@ -112,6 +112,10 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 | [SQLite](http://www.sqlite.org/download.html)                |    √    | √
 | [LuaJIT](http://luajit.org/)                                 |    √    | √
 | [Qt](https://www.qt.io/)                                     |    √    | X
+| [llvm](http://llvm.org/)                                     |    √    | ?
+| [openssl](https://www.openssl.org/)                          |    √    | √
+| [libcurl](https://curl.haxx.se/libcurl/)                     |    √    | √
+| [ninja](https://ninja-build.org/)                            |    √    | ?
 
 ## Changes：
 
