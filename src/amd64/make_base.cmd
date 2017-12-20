@@ -19,6 +19,8 @@ lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\misc\dlllib\o
 lib /def:"%~dp0msvcrt.def" /out:"%~dp0msvcrtdll.lib"
 
 lib "%libfile%" "%~dp0msvcrtdll.lib"
+lib "%libfile%" "%~dp0ntdlllite.lib"
+lib "%libfile%" "%~dp0ntdlllite.lib"
 
 del "%~dp0msvcrtdll.*" /q
 

@@ -49,6 +49,9 @@
     <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
     <VC_LTL_Library Condition=" '$(VC_LTL_Library)'==''">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
 
+    <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
+    <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
+
     <msvcrt_forward Condition=" ('$(msvcrt_forward)'=='') And ('$(DisableAdvancedSupport)'=='true') ">msvcrt_light.obj</msvcrt_forward>
     <msvcrt_forward Condition=" '$(msvcrt_forward)'==''">msvcrt_advanced.obj</msvcrt_forward>
 
@@ -66,7 +69,7 @@
       <AdditionalOptions Condition=" ('$(SupportWinXP)'=='true') And ('$(ConfigurationType)'!='Application') ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'=='true')">$(msvcrt_forward);WinXP_Support.lib;ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'=='true')">$(msvcrt_winxp_obj);$(msvcrt_forward);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'!='true')">$(msvcrt_forward);ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
