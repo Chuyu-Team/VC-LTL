@@ -37,6 +37,12 @@
 *
 *******************************************************************************/
 
+
+extern "C" size_t __cdecl _aligned_msize_downlevel(
+	void*  const block,
+	size_t const alignment,
+	size_t const offset);
+
 /***
 * void *_aligned_malloc_base(size_t size, size_t alignment)
 *       - Get a block of aligned memory from the heap.
@@ -58,13 +64,13 @@
 *
 *******************************************************************************/
 
-extern "C" void* __cdecl _aligned_malloc_base(
-    size_t const size,
-    size_t const alignment
-    )
-{
-    return _aligned_offset_malloc_base(size, alignment, 0);
-}
+//extern "C" void* __cdecl _aligned_malloc_base(
+//    size_t const size,
+//    size_t const alignment
+//    )
+//{
+//    return _aligned_offset_malloc_base(size, alignment, 0);
+//}
 /***
 * void *_aligned_offset_malloc_base(size_t size, size_t alignment, int offset)
 *       - Get a block of memory from the heap.
@@ -88,36 +94,36 @@ extern "C" void* __cdecl _aligned_malloc_base(
 *******************************************************************************/
 
 
-extern "C" void* __cdecl _aligned_offset_malloc_base(
-    size_t size,
-    size_t align,
-    size_t offset
-    )
-{
-    uintptr_t ptr, retptr, gap;
-    size_t nonuser_size,block_size;
-
-    /* validation section */
-    _VALIDATE_RETURN(IS_2_POW_N(align), EINVAL, nullptr);
-    _VALIDATE_RETURN(offset == 0 || offset < size, EINVAL, nullptr);
-
-    align = (align > PTR_SZ ? align : PTR_SZ) -1;
-
-    /* gap = number of bytes needed to round up offset to align with PTR_SZ*/
-    gap = (0 - offset)&(PTR_SZ -1);
-
-    nonuser_size = PTR_SZ +gap +align;
-    block_size = nonuser_size + size;
-    _VALIDATE_RETURN_NOEXC(size <= block_size, ENOMEM, nullptr)
-
-    if ( (ptr =(uintptr_t)malloc(block_size)) == (uintptr_t)nullptr)
-        return nullptr;
-
-    retptr =((ptr +nonuser_size+offset)&~align)- offset;
-    ((uintptr_t *)(retptr - gap))[-1] = ptr;
-
-    return (void *)retptr;
-}
+//extern "C" void* __cdecl _aligned_offset_malloc_base(
+//    size_t size,
+//    size_t align,
+//    size_t offset
+//    )
+//{
+//    uintptr_t ptr, retptr, gap;
+//    size_t nonuser_size,block_size;
+//
+//    /* validation section */
+//    _VALIDATE_RETURN(IS_2_POW_N(align), EINVAL, nullptr);
+//    _VALIDATE_RETURN(offset == 0 || offset < size, EINVAL, nullptr);
+//
+//    align = (align > PTR_SZ ? align : PTR_SZ) -1;
+//
+//    /* gap = number of bytes needed to round up offset to align with PTR_SZ*/
+//    gap = (0 - offset)&(PTR_SZ -1);
+//
+//    nonuser_size = PTR_SZ +gap +align;
+//    block_size = nonuser_size + size;
+//    _VALIDATE_RETURN_NOEXC(size <= block_size, ENOMEM, nullptr)
+//
+//    if ( (ptr =(uintptr_t)malloc(block_size)) == (uintptr_t)nullptr)
+//        return nullptr;
+//
+//    retptr =((ptr +nonuser_size+offset)&~align)- offset;
+//    ((uintptr_t *)(retptr - gap))[-1] = ptr;
+//
+//    return (void *)retptr;
+//}
 
 /***
 *
@@ -147,14 +153,14 @@ extern "C" void* __cdecl _aligned_offset_malloc_base(
 *
 *******************************************************************************/
 
-extern "C" void* __cdecl _aligned_realloc_base(
-    void*  const block,
-    size_t const size,
-    size_t const alignment
-    )
-{
-    return _aligned_offset_realloc_base(block, size, alignment, 0);
-}
+//extern "C" void* __cdecl _aligned_realloc_base(
+//    void*  const block,
+//    size_t const size,
+//    size_t const alignment
+//    )
+//{
+//    return _aligned_offset_realloc_base(block, size, alignment, 0);
+//}
 
 /***
 *
@@ -425,7 +431,7 @@ extern "C" void* __cdecl _aligned_offset_recalloc_base(
 
     if (block != nullptr)
     {
-        start_fill = _aligned_msize(block, align, offset);
+        start_fill = _aligned_msize_downlevel(block, align, offset);
     }
 
     retptr = _aligned_offset_realloc_base(block, user_size, align, offset);
@@ -457,47 +463,47 @@ extern "C" void* __cdecl _aligned_offset_recalloc_base(
 *
 *******************************************************************************/
 
-extern "C" void __cdecl _aligned_free_base(void* const block)
-{
-    uintptr_t ptr;
+//extern "C" void __cdecl _aligned_free_base(void* const block)
+//{
+//    uintptr_t ptr;
+//
+//    if (block == nullptr)
+//        return;
+//
+//    ptr = (uintptr_t)block;
+//
+//    /* ptr points to the pointer to starting of the memory block */
+//    ptr = (ptr & ~(PTR_SZ -1)) - PTR_SZ;
+//
+//    /* ptr is the pointer to the start of memory block*/
+//    ptr = *((uintptr_t*)ptr);
+//    free((void *)ptr);
+//}
 
-    if (block == nullptr)
-        return;
-
-    ptr = (uintptr_t)block;
-
-    /* ptr points to the pointer to starting of the memory block */
-    ptr = (ptr & ~(PTR_SZ -1)) - PTR_SZ;
-
-    /* ptr is the pointer to the start of memory block*/
-    ptr = *((uintptr_t*)ptr);
-    free((void *)ptr);
-}
 
 
+//extern "C" void __cdecl _aligned_free(void* const block)
+//{
+//    #ifdef _DEBUG
+//    _aligned_free_dbg(block);
+//    #else
+//    _aligned_free_base(block);
+//    #endif
+//}
 
-extern "C" void __cdecl _aligned_free(void* const block)
-{
-    #ifdef _DEBUG
-    _aligned_free_dbg(block);
-    #else
-    _aligned_free_base(block);
-    #endif
-}
+//extern "C" _CRTRESTRICT void* __cdecl _aligned_malloc(
+//    size_t const size,
+//    size_t const alignment
+//    )
+//{
+//    #ifdef _DEBUG
+//    return _aligned_offset_malloc_dbg(size, alignment, 0, nullptr, 0);
+//    #else
+//    return _aligned_malloc_base(size, alignment);
+//    #endif
+//}
 
-extern "C" _CRTRESTRICT void* __cdecl _aligned_malloc(
-    size_t const size,
-    size_t const alignment
-    )
-{
-    #ifdef _DEBUG
-    return _aligned_offset_malloc_dbg(size, alignment, 0, nullptr, 0);
-    #else
-    return _aligned_malloc_base(size, alignment);
-    #endif
-}
-
-extern "C" size_t __cdecl _aligned_msize(
+extern "C" size_t __cdecl _aligned_msize_downlevel(
     void*  const block,
     size_t const alignment,
     size_t const offset)
@@ -509,34 +515,34 @@ extern "C" size_t __cdecl _aligned_msize(
     #endif
 }
 
-extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_malloc(
-    size_t const size,
-    size_t const alignment,
-    size_t const offset
-    )
-{
-    #ifdef _DEBUG
-    return _aligned_offset_malloc_dbg(size, alignment, offset, nullptr, 0);
-    #else
-    return _aligned_offset_malloc_base(size, alignment, offset);
-    #endif
-}
+//extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_malloc(
+//    size_t const size,
+//    size_t const alignment,
+//    size_t const offset
+//    )
+//{
+//    #ifdef _DEBUG
+//    return _aligned_offset_malloc_dbg(size, alignment, offset, nullptr, 0);
+//    #else
+//    return _aligned_offset_malloc_base(size, alignment, offset);
+//    #endif
+//}
 
-extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_realloc(
-    void*  const block,
-    size_t const size,
-    size_t const alignment,
-    size_t const offset
-    )
-{
-    #ifdef _DEBUG
-    return _aligned_offset_realloc_dbg(block, size, alignment, offset, nullptr, 0);
-    #else
-    return _aligned_offset_realloc_base(block, size, alignment, offset);
-    #endif
-}
+//extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_realloc(
+//    void*  const block,
+//    size_t const size,
+//    size_t const alignment,
+//    size_t const offset
+//    )
+//{
+//    #ifdef _DEBUG
+//    return _aligned_offset_realloc_dbg(block, size, alignment, offset, nullptr, 0);
+//    #else
+//    return _aligned_offset_realloc_base(block, size, alignment, offset);
+//    #endif
+//}
 
-extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_recalloc(
+extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_recalloc_downlevel(
     void*  const block,
     size_t const count,
     size_t const size,
@@ -551,20 +557,20 @@ extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_recalloc(
     #endif
 }
 
-extern "C" _CRTRESTRICT void* __cdecl _aligned_realloc(
-    void*  const block,
-    size_t const size,
-    size_t const alignment
-    )
-{
-    #ifdef _DEBUG
-    return _aligned_offset_realloc_dbg(block, size, alignment, 0, nullptr, 0);
-    #else
-    return _aligned_realloc_base(block, size, alignment);
-    #endif
-}
+//extern "C" _CRTRESTRICT void* __cdecl _aligned_realloc(
+//    void*  const block,
+//    size_t const size,
+//    size_t const alignment
+//    )
+//{
+//    #ifdef _DEBUG
+//    return _aligned_offset_realloc_dbg(block, size, alignment, 0, nullptr, 0);
+//    #else
+//    return _aligned_realloc_base(block, size, alignment);
+//    #endif
+//}
 
-extern "C" _CRTRESTRICT void* __cdecl _aligned_recalloc(
+extern "C" _CRTRESTRICT void* __cdecl _aligned_recalloc_downlevel(
     void*  const block,
     size_t const count,
     size_t const size,

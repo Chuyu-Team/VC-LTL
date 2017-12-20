@@ -235,6 +235,15 @@ __fstat64i32=__fstat64i32_downlevel
 __imp___fstat64i32=__imp___fstat64i32_downlevel
 
 
+__aligned_msize=__aligned_msize_downlevel
+__imp___aligned_msize=__imp___aligned_msize_downlevel
+
+__aligned_offset_recalloc=__aligned_offset_recalloc_downlevel
+__imp___aligned_offset_recalloc=__imp___aligned_offset_recalloc_downlevel
+
+__aligned_recalloc=__aligned_recalloc_downlevel
+__imp___aligned_recalloc=__imp___aligned_recalloc_downlevel
+
 
 ; 数学函数转发
 __imp___acos_default=__imp__acos

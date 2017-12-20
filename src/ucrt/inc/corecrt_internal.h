@@ -1165,9 +1165,10 @@ extern "C++"
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 extern HANDLE __acrt_heap;
 
-void __cdecl _aligned_free_base(
-    _Pre_maybenull_ _Post_invalid_ void* block
-    );
+//void __cdecl _aligned_free_base(
+//    _Pre_maybenull_ _Post_invalid_ void* block
+//    );
+#define _aligned_free_base _aligned_free
 
 _Check_return_ _Ret_maybenull_ _Post_writable_byte_size_(size)
 void* __cdecl _aligned_malloc_base(
@@ -1182,12 +1183,13 @@ size_t __cdecl _aligned_msize_base(
     _In_          size_t offset
     );
 
-_Check_return_ _Ret_maybenull_ _Post_writable_byte_size_(size)
-void* __cdecl _aligned_offset_malloc_base(
-    _In_ size_t size,
-    _In_ size_t alignment,
-    _In_ size_t offset
-    );
+//_Check_return_ _Ret_maybenull_ _Post_writable_byte_size_(size)
+//void* __cdecl _aligned_offset_malloc_base(
+//    _In_ size_t size,
+//    _In_ size_t alignment,
+//    _In_ size_t offset
+//    );
+#define _aligned_offset_malloc_base _aligned_offset_malloc
 
 _Success_(return != 0) _Check_return_ _Ret_maybenull_ _Post_writable_byte_size_(size)
 void* __cdecl _aligned_offset_realloc_base(

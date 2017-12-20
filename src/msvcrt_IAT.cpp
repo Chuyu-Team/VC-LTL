@@ -76,4 +76,6 @@ _VCRT_DEFINE_IAT_SYMBOL(_wassert);
 #endif
 
 
-
+_VCRT_DEFINE_IAT_SYMBOL(_aligned_msize_downlevel);
+_VCRT_DEFINE_IAT_SYMBOL(_aligned_offset_recalloc_downlevel);
+_VCRT_DEFINE_IAT_SYMBOL(_aligned_recalloc_downlevel);
