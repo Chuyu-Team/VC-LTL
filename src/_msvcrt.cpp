@@ -2324,6 +2324,43 @@ extern "C"
 
 		return _tcscpy_s(_Buffer, _SizeInWords, szError);
 	}
+
+	_ACRTIMP void __cdecl _assert(
+		_In_z_ char const* _Message,
+		_In_z_ char const* _File,
+		_In_   unsigned       _Line
+	);
+
+	BOOL __cdecl __acrt_copy_to_char(wchar_t const* const string, char** const result);
+
+	//WinXP不支持_wassert，因此我们通过字符串转换再调用_assert实现。
+	void __cdecl _wassert(
+		_In_z_ wchar_t const* _Message,
+		_In_z_ wchar_t const* _File,
+		_In_   unsigned       _Line
+	)
+	{
+		char * _MessageA = nullptr;
+		char * _FileA = nullptr;
+
+		if (_Message)
+		{
+			__acrt_copy_to_char(_Message, &_MessageA);
+		}
+
+		if (_File)
+		{
+			__acrt_copy_to_char(_File, &_FileA);
+		}
+
+		_assert(_MessageA, _FileA, _Line);
+
+		if (_FileA)
+			free(_FileA);
+
+		if (_MessageA)
+			free(_MessageA);
+	}
 #endif
 }
 

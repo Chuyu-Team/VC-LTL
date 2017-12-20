@@ -71,7 +71,9 @@ _VCRT_DEFINE_IAT_SYMBOL(_get_thread_local_invalid_parameter_handler_downlevel);
 _VCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior_downlevel);
 
 
-
+#ifdef _ATL_XP_TARGETING
+_VCRT_DEFINE_IAT_SYMBOL(_wassert);
+#endif
 
 
 
