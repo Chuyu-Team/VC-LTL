@@ -7,11 +7,7 @@
 
 此配置能智能适应，当你选择WinXP平台工具集时，将自动切换到XP模式。
 
-你可以在父属性表定义 $(VC_LTL_Root)，自定义VC-LTL根目录
-
-你可以在父属性表定义 $(VC-LTLUsedToolsVersion)，来调整默认运行库版本
-
-你可以在父属性表定义 $(DisableAdvancedSupport)=true 来关闭VC-LTL增强支持。关闭增强支持后。程序体积将变得更小，但是某些编译器新特性将丢失。一些中小型项目可以考虑使用。
+不建议直接使用此属性表，建议你复制Shared.props到你的工程。Shared.props会自动加载此属性表。
 
 -->
 
@@ -46,8 +42,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library Condition=" '$(VC_LTL_Library)'==''">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VC-LTLTargetUniversalCRTVersion Condition="('$(VC-LTLTargetUniversalCRTVersion)'=='') And (Exists('$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)'))">$(TargetUniversalCRTVersion)</VC-LTLTargetUniversalCRTVersion>
+    
+    <!--如果遇到VC-LTL不支持的版本则切换到VC-LTL当前最高可用版本-->
+    <VC-LTLTargetUniversalCRTVersion Condition="'$(VC-LTLTargetUniversalCRTVersion)'==''">10.0.16299.0</VC-LTLTargetUniversalCRTVersion>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Library Condition=" '$(VC_LTL_Library)'==''">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
 
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
@@ -56,7 +59,7 @@
     <msvcrt_forward Condition=" '$(msvcrt_forward)'==''">msvcrt_advanced.obj</msvcrt_forward>
 
     <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
-    <SupportWinXP Condition=" ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp')">true</SupportWinXP>
+    <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ( ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp') )">true</SupportWinXP>
     
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
     <LibraryPath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
@@ -71,6 +74,9 @@
     <Link>
       <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'=='true')">$(msvcrt_winxp_obj);$(msvcrt_forward);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'!='true')">$(msvcrt_forward);ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+
+      <MinimumRequiredVersion Condition=" ('$(SupportWinXP)'=='true') And ('$(PlatformShortName)'=='x86') ">5.01</MinimumRequiredVersion>
+      <MinimumRequiredVersion Condition=" ('$(SupportWinXP)'=='true') And ('$(PlatformShortName)'=='x64') ">5.02</MinimumRequiredVersion>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

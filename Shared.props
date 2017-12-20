@@ -43,10 +43,12 @@ VC-LTL默认搜索顺序
 
     <!--取消下方注释可以开启VC-LTL轻量模式，轻量模式更加注重体积控制，但是CRT规范将会维持在VS2008。如果你需要高度兼容微软UCRT，那么请不要打开此选项！！！-->
     <!--<DisableAdvancedSupport>true</DisableAdvancedSupport>-->
+
+    <!--取消下方注释可以开启强制XP兼容模式，默认情况下仅在选择WinXP工具集时才开启。-->
+    <!--<SupportWinXP>true</SupportWinXP>-->
   </PropertyGroup>
   
   <ImportGroup Label="PropertySheets">
-    <!--加载VC-LTL属性表，自动感知是否是XP模式。如果你需要强制开启XP兼容可以修改为 Project="$(VC_LTL_Root)\ltlvcrtWinXp.props"-->
     <Import Project="$(VC_LTL_Root)\ltlvcrt.props" Condition=" '$(VC_LTL_Root)'!='' "/>
   </ImportGroup>
 </Project>
