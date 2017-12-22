@@ -116,6 +116,8 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 | [openssl](https://www.openssl.org/)                          |    √    | √
 | [libcurl](https://curl.haxx.se/libcurl/)                     |    √    | √
 | [ninja](https://ninja-build.org/)                            |    √    | ?
+| [NSudo](https://github.com/M2Team/NSudo)                     |    √    | X（NSudo本身不支持XP）
+| [GacUI](https://github.com/vczh-libraries/Release)           |    √    | X（GacUI本身不支持XP）
 
 ## Changes：
 
