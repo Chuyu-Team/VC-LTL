@@ -27,6 +27,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_advanced.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_IAT.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_winxp.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\setlocal_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\locale_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\c16rtomb.cpp" />

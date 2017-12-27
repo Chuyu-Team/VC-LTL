@@ -1,0 +1,10 @@
+
+[Symbols]
+;msvcrt.lib
+
+
+__RTCastToVoid=RTCastToVoid_downlevel
+__RTDynamicCast=RTDynamicCast_downlevel
+
+
+

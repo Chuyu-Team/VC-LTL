@@ -16,6 +16,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED)
 
@@ -38,7 +39,7 @@
 *
 *******************************************************************************/
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _mbsupr_s_l(
+extern "C" errno_t __cdecl _mbsupr_s_l_downlevel(
         unsigned char *string,
         size_t sizeInBytes,
         _locale_t plocinfo
@@ -112,24 +113,41 @@ extern "C" errno_t __cdecl _mbsupr_s_l(
 
         return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsupr_s_l_downlevel);
 #endif
 
-//extern "C" errno_t (__cdecl _mbsupr_s)(
-//        unsigned char *string,
-//        size_t sizeInBytes
-//        )
-//{
-//    return _mbsupr_s_l(string, sizeInBytes, nullptr);
-//}
+#ifdef _ATL_XP_TARGETING
+extern "C" errno_t (__cdecl _mbsupr_s_downlevel)(
+        unsigned char *string,
+        size_t sizeInBytes
+        )
+{
+    //return _mbsupr_s_l(string, sizeInBytes, nullptr);
+
+	if (string == nullptr && sizeInBytes == 0)
+		return 0;
+
+	_VALIDATE_RETURN_ERRCODE(string && sizeInBytes >0 || strnlen((char*)string, sizeInBytes) < sizeInBytes, EINVAL);
+
+	_mbsupr(string);
+
+	return 0;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsupr_s_downlevel);
+#endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" unsigned char * (__cdecl _mbsupr_l)(
+extern "C" unsigned char * (__cdecl _mbsupr_l_downlevel)(
         unsigned char *string,
         _locale_t plocinfo
         )
 {
     return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), plocinfo) == 0 ? string : nullptr);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsupr_l_downlevel);
 #endif
 
 //extern "C" unsigned char * (__cdecl _mbsupr)(

@@ -1,0 +1,16 @@
+
+[Symbols]
+;msvcrt_winxp.cpp
+___lc_collate_cp_func=___lc_collate_cp_func_downlevel
+__pwctype_func=__pwctype_func_downlevel
+
+;msvcrt.lib
+
+_seh_longjmp_unwind4@4=_seh_longjmp_unwind4_downlevel@4 NoImp
+_local_unwind4=_local_unwind4_downlevel
+_except_handler4_common=_except_handler4_common_downlevel
+_ftol2_sse_excpt=_ftol2_sse_excpt_downlevel
+_ftol2=_ftol2_downlevel
+_ftol2_sse=_ftol2_sse_downlevel
+
+

@@ -438,5 +438,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\heap\align.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_winxp.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -44,7 +45,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" char * __cdecl _strupr_l (
+extern "C" char * __cdecl _strupr_l_downlevel(
         char * string,
         _locale_t plocinfo
         )
@@ -52,6 +53,8 @@ extern "C" char * __cdecl _strupr_l (
     _strupr_s_l(string, (size_t)(-1), plocinfo);
     return (string);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_strupr_l_downlevel);
 #endif
 
 //extern "C" char * __cdecl _strupr (
@@ -190,7 +193,7 @@ static errno_t __cdecl _strupr_s_l_stat (
 }
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _strupr_s_l (
+extern "C" errno_t __cdecl _strupr_s_l_downlevel (
         char * string,
         size_t sizeInBytes,
         _locale_t plocinfo
@@ -203,12 +206,23 @@ extern "C" errno_t __cdecl _strupr_s_l (
 
     return _strupr_s_l_stat(string, sizeInBytes, plocinfo);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_strupr_s_l_downlevel);
 #endif
 
-//extern "C" errno_t __cdecl _strupr_s (
-//        char * string,
-//        size_t sizeInBytes
-//        )
-//{
-//    return _strupr_s_l(string, sizeInBytes, nullptr);
-//}
+#ifdef _ATL_XP_TARGETING
+extern "C" errno_t __cdecl _strupr_s_downlevel(
+        char * string,
+        size_t sizeInBytes
+        )
+{
+    //return _strupr_s_l(string, sizeInBytes, nullptr);
+
+	_VALIDATE_RETURN_ERRCODE(string && strnlen(string, sizeInBytes) < sizeInBytes, EINVAL);
+
+	_strupr(string);
+	return 0;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_strupr_s_downlevel);
+#endif
