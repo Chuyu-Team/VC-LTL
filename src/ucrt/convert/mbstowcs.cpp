@@ -322,6 +322,52 @@ extern "C" errno_t __cdecl mbstowcs_s(
     size_t n
     )
 {
-    return _mbstowcs_s_l(pConvertedChars, pwcs, sizeInWords, s, n, nullptr);
+    //return _mbstowcs_s_l(pConvertedChars, pwcs, sizeInWords, s, n, nullptr);
+	if (pConvertedChars)
+		*pConvertedChars = 0;
+
+	
+	auto retsize = mbstowcs(pwcs, s, sizeInWords > n ? n : sizeInWords);
+
+	if (retsize == (size_t)-1)
+	{
+		if (pwcs != nullptr)
+		{
+			_RESET_STRING(pwcs, sizeInWords);
+		}
+		return errno;
+	}
+
+	/* count the null terminator */
+	retsize++;
+
+	errno_t retvalue = 0;
+
+	if (pwcs != nullptr)
+	{
+		/* return error if the string does not fit, unless n == _TRUNCATE */
+		if (retsize > sizeInWords)
+		{
+			if (n != _TRUNCATE)
+			{
+				_RESET_STRING(pwcs, sizeInWords);
+				errno = ERANGE;
+				_invalid_parameter_noinfo();
+				return ERANGE;
+			}
+			retsize = sizeInWords;
+			retvalue = STRUNCATE;
+		}
+
+		/* ensure the string is null terminated */
+		pwcs[retsize - 1] = '\0';
+	}
+
+	if (pConvertedChars != nullptr)
+	{
+		*pConvertedChars = retsize;
+	}
+
+	return retvalue;
 }
 #endif
