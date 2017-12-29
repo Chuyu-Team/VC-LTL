@@ -309,12 +309,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\mbsbtype.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\lowio\mktemp.cpp">
-      <Filter>ucrt\WinXP</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\env\searchenv.cpp">
-      <Filter>ucrt\WinXP</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\lowio\setmode.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>

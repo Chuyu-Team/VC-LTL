@@ -5,6 +5,11 @@ __CxxFrameHandler3=__CxxFrameHandler3_downlevel
 _controlfp_s=_controlfp_s_downlevel
 _gcvt_s=_gcvt_s_downlevel
 _ecvt_s=_ecvt_s_downlevel
+_mktemp_s=_mktemp_s_downlevel
+_wmktemp_s=_wmktemp_s_downlevel
+_searchenv_s=_searchenv_s_downlevel
+_wsearchenv_s=_wsearchenv_s_downlevel
+
 
 ;_msvcrt.cpp
 _difftime32=_difftime32_downlevel

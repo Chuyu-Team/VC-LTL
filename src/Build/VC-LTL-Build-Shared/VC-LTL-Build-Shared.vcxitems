@@ -133,24 +133,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\env\searchenv.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\heap\align.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\locks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\string_utilities.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\winapi_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\locale\GetStringTypeA.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\locale\lcidtoname_downlevel.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\lowio\mktemp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>

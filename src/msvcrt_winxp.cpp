@@ -12,6 +12,8 @@
 #include <float.h>
 #include <mbstring.h>
 #include <locale.h>
+#include <corecrt_io.h>
+#include <corecrt_wio.h>
 
 #if defined _X86_
 EXTERN_C _CRTIMP EXCEPTION_DISPOSITION __CxxFrameHandler(
@@ -300,3 +302,111 @@ EXTERN_C const wctype_t* __cdecl __pwctype_func_downlevel(void)
 
 _LCRT_DEFINE_IAT_SYMBOL(__pwctype_func_downlevel);
 #endif
+
+
+EXTERN_C errno_t __cdecl _mktemp_s_downlevel(
+	_Inout_updates_z_(_Size) char*  _TemplateName,
+	_In_                     size_t _Size
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_TemplateName != nullptr && _Size > 0, EINVAL);
+
+	if (strnlen(_TemplateName, _Size)>= _Size)
+	{
+		_VALIDATE_RETURN((L"String is not null terminated" && 0), EINVAL, EINVAL)
+	}
+
+	_mktemp(_TemplateName);
+
+	return errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_mktemp_s_downlevel);
+
+
+EXTERN_C errno_t __cdecl _wmktemp_s_downlevel(
+	_Inout_updates_z_(_SizeInWords) wchar_t* _TemplateName,
+	_In_                            size_t   _SizeInWords
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_TemplateName != nullptr && _SizeInWords > 0, EINVAL);
+
+	if (wcsnlen(_TemplateName, _SizeInWords) >= _SizeInWords)
+	{
+		_VALIDATE_RETURN((L"String is not null terminated" && 0), EINVAL, EINVAL)
+	}
+
+	_wmktemp(_TemplateName);
+
+	return errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_wmktemp_s_downlevel);
+
+EXTERN_C errno_t __cdecl _searchenv_s_downlevel(
+	_In_z_                       char const* _Filename,
+	_In_z_                       char const* _VarName,
+	_Out_writes_z_(_BufferCount) char*       _Buffer,
+	_In_                         size_t      _BufferCount
+	)
+{
+	if (_BufferCount >= MAX_PATH)
+	{
+		_searchenv(_Filename, _VarName, _Buffer);
+
+		return errno;
+	}
+	else
+	{
+		char Temp[MAX_PATH];
+
+		_searchenv(_Filename, _VarName, Temp);
+
+		auto err = errno;
+
+		if (err ==0)
+		{
+			return strcpy_s(_Buffer, _BufferCount, Temp);
+		}
+		else
+		{
+			return err;
+		}
+	}
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_searchenv_s_downlevel);
+
+EXTERN_C errno_t __cdecl _wsearchenv_s_downlevel(
+	_In_z_                       wchar_t const* _Filename,
+	_In_z_                       wchar_t const* _VarName,
+	_Out_writes_z_(_BufferCount) wchar_t*       _Buffer,
+	_In_                         size_t         _BufferCount
+	)
+{
+	if (_BufferCount >= MAX_PATH)
+	{
+		_wsearchenv(_Filename, _VarName, _Buffer);
+
+		return errno;
+	}
+	else
+	{
+		wchar_t Temp[MAX_PATH];
+
+		_wsearchenv(_Filename, _VarName, Temp);
+
+		auto err = errno;
+
+		if (err == 0)
+		{
+			return wcscpy_s(_Buffer, _BufferCount, Temp);
+		}
+		else
+		{
+			return err;
+		}
+	}
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_wsearchenv_s_downlevel);
