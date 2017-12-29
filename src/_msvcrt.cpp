@@ -2418,7 +2418,6 @@ extern "C"
 		_In_   unsigned       _Line
 	);
 
-	BOOL __cdecl __acrt_copy_to_char(wchar_t const* const string, char** const result);
 
 	//WinXP不支持_wassert，因此我们通过字符串转换再调用_assert实现。
 	void __cdecl _wassert_downlevel(
@@ -2427,26 +2426,8 @@ extern "C"
 		_In_   unsigned       _Line
 	)
 	{
-		char * _MessageA = nullptr;
-		char * _FileA = nullptr;
-
-		if (_Message)
-		{
-			__acrt_copy_to_char(_Message, &_MessageA);
-		}
-
-		if (_File)
-		{
-			__acrt_copy_to_char(_File, &_FileA);
-		}
-
-		_assert(_MessageA, _FileA, _Line);
-
-		if (_FileA)
-			free(_FileA);
-
-		if (_MessageA)
-			free(_MessageA);
+		//VC-LTL只针提供Release编译，因此此函数单纯做中断程序处理。
+		_assert(nullptr, nullptr, _Line);
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(_wassert_downlevel);
