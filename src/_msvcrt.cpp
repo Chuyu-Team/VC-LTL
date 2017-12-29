@@ -22,6 +22,7 @@
 #include <sys/utime.h>  
 
 #include <corecrt_math.h>
+#include <msvcrt_IAT.h>
 
 #ifdef __NOTHROW_T_DEFINED
 
@@ -358,7 +359,7 @@ extern "C"
 		return static_cast<double>(_Time1 - _Time2);
 	}
 
-	double __cdecl _difftime32(
+	double __cdecl _difftime32_downlevel(
 		_In_ __time32_t _Time1,
 		_In_ __time32_t _Time2
 		)
@@ -366,7 +367,9 @@ extern "C"
 		return common_difftime(_Time1, _Time2);
 	}
 
-	double __cdecl _difftime64(
+	_LCRT_DEFINE_IAT_SYMBOL(_difftime32_downlevel);
+
+	double __cdecl _difftime64_downlevel(
 		_In_ __time64_t _Time1,
 		_In_ __time64_t _Time2
 		)
@@ -374,8 +377,9 @@ extern "C"
 		return common_difftime(_Time1, _Time2);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_difftime64_downlevel);
 
-	struct tm* __cdecl _localtime32(
+	struct tm* __cdecl _localtime32_downlevel(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -391,6 +395,8 @@ extern "C"
 
 		return _localtime64(&_Time64);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_localtime32_downlevel);
 
 	extern "C++" __forceinline struct tm* __cdecl _localtime_t(_In_ __time32_t const* _Time)
 	{
@@ -424,7 +430,7 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _localtime32_s(
+	errno_t __cdecl _localtime32_s_downlevel(
 		_Out_ struct tm*        _Tm,
 		_In_  __time32_t const* _Time
 		)
@@ -432,13 +438,18 @@ extern "C"
 		return common_localtime_s(_Tm, _Time);
 	}
 
-	errno_t __cdecl _localtime64_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_localtime32_s_downlevel);
+
+	errno_t __cdecl _localtime64_s_downlevel(
 		_Out_ struct tm*        _Tm,
 		_In_  __time64_t const* _Time
 		)
 	{
 		return common_localtime_s(_Tm, _Time);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_localtime64_s_downlevel);
+
 #endif
 
 	errno_t __cdecl _get_daylight(
@@ -519,11 +530,11 @@ extern "C"
 	_Origin 其他情况，返回无效参数
 
 	*/
-	int __cdecl _fseeki64(
+	int __cdecl _fseeki64_downlevel(
 		_Inout_ FILE*   _Stream,
 		_In_    __int64 _Offset,
 		_In_    int     _Origin
-	)
+		)
 	{
 		if (_Origin == SEEK_SET)
 		{
@@ -571,6 +582,8 @@ extern "C"
 		}
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_fseeki64_downlevel);
+
 #endif
 
 	//总是返回ture，因为老版本没有此函数，不过以前的 _matherr内部他会判断是否存在
@@ -616,7 +629,7 @@ extern "C"
 
 #ifdef _ATL_XP_TARGETING
 #include <Ntsecapi.h>
-	errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue)
+	errno_t __cdecl rand_s_downlevel(_Out_ unsigned int* _RandomValue)
 	{
 		*_RandomValue = 0;
 
@@ -630,6 +643,9 @@ extern "C"
 			return 0;
 		}
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(rand_s_downlevel);
+
 #endif
 
 //#ifdef _X86_
@@ -1587,7 +1603,7 @@ extern "C"
 
 #ifdef _ATL_XP_TARGETING
 
-	errno_t __cdecl _waccess_s(
+	errno_t __cdecl _waccess_s_downlevel(
 		_In_z_ wchar_t const* _FileName,
 		_In_   int            _AccessMode
 		)
@@ -1595,7 +1611,9 @@ extern "C"
 		return _waccess(_FileName, _AccessMode) == 0 ? 0 : errno;
 	}
 
-	errno_t __cdecl _access_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_waccess_s_downlevel);
+
+	errno_t __cdecl _access_s_downlevel(
         _In_z_ char const* _FileName,
         _In_   int         _AccessMode
         )
@@ -1603,7 +1621,9 @@ extern "C"
 		return _access(_FileName, _AccessMode) == 0 ? 0 : errno;
 	}
 
-	errno_t __cdecl _wasctime_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_access_s_downlevel);
+
+	errno_t __cdecl _wasctime_s_downlevel(
 		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*         _Buffer,
 		_In_range_(>=,26)                                     size_t           _SizeInWords,
 		_In_                                                  struct tm const* _Tm
@@ -1625,7 +1645,9 @@ extern "C"
 		return wcscpy_s(_Buffer, _SizeInWords, szTime);
 	}
 
-	errno_t __cdecl asctime_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wasctime_s_downlevel);
+
+	errno_t __cdecl asctime_s_downlevel(
         _Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*            _Buffer,
         _In_range_(>=,26)                                   size_t           _SizeInBytes,
         _In_                                                struct tm const* _Tm
@@ -1647,8 +1669,9 @@ extern "C"
 		return strcpy_s(_Buffer, _SizeInBytes, szTime);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(asctime_s_downlevel);
 
-	char* __cdecl _ctime32(
+	char* __cdecl _ctime32_downlevel(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -1665,7 +1688,9 @@ extern "C"
 		return _ctime64(&_Time64);
 	}
 
-	wchar_t* __cdecl _wctime32(
+	_LCRT_DEFINE_IAT_SYMBOL(_ctime32_downlevel);
+
+	wchar_t* __cdecl _wctime32_downlevel(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -1681,6 +1706,8 @@ extern "C"
 
 		return _wctime64(&_Time64);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_wctime32_downlevel);
 
 	extern "C++" __forceinline void __cdecl _ctime_t(
 		_In_ __time32_t const* _Time,
@@ -1701,7 +1728,7 @@ extern "C"
 	extern "C++" __forceinline void __cdecl _ctime_t(
 		_In_ __time32_t const* _Time,
 		wchar_t* & szTime
-	)
+		)
 	{
 		szTime = _wctime32(_Time);
 	}
@@ -1709,7 +1736,7 @@ extern "C"
 	extern "C++" __forceinline void __cdecl _ctime_t(
 		_In_ __time64_t const* _Time,
 		wchar_t* & szTime
-	)
+		)
 	{
 		szTime = _wctime64(_Time);
 	}
@@ -1739,7 +1766,7 @@ extern "C"
 		return _tcscpy_s(_Buffer, _Size, szTime);
 	}
 
-	errno_t __cdecl _ctime32_s(
+	errno_t __cdecl _ctime32_s_downlevel(
 		_Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
 		_In_range_(>= , 26)                                   size_t            _SizeInBytes,
 		_In_                                                __time32_t const* _Time
@@ -1748,7 +1775,9 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
 	}
 
-	errno_t __cdecl _ctime64_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_ctime32_s_downlevel);
+
+	errno_t __cdecl _ctime64_s_downlevel(
 		_Out_writes_z_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
 		_In_range_(>= , 26)                                     size_t            _SizeInBytes,
 		_In_                                                  __time64_t const* _Time
@@ -1757,7 +1786,9 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
 	}
 
-	errno_t __cdecl _wctime32_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_ctime64_s_downlevel);
+
+	errno_t __cdecl _wctime32_s_downlevel(
 		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
 		_In_  _In_range_(>= , 26)                              size_t            _SizeInWords,
 		_In_                                                  __time32_t const* _Time
@@ -1766,7 +1797,9 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInWords, _Time);
 	}
 
-	errno_t __cdecl _wctime64_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wctime32_s_downlevel);
+
+	errno_t __cdecl _wctime64_s_downlevel(
 		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
 		_In_  _In_range_(>= , 26)                              size_t            _SizeInWords,
 		_In_                                                  __time64_t const* _Time
@@ -1775,7 +1808,9 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInWords, _Time);
 	}
 
-	struct tm* __cdecl _gmtime32(
+	_LCRT_DEFINE_IAT_SYMBOL(_wctime64_s_downlevel);
+
+	struct tm* __cdecl _gmtime32_downlevel(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -1792,6 +1827,8 @@ extern "C"
 
 		return _gmtime64(&_Time64);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_gmtime32_downlevel);
 
 	extern "C++" __forceinline struct tm* __cdecl _gmtime_t(
 		_In_  __time32_t const* _Time
@@ -1828,7 +1865,7 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _gmtime32_s(
+	errno_t __cdecl _gmtime32_s_downlevel(
 		_Out_ struct tm*        _Tm,
 		_In_  __time32_t const* _Time
 		)
@@ -1836,7 +1873,9 @@ extern "C"
 		return common_gmtime_t_s(_Tm, _Time);
 	}
 
-	errno_t __cdecl _gmtime64_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_gmtime32_s_downlevel);
+
+	errno_t __cdecl _gmtime64_s_downlevel(
 		_Out_ struct tm*        _Tm,
 		_In_  __time64_t const* _Time
 		)
@@ -1844,8 +1883,9 @@ extern "C"
 		return common_gmtime_t_s(_Tm, _Time);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_gmtime64_s_downlevel);
 
-	__time64_t __cdecl _mkgmtime64(
+	__time64_t __cdecl _mkgmtime64_downlevel(
 		_Inout_ struct tm* _Tm
 		)
 	{
@@ -1876,7 +1916,9 @@ extern "C"
 		return time;
 	}
 
-	__time32_t __cdecl _mkgmtime32(
+	_LCRT_DEFINE_IAT_SYMBOL(_mkgmtime64_downlevel);
+
+	__time32_t __cdecl _mkgmtime32_downlevel(
 		_Inout_ struct tm* _Tm
 		)
 	{
@@ -1897,7 +1939,9 @@ extern "C"
 		return Time;
 	}
 
-	__time32_t __cdecl _mktime32(
+	_LCRT_DEFINE_IAT_SYMBOL(_mkgmtime32_downlevel);
+
+	__time32_t __cdecl _mktime32_downlevel(
 		_Inout_ struct tm* _Tm
 		)
 	{
@@ -1917,6 +1961,8 @@ extern "C"
 
 		return Time;
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_mktime32_downlevel);
 
 	extern "C++" template<typename TCHAR>
 	__forceinline errno_t __cdecl common_getenv_s_nolock(
@@ -1972,7 +2018,7 @@ extern "C"
 		return result;
 	}
 
-	errno_t __cdecl getenv_s(
+	errno_t __cdecl getenv_s_downlevel(
         _Out_                            size_t*     _RequiredCount,
         _Out_writes_opt_z_(_BufferCount) char*       _Buffer,
         _In_                             rsize_t     _BufferCount,
@@ -1982,7 +2028,9 @@ extern "C"
 		return common_getenv_s(_RequiredCount, _Buffer, _BufferCount, _VarName);
 	}
 
-	errno_t __cdecl _wgetenv_s(
+	_LCRT_DEFINE_IAT_SYMBOL(getenv_s_downlevel);
+
+	errno_t __cdecl _wgetenv_s_downlevel(
 		_Out_                            size_t*        _RequiredCount,
 		_Out_writes_opt_z_(_BufferCount) wchar_t*       _Buffer,
 		_In_                             size_t         _BufferCount,
@@ -1992,7 +2040,9 @@ extern "C"
 		return common_getenv_s(_RequiredCount, _Buffer, _BufferCount, _VarName);
 	}
 
-	errno_t __cdecl fopen_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wgetenv_s_downlevel);
+
+	errno_t __cdecl fopen_s_downlevel(
 		_Outptr_result_maybenull_ FILE**      _Stream,
 		_In_z_                    char const* _FileName,
 		_In_z_                    char const* _Mode
@@ -2003,7 +2053,9 @@ extern "C"
 		return (*_Stream = fopen(_FileName, _Mode)) ? 0 : errno;
 	}
 
-	errno_t __cdecl _wfopen_s(
+	_LCRT_DEFINE_IAT_SYMBOL(fopen_s_downlevel);
+
+	errno_t __cdecl _wfopen_s_downlevel(
 		_Outptr_result_maybenull_ FILE**         _Stream,
 		_In_z_                    wchar_t const* _FileName,
 		_In_z_                    wchar_t const* _Mode
@@ -2014,7 +2066,9 @@ extern "C"
 		return (*_Stream = _wfopen(_FileName, _Mode)) ? 0 : errno;
 	}
 
-	errno_t __cdecl freopen_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wfopen_s_downlevel);
+
+	errno_t __cdecl freopen_s_downlevel(
 		_Outptr_result_maybenull_ FILE**      _Stream,
 		_In_z_                    char const* _FileName,
 		_In_z_                    char const* _Mode,
@@ -2026,7 +2080,9 @@ extern "C"
 		return (*_Stream = freopen(_FileName, _Mode, _OldStream)) ? 0 : errno;
 	}
 
-	errno_t __cdecl _wfreopen_s(
+	_LCRT_DEFINE_IAT_SYMBOL(freopen_s_downlevel);
+
+	errno_t __cdecl _wfreopen_s_downlevel(
 		_Outptr_result_maybenull_ FILE**         _Stream,
 		_In_z_                    wchar_t const* _FileName,
 		_In_z_                    wchar_t const* _Mode,
@@ -2038,13 +2094,12 @@ extern "C"
 		return (*_Stream = _wfreopen(_FileName, _Mode, _OldStream)) ? 0 : errno;
 	}
 
-	errno_t __cdecl _ftime32_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wfreopen_s_downlevel);
+
+	void __cdecl _ftime32_downlevel(
 		_Out_ struct __timeb32* _Time
 		)
 	{
-		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
-
-
 		__timeb64 _Time64;
 		_ftime64(&_Time64);
 
@@ -2052,10 +2107,24 @@ extern "C"
 		_Time->millitm = _Time64.millitm;
 		_Time->timezone = _Time64.timezone;
 		_Time->dstflag = _Time64.dstflag;
+	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_ftime32_downlevel);
+
+	errno_t __cdecl _ftime32_s_downlevel(
+		_Out_ struct __timeb32* _Time
+		)
+	{
+		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
+
+		_ftime32_downlevel(_Time);
+		
 		return 0;
 	}
 
-	errno_t __cdecl _ftime64_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_ftime32_s_downlevel);
+
+	errno_t __cdecl _ftime64_s_downlevel(
 		_Out_ struct __timeb64* _Time
 		)
 	{
@@ -2066,14 +2135,9 @@ extern "C"
 		return 0;
 	}
 
-	void __cdecl _ftime32(
-		_Out_ struct __timeb32* _Time
-		)
-	{
-		_ftime32_s(_Time);
-	}
+	_LCRT_DEFINE_IAT_SYMBOL(_ftime64_s_downlevel);
 
-	int __cdecl _futime32(
+	int __cdecl _futime32_downlevel(
 		_In_     int                 _FileHandle,
 		_In_opt_ struct __utimbuf32* _Time
 		)
@@ -2089,7 +2153,9 @@ extern "C"
 		return _futime64(_FileHandle, _Time ? &_Time64 : nullptr);
 	}
 
-	int __cdecl _utime32(
+	_LCRT_DEFINE_IAT_SYMBOL(_futime32_downlevel);
+
+	int __cdecl _utime32_downlevel(
 		_In_z_   char const*         _FileName,
 		_In_opt_ struct __utimbuf32* _Time
 		)
@@ -2105,7 +2171,9 @@ extern "C"
 		return _utime64(_FileName, _Time ? &_Time64 : nullptr);
 	}
 
-	int __cdecl _wutime32(
+	_LCRT_DEFINE_IAT_SYMBOL(_utime32_downlevel);
+
+	int __cdecl _wutime32_downlevel(
 		_In_z_   wchar_t const*      _FileName,
 		_In_opt_ struct __utimbuf32* _Time
 		)
@@ -2121,7 +2189,9 @@ extern "C"
 		return _wutime64(_FileName, _Time ? &_Time64 : nullptr);
 	}
 
-	errno_t __cdecl clearerr_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wutime32_downlevel);
+
+	errno_t __cdecl clearerr_s_downlevel(
 		_Inout_ FILE* _Stream
 		)
 	{
@@ -2130,6 +2200,7 @@ extern "C"
 		return errno;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(clearerr_s_downlevel);
 
 	extern "C++" __forceinline int __cdecl _tputenv(
 		_In_z_ wchar_t const* _EnvString
@@ -2171,7 +2242,7 @@ extern "C"
 		return result;
 	}
 
-	errno_t __cdecl _putenv_s(
+	errno_t __cdecl _putenv_s_downlevel(
 		_In_z_ char const* _Name,
 		_In_z_ char const* _Value
 		)
@@ -2179,7 +2250,9 @@ extern "C"
 		return common_putenv_s(_Name, _Value);
 	}
 
-	errno_t __cdecl _wputenv_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_putenv_s_downlevel);
+
+	errno_t __cdecl _wputenv_s_downlevel(
 		_In_z_ wchar_t const* _Name,
 		_In_z_ wchar_t const* _Value
 		)
@@ -2187,7 +2260,9 @@ extern "C"
 		return common_putenv_s(_Name, _Value);
 	}
 
-	errno_t __cdecl tmpnam_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wputenv_s_downlevel);
+
+	errno_t __cdecl tmpnam_s_downlevel(
 		_Out_writes_z_(_Size) char*   _Buffer,
 		_In_                  rsize_t _Size
 		)
@@ -2209,7 +2284,9 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _wtmpnam_s(
+	_LCRT_DEFINE_IAT_SYMBOL(tmpnam_s_downlevel);
+
+	errno_t __cdecl _wtmpnam_s_downlevel(
 		_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 		_In_                         size_t   _BufferCount
 		)
@@ -2231,7 +2308,9 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _sopen_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_wtmpnam_s_downlevel);
+
+	errno_t __cdecl _sopen_s_downlevel(
 		_Out_  int*        _FileHandle,
 		_In_z_ char const* _FileName,
 		_In_   int         _OpenFlag,
@@ -2251,7 +2330,9 @@ extern "C"
 		return (*_FileHandle = sopen(_FileName, _OpenFlag, _ShareFlag, _PermissionMode)) == -1 ? errno : 0;
 	}
 
-	errno_t __cdecl _wsopen_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_sopen_s_downlevel);
+
+	errno_t __cdecl _wsopen_s_downlevel(
 		_Out_  int*           _FileHandle,
 		_In_z_ wchar_t const* _FileName,
 		_In_   int            _OpenFlag,
@@ -2271,9 +2352,10 @@ extern "C"
 		return (*_FileHandle = _wsopen(_FileName, _OpenFlag, _ShareFlag, _PermissionFlag)) == -1 ? errno : 0;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_wsopen_s_downlevel);
 
 	//行为略微跟原版不同，当参数不合法时，不会返回 _OldMode
-	errno_t __cdecl _umask_s(
+	errno_t __cdecl _umask_s_downlevel(
 		_In_  int  _NewMode,
 		_Out_ int* _OldMode
 		)
@@ -2286,8 +2368,9 @@ extern "C"
 		return 0;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_umask_s_downlevel);
 
-	errno_t __cdecl _strerror_s(
+	errno_t __cdecl _strerror_s_downlevel(
 		_Out_writes_z_(_SizeInBytes) char*       _Buffer,
 		_In_                         size_t      _SizeInBytes,
 		_In_opt_z_                   char const* _ErrorMessage
@@ -2306,7 +2389,9 @@ extern "C"
 		return _tcscpy_s(_Buffer, _SizeInBytes, szError);
 	}
 
-	errno_t __cdecl __wcserror_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_strerror_s_downlevel);
+
+	errno_t __cdecl __wcserror_s_downlevel(
 		_Out_writes_opt_z_(_SizeInWords) wchar_t*       _Buffer,
 		_In_                             size_t         _SizeInWords,
 		_In_z_                           wchar_t const* _ErrorMessage
@@ -2325,6 +2410,8 @@ extern "C"
 		return _tcscpy_s(_Buffer, _SizeInWords, szError);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(__wcserror_s_downlevel);
+
 	_ACRTIMP void __cdecl _assert(
 		_In_z_ char const* _Message,
 		_In_z_ char const* _File,
@@ -2334,7 +2421,7 @@ extern "C"
 	BOOL __cdecl __acrt_copy_to_char(wchar_t const* const string, char** const result);
 
 	//WinXP不支持_wassert，因此我们通过字符串转换再调用_assert实现。
-	void __cdecl _wassert(
+	void __cdecl _wassert_downlevel(
 		_In_z_ wchar_t const* _Message,
 		_In_z_ wchar_t const* _File,
 		_In_   unsigned       _Line
@@ -2361,6 +2448,9 @@ extern "C"
 		if (_MessageA)
 			free(_MessageA);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_wassert_downlevel);
+
 #endif
 }
 
