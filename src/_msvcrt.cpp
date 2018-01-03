@@ -2514,21 +2514,21 @@ extern "C++"
 	//	free(_Block);
 	//}
 
-	void __CRTDECL operator delete(
+	/*void __CRTDECL operator delete(
 			void*  _Block,
 			size_t _Size
 			)
 	{
 		operator delete(_Block);
-	}
+	}*/
 
-	void __CRTDECL operator delete[](
+	/*void __CRTDECL operator delete[](
 		void* _Block,
 		size_t _Size
 		)
 	{
 		operator delete[](_Block);
-	}
+	}*/
 }
 #endif // !__cplusplus
 

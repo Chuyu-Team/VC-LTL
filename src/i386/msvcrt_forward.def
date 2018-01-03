@@ -35,6 +35,11 @@ _query_new_mode=?_query_new_mode@@YAHXZ
 ;新版本中_set_new_mode规范变成了C
 _set_new_mode=?_set_new_mode@@YAHH@Z
 
+;void __cdecl operator delete(void *,size_t) = void __cdecl operator delete(void *)
+??3@YAXPAXI@Z=??3@YAXPAX@Z
+
+;void __cdecl operator delete[](void *,size_t) = void __cdecl operator delete[](void *)
+??_V@YAXPAXI@Z=??_V@YAXPAX@Z
 
 ;_sopen C++版重载
 ?_sopen@@YAHQBDHHH@Z=_sopen
