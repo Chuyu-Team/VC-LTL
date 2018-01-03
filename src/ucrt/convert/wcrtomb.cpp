@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <locale.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *errno_t _wcrtomb_s_l() - Helper function to convert wide character to multibyte character.
@@ -129,7 +130,7 @@ static errno_t __cdecl _wcrtomb_s_l(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wcrtomb_s(
+extern "C" errno_t __cdecl wcrtomb_s_downlevel(
     size_t*    const return_value,
     char*      const destination,
     size_t     const destination_count,
@@ -161,10 +162,13 @@ extern "C" errno_t __cdecl wcrtomb_s(
 
     return e;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wcrtomb_s_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl wcrtomb(
+extern "C" size_t __cdecl wcrtomb_downlevel(
     char*      const destination,
     wchar_t    const wchar,
     mbstate_t* const state
@@ -174,6 +178,9 @@ extern "C" size_t __cdecl wcrtomb(
     wcrtomb_s(&return_value, destination, (destination == nullptr ? 0 : MB_LEN_MAX), wchar, state);
     return return_value;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wcrtomb_downlevel);
+
 #endif
 
 /***
@@ -274,7 +281,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
 }
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl wcsrtombs(
+extern "C" size_t __cdecl wcsrtombs_downlevel(
     char*           const destination,
     wchar_t const** const source,
     size_t          const n,
@@ -283,6 +290,9 @@ extern "C" size_t __cdecl wcsrtombs(
 {
     return internal_wcsrtombs(destination, source, n, state);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_downlevel);
+
 #endif
 
 /***
@@ -312,7 +322,7 @@ extern "C" size_t __cdecl wcsrtombs(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wcsrtombs_s(
+extern "C" errno_t __cdecl wcsrtombs_s_downlevel(
     size_t*         const return_value,
     char*           const destination,
     size_t          const destination_count,
@@ -369,12 +379,15 @@ extern "C" errno_t __cdecl wcsrtombs_s(
 
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_s_downlevel);
+
 #endif
 
 
 // Converts a wide character into a one-byte character
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl wctob(wint_t const wchar)
+extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
 {
     if (wchar == WEOF)
         return EOF;
@@ -388,4 +401,7 @@ extern "C" int __cdecl wctob(wint_t const wchar)
 
     return EOF;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wctob_downlevel);
+
 #endif

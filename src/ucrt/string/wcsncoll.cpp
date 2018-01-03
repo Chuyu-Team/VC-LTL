@@ -13,6 +13,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *int _wcsncoll() - Collate wide-character locale strings
@@ -40,7 +41,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcsncoll_l (
+extern "C" int __cdecl _wcsncoll_l_downlevel (
         const wchar_t *_string1,
         const wchar_t *_string2,
         size_t count,
@@ -83,6 +84,9 @@ extern "C" int __cdecl _wcsncoll_l (
     return (ret - 2);
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcsncoll_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _wcsncoll (

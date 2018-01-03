@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *errno_t _mbrtowc_s_l() - Helper function to convert multibyte char to wide character.
@@ -179,7 +180,7 @@ static errno_t __cdecl _mbrtowc_s_l(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" wint_t __cdecl btowc(
+extern "C" wint_t __cdecl btowc_downlevel(
     int c
     )
 {
@@ -199,6 +200,9 @@ extern "C" wint_t __cdecl btowc(
         return (retValue < 0 ? WEOF : wc);
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(btowc_downlevel);
+
 #endif
 
 
@@ -216,7 +220,7 @@ extern "C" wint_t __cdecl btowc(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl mbrlen(
+extern "C" size_t __cdecl mbrlen_downlevel(
     const char *s,
     size_t n,
     mbstate_t *pst
@@ -228,6 +232,9 @@ extern "C" size_t __cdecl mbrlen(
     _mbrtowc_s_l(&retValue, nullptr, s, n, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
     return retValue;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbrlen_downlevel);
+
 #endif
 
 
@@ -245,7 +252,7 @@ extern "C" size_t __cdecl mbrlen(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl mbrtowc(
+extern "C" size_t __cdecl mbrtowc_downlevel(
     wchar_t *dst,
     const char *s,
     size_t n,
@@ -265,6 +272,9 @@ extern "C" size_t __cdecl mbrtowc(
     }
     return retValue;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbrtowc_downlevel);
+
 #endif
 
 /***
@@ -346,7 +356,7 @@ static size_t __cdecl _mbsrtowcs_helper(
 }
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl mbsrtowcs(
+extern "C" size_t __cdecl mbsrtowcs_downlevel(
     wchar_t *wcs,
     const char **ps,
     size_t n,
@@ -357,6 +367,9 @@ extern "C" size_t __cdecl mbsrtowcs(
 
     return _mbsrtowcs_helper(wcs, ps, n, pst);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_downlevel);
+
 #endif
 
 /***
@@ -386,7 +399,7 @@ extern "C" size_t __cdecl mbsrtowcs(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl mbsrtowcs_s(
+extern "C" errno_t __cdecl mbsrtowcs_s_downlevel(
     size_t *pRetValue,
     wchar_t *dst,
     size_t sizeInWords,
@@ -441,4 +454,7 @@ extern "C" errno_t __cdecl mbsrtowcs_s(
 
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_s_downlevel);
+
 #endif

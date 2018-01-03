@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 /***
 *int _mbbtype(c, ctype) - Return type of byte based on previous byte (MBCS)
@@ -37,7 +38,7 @@
 *
 *******************************************************************************/
 
-extern "C" int __cdecl _mbbtype_l(
+extern "C" int __cdecl _mbbtype_l_downlevel(
     unsigned char const c,
     int           const ctype,
     _locale_t     const locale
@@ -70,6 +71,8 @@ extern "C" int __cdecl _mbbtype_l(
             return _MBC_ILLEGAL;
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbbtype_l_downlevel);
 
 //extern "C" int __cdecl _mbbtype(unsigned char const c, int const ctype)
 //{

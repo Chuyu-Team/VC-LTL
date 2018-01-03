@@ -8,6 +8,7 @@
 //
 #include <vcruntime_internal.h>
 #include <stdlib.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -27,6 +28,8 @@ extern "C" int __cdecl _purecall_advanced()
     abort();
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_purecall_advanced);
+
 extern "C" _purecall_handler __cdecl _set_purecall_handler_advanced(
     _purecall_handler const new_handler
     )
@@ -36,7 +39,11 @@ extern "C" _purecall_handler __cdecl _set_purecall_handler_advanced(
             new_handler);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_set_purecall_handler_advanced);
+
 extern "C" _purecall_handler __cdecl _get_purecall_handler_advanced()
 {
     return __crt_interlocked_read_pointer(&__pPurecall);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_purecall_handler_advanced);

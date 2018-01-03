@@ -7,8 +7,9 @@
 #include <errno.h>
 #include <uchar.h>
 #include <corecrt_internal.h>
+#include <msvcrt_IAT.h>
 
-extern "C" size_t __cdecl mbrtoc32(char32_t * pwc, const char * s, size_t nin, mbstate_t * pst)
+extern "C" size_t __cdecl mbrtoc32_downlevel(char32_t * pwc, const char * s, size_t nin, mbstate_t * pst)
 { /* translate UTF-8 multibyte to UCS-4 char32_t, restartably */
     unsigned char *su;
 
@@ -90,6 +91,8 @@ extern "C" size_t __cdecl mbrtoc32(char32_t * pwc, const char * s, size_t nin, m
         }
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbrtoc32_downlevel);
 
 /*
  * Copyright (c) 1992-2013 by P.J. Plauger.  ALL RIGHTS RESERVED.

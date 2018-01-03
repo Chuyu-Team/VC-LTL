@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast can't see that we are checking for terminal nul.
 
@@ -37,7 +38,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcsicmp_l (
+extern "C" int __cdecl _wcsicmp_l_downlevel (
         const wchar_t * dst,
         const wchar_t * src,
         _locale_t plocinfo
@@ -75,6 +76,9 @@ extern "C" int __cdecl _wcsicmp_l (
     }
     return (int)(f - l);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcsicmp_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _wcsicmp (

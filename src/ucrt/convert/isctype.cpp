@@ -9,6 +9,7 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -62,7 +63,7 @@ extern "C" int __cdecl _chvalidator_l(_locale_t const locale, int const c, int c
 //         0       0   leadbyte trailbyte
 //
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const locale)
+extern "C" int __cdecl _isctype_l_downlevel(int const c, int const mask, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 	if (!locale)
@@ -109,6 +110,9 @@ extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const l
 
     return static_cast<int>(character_type[0] & mask);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isctype_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _isctype(int const c, int const mask)

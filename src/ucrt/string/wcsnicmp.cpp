@@ -13,6 +13,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 /***
 *int _wcsnicmp(first, last, count) - compares count wchar_t of strings,
@@ -42,7 +43,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcsnicmp_l (
+extern "C" int __cdecl _wcsnicmp_l_downlevel (
         const wchar_t * first,
         const wchar_t * last,
         size_t count,
@@ -90,6 +91,9 @@ extern "C" int __cdecl _wcsnicmp_l (
     }
     return result;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcsnicmp_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _wcsnicmp (

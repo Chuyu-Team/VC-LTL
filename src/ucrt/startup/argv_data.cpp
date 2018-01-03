@@ -8,6 +8,7 @@
 // parsed), and the accessors for the global data.
 //
 #include <corecrt_internal.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -38,7 +39,7 @@ _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 //wchar_t**  __cdecl __p__wcmdln()  { return &_wcmdln;  }
 
 #ifdef _ATL_XP_TARGETING
-errno_t __cdecl _get_wpgmptr(wchar_t** const result)
+errno_t __cdecl _get_wpgmptr_downlevel(wchar_t** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result   != nullptr, EINVAL);
     _VALIDATE_RETURN_ERRCODE(_wpgmptr != nullptr, EINVAL);
@@ -46,16 +47,22 @@ errno_t __cdecl _get_wpgmptr(wchar_t** const result)
     *result = _wpgmptr;
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_wpgmptr_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-errno_t __cdecl _get_pgmptr(char** const result)
+errno_t __cdecl _get_pgmptr_downlevel(char** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result  != nullptr, EINVAL);
     _VALIDATE_RETURN_ERRCODE(_pgmptr != nullptr, EINVAL);
     *result = _pgmptr;
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_pgmptr_downlevel);
+
 #endif
 
 _END_SECURE_CRT_DEPRECATION_DISABLE

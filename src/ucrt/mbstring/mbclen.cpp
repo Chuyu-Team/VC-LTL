@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -33,13 +34,16 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbclen_l(unsigned char const* c, _locale_t locale)
+extern "C" size_t __cdecl _mbclen_l_downlevel(unsigned char const* c, _locale_t locale)
 {
     /*  Don't return two if we have leadbyte, EOS.
         Don't assert here; too low level
     */
     return ((_ismbblead_l)(*c, locale) && c[1] != '\0') ? 2 : 1;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbclen_l_downlevel);
+
 #endif
 
 //extern "C" size_t __cdecl _mbclen(unsigned char const* c)

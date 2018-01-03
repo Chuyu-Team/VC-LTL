@@ -9,6 +9,7 @@
 #include <corecrt_internal.h>
 #include <memory.h>
 #include <search.h>
+#include <msvcrt_IAT.h>
 
 #ifdef _M_CEE
     #define __fileDECL __clrcall
@@ -45,7 +46,7 @@
 extern "C"
 #endif
 #ifdef __USE_CONTEXT
-void* __fileDECL _lsearch_s(
+void* __fileDECL _lsearch_s_downlevel(
     void const*   const key,
     void*         const base,
     unsigned int* const num,
@@ -87,5 +88,10 @@ void* __fileDECL _lsearch(
     ++(*num);
     return last;
 }
+
+#ifdef __USE_CONTEXT
+_LCRT_DEFINE_IAT_SYMBOL(_lsearch_s_downlevel);
+#else
+#endif
 
 #undef __COMPARE

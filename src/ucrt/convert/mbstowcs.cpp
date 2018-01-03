@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *size_t mbstowcs() - Convert multibyte char string to wide char string.
@@ -182,7 +183,7 @@ static size_t __cdecl _mbstowcs_l_helper(
 }
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstowcs_l(
+extern "C" size_t __cdecl _mbstowcs_l_downlevel(
     wchar_t  *pwcs,
     const char *s,
     size_t n,
@@ -193,6 +194,9 @@ extern "C" size_t __cdecl _mbstowcs_l(
 
     return _mbstowcs_l_helper(pwcs, s, n, plocinfo);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbstowcs_l_downlevel);
+
 #endif
 
 //extern "C" size_t __cdecl mbstowcs(
@@ -239,7 +243,7 @@ extern "C" size_t __cdecl _mbstowcs_l(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _mbstowcs_s_l(
+extern "C" errno_t __cdecl _mbstowcs_s_l_downlevel(
     size_t *pConvertedChars,
     wchar_t  *pwcs,
     size_t sizeInWords,
@@ -311,10 +315,13 @@ extern "C" errno_t __cdecl _mbstowcs_s_l(
 
     return retvalue;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbstowcs_s_l_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl mbstowcs_s(
+extern "C" errno_t __cdecl mbstowcs_s_downlevel(
     size_t *pConvertedChars,
     wchar_t  *pwcs,
     size_t sizeInWords,
@@ -370,4 +377,7 @@ extern "C" errno_t __cdecl mbstowcs_s(
 
 	return retvalue;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbstowcs_s_downlevel);
+
 #endif

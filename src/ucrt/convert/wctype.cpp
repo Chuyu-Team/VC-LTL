@@ -8,6 +8,7 @@
 #include <corecrt.h>
 #include <string.h>
 #include <wctype.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -38,7 +39,7 @@ const tab[] =
 #pragma warning(push)
 #pragma warning(disable: 4273)
 
-extern "C" wctype_t __cdecl wctype(char const* const name)
+extern "C" wctype_t __cdecl wctype_downlevel(char const* const name)
 {
     for (unsigned n = 0; tab[n].s != 0; ++n)
     {
@@ -48,6 +49,8 @@ extern "C" wctype_t __cdecl wctype(char const* const name)
 
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wctype_downlevel);
 
 #pragma warning(pop)
 

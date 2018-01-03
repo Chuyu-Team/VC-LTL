@@ -7,6 +7,7 @@
 // contained in a multibyte character.
 //
 #include <corecrt_internal.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -16,7 +17,7 @@
 // multibyte character, -1 is returned.  Otherwise, the number of bytes that
 // compose the next multibyte character are returned.
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mblen_l(
+extern "C" int __cdecl _mblen_l_downlevel(
     char const* const string,
     size_t      const max_count,
     _locale_t   const locale
@@ -76,6 +77,9 @@ extern "C" int __cdecl _mblen_l(
         return sizeof(char);
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mblen_l_downlevel);
+
 #endif
 
 

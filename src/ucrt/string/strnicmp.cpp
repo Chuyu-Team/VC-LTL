@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 /***
 *int _strnicmp(first, last, count) - compares count char of strings, ignore case
@@ -39,7 +40,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _strnicmp_l (
+extern "C" int __cdecl _strnicmp_l_downlevel (
         const char * dst,
         const char * src,
         size_t count,
@@ -78,6 +79,9 @@ extern "C" int __cdecl _strnicmp_l (
 
     return( 0 );
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_strnicmp_l_downlevel);
+
 #endif
 
 #if !defined(_M_IX86) || defined(_M_HYBRID_X86_ARM64)

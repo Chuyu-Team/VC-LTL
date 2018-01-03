@@ -13,12 +13,16 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
+#include <msvcrt_IAT.h>
 
-#define _FUNC_NAME _mbsnbcat_s_l
+#define _FUNC_NAME _mbsnbcat_s_l_downlevel
 #define _FUNC_NAME_NO_LOCALE _mbsnbcat_s
 #define _COUNT _CountInBytes
 #define _COUNT_IN_BYTES 1
 
 #ifdef _ATL_XP_TARGETING
 #include "mbsncat_s.inl"
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsnbcat_s_l_downlevel);
+
 #endif

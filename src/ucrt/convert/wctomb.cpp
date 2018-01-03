@@ -18,10 +18,11 @@
 #include <locale.h>
 #include <limits.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wctomb_s_l(
+extern "C" int __cdecl _wctomb_s_l_downlevel(
     int*      const return_value,
     char*     const destination,
     size_t    const destination_count,
@@ -108,10 +109,13 @@ extern "C" int __cdecl _wctomb_s_l(
         return 0;
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wctomb_s_l_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wctomb_s (
+extern "C" errno_t __cdecl wctomb_s_downlevel (
     int*    const return_value,
     char*   const destination,
     size_t  const destination_count,
@@ -120,10 +124,13 @@ extern "C" errno_t __cdecl wctomb_s (
 {
     return _wctomb_s_l(return_value, destination, destination_count, wchar, nullptr);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wctomb_s_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wctomb_l(
+extern "C" int __cdecl _wctomb_l_downlevel(
     char*     const destination,
     wchar_t   const wchar,
     _locale_t const locale
@@ -146,6 +153,9 @@ extern "C" int __cdecl _wctomb_l(
 
     return return_value;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wctomb_l_downlevel);
+
 #endif
 
 // Disable the OACR error that warns that 'MB_CUR_MAX' doesn't properly constrain buffer 'destination'.

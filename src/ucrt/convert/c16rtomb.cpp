@@ -6,8 +6,9 @@
 
 #include <uchar.h>
 #include <corecrt_internal.h>
+#include <msvcrt_IAT.h>
 
-extern "C" size_t __cdecl c16rtomb(char * s, char16_t c16, mbstate_t * pst)
+extern "C" size_t __cdecl c16rtomb_downlevel(char * s, char16_t c16, mbstate_t * pst)
 { /* translate UTF-16 char16_t to UTF-8 multibyte, restartably */
     int nextra;
     char buf[6];
@@ -86,6 +87,8 @@ extern "C" size_t __cdecl c16rtomb(char * s, char16_t c16, mbstate_t * pst)
 
     return ((char *)su - s);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(c16rtomb_downlevel);
 
 /*
  * Copyright (c) 1992-2013 by P.J. Plauger.  ALL RIGHTS RESERVED.

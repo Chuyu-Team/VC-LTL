@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 /***
 *unsigned int _mbcjistojms(c) - Converts JIS code to Microsoft Kanji Code.
@@ -34,7 +35,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" unsigned int __cdecl _mbcjistojms_l(
+extern "C" unsigned int __cdecl _mbcjistojms_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
     )
@@ -66,6 +67,9 @@ extern "C" unsigned int __cdecl _mbcjistojms_l(
             h += 0x40;
         return (h << 8) | l;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbcjistojms_l_downlevel);
+
 #endif
 
 //extern "C" unsigned int (__cdecl _mbcjistojms)(
@@ -95,7 +99,7 @@ extern "C" unsigned int __cdecl _mbcjistojms_l(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" unsigned int __cdecl _mbcjmstojis_l(
+extern "C" unsigned int __cdecl _mbcjmstojis_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -137,6 +141,9 @@ extern "C" unsigned int __cdecl _mbcjmstojis_l(
 
         return c;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbcjmstojis_l_downlevel);
+
 #endif
 
 //extern "C" unsigned int (__cdecl _mbcjmstojis)(

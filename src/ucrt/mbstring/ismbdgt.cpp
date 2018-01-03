@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 /***
@@ -37,7 +38,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcdigit_l(unsigned int const c, _locale_t const locale)
+extern "C" int __cdecl _ismbcdigit_l_downlevel(unsigned int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
@@ -48,6 +49,9 @@ extern "C" int __cdecl _ismbcdigit_l(unsigned int const c, _locale_t const local
 
     return __dcrt_multibyte_check_type(c, locale, _DIGIT, true);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcdigit_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _ismbcdigit(unsigned int const c)

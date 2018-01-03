@@ -10,6 +10,7 @@
 #include <corecrt_internal.h>
 #include <eh.h>
 #include "ehdata.h"
+#include <msvcrt_IAT.h>
 
 EXTERN_C DWORD __cdecl __LTL_GetOsMinVersion();
 
@@ -27,7 +28,7 @@ EXTERN_C DWORD __cdecl __LTL_GetOsMinVersion();
 //                           thrown but not yet caught.
 //
 
-extern "C" int __cdecl __uncaught_exceptions()
+extern "C" int __cdecl __uncaught_exceptions_downlevel()
 {
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < 0x00060000)
@@ -42,6 +43,7 @@ extern "C" int __cdecl __uncaught_exceptions()
 	}
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(__uncaught_exceptions_downlevel);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -51,7 +53,7 @@ extern "C" int __cdecl __uncaught_exceptions()
 //
 
 
-extern "C" void** __cdecl __current_exception()
+extern "C" void** __cdecl __current_exception_downlevel()
 {
 	auto ptd = __acrt_getptd();
 #ifdef _ATL_XP_TARGETING
@@ -66,7 +68,9 @@ extern "C" void** __cdecl __current_exception()
 	}
 }
 
-extern "C" void** __cdecl __current_exception_context()
+_LCRT_DEFINE_IAT_SYMBOL(__current_exception_downlevel);
+
+extern "C" void** __cdecl __current_exception_context_downlevel()
 {
 	auto ptd = __acrt_getptd();
 #ifdef _ATL_XP_TARGETING
@@ -81,10 +85,12 @@ extern "C" void** __cdecl __current_exception_context()
 	}
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(__current_exception_context_downlevel);
+
 #ifdef _ATL_XP_TARGETING
-thread_local int _ProcessingThrow;
+static thread_local int _ProcessingThrow;
 #endif
-extern "C" int* __cdecl __processing_throw()
+extern "C" int* __cdecl __processing_throw_downlevel()
 {
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < 0x00060000)
@@ -101,6 +107,7 @@ extern "C" int* __cdecl __processing_throw()
 	}
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(__processing_throw_downlevel);
 
 ////////////////////////////////////////////////////////////////////////////////
 //

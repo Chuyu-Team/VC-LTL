@@ -8,6 +8,7 @@
 #include <corecrt_internal.h>
 #include <corecrt_terminate.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 
 static __forceinline terminate_handler __cdecl get_terminate_or_default(
@@ -22,10 +23,13 @@ static __forceinline terminate_handler __cdecl get_terminate_or_default(
 		return ptd->VistaOrLater_msvcrt._terminate ? ptd->VistaOrLater_msvcrt._terminate : &abort;
 }
 
-extern "C" terminate_handler __cdecl _get_terminate()
+extern "C" terminate_handler __cdecl _get_terminate_downlevel()
 {
     return get_terminate_or_default(__acrt_getptd());
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_terminate_downlevel);
+
 
 //ÓÉ set_terminate.asm ×ª·¢
 //extern "C" terminate_handler __cdecl set_terminate(

@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 /***
@@ -37,7 +38,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcpunct_l(unsigned int const c, _locale_t const locale)
+extern "C" int __cdecl _ismbcpunct_l_downlevel(unsigned int const c, _locale_t const locale)
 {
 	if (!locale)
 		return _ismbcpunct(c);
@@ -50,6 +51,9 @@ extern "C" int __cdecl _ismbcpunct_l(unsigned int const c, _locale_t const local
 
     return __dcrt_multibyte_check_type(c, locale, _PUNCT, true);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcpunct_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _ismbcpunct(unsigned int const c)
@@ -78,7 +82,7 @@ extern "C" int __cdecl _ismbcpunct_l(unsigned int const c, _locale_t const local
 *
 *******************************************************************************/
 
-extern "C" int __cdecl _ismbcblank_l(unsigned int const c, _locale_t const locale)
+extern "C" int __cdecl _ismbcblank_l_downlevel(unsigned int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
@@ -90,7 +94,12 @@ extern "C" int __cdecl _ismbcblank_l(unsigned int const c, _locale_t const local
     return __dcrt_multibyte_check_type(c, locale, _BLANK, true);
 }
 
-extern "C" int __cdecl _ismbcblank(unsigned int const c)
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcblank_l_downlevel);
+
+
+extern "C" int __cdecl _ismbcblank_downlevel(unsigned int const c)
 {
     return _ismbcblank_l(c, nullptr);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcblank_downlevel);

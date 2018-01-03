@@ -20,6 +20,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -532,41 +533,56 @@ extern "C" int __cdecl _stat32_advanced(char const* const path, struct _stat32* 
     return common_stat(path, result);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_stat32_advanced);
+
 extern "C" int __cdecl _stat32i64_advanced(char const* const path, struct _stat32i64* const result)
 {
     return common_stat(path, result);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_stat32i64_advanced);
 
 extern "C" int __cdecl _stat64_advanced(char const* const path, struct _stat64* const result)
 {
     return common_stat(path, result);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_stat64_advanced);
+
 extern "C" int __cdecl _stat64i32_advanced(char const* const path, struct _stat64i32* const result)
 {
     return common_stat(path, result);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_stat64i32_advanced);
 
 extern "C" int __cdecl _wstat32_advanced(wchar_t const* const path, struct _stat32* const result)
 {
     return common_stat(path, result);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_wstat32_advanced);
+
 extern "C" int __cdecl _wstat32i64_advanced(wchar_t const* const path, struct _stat32i64* const result)
 {
     return common_stat(path, result);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wstat32i64_advanced);
 
 extern "C" int __cdecl _wstat64_advanced(wchar_t const* const path, struct _stat64* const result)
 {
     return common_stat(path, result);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_wstat64_advanced);
+
 extern "C" int __cdecl _wstat64i32_advanced(wchar_t const* const path, struct _stat64i32* const result)
 {
     return common_stat(path, result);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_wstat64i32_advanced);
 
 
 //template <typename StatStruct>

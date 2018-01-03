@@ -14,6 +14,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 /***
@@ -34,7 +35,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcl0_l(
+extern "C" int __cdecl _ismbcl0_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -48,6 +49,9 @@ extern "C" int __cdecl _ismbcl0_l(
             (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c < 0x889f) );
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcl0_l_downlevel);
+
 #endif
 
 //extern "C" int (__cdecl _ismbcl0)(
@@ -75,7 +79,7 @@ extern "C" int __cdecl _ismbcl0_l(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcl1_l(
+extern "C" int __cdecl _ismbcl1_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -89,6 +93,9 @@ extern "C" int __cdecl _ismbcl1_l(
             (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c >= 0x889f) && (c <= 0x9872) );
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcl1_l_downlevel);
+
 #endif
 
 //extern "C" int (__cdecl _ismbcl1)(
@@ -116,7 +123,7 @@ extern "C" int __cdecl _ismbcl1_l(
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcl2_l(
+extern "C" int __cdecl _ismbcl2_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -130,6 +137,9 @@ extern "C" int __cdecl _ismbcl2_l(
             (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c >= 0x989f) && (c <= 0xEAA4) );
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ismbcl2_l_downlevel);
+
 #endif
 //extern "C" int __cdecl _ismbcl2(
 //        unsigned int c

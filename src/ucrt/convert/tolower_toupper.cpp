@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 
 typedef bool (__cdecl internal_istype_l_type)(int, _locale_t);
@@ -95,12 +96,15 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _tolower_l(int const c, _locale_t const locale)
+extern "C" int __cdecl _tolower_l_downlevel(int const c, _locale_t const locale)
 {
 	if (!locale)
 		return tolower(c);
     return common_tox_l<internal_isupper_l, internal_map_lower>(c, LCMAP_LOWERCASE, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_tolower_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl tolower(int const c)
@@ -117,12 +121,15 @@ extern "C" int __cdecl _tolower_l(int const c, _locale_t const locale)
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _toupper_l(int const c, _locale_t const locale)
+extern "C" int __cdecl _toupper_l_downlevel(int const c, _locale_t const locale)
 {
 	if (!locale)
 		return toupper(c);
     return common_tox_l<internal_islower_l, internal_map_upper>(c, LCMAP_UPPERCASE, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_toupper_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl toupper(int const c)

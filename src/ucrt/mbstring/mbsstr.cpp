@@ -16,6 +16,7 @@
 #include <locale.h>
 #include <stddef.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 /***
 * _mbsstr - Search for one MBCS string inside another
@@ -37,7 +38,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
+extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l_downlevel(
         const unsigned char *str1,
         const unsigned char *str2,
         _locale_t plocinfo
@@ -95,6 +96,9 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsstr_l(
         return(nullptr);
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsstr_l_downlevel);
+
 #endif
 
 //extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsstr)(

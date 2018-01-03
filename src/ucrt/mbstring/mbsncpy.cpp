@@ -14,6 +14,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_INCORRECT_VALIDATION __WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26014 26018
 
@@ -41,7 +42,7 @@
 
 #ifdef _ATL_XP_TARGETING
 #pragma warning(suppress:6101) // Returning uninitialized memory '*dst'.  A successful path through the function does not set the named _Out_ parameter.
-extern "C" unsigned char * __cdecl _mbsncpy_l(
+extern "C" unsigned char * __cdecl _mbsncpy_l_downlevel(
         unsigned char *dst,
         const unsigned char *src,
         size_t cnt,
@@ -88,6 +89,9 @@ extern "C" unsigned char * __cdecl _mbsncpy_l(
 #pragma warning(suppress:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036 REVIEW annotation mistake?
         return start;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsncpy_l_downlevel);
+
 #endif
 
 //extern "C" unsigned char * (__cdecl _mbsncpy)(

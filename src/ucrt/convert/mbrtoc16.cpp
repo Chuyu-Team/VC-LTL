@@ -7,10 +7,11 @@
 #include <errno.h>
 #include <uchar.h>
 #include <corecrt_internal.h>
+#include <msvcrt_IAT.h>
 
 #define PART_2 16 /* 0 => new char, 1-5 => extra bytes, else 2nd half */
 
-extern "C" size_t __cdecl mbrtoc16(char16_t * pwc, const char * s, size_t nin, mbstate_t * pst)
+extern "C" size_t __cdecl mbrtoc16_downlevel(char16_t * pwc, const char * s, size_t nin, mbstate_t * pst)
 { /* translate UTF-8 multibyte to UTF-16 char16_t, restartably */
     unsigned char *su;
 
@@ -114,6 +115,8 @@ extern "C" size_t __cdecl mbrtoc16(char16_t * pwc, const char * s, size_t nin, m
         }
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(mbrtoc16_downlevel);
 
 /*
  * Copyright (c) 1992-2013 by P.J. Plauger.  ALL RIGHTS RESERVED.

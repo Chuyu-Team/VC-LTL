@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 /***
 * _mbsnbcnt - Returns byte count of MBCS string
@@ -39,7 +40,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbsnbcnt_l(
+extern "C" size_t __cdecl _mbsnbcnt_l_downlevel(
         const unsigned char *string,
         size_t ccnt,
         _locale_t plocinfo
@@ -65,6 +66,9 @@ extern "C" size_t __cdecl _mbsnbcnt_l(
 
         return ((size_t) ((char *)p - (char *)string));
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsnbcnt_l_downlevel);
+
 #endif
 
 //extern "C" size_t (__cdecl _mbsnbcnt)(

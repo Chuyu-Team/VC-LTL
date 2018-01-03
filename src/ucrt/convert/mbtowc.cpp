@@ -10,6 +10,7 @@
 #include <corecrt_internal.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 /***
 *int mbtowc() - Convert multibyte char to wide character.
@@ -39,7 +40,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbtowc_l(
+extern "C" int __cdecl _mbtowc_l_downlevel(
     wchar_t  *pwc,
     const char *s,
     size_t n,
@@ -110,6 +111,9 @@ extern "C" int __cdecl _mbtowc_l(
     }
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbtowc_l_downlevel);
+
 #endif
 
 

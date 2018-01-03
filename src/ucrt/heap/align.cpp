@@ -17,6 +17,7 @@
 
 #include <corecrt_internal.h>
 #include <malloc.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -515,6 +516,8 @@ extern "C" size_t __cdecl _aligned_msize_downlevel(
     #endif
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_aligned_msize_downlevel);
+
 //extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_malloc(
 //    size_t const size,
 //    size_t const alignment,
@@ -557,6 +560,8 @@ extern "C" _CRTRESTRICT void* __cdecl _aligned_offset_recalloc_downlevel(
     #endif
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_aligned_offset_recalloc_downlevel);
+
 //extern "C" _CRTRESTRICT void* __cdecl _aligned_realloc(
 //    void*  const block,
 //    size_t const size,
@@ -583,3 +588,5 @@ extern "C" _CRTRESTRICT void* __cdecl _aligned_recalloc_downlevel(
     return _aligned_recalloc_base(block, count, size, alignment);
     #endif
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_aligned_recalloc_downlevel);

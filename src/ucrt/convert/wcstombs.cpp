@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *size_t __cdecl wcsncnt - count wide characters in a string, up to n.
@@ -278,7 +279,7 @@ static size_t __cdecl _wcstombs_l_helper (
 }
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _wcstombs_l (
+extern "C" size_t __cdecl _wcstombs_l_downlevel (
         char * s,
         const wchar_t * pwcs,
         size_t n,
@@ -287,6 +288,9 @@ extern "C" size_t __cdecl _wcstombs_l (
 {
     return _wcstombs_l_helper(s, pwcs, n, plocinfo);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcstombs_l_downlevel);
+
 #endif
 
 //extern "C" size_t __cdecl wcstombs (
@@ -324,7 +328,7 @@ extern "C" size_t __cdecl _wcstombs_l (
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _wcstombs_s_l (
+extern "C" errno_t __cdecl _wcstombs_s_l_downlevel (
         size_t *pConvertedChars,
         char * dst,
         size_t sizeInBytes,
@@ -390,10 +394,13 @@ extern "C" errno_t __cdecl _wcstombs_s_l (
 
     return retvalue;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcstombs_s_l_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wcstombs_s (
+extern "C" errno_t __cdecl wcstombs_s_downlevel (
         size_t *pConvertedChars,
         char * dst,
         size_t sizeInBytes,
@@ -403,4 +410,7 @@ extern "C" errno_t __cdecl wcstombs_s (
 {
     return _wcstombs_s_l(pConvertedChars, dst, sizeInBytes, src, n, nullptr);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wcstombs_s_downlevel);
+
 #endif

@@ -5,8 +5,9 @@
 //
 
 #include <uchar.h>
+#include <msvcrt_IAT.h>
 
-extern "C" size_t __cdecl c32rtomb(char * s, char32_t c32, mbstate_t * /* pst */)
+extern "C" size_t __cdecl c32rtomb_downlevel(char * s, char32_t c32, mbstate_t * /* pst */)
 { /* translate UCS-4 char32_t to UTF-8 multibyte, restartably */
     unsigned char *su;
     unsigned long wc;
@@ -60,6 +61,8 @@ extern "C" size_t __cdecl c32rtomb(char * s, char32_t c32, mbstate_t * /* pst */
 
     return ((char *)su - s);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(c32rtomb_downlevel);
 
 /*
  * Copyright (c) 1992-2013 by P.J. Plauger.  ALL RIGHTS RESERVED.

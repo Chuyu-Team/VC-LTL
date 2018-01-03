@@ -11,6 +11,7 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -25,12 +26,15 @@
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isalpha_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isalpha_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isalpha_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isalpha_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isalpha)(int const c)
@@ -41,12 +45,15 @@ extern "C" extern __inline int (__cdecl _isalpha_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isupper_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isupper_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isupper_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isupper_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isupper)(int const c)
@@ -57,12 +64,15 @@ extern "C" extern __inline int (__cdecl _isupper_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _islower_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _islower_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _islower_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_islower_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl islower)(int const c)
@@ -73,12 +83,15 @@ extern "C" extern __inline int (__cdecl _islower_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isdigit_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isdigit_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isdigit_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isdigit_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isdigit)(int const c)
@@ -89,12 +102,15 @@ extern "C" extern __inline int (__cdecl _isdigit_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isxdigit_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isxdigit_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isxdigit_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isxdigit_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isxdigit)(int const c)
@@ -105,12 +121,15 @@ extern "C" extern __inline int (__cdecl _isxdigit_l)(int const c, _locale_t cons
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isspace_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isspace_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isspace_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isspace_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isspace)(int const c)
@@ -120,12 +139,15 @@ extern "C" extern __inline int (__cdecl _isspace_l)(int const c, _locale_t const
 //        : fast_check(c, _SPACE);
 //}
 
-extern "C" extern __inline int (__cdecl _ispunct_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _ispunct_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _ispunct_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_ispunct_l_downlevel);
+
 
 //extern "C" extern __inline int (__cdecl ispunct)(int const c)
 //{
@@ -134,14 +156,17 @@ extern "C" extern __inline int (__cdecl _ispunct_l)(int const c, _locale_t const
 //        : fast_check(c, _PUNCT);
 //}
 
-extern "C" extern __inline int (__cdecl _isblank_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isblank_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isblank_l(c, locale);
 }
 
-extern "C" extern __inline int (__cdecl isblank)(int const c)
+_LCRT_DEFINE_IAT_SYMBOL(_isblank_l_downlevel);
+
+
+extern "C" extern __inline int (__cdecl isblank_downlevel)(int const c)
 {
     //return __acrt_locale_changed()
     //    ? (_isblank_l)(c, nullptr)
@@ -151,13 +176,19 @@ extern "C" extern __inline int (__cdecl isblank)(int const c)
 
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(isblank_downlevel);
+
+
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isalnum_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isalnum_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isalnum_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isalnum_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isalnum)(int const c)
@@ -168,12 +199,15 @@ extern "C" extern __inline int (__cdecl _isalnum_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isprint_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isprint_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isprint_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isprint_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isprint)(int const c)
@@ -184,12 +218,15 @@ extern "C" extern __inline int (__cdecl _isprint_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isgraph_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _isgraph_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _isgraph_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_isgraph_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl isgraph)(int const c)
@@ -200,12 +237,15 @@ extern "C" extern __inline int (__cdecl _isgraph_l)(int const c, _locale_t const
 //}
 
 #ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _iscntrl_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _iscntrl_l_downlevel)(int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
     return _iscntrl_l(c, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_iscntrl_l_downlevel);
+
 #endif
 
 //extern "C" extern __inline int (__cdecl iscntrl)(int const c)
@@ -225,20 +265,25 @@ extern "C" extern __inline int (__cdecl _iscntrl_l)(int const c, _locale_t const
 //    return __toascii(c);
 //}
 
-extern "C" extern __inline int (__cdecl _iscsymf_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _iscsymf_l_downlevel)(int const c, _locale_t const locale)
 {
     return (_isalpha_l)(c, locale) || (c) == '_';
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_iscsymf_l_downlevel);
 
 //extern "C" extern __inline int (__cdecl __iscsymf)(int const c)
 //{
 //    return __iscsymf(c);
 //}
 
-extern "C" extern __inline int (__cdecl _iscsym_l)(int const c, _locale_t const locale)
+extern "C" extern __inline int (__cdecl _iscsym_l_downlevel)(int const c, _locale_t const locale)
 {
     return (_isalnum_l)(c, locale) || (c) == '_';
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_iscsym_l_downlevel);
+
 
 //extern "C" extern __inline int (__cdecl __iscsym)(int const c)
 //{

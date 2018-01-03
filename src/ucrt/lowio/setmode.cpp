@@ -9,6 +9,7 @@
 //
 #include <corecrt_internal_lowio.h>
 #include <stdlib.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -96,7 +97,7 @@
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _set_fmode(int const mode)
+extern "C" errno_t __cdecl _set_fmode_downlevel(int const mode)
 {
     _VALIDATE_RETURN_ERRCODE(mode == _O_TEXT || mode == _O_BINARY || mode == _O_WTEXT, EINVAL);
 
@@ -106,11 +107,14 @@ extern "C" errno_t __cdecl _set_fmode(int const mode)
 
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_set_fmode_downlevel);
+
 #endif
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _get_fmode(int* const pMode)
+extern "C" errno_t __cdecl _get_fmode_downlevel(int* const pMode)
 {
     _VALIDATE_RETURN_ERRCODE(pMode != nullptr, EINVAL);
 
@@ -120,4 +124,7 @@ extern "C" errno_t __cdecl _get_fmode(int* const pMode)
 
     return 0;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_fmode_downlevel);
+
 #endif

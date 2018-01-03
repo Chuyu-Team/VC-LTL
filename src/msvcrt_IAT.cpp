@@ -16,41 +16,39 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_FMA3_enable);
 //_LCRT_DEFINE_IAT_SYMBOL_EXTERN(abort_advanced);
 //_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_abort_behavior_advanced);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_fstat64i32_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat64i32_light);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat64i32_light);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_fstat64i32_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat64i32_light);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat64i32_light);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat32_advanced);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat32i64_advanced);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat64i32_advanced);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat64_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat32_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat32i64_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat64i32_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_stat64_advanced);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat32_advanced);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat32i64_advanced);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat64i32_advanced);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat64_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat32_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat32i64_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat64i32_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wstat64_advanced);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_purecall_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_purecall_advanced);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_purecall_handler_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_purecall_handler_advanced);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_purecall_handler_advanced);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_purecall_handler_advanced);
 
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_invalid_parameter_handler_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_invalid_parameter_handler_downlevel);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_invalid_parameter_handler_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_invalid_parameter_handler_downlevel);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_thread_local_invalid_parameter_handler_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_thread_local_invalid_parameter_handler_downlevel);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_thread_local_invalid_parameter_handler_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_thread_local_invalid_parameter_handler_downlevel);
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_abort_behavior_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_abort_behavior_downlevel);
 
 
 #ifdef _ATL_XP_TARGETING
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wassert);
-
 //msvcrt.lib
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(qsort_s_downlevel);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_i64toa_s_downlevel);
@@ -127,6 +125,6 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(RTDynamicCast_downlevel);
 
 
 
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_msize_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_offset_recalloc_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_recalloc_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_msize_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_offset_recalloc_downlevel);
+//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_recalloc_downlevel);

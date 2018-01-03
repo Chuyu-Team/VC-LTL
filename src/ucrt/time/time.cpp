@@ -7,6 +7,7 @@
 // system time as a timespec and a time_t, respectively.
 //
 #include <corecrt_internal_time.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -40,15 +41,20 @@ static int __cdecl common_timespec_get(TimeSpecType* const ts, int const base) t
     return base;
 }
 
-extern "C" int __cdecl _timespec32_get(_timespec32* const ts, int const base)
+extern "C" int __cdecl _timespec32_get_downlevel(_timespec32* const ts, int const base)
 {
     return common_timespec_get(ts, base);
 }
 
-extern "C" int __cdecl _timespec64_get(_timespec64* const ts, int const base)
+_LCRT_DEFINE_IAT_SYMBOL(_timespec32_get_downlevel);
+
+extern "C" int __cdecl _timespec64_get_downlevel(_timespec64* const ts, int const base)
 {
     return common_timespec_get(ts, base);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_timespec64_get_downlevel);
+
 
 
 
@@ -72,14 +78,19 @@ static TimeType __cdecl common_time(TimeType* const result) throw()
 
 #ifdef _ATL_XP_TARGETING
 
-extern "C" __time32_t __cdecl _time32(__time32_t* const result)
+extern "C" __time32_t __cdecl _time32_downlevel(__time32_t* const result)
 {
     return common_time(result);
 }
 
-extern "C" __time64_t __cdecl _time64(__time64_t* const result)
+_LCRT_DEFINE_IAT_SYMBOL(_time32_downlevel);
+
+extern "C" __time64_t __cdecl _time64_downlevel(__time64_t* const result)
 {
     return common_time(result);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_time64_downlevel);
+
 
 #endif

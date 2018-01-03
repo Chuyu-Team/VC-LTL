@@ -14,6 +14,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -38,7 +39,7 @@
 *
 *******************************************************************************/
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbscmp_l(
+extern "C" int __cdecl _mbscmp_l_downlevel(
         const unsigned char *s1,
         const unsigned char *s2,
         _locale_t plocinfo
@@ -74,6 +75,9 @@ extern "C" int __cdecl _mbscmp_l(
 
         }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbscmp_l_downlevel);
+
 #endif
 
 //extern "C" int (__cdecl _mbscmp)(

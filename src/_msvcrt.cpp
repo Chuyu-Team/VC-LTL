@@ -105,7 +105,7 @@ extern "C"
 	}*/
 
 	//系统自带有double，用此将其转换为float
-	float __cdecl strtof(
+	float __cdecl strtof_downlevel(
 		_In_z_                   char const* _String,
 		_Out_opt_ _Deref_post_z_ char**      _EndPtr
 	)
@@ -114,7 +114,9 @@ extern "C"
 		return strtod(_String, _EndPtr);
 	}
 
-	float __cdecl wcstof(
+	_LCRT_DEFINE_IAT_SYMBOL(strtof_downlevel);
+
+	float __cdecl wcstof_downlevel(
 		_In_z_                   wchar_t const* _String,
 		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr
 	)
@@ -122,6 +124,9 @@ extern "C"
 #pragma warning(suppress : 4244)
 		return wcstod(_String, _EndPtr);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(wcstof_downlevel);
+
 
 	BOOL __cdecl __vcrt_InitializeCriticalSectionEx(
 		LPCRITICAL_SECTION const critical_section,
@@ -452,7 +457,7 @@ extern "C"
 
 #endif
 
-	errno_t __cdecl _get_daylight(
+	errno_t __cdecl _get_daylight_downlevel(
 		_Out_ int* _Daylight
 		)
 	{
@@ -463,7 +468,9 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _get_dstbias(
+	_LCRT_DEFINE_IAT_SYMBOL(_get_daylight_downlevel);
+
+	errno_t __cdecl _get_dstbias_downlevel(
 		_Out_ long* _DaylightSavingsBias
 		)
 	{
@@ -473,7 +480,9 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _get_timezone(
+	_LCRT_DEFINE_IAT_SYMBOL(_get_dstbias_downlevel);
+
+	errno_t __cdecl _get_timezone_downlevel(
 		_Out_ long* _TimeZone
 		)
 	{
@@ -483,7 +492,9 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _get_tzname(
+	_LCRT_DEFINE_IAT_SYMBOL(_get_timezone_downlevel);
+
+	errno_t __cdecl _get_tzname_downlevel(
 		_Out_                        size_t* _ReturnValue,
 		_Out_writes_z_(_SizeInBytes) char*   _Buffer,
 		_In_                         size_t  _SizeInBytes,
@@ -515,6 +526,8 @@ extern "C"
 
 		return strcpy_s(_Buffer, _SizeInBytes, _tzname[_Index]);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_get_tzname_downlevel);
 
 #ifdef _ATL_XP_TARGETING
 	/*
@@ -740,7 +753,7 @@ extern "C"
 	}
 
 	// Locks a stdio stream.
-	void __cdecl _lock_file(FILE* const stream)
+	void __cdecl _lock_file_downlevel(FILE* const stream)
 	{
 		if (IsInternalStream(stream))
 			_lock((stream - _iob) + 0x10);
@@ -748,10 +761,11 @@ extern "C"
 			EnterCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_lock_file_downlevel);
 
 
 	// Unlocks a stdio stream.
-	void __cdecl _unlock_file(FILE* const stream)
+	void __cdecl _unlock_file_downlevel(FILE* const stream)
 	{
 		if (IsInternalStream(stream))
 			_unlock((stream - _iob) + 0x10);
@@ -759,8 +773,9 @@ extern "C"
 			LeaveCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_unlock_file_downlevel);
 
-	errno_t __cdecl _get_stream_buffer_pointers(
+	errno_t __cdecl _get_stream_buffer_pointers_downlevel(
 		FILE*   const public_stream,
 		char*** const base,
 		char*** const ptr,
@@ -788,9 +803,10 @@ extern "C"
 		return 0;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_get_stream_buffer_pointers_downlevel);
 
 	//msvrct仅支持_Strftime，我们可以将通过字符串转换，得到_Wcsftime
-	size_t __cdecl _Wcsftime(
+	size_t __cdecl _Wcsftime_downlevel(
 		wchar_t*       const buffer,
 		size_t         const max_size,
 		wchar_t const* const format,
@@ -854,9 +870,10 @@ extern "C"
 		return Count;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_Wcsftime_downlevel);
 
 	//msvrct仅支持_Getdays，我们可以将通过字符串转换，得到_W_Getdays
-	wchar_t* __cdecl _W_Getdays(void)
+	wchar_t* __cdecl _W_Getdays_downlevel(void)
 	{
 		auto szDays = _Getdays();
 		if (!szDays)
@@ -888,8 +905,10 @@ extern "C"
 		}
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_W_Getdays_downlevel);
+
 	//msvrct仅支持_Getmonths，我们可以将通过字符串转换，得到_W_Getmonths
-	wchar_t *__cdecl _W_Getmonths(void)
+	wchar_t *__cdecl _W_Getmonths_downlevel(void)
 	{
 		auto szMonths = _Getmonths();
 		if (!szMonths)
@@ -920,6 +939,8 @@ extern "C"
 			return nullptr;
 		}
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_W_Getmonths_downlevel);
 
 	/*void* __cdecl _W_Gettnames()
 	{
@@ -1027,7 +1048,7 @@ extern "C"
 		return common_stat(_FileHandle, _Stat);
 	}
 
-
+	_LCRT_DEFINE_IAT_SYMBOL(_fstat64i32_downlevel);
 
 	//_stat已经改名为_stat32
 //#pragma push_macro("_stat")
@@ -1074,6 +1095,7 @@ extern "C"
 		return common_stat(_FileName, _Stat);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_stat64i32_light);
 
 	//_wstat已经改名为_wstat32，做转发
 //#pragma push_macro("_wstat")
@@ -1117,6 +1139,8 @@ extern "C"
 	{
 		return common_stat(_FileName, _Stat);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_wstat64i32_light);
 
 	//通过ASCII文件名搜索
 	extern "C++" __forceinline intptr_t __cdecl _tfindfirst(
@@ -1163,7 +1187,7 @@ extern "C"
 	}
 
 	//msvcrt不支持_findfirst64i32，不过我们可以用_findfirst64转换
-	intptr_t __cdecl _findfirst64i32(
+	intptr_t __cdecl _findfirst64i32_downlevel(
 		_In_z_ char const*              _FileName,
 		_Out_  struct _finddata64i32_t* _FindData
 	)
@@ -1171,8 +1195,11 @@ extern "C"
 		return common_findfirst<__finddata64_t>(_FileName, _FindData);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_findfirst64i32_downlevel);
+
+
 	//msvcrt不支持_wfindfirst64i32，不过我们可以用_wfindfirst64转换
-	intptr_t __cdecl _wfindfirst64i32(
+	intptr_t __cdecl _wfindfirst64i32_downlevel(
 		_In_z_ wchar_t const*            _FileName,
 		_Out_  struct _wfinddata64i32_t* _FindData
 	)
@@ -1180,6 +1207,7 @@ extern "C"
 		return common_findfirst<_wfinddata64_t>(_FileName, _FindData);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_wfindfirst64i32_downlevel);
 
 
 	extern "C++" __forceinline int __cdecl _tfindnext(
@@ -1224,7 +1252,7 @@ extern "C"
 		return result;
 	}
 
-	int __cdecl _findnext64i32(
+	int __cdecl _findnext64i32_downlevel(
 		_In_  intptr_t                 _FindHandle,
 		_Out_ struct _finddata64i32_t* _FindData
 	)
@@ -1232,7 +1260,9 @@ extern "C"
 		return common_findnext<__finddata64_t>(_FindHandle, _FindData);
 	}
 
-	int __cdecl _wfindnext64i32(
+	_LCRT_DEFINE_IAT_SYMBOL(_findnext64i32_downlevel);
+
+	int __cdecl _wfindnext64i32_downlevel(
 		_In_  intptr_t                  _FindHandle,
 		_Out_ struct _wfinddata64i32_t* _FindData
 	)
@@ -1240,8 +1270,10 @@ extern "C"
 		return common_findnext<_wfinddata64_t>(_FindHandle, _FindData);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_wfindnext64i32_downlevel);
+
 	//msvcrt没有_ftelli64，不过好在有fgetpos
-	__int64 __cdecl _ftelli64(
+	__int64 __cdecl _ftelli64_downlevel(
 		_Inout_ FILE* _Stream
 	)
 	{
@@ -1256,6 +1288,8 @@ extern "C"
 			return _Position;
 		}
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_ftelli64_downlevel);
 
 	//	typedef struct {
 	//		long osfhnd;    /* underlying OS file HANDLE */ //CreateFile返回的句柄
@@ -1289,7 +1323,7 @@ extern "C"
 		return ptd;
 	}
 
-	float __cdecl _strtof_l(
+	float __cdecl _strtof_l_downlevel(
 		_In_z_                   char const* _String,
 		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
 		_In_opt_                 _locale_t   _Locale
@@ -1298,6 +1332,7 @@ extern "C"
 		return _strtod_l(_String, _EndPtr, _Locale);
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_strtof_l_downlevel);
 
 	extern "C++" __forceinline double __cdecl _tatof(char const* const string)
 	{
@@ -1329,12 +1364,14 @@ extern "C"
 
 
 	//msvcrt没有_atoflt，但是我们可以使用atof转换
-	int __cdecl _atoflt(_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String)
+	int __cdecl _atoflt_downlevel(_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String)
 	{
 		_VALIDATE_RETURN(_Result != nullptr, EINVAL, _DOMAIN);
 
 		return common_atof(_Result->f, _String);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_atoflt_downlevel);
 
 #ifdef _DEBUG
 	#define _BUFFER_FILL_PATTERN _SECURECRT_FILL_BUFFER_PATTERN
@@ -1352,7 +1389,7 @@ extern "C"
 	根据文档https://msdn.microsoft.com/zh-cn/library/hh977173.aspx 以及UCRT源代码确定，fread_s失败时文件位置是未知的。
 	因此我们没有必要事先保存文件指针位置，来提供恢复机制。
 	*/
-    size_t __cdecl fread_s(
+    size_t __cdecl fread_s_downlevel(
         _Out_writes_bytes_to_(_BufferSize, _ElementSize * _ElementCount)   void*  _Buffer,
         _In_range_(>=, _ElementSize * _ElementCount)                       size_t _BufferSize,
         _In_                                                               size_t _ElementSize,
@@ -1415,6 +1452,7 @@ extern "C"
 		return num_read / _ElementSize;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(fread_s_downlevel);
 
 	extern "C++" __forceinline char* __cdecl _tgetenv(
 		_In_z_ char const* _VarName
@@ -1482,7 +1520,7 @@ extern "C"
 		return result;
 	}
 
-	errno_t __cdecl _dupenv_s(
+	errno_t __cdecl _dupenv_s_downlevel(
 		_Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ char**      _Buffer,
 		_Out_opt_                                                                   size_t*     _BufferCount,
 		_In_z_                                                                      char const* _VarName
@@ -1491,7 +1529,9 @@ extern "C"
 		return common_tdupenv_s(_Buffer, _BufferCount, _VarName);
 	}
 
-	errno_t __cdecl _wdupenv_s(
+	_LCRT_DEFINE_IAT_SYMBOL(_dupenv_s_downlevel);
+
+	errno_t __cdecl _wdupenv_s_downlevel(
 		_Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ wchar_t**      _Buffer,
 		_Out_opt_                                                                   size_t*        _BufferCount,
 		_In_z_                                                                      wchar_t const* _VarName
@@ -1499,6 +1539,8 @@ extern "C"
 	{
 		return common_tdupenv_s(_Buffer, _BufferCount, _VarName);
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_wdupenv_s_downlevel);
 
 	//不想额外写类，通过参数强制转换，规避下吧
 	extern "C++"
@@ -1566,7 +1608,7 @@ extern "C"
 		return pBuffer;
 	}
 
-	char* __cdecl gets_s(
+	char* __cdecl gets_s_downlevel(
 		_Out_writes_z_(_Size) char*   _Buffer,
 		_In_                  rsize_t _Size
 		)
@@ -1579,7 +1621,9 @@ extern "C"
 		return result;
 	}
 
-	wchar_t* __cdecl _getws_s(
+	_LCRT_DEFINE_IAT_SYMBOL(gets_s_downlevel);
+
+	wchar_t* __cdecl _getws_s_downlevel(
 		_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 		_In_                         size_t   _BufferCount
 		)
@@ -1592,6 +1636,8 @@ extern "C"
 		return result;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(_getws_s_downlevel);
+
 	//此函数什么都不做，仅供编译通过处理，因此任何调用abort函数必定静默退出。
 	unsigned int __cdecl _set_abort_behavior_downlevel(
 		_In_ unsigned int _Flags,
@@ -1600,6 +1646,8 @@ extern "C"
 	{
 		return 0;
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior_downlevel);
 
 #ifdef _ATL_XP_TARGETING
 

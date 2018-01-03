@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 /***
 *int _memicmp(first, last, count) - compare two blocks of memory, ignore case
@@ -39,7 +40,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _memicmp_l (
+extern "C" int __cdecl _memicmp_l_downlevel (
         const void * first,
         const void * last,
         size_t count,
@@ -71,6 +72,9 @@ extern "C" int __cdecl _memicmp_l (
     }
     return ( f - l );
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_memicmp_l_downlevel);
+
 #endif
 
 #if !defined(_M_IX86) || defined(_M_HYBRID_X86_ARM64)

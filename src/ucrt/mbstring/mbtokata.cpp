@@ -13,6 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 /***
@@ -32,7 +33,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" unsigned int __cdecl _mbctokata_l(
+extern "C" unsigned int __cdecl _mbctokata_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -44,6 +45,9 @@ extern "C" unsigned int __cdecl _mbctokata_l(
         }
         return(c);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbctokata_l_downlevel);
+
 #endif
 
 //extern "C" unsigned int (__cdecl _mbctokata)(

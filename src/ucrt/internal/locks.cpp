@@ -7,6 +7,7 @@
 //
 #include <corecrt_internal.h>
 #include "..\..\src\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 
 
@@ -60,13 +61,17 @@
 //    LeaveCriticalSection(&__acrt_lock_table[_Lock]);
 //}
 
-extern "C" void __cdecl _lock_locales()
+extern "C" void __cdecl _lock_locales_downlevel()
 {
 	//__acrt_eagerly_load_locale_apis();
 	_lock(__acrt_locale_lock);
 }
 
-extern "C" void __cdecl _unlock_locales()
+_LCRT_DEFINE_IAT_SYMBOL(_lock_locales_downlevel);
+
+extern "C" void __cdecl _unlock_locales_downlevel()
 {
 	_unlock(__acrt_locale_lock);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_unlock_locales_downlevel);

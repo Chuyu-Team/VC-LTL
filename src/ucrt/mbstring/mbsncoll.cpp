@@ -16,6 +16,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 * _mbsncoll(s1, s2, n) - Collate n characters of two MBCS strings
@@ -40,7 +41,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbsncoll_l(
+extern "C" int __cdecl _mbsncoll_l_downlevel(
         const unsigned char *s1,
         const unsigned char *s2,
         size_t n,
@@ -85,6 +86,9 @@ extern "C" int __cdecl _mbsncoll_l(
         return ret - 2;
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsncoll_l_downlevel);
+
 #endif
 
 //extern "C" int (__cdecl _mbsncoll)(

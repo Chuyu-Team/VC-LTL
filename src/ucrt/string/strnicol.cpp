@@ -13,6 +13,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *int _strnicoll() - Collate locale strings without regard to case
@@ -39,7 +40,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _strnicoll_l (
+extern "C" int __cdecl _strnicoll_l_downlevel (
         const char *_string1,
         const char *_string2,
         size_t count,
@@ -79,6 +80,9 @@ extern "C" int __cdecl _strnicoll_l (
 
     return (ret - 2);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_strnicoll_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _strnicoll (

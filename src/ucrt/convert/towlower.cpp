@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *wint_t _towlower_l(c, ptloci) - convert wide character to lower case
@@ -27,7 +28,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" wint_t __cdecl _towlower_l (
+extern "C" wint_t __cdecl _towlower_l_downlevel (
         wint_t c,
         _locale_t plocinfo
         )
@@ -70,6 +71,9 @@ extern "C" wint_t __cdecl _towlower_l (
     return widechar;
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_towlower_l_downlevel);
+
 #endif
 
 /***

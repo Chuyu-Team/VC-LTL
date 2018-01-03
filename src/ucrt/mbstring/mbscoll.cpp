@@ -15,6 +15,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 * _mbscoll - Collate MBCS strings
@@ -37,7 +38,7 @@
 *
 *******************************************************************************/
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbscoll_l(
+extern "C" int __cdecl _mbscoll_l_downlevel(
         const unsigned char *s1,
         const unsigned char *s2,
         _locale_t plocinfo
@@ -74,6 +75,9 @@ extern "C" int __cdecl _mbscoll_l(
         return ret - 2;
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbscoll_l_downlevel);
+
 #endif
 
 //extern "C" int (__cdecl _mbscoll)(

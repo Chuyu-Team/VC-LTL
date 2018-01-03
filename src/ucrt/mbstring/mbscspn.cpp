@@ -16,6 +16,7 @@
 #include <locale.h>
 #include <stddef.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 /***
 *ifndef _RETURN_PTR
@@ -54,14 +55,14 @@
 #ifdef _ATL_XP_TARGETING
 #ifndef _RETURN_PTR
 
-extern "C" size_t __cdecl _mbscspn_l(
+extern "C" size_t __cdecl _mbscspn_l_downlevel(
         const unsigned char *string,
         const unsigned char *charset,
         _locale_t plocinfo
         )
 #else  /* _RETURN_PTR */
 
-extern "C" const unsigned char * __cdecl _mbspbrk_l(
+extern "C" const unsigned char * __cdecl _mbspbrk_l_downlevel(
         const unsigned char *string,
         const unsigned char  *charset,
         _locale_t plocinfo
@@ -128,6 +129,13 @@ extern "C" const unsigned char * __cdecl _mbspbrk_l(
 #endif  /* _RETURN_PTR */
 
 }
+
+#ifndef _RETURN_PTR
+_LCRT_DEFINE_IAT_SYMBOL(_mbscspn_l_downlevel);
+#else
+_LCRT_DEFINE_IAT_SYMBOL(_mbspbrk_l_downlevel);
+#endif
+
 #endif
 
 //#ifndef _RETURN_PTR

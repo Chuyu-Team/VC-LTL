@@ -11,7 +11,7 @@
 *
 ****/
 
-errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, size_t _COUNT, _LOCALE_ARG_DECL)
+EXTERN_C errno_t __cdecl _FUNC_NAME(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, size_t _COUNT, _LOCALE_ARG_DECL)
 {
 	if (!_LOCALE_ARG)
 		return _FUNC_NAME_NO_LOCALE(_Dst, _SizeInBytes, _Src, _COUNT);

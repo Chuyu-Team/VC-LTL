@@ -17,6 +17,7 @@
 #include <corecrt_internal.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <msvcrt_IAT.h>
 
 
 _Check_return_
@@ -78,13 +79,16 @@ static size_t __cdecl common_mbstrlen_l(
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstrlen_l(
+extern "C" size_t __cdecl _mbstrlen_l_downlevel(
     char const* const string,
     _locale_t   const locale
     )
 {
     return common_mbstrlen_l(string, SIZE_MAX, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbstrlen_l_downlevel);
+
 #endif
 
 //extern "C" size_t __cdecl _mbstrlen(char const* const string)
@@ -101,7 +105,7 @@ extern "C" size_t __cdecl _mbstrlen_l(
 
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstrnlen_l(
+extern "C" size_t __cdecl _mbstrnlen_l_downlevel(
     char const* const string,
     size_t      const max_size,
     _locale_t   const locale
@@ -112,14 +116,20 @@ extern "C" size_t __cdecl _mbstrnlen_l(
 
     return common_mbstrlen_l(string, max_size, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbstrnlen_l_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstrnlen(
+extern "C" size_t __cdecl _mbstrnlen_downlevel(
     char const* const string,
     size_t      const max_size
     )
 {
     return _mbstrnlen_l(string, max_size, nullptr);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbstrnlen_downlevel);
+
 #endif

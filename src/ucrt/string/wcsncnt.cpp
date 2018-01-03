@@ -7,10 +7,10 @@
 // the string is longer than the given 'count', 'count' is returned.
 //
 #include <string.h>
-
+#include <msvcrt_IAT.h>
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl __wcsncnt(
+extern "C" size_t __cdecl __wcsncnt_downlevel(
     wchar_t const* const string,
     size_t         const count
     )
@@ -22,4 +22,7 @@ extern "C" size_t __cdecl __wcsncnt(
 
     return n;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__wcsncnt_downlevel);
+
 #endif

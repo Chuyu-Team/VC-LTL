@@ -14,6 +14,7 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 * _mbctoupper - Convert character to upper case (MBCS)
@@ -37,7 +38,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" unsigned int __cdecl _mbctoupper_l(
+extern "C" unsigned int __cdecl _mbctoupper_l_downlevel(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -81,6 +82,9 @@ extern "C" unsigned int __cdecl _mbctoupper_l(
         else
             return (unsigned int)_mbbtoupper_l((int)c, plocinfo);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbctoupper_l_downlevel);
+
 #endif
 //unsigned int (__cdecl _mbctoupper)(
 //        unsigned int c

@@ -96,9 +96,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\mbstring\ismbupr.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\iswctype.cpp">
-      <Filter>ucrt\WinXP</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\_mbslen.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>

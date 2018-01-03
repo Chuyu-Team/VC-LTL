@@ -13,6 +13,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -128,7 +129,7 @@ static errno_t __cdecl common_strerror_s(
 }
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl strerror_s(
+extern "C" errno_t __cdecl strerror_s_downlevel(
     char*  const buffer,
     size_t const buffer_count,
     int    const error_number
@@ -136,10 +137,13 @@ extern "C" errno_t __cdecl strerror_s(
 {
     return common_strerror_s(buffer, buffer_count, error_number);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(strerror_s_downlevel);
+
 #endif
 
 #ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _wcserror_s(
+extern "C" errno_t __cdecl _wcserror_s_downlevel(
     wchar_t* const buffer,
     size_t   const buffer_count,
     int      const error_number
@@ -147,4 +151,7 @@ extern "C" errno_t __cdecl _wcserror_s(
 {
     return common_strerror_s(buffer, buffer_count, error_number);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcserror_s_downlevel);
+
 #endif

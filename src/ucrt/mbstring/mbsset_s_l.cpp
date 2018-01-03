@@ -13,9 +13,10 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
+#include <msvcrt_IAT.h>
 
 #ifdef _ATL_XP_TARGETING
-errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned int _Value, _LOCALE_ARG_DECL)
+EXTERN_C errno_t __cdecl _mbsset_s_l_downlevel(unsigned char *_Dst, size_t _SizeInBytes, unsigned int _Value, _LOCALE_ARG_DECL)
 {
 	if (!_LOCALE_ARG)
 		return _mbsset_s(_Dst, _SizeInBytes, _Value);
@@ -91,4 +92,7 @@ errno_t __cdecl _mbsset_s_l(unsigned char *_Dst, size_t _SizeInBytes, unsigned i
         _RETURN_NO_ERROR;
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_mbsset_s_l_downlevel);
+
 #endif

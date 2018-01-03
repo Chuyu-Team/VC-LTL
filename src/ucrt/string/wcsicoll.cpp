@@ -13,6 +13,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast can't see that we are checking for terminal nul.
 
@@ -41,7 +42,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcsicoll_l (
+extern "C" int __cdecl _wcsicoll_l_downlevel (
         const wchar_t *_string1,
         const wchar_t *_string2,
         _locale_t plocinfo
@@ -85,6 +86,9 @@ extern "C" int __cdecl _wcsicoll_l (
 
     return (ret - 2);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcsicoll_l_downlevel);
+
 #endif
 
 //extern "C" int __cdecl _wcsicoll (

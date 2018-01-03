@@ -13,6 +13,7 @@
 #include <locale.h>
 #include <string.h>
 #include "..\..\winapi_thunks.h"
+#include <msvcrt_IAT.h>
 
 /***
 *size_t wcsxfrm() - Transform a string using locale information
@@ -50,7 +51,7 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _wcsxfrm_l (
+extern "C" size_t __cdecl _wcsxfrm_l_downlevel (
         wchar_t *_string1,
         const wchar_t *_string2,
         size_t _count,
@@ -125,6 +126,9 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
 
     return (size_t)size;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcsxfrm_l_downlevel);
+
 #endif
 
 //extern "C" size_t __cdecl wcsxfrm (

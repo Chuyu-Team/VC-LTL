@@ -7,6 +7,7 @@
 //
 #include <corecrt_internal.h>
 #include <search.h>
+#include <msvcrt_IAT.h>
 
 #ifdef _M_CEE
     #define __fileDECL __clrcall
@@ -53,7 +54,7 @@ extern "C"
 
 _CRT_SECURITYSAFECRITICAL_ATTRIBUTE
 #ifdef __USE_CONTEXT
-void* __fileDECL bsearch_s(
+void* __fileDECL bsearch_s_downlevel(
     void const* const key,
     void const* const base,
     size_t            num,
@@ -122,5 +123,10 @@ void* __fileDECL bsearch(
 
     return nullptr;
 }
+
+#ifdef __USE_CONTEXT
+_LCRT_DEFINE_IAT_SYMBOL(bsearch_s_downlevel);
+#else
+#endif
 
 #undef __COMPARE
