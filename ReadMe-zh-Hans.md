@@ -91,7 +91,7 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 
 |  模块  | 一般模式 | XP工具集            | 相关文件 
 |  ----  | -------- | --------            | --------
-|   CRT  | 91.259%  | 87.084%             | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
+|   CRT  | 91.726%  | 88.389%             | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
 |   STL  | 100%     | 100.1%（超标准支持）| ltlcprt.lib，ltlcprtxp.lib
 | ConcRT | 100%     | 100%                | libconcrt.lib，libconcrtxp.lib
 |   ATL  | 100%     | 100%                | -
