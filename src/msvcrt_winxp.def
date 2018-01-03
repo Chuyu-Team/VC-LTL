@@ -58,6 +58,15 @@ _umask_s=_umask_s_downlevel
 _strerror_s=_strerror_s_downlevel
 __wcserror_s=__wcserror_s_downlevel
 _wassert=_wassert_downlevel
+_fcvt_s=_fcvt_s_downlevel
+_strdate_s=_strdate_s_downlevel
+_wstrdate_s=_wstrdate_s_downlevel
+_set_controlfp=_set_controlfp_downlevel
+_strtime_s=_strtime_s_downlevel
+_wstrtime_s=_wstrtime_s_downlevel
+tmpfile_s=tmpfile_s_downlevel
+_cgets_s=_cgets_s_downlevel
+_cgetws_s=_cgetws_s_downlevel
 
 
 

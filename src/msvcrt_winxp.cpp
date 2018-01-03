@@ -14,6 +14,11 @@
 #include <locale.h>
 #include <corecrt_io.h>
 #include <corecrt_wio.h>
+#include <corecrt_wtime.h>
+#include <time.h>
+#include <intrin.h> 
+#include <stdio.h>
+#include <conio.h>
 
 #if defined _X86_
 EXTERN_C _CRTIMP EXCEPTION_DISPOSITION __CxxFrameHandler(
@@ -316,9 +321,7 @@ EXTERN_C errno_t __cdecl _mktemp_s_downlevel(
 		_VALIDATE_RETURN((L"String is not null terminated" && 0), EINVAL, EINVAL)
 	}
 
-	_mktemp(_TemplateName);
-
-	return errno;
+	return _mktemp(_TemplateName) ? 0 : errno;
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_mktemp_s_downlevel);
@@ -336,9 +339,7 @@ EXTERN_C errno_t __cdecl _wmktemp_s_downlevel(
 		_VALIDATE_RETURN((L"String is not null terminated" && 0), EINVAL, EINVAL)
 	}
 
-	_wmktemp(_TemplateName);
-
-	return errno;
+	return _wmktemp(_TemplateName) ? 0 : errno;
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_wmktemp_s_downlevel);
@@ -410,3 +411,219 @@ EXTERN_C errno_t __cdecl _wsearchenv_s_downlevel(
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_wsearchenv_s_downlevel);
+
+EXTERN_C errno_t __cdecl _fcvt_s_downlevel(
+	_Out_writes_z_(_BufferCount) char*  _Buffer,
+	_In_                         size_t _BufferCount,
+	_In_                         double _Value,
+	_In_                         int    _FractionalDigitCount,
+	_Out_                        int*   _PtDec,
+	_Out_                        int*   _PtSign
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr, EINVAL);
+	_VALIDATE_RETURN_ERRCODE(_BufferCount > 0, EINVAL);
+
+	*_Buffer = '\0';
+
+	_VALIDATE_RETURN_ERRCODE(_PtDec != nullptr, EINVAL);
+	_VALIDATE_RETURN_ERRCODE(_PtSign != nullptr, EINVAL);
+
+	auto szValue = _fcvt(_Value, _FractionalDigitCount, _PtDec, _PtSign);
+
+	if (!szValue)
+		return errno;
+
+	return strcpy_s(_Buffer, _BufferCount, szValue);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_fcvt_s_downlevel);
+
+EXTERN_C errno_t __cdecl _strdate_s_downlevel(
+	_Out_writes_(_SizeInBytes) _Post_readable_size_(9) char*  _Buffer,
+	_In_  _In_range_(>= , 9)                            size_t _SizeInBytes
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr && _SizeInBytes > 0, EINVAL);
+
+	*_Buffer = 0;
+
+	_VALIDATE_RETURN_ERRCODE(_SizeInBytes >= 9, ERANGE);
+
+
+	return _strtime(_Buffer) ? 0 : errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_strdate_s_downlevel);
+
+EXTERN_C errno_t __cdecl _wstrdate_s_downlevel(
+	_Out_writes_z_(_SizeInWords) _When_(_SizeInWords >= 9, _Post_readable_size_(9)) wchar_t* _Buffer,
+	_In_                                                                           size_t   _SizeInWords
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr && _SizeInWords > 0, EINVAL);
+
+	*_Buffer = 0;
+
+	_VALIDATE_RETURN_ERRCODE(_SizeInWords >= 9, ERANGE);
+
+	return _wstrtime(_Buffer) ? 0 : errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_wstrdate_s_downlevel);
+
+
+#ifdef _X86_
+EXTERN_C extern BOOL __sse2_available;
+#endif
+
+EXTERN_C void __cdecl _set_controlfp_downlevel(
+	_In_ unsigned int _NewValue,
+	_In_ unsigned int _Mask
+	)
+{
+	if (_NewValue == 0x9001F
+		|| _Mask==0xFFFFFFFF)
+	{
+		return;
+	}
+
+#ifdef _M_IX86
+	UINT16 currentState;
+
+	__asm { fstcw currentState }
+
+	if ((currentState&0x1F3D)== 0x23D 
+		&& (__sse2_available ==FALSE || (_mm_getcsr() & 0xFEC0) == 0x1E80))
+	{
+		return;
+	}
+#elif defined (_M_AMD64)
+	if ((_mm_getcsr() & 0xFEC0) == 0x1E80)
+		return;
+#else
+#error "不支持此体系"
+#endif
+
+	_controlfp(_NewValue, _Mask &0xFFF7FFFF);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_set_controlfp_downlevel);
+
+EXTERN_C errno_t __cdecl _strtime_s_downlevel(
+	_Out_writes_(_SizeInBytes) _When_(_SizeInBytes >= 9, _Post_readable_size_(9)) char*  _Buffer,
+	_In_                                                                         size_t _SizeInBytes
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr && _SizeInBytes > 0, EINVAL);
+	*_Buffer = 0;
+	_VALIDATE_RETURN_ERRCODE(_SizeInBytes >= 9, ERANGE);
+
+	return _strtime(_Buffer) ? 0 : errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_strtime_s_downlevel);
+
+EXTERN_C errno_t __cdecl _wstrtime_s_downlevel(
+	_Out_writes_z_(_SizeInWords) _When_(_SizeInWords >= 9, _Post_readable_size_(9)) wchar_t* _Buffer,
+	_In_                                                                           size_t   _SizeInWords
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr && _SizeInWords > 0, EINVAL);
+	*_Buffer = 0;
+	_VALIDATE_RETURN_ERRCODE(_SizeInWords >= 9, ERANGE);
+
+	return _wstrtime(_Buffer) ? 0 : errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_wstrtime_s_downlevel);
+
+EXTERN_C errno_t __cdecl tmpfile_s_downlevel(
+	_Out_opt_ _Deref_post_valid_ FILE** _Stream
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Stream != nullptr, EINVAL);
+
+	return (*_Stream = tmpfile()) ? 0 : errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(tmpfile_s_downlevel);
+
+
+EXTERN_C _CRTIMP char* __cdecl _cgets(_Inout_z_ char* const string);
+
+EXTERN_C errno_t __cdecl _cgets_s_downlevel(
+	_Out_writes_z_(_BufferCount) char*   _Buffer,
+	_In_                         size_t  _BufferCount,
+	_Out_                        size_t* _SizeRead
+	)
+{
+	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE(_Buffer != nullptr, EINVAL);
+	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE(_BufferCount > 0, EINVAL);
+
+	*_Buffer = 0;
+
+	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE(_SizeRead != nullptr, EINVAL);
+
+	*_SizeRead = 0;
+
+	_BufferCount = min(0xFF, _BufferCount);
+
+	byte TempBuffer[0xFF + 2];
+	*TempBuffer = _BufferCount;
+
+	if (!_cgets((char*)TempBuffer))
+	{
+		return errno;
+	}
+
+	memcpy(_Buffer, TempBuffer + 2, *_SizeRead = TempBuffer[2]);
+
+	return 0;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_cgets_s_downlevel);
+
+
+EXTERN_C _CRTIMP wchar_t* __cdecl _cgetws(_Inout_z_ wchar_t* const string);
+
+EXTERN_C errno_t __cdecl _cgetws_s_downlevel(
+	_Out_writes_to_(_BufferCount, *_SizeRead) wchar_t* _Buffer,
+	_In_                                      size_t   _BufferCount,
+	_Out_                                     size_t*  _SizeRead
+	)
+{
+	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE(_Buffer != nullptr, EINVAL);
+	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE(_BufferCount > 0, EINVAL);
+
+	*_Buffer = 0;
+
+	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE(_SizeRead != nullptr, EINVAL);
+
+	*_SizeRead = 0;
+
+	_BufferCount= max(_BufferCount, 0xFFFF);
+
+	auto Tmp = (wchar_t*)_malloca((_BufferCount + 2) * sizeof(*_Buffer));
+	if (!Tmp)
+		return errno;
+
+	*Tmp = _BufferCount;
+
+	errno_t error = 0;
+
+	if (_cgetws(Tmp))
+	{
+		memcpy(_Buffer, Tmp + 2, (*_SizeRead = Tmp[1]) + 1);
+	}
+	else
+	{
+		error = errno;
+	}
+
+	_freea(Tmp);
+
+	return error;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_cgetws_s_downlevel);
