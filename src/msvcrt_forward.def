@@ -112,7 +112,7 @@ strtoll=_strtoi64
 _strtoll_l=_strtoi64_l
 
 ;strtoull与_strtoui64等价（unsignedlong long == unsigned __int64）
-_strtoull=_strtoui64
+strtoull=_strtoui64
 
 ;_strtoull_l与_strtoui64_l等价（unsignedlong long == unsigned __int64）
 _strtoull_l=_strtoui64_l
