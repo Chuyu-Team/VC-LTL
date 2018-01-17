@@ -9,6 +9,13 @@
 
 ## Changes
 
+### 2.0.0.6 2018-01-17 17:15
+* 添加Vistual Studio 2017 15.5新增函数支持
+* 新增Shared.props改进属性表引用灵活性
+* 新增VC-LTL轻量模式以及高级模式支持（修改Shared.props可以调整模式）
+* 继续扩充CRT函数支持
+
+
 ### 2.0.0.5 2017-12-10 20:56
 * 新增C++ 17 align new/delete支持
 * 解决兼容WinXP时可能出现的ntdll.lib依赖失败以及某些函数转发切换到weak别名技术
