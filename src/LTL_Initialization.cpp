@@ -13,6 +13,8 @@ static void __cdecl __LTL_Unitialization() throw()
 
 EXTERN_C int __cdecl __LTL_Initialization() throw()
 {
+	//先初始化高级指令支持
+	__isa_available_init();
 
 	//需要支持XP时才需要初始化，Vista以上系统直接使用新接口
 	__acrt_initialize_winapi_thunks();

@@ -474,7 +474,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_wstrdate_s_downlevel);
 
 
 #ifdef _X86_
-EXTERN_C extern BOOL __sse2_available;
+EXTERN_C extern BOOL __isa_available;
 #endif
 
 EXTERN_C void __cdecl _set_controlfp_downlevel(
@@ -494,7 +494,7 @@ EXTERN_C void __cdecl _set_controlfp_downlevel(
 	__asm { fstcw currentState }
 
 	if ((currentState&0x1F3D)== 0x23D 
-		&& (__sse2_available ==FALSE || (_mm_getcsr() & 0xFEC0) == 0x1E80))
+		&& (__isa_available ==FALSE || (_mm_getcsr() & 0xFEC0) == 0x1E80))
 	{
 		return;
 	}
