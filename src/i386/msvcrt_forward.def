@@ -62,7 +62,7 @@ terminate=?terminate@@YAXXZ
 ;新版本中unexpected规范变成了C
 unexpected=?unexpected@@YAXXZ
 
-;BOOL __isa_available老版本中叫BOOL __sse2_available
+;int __isa_available老版本中叫BOOL __sse2_available
 __sse2_available=__isa_available NoImp
 
 _statusfp2=_statusfp2_downlevel

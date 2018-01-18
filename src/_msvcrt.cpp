@@ -2484,7 +2484,7 @@ extern "C"
 #endif
 	
 #ifdef _M_IX86
-	extern BOOL __isa_available;
+	extern int __isa_available;
 
 	extern unsigned int __cdecl __get_fpsr_sse2();
 
