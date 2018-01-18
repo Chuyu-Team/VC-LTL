@@ -65,6 +65,8 @@ unexpected=?unexpected@@YAXXZ
 ;BOOL __isa_available老版本中叫BOOL __sse2_available
 __sse2_available=__isa_available NoImp
 
+_statusfp2=_statusfp2_downlevel
+
 ; 数学函数转发
 _acos_default=acos
 

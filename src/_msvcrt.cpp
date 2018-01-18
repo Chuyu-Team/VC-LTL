@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <sys/timeb.h>
 #include <sys/utime.h>  
+#include <float.h>
 
 #include <corecrt_math.h>
 #include <msvcrt_IAT.h>
@@ -2479,6 +2480,92 @@ extern "C"
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(_wassert_downlevel);
+
+#endif
+	
+#ifdef _M_IX86
+	extern BOOL __isa_available;
+
+	static __forceinline unsigned int __get_fpsr_sse2()
+	{
+		if (__isa_available < 1)
+			return 0;
+		else
+			return _mm_getcsr();
+	}
+
+	static __forceinline unsigned int __statusfp_sse2()
+	{
+		auto fpsr_sse2 = __get_fpsr_sse2();
+
+		unsigned int result = 0;
+
+		if (fpsr_sse2 & 0x3F)
+		{
+			if (fpsr_sse2 & 0x01)
+				result |= 0x10;
+
+			if (fpsr_sse2 & 0x02)
+				result |= 0x80000;
+
+			if (fpsr_sse2 & 0x04)
+				result |= 0x8;
+
+			if (fpsr_sse2 & 0x08)
+				result |= 0x4;
+
+			if (fpsr_sse2 & 0x10)
+				result |= 0x2;
+
+			if (fpsr_sse2 & 0x20)
+				result |= 0x1;
+		}
+
+		return result;
+	}
+
+	void __cdecl _statusfp2_downlevel(
+		_Out_opt_ unsigned int* _X86Status,
+		_Out_opt_ unsigned int* _SSE2Status
+		)
+	{
+		if (_X86Status)
+		{
+			unsigned short FpuStatus;
+
+			__asm { fstsw FpuStatus };
+
+			unsigned int dwX86Status = 0;
+
+			if (FpuStatus & 0x3F)
+			{
+				if (FpuStatus & 0x01)
+					dwX86Status |= 0x10;
+
+				if (FpuStatus & 0x02)
+					dwX86Status |= 0x80000;
+
+				if (FpuStatus & 0x04)
+					dwX86Status |= 0x08;
+
+				if (FpuStatus & 0x08)
+					dwX86Status |= 0x04;
+
+				if (FpuStatus & 0x10)
+					dwX86Status |= 0x02;
+
+				if (FpuStatus & 0x20)
+					dwX86Status |= 0x01;
+			}
+
+			*_X86Status = dwX86Status;
+		}
+
+		if (_SSE2Status)
+			*_SSE2Status = __statusfp_sse2();
+	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(_statusfp2_downlevel);
 
 #endif
 }
