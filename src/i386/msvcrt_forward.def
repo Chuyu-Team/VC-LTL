@@ -67,6 +67,8 @@ __sse2_available=__isa_available NoImp
 
 _statusfp2=_statusfp2_downlevel
 
+__control87_2=__control87_2_downlevel
+
 ; 数学函数转发
 _acos_default=acos
 
