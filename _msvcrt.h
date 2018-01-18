@@ -3,16 +3,22 @@
 #define _ltlfilelen __FILE__ "(" _CRT_STRINGIZE(__LINE__) ") : "
 
 #ifdef _DEBUG
-#error _ltlfilelen "warning: 调试版无法使用VC LTL，请切换到Release然后重新编译！"
+#error "调试版无法使用VC LTL，请切换到Release然后重新编译！"
 #endif
 
 #ifndef _DLL
-#error  _ltlfilelen "warning: 由于VC LTL必须在MD编译选项才能使用，请将运行调整为MD！"
+#error  "由于VC LTL必须在MD编译选项才能使用，请将运行调整为MD！"
 #endif
 
 #ifndef _DEBUG
 
 #include <crtversion.h>
+
+#ifndef _VC_LTL_Include
+#error  "VC头文件（VC\X.XX.XXXXX\include）没有被加载，请确保 Shared.props 属性表正常加入项目，并检查依赖顺序是否有误！"
+#endif
+
+
 
 //关闭常用的pintf系列函数的内联操作，因为老版本没有__stdio_common_vswscanf系列函数
 #ifndef _NO_CRT_STDIO_INLINE
@@ -106,7 +112,7 @@
 #endif
 
 #ifndef _DISABLE_DEPRECATE_LTL_MESSAGE
-#pragma message(_ltlfilelen "info: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
+#pragma message(_ltlfilelen "note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
 #endif //_DISABLE_DEPRECATE_LTL_MESSAGE
 
 
