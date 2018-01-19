@@ -40,7 +40,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 * Windows 10 16299目标平台（推荐使用）
 
 ### 支持的操作系统
-* Windows XP RTM, Windows XP 64 RTM, Windows 2003 RTM（平台工具集需要调整为 Windows XP平台工具集）
+* Windows XP RTM, Windows XP 64 RTM, Windows 2003 RTM（需要启用WinXP Support）
 * Windows Vista RTM, Windows 2008 RTM
 * Windows 7 RTM, Windows 2008 R2 RTM
 * Windows 8 RTM, Windows 2012 RTM
@@ -53,7 +53,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ### 1. 配置VC-LTL加载路径
 你可以在 1.1 或者 1.2 中任意选择一种VC-LTL加载方式
 
-#### 1.1 通过配置共享VC-LTL
+#### 1.1. 通过配置共享VC-LTL
 > 如果你有多个不同位置的工程需要使用VC-LTL，那么优先推荐使用此方式。
 
 假如，你将VC-LTL下载至`D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LT\Install.cmd` 即可。
@@ -61,12 +61,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 然后呢？没有然后了，脚本自动会在 `HKCU\Code\VC-LTL` 创建注册表。
 
 
-随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
-
-PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
-
-
-#### 1.2 通过目录独享VC-LTL
+#### 1.2. 通过目录独享VC-LTL
 > 此方案不利于源代码共享，我们优先推荐你使用 1.1 中描述的方式。
 
 假如，你的Sln文件在	`D:\MySln\MySln.sln`，这时你把VC-LTL放在 `D:\VC-LTL` 或者 `D:\MySln\VC-LTL`。
@@ -98,7 +93,7 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
 
-### 4. VC-LTL兼容性
+## VC-LTL兼容性
 
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
@@ -111,11 +106,11 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 |   AMP  |   -      |   -                 | -
 |   MFC  |  不支持  |   不支持            | -
 
-#### 4.1 已知问题规避
+### 已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 以及 _l 相关版本不存在此问题。
 * 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 以及 _l 相关版本不存在此问题。
 
-#### 4.2 已知与VC-LTL兼容的项目
+### 已知与VC-LTL兼容的项目
 此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
 
 |  项目                                                        | 一般模式 | XP工具集 
