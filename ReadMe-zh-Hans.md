@@ -56,7 +56,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 #### 1.1. 通过配置共享VC-LTL
 > 如果你有多个不同位置的工程需要使用VC-LTL，那么优先推荐使用此方式。
 
-假如，你将VC-LTL下载至`D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LT\Install.cmd` 即可。
+假如，你将VC-LTL下载至 `D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LT\Install.cmd` 即可。
 
 然后呢？没有然后了，脚本自动会在 `HKCU\Code\VC-LTL` 创建注册表。
 
@@ -64,9 +64,9 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 #### 1.2. 通过目录独享VC-LTL
 > 此方案不利于源代码共享，我们优先推荐你使用 1.1 中描述的方式。
 
-假如，你的Sln文件在	`D:\MySln\MySln.sln`，这时你把VC-LTL放在 `D:\VC-LTL` 或者 `D:\MySln\VC-LTL`。
+假如，你的Sln文件在 `D:\MySln\MySln.sln`。你必须把VC-LTL放在 `D:\VC-LTL` 或者 `D:\MySln\VC-LTL`。
 
-简单的说，使用此方式。你必须把VC-LTL放在Solution的根目录或者Solution的父目录。
+简单的说，你需要把 VC-LTL 放在 `Solution根目录` 或者 `Solution父目录`。
 
 
 ### 2. 加载VC-LTL（仅Release）
@@ -80,14 +80,14 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 #### 2.2. 配置工程属性
 * 常规 - 【Windows SDK版本】调整为【8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
-* C/C++ - 代码生成 -【运行库】调整为【多线程DLL/MD】
+* C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
 > 如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
 
 
-### 3. 重新编译你的应用程序（Release）
+### 3. 重新编译（仅Release）
 现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC-LTL。
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
