@@ -54,11 +54,11 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 你可以在 1.1 或者 1.2 中任意选择一种VC-LTL加载方式
 
 #### 1.1 通过配置共享VC-LTL
-VC-LTL属性表优先从注册表加载路径。如果你希望在多个工程中共享VC-LTL那么此方法会比较友好。
+> 如果你有多个不同位置的工程需要使用VC-LTL，那么优先推荐使用此方式。
 
-假如，你将VC-LTL下载至`D:\Src\VC-LTL`，双击 `D:\Src\VC-LT\Install.cmd` 即可。
+假如，你将VC-LTL下载至`D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LT\Install.cmd` 即可。
 
-双击后，cmd脚本会在 HKCU\Code\VC-LTL 创建注册表。
+然后呢？没有然后了，脚本自动会在 `HKCU\Code\VC-LTL` 创建注册表。
 
 
 随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
@@ -71,19 +71,32 @@ PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或
 
 假如，你的Sln文件在	`D:\MySln\MySln.sln`，这时你把VC-LTL放在 `D:\VC-LTL` 或者 `D:\MySln\VC-LTL`。
 
-随后将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
+简单的说，使用此方式。你必须把VC-LTL放在Solution的根目录或者Solution的父目录。
 
-PS：如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+
+### 2. 加载VC-LTL（仅Release）
+#### 2.1. 添加Shared属性表
+将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
+
+![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
 
 > 如果你不希望使用 `Shared.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
 
 
-### 2. 在工程属性（Release配置） C++ - 所有选项：
-* 【运行库】调整为 【多线程DLL/MD】
-* 【目标平台】调整为【8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
+#### 2.2. 配置工程属性
+* 常规 - 【Windows SDK版本】调整为【8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
+* C/C++ - 代码生成 -【运行库】调整为【多线程DLL/MD】
+
+![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
+
+> 如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+
 
 ### 3. 重新编译你的应用程序（Release）
 现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC-LTL。
+
+![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
+
 
 ### 4. VC-LTL兼容性
 
