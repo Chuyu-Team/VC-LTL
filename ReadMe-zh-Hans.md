@@ -29,8 +29,8 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 ## 支持平台
 ### 支持的IDE
-* Vistual Studio 2015
-* Vistual Studio 2017
+* Visual Studio 2015
+* Visual Studio 2017
 
 ### 支持的目标平台（UCRT版本）
 * Windows XP平台工具集
@@ -56,7 +56,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 #### 1.1. 通过配置共享VC-LTL
 > 如果你有多个不同位置的工程需要使用VC-LTL，那么优先推荐使用此方式。
 
-假如，你将VC-LTL下载至 `D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LT\Install.cmd` 即可。
+假如，你将VC-LTL下载至 `D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LTL\Install.cmd` 即可。
 
 然后呢？没有然后了，脚本自动会在 `HKCU\Code\VC-LTL` 创建注册表。
 
