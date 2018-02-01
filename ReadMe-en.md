@@ -41,27 +41,30 @@ from the pure C source code.
 
 Let's say goodbye to the Visual Studio 2008.
 
-## 支持平台
-### 支持的IDE
-* Vistual Studio 2015
-* Vistual Studio 2017
+## Supported Platforms
+### Supported Visual Studio Versions
+* Visual Studio 2015
+* Visual Studio 2017
 
-### 支持的目标平台（UCRT版本）
-* Windows XP平台工具集
-* Windows 8.1 目标平台
-* Windows 10 10240目标平台
-* Windows 10 15063目标平台（强烈建议使用16299，下个Windows SDK发布时将删除对15063的支持！）
-* Windows 10 16299目标平台（推荐使用）
+### Supported Windows SDK Versions
+* 7.x (Windows XP Platform Toolset)
+* 8.1
+* 10.0.10240.0
+* 10.0.15063.0 (Will be removed when the next SDK version come out.)
+* 10.0.16299.0 (Recommend to use)
 
-### 支持的操作系统
-* Windows XP RTM, Windows XP 64 RTM, Windows 2003 RTM（需要启用WinXP Support）
-* Windows Vista RTM, Windows 2008 RTM
-* Windows 7 RTM, Windows 2008 R2 RTM
-* Windows 8 RTM, Windows 2012 RTM
-* Windows 8.1 RTM, Windows 2012 R2 RTM
-* Windows 10, Windows 2016
+### Supported Windows Versions
+Notice: All versions we mentioned is started with RTM.
 
-> 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
+* x86 and x86-64 of Windows XP (Need to enable the XP Support.)
+* x86 and x86-64 of Windows Server 2003 (Need to enable the XP Support.)
+* x86 and x86-64 of Windows Vista / 7 / 8 / 8.1 /10
+* x86 and x86-64 of Windows Server 2008 / 2008 R2 / 2012 / 2012 R2 / 2016
+
+```
+The binaries compiled with the VC-LTL is compatible with Windows XP and 
+later, even in the environment which installed no hotfixes.
+```
 
 ## 使用方法：
 ### 1. 配置VC-LTL加载路径
@@ -120,7 +123,7 @@ Let's say goodbye to the Visual Studio 2008.
 |  MFC     | No Support  | No Support   | -
 
 PS:
-  [1] Extended support.
+- [1] Extended support.
 
 ### 已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 以及 _l 相关版本不存在此问题。
@@ -150,5 +153,5 @@ compatible with the following projects.
 | [GacUI](https://github.com/vczh-libraries/Release)           |      √     |   X([2])
 
 PS:
-  [1] Need to Disable _create_locale.
-  [2] The project don't support Windows XP.
+- [1] Need to Disable _create_locale.
+- [2] The project don't support Windows XP.
