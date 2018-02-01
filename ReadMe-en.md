@@ -22,10 +22,16 @@ By mingkuang, the creator of VC-LTL.
 
 [ [VC-LTL QQ Group: 633710173](https://shang.qq.com/wpa/qunwpa?idkey=21d51d8ad1d77b99ea9544b399e080ec347ca6a1bc04267fb59cebf22644a42a) ]
 
-## 原理：
-使用 VC-LTL后可以将程序动态链接到系统自带的msvcrt.dll中，来减少程序体积。目前使用CRT以及STL的工程一般都可以使用。但是MFC工程不能使用，因为MFC类库太复杂了，尚未适配。
+## The principle of VC-LTL
+After using the VC-LTL, the binaries will be dynamically linked to the built-in
+`msvcrt.dll` in the Windows to reduce the binaries size. It is generally 
+available if you use the VC-LTL in the project using the C Runtime and the STL.
+However you cannot use the VC-LTL in the MFC project with the VC-LTL because it
+is too complex to support.
 
-温馨提示：使用VC-LTL，C++程序体积大约缩减30%，而纯C程序则大约缩减50%。
+Notice: After using the VC-LTL, the size of the binaries will reduce about 30 
+percent if compiled from the C++ source code, and about 50 percent if compiled 
+from the pure C source code.
 
 ## 亮点
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
@@ -33,9 +39,7 @@ By mingkuang, the creator of VC-LTL.
 * 拥有比微软原版更好的兼容性，即使想兼容Windows XP RTM也可以安心的对新编译器说“Yes”。
 * 完全的开放代码，广泛的接受用户意见，希望大家能踊跃的 pull requests，为VC-LTL添砖加瓦。
 
-
-让我们一起跟VS 2008说拜拜！
-
+Let's say goodbye to the Visual Studio 2008.
 
 ## 支持平台
 ### 支持的IDE
@@ -103,8 +107,7 @@ By mingkuang, the creator of VC-LTL.
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
 
-## VC-LTL兼容性
-
+## VC-LTL Compatibility
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
 |  Module  | Normal Mode |  XP Support  | Files 
@@ -123,8 +126,10 @@ PS:
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 以及 _l 相关版本不存在此问题。
 * 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 以及 _l 相关版本不存在此问题。
 
-### 已知与VC-LTL兼容的项目
-此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
+### The known VC-LTL compatible projects 
+This list simply indicates that some developers have already compiled these 
+projects successfully with using the VC-LTL. Do not mean the VC-LTL is only 
+compatible with the following projects.
 
 | Project                                                      | Normal Mode | XP Support
 | ---                                                          | ----------- | ---------- 
