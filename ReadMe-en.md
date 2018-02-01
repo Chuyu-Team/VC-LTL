@@ -1,0 +1,149 @@
+﻿# VC-LTL - An elegant way to compile lighter binaries.
+
+VC-LTL is an open source CRT library based on the MS VCRT, which is highly
+compatible with the MS VCRT in the source code level. I created the VC-LTL
+because I desire to solve the C runtime deployment problem and the fiber local
+storage (FLS) 128 limitation problem.
+
+There are plenty of modules in large projects. If all binaries uses static 
+compilation, it will use plenty of disk space and finally may crashed because 
+of the fiber local storage (FLS) limitation.
+
+But the VC-LTL can make your project using the built-in `msvcrt.dll` in the 
+Windows. It solves the C runtime deployment problem and the fiber local storage
+(FLS) limitation problem effectively, and greatly reduce the binaries size. 
+What a handy library!
+
+Everyone can use it for free, even for the commerical use. Of course, I hope 
+that if you mentioned the VC-LTL in your project, because I want to help more
+people.
+
+By mingkuang, the creator of VC-LTL.
+
+[ [VC-LTL QQ Group: 633710173](https://shang.qq.com/wpa/qunwpa?idkey=21d51d8ad1d77b99ea9544b399e080ec347ca6a1bc04267fb59cebf22644a42a) ]
+
+## 原理：
+使用 VC-LTL后可以将程序动态链接到系统自带的msvcrt.dll中，来减少程序体积。目前使用CRT以及STL的工程一般都可以使用。但是MFC工程不能使用，因为MFC类库太复杂了，尚未适配。
+
+温馨提示：使用VC-LTL，C++程序体积大约缩减30%，而纯C程序则大约缩减50%。
+
+## 亮点
+* 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
+* 无缝使用最新C/C++库以及最新编译器，尽情的使用最新规范。神马异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧！！
+* 拥有比微软原版更好的兼容性，即使想兼容Windows XP RTM也可以安心的对新编译器说“Yes”。
+* 完全的开放代码，广泛的接受用户意见，希望大家能踊跃的 pull requests，为VC-LTL添砖加瓦。
+
+
+让我们一起跟VS 2008说拜拜！
+
+
+## 支持平台
+### 支持的IDE
+* Vistual Studio 2015
+* Vistual Studio 2017
+
+### 支持的目标平台（UCRT版本）
+* Windows XP平台工具集
+* Windows 8.1 目标平台
+* Windows 10 10240目标平台
+* Windows 10 15063目标平台（强烈建议使用16299，下个Windows SDK发布时将删除对15063的支持！）
+* Windows 10 16299目标平台（推荐使用）
+
+### 支持的操作系统
+* Windows XP RTM, Windows XP 64 RTM, Windows 2003 RTM（需要启用WinXP Support）
+* Windows Vista RTM, Windows 2008 RTM
+* Windows 7 RTM, Windows 2008 R2 RTM
+* Windows 8 RTM, Windows 2012 RTM
+* Windows 8.1 RTM, Windows 2012 R2 RTM
+* Windows 10, Windows 2016
+
+> 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
+
+## 使用方法：
+### 1. 配置VC-LTL加载路径
+你可以在 1.1 或者 1.2 中任意选择一种VC-LTL加载方式
+
+#### 1.1. 通过配置共享VC-LTL
+> 如果你有多个不同位置的工程需要使用VC-LTL，那么优先推荐使用此方式。
+
+假如，你将VC-LTL下载至 `D:\Src\VC-LTL`（具体位置无任何要求），双击 `D:\Src\VC-LT\Install.cmd` 即可。
+
+然后呢？没有然后了，脚本自动会在 `HKCU\Code\VC-LTL` 创建注册表。
+
+
+#### 1.2. 通过目录独享VC-LTL
+> 此方案不利于源代码共享，我们优先推荐你使用 1.1 中描述的方式。
+
+假如，你的Sln文件在 `D:\MySln\MySln.sln`。你必须把VC-LTL放在 `D:\VC-LTL` 或者 `D:\MySln\VC-LTL`。
+
+简单的说，你需要把 VC-LTL 放在 `Solution根目录` 或者 `Solution父目录`。
+
+
+### 2. 加载VC-LTL（仅Release）
+#### 2.1. 添加Shared属性表
+将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
+
+![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
+
+> 如果你不希望使用 `Shared.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
+
+
+#### 2.2. 配置工程属性
+* 常规 - 【Windows SDK版本】调整为【8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
+* C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
+
+![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
+
+> 如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+
+
+### 3. 重新编译（仅Release）
+现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC-LTL。
+
+![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
+
+
+## VC-LTL兼容性
+
+此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
+
+|  Module  | Normal Mode |  XP Support  | Files 
+|  ------  | ----------- |  ----------  | --------
+|  CRT     | 91.726%     | 88.389%      | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
+|  STL     | 100%        | 100.1% ([1]) | ltlcprt.lib，ltlcprtxp.lib
+|  ConcRT  | 100%        | 100%         | libconcrt.lib，libconcrtxp.lib
+|  ATL     | 100%        | 100%         | -
+|  AMP     | -           | -            | -
+|  MFC     | No Support  | No Support   | -
+
+PS:
+  [1] Extended support.
+
+### 已知问题规避
+* 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 以及 _l 相关版本不存在此问题。
+* 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 以及 _l 相关版本不存在此问题。
+
+### 已知与VC-LTL兼容的项目
+此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
+
+| Project                                                      | Normal Mode | XP Support
+| ---                                                          | ----------- | ---------- 
+| [duilib](https://github.com/duilib/duilib)                   |      √     |     √
+| [FastCopy](https://ipmsg.org/tools/fastcopy.html.en)         |      √     |     √
+| [WinPCK](http://www.winpak.com/en/home/)                     |      √     |     √
+| [RapidXml](http://rapidxml.sourceforge.net/)                 |      √     |     √
+| [JsonCPP](https://github.com/open-source-parsers/jsoncpp)    |      √     |     √
+| [icu](http://source.icu-project.org/repos/icu/trunk)         |      √     |   √([1])
+| [SQLite](http://www.sqlite.org/download.html)                |      √     |     √
+| [LuaJIT](http://luajit.org/)                                 |      √     |     √
+| [Qt](https://www.qt.io/)                                     |      √     |     X
+| [llvm](http://llvm.org/)                                     |      √     |     ?
+| [openssl](https://www.openssl.org/)                          |      √     |     √
+| [libcurl](https://curl.haxx.se/libcurl/)                     |      √     |     √
+| [ninja](https://ninja-build.org/)                            |      √     |     ?
+| [NSudo](https://github.com/M2Team/NSudo)                     |      √     |   X([2])
+| [GacUI](https://github.com/vczh-libraries/Release)           |      √     |   X([2])
+
+PS:
+  [1] Need to Disable _create_locale.
+  [2] The project don't support Windows XP.
