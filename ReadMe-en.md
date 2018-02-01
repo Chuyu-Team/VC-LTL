@@ -61,10 +61,8 @@ Notice: All versions we mentioned is started with RTM.
 * x86 and x86-64 of Windows Vista / 7 / 8 / 8.1 /10
 * x86 and x86-64 of Windows Server 2008 / 2008 R2 / 2012 / 2012 R2 / 2016
 
-```
-The binaries compiled with the VC-LTL is compatible with Windows XP and 
+> The binaries compiled with the VC-LTL is compatible with Windows XP and 
 later, even in the environment which installed no hotfixes.
-```
 
 ## 使用方法：
 ### 1. 配置VC-LTL加载路径
