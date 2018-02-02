@@ -32,12 +32,12 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 * Vistual Studio 2015
 * Vistual Studio 2017
 
-### 支持的目标平台（UCRT版本）
-* Windows XP平台工具集
-* Windows 8.1 目标平台
-* Windows 10 10240目标平台
-* Windows 10 15063目标平台（强烈建议使用16299，下个Windows SDK发布时将删除对15063的支持！）
-* Windows 10 16299目标平台（推荐使用）
+### 支持的Windows SDK版本
+* 7.X（WinXP平台工具集）
+* 8.1
+* 10.0.10240.0
+* 10.0.15063.0（强烈建议使用16299，下个Windows SDK发布时将删除对15063的支持！）
+* 10.0.16299.0（推荐使用）
 
 ### 支持的操作系统
 * Windows XP RTM, Windows XP 64 RTM, Windows 2003 RTM（需要启用WinXP Support）
@@ -79,7 +79,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 
 #### 2.2. 配置工程属性
-* 常规 - 【Windows SDK版本】调整为【8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
+* 常规 - 【Windows SDK版本】调整为【7.X/8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
 * C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
@@ -88,9 +88,36 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 
 ### 3. 重新编译（仅Release）
-现在是不是体积就小了很多。如果你编译不通过，咋们可以一起研究研究，共同改进VC-LTL。
+现在是不是体积就小了很多。如果你编译不通过，可以先参考 第 4 节。如果还是不通过可以反馈，共同改进VC-LTL。
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
+
+
+> 如果正确引用VC-LTL，那么 会在生成时输出 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+
+
+### 4. 常见问题
+#### 4.1. 未共享到msvcrt.dll
+问题原因：未正确引用VC-LTL。建议看看生成日志，是否包含 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+
+解决方案：
+1：请务必确保Shared.props已经添加到工程。
+2：确保以下设置正确：
+	* VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
+	* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
+
+#### 4.2. 无法解析外部符号 delete 等
+问题原因：没有正确引入vc.lib、msvcrt_advanced.obj。
+
+解决方案：
+* VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
+* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
+
+#### 4.3. 检测到RuntimeLibrary的不匹配项
+问题原因：引入了没有使用VC-LTL编译的静态lib文件。
+
+解决方案：
+使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
 
 
 ## VC-LTL兼容性
