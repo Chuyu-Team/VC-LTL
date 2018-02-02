@@ -23,10 +23,15 @@ By mingkuang, the creator of VC-LTL.
 [ [VC-LTL QQ Group: 633710173](https://shang.qq.com/wpa/qunwpa?idkey=21d51d8ad1d77b99ea9544b399e080ec347ca6a1bc04267fb59cebf22644a42a) ]
 
 ## The principle of VC-LTL
-After using the VC-LTL, the binaries will be dynamically linked to the built-in `msvcrt.dll` in the Windows to reduce the binaries size. It is generally available if you use the VC-LTL in the project using the C Runtime and the STL. However you cannot use the VC-LTL in the MFC project with the VC-LTL because it
+After using the VC-LTL, the binaries will be dynamically linked to the built-in
+`msvcrt.dll` in the Windows to reduce the binaries size. It is generally 
+available if you use the VC-LTL in the project using the C Runtime and the STL.
+However you cannot use the VC-LTL in the MFC project with the VC-LTL because it
 is too complex to support.
 
-Notice: After using the VC-LTL, the size of the binaries will reduce about 30 percent if compiled from the C++ source code, and about 50 percent if compiled from the pure C source code.
+Notice: After using the VC-LTL, the size of the binaries will reduce about 30 
+percent if compiled from the C++ source code, and about 50 percent if compiled 
+from the pure C source code.
 
 ## 亮点
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
@@ -58,7 +63,8 @@ Notice: All versions we mentioned is started with RTM.
 * x86 and x64 of Windows 8.1 / Windows Server 2012 R2
 * x86 and x64 of Windows 10 / Windows Server 2016
 
-> The binaries compiled with the VC-LTL is compatible with Windows XP and later, even in the environment which installed no hotfixes.
+> The binaries compiled with the VC-LTL is compatible with Windows XP and 
+later, even in the environment which installed no hotfixes.
 
 ## 使用方法：
 ### 1. 配置VC-LTL加载路径
@@ -101,9 +107,9 @@ Notice: All versions we mentioned is started with RTM.
 ### 3. 重新编译（仅Release）
 现在是不是体积就小了很多。如果你编译不通过，可以先参考 第 4 节。如果还是不通过可以反馈，共同改进VC-LTL。
 
-![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
-
 > 如果正确引用VC-LTL，那么 会在生成时输出 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+
+![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
 
 ### 4. 常见问题
@@ -111,7 +117,9 @@ Notice: All versions we mentioned is started with RTM.
 问题原因：未正确引用VC-LTL。建议看看生成日志，是否包含 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
 解决方案：
+
 1：请务必确保Shared.props已经添加到工程。
+
 2：确保以下设置正确：
 	* VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
 	* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
