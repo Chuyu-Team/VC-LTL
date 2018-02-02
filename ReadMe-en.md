@@ -121,8 +121,8 @@ later, even in the environment which installed no hotfixes.
 1：请务必确保Shared.props已经添加到工程。
 
 2：确保以下设置正确：
-	* VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
-	* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
+* VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
+* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
 
 #### 4.2. 无法解析外部符号 delete 等
 问题原因：没有正确引入vc.lib、msvcrt_advanced.obj。
