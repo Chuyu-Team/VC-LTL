@@ -137,6 +137,12 @@ later, even in the environment which installed no hotfixes.
 解决方案：
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
 
+#### 4.4. 支持XP时msvcrt.dll大量导出XP不支持的函数
+问题原因：可能没有开启引用消除
+
+解决方案：
+* C/C++ - 所有选项 - 移除未引用的代码和数据 - 【是(/Zc:inline)】
+* 连接器 - 所有选项 - 引用 - 【是(/OPT:REF)】
 
 ## VC-LTL Compatibility
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
