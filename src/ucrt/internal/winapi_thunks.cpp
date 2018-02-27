@@ -2093,16 +2093,12 @@ namespace
 	EXTERN_C NTSYSAPI
 		NTSTATUS
 		NTAPI
-		RtlAcquirePrivilege(
-			IN PULONG Privilege,
-			IN ULONG NumPriv,
-			IN ULONG Flags,
-			OUT PVOID *ReturnedState
-			);
-
-	EXTERN_C NTSYSAPI
-		NTSTATUS
-		NTAPI RtlReleasePrivilege(IN PVOID State);
+		RtlAdjustPrivilege(
+			ULONG Privilege,
+			BOOLEAN Enable,
+			BOOLEAN CurrentThread,
+			PBOOLEAN Enabled
+		);
 
 	EXTERN_C NTSYSAPI ULONG
 		NTAPI
@@ -2218,145 +2214,160 @@ namespace
 			return FALSE;
 		}
 
-		ULONG Privilege = /*SE_CREATE_SYMBOLIC_LINK_PRIVILEGE*/35;
-		PVOID OldStatus=nullptr;
-		auto lStatus = RtlAcquirePrivilege(&Privilege, 1, 0, &OldStatus);
 
-		if (lStatus<0)
-		{
-			SetLastError(RtlNtStatusToDosError(lStatus));
+		if (!ImpersonateSelf(SecurityImpersonation))
 			return FALSE;
-		}
 
-		BOOL bRet = FALSE;
+		BOOLEAN Enabled = FALSE;
 
-		//auto& pReparseData = _calloc_crt_t(byte, MAXIMUM_REPARSE_DATA_BUFFER_SIZE);
+		LSTATUS lStatus = ERROR_SUCCESS;
 
-		__crt_scoped_stack_ptr_tag<wchar_t> lpFullTargetFileName=nullptr;
-
-		UNICODE_STRING NtName = {}, NtSymlinkFileName = {};
-		bool bRelative = false;
-
-		switch (RtlDetermineDosPathNameType_U(lpTargetFileName))
+		if (auto Status = RtlAdjustPrivilege(/*SE_CREATE_SYMBOLIC_LINK_PRIVILEGE*/35, TRUE, TRUE, &Enabled))
 		{
-		case RtlPathTypeUnknown:
-		case RtlPathTypeRooted:
-		case RtlPathTypeRelative:
-			//
-			bRelative = true;
-			NtName.Buffer = (wchar_t*)lpTargetFileName;
-			NtName.Length = NtName.MaximumLength = wcslen(lpTargetFileName) * sizeof(wchar_t);
+			lStatus = RtlNtStatusToDosError(Status);
+		}
+		else
+		{
+			//auto& pReparseData = _calloc_crt_t(byte, MAXIMUM_REPARSE_DATA_BUFFER_SIZE);
 
-			break;
-		case RtlPathTypeDriveRelative:
-			if (auto cchFull = GetFullPathNameW(lpTargetFileName, 0, 0, nullptr))
+			__crt_scoped_stack_ptr_tag<wchar_t> lpFullTargetFileName = nullptr;
+
+			UNICODE_STRING NtName = {}, NtSymlinkFileName = {};
+			bool bRelative = false;
+
+			switch (RtlDetermineDosPathNameType_U(lpTargetFileName))
 			{
-				lpFullTargetFileName = (wchar_t*)_malloca(cchFull * sizeof(wchar_t));
-				if (!lpFullTargetFileName._p)
+			case RtlPathTypeUnknown:
+			case RtlPathTypeRooted:
+			case RtlPathTypeRelative:
+				//
+				bRelative = true;
+				NtName.Buffer = (wchar_t*)lpTargetFileName;
+				NtName.Length = NtName.MaximumLength = wcslen(lpTargetFileName) * sizeof(wchar_t);
+
+				break;
+			case RtlPathTypeDriveRelative:
+				if (auto cchFull = GetFullPathNameW(lpTargetFileName, 0, 0, nullptr))
 				{
-					SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+					lpFullTargetFileName = (wchar_t*)_malloca(cchFull * sizeof(wchar_t));
+					if (!lpFullTargetFileName._p)
+					{
+						lStatus = ERROR_NOT_ENOUGH_MEMORY;
+						goto _End;
+					}
+
+					lpTargetFileName = lpFullTargetFileName._p;
+				}
+
+				//case RtlPathTypeUncAbsolute:
+				//case RtlPathTypeDriveAbsolute:
+				//case RtlPathTypeLocalDevice:
+				//case RtlPathTypeRootLocalDevice:
+			default:
+				if (!RtlDosPathNameToNtPathName_U(lpTargetFileName, &NtName, nullptr, nullptr))
+				{
+					lStatus = ERROR_INVALID_PARAMETER;
+					goto _End;
+				}
+				break;
+			}
+
+			{
+				auto cbTargetFileName = wcslen(lpTargetFileName) * sizeof(wchar_t);
+
+				auto cBuffer = NtName.Length + cbTargetFileName + UFIELD_OFFSET(REPARSE_DATA_BUFFER, SymbolicLinkReparseBuffer.PathBuffer);
+
+
+				auto& pReparseData = _malloca_crt_t(BYTE, cBuffer);
+
+				if (!pReparseData._p)
+				{
+					lStatus = ERROR_NOT_ENOUGH_MEMORY;
 					goto _End;
 				}
 
-				lpTargetFileName = lpFullTargetFileName._p;
-			}
+				memset(pReparseData._p, 0, cBuffer);
 
-		//case RtlPathTypeUncAbsolute:
-		//case RtlPathTypeDriveAbsolute:
-		//case RtlPathTypeLocalDevice:
-		//case RtlPathTypeRootLocalDevice:
-		default:
-			if (!RtlDosPathNameToNtPathName_U(lpTargetFileName, &NtName, nullptr, nullptr))
-			{
-				SetLastError(ERROR_INVALID_PARAMETER);
-				goto _End;
-			}
-			break;
-		}
-
-		{
-			auto cbTargetFileName = wcslen(lpTargetFileName) * sizeof(wchar_t);
-
-			auto cBuffer = NtName.Length + cbTargetFileName + UFIELD_OFFSET(REPARSE_DATA_BUFFER, SymbolicLinkReparseBuffer.PathBuffer);
+				if (bRelative)
+					((REPARSE_DATA_BUFFER*)pReparseData._p)->SymbolicLinkReparseBuffer.Flags |= SYMLINK_FLAG_RELATIVE;
 
 
-			auto& pReparseData = _malloca_crt_t(BYTE, cBuffer);
+				((REPARSE_DATA_BUFFER*)pReparseData._p)->ReparseTag = IO_REPARSE_TAG_SYMLINK;
 
-			if (!pReparseData._p)
-			{
-				SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-				goto _End;
-			}
+				((REPARSE_DATA_BUFFER*)pReparseData._p)->ReparseDataLength = cBuffer - UFIELD_OFFSET(REPARSE_DATA_BUFFER, GenericReparseBuffer);
 
-			memset(pReparseData._p, 0, cBuffer);
-
-			if (bRelative)
-				((REPARSE_DATA_BUFFER*)pReparseData._p)->SymbolicLinkReparseBuffer.Flags |= SYMLINK_FLAG_RELATIVE;
+				auto& SymbolicLinkReparseBuffer = ((REPARSE_DATA_BUFFER*)pReparseData._p)->SymbolicLinkReparseBuffer;
 
 
-			((REPARSE_DATA_BUFFER*)pReparseData._p)->ReparseTag = IO_REPARSE_TAG_SYMLINK;
+				SymbolicLinkReparseBuffer.SubstituteNameOffset = SymbolicLinkReparseBuffer.PrintNameLength = wcslen(lpTargetFileName) * sizeof(wchar_t);
+				SymbolicLinkReparseBuffer.SubstituteNameLength = NtName.Length;
 
-			((REPARSE_DATA_BUFFER*)pReparseData._p)->ReparseDataLength = cBuffer - UFIELD_OFFSET(REPARSE_DATA_BUFFER, GenericReparseBuffer);
-
-			auto& SymbolicLinkReparseBuffer = ((REPARSE_DATA_BUFFER*)pReparseData._p)->SymbolicLinkReparseBuffer;
-
-
-			SymbolicLinkReparseBuffer.SubstituteNameOffset = SymbolicLinkReparseBuffer.PrintNameLength = wcslen(lpTargetFileName) * sizeof(wchar_t);
-			SymbolicLinkReparseBuffer.SubstituteNameLength = NtName.Length;
-
-			memcpy(SymbolicLinkReparseBuffer.PathBuffer, lpTargetFileName, SymbolicLinkReparseBuffer.PrintNameLength);
-			memcpy((byte*)(SymbolicLinkReparseBuffer.PathBuffer) + SymbolicLinkReparseBuffer.PrintNameLength, NtName.Buffer, NtName.Length);
+				memcpy(SymbolicLinkReparseBuffer.PathBuffer, lpTargetFileName, SymbolicLinkReparseBuffer.PrintNameLength);
+				memcpy((byte*)(SymbolicLinkReparseBuffer.PathBuffer) + SymbolicLinkReparseBuffer.PrintNameLength, NtName.Buffer, NtName.Length);
 
 
-			
 
-			if (RtlDosPathNameToNtPathName_U(lpSymlinkFileName, &NtSymlinkFileName, nullptr, nullptr))
-			{
-				HANDLE hFile;
 
-				OBJECT_ATTRIBUTES ObjectAttributes = {sizeof(OBJECT_ATTRIBUTES),nullptr,&NtSymlinkFileName ,/*OBJ_CASE_INSENSITIVE*/0x40};
-				IO_STATUS_BLOCK IoStatusBlock;
-
-				lStatus = NtCreateFile(&hFile, FILE_WRITE_ATTRIBUTES | SYNCHRONIZE | DELETE, &ObjectAttributes, &IoStatusBlock, nullptr, FILE_ATTRIBUTE_NORMAL, 0, /*FILE_CREATE*/2, (dwFlags&SYMBOLIC_LINK_FLAG_DIRECTORY) ? 0x200021 : 0x200060, nullptr, 0);
-				if (lStatus < 0)
+				if (RtlDosPathNameToNtPathName_U(lpSymlinkFileName, &NtSymlinkFileName, nullptr, nullptr))
 				{
-					SetLastError(RtlNtStatusToDosError(lStatus));
+					HANDLE hFile;
+
+					OBJECT_ATTRIBUTES ObjectAttributes = { sizeof(OBJECT_ATTRIBUTES),nullptr,&NtSymlinkFileName ,/*OBJ_CASE_INSENSITIVE*/0x40 };
+					IO_STATUS_BLOCK IoStatusBlock;
+
+					Status = NtCreateFile(&hFile, FILE_WRITE_ATTRIBUTES | SYNCHRONIZE | DELETE, &ObjectAttributes, &IoStatusBlock, nullptr, FILE_ATTRIBUTE_NORMAL, 0, /*FILE_CREATE*/2, (dwFlags&SYMBOLIC_LINK_FLAG_DIRECTORY) ? 0x200021 : 0x200060, nullptr, 0);
+					if (Status < 0)
+					{
+						lStatus = RtlNtStatusToDosError(Status);
+					}
+					else
+					{
+						DWORD cRet;
+
+						if (!DeviceIoControl(hFile, FSCTL_SET_REPARSE_POINT, pReparseData._p, cBuffer, NULL, NULL, &cRet, NULL))
+						{
+							lStatus = GetLastError();
+
+							if (lStatus == ERROR_SUCCESS)
+								lStatus = ERROR_INVALID_FUNCTION;
+
+							//设置失败则删除创建的文件
+							FILE_DISPOSITION_INFORMATION DispositionInformation;
+							DispositionInformation.NeedDeleteFile = TRUE;
+							NtSetInformationFile(hFile, &IoStatusBlock, &DispositionInformation, sizeof(DispositionInformation), FileDispositionInformation);
+						}
+
+
+						NtClose(hFile);
+					}
+
+					RtlFreeUnicodeString(&NtSymlinkFileName);
 				}
 				else
 				{
-					DWORD cRet;
-					bRet = DeviceIoControl(hFile, FSCTL_SET_REPARSE_POINT, pReparseData._p, cBuffer, NULL, NULL, &cRet, NULL);
-					if (!bRet)
-					{
-						//设置失败则删除创建的文件
-						FILE_DISPOSITION_INFORMATION DispositionInformation;
-						DispositionInformation.NeedDeleteFile = TRUE;
-						NtSetInformationFile(hFile, &IoStatusBlock, &DispositionInformation, sizeof(DispositionInformation), FileDispositionInformation);
-					}
-
-
-					NtClose(hFile);
+					lStatus = ERROR_INVALID_PARAMETER;
 				}
 
-				RtlFreeUnicodeString(&NtSymlinkFileName);
+
+				if (!bRelative)
+					RtlFreeUnicodeString(&NtName);
+
 			}
-			else
-			{
-				SetLastError(ERROR_INVALID_PARAMETER);
-			}
-
-
-			if (!bRelative)
-				RtlFreeUnicodeString(&NtName);
-
 		}
-
 
 	_End:
 
-		RtlReleasePrivilege(OldStatus);
+		RevertToSelf();
 
-		return bRet;
+		if (lStatus)
+		{
+			SetLastError(lStatus);
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
 	}
 #endif
 }
