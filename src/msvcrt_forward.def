@@ -117,6 +117,30 @@ strtoull=_strtoui64
 ;_strtoull_l与_strtoui64_l等价（unsignedlong long == unsigned __int64）
 _strtoull_l=_strtoui64_l
 
+;strtoimax与_strtoi64等价（intmax_t == long long）
+strtoimax=_strtoi64
+
+;_strtoimax_l与_strtoi64_l等价（intmax_t == long long）
+_strtoimax_l=_strtoi64_l
+
+;strtoumax与_strtoui64等价（uintmax_t == unsigned long long）
+strtoumax=_strtoui64
+
+;_strtoumax_l与_strtoui64_l等价（uintmax_t == unsigned long long）
+_strtoumax_l=_strtoui64_l
+
+;wcstoimax与_wcstoi64等价（intmax_t == long long）
+wcstoimax=_wcstoi64
+
+;_wcstoimax_l与_wcstoi64_l等价（intmax_t == long long）
+_wcstoimax_l=_wcstoi64_l
+
+;wcstoumax与_wcstoui64等价（uintmax_t == unsigned long long）
+wcstoumax=_wcstoui64
+
+;_wcstoumax_l与_wcstoui64_l等价（uintmax_t == unsigned long long）
+_wcstoumax_l=_wcstoui64_l
+
 _set_invalid_parameter_handler=_set_invalid_parameter_handler_downlevel
 
 _get_invalid_parameter_handler=_get_invalid_parameter_handler_downlevel

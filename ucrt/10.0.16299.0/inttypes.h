@@ -37,99 +37,67 @@ typedef _Lldiv_t imaxdiv_t;
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _Check_return_
-extern intmax_t __cdecl imaxabs(
+_ACRTIMP intmax_t __cdecl imaxabs(
     _In_ intmax_t _Number
     );
 
 _Check_return_
-extern imaxdiv_t __cdecl imaxdiv(
+_ACRTIMP imaxdiv_t __cdecl imaxdiv(
     _In_ intmax_t _Numerator,
     _In_ intmax_t _Denominator
     );
 
-__inline intmax_t __cdecl strtoimax(
+_ACRTIMP intmax_t __cdecl strtoimax(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix
-    )
-{
-	static_assert(sizeof(intmax_t) == sizeof(__int64), "Error sizeof(intmax_t)!=sizeof(__int64) ");
-	return _strtoi64(_String, _EndPtr, _Radix);
-}
+    );
 
-__inline intmax_t __cdecl _strtoimax_l(
+_ACRTIMP intmax_t __cdecl _strtoimax_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix,
     _In_opt_                 _locale_t   _Locale
-    )
-{
-	static_assert(sizeof(intmax_t) == sizeof(__int64), "Error sizeof(intmax_t)!=sizeof(__int64) ");
-	return _strtoi64_l(_String, _EndPtr, _Radix, _Locale);
-}
+    );
 
-__inline uintmax_t __cdecl strtoumax(
+_ACRTIMP uintmax_t __cdecl strtoumax(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix
-    )
-{
-	static_assert(sizeof(uintmax_t) == sizeof(unsigned __int64), "Error sizeof(uintmax_t)!=sizeof(unsigned __int64) ");
-	return _strtoui64(_String, _EndPtr, _Radix);
-}
+    );
 
-__inline uintmax_t __cdecl _strtoumax_l(
+_ACRTIMP uintmax_t __cdecl _strtoumax_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_                     int         _Radix,
     _In_opt_                 _locale_t   _Locale
-    )
-{
-	static_assert(sizeof(uintmax_t) == sizeof(unsigned __int64), "Error sizeof(uintmax_t)!=sizeof(unsigned __int64) ");
-	return _strtoui64_l(_String, _EndPtr, _Radix, _Locale);
-}
+    );
 
-__inline intmax_t __cdecl wcstoimax(
+_ACRTIMP intmax_t __cdecl wcstoimax(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
     _In_                     int            _Radix
-    )
-{
-	static_assert(sizeof(intmax_t) == sizeof(__int64), "Error sizeof(intmax_t)!=sizeof(__int64) ");
-	return _wcstoi64(_String, _EndPtr, _Radix);
-}
+    );
 
-__inline intmax_t __cdecl _wcstoimax_l(
+_ACRTIMP intmax_t __cdecl _wcstoimax_l(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
     _In_                     int            _Radix,
     _In_opt_                 _locale_t      _Locale
-    )
-{
-	static_assert(sizeof(intmax_t) == sizeof(__int64), "Error sizeof(intmax_t)!=sizeof(__int64) ");
-	return _wcstoi64_l(_String, _EndPtr, _Radix, _Locale);
-}
+    );
 
-__inline uintmax_t __cdecl wcstoumax(
+_ACRTIMP uintmax_t __cdecl wcstoumax(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
     _In_                     int            _Radix
-    )
-{
-	static_assert(sizeof(uintmax_t) == sizeof(unsigned __int64), "Error sizeof(uintmax_t)!=sizeof(unsigned __int64) ");
-	return _wcstoui64(_String, _EndPtr, _Radix);
-}
+    );
 
-__inline uintmax_t __cdecl _wcstoumax_l(
+_ACRTIMP uintmax_t __cdecl _wcstoumax_l(
     _In_z_                   wchar_t const* _String,
     _Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
     _In_                     int            _Radix,
     _In_opt_                 _locale_t      _Locale
-    )
-{
-	static_assert(sizeof(uintmax_t) == sizeof(unsigned __int64), "Error sizeof(uintmax_t)!=sizeof(unsigned __int64) ");
-	return _wcstoui64_l(_String, _EndPtr, _Radix, _Locale);
-}
+    );
 
 
 

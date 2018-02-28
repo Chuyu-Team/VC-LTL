@@ -47,6 +47,9 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_get_FMA3_enable);
 
 //_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_abort_behavior_downlevel);
 
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(imaxabs);
+
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(imaxdiv);
 
 #ifdef _ATL_XP_TARGETING
 //msvcrt.lib
