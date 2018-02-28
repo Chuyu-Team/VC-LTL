@@ -137,7 +137,7 @@ later, even in the environment which installed no hotfixes.
 解决方案：
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
 
-#### 4.4. 支持XP时msvcrt.dll大量导出XP不支持的函数
+#### 4.4. 支持XP时从msvcrt.dll导入大量XP不支持的函数
 问题原因：可能没有开启引用消除
 
 解决方案：
