@@ -862,30 +862,36 @@ typedef struct _ptd_msvcrt
 
 	// Per-thread error message data:
 	char*      _strerror_buffer;            // Pointer to strerror()  / _strerror()  buffer _errmsg
+	wchar_t*   _wcserror_buffer;            // Pointer to _wcserror() / __wcserror() buffer _werrmsg
 
+	//0x2C
+	//char *      _namebuf0;      /* ptr to tmpnam() buffer */
+	//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
+	// Per-thread tmpnam() data:
+	char*                _tmpnam_narrow_buffer;
+	wchar_t*             _tmpnam_wide_buffer;
+	//0x34
+	char *      _namebuf1;      /* ptr to tmpfile() buffer */
+	wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
+								//char *      _asctimebuf;    /* ptr to asctime() buffer */
+								//wchar_t *   _wasctimebuf;   /* ptr to _wasctime() buffer */
+								//void *      _gmtimebuf;     /* ptr to gmtime() structure */
+								//char *      _cvtbuf;        /* ptr to ecvt()/fcvt buffer */
+
+								// Per-thread time library data:
+	char*                _asctime_buffer;  // Pointer to asctime() buffer
+	wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
+	//0x44
+	struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
+
+	//0x48
+	char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
+
+	//0x4C
 	union
 	{
 		struct
 		{
-			//char *      _namebuf0;      /* ptr to tmpnam() buffer */
-			char*                _tmpnam_narrow_buffer;
-#ifdef _WIN32
-			//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
-			wchar_t*             _tmpnam_wide_buffer;
-#endif  /* _WIN32 */
-			char *      _namebuf1;      /* ptr to tmpfile() buffer */
-#ifdef _WIN32
-			wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
-#endif  /* _WIN32 */
-
-										// Per-thread time library data:
-			char*                _asctime_buffer;  // Pointer to asctime() buffer
-#ifdef _WIN32
-			wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
-#endif  /* _WIN32 */
-			struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
-			char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
-
 												   /* following fields are needed by _beginthread code */
 			void *      _initaddr;      /* initial user thread address */
 			void *      _initarg;       /* initial user thread argument */
@@ -896,17 +902,35 @@ typedef struct _ptd_msvcrt
 			EXCEPTION_POINTERS*           _tpxcptinfoptrs;  // Pointer to the exception info pointers
 			int                           _tfpecode;        // Last floating point exception code
 
-										/* following field is needed by NLG routines */
+			//0x60
+
+			/* pointer to the copy of the multibyte character information used by
+			* the thread */
+			//struct __crt_multibyte_data*  ptmbcinfo;
+			struct _multibyte_data_msvcrt_winxp*                  _multibyte_info;
+
+			//0x64
+			/* pointer to the copy of the locale informaton used by the thead */
+			struct _locale_data_msvcrt_winxp*                     _locale_info;
+
+			//0x68
+			/* following field is needed by NLG routines */
 			unsigned long   _NLG_dwCode;
 
 			/*
 			* Per-Thread data needed by C++ Exception Handling
 			*/
+			//0x6C
 			terminate_handler      _terminate;    // terminate() routine
+			//0x70
 			void *      _unexpected;    /* unexpected() routine */
 			void *      _translator;    /* S.E. translator */
 			void *      _curexception;  /* current exception */
 			void *      _curcontext;    /* current exception context */
+
+			//0x80
+			int         _ProcessingThrow; /* for uncaught_exception */
+
 #if defined (_M_MRX000)
 			void *      _pFrameInfoChain;
 			void *      _pUnwindContext;
@@ -924,28 +948,6 @@ typedef struct _ptd_msvcrt
 
 		struct
 		{
-			wchar_t*   _wcserror_buffer;            // Pointer to _wcserror() / __wcserror() buffer _werrmsg
-
-			//char *      _namebuf0;      /* ptr to tmpnam() buffer */
-			//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
-			// Per-thread tmpnam() data:
-			char*                _tmpnam_narrow_buffer;
-			wchar_t*             _tmpnam_wide_buffer;
-
-			char *      _namebuf1;      /* ptr to tmpfile() buffer */
-			wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
-			//char *      _asctimebuf;    /* ptr to asctime() buffer */
-			//wchar_t *   _wasctimebuf;   /* ptr to _wasctime() buffer */
-			//void *      _gmtimebuf;     /* ptr to gmtime() structure */
-			//char *      _cvtbuf;        /* ptr to ecvt()/fcvt buffer */
-
-			// Per-thread time library data:
-			char*                _asctime_buffer;  // Pointer to asctime() buffer
-			wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
-			struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
-
-			char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
-
 
 			//unsigned char _con_ch_buf[MB_LEN_MAX];
 			/* ptr to putch() buffer */

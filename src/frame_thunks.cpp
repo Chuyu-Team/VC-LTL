@@ -33,8 +33,7 @@ extern "C" int __cdecl __uncaught_exceptions_downlevel()
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < 0x00060000)
 	{
-		//Windows XP不支持多异常处理
-		return __uncaught_exception() ? 1 : 0;
+		return __acrt_getptd()->XP_msvcrt._ProcessingThrow;
 	}
 	else
 #endif
@@ -87,18 +86,13 @@ extern "C" void** __cdecl __current_exception_context_downlevel()
 
 _LCRT_DEFINE_IAT_SYMBOL(__current_exception_context_downlevel);
 
-#ifdef _ATL_XP_TARGETING
-static thread_local int _ProcessingThrow;
-#endif
+
 extern "C" int* __cdecl __processing_throw_downlevel()
 {
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < 0x00060000)
 	{
-		//Windows XP不支持多异常处理，只能获取有或者无
-
-		_ProcessingThrow = __uncaught_exception() ? 1 : 0;
-		return &_ProcessingThrow;
+		return &__acrt_getptd()->XP_msvcrt._ProcessingThrow;
 	}
 	else
 #endif
