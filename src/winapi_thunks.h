@@ -311,7 +311,7 @@ __declspec(dllimport) int __cdecl __crtLCMapStringW
 );
 
 
-__declspec(dllimport) LCID* ___lc_handle_func(void);
+__declspec(dllimport) LCID* __cdecl ___lc_handle_func(void);
 
 
 __declspec(dllimport) int __cdecl __crtLCMapStringA
@@ -356,7 +356,7 @@ __declspec(dllimport) void __cdecl _unlock(
 	int locknum
 );
 
-__declspec(dllimport) void _amsg_exit(
+__declspec(dllimport) void __cdecl _amsg_exit(
 	int rterrnum
 );
 
