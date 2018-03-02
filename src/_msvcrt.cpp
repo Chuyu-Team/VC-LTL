@@ -24,6 +24,7 @@
 
 #include <corecrt_math.h>
 #include <msvcrt_IAT.h>
+#include <corecrt_internal.h>
 
 #ifdef __NOTHROW_T_DEFINED
 
@@ -1303,16 +1304,24 @@ extern "C"
 	//	}   ioinfo;
 	//
 	//	__declspec(dllimport) ioinfo* __pioinfo[];
-	struct _ptd_msvcrt;
 
-	_ptd_msvcrt * __cdecl _getptd_noexit(void);
+	
+	/*为了兼容XP需要，此处调整为_errno()直接取偏移，
+	该方案中如果msvcrt.dll内部的_getptd_noexit内存分配失败会导致这里的_getptd_noexit返回值不正确。
+	但是这种可能性极小，可以接受。
+	*/
+	_ptd_msvcrt* __cdecl _getptd_noexit(void)
+	{
+		//_errno()不可能返回null
+		return (_ptd_msvcrt*)(((byte*)_errno()) - FIELD_OFFSET(_ptd_msvcrt, _terrno));
+	}
 
 
-	__declspec(dllimport) void _amsg_exit(
+	__declspec(dllimport) void __cdecl _amsg_exit(
 		int rterrnum
 	);
 
-	_ptd_msvcrt * __cdecl __acrt_getptd(void)  /* return address of per-thread CRT data */
+	_ptd_msvcrt* __cdecl __acrt_getptd(void)  /* return address of per-thread CRT data */
 	{
 		auto ptd = _getptd_noexit();
 

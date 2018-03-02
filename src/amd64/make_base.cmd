@@ -14,19 +14,14 @@ lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\obj
 lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\objfre\amd64\ehvccctr.obj
 lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\eh\dlllib\objfre\amd64\ehveccvb.obj
 lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\misc\dlllib\objfre\amd64\invarg.obj
-
+lib "%libfile%" /remove:d:\5359.obj.amd64fre\minkernel\crts\crtw32\startup\dlllib\objfre\amd64\ptd_from_dll.obj
 
 lib /def:"%~dp0msvcrt.def" /out:"%~dp0msvcrtdll.lib"
 
 lib "%libfile%" "%~dp0msvcrtdll.lib"
 lib "%libfile%" "%~dp0ntdlllite.lib"
-lib "%libfile%" "%~dp0ntdlllite.lib"
+::lib "%libfile%" "%~dp0ntdlllite.lib"
 
 del "%~dp0msvcrtdll.*" /q
-
-
-
-"%~dp0..\YYLib.exe" /MACHINE:x64 /def:"%~dp0msvcrt_advanced.def"  /out:"%~dp0..\..\x64\msvcrt_advanced.obj"
-"%~dp0..\YYLib.exe" /MACHINE:x64 /def:"%~dp0msvcrt_light.def"  /out:"%~dp0..\..\x64\msvcrt_light.obj"
 
 pause
