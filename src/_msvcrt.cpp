@@ -1306,14 +1306,19 @@ extern "C"
 	//	__declspec(dllimport) ioinfo* __pioinfo[];
 
 	
-	/*为了兼容XP需要，此处调整为_errno()直接取偏移，
-	该方案中如果msvcrt.dll内部的_getptd_noexit内存分配失败会导致这里的_getptd_noexit返回值不正确。
-	但是这种可能性极小，可以接受。
+	/*
+	从msvcrt.dll中获取ptd指针。
+	函数通过获取errno地址换算出ptd地址。函数行为在某些平台不能保证统一。
+	在WinXP中，如果msvcrt.dll内部内存申请失败那么将导致整个程序退出。
+	XP以上平台则不会发生此问题，能保证在内存申请失败时返回null。
 	*/
 	_ptd_msvcrt* __cdecl _getptd_noexit(void)
 	{
 		//_errno()不可能返回null
-		return (_ptd_msvcrt*)(((byte*)_errno()) - FIELD_OFFSET(_ptd_msvcrt, _terrno));
+		auto ptd = (_ptd_msvcrt*)(((byte*)_errno()) - FIELD_OFFSET(_ptd_msvcrt, _terrno));
+
+		//如果_thandle不为-1，说明msvcrt.dll内部内存已经申请失败
+		return ptd->_thandle == (uintptr_t)-1/*Current Thread Handle*/ ? ptd : nullptr;
 	}
 
 
@@ -2815,54 +2820,5 @@ extern "C"
 
 #endif
 }
-
-#ifdef __cplusplus
-extern "C++"
-{
-	//void* __CRTDECL operator new(
-	//	size_t _Size
-	//	)
-	//{
-	//	return malloc(_Size);
-	//}
-
-	//void* __CRTDECL operator new[](
-	//		size_t _Size
-	//		)
-	//{
-	//	return malloc(_Size);
-	//}
-
-	//void __CRTDECL operator delete(
-	//		void* _Block
-	//		) throw()
-	//{
-	//	free(_Block);
-	//}
-
-	//void __CRTDECL operator delete[](
-	//	void* _Block
-	//	)
-	//{
-	//	free(_Block);
-	//}
-
-	/*void __CRTDECL operator delete(
-			void*  _Block,
-			size_t _Size
-			)
-	{
-		operator delete(_Block);
-	}*/
-
-	/*void __CRTDECL operator delete[](
-		void* _Block,
-		size_t _Size
-		)
-	{
-		operator delete[](_Block);
-	}*/
-}
-#endif // !__cplusplus
 
 #endif //NDEBUG&&_DLL&&__NO_LTL_LIB
