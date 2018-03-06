@@ -61,17 +61,17 @@ struct __utimbuf64
 // Functions
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-_ACRTXPIMP int __cdecl _utime32(
+_ACRTIMP int __cdecl _utime32(
     _In_z_   char const*         _FileName,
     _In_opt_ struct __utimbuf32* _Time
     );
 
-_ACRTXPIMP int __cdecl _futime32(
+_ACRTIMP int __cdecl _futime32(
     _In_     int                 _FileHandle,
     _In_opt_ struct __utimbuf32* _Time
     );
 
-_ACRTXPIMP int __cdecl _wutime32(
+_ACRTIMP int __cdecl _wutime32(
     _In_z_   wchar_t const*      _FileName,
     _In_opt_ struct __utimbuf32* _Time
     );

@@ -148,6 +148,9 @@ _ismbcspace_l=_ismbcspace_l_downlevel
 ;iswctype.cpp，由于cd调用约定，直接转发即可。
 _iswctype_l=iswctype
 
+;ismbstr.cpp
+_ismbstrail_l=_ismbstrail_l_downlevel
+
 _lfind_s=_lfind_s_downlevel
 _lsearch_s=_lsearch_s_downlevel
 
@@ -458,6 +461,10 @@ _wmakepath_s=_wmakepath_s_downlevel
 wscanf_s=wscanf_s_downlevel
 _wsplitpath_s=_wsplitpath_s_downlevel
 
+
+;WinXp兼容专用
+__daylight=__p__daylight
+__dstbias=__p__dstbias
 
 [Import.x64]
 amd64\msvcrt_winxp.def

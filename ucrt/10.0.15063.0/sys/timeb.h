@@ -64,11 +64,11 @@ struct __timeb64
 
 
 _CRT_INSECURE_DEPRECATE(_ftime32_s)
-_ACRTXPIMP void __cdecl _ftime32(
+_ACRTIMP void __cdecl _ftime32(
     _Out_ struct __timeb32* _Time
     );
 
-_ACRTXPIMP errno_t __cdecl _ftime32_s(
+_ACRTIMP errno_t __cdecl _ftime32_s(
     _Out_ struct __timeb32* _Time
     );
 
@@ -77,7 +77,7 @@ _ACRTIMP void __cdecl _ftime64(
     _Out_ struct __timeb64* _Time
     );
 
-_ACRTXPIMP errno_t __cdecl _ftime64_s(
+_ACRTIMP errno_t __cdecl _ftime64_s(
     _Out_ struct __timeb64* _Time
     );
 

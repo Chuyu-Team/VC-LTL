@@ -141,6 +141,18 @@ wcstoumax=_wcstoui64
 ;_wcstoumax_l与_wcstoui64_l等价（uintmax_t == unsigned long long）
 _wcstoumax_l=_wcstoui64_l
 
+;cabsl与cabs等价（long double == double）
+cabsl=cabs
+
+;copysignl与_copysign等价（long double == double）
+copysignl=_copysign
+
+;strtold与strtod等价（long double == double）
+strtold=strtod
+
+;_strtold_l与_strtod_l等价（long double == double）
+_strtold_l=_strtod_l
+
 _set_invalid_parameter_handler=_set_invalid_parameter_handler_downlevel
 
 _get_invalid_parameter_handler=_get_invalid_parameter_handler_downlevel
@@ -243,12 +255,27 @@ _dupenv_s=_dupenv_s_downlevel
 _wdupenv_s=_wdupenv_s_downlevel
 gets_s=gets_s_downlevel
 _getws_s=_getws_s_downlevel
+__sys_nerr=__sys_nerr_downlevel
+__sys_errlist=__sys_errlist_downlevel
 
 ;frame_thunks.cpp
 __uncaught_exceptions=__uncaught_exceptions_downlevel
 __current_exception=__current_exception_downlevel
 __current_exception_context=__current_exception_context_downlevel
 __processing_throw=__processing_throw_downlevel
+
+
+;setlocal_thunks.cpp
+_free_locale=_free_locale_downlevel
+___mb_cur_max_l_func=___mb_cur_max_l_func_downlevel
+
+
+;unexpected.cpp
+_get_unexpected=_get_unexpected_downlevel
+
+
+__timezone=__p__timezone
+__tzname=__p__tzname
 
 
 [Import.x64]

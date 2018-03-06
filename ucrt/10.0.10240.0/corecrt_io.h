@@ -109,7 +109,7 @@ _ACRTIMP int __cdecl _access(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _access_s(
+_ACRTIMP errno_t __cdecl _access_s(
     _In_z_ char const* _FileName,
     _In_   int         _AccessMode
     );
@@ -212,7 +212,7 @@ _ACRTIMP long __cdecl _lseek(
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _mktemp_s(
+_ACRTIMP errno_t __cdecl _mktemp_s(
     _Inout_updates_z_(_Size) char*  _TemplateName,
     _In_                     size_t _Size
     );
@@ -282,7 +282,7 @@ _ACRTIMP int __cdecl _umask(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _umask_s(
+_ACRTIMP errno_t __cdecl _umask_s(
     _In_  int  _NewMode,
     _Out_ int* _OldMode
     );
@@ -307,7 +307,7 @@ _ACRTIMP intptr_t __cdecl _findfirst32i64(
 
 _Success_(return != -1)
 _Check_return_
-extern intptr_t __cdecl _findfirst64i32(
+_ACRTIMP intptr_t __cdecl _findfirst64i32(
     _In_z_ char const*              _FileName,
     _Out_  struct _finddata64i32_t* _FindData
     );
@@ -328,7 +328,7 @@ _ACRTIMP int __cdecl _findnext32i64(
 
 _Success_(return != -1)
 _Check_return_
-extern int __cdecl _findnext64i32(
+_ACRTIMP int __cdecl _findnext64i32(
     _In_  intptr_t                 _FindHandle,
     _Out_ struct _finddata64i32_t* _FindData
     );
@@ -353,7 +353,7 @@ _ACRTIMP __int64 __cdecl _telli64(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _sopen_s(
+_ACRTIMP errno_t __cdecl _sopen_s(
     _Out_  int*        _FileHandle,
     _In_z_ char const* _FileName,
     _In_   int         _OpenFlag,
@@ -381,7 +381,7 @@ _ACRTIMP errno_t __cdecl _sopen_dispatch(
 
 
 
-#if defined __cplusplus && !defined __Build_LTL
+#ifdef __cplusplus
 
     // These function do not validate pmode; use _sopen_s instead.
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
@@ -413,6 +413,7 @@ _ACRTIMP errno_t __cdecl _sopen_dispatch(
         _In_   int         _OpenFlag,
         _In_   int         _ShareFlag,
         ...);
+
 #endif
 
 

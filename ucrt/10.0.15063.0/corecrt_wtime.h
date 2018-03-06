@@ -47,7 +47,7 @@ _ACRTIMP wchar_t* __cdecl _wasctime(
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _wasctime_s(
+_ACRTIMP errno_t __cdecl _wasctime_s(
     _Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*         _Buffer,
     _In_range_(>=,26)                                     size_t           _SizeInWords,
     _In_                                                  struct tm const* _Tm
@@ -81,12 +81,12 @@ _ACRTIMP size_t __cdecl _wcsftime_l(
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_wctime32_s)
-_ACRTXPIMP wchar_t* __cdecl _wctime32(
+_ACRTIMP wchar_t* __cdecl _wctime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _wctime32_s(
+_ACRTIMP errno_t __cdecl _wctime32_s(
     _Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
     _In_  _In_range_(>=, 26)                              size_t            _SizeInWords,
     _In_                                                  __time32_t const* _Time
@@ -106,7 +106,7 @@ _ACRTIMP wchar_t* __cdecl _wctime64(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _wctime64_s(
+_ACRTIMP errno_t __cdecl _wctime64_s(
     _Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
     _In_  _In_range_(>=, 26)                              size_t            _SizeInWords,
     _In_                                                  __time64_t const* _Time);

@@ -152,16 +152,16 @@ _ACRTIMP size_t __cdecl _Strftime(_Out_writes_z_(_Maxsize) char *,
 
 _Success_(return != 0)
 _Ret_z_
-extern wchar_t *__cdecl _W_Getdays(void);
+_ACRTIMP wchar_t *__cdecl _W_Getdays(void);
 
 _Success_(return != 0)
 _Ret_z_
-extern wchar_t *__cdecl _W_Getmonths(void);
+_ACRTIMP wchar_t *__cdecl _W_Getmonths(void);
 
 _ACRTIMP void *__cdecl _W_Gettnames(void);
 
 _Success_(return > 0)
-extern size_t __cdecl _Wcsftime(_Out_writes_z_(_Maxsize) wchar_t *,
+_ACRTIMP size_t __cdecl _Wcsftime(_Out_writes_z_(_Maxsize) wchar_t *,
 	_In_ size_t _Maxsize, _In_z_ const wchar_t *, _In_ const struct tm *,
 	_In_opt_ void *);
 _END_EXTERN_C

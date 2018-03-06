@@ -22,8 +22,8 @@ _CRT_BEGIN_C_HEADER
 
 #define FE_ROUND_MASK _MCW_RC
 
-extern int __cdecl fegetround(void);
-extern int __cdecl fesetround(_In_ int _Round);
+_ACRTIMP int __cdecl fegetround(void);
+_ACRTIMP int __cdecl fesetround(_In_ int _Round);
 
 
 
@@ -46,13 +46,13 @@ extern int __cdecl fesetround(_In_ int _Round);
 
     #define FE_ALL_EXCEPT (FE_DIVBYZERO | FE_INEXACT | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW)
 
-    extern int __cdecl fegetenv(_Out_ fenv_t* _Env);
-    extern int __cdecl fesetenv(_In_ fenv_t const* _Env);
-    extern int __cdecl feclearexcept(_In_ int _Flags);
-	extern _Success_(return == 0) int __cdecl feholdexcept(_Out_ fenv_t* _Env);
-    extern int __cdecl fetestexcept(_In_ int _Flags);
-	extern int __cdecl fegetexceptflag(_Out_ fexcept_t* _Except, _In_ int _TestFlags);
-	extern int __cdecl fesetexceptflag(_In_ fexcept_t const* _Except, _In_ int _SetFlags);
+    _ACRTIMP int __cdecl fegetenv(_Out_ fenv_t* _Env);
+    _ACRTIMP int __cdecl fesetenv(_In_ fenv_t const* _Env);
+    _ACRTIMP int __cdecl feclearexcept(_In_ int _Flags);
+    _ACRTIMP _Success_(return == 0) int __cdecl feholdexcept(_Out_ fenv_t* _Env);
+    _ACRTIMP int __cdecl fetestexcept(_In_ int _Flags);
+    _ACRTIMP int __cdecl fegetexceptflag(_Out_ fexcept_t* _Except, _In_ int _TestFlags);
+    _ACRTIMP int __cdecl fesetexceptflag(_In_ fexcept_t const* _Except, _In_ int _SetFlags);
 
     #if !defined __midl // MIDL does not support compound initializers
         // In the original implementation (_Fenv0), the global variable was zero

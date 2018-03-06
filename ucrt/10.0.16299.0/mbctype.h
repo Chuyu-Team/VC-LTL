@@ -22,7 +22,7 @@ _Check_return_ _ACRTIMP unsigned char* __cdecl __p__mbcasemap(void);
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
     #ifndef _CORECRT_BUILD
         _ACRTIMP extern unsigned char _mbctype[];
-		_ACRTIMP extern unsigned char _mbcasemap[];
+        _ACRTIMP extern unsigned char _mbcasemap[];
     #endif
 #else
     #define _mbctype   (__p__mbctype())
@@ -72,21 +72,21 @@ _ACRTIMP int __cdecl _getmbcp(void);
     _Check_return_ _DCRTIMP int __cdecl _ismbbkprint(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbbalpha (_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbbpunct (_In_ unsigned int _C);
-    _Check_return_   extern int __cdecl _ismbbblank (_In_ unsigned int _C);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbblank (_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbbalnum (_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbbprint (_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbbgraph (_In_ unsigned int _C);
 
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbkalnum_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbkana_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbkpunct_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbkprint_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbalpha_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbpunct_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_     extern int __cdecl _ismbbblank_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbalnum_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbprint_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbgraph_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbkalnum_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbkana_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbkpunct_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbkprint_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbalpha_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbpunct_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbblank_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbalnum_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbprint_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbgraph_l (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
 
     // BEGIN _MBLEADTRAIL_DEFINED
     _When_(_Ch == 0, _Post_equal_to_(0))
@@ -94,8 +94,8 @@ _ACRTIMP int __cdecl _getmbcp(void);
     _Check_return_ _DCRTIMP int __cdecl _ismbbtrail(_In_ unsigned int _Ch);
 
     _When_(_Ch == 0, _Post_equal_to_(0))
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
 
     _Check_return_
     _DCRTIMP int __cdecl _ismbslead(
@@ -104,7 +104,7 @@ _ACRTIMP int __cdecl _getmbcp(void);
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _ismbslead_l(
+    _DCRTIMP int __cdecl _ismbslead_l(
         _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
         _In_z_                           unsigned char const* _Pos,
         _In_opt_                         _locale_t            _Locale
@@ -117,7 +117,7 @@ _ACRTIMP int __cdecl _getmbcp(void);
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _ismbstrail_l(
+    _ACRTIMP int __cdecl _ismbstrail_l(
         _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
         _In_z_                           unsigned char const* _Pos,
         _In_opt_                         _locale_t            _Locale

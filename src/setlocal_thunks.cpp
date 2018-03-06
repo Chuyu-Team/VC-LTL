@@ -5,6 +5,10 @@ setlocal.cpp 的修正实现，利用现有msvcrt 函数生成新的
 
 */
 
+#define _get_current_locale _get_current_locale_downlevel
+#define _create_locale      _create_locale_downlevel
+#define _wcreate_locale     _wcreate_locale_downlevel
+#define _configthreadlocale _configthreadlocale_downlevel
 
 #include <corecrt_internal.h>
 #include <locale.h>
@@ -12,6 +16,7 @@ setlocal.cpp 的修正实现，利用现有msvcrt 函数生成新的
 
 #include <mbctype.h>
 #include <functional>
+#include "msvcrt_IAT.h"
 
 //static __crt_locale_pointers* ___StaticLocale;
 
@@ -353,6 +358,9 @@ static void __cdecl __freetlocinfo(
 }
 
 #ifndef _ATL_XP_TARGETING
+
+#undef _get_current_locale
+
 //WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _get_current_locale(void)
 {
@@ -393,6 +401,9 @@ EXTERN_C _locale_t __cdecl _get_current_locale(void)
 
 	return retval;
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_current_locale);
+
 #endif
 
 static __forceinline char * __cdecl common_setlocale(
@@ -476,6 +487,9 @@ static _locale_t __cdecl common_create_locale(
 }
 
 #ifndef _ATL_XP_TARGETING
+
+#undef _create_locale
+
 //WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _create_locale(
 	_In_   int         _Category,
@@ -484,9 +498,15 @@ EXTERN_C _locale_t __cdecl _create_locale(
 {
 	return common_create_locale(_Category, _Locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_create_locale);
+
 #endif
 
 #ifndef _ATL_XP_TARGETING
+
+#undef _wcreate_locale
+
 //WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _wcreate_locale(
 	_In_   int            _category,
@@ -495,9 +515,15 @@ EXTERN_C _locale_t __cdecl _wcreate_locale(
 {
 	return common_create_locale(_category, _locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcreate_locale);
+
 #endif
 
 #ifndef _ATL_XP_TARGETING
+
+#undef _configthreadlocale
+
 //WinXP不支持此接口
 EXTERN_C int __cdecl _configthreadlocale(int i)
 {
@@ -550,9 +576,12 @@ EXTERN_C int __cdecl _configthreadlocale(int i)
 	return retval;
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_configthreadlocale);
+
 #endif
 
-void __cdecl _free_locale(
+EXTERN_C void __cdecl _free_locale_downlevel(
 	_In_opt_ _locale_t plocinfo
 )
 {
@@ -604,10 +633,14 @@ void __cdecl _free_locale(
 	}
 }
 
-EXTERN_C int __cdecl ___mb_cur_max_l_func(_locale_t locale)
+_LCRT_DEFINE_IAT_SYMBOL(_free_locale_downlevel);
+
+EXTERN_C int __cdecl ___mb_cur_max_l_func_downlevel(_locale_t locale)
 {
 	return locale == nullptr
 		? ___mb_cur_max_func()
 		: locale->locinfo->_locale_mb_cur_max;
 
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(___mb_cur_max_l_func_downlevel);

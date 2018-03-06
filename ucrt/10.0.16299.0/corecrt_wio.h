@@ -99,7 +99,7 @@ _ACRTIMP int __cdecl _waccess(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _waccess_s(
+_ACRTIMP errno_t __cdecl _waccess_s(
     _In_z_ wchar_t const* _FileName,
     _In_   int            _AccessMode
     );
@@ -140,7 +140,7 @@ _ACRTIMP int __cdecl _wrename(
     _In_z_ wchar_t const* _NewFileName
     );
 
-_ACRTXPIMP errno_t __cdecl _wmktemp_s(
+_ACRTIMP errno_t __cdecl _wmktemp_s(
     _Inout_updates_z_(_SizeInWords) wchar_t* _TemplateName,
     _In_                            size_t   _SizeInWords
     );
@@ -165,7 +165,7 @@ _ACRTIMP intptr_t __cdecl _wfindfirst32i64(
 
 _Success_(return != -1)
 _Check_return_
-extern intptr_t __cdecl _wfindfirst64i32(
+_ACRTIMP intptr_t __cdecl _wfindfirst64i32(
     _In_z_ wchar_t const*            _FileName,
     _Out_  struct _wfinddata64i32_t* _FindData
     );
@@ -186,7 +186,7 @@ _ACRTIMP int __cdecl _wfindnext32i64(
 
 _Success_(return != -1)
 _Check_return_
-extern int __cdecl _wfindnext64i32(
+_ACRTIMP int __cdecl _wfindnext64i32(
     _In_  intptr_t                  _FindHandle,
     _Out_ struct _wfinddata64i32_t* _FindData
     );
@@ -199,7 +199,7 @@ _ACRTIMP int __cdecl _wfindnext64(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _wsopen_s(
+_ACRTIMP errno_t __cdecl _wsopen_s(
     _Out_  int*           _FileHandle,
     _In_z_ wchar_t const* _FileName,
     _In_   int            _OpenFlag,

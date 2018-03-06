@@ -22,8 +22,8 @@ _CRT_BEGIN_C_HEADER
 
 #define FE_ROUND_MASK 0x0300
 
-extern int __cdecl fegetround(void);
-extern int __cdecl fesetround(_In_ int);
+_ACRTIMP int __cdecl fegetround(void);
+_ACRTIMP int __cdecl fesetround(_In_ int);
 
 
 
@@ -46,15 +46,15 @@ extern int __cdecl fesetround(_In_ int);
 
     #define FE_ALL_EXCEPT (FE_DIVBYZERO | FE_INEXACT | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW)
 
-    extern int __cdecl fegetenv(_Out_ fenv_t*);
-    extern int __cdecl fesetenv(_In_ fenv_t const*);
-    extern int __cdecl feclearexcept(_In_ int);
-	extern _Success_(return == 0) int __cdecl feholdexcept(_Out_ fenv_t*);
-    extern int __cdecl fetestexcept(_In_ int);
-	extern int __cdecl fegetexceptflag(_Out_ fexcept_t*, _In_ int);
-	extern int __cdecl fesetexceptflag(_In_ fexcept_t const*, _In_ int);
+    _ACRTIMP int __cdecl fegetenv(_Out_ fenv_t*);
+    _ACRTIMP int __cdecl fesetenv(_In_ fenv_t const*);
+    _ACRTIMP int __cdecl feclearexcept(_In_ int);
+    _ACRTIMP _Success_(return == 0) int __cdecl feholdexcept(_Out_ fenv_t*);
+    _ACRTIMP int __cdecl fetestexcept(_In_ int);
+    _ACRTIMP int __cdecl fegetexceptflag(_Out_ fexcept_t*, _In_ int);
+    _ACRTIMP int __cdecl fesetexceptflag(_In_ fexcept_t const*, _In_ int);
 
-	__declspec(selectany) extern const fenv_t _Fenv0 = { 0, 0 };
+    __declspec(selectany) extern const fenv_t _Fenv0 = { 0, 0 };
 
     #define FE_DFL_ENV (&_Fenv0)
 
@@ -75,7 +75,7 @@ extern int __cdecl fesetround(_In_ int);
             int    _Except_Val;
             double _Num;
             double _Denom;
-        } const _Table[] =
+        } const _Table[] = 
         {  // Raise exception by evaluating num / denom:
             {FE_INVALID,   0.0,    0.0    },
             {FE_DIVBYZERO, 1.0,    0.0    },
@@ -112,17 +112,17 @@ extern int __cdecl fesetround(_In_ int);
     }
     #pragma optimize( "", on )
 
-        __inline int __CRTDECL feupdateenv(_In_ const fenv_t *_Penv)
+    __inline int __CRTDECL feupdateenv(_In_ const fenv_t *_Penv)
+    {
+        int _Except = fetestexcept(FE_ALL_EXCEPT);
+
+        if (fesetenv(_Penv) != 0 || feraiseexcept(_Except) != 0)
         {
-            int _Except = fetestexcept(FE_ALL_EXCEPT);
-
-            if (fesetenv(_Penv) != 0 || feraiseexcept(_Except) != 0)
-            {
-                return 1;
-            }
-
-            return 0;
+            return 1;
         }
+
+        return 0;
+    }
 
 #endif // !defined _M_CEE && !defined _CORECRT_BUILD
 

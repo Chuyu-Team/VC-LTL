@@ -1,4 +1,4 @@
-ï»¿//
+//
 // corecrt.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -154,7 +154,7 @@ extern "C++"
 #define _CRT_SIZE_MAX ((size_t)-1)
 
 #ifdef _ATL_XP_TARGETING
-	//Windows XPçš„msvcrtæœ‰BUGï¼Œå†…éƒ¨32ä½å¸¦ç¬¦å·æ•´å½¢ã€‚å› æ­¤å¤–éƒ¨æœ€å¤§åªå…è®¸0x3FFFFFFF
+	//Windows XPµÄmsvcrtÓĞBUG£¬ÄÚ²¿32Î»´ø·ûºÅÕûĞÎ¡£Òò´ËÍâ²¿×î´óÖ»ÔÊĞí0x3FFFFFFF
 #define _CRT_STDIO_SIZE_MAX 0x3FFFFFFF
 #else
 #define _CRT_STDIO_SIZE_MAX _CRT_SIZE_MAX
@@ -260,11 +260,11 @@ extern "C++"
         );
 #endif
 
-extern void __cdecl _invalid_parameter_noinfo(void);
-extern __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(void);
+_ACRTIMP_ALT void __cdecl _invalid_parameter_noinfo(void);
+_ACRTIMP __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(void);
 
 __declspec(noreturn)
-extern void __cdecl _invoke_watson(
+_ACRTIMP void __cdecl _invoke_watson(
     _In_opt_z_ wchar_t const* _Expression,
     _In_opt_z_ wchar_t const* _FunctionName,
     _In_opt_z_ wchar_t const* _FileName,

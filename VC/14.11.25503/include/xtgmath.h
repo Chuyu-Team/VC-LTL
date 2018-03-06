@@ -61,30 +61,6 @@ template<class _Ty1, \
 #define _GENERIC_MATH2(FUN, CRTTYPE) \
 	_GENERIC_MATH2_CALL(FUN, CRTTYPE, __cdecl)
 
-#define _GENERIC_MATH1X_Thunks(FUN, FUN_NEW, ARG2, CRTTYPE) \
-extern "C" _Check_return_ CRTTYPE double __cdecl FUN(_In_ double, _In_ double); \
-template<class _Ty, \
-	class = _STD enable_if_t< _STD is_integral<_Ty>::value>> inline \
-	double FUN_NEW(_Ty _Left, ARG2 _Arg2) \
-	{ \
-	return (_CSTD FUN(static_cast<double>(_Left), _Arg2)); \
-	}
-
-#define _GENERIC_MATH2_CALL_Thunks(FUN, FUN_NEW, CRTTYPE, CALL_OPT) \
-extern "C" _Check_return_ CRTTYPE double CALL_OPT FUN(_In_ double, _In_ double); \
-template<class _Ty1, \
-	class _Ty2, \
-	class = _STD enable_if_t< _STD is_arithmetic<_Ty1>::value && _STD is_arithmetic<_Ty2>::value>> inline \
-	_STD _Common_float_type_t<_Ty1, _Ty2> FUN_NEW(_Ty1 _Left, _Ty2 _Right) \
-	{ \
-	typedef _STD _Common_float_type_t<_Ty1, _Ty2> type; \
-	return (_CSTD FUN(static_cast<type>(_Left), static_cast<type>(_Right))); \
-	}
-
-#define _GENERIC_MATH2_Thunks(FUN,FUN_NEW, CRTTYPE) \
-	_GENERIC_MATH2_CALL_Thunks(FUN,FUN_NEW, CRTTYPE, __cdecl)
-
-
 template<class _Ty1,
 	class _Ty2,
 	class = _STD enable_if_t< _STD is_arithmetic<_Ty1>::value && _STD is_arithmetic<_Ty2>::value>> inline
@@ -176,40 +152,40 @@ template<class _Ty1,
 	return (_Remquo((type)_Left, (type)_Right, _Pquo));
 	}
 
-_GENERIC_MATH1(acosh, _CRTDEFAULT)
-_GENERIC_MATH1(asinh, _CRTDEFAULT)
-_GENERIC_MATH1(atanh, _CRTDEFAULT)
-_GENERIC_MATH1(cbrt, _CRTDEFAULT)
-_GENERIC_MATH2_Thunks(_copysign, copysign, _CRTSPECIAL)
-_GENERIC_MATH1(erf, _CRTDEFAULT)
-_GENERIC_MATH1(erfc, _CRTDEFAULT)
-_GENERIC_MATH1(expm1, _CRTDEFAULT)
-_GENERIC_MATH1(exp2, _CRTDEFAULT)
-_GENERIC_MATH2(fdim, _CRTDEFAULT)
+_GENERIC_MATH1(acosh, _CRTSPECIAL)
+_GENERIC_MATH1(asinh, _CRTSPECIAL)
+_GENERIC_MATH1(atanh, _CRTSPECIAL)
+_GENERIC_MATH1(cbrt, _CRTSPECIAL)
+_GENERIC_MATH2(copysign, _CRTSPECIAL)
+_GENERIC_MATH1(erf, _CRTSPECIAL)
+_GENERIC_MATH1(erfc, _CRTSPECIAL)
+_GENERIC_MATH1(expm1, _CRTSPECIAL)
+_GENERIC_MATH1(exp2, _CRTSPECIAL)
+_GENERIC_MATH2(fdim, _CRTSPECIAL)
 //_GENERIC_MATH3(fma, _CRTSPECIAL)	// hand crafted
-_GENERIC_MATH2(fmax, _CRTDEFAULT)
-_GENERIC_MATH2(fmin, _CRTDEFAULT)
-_GENERIC_MATH2_Thunks(_hypot, hypot, _CRTSPECIAL)
-_GENERIC_MATH1R(ilogb, int, _CRTDEFAULT)
-_GENERIC_MATH1(lgamma, _CRTDEFAULT)
-_GENERIC_MATH1R(llrint, long long, _CRTDEFAULT)
-_GENERIC_MATH1R(llround, long long, _CRTDEFAULT)
-_GENERIC_MATH1(log1p, _CRTDEFAULT)
-_GENERIC_MATH1(log2, _CRTDEFAULT)
-_GENERIC_MATH1(logb, _CRTDEFAULT)
-_GENERIC_MATH1R(lrint, long, _CRTDEFAULT)
-_GENERIC_MATH1R(lround, long, _CRTDEFAULT)
-_GENERIC_MATH1(nearbyint, _CRTDEFAULT)
-_GENERIC_MATH2_Thunks(_nextafter, nextafter, _CRTSPECIAL)
-_GENERIC_MATH1X_Thunks(_nextafter, nexttoward, _In_ long double, _CRTSPECIAL)
-_GENERIC_MATH2(remainder, _CRTDEFAULT)
+_GENERIC_MATH2(fmax, _CRTSPECIAL)
+_GENERIC_MATH2(fmin, _CRTSPECIAL)
+_GENERIC_MATH2(hypot, _CRTSPECIAL)
+_GENERIC_MATH1R(ilogb, int, _CRTSPECIAL)
+_GENERIC_MATH1(lgamma, _CRTSPECIAL)
+_GENERIC_MATH1R(llrint, long long, _CRTSPECIAL)
+_GENERIC_MATH1R(llround, long long, _CRTSPECIAL)
+_GENERIC_MATH1(log1p, _CRTSPECIAL)
+_GENERIC_MATH1(log2, _CRTSPECIAL)
+_GENERIC_MATH1(logb, _CRTSPECIAL)
+_GENERIC_MATH1R(lrint, long, _CRTSPECIAL)
+_GENERIC_MATH1R(lround, long, _CRTSPECIAL)
+_GENERIC_MATH1(nearbyint, _CRTSPECIAL)
+_GENERIC_MATH2(nextafter, _CRTSPECIAL)
+_GENERIC_MATH1X(nexttoward, _In_ long double, _CRTSPECIAL)
+_GENERIC_MATH2(remainder, _CRTSPECIAL)
 //_GENERIC_MATH2X(remquo, _CRTSPECIAL)	// hand crafted
-_GENERIC_MATH1(rint, _CRTDEFAULT)
-_GENERIC_MATH1(round, _CRTDEFAULT)
-_GENERIC_MATH1X(scalbln, _In_ long, _CRTDEFAULT)
-_GENERIC_MATH1X(scalbn, _In_ int, _CRTDEFAULT)
-_GENERIC_MATH1(tgamma, _CRTDEFAULT)
-_GENERIC_MATH1(trunc, _CRTDEFAULT)
+_GENERIC_MATH1(rint, _CRTSPECIAL)
+_GENERIC_MATH1(round, _CRTSPECIAL)
+_GENERIC_MATH1X(scalbln, _In_ long, _CRTSPECIAL)
+_GENERIC_MATH1X(scalbn, _In_ int, _CRTSPECIAL)
+_GENERIC_MATH1(tgamma, _CRTSPECIAL)
+_GENERIC_MATH1(trunc, _CRTSPECIAL)
 
 #undef _CRTDEFAULT
 #undef _CRTSPECIAL

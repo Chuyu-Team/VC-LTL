@@ -16,9 +16,9 @@ _CRT_BEGIN_C_HEADER
 
 
 typedef wchar_t wctrans_t;
-extern wint_t __cdecl towctrans(wint_t c, wctrans_t value);
-extern wctrans_t __cdecl wctrans(const char *name);
-extern wctype_t __cdecl wctype(const char *name);
+_ACRTIMP wint_t __cdecl towctrans(wint_t c, wctrans_t value);
+_ACRTIMP wctrans_t __cdecl wctrans(const char *name);
+_ACRTIMP wctype_t __cdecl wctype(const char *name);
 
 
 

@@ -49,8 +49,8 @@ _CRT_BEGIN_C_HEADER
 
 typedef int (__CRTDECL* _PNH)(size_t);
 
-_ACRTIMP _PNH __cdecl _query_new_handler(void);
-_ACRTIMP _PNH __cdecl _set_new_handler(_In_opt_ _PNH _NewHandler);
+_PNH __cdecl _query_new_handler(void);
+_PNH __cdecl _set_new_handler(_In_opt_ _PNH _NewHandler);
 
 // new mode flag -- when set, makes malloc() behave like new()
 _ACRTIMP int __cdecl _query_new_mode(void);

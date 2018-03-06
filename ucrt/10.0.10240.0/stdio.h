@@ -1,4 +1,4 @@
-﻿//
+//
 // stdio.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -70,7 +70,7 @@ typedef __int64 fpos_t;
 
 
 _Check_return_opt_
-extern errno_t __cdecl _get_stream_buffer_pointers(
+_ACRTIMP errno_t __cdecl _get_stream_buffer_pointers(
     _In_      FILE*   _Stream,
     _Out_opt_ char*** _Base,
     _Out_opt_ char*** _Pointer,
@@ -86,12 +86,12 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl clearerr_s(
+    _ACRTIMP errno_t __cdecl clearerr_s(
         _Inout_ FILE* _Stream
         );
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl fopen_s(
+    _ACRTIMP errno_t __cdecl fopen_s(
         _Outptr_result_maybenull_ FILE**      _Stream,
         _In_z_                    char const* _FileName,
         _In_z_                    char const* _Mode
@@ -99,7 +99,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
     
     _Check_return_opt_
     _Success_(return != 0)
-    extern size_t __cdecl fread_s(
+    _ACRTIMP size_t __cdecl fread_s(
         _Out_writes_bytes_to_(_BufferSize, _ElementSize * _ElementCount)   void*  _Buffer,
         _In_range_(_ElementSize*_ElementCount, _CRT_SIZE_MAX)              size_t _BufferSize,
         _In_                                                               size_t _ElementSize,
@@ -108,7 +108,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
         );
     
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl freopen_s(
+    _ACRTIMP errno_t __cdecl freopen_s(
         _Outptr_result_maybenull_ FILE**      _Stream,
         _In_z_                    char const* _FileName,
         _In_z_                    char const* _Mode,
@@ -116,7 +116,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
         );
 
     _Success_(return != 0)
-    extern char* __cdecl gets_s(
+    _ACRTIMP char* __cdecl gets_s(
         _Out_writes_z_(_Size) char*   _Buffer,
         _In_                  rsize_t _Size
         );
@@ -128,7 +128,7 @@ extern errno_t __cdecl _get_stream_buffer_pointers(
 
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl tmpnam_s(
+    _ACRTIMP errno_t __cdecl tmpnam_s(
         _Out_writes_z_(_Size) char*   _Buffer,
         _In_                  rsize_t _Size
         );
@@ -267,7 +267,7 @@ _ACRTIMP int __cdecl fseek(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTXPIMP int __cdecl _fseeki64(
+_ACRTIMP int __cdecl _fseeki64(
     _Inout_ FILE*   _Stream,
     _In_    __int64 _Offset,
     _In_    int     _Origin
@@ -281,7 +281,7 @@ _ACRTIMP long __cdecl ftell(
 
 _Success_(return != -1)
 _Check_return_
-extern __int64 __cdecl _ftelli64(
+_ACRTIMP __int64 __cdecl _ftelli64(
     _Inout_ FILE* _Stream
     );
 
@@ -455,11 +455,11 @@ _ACRTIMP int __cdecl ungetc(
 // I/O Synchronization and _nolock family of I/O functions
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-extern void __cdecl _lock_file(
+_ACRTIMP void __cdecl _lock_file(
     _Inout_ FILE* _Stream
     );
 
-extern void __cdecl _unlock_file(
+_ACRTIMP void __cdecl _unlock_file(
     _Inout_ FILE* _Stream
     );
 
@@ -1620,13 +1620,16 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(
 
     _Success_(return >= 0)
     _Check_return_opt_
-    __inline int __CRTDECL vsnprintf_s(
+	_CRT_STDIO_INLINE_AWAYS int __CRTDECL vsnprintf_s(
         _Out_writes_z_(_BufferCount)  char*       const _Buffer,
         _In_                          size_t      const _BufferCount,
         _In_                          size_t      const _MaxCount,
         _In_z_ _Printf_format_string_ char const* const _Format,
                                       va_list           _ArgList
         )
+#if 0
+;
+#else
     {
 #ifndef _ATL_XP_TARGETING
         return _vsnprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
@@ -1634,6 +1637,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(
 		return _vsnprintf_s(_Buffer, _BufferCount, _MaxCount, _Format, _ArgList);
 #endif
     }
+#endif
     
     __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(
         _Success_(return >= 0)
@@ -1696,13 +1700,17 @@ _CRT_STDIO_INLINE int __CRTDECL _vscprintf_p_l(
 #endif
 
 _Check_return_
-__inline int __CRTDECL _vscprintf_p(
+_CRT_STDIO_INLINE_AWAYS int __CRTDECL _vscprintf_p(
     _In_z_ _Printf_format_string_ char const* const _Format,
                                   va_list           _ArgList
     )
+#if 0
+;
+#else
 {
     return _vscprintf_p_l(_Format, NULL, _ArgList);
 }
+#endif
 
 _Check_return_opt_
 _CRT_STDIO_INLINE int __CRTDECL _vsnprintf_c_l(
@@ -1792,7 +1800,7 @@ _CRT_STDIO_INLINE int __CRTDECL sprintf(
 #pragma warning(disable: 4996)
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_ARGLIST(
     _Success_(return >= 0)
-    int, __RETURN_POLICY_SAME, __EMPTY_DECLSPEC, __CRTDECL, sprintf, vsprintf,
+    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE, __CRTDECL, sprintf, vsprintf,
     _Pre_notnull_ _Post_z_,       char,        _Buffer,
     _In_z_ _Printf_format_string_ char const*, _Format
     )
@@ -1929,11 +1937,14 @@ _CRT_STDIO_INLINE int __CRTDECL _snprintf_l(
 
 _Success_(return >= 0)
 _Check_return_
-__inline int __CRTDECL snprintf(
+_CRT_STDIO_INLINE_AWAYS int __CRTDECL snprintf(
     _Out_writes_z_(_BufferCount)  char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
     ...)
+#if 0
+;
+#else
 {
     int _Result;
     va_list _ArgList;
@@ -1943,6 +1954,7 @@ __inline int __CRTDECL snprintf(
     __crt_va_end(_ArgList);
     return _Result;
 }
+#endif
 
 _Success_(return >= 0)
 _CRT_STDIO_INLINE int __CRTDECL _snprintf(
@@ -1966,7 +1978,7 @@ _CRT_STDIO_INLINE int __CRTDECL _snprintf(
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_ARGLIST_EX(
     _Success_(return >= 0)
-    int, __RETURN_POLICY_SAME, __EMPTY_DECLSPEC, __CRTDECL, _snprintf, _vsnprintf,
+    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE, __CRTDECL, _snprintf, _vsnprintf,
     _Pre_notnull_ _Post_maybez_ char,
     _Out_writes_(_BufferCount) _Post_maybez_, char,        _Buffer,
     _In_                                      size_t,      _BufferCount,

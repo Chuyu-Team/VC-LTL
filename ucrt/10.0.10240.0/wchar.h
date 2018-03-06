@@ -45,24 +45,24 @@ _ACRTIMP wchar_t* __cdecl _wsetlocale(
     );
 
 _Check_return_opt_
-extern _locale_t __cdecl _wcreate_locale(
+_ACRTIMP _locale_t __cdecl _wcreate_locale(
     _In_   int            _Category,
     _In_z_ wchar_t const* _Locale
     );
 
 
 
-_ACRTXPIMP wint_t __cdecl btowc(
+_ACRTIMP wint_t __cdecl btowc(
     _In_ int _Ch
     );
 
-_ACRTXPIMP size_t __cdecl mbrlen(
+_ACRTIMP size_t __cdecl mbrlen(
     _In_reads_bytes_opt_(_SizeInBytes) _Pre_opt_z_ char const* _Ch,
     _In_                                           size_t      _SizeInBytes,
     _Inout_                                        mbstate_t*  _State
     );
 
-_ACRTXPIMP size_t __cdecl mbrtowc(
+_ACRTIMP size_t __cdecl mbrtowc(
     _Pre_maybenull_ _Post_z_                       wchar_t*    _DstCh,
     _In_reads_bytes_opt_(_SizeInBytes) _Pre_opt_z_ char const* _SrcCh,
     _In_                                           size_t      _SizeInBytes,
@@ -70,7 +70,7 @@ _ACRTXPIMP size_t __cdecl mbrtowc(
     );
 
 _Success_(return == 0)
-_ACRTXPIMP errno_t __cdecl mbsrtowcs_s(
+_ACRTIMP errno_t __cdecl mbsrtowcs_s(
     _Out_opt_                         size_t*      _Retval,
     _Out_writes_opt_z_(_Size)         wchar_t*     _Dst,
     _In_                              size_t       _Size,
@@ -90,7 +90,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE(
-    _Success_(return == 0) _ACRTXPIMP, mbsrtowcs,
+    _Success_(return == 0) _ACRTIMP, mbsrtowcs,
     _Out_writes_opt_z_(_Count),           wchar_t,      _Dest,
     _Deref_pre_opt_z_                 char const**, _PSrc,
     _In_                              size_t,       _Count,
@@ -98,7 +98,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE(
     )
 
 _Success_(return == 0)
-_ACRTXPIMP errno_t __cdecl wcrtomb_s(
+_ACRTIMP errno_t __cdecl wcrtomb_s(
     _Out_opt_                        size_t*    _Retval,
     _Out_writes_opt_z_(_SizeInBytes) char*      _Dst,
     _In_                             size_t     _SizeInBytes,
@@ -116,14 +116,14 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_2(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_2_SIZE(
-    _ACRTXPIMP, wcrtomb,
+    _ACRTIMP, wcrtomb,
     _Pre_maybenull_ _Post_z_, char,       _Dest,
     _In_                      wchar_t,    _Source,
     _Inout_opt_              mbstate_t*, _State
     )
 
 _Success_(return == 0)
-_ACRTXPIMP errno_t __cdecl wcsrtombs_s(
+_ACRTIMP errno_t __cdecl wcsrtombs_s(
     _Out_opt_                                         size_t*         _Retval,
     _Out_writes_bytes_to_opt_(_SizeInBytes, *_Retval) char*           _Dst,
     _In_                                              size_t          _SizeInBytes,
@@ -143,14 +143,14 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE(
-    _ACRTXPIMP, wcsrtombs,
+    _ACRTIMP, wcsrtombs,
     _Pre_maybenull_ _Post_z_, char,            _Dest,
     _Inout_ _Deref_prepost_z_ wchar_t const**, _PSource,
     _In_                      size_t,          _Count,
     _Inout_opt_               mbstate_t*,      _State
     )
 
-_ACRTXPIMP int __cdecl wctob(
+_ACRTIMP int __cdecl wctob(
     _In_ wint_t _WCh
     );
 
@@ -161,26 +161,20 @@ _ACRTXPIMP int __cdecl wctob(
     #if __STDC_WANT_SECURE_LIB__
 
         _Success_(return == 0)
-        __inline errno_t __CRTDECL wmemcpy_s(
+        errno_t __CRTDECL wmemcpy_s(
             _Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
             _In_                         rsize_t        _N1,
             _In_reads_opt_(_N)           wchar_t const* _S2,
             _In_                         rsize_t        _N
-            )
-		{
-			return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
-		}
+            );
 
         _Success_(return == 0)
-        __inline errno_t __CRTDECL wmemmove_s(
+        errno_t __CRTDECL wmemmove_s(
             _Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
             _In_                         rsize_t        _N1,
             _In_reads_opt_(_N)           wchar_t const* _S2,
             _In_                         rsize_t        _N
-            )
-		{
-			return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
-		}
+            );
 
     #endif // __STDC_WANT_SECURE_LIB__
 

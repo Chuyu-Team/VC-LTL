@@ -92,7 +92,7 @@ _ACRTIMP wchar_t** __cdecl __p__wcmdln(void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
     _ACRTIMP extern char*    _acmdln;
-	_ACRTIMP extern wchar_t* _wcmdln;
+    _ACRTIMP extern wchar_t* _wcmdln;
 #else
     #define _acmdln (*__p__acmdln())
     #define _wcmdln (*__p__wcmdln())

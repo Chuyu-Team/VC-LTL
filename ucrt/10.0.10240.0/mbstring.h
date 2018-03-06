@@ -18,7 +18,7 @@ _CRT_BEGIN_C_HEADER
     #define _FILE_DEFINED
     typedef struct _iobuf
     {
-		union
+        union
 		{
 			void* _Placeholder;
 			char* _ptr;
@@ -59,7 +59,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned int __cdecl _mbbtombc_l(
+    _DCRTIMP unsigned int __cdecl _mbbtombc_l(
         _In_     unsigned int _C,
         _In_opt_ _locale_t    _Locale
         );
@@ -71,7 +71,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    extern int __cdecl _mbbtype_l(
+    _DCRTIMP int __cdecl _mbbtype_l(
         _In_     unsigned char _C,
         _In_     int           _CType,
         _In_opt_ _locale_t     _Locale
@@ -83,7 +83,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned int __cdecl _mbctombb_l(
+    _DCRTIMP unsigned int __cdecl _mbctombb_l(
         _In_     unsigned int _C,
         _In_opt_ _locale_t    _Locale
         );
@@ -93,13 +93,13 @@ _CRT_BEGIN_C_HEADER
         _In_               size_t               _Pos
         );
 
-    _ACRTXPIMP int __cdecl _mbsbtype_l(
+    _DCRTIMP int __cdecl _mbsbtype_l(
         _In_reads_z_(_Pos) unsigned char const* _Str,
         _In_               size_t               _Pos,
         _In_opt_           _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbscat_s(
+    _DCRTIMP errno_t __cdecl _mbscat_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _SizeInBytes,
         _In_z_                          unsigned char const* _Src
@@ -117,7 +117,7 @@ _CRT_BEGIN_C_HEADER
         _In_z_                                                                    unsigned char const*, _Source
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbscat_s_l(
+    _DCRTIMP errno_t __cdecl _mbscat_s_l(
         _Inout_updates_z_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                               size_t               _DstSizeInBytes,
         _In_z_                             unsigned char const* _Src,
@@ -146,7 +146,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char _CONST_RETURN* __cdecl _mbschr_l(
+    _DCRTIMP unsigned char _CONST_RETURN* __cdecl _mbschr_l(
         _In_z_   unsigned char const* _Str,
         _In_     unsigned int         _C,
         _In_opt_ _locale_t            _Locale
@@ -159,7 +159,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbscmp_l(
+    _DCRTIMP int __cdecl _mbscmp_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_opt_ _locale_t            _Locale
@@ -172,13 +172,13 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbscoll_l(
+    _DCRTIMP int __cdecl _mbscoll_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_opt_ _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbscpy_s(
+    _DCRTIMP errno_t __cdecl _mbscpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _In_z_                       unsigned char const* _Src
@@ -196,7 +196,7 @@ _CRT_BEGIN_C_HEADER
         _In_z_                                        unsigned char const*, _Source
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbscpy_s_l(
+    _DCRTIMP errno_t __cdecl _mbscpy_s_l(
         _Out_writes_z_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _DstSizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -225,7 +225,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP size_t __cdecl _mbscspn_l(
+    _DCRTIMP size_t __cdecl _mbscspn_l(
         _In_z_   unsigned char const* _String,
         _In_z_   unsigned char const* _Control,
         _In_opt_ _locale_t            _Locale
@@ -238,7 +238,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char* __cdecl _mbsdec_l(
+    _DCRTIMP unsigned char* __cdecl _mbsdec_l(
         _In_reads_z_(_Pos-_Start+1) unsigned char const* _Start,
         _In_z_                      unsigned char const* _Pos,
         _In_opt_                    _locale_t            _Locale
@@ -251,7 +251,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsicmp_l(
+    _DCRTIMP int __cdecl _mbsicmp_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_opt_ _locale_t            _Locale
@@ -264,7 +264,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsicoll_l(
+    _DCRTIMP int __cdecl _mbsicoll_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_opt_ _locale_t            _Locale
@@ -276,7 +276,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char* __cdecl _mbsinc_l(
+    _DCRTIMP unsigned char* __cdecl _mbsinc_l(
         _In_z_   unsigned char const* _Ptr,
         _In_opt_ _locale_t            _Locale
         );
@@ -289,27 +289,27 @@ _CRT_BEGIN_C_HEADER
 
     _Check_return_
     _Post_satisfies_(return <= _String_length_(_String))
-    _ACRTXPIMP size_t __cdecl _mbslen_l(
+    _DCRTIMP size_t __cdecl _mbslen_l(
         _In_z_   unsigned char const* _String,
         _In_opt_ _locale_t            _Locale
         );
 
     _Check_return_
     _Post_satisfies_(return <= _String_length_(_String) && return <= _MaxCount)
-    _ACRTXPIMP size_t __cdecl _mbsnlen(
+    _DCRTIMP size_t __cdecl _mbsnlen(
         _In_z_ unsigned char const* _String,
         _In_   size_t               _MaxCount
         );
 
     _Check_return_
     _Post_satisfies_(return <= _String_length_(_String) && return <= _MaxCount)
-    _ACRTXPIMP size_t __cdecl _mbsnlen_l(
+    _DCRTIMP size_t __cdecl _mbsnlen_l(
         _In_z_   unsigned char const* _String,
         _In_     size_t               _MaxCount,
         _In_opt_ _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbslwr_s(
+    _DCRTIMP errno_t __cdecl _mbslwr_s(
         _Inout_updates_opt_z_(_SizeInBytes) unsigned char* _String,
         _In_                                size_t         _SizeInBytes
         );
@@ -324,7 +324,7 @@ _CRT_BEGIN_C_HEADER
         _Inout_z_, unsigned char, _String
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbslwr_s_l(
+    _DCRTIMP errno_t __cdecl _mbslwr_s_l(
         _Inout_updates_opt_z_(_SizeInBytes) unsigned char* _String,
         _In_                                size_t         _SizeInBytes,
         _In_opt_                            _locale_t      _Locale
@@ -337,13 +337,13 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbslwr_l, _mbslwr_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbslwr_l, _mbslwr_s_l,
         _Inout_updates_z_(_Size) unsigned char,
         _Inout_z_,               unsigned char, _String,
         _In_opt_                 _locale_t,     _Locale
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsnbcat_s(
+    _DCRTIMP errno_t __cdecl _mbsnbcat_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _SizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -364,7 +364,7 @@ _CRT_BEGIN_C_HEADER
         _In_       size_t,               _Count
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsnbcat_s_l(
+    _DCRTIMP errno_t __cdecl _mbsnbcat_s_l(
         _Inout_updates_z_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                               size_t               _DstSizeInBytes,
         _In_z_                             unsigned char const* _Src,
@@ -381,7 +381,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsnbcat_l, _mbsnbcat_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsnbcat_l, _mbsnbcat_s_l,
         _Inout_updates_z_(_Size) unsigned char,
         _Inout_z_,               unsigned char,        _Dest,
         _In_z_                   unsigned char const*, _Source,
@@ -397,7 +397,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsnbcmp_l(
+    _DCRTIMP int __cdecl _mbsnbcmp_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
@@ -412,7 +412,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsnbcoll_l(
+    _DCRTIMP int __cdecl _mbsnbcoll_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
@@ -426,13 +426,13 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP size_t __cdecl _mbsnbcnt_l(
+    _DCRTIMP size_t __cdecl _mbsnbcnt_l(
         _In_reads_or_z_(_MaxCount) unsigned char const* _String,
         _In_                       size_t               _MaxCount,
         _In_opt_                   _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbsnbcpy_s(
+    _DCRTIMP errno_t __cdecl _mbsnbcpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _In_z_                       unsigned char const* _Src,
@@ -453,7 +453,7 @@ _CRT_BEGIN_C_HEADER
         _In_                                size_t,               _Count
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsnbcpy_s_l(
+    _DCRTIMP errno_t __cdecl _mbsnbcpy_s_l(
         _Out_writes_z_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _DstSizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -470,7 +470,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_EX(
-        _Success_(return != 0) unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsnbcpy_l, _mbsnbcpy_s_l,
+        _Success_(return != 0) unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsnbcpy_l, _mbsnbcpy_s_l,
         _Out_writes_z_(_Size)               unsigned char,
         _Out_writes_(_Count) _Post_maybez_, unsigned char,        _Dest,
         _In_z_                              unsigned char const*, _Source,
@@ -486,7 +486,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsnbicmp_l(
+    _DCRTIMP int __cdecl _mbsnbicmp_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
@@ -501,14 +501,14 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsnbicoll_l(
+    _DCRTIMP int __cdecl _mbsnbicoll_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
         _In_opt_ _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbsnbset_s(
+    _DCRTIMP errno_t __cdecl _mbsnbset_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Dst,
         _In_                            size_t         _SizeInBytes,
         _In_                            unsigned int   _C,
@@ -530,7 +530,7 @@ _CRT_BEGIN_C_HEADER
         _In_                          size_t,        _MaxCount
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsnbset_s_l(
+    _DCRTIMP errno_t __cdecl _mbsnbset_s_l(
         _Inout_updates_z_(_DstSizeInBytes) unsigned char* _Dst,
         _In_                               size_t         _DstSizeInBytes,
         _In_                               unsigned int   _Ch,
@@ -547,7 +547,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsnbset_l, _mbsnbset_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsnbset_l, _mbsnbset_s_l,
         _Inout_updates_z_(_Size)      unsigned char,
         _Inout_updates_z_(_MaxCount), unsigned char, _String,
         _In_                          unsigned int,  _Val,
@@ -555,7 +555,7 @@ _CRT_BEGIN_C_HEADER
         _In_opt_                      _locale_t,     _Locale
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsncat_s(
+    _DCRTIMP errno_t __cdecl _mbsncat_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _SizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -576,7 +576,7 @@ _CRT_BEGIN_C_HEADER
         _In_       size_t,               _Count
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsncat_s_l(
+    _DCRTIMP errno_t __cdecl _mbsncat_s_l(
         _Inout_updates_z_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                               size_t               _DstSizeInBytes,
         _In_z_                             unsigned char const* _Src,
@@ -593,7 +593,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsncat_l, _mbsncat_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsncat_l, _mbsncat_s_l,
         _Inout_updates_z_(_Size) unsigned char,
         _Inout_z_,               unsigned char,        _Dest,
         _In_z_                   unsigned char const*, _Source,
@@ -608,7 +608,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP size_t __cdecl _mbsnccnt_l(
+    _DCRTIMP size_t __cdecl _mbsnccnt_l(
         _In_reads_or_z_(_MaxCount) unsigned char const* _Str,
         _In_                       size_t               _MaxCount,
         _In_opt_                   _locale_t            _Locale
@@ -622,7 +622,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsncmp_l(
+    _DCRTIMP int __cdecl _mbsncmp_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
@@ -637,14 +637,14 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsncoll_l(
+    _DCRTIMP int __cdecl _mbsncoll_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
         _In_opt_ _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbsncpy_s(
+    _DCRTIMP errno_t __cdecl _mbsncpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _In_z_                       unsigned char const* _Src,
@@ -665,7 +665,7 @@ _CRT_BEGIN_C_HEADER
         _In_                                                  size_t,               _Count
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsncpy_s_l(
+    _DCRTIMP errno_t __cdecl _mbsncpy_s_l(
         _Out_writes_z_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                            size_t               _DstSizeInBytes,
         _In_z_                          unsigned char const* _Src,
@@ -682,7 +682,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsncpy_l, _mbsncpy_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsncpy_l, _mbsncpy_s_l,
         _Out_writes_z_(_Size)               unsigned char,
         _Out_writes_(_Count) _Post_maybez_, unsigned char,        _Dest,
         _In_z_                              unsigned char const*, _Source,
@@ -696,7 +696,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned int __cdecl _mbsnextc_l(
+    _DCRTIMP unsigned int __cdecl _mbsnextc_l(
         _In_z_   unsigned char const* _String,
         _In_opt_ _locale_t            _Locale
         );
@@ -709,7 +709,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsnicmp_l(
+    _DCRTIMP int __cdecl _mbsnicmp_l(
         _In_reads_or_z_(_MaxCount) unsigned char const* _Str1,
         _In_reads_or_z_(_MaxCount) unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
@@ -724,7 +724,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP int __cdecl _mbsnicoll_l(
+    _DCRTIMP int __cdecl _mbsnicoll_l(
         _In_reads_or_z_(_MaxCount) unsigned char const* _Str1,
         _In_reads_or_z_(_MaxCount) unsigned char const* _Str2,
         _In_     size_t               _MaxCount,
@@ -738,13 +738,13 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char*  __cdecl _mbsninc_l(
+    _DCRTIMP unsigned char*  __cdecl _mbsninc_l(
         _In_reads_or_z_(_Count) unsigned char const* _String,
         _In_                    size_t               _Count,
         _In_opt_                _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbsnset_s(
+    _DCRTIMP errno_t __cdecl _mbsnset_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Dst,
         _In_                            size_t         _SizeInBytes,
         _In_                            unsigned int   _Val,
@@ -766,7 +766,7 @@ _CRT_BEGIN_C_HEADER
         _In_                          size_t,        _MaxCount
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsnset_s_l(
+    _DCRTIMP errno_t __cdecl _mbsnset_s_l(
         _Inout_updates_z_(_DstSizeInBytes) unsigned char* _Dst,
         _In_                               size_t         _DstSizeInBytes,
         _In_                               unsigned int   _Val,
@@ -783,7 +783,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_EX(
-        unsigned char* , __RETURN_POLICY_DST, _ACRTXPIMP, _mbsnset_l, _mbsnset_s_l,
+        unsigned char* , __RETURN_POLICY_DST, _DCRTIMP, _mbsnset_l, _mbsnset_s_l,
         _Inout_updates_z_(_Size)      unsigned char,
         _Inout_updates_z_(_MaxCount), unsigned char, _String,
         _In_                          unsigned int,  _Val,
@@ -798,7 +798,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char _CONST_RETURN* __cdecl _mbspbrk_l(
+    _DCRTIMP unsigned char _CONST_RETURN* __cdecl _mbspbrk_l(
         _In_z_   unsigned char const* _String,
         _In_z_   unsigned char const* _Control,
         _In_opt_ _locale_t            _Locale
@@ -811,7 +811,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char _CONST_RETURN* __cdecl _mbsrchr_l(
+    _DCRTIMP unsigned char _CONST_RETURN* __cdecl _mbsrchr_l(
         _In_z_   unsigned char const* _String,
         _In_     unsigned int         _C,
         _In_opt_ _locale_t            _Locale
@@ -821,12 +821,12 @@ _CRT_BEGIN_C_HEADER
         _Inout_z_ unsigned char* _String
         );
 
-    _ACRTXPIMP unsigned char* __cdecl _mbsrev_l(
+    _DCRTIMP unsigned char* __cdecl _mbsrev_l(
         _Inout_z_ unsigned char* _String,
         _In_opt_  _locale_t      _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbsset_s(
+    _DCRTIMP errno_t __cdecl _mbsset_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Dst,
         _In_                            size_t         _SizeInBytes,
         _In_                            unsigned int   _Val
@@ -845,7 +845,7 @@ _CRT_BEGIN_C_HEADER
         _In_                     unsigned int,  _Val
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsset_s_l(
+    _DCRTIMP errno_t __cdecl _mbsset_s_l(
         _Inout_updates_z_(_DstSizeInBytes) unsigned char* _Dst,
         _In_                               size_t         _DstSizeInBytes,
         _In_                               unsigned int   _Val,
@@ -860,7 +860,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_2_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsset_l, _mbsset_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsset_l, _mbsset_s_l,
         _Inout_updates_z_(_Size) unsigned char,
         _Inout_z_,               unsigned char, _String,
         _In_                     unsigned int,  _Val,
@@ -874,7 +874,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP size_t __cdecl _mbsspn_l(
+    _DCRTIMP size_t __cdecl _mbsspn_l(
         _In_z_   unsigned char const* _Str,
         _In_z_   unsigned char const* _Control,
         _In_opt_ _locale_t            _Locale
@@ -887,7 +887,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char* __cdecl _mbsspnp_l(
+    _DCRTIMP unsigned char* __cdecl _mbsspnp_l(
         _In_z_   unsigned char const* _Str1,
         _In_z_   unsigned char const* _Str2,
         _In_opt_ _locale_t            _Locale
@@ -900,7 +900,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_ _Ret_maybenull_
-    _ACRTXPIMP unsigned char _CONST_RETURN* __cdecl _mbsstr_l(
+    _DCRTIMP unsigned char _CONST_RETURN* __cdecl _mbsstr_l(
         _In_z_   unsigned char const* _Str,
         _In_z_   unsigned char const* _Substr,
         _In_opt_ _locale_t            _Locale
@@ -913,28 +913,28 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_ _CRT_INSECURE_DEPRECATE(_mbstok_s_l)
-    _ACRTXPIMP unsigned char* __cdecl _mbstok_l(
+    _DCRTIMP unsigned char* __cdecl _mbstok_l(
         _Inout_opt_z_ unsigned char*       _Str,
         _In_z_        unsigned char const* _Delim,
         _In_opt_      _locale_t            _Locale
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char* __cdecl _mbstok_s(
+    _DCRTIMP unsigned char* __cdecl _mbstok_s(
         _Inout_opt_z_                 unsigned char*       _Str,
         _In_z_                        unsigned char const* _Delim,
         _Inout_ _Deref_prepost_opt_z_ unsigned char**      _Context
         );
 
     _Check_return_
-    _ACRTXPIMP unsigned char* __cdecl _mbstok_s_l(
+    _DCRTIMP unsigned char* __cdecl _mbstok_s_l(
         _Inout_opt_z_                 unsigned char*       _Str,
         _In_z_                        unsigned char const* _Delim,
         _Inout_ _Deref_prepost_opt_z_ unsigned char**      _Context,
         _In_opt_                      _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbsupr_s(
+    _DCRTIMP errno_t __cdecl _mbsupr_s(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Str,
         _In_                            size_t         _SizeInBytes
         );
@@ -949,7 +949,7 @@ _CRT_BEGIN_C_HEADER
         _Inout_z_, unsigned char, _String
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbsupr_s_l(
+    _DCRTIMP errno_t __cdecl _mbsupr_s_l(
         _Inout_updates_z_(_SizeInBytes) unsigned char* _Str,
         _In_                            size_t         _SizeInBytes,
         _In_opt_                        _locale_t      _Locale
@@ -962,7 +962,7 @@ _CRT_BEGIN_C_HEADER
         )
 
     __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_EX(
-        unsigned char*, __RETURN_POLICY_DST, _ACRTXPIMP, _mbsupr_l, _mbsupr_s_l,
+        unsigned char*, __RETURN_POLICY_DST, _DCRTIMP, _mbsupr_l, _mbsupr_s_l,
         _Inout_updates_z_(_Size) unsigned char,
         _Inout_z_,               unsigned char, _String,
         _In_opt_                 _locale_t,     _Locale
@@ -974,7 +974,7 @@ _CRT_BEGIN_C_HEADER
         );
 
     _Check_return_
-    _ACRTXPIMP size_t __cdecl _mbclen_l(
+    _DCRTIMP size_t __cdecl _mbclen_l(
         _In_z_   unsigned char const* _String,
         _In_opt_ _locale_t            _Locale
         );
@@ -986,13 +986,13 @@ _CRT_BEGIN_C_HEADER
         );
 
     _CRT_INSECURE_DEPRECATE(_mbccpy_s_l)
-    _ACRTXPIMP void __cdecl _mbccpy_l(
+    _DCRTIMP void __cdecl _mbccpy_l(
         _Out_writes_bytes_(2) unsigned char*       _Dst,
         _In_z_                unsigned char const* _Src,
         _In_opt_              _locale_t            _Locale
         );
 
-    _ACRTXPIMP errno_t __cdecl _mbccpy_s(
+    _DCRTIMP errno_t __cdecl _mbccpy_s(
         _Out_writes_z_(_SizeInBytes) unsigned char*       _Dst,
         _In_                         size_t               _SizeInBytes,
         _Out_opt_                    int*                 _PCopied,
@@ -1006,7 +1006,7 @@ _CRT_BEGIN_C_HEADER
         _In_z_    unsigned char const*, _Source
         )
 
-    _ACRTXPIMP errno_t __cdecl _mbccpy_s_l(
+    _DCRTIMP errno_t __cdecl _mbccpy_s_l(
         _Out_writes_bytes_(_DstSizeInBytes) unsigned char*       _Dst,
         _In_                                size_t               _DstSizeInBytes,
         _Out_opt_                           int*                 _PCopied,
@@ -1138,27 +1138,27 @@ _CRT_BEGIN_C_HEADER
     _Check_return_ _DCRTIMP int __cdecl _ismbclower(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcprint(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcpunct(_In_ unsigned int _C);
-    _Check_return_   extern int __cdecl _ismbcblank(_In_ unsigned int _C);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcblank(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcspace(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcupper(_In_ unsigned int _C);
 
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcalnum_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcalpha_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcdigit_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcgraph_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbclegal_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbclower_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcprint_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcpunct_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_     extern int __cdecl _ismbcblank_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcspace_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcupper_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcalnum_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcalpha_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcdigit_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcgraph_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbclegal_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbclower_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcprint_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcpunct_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcblank_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcspace_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcupper_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
 
     _Check_return_ _DCRTIMP unsigned int __cdecl _mbctolower(_In_ unsigned int _Ch);
     _Check_return_ _DCRTIMP unsigned int __cdecl _mbctoupper(_In_ unsigned int _Ch);
 
-    _Check_return_ _ACRTXPIMP unsigned int __cdecl _mbctolower_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP unsigned int __cdecl _mbctoupper_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP unsigned int __cdecl _mbctolower_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP unsigned int __cdecl _mbctoupper_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
 
 
 
@@ -1174,22 +1174,22 @@ _CRT_BEGIN_C_HEADER
     _Check_return_ _DCRTIMP int __cdecl _ismbcl1    (_In_ unsigned int _C);
     _Check_return_ _DCRTIMP int __cdecl _ismbcl2    (_In_ unsigned int _C);
 
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbchira_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbckata_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcsymbol_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcl0_l    (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcl1_l    (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP int __cdecl _ismbcl2_l    (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbchira_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbckata_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcsymbol_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcl0_l    (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcl1_l    (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP int __cdecl _ismbcl2_l    (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
 
     _Check_return_ _DCRTIMP unsigned int __cdecl _mbcjistojms(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP unsigned int __cdecl _mbcjmstojis(_In_ unsigned int _C);
     _Check_return_ _DCRTIMP unsigned int __cdecl _mbctohira  (_In_ unsigned int _C);
     _Check_return_ _DCRTIMP unsigned int __cdecl _mbctokata  (_In_ unsigned int _C);
 
-    _Check_return_ _ACRTXPIMP unsigned int __cdecl _mbcjistojms_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP unsigned int __cdecl _mbcjmstojis_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP unsigned int __cdecl _mbctohira_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
-    _Check_return_ _ACRTXPIMP unsigned int __cdecl _mbctokata_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP unsigned int __cdecl _mbcjistojms_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP unsigned int __cdecl _mbcjmstojis_l(_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP unsigned int __cdecl _mbctohira_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
+    _Check_return_ _DCRTIMP unsigned int __cdecl _mbctokata_l  (_In_ unsigned int _C, _In_opt_ _locale_t _Locale);
 
 #endif // _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
 
@@ -1201,8 +1201,8 @@ _Check_return_ _DCRTIMP int __cdecl _ismbblead (_In_ unsigned int _Ch);
 _Check_return_ _DCRTIMP int __cdecl _ismbbtrail(_In_ unsigned int _Ch);
 
 _When_(_Ch == 0, _Post_equal_to_(0))
-_Check_return_ _ACRTXPIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
-_Check_return_ _ACRTXPIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+_Check_return_ _DCRTIMP int __cdecl _ismbblead_l (_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
+_Check_return_ _DCRTIMP int __cdecl _ismbbtrail_l(_In_ unsigned int _Ch, _In_opt_ _locale_t _Locale);
 
 _Check_return_
 _DCRTIMP int __cdecl _ismbslead(
@@ -1211,7 +1211,7 @@ _DCRTIMP int __cdecl _ismbslead(
     );
 
 _Check_return_
-_ACRTXPIMP int __cdecl _ismbslead_l(
+_DCRTIMP int __cdecl _ismbslead_l(
     _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
     _In_z_                           unsigned char const* _Pos,
     _In_opt_                         _locale_t            _Locale
@@ -1224,7 +1224,7 @@ _ACRTIMP int __cdecl _ismbstrail(
     );
 
 _Check_return_
-_ACRTXPIMP int __cdecl _ismbstrail_l(
+_ACRTIMP int __cdecl _ismbstrail_l(
     _In_reads_z_(_Pos - _String + 1) unsigned char const* _String,
     _In_z_                           unsigned char const* _Pos,
     _In_opt_                         _locale_t            _Locale

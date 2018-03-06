@@ -80,11 +80,11 @@ struct tm;
 
 #if _CRT_FUNCTIONS_REQUIRED
 
-    extern void __cdecl _lock_locales(void);
-	extern void __cdecl _unlock_locales(void);
+    _ACRTIMP void __cdecl _lock_locales(void);
+    _ACRTIMP void __cdecl _unlock_locales(void);
 
     _Check_return_opt_
-    extern int __cdecl _configthreadlocale(
+    _ACRTIMP int __cdecl _configthreadlocale(
         _In_ int _Flag
         );
 
@@ -98,15 +98,15 @@ struct tm;
     _ACRTIMP struct lconv* __cdecl localeconv(void);
 
     _Check_return_opt_
-    extern _locale_t __cdecl _get_current_locale(void);
+    _ACRTIMP _locale_t __cdecl _get_current_locale(void);
 
     _Check_return_opt_
-    extern _locale_t __cdecl _create_locale(
+    _ACRTIMP _locale_t __cdecl _create_locale(
         _In_   int         _Category,
         _In_z_ char const* _Locale
         );
 
-	extern void __cdecl _free_locale(
+    _ACRTIMP void __cdecl _free_locale(
         _In_opt_ _locale_t _Locale
         );
 
@@ -118,7 +118,7 @@ struct tm;
         );
 
     _Check_return_opt_
-    extern _locale_t __cdecl _wcreate_locale(
+    _ACRTIMP _locale_t __cdecl _wcreate_locale(
         _In_   int            _Category,
         _In_z_ wchar_t const* _Locale
         );
@@ -127,7 +127,7 @@ struct tm;
 
     _ACRTIMP wchar_t**    __cdecl ___lc_locale_name_func(void);
     _ACRTIMP unsigned int __cdecl ___lc_codepage_func   (void);
-    _ACRTXPIMP unsigned int __cdecl ___lc_collate_cp_func (void);
+    _ACRTIMP unsigned int __cdecl ___lc_collate_cp_func (void);
 
 
 
@@ -145,13 +145,13 @@ struct tm;
 
     _Success_(return != 0)
     _Ret_z_
-    extern wchar_t* __cdecl _W_Getdays(void);
+    _ACRTIMP wchar_t* __cdecl _W_Getdays(void);
 
     _Success_(return != 0)
     _Ret_z_
-    extern wchar_t* __cdecl _W_Getmonths(void);
+    _ACRTIMP wchar_t* __cdecl _W_Getmonths(void);
 
-	_ACRTIMP void*    __cdecl _W_Gettnames(void);
+    _ACRTIMP void*    __cdecl _W_Gettnames(void);
 
     _Success_(return > 0)
     _ACRTIMP size_t __cdecl _Strftime(
@@ -162,7 +162,7 @@ struct tm;
         _In_opt_                 void*            _Lc_time_arg);
 
     _Success_(return > 0)
-    extern size_t __cdecl _Wcsftime(
+    _ACRTIMP size_t __cdecl _Wcsftime(
         _Out_writes_z_(_Max_size) wchar_t*        _Buffer,
         _In_                     size_t           _Max_size,
         _In_z_                   wchar_t const*   _Format,

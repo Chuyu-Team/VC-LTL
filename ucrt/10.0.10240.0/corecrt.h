@@ -233,11 +233,11 @@ extern "C++"
         );
 #endif
 
-extern void __cdecl _invalid_parameter_noinfo(void);
-extern __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(void);
+_ACRTIMP_ALT void __cdecl _invalid_parameter_noinfo(void);
+_ACRTIMP __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn(void);
 
 __declspec(noreturn)
-extern void __cdecl _invoke_watson(
+_ACRTIMP void __cdecl _invoke_watson(
     _In_opt_z_ wchar_t const*,
     _In_opt_z_ wchar_t const*,
     _In_opt_z_ wchar_t const*,

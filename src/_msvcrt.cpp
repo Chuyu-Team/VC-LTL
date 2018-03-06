@@ -26,45 +26,38 @@
 #include <msvcrt_IAT.h>
 #include <corecrt_internal.h>
 
-#ifdef __NOTHROW_T_DEFINED
 
-#ifdef __cplusplus
-extern "C++"
+__forceinline errno_t __cdecl _tcscpy_s(
+	_Out_writes_z_(_SizeInBytes) char*       _Destination,
+	_In_                         rsize_t     _SizeInBytes,
+	_In_z_                       char const* _Source
+	)
 {
-	__forceinline errno_t __cdecl _tcscpy_s(
-		_Out_writes_z_(_SizeInBytes) char*       _Destination,
-		_In_                         rsize_t     _SizeInBytes,
-		_In_z_                       char const* _Source
-		)
-	{
-		return strcpy_s(_Destination, _SizeInBytes, _Source);
-	}
-
-	__forceinline errno_t __cdecl _tcscpy_s(
-		_Out_writes_z_(_SizeInBytes) wchar_t*       _Destination,
-		_In_                         rsize_t     _SizeInBytes,
-		_In_z_                       wchar_t const* _Source
-		)
-	{
-		return wcscpy_s(_Destination, _SizeInBytes, _Source);
-	}
-
-	__forceinline size_t __cdecl _tcslen(
-		_In_z_ char const* _Str
-		)
-	{
-		return strlen(_Str);
-	}
-
-	__forceinline size_t __cdecl _tcslen(
-		_In_z_ wchar_t const* _String
-		)
-	{
-		return wcslen(_String);
-	}
+	return strcpy_s(_Destination, _SizeInBytes, _Source);
 }
-#endif
-#endif
+
+__forceinline errno_t __cdecl _tcscpy_s(
+	_Out_writes_z_(_SizeInBytes) wchar_t*       _Destination,
+	_In_                         rsize_t     _SizeInBytes,
+	_In_z_                       wchar_t const* _Source
+	)
+{
+	return wcscpy_s(_Destination, _SizeInBytes, _Source);
+}
+
+__forceinline size_t __cdecl _tcslen(
+	_In_z_ char const* _Str
+	)
+{
+	return strlen(_Str);
+}
+
+__forceinline size_t __cdecl _tcslen(
+	_In_z_ wchar_t const* _String
+	)
+{
+	return wcslen(_String);
+}
 
 extern "C"
 {
@@ -297,7 +290,7 @@ extern "C"
 		_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
 	}*/
 
-	/*errno_t __CRTDECL wmemcpy_s(
+	errno_t __CRTDECL wmemcpy_s(
 		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 		_In_                         rsize_t        _N1,
 		_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -315,7 +308,7 @@ extern "C"
 		)
 	{
 		return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
-	}*/
+	}
 
 
 	//	int __cdecl __stdio_common_vswprintf(
@@ -2819,6 +2812,27 @@ extern "C"
 	_LCRT_DEFINE_IAT_SYMBOL(__control87_2_downlevel);
 
 #endif
+
+#undef _sys_nerr
+#undef _sys_errlist
+
+	extern "C" _CRTIMP extern char const* const _sys_errlist[];
+	extern "C" _CRTIMP extern int const _sys_nerr;
+
+	extern "C" int* __cdecl __sys_nerr_downlevel()
+	{
+		return const_cast<int*>(&_sys_nerr);
+	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(__sys_nerr_downlevel);
+
+	extern "C" char** __cdecl __sys_errlist_downlevel()
+	{
+		return const_cast<char**>(_sys_errlist);
+	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(__sys_errlist_downlevel);
+
 }
 
 #endif //NDEBUG&&_DLL&&__NO_LTL_LIB

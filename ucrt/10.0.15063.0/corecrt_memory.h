@@ -28,7 +28,7 @@ _ACRTIMP int __cdecl _memicmp(
     );
 
 _Check_return_
-_ACRTXPIMP int __cdecl _memicmp_l(
+_ACRTIMP int __cdecl _memicmp_l(
     _In_reads_bytes_opt_(_Size) void const* _Buf1,
     _In_reads_bytes_opt_(_Size) void const* _Buf2,
     _In_                        size_t      _Size,

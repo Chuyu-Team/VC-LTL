@@ -212,27 +212,21 @@ _Check_return_opt_ _ACRTIMP int __cdecl _set_error_mode(_In_ int _Mode);
 _ACRTIMP int* __cdecl _errno(void);
 #define errno (*_errno())
 
-_ACRTXPIMP errno_t __cdecl _set_errno(_In_ int _Value);
-_ACRTXPIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
+_ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
+_ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 
 _ACRTIMP unsigned long* __cdecl __doserrno(void);
 #define _doserrno (*__doserrno())
 
-_ACRTXPIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
-_ACRTXPIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
+_ACRTIMP errno_t __cdecl _set_doserrno(_In_ unsigned long _Value);
+_ACRTIMP errno_t __cdecl _get_doserrno(_Out_ unsigned long * _Value);
 
-_ACRTIMP extern char const* _sys_errlist[];
 // This is non-const for backwards compatibility; do not modify it.
-__inline _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void)
-{
-	return (char**)_sys_errlist;
-}
+_ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) char** __cdecl __sys_errlist(void);
+#define _sys_errlist (__sys_errlist())
 
-_ACRTIMP extern const int _sys_nerr;
-__inline _CRT_INSECURE_DEPRECATE(strerror) int * __cdecl __sys_nerr(void)
-{
-	return (int*)&_sys_nerr;
-}
+_ACRTIMP _CRT_INSECURE_DEPRECATE(strerror) int * __cdecl __sys_nerr(void);
+#define _sys_nerr (*__sys_nerr())
 
 _ACRTIMP void __cdecl perror(_In_opt_z_ char const* _ErrMsg);
 
@@ -254,14 +248,14 @@ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP int*      __cdecl __p__fm
 #endif
 
 _Success_(return == 0)
-_ACRTXPIMP errno_t __cdecl _get_pgmptr (_Outptr_result_z_ char**    _Value);
+_ACRTIMP errno_t __cdecl _get_pgmptr (_Outptr_result_z_ char**    _Value);
 
 _Success_(return == 0)
-_ACRTXPIMP errno_t __cdecl _get_wpgmptr(_Outptr_result_z_ wchar_t** _Value);
+_ACRTIMP errno_t __cdecl _get_wpgmptr(_Outptr_result_z_ wchar_t** _Value);
 
-_ACRTXPIMP errno_t __cdecl _set_fmode  (_In_              int       _Mode );
+_ACRTIMP errno_t __cdecl _set_fmode  (_In_              int       _Mode );
 
-_ACRTXPIMP errno_t __cdecl _get_fmode  (_Out_             int*      _PMode);
+_ACRTIMP errno_t __cdecl _get_fmode  (_Out_             int*      _PMode);
 
 
 
@@ -299,7 +293,7 @@ _Check_return_ unsigned __int64 __cdecl _byteswap_uint64(_In_ unsigned __int64 _
 
 _Check_return_ _ACRTIMP div_t   __cdecl div  (_In_ int       _Numerator, _In_ int       _Denominator);
 _Check_return_ _ACRTIMP ldiv_t  __cdecl ldiv (_In_ long      _Numerator, _In_ long      _Denominator);
-_Check_return_ extern lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ long long _Denominator);
+_Check_return_ _ACRTIMP lldiv_t __cdecl lldiv(_In_ long long _Numerator, _In_ long long _Denominator);
 
 // These functions have declspecs in their declarations in the Windows headers,
 // which cause PREfast to fire 6540.
@@ -350,7 +344,7 @@ _ACRTIMP void __cdecl srand(_In_ unsigned int _Seed);
 _Check_return_ _ACRTIMP int __cdecl rand(void);
 
 #if defined _CRT_RAND_S || defined _CRTBLD
-    _ACRTXPIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
+    _ACRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue);
 #endif
 
 
@@ -457,7 +451,7 @@ _Check_return_ _ACRTIMP long      __cdecl _atol_l  (_In_z_ char const* _String, 
 _Check_return_ _ACRTIMP long long __cdecl _atoll_l (_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 _Check_return_ _ACRTIMP __int64   __cdecl _atoi64_l(_In_z_ char const* _String, _In_opt_ _locale_t _Locale);
 
-_Check_return_ extern int __cdecl _atoflt (_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String);
+_Check_return_ _ACRTIMP int __cdecl _atoflt (_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String);
 _Check_return_ _ACRTIMP int __cdecl _atodbl (_Out_ _CRT_DOUBLE* _Result, _In_z_ char*       _String);
 _Check_return_ _ACRTIMP int __cdecl _atoldbl(_Out_ _LDOUBLE*    _Result, _In_z_ char*       _String);
 
@@ -484,13 +478,13 @@ _ACRTIMP int __cdecl _atoldbl_l(
     );
 
 _Check_return_
-extern float __cdecl strtof(
+_ACRTIMP float __cdecl strtof(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
     );
 
 _Check_return_
-extern float __cdecl _strtof_l(
+_ACRTIMP float __cdecl _strtof_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_opt_                 _locale_t   _Locale
@@ -510,25 +504,17 @@ _ACRTIMP double __cdecl _strtod_l(
     );
 
 _Check_return_
-__inline long double __cdecl strtold(
+_ACRTIMP long double __cdecl strtold(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr
-    )
-{
-	//VS中long double与double等价
-	return strtod(_String, _EndPtr);
-}
+    );
 
 _Check_return_
-__inline long double __cdecl _strtold_l(
+_ACRTIMP long double __cdecl _strtold_l(
     _In_z_                   char const* _String,
     _Out_opt_ _Deref_post_z_ char**      _EndPtr,
     _In_opt_                 _locale_t   _Locale
-    )
-{
-	//VS中long double与double等价
-	return _strtod_l(_String, _EndPtr, _Locale);
-}
+    );
 
 _Check_return_
 _ACRTIMP long __cdecl strtol(
@@ -629,7 +615,7 @@ _ACRTIMP unsigned __int64 __cdecl _strtoui64_l(
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl _itoa_s(
+_ACRTIMP errno_t __cdecl _itoa_s(
     _In_                         int    _Value,
     _Out_writes_z_(_BufferCount) char*  _Buffer,
     _In_                         size_t _BufferCount,
@@ -653,7 +639,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl _ltoa_s(
+_ACRTIMP errno_t __cdecl _ltoa_s(
     _In_                         long   _Value,
     _Out_writes_z_(_BufferCount) char*  _Buffer,
     _In_                         size_t _BufferCount,
@@ -676,7 +662,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl _ultoa_s(
+_ACRTIMP errno_t __cdecl _ultoa_s(
     _In_                         unsigned long _Value,
     _Out_writes_z_(_BufferCount) char*         _Buffer,
     _In_                         size_t        _BufferCount,
@@ -699,7 +685,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_1_1(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl _i64toa_s(
+_ACRTIMP errno_t __cdecl _i64toa_s(
     _In_                         __int64 _Value,
     _Out_writes_z_(_BufferCount) char*   _Buffer,
     _In_                         size_t  _BufferCount,
@@ -716,7 +702,7 @@ _ACRTIMP char* __cdecl _i64toa(
 
 _Success_(return == 0)
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl _ui64toa_s(
+_ACRTIMP errno_t __cdecl _ui64toa_s(
     _In_                         unsigned __int64 _Value,
     _Out_writes_z_(_BufferCount) char*            _Buffer,
     _In_                         size_t           _BufferCount,
@@ -744,7 +730,7 @@ _ACRTIMP char* __cdecl _ui64toa(
 
 _Success_(return == 0)
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _ecvt_s(
+_ACRTIMP errno_t __cdecl _ecvt_s(
     _Out_writes_z_(_BufferCount) char* _Buffer,
     _In_  size_t                       _BufferCount,
     _In_  double                       _Value,
@@ -801,7 +787,7 @@ _ACRTIMP char* __cdecl _fcvt(
     );
 
 _Success_(return == 0)
-_ACRTXPIMP errno_t __cdecl _gcvt_s(
+_ACRTIMP errno_t __cdecl _gcvt_s(
     _Out_writes_z_(_BufferCount) char*  _Buffer,
     _In_                         size_t _BufferCount,
     _In_                         double _Value,
@@ -849,7 +835,7 @@ _ACRTIMP char* __cdecl _gcvt(
     _ACRTIMP int __cdecl ___mb_cur_max_func(void);
 
     _Post_satisfies_(return > 0 && return < MB_LEN_MAX)
-    extern int __cdecl ___mb_cur_max_l_func(_locale_t);
+    _ACRTIMP int __cdecl ___mb_cur_max_l_func(_locale_t);
 #endif
 
 
@@ -861,7 +847,7 @@ _ACRTIMP int __cdecl mblen(
     );
 
 _Check_return_ 
-_ACRTXPIMP int __cdecl _mblen_l(
+_ACRTIMP int __cdecl _mblen_l(
     _In_reads_bytes_opt_(_MaxCount) _Pre_opt_z_ char const* _Ch,
     _In_                                        size_t      _MaxCount,
     _In_opt_                                    _locale_t   _Locale
@@ -875,21 +861,21 @@ _ACRTIMP size_t __cdecl _mbstrlen(
 
 _Check_return_
 _Post_satisfies_(return <= _String_length_(_String) || return == (size_t)-1)
-_ACRTXPIMP size_t __cdecl _mbstrlen_l(
+_ACRTIMP size_t __cdecl _mbstrlen_l(
     _In_z_   char const* _String, 
     _In_opt_ _locale_t   _Locale
     );
 
 _Check_return_
 _Post_satisfies_((return <= _String_length_(_String) && return <= _MaxCount) || return == (size_t)-1)
-_ACRTXPIMP size_t __cdecl _mbstrnlen(
+_ACRTIMP size_t __cdecl _mbstrnlen(
     _In_z_ char const* _String,
     _In_   size_t      _MaxCount
     );
 
 _Post_satisfies_((return <= _String_length_(_String) && return <= _MaxCount) || return == (size_t)-1)
 _Check_return_
-_ACRTXPIMP size_t __cdecl _mbstrnlen_l(
+_ACRTIMP size_t __cdecl _mbstrnlen_l(
     _In_z_   char const* _String,
     _In_     size_t      _MaxCount,
     _In_opt_ _locale_t   _Locale
@@ -903,7 +889,7 @@ _ACRTIMP int __cdecl mbtowc(
     );
 
 _Success_(return != -1)
-_ACRTXPIMP int __cdecl _mbtowc_l(
+_ACRTIMP int __cdecl _mbtowc_l(
     _Pre_notnull_ _Post_z_               wchar_t*    _DstCh,
     _In_reads_or_z_opt_(_SrcSizeInBytes) char const* _SrcCh,
     _In_                                 size_t      _SrcSizeInBytes,
@@ -911,7 +897,7 @@ _ACRTXPIMP int __cdecl _mbtowc_l(
     );
 
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl mbstowcs_s(
+_ACRTIMP errno_t __cdecl mbstowcs_s(
     _Out_opt_                                                 size_t*     _PtNumOfCharConverted,
     _Out_writes_to_opt_(_SizeInWords, *_PtNumOfCharConverted) wchar_t*    _DstBuf,
     _In_                                                      size_t      _SizeInWords,
@@ -935,7 +921,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_SIZE(
     )
 
 _Check_return_opt_
-_ACRTXPIMP errno_t __cdecl _mbstowcs_s_l(
+_ACRTIMP errno_t __cdecl _mbstowcs_s_l(
     _Out_opt_                                                 size_t*     _PtNumOfCharConverted,
     _Out_writes_to_opt_(_SizeInWords, *_PtNumOfCharConverted) wchar_t*    _DstBuf,
     _In_                                                      size_t      _SizeInWords,
@@ -954,7 +940,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE_EX(
-    _ACRTXPIMP, _mbstowcs_l, _mbstowcs_s_l,
+    _ACRTIMP, _mbstowcs_l, _mbstowcs_s_l,
     _Out_writes_opt_z_(_Size)  wchar_t,
     _Out_writes_z_(_MaxCount), wchar_t,     _Dest,
     _In_z_                     char const*, _Source,
@@ -972,7 +958,7 @@ _ACRTIMP int __cdecl wctomb(
     );
 
 _CRT_INSECURE_DEPRECATE(_wctomb_s_l)
-_ACRTXPIMP int __cdecl _wctomb_l(
+_ACRTIMP int __cdecl _wctomb_l(
     _Pre_maybenull_ _Post_z_ char*     _MbCh,
     _In_                     wchar_t   _WCh,
     _In_opt_                 _locale_t _Locale
@@ -981,7 +967,7 @@ _ACRTXPIMP int __cdecl _wctomb_l(
 #if __STDC_WANT_SECURE_LIB__
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl wctomb_s(
+    _ACRTIMP errno_t __cdecl wctomb_s(
         _Out_opt_                                                int*    _SizeConverted,
         _Out_writes_bytes_to_opt_(_SizeInBytes, *_SizeConverted) char*   _MbCh,
         _In_                                                     rsize_t _SizeInBytes,
@@ -991,7 +977,7 @@ _ACRTXPIMP int __cdecl _wctomb_l(
 #endif // __STDC_WANT_SECURE_LIB__
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _wctomb_s_l(
+_ACRTIMP errno_t __cdecl _wctomb_s_l(
     _Out_opt_                        int*     _SizeConverted,
     _Out_writes_opt_z_(_SizeInBytes) char*     _MbCh,
     _In_                             size_t    _SizeInBytes,
@@ -999,7 +985,7 @@ _ACRTXPIMP errno_t __cdecl _wctomb_s_l(
     _In_opt_                         _locale_t _Locale);
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl wcstombs_s(
+_ACRTIMP errno_t __cdecl wcstombs_s(
     _Out_opt_                                                          size_t*        _PtNumOfCharConverted,
     _Out_writes_bytes_to_opt_(_DstSizeInBytes, *_PtNumOfCharConverted) char*          _Dst,
     _In_                                                               size_t         _DstSizeInBytes,
@@ -1023,7 +1009,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_SIZE(
     )
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _wcstombs_s_l(
+_ACRTIMP errno_t __cdecl _wcstombs_s_l(
     _Out_opt_                                                          size_t*        _PtNumOfCharConverted,
     _Out_writes_bytes_to_opt_(_DstSizeInBytes, *_PtNumOfCharConverted) char*          _Dst,
     _In_                                                               size_t         _DstSizeInBytes,
@@ -1042,7 +1028,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_1_3(
     )
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_3_SIZE_EX(
-    _ACRTXPIMP, _wcstombs_l, _wcstombs_s_l,
+    _ACRTIMP, _wcstombs_l, _wcstombs_s_l,
     _Out_writes_opt_z_(_Size)  char,
     _Out_writes_(_MaxCount),   char,           _Dest,
     _In_z_                     wchar_t const*, _Source,
@@ -1080,7 +1066,7 @@ _ACRTIMP _CRTALLOCATOR char* __cdecl _fullpath(
 #pragma pop_macro("_fullpath")
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _makepath_s(
+_ACRTIMP errno_t __cdecl _makepath_s(
     _Out_writes_z_(_BufferCount) char*       _Buffer,
     _In_                         size_t      _BufferCount,
     _In_opt_z_                   char const* _Drive,
@@ -1117,7 +1103,7 @@ _ACRTIMP void __cdecl _splitpath(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _splitpath_s(
+_ACRTIMP errno_t __cdecl _splitpath_s(
     _In_z_                             char const* _FullPath,
     _Out_writes_opt_z_(_DriveCount)    char*       _Drive,
     _In_                               size_t      _DriveCount,
@@ -1144,7 +1130,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
 
     _Check_return_opt_
     _Success_(return == 0)
-	_ACRTXPIMP errno_t __cdecl getenv_s(
+    _DCRTIMP errno_t __cdecl getenv_s(
         _Out_                            size_t*     _RequiredCount,
         _Out_writes_opt_z_(_BufferCount) char*       _Buffer,
         _In_                             rsize_t     _BufferCount,
@@ -1154,59 +1140,36 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
     #endif // __STDC_WANT_SECURE_LIB__
 
 
-	_ACRTIMP extern int       __argc;
-	_ACRTIMP extern char**    __argv;
-	_ACRTIMP extern wchar_t** __wargv;
 
 
-	__inline int*       __cdecl __p___argc(void)
-	{
-		return &__argc;
-	}
-	__inline char***    __cdecl __p___argv(void)
-	{
-		return &__argv;
-	}
-	__inline wchar_t*** __cdecl __p___wargv(void)
-	{
-		return &__wargv;
-	}
+    _ACRTIMP int*       __cdecl __p___argc (void);
+    _ACRTIMP char***    __cdecl __p___argv (void);
+    _ACRTIMP wchar_t*** __cdecl __p___wargv(void);
 
-    /*#ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        extern int       __argc;
-        extern char**    __argv;
-        extern wchar_t** __wargv;
+    #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+        _ACRTIMP extern int       __argc;
+        _ACRTIMP extern char**    __argv;
+        _ACRTIMP extern wchar_t** __wargv;
     #else
         #define __argc  (*__p___argc())  // Pointer to number of command line arguments
         #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
         #define __wargv (*__p___wargv()) // Pointer to table of wide command line arguments
-    #endif*/
+    #endif
     
-	_ACRTIMP extern char **    _environ;
-	_ACRTIMP extern wchar_t ** _wenviron;
-
-	__inline char***    __cdecl __p__environ(void)
-	{
-		return &_environ;
-	}
-	__inline wchar_t*** __cdecl __p__wenviron(void)
-	{
-		return &_wenviron;
-	}
+    _DCRTIMP char***    __cdecl __p__environ (void);
+    _DCRTIMP wchar_t*** __cdecl __p__wenviron(void);
 
     #ifndef _CRT_BEST_PRACTICES_USAGE
         #define _CRT_V12_LEGACY_FUNCTIONALITY
     #endif
     
-    /*#ifndef _CRT_V12_LEGACY_FUNCTIONALITY
-        // Deprecated symbol: Do not expose environment global pointers unless
-        // legacy access is specifically requested
-        #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
-        #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
+    #ifndef _CRT_V12_LEGACY_FUNCTIONALITY
+        _ACRTIMP extern char **    _environ;
+		_ACRTIMP extern wchar_t ** _wenviron;
     #else
         #define _environ  (*__p__environ())  // Pointer to narrow environment table
         #define _wenviron (*__p__wenviron()) // Pointer to wide environment table
-    #endif*/
+    #endif
 
 
 
@@ -1233,7 +1196,7 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
     #endif
 
     _Check_return_opt_
-    extern errno_t __cdecl _dupenv_s(
+    _DCRTIMP errno_t __cdecl _dupenv_s(
         _Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ char**      _Buffer,
         _Out_opt_                                                                   size_t*     _BufferCount,
         _In_z_                                                                      char const* _VarName
@@ -1258,14 +1221,14 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_SPLITPATH(errno_t, _splitpath_s, char, _Dest)
         );
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl _putenv_s(
+    _DCRTIMP errno_t __cdecl _putenv_s(
         _In_z_ char const* _Name,
         _In_z_ char const* _Value
         );
 
     #pragma warning (pop)
 
-    _ACRTXPIMP errno_t __cdecl _searchenv_s(
+    _DCRTIMP errno_t __cdecl _searchenv_s(
         _In_z_                       char const* _Filename,
         _In_z_                       char const* _VarName,
         _Out_writes_z_(_BufferCount) char*       _Buffer,

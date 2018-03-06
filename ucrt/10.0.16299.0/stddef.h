@@ -30,8 +30,8 @@ _CRT_BEGIN_C_HEADER
     _ACRTIMP int* __cdecl _errno(void);
     #define errno (*_errno())
 
-    _ACRTXPIMP errno_t __cdecl _set_errno(_In_ int _Value);
-    _ACRTXPIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
+    _ACRTIMP errno_t __cdecl _set_errno(_In_ int _Value);
+    _ACRTIMP errno_t __cdecl _get_errno(_Out_ int* _Value);
 
 #endif // _CRT_FUNCTIONS_REQUIRED
 

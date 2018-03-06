@@ -36,11 +36,11 @@ struct _EXCEPTION_POINTERS;
             _In_opt_ unexpected_handler _NewUnexpectedHandler
             ) throw();
 
-		extern unexpected_handler __cdecl _get_unexpected();
+        _VCRTIMP unexpected_handler __cdecl _get_unexpected();
 
         typedef void (__cdecl* _se_translator_function)(unsigned int, struct _EXCEPTION_POINTERS*);
 
-		_VCRTIMP _se_translator_function __cdecl _set_se_translator(
+        _VCRTIMP _se_translator_function __cdecl _set_se_translator(
             _In_opt_ _se_translator_function _NewSETranslator
             );
 
@@ -54,7 +54,7 @@ struct _EXCEPTION_POINTERS;
         );
 
     _VCRTIMP bool __cdecl __uncaught_exception();
-    extern int  __cdecl __uncaught_exceptions();
+    _VCRTIMP int  __cdecl __uncaught_exceptions();
 
 #endif
 

@@ -57,58 +57,46 @@ struct _timespec64
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // Nonzero if Daylight Savings Time is used
-_ACRTIMP extern int _daylight;
-
 _Check_return_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_daylight)
-__inline int* __cdecl __daylight(void)
-{
-	return &_daylight;
-}
+_ACRTIMP int* __cdecl __daylight(void);
+
+#define _daylight (*__daylight())
 
 // Offset for Daylight Savings Time
-_ACRTIMP extern long _dstbias;
-
 _Check_return_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_dstbias)
-__inline long* __cdecl __dstbias(void)
-{
-	return &_dstbias;
-}
+_ACRTIMP long* __cdecl __dstbias(void);
+
+#define _dstbias (*__dstbias())
 
 // Difference in seconds between GMT and local time
-_ACRTIMP extern long _timezone;
-
 _Check_return_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_timezone)
-__inline long* __cdecl __timezone(void)
-{
-	return &_timezone;
-}
+_ACRTIMP long* __cdecl __timezone(void);
+
+#define _timezone (*__timezone())
 
 // Standard and Daylight Savings Time time zone names
-_ACRTIMP extern char** _tzname;
-
 _Check_return_ _Deref_ret_z_ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_tzname)
-__inline char** __cdecl __tzname(void)
-{
-	return _tzname;
-}
+_ACRTIMP char** __cdecl __tzname(void);
+
+#define _tzname (__tzname())
 
  _Success_(_Daylight != 0)
-extern errno_t __cdecl _get_daylight(
+_ACRTIMP errno_t __cdecl _get_daylight(
     _Out_ int* _Daylight
     );
 
 _Success_(_DaylightSavingsBias != 0)
-extern errno_t __cdecl _get_dstbias(
+_ACRTIMP errno_t __cdecl _get_dstbias(
     _Out_ long* _DaylightSavingsBias
     );
 
  _Success_(_TimeZone != 0)
-extern errno_t __cdecl _get_timezone(
+_ACRTIMP errno_t __cdecl _get_timezone(
     _Out_ long* _TimeZone
     );
 
 _Success_(return == 0)
-extern errno_t __cdecl _get_tzname(
+_ACRTIMP errno_t __cdecl _get_tzname(
     _Out_                        size_t* _ReturnValue,
     _Out_writes_z_(_SizeInBytes) char*   _Buffer,
     _In_                         size_t  _SizeInBytes,
@@ -132,7 +120,7 @@ _ACRTIMP char* __cdecl asctime(
 #if __STDC_WANT_SECURE_LIB__
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl asctime_s(
+    _ACRTIMP errno_t __cdecl asctime_s(
         _Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*            _Buffer,
         _In_range_(>=,26)                                   size_t           _SizeInBytes,
         _In_                                                struct tm const* _Tm
@@ -151,12 +139,12 @@ _ACRTIMP clock_t __cdecl clock(void);
 _Ret_z_
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_ctime32_s)
-_ACRTXPIMP char* __cdecl _ctime32(
+_ACRTIMP char* __cdecl _ctime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _ctime32_s(
+_ACRTIMP errno_t __cdecl _ctime32_s(
     _Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
     _In_range_(>=,26)                                   size_t            _SizeInBytes,
     _In_                                                __time32_t const* _Time
@@ -176,7 +164,7 @@ _ACRTIMP char* __cdecl _ctime64(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _ctime64_s(
+_ACRTIMP errno_t __cdecl _ctime64_s(
     _Out_writes_z_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
     _In_range_(>=,26)                                     size_t            _SizeInBytes,
     _In_                                                  __time64_t const* _Time
@@ -189,25 +177,25 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_1(
     )
 
 _Check_return_
-_ACRTXPIMP double __cdecl _difftime32(
+_ACRTIMP double __cdecl _difftime32(
     _In_ __time32_t _Time1,
     _In_ __time32_t _Time2
     );
 
 _Check_return_
-_ACRTXPIMP double __cdecl _difftime64(
+_ACRTIMP double __cdecl _difftime64(
     _In_ __time64_t _Time1,
     _In_ __time64_t _Time2
     );
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_gmtime32_s)
-_ACRTXPIMP struct tm* __cdecl _gmtime32(
+_ACRTIMP struct tm* __cdecl _gmtime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _gmtime32_s(
+_ACRTIMP errno_t __cdecl _gmtime32_s(
     _Out_ struct tm*        _Tm,
     _In_  __time32_t const* _Time
     );
@@ -219,19 +207,19 @@ _ACRTIMP struct tm* __cdecl _gmtime64(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _gmtime64_s(
+_ACRTIMP errno_t __cdecl _gmtime64_s(
     _Out_ struct tm*        _Tm,
     _In_  __time64_t const* _Time
     );
 
 _Success_(return != 0)
 _Check_return_ _CRT_INSECURE_DEPRECATE(_localtime32_s)
-_ACRTXPIMP struct tm* __cdecl _localtime32(
+_ACRTIMP struct tm* __cdecl _localtime32(
     _In_ __time32_t const* _Time
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _localtime32_s(
+_ACRTIMP errno_t __cdecl _localtime32_s(
     _Out_ struct tm*        _Tm,
     _In_  __time32_t const* _Time
     );
@@ -243,23 +231,23 @@ _ACRTIMP struct tm* __cdecl _localtime64(
     );
 
 _Check_return_wat_
-_ACRTXPIMP errno_t __cdecl _localtime64_s(
+_ACRTIMP errno_t __cdecl _localtime64_s(
     _Out_ struct tm*        _Tm,
     _In_  __time64_t const* _Time
     );
 
 _Check_return_
-_ACRTXPIMP __time32_t __cdecl _mkgmtime32(
+_ACRTIMP __time32_t __cdecl _mkgmtime32(
     _Inout_ struct tm* _Tm
     );
 
 _Check_return_
-_ACRTXPIMP __time64_t __cdecl _mkgmtime64(
+_ACRTIMP __time64_t __cdecl _mkgmtime64(
     _Inout_ struct tm* _Tm
     );
 
 _Check_return_opt_
-_ACRTXPIMP __time32_t __cdecl _mktime32(
+_ACRTIMP __time32_t __cdecl _mktime32(
     _Inout_ struct tm* _Tm
     );
 
@@ -279,7 +267,7 @@ _ACRTIMP size_t __cdecl strftime(
 
 _Success_(return > 0)
 _Check_return_wat_
-extern size_t __cdecl _strftime_l(
+_ACRTIMP size_t __cdecl _strftime_l(
     _Out_writes_z_(_MaxSize)      char*            _Buffer,
     _In_                          size_t           _MaxSize,
     _In_z_ _Printf_format_string_ char const*      _Format,
@@ -319,24 +307,24 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
     _Out_writes_z_(9), char, _Buffer
     )
 
-_ACRTXPIMP __time32_t __cdecl _time32(
+_ACRTIMP __time32_t __cdecl _time32(
     _Out_opt_ __time32_t* _Time
     );
 
-_ACRTXPIMP __time64_t __cdecl _time64(
+_ACRTIMP __time64_t __cdecl _time64(
     _Out_opt_ __time64_t* _Time
     );
 
 _Success_(return != 0)
 _Check_return_
-extern int __cdecl _timespec32_get(
+_ACRTIMP int __cdecl _timespec32_get(
     _Out_ struct _timespec32* _Ts,
     _In_  int                 _Base
     );
 
 _Success_(return != 0)
 _Check_return_
-extern int __cdecl _timespec64_get(
+_ACRTIMP int __cdecl _timespec64_get(
     _Out_ struct _timespec64* _Ts,
     _In_  int                 _Base
     );

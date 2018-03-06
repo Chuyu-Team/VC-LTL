@@ -111,7 +111,7 @@ struct __finddata64_t
         );
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl _access_s(
+    _ACRTIMP errno_t __cdecl _access_s(
         _In_z_ char const* _FileName,
         _In_   int         _AccessMode
         );
@@ -214,7 +214,7 @@ struct __finddata64_t
 
     _Success_(return == 0)
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl _mktemp_s(
+    _ACRTIMP errno_t __cdecl _mktemp_s(
         _Inout_updates_z_(_Size) char*  _TemplateName,
         _In_                     size_t _Size
         );
@@ -284,7 +284,7 @@ struct __finddata64_t
         );
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl _umask_s(
+    _ACRTIMP errno_t __cdecl _umask_s(
         _In_  int  _NewMode,
         _Out_ int* _OldMode
         );
@@ -309,7 +309,7 @@ struct __finddata64_t
 
     _Success_(return != -1)
     _Check_return_
-    extern intptr_t __cdecl _findfirst64i32(
+    _ACRTIMP intptr_t __cdecl _findfirst64i32(
         _In_z_ char const*              _FileName,
         _Out_  struct _finddata64i32_t* _FindData
         );
@@ -330,7 +330,7 @@ struct __finddata64_t
 
     _Success_(return != -1)
     _Check_return_
-    extern int __cdecl _findnext64i32(
+    _ACRTIMP int __cdecl _findnext64i32(
         _In_  intptr_t                 _FindHandle,
         _Out_ struct _finddata64i32_t* _FindData
         );
@@ -355,7 +355,7 @@ struct __finddata64_t
         );
 
     _Check_return_wat_
-    _ACRTXPIMP errno_t __cdecl _sopen_s(
+    _ACRTIMP errno_t __cdecl _sopen_s(
         _Out_  int*        _FileHandle,
         _In_z_ char const* _FileName,
         _In_   int         _OpenFlag,
@@ -385,23 +385,23 @@ struct __finddata64_t
 
 	#if defined __cplusplus && !defined __Build_LTL
 
-		// These function do not validate pmode; use _sopen_s instead.
-		extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
-		_ACRTIMP int __CRTDECL _open(
-			_In_z_ char const* const _FileName,
-			_In_   int         const _OFlag,
-			_In_   int         const _PMode = 0
-			);
+        // These function do not validate pmode; use _sopen_s instead.
+        extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
+        _ACRTIMP int __CRTDECL _open(
+            _In_z_ char const* const _FileName,
+            _In_   int         const _OFlag,
+            _In_   int         const _PMode = 0
+            );
 
-		extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
-		_ACRTIMP int __CRTDECL _sopen(
-			_In_z_ char const* const _FileName,
-			_In_   int         const _OFlag,
-			_In_   int         const _ShFlag,
-			_In_   int         const _PMode = 0
-			);
+        extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
+        _ACRTIMP int __CRTDECL _sopen(
+            _In_z_ char const* const _FileName,
+            _In_   int         const _OFlag,
+            _In_   int         const _ShFlag,
+            _In_   int         const _PMode = 0
+            );
 
-	#else
+    #else
 
         _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
         _ACRTIMP int __cdecl _open(
@@ -416,7 +416,7 @@ struct __finddata64_t
             _In_   int         _ShareFlag,
             ...);
 
-	#endif
+    #endif
 
 
 

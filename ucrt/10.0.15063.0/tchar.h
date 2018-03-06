@@ -705,7 +705,7 @@ _Check_return_ __inline int __CRTDECL _tccmp(_In_z_ const wchar_t *_Cpc1, _In_z_
 #define _wcsinc(_pc)    ((_pc)+1)
 #define _wcsnextc(_cpc) ((unsigned int) *(_cpc))
 #define _wcsninc(_pc, _sz) (((_pc)+(_sz)))
-_Check_return_ _ACRTXPIMP size_t __cdecl __wcsncnt(_In_reads_or_z_(_MaxCount) const wchar_t * _Str, _In_ size_t _MaxCount);
+_Check_return_ _ACRTIMP size_t __cdecl __wcsncnt(_In_reads_or_z_(_MaxCount) const wchar_t * _Str, _In_ size_t _MaxCount);
 #define _wcsncnt(_cpc, _sz) (__wcsncnt(_cpc,_sz))
 #define _wcsspnp(_cpc1, _cpc2)                                                          (_cpc1==NULL ? NULL : ((*((_cpc1)+wcsspn(_cpc1,_cpc2))) ? ((_cpc1)+wcsspn(_cpc1,_cpc2)) : NULL))
 #define _wcsncpy_l(_Destination, _Source, _Count, _Locale)                              (wcsncpy(_Destination, _Source, _Count))
