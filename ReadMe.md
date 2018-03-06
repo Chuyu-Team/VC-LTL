@@ -10,6 +10,11 @@
 
 ## Changes
 
+### 2.0.0.7 2018-03-06 17:17
+* 重新整理VC-LTL，尽可能减少对原版改动
+* 解决一些BUG（感谢 亮亮、layerfsd、waiting4love）
+
+
 ### 2.0.0.6 2018-01-17 17:15
 * 添加Vistual Studio 2017 15.5新增函数支持
 * 新增Shared.props改进属性表引用灵活性
