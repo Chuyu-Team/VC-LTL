@@ -39,9 +39,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\wctype.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\locale_thunks.cpp">
-      <Filter>ltl</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\_ctype.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>

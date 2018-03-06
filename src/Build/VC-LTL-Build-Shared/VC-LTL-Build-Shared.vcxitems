@@ -34,7 +34,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\setlocal_thunks.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\locale_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\c16rtomb.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\c32rtomb.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\isctype.cpp">
