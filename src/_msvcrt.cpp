@@ -59,6 +59,13 @@ __forceinline size_t __cdecl _tcslen(
 	return wcslen(_String);
 }
 
+namespace std
+{
+	// Note:  We use aggregate initialization in order to avoid use of a dynamic
+	// initializer.
+	const nothrow_t nothrow = {};
+}
+
 extern "C"
 {
 	/*void __fastcall _guard_check_icall(void*)
