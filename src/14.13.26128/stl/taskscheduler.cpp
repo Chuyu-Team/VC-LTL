@@ -28,15 +28,17 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 namespace Concurrency { namespace details {
     namespace
     {
-        bool _Is_vista_threadpool_supported()
-            {
-#if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
-            return true;
-#else /* ^^^ _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA ^^^ // vvv _STL_WIN32_WINNT < _WIN32_WINNT_VISTA vvv */
-            DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNCREATETHREADPOOLWORK, CreateThreadpoolWork, pfCreateThreadpoolWork);
-            return pfCreateThreadpoolWork != nullptr;
-#endif // _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
-            }
+		//已经转移到winapi_thunks.h
+//        bool _Is_vista_threadpool_supported()
+//            {
+//#if _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
+//            return true;
+//#else /* ^^^ _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA ^^^ // vvv _STL_WIN32_WINNT < _WIN32_WINNT_VISTA vvv */
+//            DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNCREATETHREADPOOLWORK, CreateThreadpoolWork, pfCreateThreadpoolWork);
+//            return pfCreateThreadpoolWork != nullptr;
+//#endif // _STL_WIN32_WINNT >= _WIN32_WINNT_VISTA
+//            }
+		#define _Is_vista_threadpool_supported __crt__Is_vista_threadpool_supported
 
 // When the CRT and STL are statically linked into an EXE, their uninitialization will take place
 // inside of the call to exit(), before ExitProcess() is called.  This means that their
