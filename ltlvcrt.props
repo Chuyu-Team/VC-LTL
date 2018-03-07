@@ -11,7 +11,7 @@
 
 -->
 
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VC_LTL_PlatformPrepareForBuild">
   <PropertyGroup>
     <!--先判断Sln目录是否已经有了VC-LTL，如果已经存在，那么优先使用本地工程中的VC-LTL-->
     <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(SolutionDir)VC-LTL\_msvcrt.h')) ">$(SolutionDir)VC-LTL</VC_LTL_Root>
@@ -22,30 +22,34 @@
   </PropertyGroup>
   
   <PropertyGroup Condition=" ('$(VCToolsVersion)'=='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
-    <!--计算机已经安装Visual Studio 2015 Update3 KB3165756 ?-->
+    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017中的2015平台工具集）-->
     <VC-LTLUsedToolsVersion>$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
-    <!--计算机已经安装Visual Studio 2015 Update3 ?-->
+    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24210（正统Visual Studio 2015）-->
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
 
     <!--如果找不到，那么指定为当前支持的最低版本 2015 Update2-->
+    <VC-LTLFoundToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">false</VC-LTLFoundToolsVersion>
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">14.0.23918</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   
   <PropertyGroup Condition=" ('$(VCToolsVersion)'!='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
+    <VC-LTLUsedToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VC-LTLUsedToolsVersion>
+
     <!--如果目标不存在，这指向为当前VC-LTL支持的最高版本-->
-    <VC-LTLUsedToolsVersion Condition=" !Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >14.12.25827</VC-LTLUsedToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">$(VCToolsVersion)</VC-LTLUsedToolsVersion>
+    <VC-LTLFoundToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">false</VC-LTLFoundToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.12.25827</VC-LTLUsedToolsVersion>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <VC-LTLTargetUniversalCRTVersion Condition="('$(VC-LTLTargetUniversalCRTVersion)'=='') And (Exists('$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)'))">$(TargetUniversalCRTVersion)</VC-LTLTargetUniversalCRTVersion>
+  <PropertyGroup Condition="('$(VC-LTLTargetUniversalCRTVersion)'=='')">
+    <VC-LTLTargetUniversalCRTVersion Condition="Exists('$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)')">$(TargetUniversalCRTVersion)</VC-LTLTargetUniversalCRTVersion>
     
-    <!--如果遇到VC-LTL不支持的版本则切换到VC-LTL当前最高可用版本-->
-    <VC-LTLTargetUniversalCRTVersion Condition="'$(VC-LTLTargetUniversalCRTVersion)'==''">10.0.16299.0</VC-LTLTargetUniversalCRTVersion>
+    <!--如果遇到VC-LTL不支持的版本则切换到VC-LTL最低可用版本-->
+    <VC-LTLFoundTargetUniversalCRTVersion Condition="'$(VC-LTLTargetUniversalCRTVersion)'==''">false</VC-LTLFoundTargetUniversalCRTVersion>
+    <VC-LTLTargetUniversalCRTVersion Condition="'$(VC-LTLTargetUniversalCRTVersion)'==''">10.0.10240.0</VC-LTLTargetUniversalCRTVersion>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -58,7 +62,7 @@
     <msvcrt_forward Condition=" ('$(msvcrt_forward)'=='') And ('$(DisableAdvancedSupport)'=='true') ">msvcrt_light.obj</msvcrt_forward>
     <msvcrt_forward Condition=" '$(msvcrt_forward)'==''">msvcrt_advanced.obj</msvcrt_forward>
 
-    <SupportLTL Condition=" ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
+    <SupportLTL Condition="('$(PlatformToolsetVersion)' &gt;= '140') And ('$(PlatformToolsetVersion)' &lt;= '141') And ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ('$(UseOfMFC)'=='false') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ( ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp') )">true</SupportWinXP>
     
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
@@ -80,4 +84,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
+
+  <Target Name="VC_LTL_PlatformPrepareForBuild">
+    <Warning Code="LTL2000" Text="VC-LTL不兼容 Debug 配置，VC-LTL已经自动禁用，请切换到 Release 配置然后继续。" Condition="('$(UseDebugLibraries)'=='true') Or ('$(Configuration)'=='Debug')" />
+    <Warning Code="LTL2001" Text="VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。" Condition="'$(UseOfMFC)'!='false'" />
+    <Warning Code="LTL2002" Text="VC-LTL不兼容 $(PlatformShortName) 平台，已经自动禁用VC-LTL。" Condition="('$(PlatformShortName)'!='x86') And ('$(PlatformShortName)'!='x64')"/>
+    <Warning Code="LTL2003" Text="VC-LTL不兼容 $(PlatformToolset) 工具集，请切换到 Visual Studio 2015/2017 然后继续。" Condition="('$(PlatformToolsetVersion)' &lt;'140') And ('$(PlatformToolsetVersion)' &gt; '141')"/>
+    
+    <Warning Code="LTL3000" Text="VC-LTL不支持 VC $(VCToolsVersion)，目前已临时切换到 VC $(VC-LTLUsedToolsVersion) 来维持基础功能。这可能是你的IDE版本过低，建议升级到最新IDE然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundToolsVersion)'=='false')" />
+    <Warning Code="LTL3001" Text="VC-LTL不支持 SDK $(TargetUniversalCRTVersion)，目前已临时切换到 SDK $(VC-LTLTargetUniversalCRTVersion) 来维持基础功能。这可能是你的SDK版本过低，建议切换到最新SDK然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundTargetUniversalCRTVersion)'=='false')" />
+  </Target>
 </Project>
