@@ -28,7 +28,7 @@
 #endif
 
 #ifndef _Build_By_LTL
-#define _Build_By_LTL
+#error "预处理器定义继承被破坏，请确保启用 C/C++ - 预处理器 - 【√ 从父级或项目默认设置继承(I)】！"
 #endif
 
 #ifndef _DISABLE_DEPRECATE_STATIC_CPPLIB
