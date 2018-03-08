@@ -1,4 +1,4 @@
-// This is a part of the Active Template Library.
+﻿// This is a part of the Active Template Library.
 // Copyright (C) Microsoft Corporation
 // All rights reserved.
 //
@@ -152,6 +152,19 @@ typedef _Return_type_success_(return==ERROR_SUCCESS) LONG LSTATUS;
 
 namespace ATL
 {
+#ifdef _ATL_XP_TARGETING
+	//WinXP SP2 才支持 EncodePointer 以及 DecodePointer
+	EXTERN_C PVOID __fastcall __CRT_DecodePointer( PVOID Ptr);
+
+	EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
+
+#define EncodePointerDownlevel __CRT_DecodePointer
+#define DecodePointerDownlevel __CRT_EncodePointer
+
+#else
+#define EncodePointerDownlevel ::EncodePointer
+#define DecodePointerDownlevel ::DecodePointer
+#endif
 
 struct _ATL_CATMAP_ENTRY
 {
@@ -2630,7 +2643,7 @@ public:
 				if (pCache->pCF != NULL)
 				{
 					// Decode factory pointer if it's not null
-					IUnknown *factory = reinterpret_cast<IUnknown*>(::DecodePointer(pCache->pCF));
+					IUnknown *factory = reinterpret_cast<IUnknown*>(DecodePointerDownlevel(pCache->pCF));
 					_Analysis_assume_(factory != nullptr);
 					factory->Release();
 					pCache->pCF = NULL;
@@ -8149,7 +8162,7 @@ ATLINLINE ATLAPI AtlComModuleGetClassObject(
 						hr = pEntry->pfnGetClassObject(pEntry->pfnCreateInstance, __uuidof(IUnknown), reinterpret_cast<void**>(&factory));
 						if (SUCCEEDED(hr))
 						{
-							pCache->pCF = reinterpret_cast<IUnknown*>(::EncodePointer(factory));
+							pCache->pCF = reinterpret_cast<IUnknown*>(EncodePointerDownlevel(factory));
 						}
 					}
 				}
@@ -8157,7 +8170,7 @@ ATLINLINE ATLAPI AtlComModuleGetClassObject(
 				if (pCache->pCF != NULL)
 				{
 					// Decode factory pointer
-					IUnknown* factory = reinterpret_cast<IUnknown*>(::DecodePointer(pCache->pCF));
+					IUnknown* factory = reinterpret_cast<IUnknown*>(DecodePointerDownlevel(pCache->pCF));
 					_Analysis_assume_(factory != nullptr);
 					hr = factory->QueryInterface(riid, ppv);
 				}

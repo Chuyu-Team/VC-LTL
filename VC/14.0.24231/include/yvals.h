@@ -263,7 +263,7 @@ clients and process-global for mixed clients.
 		#elif !defined(_DLL) && defined(_DEBUG)
 			#pragma detect_mismatch("RuntimeLibrary", "MTd_StaticDebug")
 		#elif defined(_DLL) && !defined(_DEBUG)
-			#pragma detect_mismatch("RuntimeLibrary", "MD_DynamicRelease")
+			#pragma detect_mismatch("RuntimeLibrary", "MD_LTL_DynamicRelease")
 		#elif defined(_DLL) && defined(_DEBUG)
 			#pragma detect_mismatch("RuntimeLibrary", "MDd_DynamicDebug")
 		#endif /* defined(_DLL) etc. */
