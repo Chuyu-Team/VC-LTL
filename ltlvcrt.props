@@ -43,9 +43,9 @@
   <PropertyGroup Condition=" ('$(VCToolsVersion)'!='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
     <VC-LTLUsedToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VC-LTLUsedToolsVersion>
 
-    <!--如果目标不存在，这指向为当前VC-LTL支持的最高版本-->
+    <!--如果目标不存在，这指向为当前VC-LTL支持的最低版本-->
     <VC-LTLFoundToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">false</VC-LTLFoundToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.13.26128</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.10.25017</VC-LTLUsedToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="('$(VC-LTLTargetUniversalCRTVersion)'=='')">
