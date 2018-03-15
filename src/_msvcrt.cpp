@@ -1317,8 +1317,12 @@ extern "C"
 		//_errno()不可能返回null
 		auto ptd = (_ptd_msvcrt*)(((byte*)_errno()) - FIELD_OFFSET(_ptd_msvcrt, _terrno));
 
-		//如果_thandle不为-1，说明msvcrt.dll内部内存已经申请失败
-		return ptd->_thandle == (uintptr_t)-1/*Current Thread Handle*/ ? ptd : nullptr;
+		/*
+		当 _thandle = -1，这表明此线程的ptd通过msvcrt.dll begin_thread 或者 __getptd_noexit 创建。
+		当 _thandle = 0，这表明此线程的ptd通过msvcrt.dll的DllMain创建。
+		当 _thandle = 其他，这表明msvcrt.dll内部内存已经申请失败。
+		*/
+		return ( ptd->_thandle == (uintptr_t)-1/*Current Thread Handle*/ || ptd->_thandle == 0 )? ptd : nullptr;
 	}
 
 
