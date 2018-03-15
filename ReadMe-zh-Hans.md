@@ -140,8 +140,9 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 |   MFC  |  不支持  |   不支持            | -
 
 ### 已知问题规避
-* 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 以及 _l 相关版本不存在此问题。
-* 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 以及 _l 相关版本不存在此问题。
+* 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
+* 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
+* 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 setlocale(0, ".936") 这样调用，而不是传入setlocale(0, "zh-CN")。
 
 ### 已知与VC-LTL兼容的项目
 此列表只是表示已经有开发者使用VC-LTL编译并使用，并不代表VC-LTL仅能兼容以下项目。
