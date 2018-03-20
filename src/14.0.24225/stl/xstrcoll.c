@@ -15,8 +15,7 @@
 #include <malloc.h>
 #include <locale.h>
 #include <errno.h>
-//#include <awint.h>
-#include <winapi_thunks.h>
+#include <awint.h>
 
 /***
 *int _Strcoll() - Collate locale strings
@@ -82,7 +81,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Strcoll (
         }
         else
         {
-            if ( 0 == (ret = __crtCompareStringA(NULL, _Locale,
+            if ( 0 == (ret = __crtCompareStringA(_Locale,
                                                   SORT_STRINGSORT,
                                                   _string1,
                                                   n1,

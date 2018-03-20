@@ -5,6 +5,13 @@
 
 EXTERN_C_START
 
+#define MakeMiniVersion(v1,v2) (DWORD)(v2|(v1<<16))
+#define MakeVersion(v1,v2,v3,v4) (UINT64)(((UINT64)(v4))|((UINT64)v3<<16)|((UINT64)v2<<32)|((UINT64)v1<<48))
+
+DWORD __cdecl __LTL_GetOsMinVersion();
+
+UINT64 __cdecl __LTL_GetOsVersion();
+
 
 #ifdef _ATL_XP_TARGETING
 BOOL WINAPI __crtInitOnceExecuteOnce(
@@ -277,9 +284,10 @@ PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
 #define __crtCreateThreadpoolTimer CreateThreadpoolTimer
 #endif
 
-__declspec(dllimport) int __cdecl __crtCompareStringA
+_CRTIMP int __cdecl __crtCompareStringA(LCID, ...);
+
+_CRTIMP int __cdecl __crtCompareStringA_WinXP
 (
-    _In_opt_ _locale_t _Plocinfo,
     _In_ LCID     _Locale,
     _In_ DWORD    _DwCmpFlags,
     _In_count_(_CchCount1) LPCSTR   _LpString1,
@@ -289,7 +297,46 @@ __declspec(dllimport) int __cdecl __crtCompareStringA
     _In_ int      _Code_page
 );
 
-__declspec(dllimport) int __cdecl __crtCompareStringW
+_CRTIMP int __cdecl __crtCompareStringA_Vista
+(
+	_In_opt_ _locale_t _Plocinfo,
+	_In_ LCID     _Locale,
+	_In_ DWORD    _DwCmpFlags,
+	_In_count_(_CchCount1) LPCSTR   _LpString1,
+	_In_ int      _CchCount1,
+	_In_count_(_CchCount2) LPCSTR   _LpString2,
+	_In_ int      _CchCount2,
+	_In_ int      _Code_page
+);
+
+__forceinline int __cdecl __crtCompareStringA_Current
+(
+	_In_ LCID     _Locale,
+	_In_ DWORD    _DwCmpFlags,
+	_In_count_(_CchCount1) LPCSTR   _LpString1,
+	_In_ int      _CchCount1,
+	_In_count_(_CchCount2) LPCSTR   _LpString2,
+	_In_ int      _CchCount2,
+	_In_ int      _Code_page
+)
+{
+#ifdef _ATL_XP_TARGETING
+	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
+	{
+		return __crtCompareStringA(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
+	}
+	else
+#endif
+	{
+		return __crtCompareStringA(0,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
+	}
+}
+
+#define __crtCompareStringA __crtCompareStringA_Current
+
+_CRTIMP int __cdecl __crtCompareStringW(LCID, ...);
+
+_CRTIMP int __cdecl __crtCompareStringW_WinXP
 (
     _In_ LCID     _Locale,
     _In_ DWORD    _DwCmpFlags,
@@ -299,8 +346,44 @@ __declspec(dllimport) int __cdecl __crtCompareStringW
     _In_ int      _CchCount2
 );
 
+_CRTIMP int __cdecl __crtCompareStringW_Vista
+(
+	_In_opt_ _locale_t _Plocinfo,
+	_In_ LCID     _Locale,
+	_In_ DWORD    _DwCmpFlags,
+	_In_count_(_CchCount1) LPCWSTR  _LpString1,
+	_In_ int      _CchCount1,
+	_In_count_(_CchCount2) LPCWSTR  _LpString2,
+	_In_ int      _CchCount2
+);
 
-__declspec(dllimport) int __cdecl __crtLCMapStringW
+__forceinline int __cdecl __crtCompareStringW_Current
+(
+	_In_ LCID     _Locale,
+	_In_ DWORD    _DwCmpFlags,
+	_In_count_(_CchCount1) LPCWSTR  _LpString1,
+	_In_ int      _CchCount1,
+	_In_count_(_CchCount2) LPCWSTR  _LpString2,
+	_In_ int      _CchCount2
+)
+{
+#ifdef _ATL_XP_TARGETING
+	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
+	{
+		return __crtCompareStringW(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
+	}
+	else
+#endif
+	{
+		return __crtCompareStringW(0,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
+	}
+}
+
+#define __crtCompareStringW __crtCompareStringW_Current
+
+_CRTIMP int __cdecl __crtLCMapStringW(LCID, ...);
+
+_CRTIMP int __cdecl __crtLCMapStringW_WinXP
 (
     _In_ LCID _Locale,
     _In_ DWORD _DWMapFlag,
@@ -310,11 +393,56 @@ __declspec(dllimport) int __cdecl __crtLCMapStringW
     _In_ int _CchDest
 );
 
+_CRTIMP int __cdecl __crtLCMapStringW_Vista
+(
+	_In_opt_ _locale_t _Plocinfo,
+	_In_ LCID _Locale,
+	_In_ DWORD _DWMapFlag,
+	_In_count_(_CchSrc) LPCWSTR _LpSrcStr,
+	_In_ int _CchSrc,
+	_Out_opt_cap_(_CchDest) LPWSTR _LpDestStr,
+	_In_ int _CchDest
+);
 
-__declspec(dllimport) LCID* __cdecl ___lc_handle_func(void);
+__forceinline int __cdecl __crtLCMapStringW_Current
+(
+	_In_ LCID _Locale,
+	_In_ DWORD _DWMapFlag,
+	_In_count_(_CchSrc) LPCWSTR _LpSrcStr,
+	_In_ int _CchSrc,
+	_Out_opt_cap_(_CchDest) LPWSTR _LpDestStr,
+	_In_ int _CchDest
+)
+{
+#ifdef _ATL_XP_TARGETING
+	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
+	{
+		return __crtLCMapStringW(_Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
+	}
+	else
+#endif
+	{
+		return __crtLCMapStringW(0, _Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
+	}
+}
 
+#define __crtLCMapStringW __crtLCMapStringW_Current
 
-__declspec(dllimport) int __cdecl __crtLCMapStringA
+_CRTIMP int __cdecl __crtLCMapStringA(LCID, ...);
+
+_CRTIMP int __cdecl __crtLCMapStringA_WinXP
+(
+	_In_ LCID _Locale,
+	_In_ DWORD _DwMapFlag,
+	_In_count_(_CchSrc) LPCSTR _LpSrcStr,
+	_In_ int _CchSrc,
+	_Out_opt_cap_(_CchDest) LPSTR _LpDestStr,
+	_In_ int _CchDest,
+	_In_ int _Code_page,
+	_In_ BOOL _BError
+);
+
+_CRTIMP int __cdecl __crtLCMapStringA_Vista
 (
 	_In_opt_ _locale_t _Plocinfo,
 	_In_ LCID _Locale,
@@ -327,6 +455,33 @@ __declspec(dllimport) int __cdecl __crtLCMapStringA
 	_In_ BOOL _BError
 );
 
+__forceinline int __cdecl __crtLCMapStringA_Current
+(
+	_In_ LCID _Locale,
+	_In_ DWORD _DwMapFlag,
+	_In_count_(_CchSrc) LPCSTR _LpSrcStr,
+	_In_ int _CchSrc,
+	_Out_opt_cap_(_CchDest) LPSTR _LpDestStr,
+	_In_ int _CchDest,
+	_In_ int _Code_page,
+	_In_ BOOL _BError
+)
+{
+#ifdef _ATL_XP_TARGETING
+	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
+	{
+		return __crtLCMapStringA(_Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
+	}
+	else
+#endif
+	{
+		return __crtLCMapStringA(0, _Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
+	}
+}
+
+#define __crtLCMapStringA __crtLCMapStringA_Current
+
+__declspec(dllimport) LCID* __cdecl ___lc_handle_func(void);
 
 /* Lock symbols */
 
@@ -360,11 +515,5 @@ __declspec(dllimport) void __cdecl _amsg_exit(
 	int rterrnum
 );
 
-#define MakeMiniVersion(v1,v2) (DWORD)(v2|(v1<<16))
-#define MakeVersion(v1,v2,v3,v4) (UINT64)(((UINT64)(v4))|((UINT64)v3<<16)|((UINT64)v2<<32)|((UINT64)v1<<48))
-
-DWORD __cdecl __LTL_GetOsMinVersion();
-
-UINT64 __cdecl __LTL_GetOsVersion();
 
 EXTERN_C_END

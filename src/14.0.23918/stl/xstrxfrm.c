@@ -100,7 +100,7 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Strxfrm (
         else
         {
             /* Inquire size of dst string in BYTES */
-            if (0 != (dstlen = __crtLCMapStringA(NULL,_Locale,
+            if (0 != (dstlen = __crtLCMapStringA(_Locale,
                                                  LCMAP_SORTKEY,
                                                  _string2,
                                                  (int)_n2,
@@ -115,7 +115,7 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Strxfrm (
                 if (dstlen <= (int)(_n1))
                 {
                     /* Map src string to dst string */
-                    __crtLCMapStringA(NULL,_Locale,
+                    __crtLCMapStringA(_Locale,
                                       LCMAP_SORTKEY,
                                       _string2,
                                       (int)_n2,

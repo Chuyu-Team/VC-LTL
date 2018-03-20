@@ -49,11 +49,11 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         unsigned char outbuffer[3];
 
         UINT codepage;
-        
-		
+
+
 		LCID _Locale;
 
-		//const wchar_t *locale_name;
+        //const wchar_t *locale_name;
 
         if (ploc == 0)
         {
@@ -111,7 +111,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         }
 
         /* convert wide char to lowercase */
-        if (0 == (size = __crtLCMapStringA(NULL, _Locale, LCMAP_LOWERCASE,
+        if (0 == (size = __crtLCMapStringA(_Locale, LCMAP_LOWERCASE,
             (const char *)inbuffer, size, (char *)outbuffer, 3, codepage, TRUE)))
         {
             return c;
@@ -162,8 +162,8 @@ _CRTIMP2_PURE _Ctypevec __CLRCALL_PURE_OR_CDECL _Getctype()
         //ctype._LocaleName = ___lc_locale_name_func()[LC_COLLATE];
 		auto __lc_collate = ___lc_handle_func()[LC_COLLATE];
 
-        if (__lc_collate&&__acrt_LCIDToLocaleName(__lc_collate, _LocaleName, _countof(_LocaleName), 0))
-            ctype._LocaleName = _wcsdup_dbg(_LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
+		if (__lc_collate&&__acrt_LCIDToLocaleName(__lc_collate, _LocaleName, _countof(_LocaleName), 0))
+			ctype._LocaleName = _wcsdup_dbg(_LocaleName, _CRT_BLOCK, __FILE__, __LINE__);
 		else
 			ctype._LocaleName = NULL;
 
