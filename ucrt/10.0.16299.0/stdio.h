@@ -1886,12 +1886,12 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
 
     _Success_(return >= 0)
     _Check_return_opt_
-    _CRT_STDIO_INLINE int __CRTDECL _sprintf_p(
+    _CRT_STDIO_INLINE_AWAYS int __CRTDECL _sprintf_p(
         _Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
         _In_                                          size_t      const _BufferCount,
         _In_z_ _Printf_format_string_                 char const* const _Format,
         ...)
-    #if defined _NO_CRT_STDIO_INLINE
+    #if 0
     ;
     #else
     {
