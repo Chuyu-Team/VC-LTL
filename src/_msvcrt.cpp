@@ -459,6 +459,18 @@ extern "C"
 
 #endif
 
+	#undef _daylight
+	_CRTIMP extern const int _daylight;
+
+	#undef _dstbias
+	_CRTIMP extern const long _dstbias;
+
+	#undef _timezone
+	_CRTIMP extern const long _timezone;
+
+	#undef _tzname
+	_CRTIMP extern const char** _tzname;
+
 	errno_t __cdecl _get_daylight_downlevel(
 		_Out_ int* _Daylight
 		)
@@ -514,9 +526,11 @@ extern "C"
 		_VALIDATE_RETURN_ERRCODE(_ReturnValue != nullptr, EINVAL);
 		_VALIDATE_RETURN_ERRCODE(_Index == 0 || _Index == 1, EINVAL);
 
+		auto& _TmpName = _tzname[_Index];
+
 		// _tzname is correctly inited at startup, so no need to check if
 		// CRT init finished.
-		*_ReturnValue = strlen(_tzname[_Index]) + 1;
+		*_ReturnValue = strlen(_TmpName) + 1;
 
 		// If the buffer pointer is null, the caller is interested only in the size
 		// of the string, not in the actual value of the string:
@@ -526,7 +540,7 @@ extern "C"
 		if (*_ReturnValue > _SizeInBytes)
 			return ERANGE;
 
-		return strcpy_s(_Buffer, _SizeInBytes, _tzname[_Index]);
+		return strcpy_s(_Buffer, _SizeInBytes, _TmpName);
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(_get_tzname_downlevel);
