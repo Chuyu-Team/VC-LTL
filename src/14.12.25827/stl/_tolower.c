@@ -110,7 +110,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Tolower (
         }
 
         /* convert wide char to lowercase */
-        if (0 == (size = __crtLCMapStringA(NULL, _Locale, LCMAP_LOWERCASE,
+        if (0 == (size = __crtLCMapStringA(_Locale, LCMAP_LOWERCASE,
             (const char *)inbuffer, size, (char *)outbuffer, 3, codepage, TRUE)))
         {
             return c;

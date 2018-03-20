@@ -105,7 +105,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Toupper (
         }
 
         /* convert wide char to uppercase */
-        if (0 == (size = __crtLCMapStringA(NULL, _Locale, LCMAP_UPPERCASE,
+        if (0 == (size = __crtLCMapStringA(_Locale, LCMAP_UPPERCASE,
             (const char *)inbuffer, size, (char *)outbuffer, 3, codepage, TRUE)))
         {
             return c;
