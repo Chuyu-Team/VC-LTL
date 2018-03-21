@@ -324,6 +324,9 @@ __forceinline int __cdecl __crtCompareStringA_Current
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
 	{
+		if (_Plocinfo&&_Code_page == 0)
+			_Code_page = _Plocinfo->locinfo->_locale_lc_codepage;
+
 		return __crtCompareStringA(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
 	}
 	else
@@ -473,6 +476,9 @@ __forceinline int __cdecl __crtLCMapStringA_Current
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
 	{
+		if (_Plocinfo&&_Code_page == 0)
+			_Code_page = _Plocinfo->locinfo->_locale_lc_codepage;
+
 		return __crtLCMapStringA(_Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
 	}
 	else
