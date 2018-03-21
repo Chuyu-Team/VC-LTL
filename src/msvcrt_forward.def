@@ -191,6 +191,7 @@ c16rtomb=c16rtomb_downlevel
 c32rtomb=c32rtomb_downlevel
 
 ;invalid_parameter.cpp
+_invalid_parameter=_invalid_parameter_downlevel
 _invalid_parameter_noinfo=_invalid_parameter_noinfo_downlevel
 _invalid_parameter_noinfo_noreturn=_invalid_parameter_noinfo_noreturn_downlevel
 _invoke_watson=_invoke_watson_downlevel
