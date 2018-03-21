@@ -153,40 +153,43 @@ static void __free_lconv_mon(lconv* plconv)
 		free(plconv->negative_sign);
 	}
 
-	//0x38
-	if (plconv->_W_int_curr_symbol /*!= __lconv_c_data._W_int_curr_symbol*/)
+	if (__LTL_GetOsMinVersion() >= MakeMiniVersion(6, 1))
 	{
-		free(plconv->_W_int_curr_symbol);
-	}
+		//0x38
+		if (plconv->lconv_Win7._W_int_curr_symbol /*!= __lconv_c_data._W_int_curr_symbol*/)
+		{
+			free(plconv->lconv_Win7._W_int_curr_symbol);
+		}
 
-	//0x3C
-	if (plconv->_W_currency_symbol /*!= __lconv_c_data._W_currency_symbol*/)
-	{
-		free(plconv->_W_currency_symbol);
-	}
+		//0x3C
+		if (plconv->lconv_Win7._W_currency_symbol /*!= __lconv_c_data._W_currency_symbol*/)
+		{
+			free(plconv->lconv_Win7._W_currency_symbol);
+		}
 
-	//0x40
-	if (plconv->_W_mon_decimal_point /*!= __lconv_c_data._W_mon_decimal_point*/)
-	{
-		free(plconv->_W_mon_decimal_point);
-	}
+		//0x40
+		if (plconv->lconv_Win7._W_mon_decimal_point /*!= __lconv_c_data._W_mon_decimal_point*/)
+		{
+			free(plconv->lconv_Win7._W_mon_decimal_point);
+		}
 
-	//0x44
-	if (plconv->_W_mon_thousands_sep /*!= __lconv_c_data._W_mon_thousands_sep*/)
-	{
-		free(plconv->_W_mon_thousands_sep);
-	}
+		//0x44
+		if (plconv->lconv_Win7._W_mon_thousands_sep /*!= __lconv_c_data._W_mon_thousands_sep*/)
+		{
+			free(plconv->lconv_Win7._W_mon_thousands_sep);
+		}
 
-	//0x48
-	if (plconv->_W_positive_sign /*!= __lconv_c_data._W_positive_sign*/)
-	{
-		free(plconv->_W_positive_sign);
-	}
+		//0x48
+		if (plconv->lconv_Win7._W_positive_sign /*!= __lconv_c_data._W_positive_sign*/)
+		{
+			free(plconv->lconv_Win7._W_positive_sign);
+		}
 
-	//0x4C
-	if (plconv->_W_negative_sign /*!= __lconv_c_data._W_negative_sign*/)
-	{
-		free(plconv->_W_negative_sign);
+		//0x4C
+		if (plconv->lconv_Win7._W_negative_sign /*!= __lconv_c_data._W_negative_sign*/)
+		{
+			free(plconv->lconv_Win7._W_negative_sign);
+		}
 	}
 }
 
@@ -213,16 +216,19 @@ static void __free_lconv_num(lconv* plconv)
 		free(plconv->grouping);
 	}
 
-	//0x30
-	if (plconv->_W_decimal_point /*!= __lconv_c_data._W_decimal_point*/)
+	if (__LTL_GetOsMinVersion() >= 0x00060001)
 	{
-		free(plconv->_W_decimal_point);
-	}
+		//0x30
+		if (plconv->lconv_Win7._W_decimal_point /*!= __lconv_c_data._W_decimal_point*/)
+		{
+			free(plconv->lconv_Win7._W_decimal_point);
+		}
 
-	//0x34
-	if (plconv->_W_thousands_sep /*!= __lconv_c_data._W_thousands_sep*/)
-	{
-		free(plconv->_W_thousands_sep);
+		//0x34
+		if (plconv->lconv_Win7._W_thousands_sep /*!= __lconv_c_data._W_thousands_sep*/)
+		{
+			free(plconv->lconv_Win7._W_thousands_sep);
+		}
 	}
 }
 

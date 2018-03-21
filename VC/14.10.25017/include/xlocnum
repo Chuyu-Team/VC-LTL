@@ -191,10 +191,19 @@ protected:
 		}
 
 	template<>
-		void _Getvals(wchar_t, const lconv *_Ptr, _Locinfo::_Cvtvec)
+		void _Getvals(wchar_t, const lconv *_Ptr, _Locinfo::_Cvtvec _Cvt)
 		{	// get values
-		_Dp = (_Elem)_Ptr->_W_decimal_point[0];
-		_Kseparator = (_Elem)_Ptr->_W_thousands_sep[0];
+			//Win7
+			if (__LTL_GetOsMinVersion() >= 0x00060001)
+			{
+				_Dp = (_Elem)_Ptr->lconv_Win7._W_decimal_point[0];
+				_Kseparator = (_Elem)_Ptr->lconv_Win7._W_thousands_sep[0];
+			}
+			else
+			{
+				_Dp = _MAKLOCCHR(wchar_t, _Ptr->decimal_point[0], _Cvt);
+				_Kseparator = _MAKLOCCHR(wchar_t, _Ptr->thousands_sep[0], _Cvt);
+			}
 		}
 
 	void _Init(const _Locinfo& _Lobj, bool _Isdef = false)
