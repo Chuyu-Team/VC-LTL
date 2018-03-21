@@ -64,7 +64,7 @@ extern "C" int __cdecl _strnicoll_l_downlevel (
     if ( plocinfo->locinfo->lc_handle[LC_COLLATE] == 0 )
         return _strnicmp_l(_string1, _string2, count, plocinfo);
 
-    if ( 0 == (ret = __crtCompareStringA(
+    if ( 0 == (ret = __acrt_CompareStringA(
                     plocinfo,
                     plocinfo->locinfo->lc_handle[LC_COLLATE],
                     SORT_STRINGSORT | NORM_IGNORECASE,

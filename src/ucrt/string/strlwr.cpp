@@ -141,7 +141,7 @@ errno_t __cdecl _strlwr_s_l_stat (
     }   /* C locale */
 
     /* Inquire size of dst string */
-    if ( 0 == (dstsize = __crtLCMapStringA(
+    if ( 0 == (dstsize = __acrt_LCMapStringA(
                     plocinfo,
                     plocinfo->locinfo->lc_handle[LC_CTYPE],
                     LCMAP_LOWERCASE,
@@ -171,7 +171,7 @@ errno_t __cdecl _strlwr_s_l_stat (
     }
 
     /* Map src string to dst string in alternate case */
-    if (__crtLCMapStringA(
+    if (__acrt_LCMapStringA(
                 plocinfo,
                 plocinfo->locinfo->lc_handle[LC_CTYPE],
                 LCMAP_LOWERCASE,

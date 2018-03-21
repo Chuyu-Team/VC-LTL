@@ -90,7 +90,7 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     }
 
     /* Inquire size of dst string in BYTES */
-    if ( 0 == (dstlen = __crtLCMapStringA(
+    if ( 0 == (dstlen = __acrt_LCMapStringA(
                     plocinfo,
                     plocinfo->locinfo->lc_handle[LC_COLLATE],
                     LCMAP_SORTKEY,
@@ -121,7 +121,7 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
     }
 
     /* Map src string to dst string */
-    if ( 0 == __crtLCMapStringA(
+    if ( 0 == __acrt_LCMapStringA(
                 plocinfo,
                 plocinfo->locinfo->lc_handle[LC_COLLATE],
                 LCMAP_SORTKEY,

@@ -73,7 +73,7 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
 
     // Convert the wide character equivalent to the target case:
     unsigned char out_buffer[3]{};
-    int const out_count = __crtLCMapStringA(
+    int const out_count = __acrt_LCMapStringA(
 		locale,
 		locale->locinfo->lc_handle[LC_CTYPE],
         map_flag,

@@ -58,7 +58,7 @@ extern "C" int __cdecl _stricoll_l_downlevel (
         return _stricmp(_string1, _string2);
     }
 
-    if ( 0 == (ret = __crtCompareStringA(plocinfo,
+    if ( 0 == (ret = __acrt_CompareStringA(plocinfo,
                     plocinfo->locinfo->lc_handle[LC_COLLATE],
                     SORT_STRINGSORT | NORM_IGNORECASE,
                     _string1,

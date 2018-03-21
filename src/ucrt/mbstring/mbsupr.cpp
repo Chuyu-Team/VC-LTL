@@ -79,7 +79,7 @@ extern "C" errno_t __cdecl _mbsupr_s_l_downlevel(
                 int retval;
                 unsigned char ret[4];
 
-                if ( (retval = __crtLCMapStringA(
+                if ( (retval = __acrt_LCMapStringA(
                                 plocinfo,
                                 plocinfo->mbcinfo->mblcid,
                                 LCMAP_UPPERCASE,

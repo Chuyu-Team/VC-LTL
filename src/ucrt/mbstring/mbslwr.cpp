@@ -81,7 +81,7 @@ EXTERN_C errno_t __cdecl _mbslwr_s_l_downlevel(
 
                 int retval;
                 unsigned char ret[4];
-                if ((retval = __crtLCMapStringA(
+                if ((retval = __acrt_LCMapStringA(
                                 plocinfo,
                                 plocinfo->mbcinfo->mblcid,
                                 LCMAP_LOWERCASE,

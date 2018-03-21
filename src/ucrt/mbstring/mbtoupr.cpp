@@ -60,7 +60,7 @@ extern "C" unsigned int __cdecl _mbctoupper_l_downlevel(
                 return c;
 
 
-            if ( __crtLCMapStringA(
+            if (__acrt_LCMapStringA(
                         plocinfo,
                         plocinfo->mbcinfo->mblcid,
                         LCMAP_UPPERCASE,

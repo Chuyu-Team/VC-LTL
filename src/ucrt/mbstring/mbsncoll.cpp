@@ -69,7 +69,7 @@ extern "C" int __cdecl _mbsncoll_l_downlevel(
         bcnt1 = _mbsnbcnt_l(s1, n, plocinfo);
         bcnt2 = _mbsnbcnt_l(s2, n, plocinfo);
 
-        if ( 0 == (ret = __crtCompareStringA(
+        if ( 0 == (ret = __acrt_CompareStringA(
                         plocinfo,
                         plocinfo->mbcinfo->mblcid,
                         SORT_STRINGSORT,

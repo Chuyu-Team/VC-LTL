@@ -71,7 +71,7 @@ extern "C" int __cdecl _mbsicmp_l_downlevel(
                     c1 = 0;
                 else
                 {
-                    retval = __crtLCMapStringA(
+                    retval = __acrt_LCMapStringA(
                             plocinfo,
                             plocinfo->mbcinfo->mblcid,
                             LCMAP_UPPERCASE,
@@ -104,7 +104,7 @@ extern "C" int __cdecl _mbsicmp_l_downlevel(
                     c2 = 0;
                 else
                 {
-                    retval = __crtLCMapStringA(
+                    retval = __acrt_LCMapStringA(
                             plocinfo,
                             plocinfo->mbcinfo->mblcid,
                             LCMAP_UPPERCASE,

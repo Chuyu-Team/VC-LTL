@@ -65,7 +65,7 @@ extern "C" int __cdecl _mbsnbcoll_l_downlevel(
         if (plocinfo->mbcinfo->ismbcodepage == 0)
             return _strncoll_l((const char *)s1, (const char *)s2, n, plocinfo);
 
-        if ( 0 == (ret = __crtCompareStringA(plocinfo,
+        if ( 0 == (ret = __acrt_CompareStringA(plocinfo,
                                               plocinfo->mbcinfo->mblcid,
                                               SORT_STRINGSORT,
                                               (const char *)s1,

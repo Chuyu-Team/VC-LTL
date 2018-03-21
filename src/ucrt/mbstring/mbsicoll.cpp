@@ -57,7 +57,7 @@ extern "C" int __cdecl _mbsicoll_l_downlevel(
         if (plocinfo->mbcinfo->ismbcodepage == 0)
             return _stricoll_l((const char *)s1, (const char *)s2, plocinfo);
 
-        if ( 0 == (ret = __crtCompareStringA(
+        if ( 0 == (ret = __acrt_CompareStringA(
                         plocinfo,
                         plocinfo->mbcinfo->mblcid,
                         SORT_STRINGSORT | NORM_IGNORECASE,
