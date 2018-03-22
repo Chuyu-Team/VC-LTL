@@ -22,11 +22,11 @@
   </PropertyGroup>
   
   <PropertyGroup Condition=" ('$(VCToolsVersion)'=='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
-    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24231（Visual Studio 2017中的2015平台工具集）-->
+    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24231（Visual Studio 2017 15.6中的2015平台工具集）-->
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53}@DisplayVersion)</VC-LTLUsedToolsVersion>
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
-    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017中的2015平台工具集）-->
+    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017 15.5中的2015平台工具集）-->
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
     <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
 
@@ -66,7 +66,7 @@
     <msvcrt_forward Condition=" ('$(msvcrt_forward)'=='') And ('$(DisableAdvancedSupport)'=='true') ">msvcrt_light.obj</msvcrt_forward>
     <msvcrt_forward Condition=" '$(msvcrt_forward)'==''">msvcrt_advanced.obj</msvcrt_forward>
 
-    <SupportLTL Condition="('$(PlatformToolsetVersion)' &gt;= '140') And ('$(PlatformToolsetVersion)' &lt;= '141') And ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ('$(UseOfMFC)'=='false') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
+    <SupportLTL Condition="('$(DriverTargetPlatform)'!='Universal') And ('$(PlatformToolsetVersion)' &gt;= '140') And ('$(PlatformToolsetVersion)' &lt;= '141') And ('$(UseDebugLibraries)'!='true') And ('$(Configuration)'!='Debug') And ('$(UseOfMFC)'=='false') And ( ('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') )">true</SupportLTL>
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ( ('$(PlatformToolset)'=='v141_xp') Or ('$(PlatformToolset)'=='v140_xp') )">true</SupportWinXP>
     
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
@@ -75,7 +75,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions Condition=" '$(SupportWinXP)'=='true' ">_ATL_XP_TARGETING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL;_DISABLE_DEPRECATE_STATIC_CPPLIB;_STATIC_CPPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL=1;_DISABLE_DEPRECATE_STATIC_CPPLIB=1;_STATIC_CPPLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <!--当兼容XP时，对于非 exe 的需要禁用线程安全初始化。避免XP中在DllMain中使用TLS而崩溃-->
       <AdditionalOptions Condition=" ('$(SupportWinXP)'=='true') And ('$(ConfigurationType)'!='Application') ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -94,7 +94,8 @@
     <Warning Code="LTL2001" Text="VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。" Condition="'$(UseOfMFC)'!='false'" />
     <Warning Code="LTL2002" Text="VC-LTL不兼容 $(PlatformShortName) 平台，已经自动禁用VC-LTL。" Condition="('$(PlatformShortName)'!='x86') And ('$(PlatformShortName)'!='x64')"/>
     <Warning Code="LTL2003" Text="VC-LTL不兼容 $(PlatformToolset) 工具集，请切换到 Visual Studio 2015/2017 然后继续。" Condition="('$(PlatformToolsetVersion)' &lt;'140') And ('$(PlatformToolsetVersion)' &gt; '141')"/>
-    
+    <Warning Code="LTL2004" Text="VC-LTL不兼容 Windows 10 Universal Driver，VC-LTL已经自动禁用。" Condition="'$(DriverTargetPlatform)'=='Universal'"/>
+
     <Warning Code="LTL3000" Text="VC-LTL不支持 VC $(VCToolsVersion)，目前已临时切换到 VC $(VC-LTLUsedToolsVersion) 来维持基础功能。这可能是你的IDE版本过低，建议升级到最新IDE然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundToolsVersion)'=='false')" />
     <Warning Code="LTL3001" Text="VC-LTL不支持 SDK $(TargetUniversalCRTVersion)，目前已临时切换到 SDK $(VC-LTLTargetUniversalCRTVersion) 来维持基础功能。这可能是你的SDK版本过低，建议切换到最新SDK然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundTargetUniversalCRTVersion)'=='false')" />
   </Target>
