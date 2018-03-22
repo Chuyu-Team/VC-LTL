@@ -145,4 +145,12 @@ __LTL_Initialization用于初始化 LTL_Initialization.cpp 全局构造
 
 #endif //!_LIB
 
+#ifdef __cplusplus
+extern "C" unsigned long __cdecl __LTL_GetOsMinVersion();
+extern "C" unsigned long long __cdecl __LTL_GetOsVersion();
+#else
+extern unsigned long __cdecl __LTL_GetOsMinVersion();
+extern unsigned long long __cdecl __LTL_GetOsVersion();
+#endif
+
 #endif //!_DEBUG
