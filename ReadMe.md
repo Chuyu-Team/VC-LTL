@@ -10,6 +10,13 @@
 
 ## Changes
 
+### 2.0.0.8 2018-03-23 14:58
+* 解决一些潜在找不到符号问题以及链接失败问题（感谢 Too Simple）
+* 修正__crtLCMapString相关字符串操作兼容性问题（感谢 Too Simple）
+* 解决_getptd_noexit在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题。（感谢 亮亮）
+* 添加最新Vistual Studio 2017 15.6支持
+
+
 ### 2.0.0.7 2018-03-06 17:17
 * 重新整理VC-LTL，尽可能减少对原版改动
 * 解决一些BUG（感谢 亮亮、layerfsd、waiting4love）
