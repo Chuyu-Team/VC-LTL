@@ -578,8 +578,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\startup\argv_data.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v141|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\stdlib\bsearch_s.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">true</ExcludedFromBuild>

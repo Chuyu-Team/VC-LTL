@@ -30,13 +30,29 @@ _ACRTIMP extern  wchar_t*  _wcmdln; // The raw command line as a wide string
 
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 
-//int*       __cdecl __p___argc()   { return &__argc;   }
-//char***    __cdecl __p___argv()   { return &__argv;   }
-//wchar_t*** __cdecl __p___wargv()  { return &__wargv;  }
-//char**     __cdecl __p__pgmptr()  { return &_pgmptr;  }
-//wchar_t**  __cdecl __p__wpgmptr() { return &_wpgmptr; }
-//char**     __cdecl __p__acmdln()  { return &_acmdln;  }
-//wchar_t**  __cdecl __p__wcmdln()  { return &_wcmdln;  }
+#ifdef _M_AMD64
+int*       __cdecl __p___argc_downlevel()   { return &__argc;   }
+_LCRT_DEFINE_IAT_SYMBOL(__p___argc_downlevel);
+
+char***    __cdecl __p___argv_downlevel()   { return &__argv;   }
+_LCRT_DEFINE_IAT_SYMBOL(__p___argv_downlevel);
+
+wchar_t*** __cdecl __p___wargv_downlevel()  { return &__wargv;  }
+_LCRT_DEFINE_IAT_SYMBOL(__p___wargv_downlevel);
+
+char**     __cdecl __p__pgmptr_downlevel()  { return &_pgmptr;  }
+_LCRT_DEFINE_IAT_SYMBOL(__p__pgmptr_downlevel);
+
+wchar_t**  __cdecl __p__wpgmptr_downlevel() { return &_wpgmptr; }
+_LCRT_DEFINE_IAT_SYMBOL(__p__wpgmptr_downlevel);
+
+char**     __cdecl __p__acmdln_downlevel()  { return &_acmdln;  }
+_LCRT_DEFINE_IAT_SYMBOL(__p__acmdln_downlevel);
+
+wchar_t**  __cdecl __p__wcmdln_downlevel()  { return &_wcmdln;  }
+_LCRT_DEFINE_IAT_SYMBOL(__p__wcmdln_downlevel);
+
+#endif
 
 #ifdef _ATL_XP_TARGETING
 errno_t __cdecl _get_wpgmptr_downlevel(wchar_t** const result)

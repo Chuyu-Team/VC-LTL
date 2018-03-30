@@ -462,10 +462,6 @@ wscanf_s=wscanf_s_downlevel
 _wsplitpath_s=_wsplitpath_s_downlevel
 
 
-;WinXp¼æÈÝ×¨ÓÃ
-__daylight=__p__daylight
-__dstbias=__p__dstbias
-
 [Import.x64]
 amd64\msvcrt_winxp.def
 

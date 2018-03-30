@@ -96,9 +96,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\convert\_mbslen.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\startup\argv_data.cpp">
-      <Filter>ucrt\WinXP</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\stdlib\bsearch_s.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
@@ -428,6 +425,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\msvcrt_winxp.cpp">
       <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\startup\argv_data.cpp">
+      <Filter>ucrt</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

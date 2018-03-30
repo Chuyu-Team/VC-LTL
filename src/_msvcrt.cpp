@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #if defined(NDEBUG)&&defined(_DLL)&&defined(_Build_By_LTL)
+#define _CRT_BEST_PRACTICES_USAGE
+
 #include <vcruntime_new.h>
 #include <corecrt_terminate.h>
 #include <stdlib.h>
@@ -460,16 +462,16 @@ extern "C"
 #endif
 
 	#undef _daylight
-	_CRTIMP extern const int _daylight;
+	_CRTIMP extern int _daylight;
 
 	#undef _dstbias
-	_CRTIMP extern const long _dstbias;
+	_CRTIMP extern long _dstbias;
 
 	#undef _timezone
-	_CRTIMP extern const long _timezone;
+	_CRTIMP extern long _timezone;
 
 	#undef _tzname
-	_CRTIMP extern const char** _tzname;
+	_CRTIMP extern char** _tzname;
 
 	errno_t __cdecl _get_daylight_downlevel(
 		_Out_ int* _Daylight
@@ -544,6 +546,38 @@ extern "C"
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(_get_tzname_downlevel);
+
+#if defined _M_AMD64 && defined _ATL_XP_TARGETING
+
+	extern "C" int* __cdecl __daylight_downlevel()
+	{
+		return &_daylight;
+	}
+	_LCRT_DEFINE_IAT_SYMBOL(__daylight_downlevel);
+
+	extern "C" long* __cdecl __dstbias_downlevel()
+	{
+		return &_dstbias;
+	}
+	_LCRT_DEFINE_IAT_SYMBOL(__dstbias_downlevel);
+
+#endif
+
+#ifdef _M_AMD64
+
+	extern "C" long* __cdecl __timezone_downlevel()
+	{
+		return &_timezone;
+	}
+	_LCRT_DEFINE_IAT_SYMBOL(__timezone_downlevel);
+
+	extern "C" char** __cdecl __tzname_downlevel()
+	{
+		return _tzname;
+	}
+	_LCRT_DEFINE_IAT_SYMBOL(__tzname_downlevel);
+
+#endif
 
 #ifdef _ATL_XP_TARGETING
 	/*
@@ -2858,6 +2892,29 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(__sys_errlist_downlevel);
 
+#ifdef _M_AMD64
+
+	extern "C" unsigned char* __cdecl __p__mbctype_downlevel()
+	{
+		return _mbctype;
+	}
+	_LCRT_DEFINE_IAT_SYMBOL(__p__mbctype_downlevel);
+
+	extern "C" unsigned char* __cdecl __p__mbcasemap_downlevel()
+	{
+		return _mbcasemap;
+	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(__p__mbcasemap_downlevel);
+
+	extern "C" char***    __cdecl __p__environ_downlevel() { return &_environ; }
+	_LCRT_DEFINE_IAT_SYMBOL(__p__environ_downlevel);
+
+	extern "C" wchar_t*** __cdecl __p__wenviron_downlevel() { return &_wenviron; }
+	_LCRT_DEFINE_IAT_SYMBOL(__p__wenviron_downlevel);
+
+
+#endif
 }
 
 #endif //NDEBUG&&_DLL&&__NO_LTL_LIB
