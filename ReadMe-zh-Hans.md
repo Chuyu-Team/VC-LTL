@@ -45,7 +45,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 * 基于x86以及x64的 Windows 7、Windows Server 2008 R2
 * 基于x86以及x64的 Windows 8、Windows Server 2012
 * 基于x86以及x64的 Windows 8.1、Windows Server 2012 R2
-* 基于x86以及x64的 Windows 10、Windows Server 2016
+* 基于x86、x64以及arm64的 Windows 10、Windows Server 2016
 
 > 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
 
@@ -79,7 +79,6 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 
 #### 2.2. 配置工程属性
-* 常规 - 【Windows SDK版本】调整为【7.X/8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
 * C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)

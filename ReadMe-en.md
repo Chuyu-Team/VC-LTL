@@ -61,7 +61,7 @@ Notice: All versions we mentioned is started with RTM.
 * x86 and x64 of Windows 7 / Windows Server 2008 R2
 * x86 and x64 of Windows 8 / Windows Server 2012
 * x86 and x64 of Windows 8.1 / Windows Server 2012 R2
-* x86 and x64 of Windows 10 / Windows Server 2016
+* x86, x64 and arm64 of Windows 10 / Windows Server 2016
 
 > The binaries compiled with the VC-LTL is compatible with Windows XP and 
 later, even in the environment which installed no hotfixes.
@@ -96,7 +96,6 @@ later, even in the environment which installed no hotfixes.
 
 
 #### 2.2. 配置工程属性
-* 常规 - 【Windows SDK版本】调整为【7.X/8.1/10.0.10240.0/10.0.15063.0/10.0.16299.0（推荐）】（从中选择任意SDK版本，但是尽量不要选择15063，因为在不久会删除15063 SDK 支持）
 * C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationProject.png)
