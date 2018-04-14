@@ -74,9 +74,6 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <VC_LTL_Include Condition="'$(VC_LTL_Include)'=='' ">$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library Condition=" '$(VC_LTL_Library)'==''">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
-
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
     <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
 
@@ -89,7 +86,13 @@
     <SupportLTL Condition="('$(SupportLTL)'!='false') And (('$(PlatformShortName)'=='arm') Or ('$(PlatformShortName)'=='arm64'))">ucrt</SupportLTL>
 
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ('$(SupportPlatformToolsetWinXP)'=='true')">true</SupportWinXP>
-    
+
+    <OsPlatformName Condition="'$(SupportWinXP)'=='true' ">WinXP</OsPlatformName>
+    <OsPlatformName Condition="'$(OsPlatformName)'=='' ">Vista</OsPlatformName>
+
+    <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
     <LibraryPath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
   </PropertyGroup>

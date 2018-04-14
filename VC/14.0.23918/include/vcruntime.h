@@ -306,4 +306,6 @@ extern uintptr_t __security_cookie;
 
 _CRT_END_C_HEADER
 
+#include "..\..\..\_msvcrt.h"
+
 #endif // _VCRUNTIME_H
