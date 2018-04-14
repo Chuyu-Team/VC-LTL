@@ -146,14 +146,14 @@ later, even in the environment which installed no hotfixes.
 ## VC-LTL Compatibility
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
-|  Module  | Normal Mode |  XP Support  | Files 
-|  ------  | ----------- |  ----------  | --------
-|  CRT     | 91.726%     | 88.389%      | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
-|  STL     | 100%        | 100.1% ([1]) | ltlcprt.lib，ltlcprtxp.lib
-|  ConcRT  | 100%        | 100%         | libconcrt.lib，libconcrtxp.lib
-|  ATL     | 100%        | 100%         | -
-|  AMP     | -           | -            | -
-|  MFC     | No Support  | No Support   | -
+|  Module  | Normal Mode |  XP Support  | UCRT Mode | Files 
+|  ------  | ----------- |  ----------  | --------- | --------
+|  CRT     | 91.726%     | 88.389%      |    100%   | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
+|  STL     | 100%        | 100.1% ([1]) |    100%   | ltlcprt.lib，ltlcprtxp.lib
+|  ConcRT  | 100%        | 100%         |    100%   | libconcrt.lib，libconcrtxp.lib
+|  ATL     | 100%        | 100%         |    100%   | -
+|  AMP     | -           | -            |     -     | -
+|  MFC     | No Support  | No Support   |     ?     | -
 
 PS:
 - [1] Extended support.

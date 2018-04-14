@@ -129,14 +129,14 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ## VC-LTL兼容性
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
-|  模块  | 一般模式 | XP工具集            | 相关文件 
-|  ----  | -------- | --------            | --------
-|   CRT  | 91.726%  | 88.389%             | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
-|   STL  | 100%     | 100.1%（超标准支持）| ltlcprt.lib，ltlcprtxp.lib
-| ConcRT | 100%     | 100%                | libconcrt.lib，libconcrtxp.lib
-|   ATL  | 100%     | 100%                | -
-|   AMP  |   -      |   -                 | -
-|   MFC  |  不支持  |   不支持            | -
+|  模块  | 一般模式 | XP工具集            | UCRT模式 | 相关文件 
+|  ----  | -------- | --------            | -------- | --------
+|   CRT  | 91.726%  | 88.389%             |   100%   | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
+|   STL  | 100%     | 100.1%（超标准支持）|   100%   | ltlcprt.lib，ltlcprtxp.lib
+| ConcRT | 100%     | 100%                |   100%   | libconcrt.lib，libconcrtxp.lib
+|   ATL  | 100%     | 100%                |   100%   | -
+|   AMP  |   -      |   -                 |    -     | -
+|   MFC  |  不支持  |   不支持            |    ?     | -
 
 ### 已知问题规避
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
