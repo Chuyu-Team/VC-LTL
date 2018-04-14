@@ -61,13 +61,6 @@ __forceinline size_t __cdecl _tcslen(
 	return wcslen(_String);
 }
 
-namespace std
-{
-	// Note:  We use aggregate initialization in order to avoid use of a dynamic
-	// initializer.
-	const nothrow_t nothrow = {};
-}
-
 extern "C"
 {
 	/*void __fastcall _guard_check_icall(void*)
@@ -2442,7 +2435,7 @@ extern "C"
 		_VALIDATE_RETURN_ERRCODE((_PermissionMode & (~(_S_IREAD | _S_IWRITE))) == 0, EINVAL);
 
 
-		return (*_FileHandle = sopen(_FileName, _OpenFlag, _ShareFlag, _PermissionMode)) == -1 ? errno : 0;
+		return (*_FileHandle = _sopen(_FileName, _OpenFlag, _ShareFlag, _PermissionMode)) == -1 ? errno : 0;
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(_sopen_s_downlevel);

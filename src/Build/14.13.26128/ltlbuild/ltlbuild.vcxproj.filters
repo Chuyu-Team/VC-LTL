@@ -57,5 +57,8 @@
     <ClCompile Include="..\..\..\14.13.26128\vcruntime\utility_desktop.cpp">
       <Filter>源文件\vc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\14.13.26128\vcruntime\std_nothrow.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
