@@ -89,7 +89,7 @@ static thread_local _invalid_parameter_handler _thread_local_iph=nullptr;
 // _invalid_parameter
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-extern "C" void __cdecl _invalid_parameter_downlevel(
+extern "C" void __cdecl _invalid_parameter_advanced(
     wchar_t const* const expression,
     wchar_t const* const function_name,
     wchar_t const* const file_name,
@@ -113,9 +113,15 @@ extern "C" void __cdecl _invalid_parameter_downlevel(
     _invoke_watson(expression, function_name, file_name, line_number, reserved);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_invalid_parameter_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_invalid_parameter_advanced);
 
-#define _invalid_parameter _invalid_parameter_downlevel
+EXTERN_C _ACRTIMP void __cdecl _invalid_parameter(
+        _In_opt_z_ wchar_t const*,
+        _In_opt_z_ wchar_t const*,
+        _In_opt_z_ wchar_t const*,
+        _In_       unsigned int,
+        _In_       uintptr_t
+        );
 
 extern "C" void __cdecl _invalid_parameter_noinfo_downlevel()
 {
