@@ -89,9 +89,16 @@
 
     <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
     <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+  </PropertyGroup>
 
-    <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
-    <LibraryPath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
+  <PropertyGroup Condition=" '$(SupportLTL)'=='true' ">
+    <IncludePath>$(VC_LTL_Include);$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
+
+    <!--可选，仅仅是为了增强对某些奇葩工程的兼容性。-->
+    <VC_IncludePath>$(VC_LTL_Include);$(VC_IncludePath)</VC_IncludePath>
+    <VC_LibraryPath_x86>$(VC_LTL_Root)\x86;$(VC_LTL_Root)\x86\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\x86;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\x86;$(VC_LibraryPath_x86)</VC_LibraryPath_x86>
+    <VC_LibraryPath_x64>$(VC_LTL_Root)\x64;$(VC_LTL_Root)\x64\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\x64;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\x64;$(VC_LibraryPath_x64)</VC_LibraryPath_x64>
   </PropertyGroup>
   
   <!--Windows XP模式-->
