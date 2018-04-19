@@ -2,7 +2,7 @@
 
 <!--
 作者：mingkuang
-修改日期：2017-12-19
+修改日期：2018-04-19
 
 
 用于统一加载配置，建议你将此文件单独复制到你的工程再使用，该文件能自动识别当前环境是否存在VC-LTL，并且自动应用。
@@ -12,11 +12,12 @@
 
 VC-LTL默认搜索顺序
 
-1：当前项目根目录，即$(ProjectDir)
-2：前解决方案根目录，即$(SolutionDir)
-3：当前项目父目录，即$(ProjectDir)..\
-4：当前解决方案父目录，即$(SolutionDir)..\
-5：注册表HKEY_CURRENT_USER\Code\VC-LTL@Root
+1：Shared.props所在目录
+2：当前项目根目录，即$(ProjectDir)
+3：前解决方案根目录，即$(SolutionDir)
+4：当前项目父目录，即$(ProjectDir)..
+5：当前解决方案父目录，即$(SolutionDir)..
+6：注册表HKEY_CURRENT_USER\Code\VC-LTL@Root
 
 把VC-LTL放在其中一个位置即可，VC-LTL就能被自动引用。
 
@@ -26,6 +27,9 @@ VC-LTL默认搜索顺序
 
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <!--Shared.props文件根目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(MSBuildThisFileDirectory)_msvcrt.h')) ">$(MSBuildThisFileDirectory)</VC_LTL_Root>
+
     <!--当前项目根目录存在VC-LTL？-->
     <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(ProjectDir)VC-LTL\_msvcrt.h')) ">$(ProjectDir)VC-LTL</VC_LTL_Root>
 
@@ -49,6 +53,6 @@ VC-LTL默认搜索顺序
   </PropertyGroup>
   
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(VC_LTL_Root)\ltlvcrt.props" Condition=" '$(VC_LTL_Root)'!='' "/>
+    <Import Project="$(VC_LTL_Root)\ltlvcrt.props" Condition=" ('$(VC_LTL_Root)'!='') And (Exists('$(VC_LTL_Root)\ltlvcrt.props'))"/>
   </ImportGroup>
 </Project>
