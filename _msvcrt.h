@@ -73,8 +73,18 @@ _LTL_PushWarning(1000, "此工具集已经停止维护，强烈建议你请升�
 #error "暂不支持此版本的CRT库"
 #endif
 
-#ifdef __NO_LTL_LIB
-_LTL_PushWarning(1003, "进入ltl超越模式已经弃用，此选项将将被忽略。")
+#ifndef __NO_LTL_LIB
+
+#ifdef _ATL_XP_TARGETING
+#pragma comment(lib,"msvcrt_winxp.lib")
+#else
+#pragma comment(lib,"msvcrt_vista.lib")
+#endif
+
+#pragma comment(lib,"ltl" __ltlversionxp ".lib")
+#pragma comment(lib,"vc.lib")
+#pragma comment(lib,"ucrt.lib")
+
 #endif
 
 #if !defined(_NO__LTL_Initialization)

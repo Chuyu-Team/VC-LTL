@@ -74,11 +74,8 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x86' ">msvcrt_winxp.obj</msvcrt_winxp_obj>
-    <msvcrt_winxp_obj Condition=" '$(PlatformShortName)'=='x64' ">msvcrt_win2003.obj</msvcrt_winxp_obj>
-
-    <msvcrt_forward Condition=" ('$(msvcrt_forward)'=='') And ('$(DisableAdvancedSupport)'=='true') ">msvcrt_light.obj</msvcrt_forward>
-    <msvcrt_forward Condition=" '$(msvcrt_forward)'==''">msvcrt_advanced.obj</msvcrt_forward>
+    <LTL_Mode Condition=" '$(DisableAdvancedSupport)'=='true' ">Light</LTL_Mode>
+    <LTL_Mode Condition=" '$(DisableAdvancedSupport)'!='true' ">Advanced</LTL_Mode>
 
     <SupportLTL Condition="('$(DriverTargetPlatform)'=='Universal') Or ('$(SupportPlatformToolset)' != 'true') Or ('$(UseDebugLibraries)'=='true') Or ('$(UseOfMFC)'!='false')">false</SupportLTL>
     <SupportLTL Condition="('$(SupportLTL)'=='') And (('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64'))">true</SupportLTL>
@@ -87,11 +84,11 @@
 
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ('$(SupportPlatformToolsetWinXP)'=='true')">true</SupportWinXP>
 
-    <OsPlatformName Condition="'$(SupportWinXP)'=='true' ">WinXP</OsPlatformName>
-    <OsPlatformName Condition="'$(OsPlatformName)'=='' ">Vista</OsPlatformName>
+    <OsPlatformName Condition=" '$(SupportWinXP)'=='true' ">WinXP</OsPlatformName>
+    <OsPlatformName Condition=" '$(SupportWinXP)'!='true' ">Vista</OsPlatformName>
 
     <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
 
     <IncludePath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Include);$(IncludePath)</IncludePath>
     <LibraryPath Condition=" '$(SupportLTL)'=='true' ">$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
@@ -101,13 +98,16 @@
   <ItemDefinitionGroup Condition=" ('$(SupportLTL)'!='ucrt') And ('$(SupportWinXP)'=='true') ">
     <ClCompile>
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'!='true' ">_ATL_XP_TARGETING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      
+      <!--可选，_msvcrt.h自动会添加这些设置-->
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_ATL_XP_TARGETING=1;_NO_CRT_STDIO_INLINE=1;_Build_By_LTL=1;_DISABLE_DEPRECATE_STATIC_CPPLIB=1;_STATIC_CPPLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 
       <!--当兼容XP时，对于非 exe 的需要禁用线程安全初始化。避免XP中在DllMain中使用TLS而崩溃-->
       <AdditionalOptions Condition=" '$(ConfigurationType)'!='Application' ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true'">$(msvcrt_winxp_obj);$(msvcrt_forward);ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--可选，_msvcrt.h自动会添加这些设置-->
+      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true'">msvcrt_winxp.lib;ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
 
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x86' ">5.01</MinimumRequiredVersion>
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x64' ">5.02</MinimumRequiredVersion>
@@ -117,10 +117,12 @@
   <!--普通模式-->
   <ItemDefinitionGroup Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'!='true') ">
     <ClCompile>
+      <!--可选，_msvcrt.h自动会添加这些设置-->
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL=1;_DISABLE_DEPRECATE_STATIC_CPPLIB=1;_STATIC_CPPLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(msvcrt_forward);ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--可选，_msvcrt.h自动会添加这些设置-->
+      <AdditionalDependencies>msvcrt_vista.lib;ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
