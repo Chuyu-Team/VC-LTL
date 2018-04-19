@@ -18,6 +18,4 @@
 #endif
 
 
-#ifndef _DISABLE_DEPRECATE_LTL_MESSAGE
-#pragma message(_ltlfilelen "note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
-#endif //_DISABLE_DEPRECATE_LTL_MESSAGE
+_LTL_PushNote("进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
