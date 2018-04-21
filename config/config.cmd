@@ -1,6 +1,6 @@
 @echo off
 ::
-::  请不要直接使用此脚本，应该使用nmake_helper.cmd
+::  请不要直接使用此脚本，应该使用VC-LTL helper for nmake.cmd
 ::
 
 
@@ -10,7 +10,7 @@
 if /i "%VC_LTL_Helper_Load%" == "true" goto:eof
 
 
-if "%VC_LTL_Root%" == "" echo 请不要直接使用此脚本，应该使用nmake_helper&&goto:eof
+if "%VC_LTL_Root%" == "" echo 请不要直接使用此脚本，应该使用VC-LTL helper for nmake&&goto:eof
 
 if "%INCLUDE%" == "" echo 找不到环境变量INCLUDE，请在vcvars32.bat/vcvars64.bat执行后调用此脚本&&goto:eof
 

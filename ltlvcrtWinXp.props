@@ -3,19 +3,23 @@
 <!--
 
 作者：mingkuang
-修改日期：2017-12-20
+修改日期：2018-04-21
 
-单纯做个转发，此文件已经弃用，单纯为了兼容老项目而存在，建议直接使用Shared.props。
+单纯做个转发，此文件已经弃用，单纯为了兼容老项目而存在，建议直接使用“VC-LTL helper for Visual Studio.props”。
 
 -->
 
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VC_LTL_PlatformPrepareForBuild_ltlvcrtWinXp">
   <PropertyGroup>
     <!--强制开启XP兼容-->
     <SupportWinXP>true</SupportWinXP>
   </PropertyGroup>
 
   <ImportGroup Label="PropertySheets">
-    <Import Project="ltlvcrt.props"/>
+    <Import Project="$(MSBuildThisFileDirectory)ltlvcrt.props" Condition="Exists('$(MSBuildThisFileDirectory)ltlvcrt.props')"/>
   </ImportGroup>
+
+  <Target Name="VC_LTL_PlatformPrepareForBuild_ltlvcrtWinXp">
+    <Warning Code="LTL2100" Text="此文件已经弃用，未来版本随时可能删除。强烈建议直接使用“VC-LTL helper for Visual Studio.props”！！！！"/>
+  </Target>
 </Project>

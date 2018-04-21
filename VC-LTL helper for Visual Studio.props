@@ -5,9 +5,10 @@
 修改日期：2018-04-19
 
 
-用于统一加载配置，建议你将此文件单独复制到你的工程再使用，该文件能自动识别当前环境是否存在VC-LTL，并且自动应用。
+VC-LTL自动化加载配置，建议你将此文件单独复制到你的工程再使用，该文件能自动识别当前环境是否存在VC-LTL，并且自动应用。
 
-复制到你的工程后，你可以修改此文件，添加你其他需要添加的属性表。
+使用方法：
+在属性管理器选择所有Release配置，然后右键选择“添加现有属性表”即可。
 
 
 VC-LTL默认搜索顺序
@@ -53,6 +54,6 @@ VC-LTL默认搜索顺序
   </PropertyGroup>
   
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(VC_LTL_Root)\ltlvcrt.props" Condition=" ('$(VC_LTL_Root)'!='') And (Exists('$(VC_LTL_Root)\ltlvcrt.props'))"/>
+    <Import Project="$(VC_LTL_Root)\Config\config.props" Condition=" ('$(VC_LTL_Root)'!='') And (Exists('$(VC_LTL_Root)\Config\config.props'))"/>
   </ImportGroup>
 </Project>
