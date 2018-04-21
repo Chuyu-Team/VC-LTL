@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+作者：mingkuang
+修改日期：2018-04-21
+
+单纯做个转发，此文件已经弃用，单纯为了兼容老项目而存在，建议直接使用“VC-LTL helper for Visual Studio.props”。
+
+-->
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VC_LTL_PlatformPrepareForBuild_Shared">
+  <PropertyGroup>
+    <!--Shared.props文件根目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(MSBuildThisFileDirectory)_msvcrt.h')) ">$(MSBuildThisFileDirectory)</VC_LTL_Root>
+
+    <!--当前项目根目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(ProjectDir)VC-LTL\_msvcrt.h')) ">$(ProjectDir)VC-LTL</VC_LTL_Root>
+
+    <!--当前解决方案根目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And ('$(SolutionDir)'!='') And (Exists('$(SolutionDir)VC-LTL\_msvcrt.h')) ">$(SolutionDir)VC-LTL</VC_LTL_Root>
+
+    <!--当前项目父目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(ProjectDir)..\VC-LTL\_msvcrt.h')) ">$(ProjectDir)..\VC-LTL</VC_LTL_Root>
+
+    <!--当前解决方案父目录存在VC-LTL？-->
+    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And ('$(SolutionDir)'!='') And (Exists('$(SolutionDir)..\VC-LTL\_msvcrt.h')) ">$(SolutionDir)..\VC-LTL</VC_LTL_Root>
+
+    <!--如果本地工程没有，那么继续尝试通过注册表获取VC-LTL路径，双击Install.cmd可以自动产生此注册表。-->
+    <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
+
+    <!--取消下方注释可以开启VC-LTL轻量模式，轻量模式更加注重体积控制，但是CRT规范将会维持在VS2008。如果你需要高度兼容微软UCRT，那么请不要打开此选项！！！-->
+    <!--<DisableAdvancedSupport>true</DisableAdvancedSupport>-->
+
+    <!--取消下方注释可以开启强制XP兼容模式，默认情况下仅在选择WinXP工具集时才开启。-->
+    <!--<SupportWinXP>true</SupportWinXP>-->
+  </PropertyGroup>
+  
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(VC_LTL_Root)\Config\config.props" Condition=" ('$(VC_LTL_Root)'!='') And (Exists('$(VC_LTL_Root)\Config\config.props'))"/>
+  </ImportGroup>
+
+  <Target Name="VC_LTL_PlatformPrepareForBuild_Shared">
+    <Warning Code="LTL2100" Text="此文件已经弃用，未来版本随时可能删除。强烈建议直接使用“VC-LTL helper for Visual Studio.props”！！！！"/>
+  </Target>
+</Project>
