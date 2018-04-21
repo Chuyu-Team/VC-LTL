@@ -56,11 +56,9 @@ echo Platform : %PlatformShortName%
 
 if /i "%SupportWinXP%" == "true" (set OsPlatformName=WinXP) else (set OsPlatformName=Vista)
 
-echo VC-LTL %OsPlatformName% Support
-
 if /i "%DisableAdvancedSupport%" == "true" (set LTL_Mode=Light) else (set LTL_Mode=Advanced)
 
-echo VC-LTL %LTL_Mode% Mode
+echo Using VC-LTL %OsPlatformName% %LTL_Mode% Mode
 
 
 ::ÐÞ¸ÄInclude
