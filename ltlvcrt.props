@@ -88,7 +88,7 @@
     <OsPlatformName Condition=" '$(SupportWinXP)'!='true' ">Vista</OsPlatformName>
 
     <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SupportLTL)'=='true' ">
@@ -96,9 +96,9 @@
     <LibraryPath>$(VC_LTL_Library);$(LibraryPath)</LibraryPath>
 
     <!--可选，仅仅是为了增强对某些奇葩工程的兼容性。-->
-    <VC_IncludePath>$(VC_LTL_Include);$(VC_IncludePath)</VC_IncludePath>
-    <VC_LibraryPath_x86>$(VC_LTL_Root)\x86;$(VC_LTL_Root)\x86\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\x86;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\x86;$(VC_LibraryPath_x86)</VC_LibraryPath_x86>
-    <VC_LibraryPath_x64>$(VC_LTL_Root)\x64;$(VC_LTL_Root)\x64\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\x64;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\x64;$(VC_LibraryPath_x64)</VC_LibraryPath_x64>
+    <VC_IncludePath Condition=" '$(VC_IncludePath)'!='' ">$(VC_LTL_Include);$(VC_IncludePath)</VC_IncludePath>
+    <VC_LibraryPath_x86 Condition=" '$(VC_LibraryPath_x86)'!='' ">$(VC_LTL_Library);$(VC_LibraryPath_x86)</VC_LibraryPath_x86>
+    <VC_LibraryPath_x64 Condition=" '$(VC_LibraryPath_x64)'!='' ">$(VC_LTL_Library);$(VC_LibraryPath_x64)</VC_LibraryPath_x64>
   </PropertyGroup>
   
   <!--Windows XP模式-->
@@ -113,8 +113,8 @@
       <AdditionalOptions Condition=" '$(ConfigurationType)'!='Application' ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <!--可选，_msvcrt.h自动会添加这些设置-->
-      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true'">msvcrt_winxp.lib;ltlxp.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--可选，msvcrt.lib自动会添加这些设置-->
+      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true'">msvcrt_Platform.lib;ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
 
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x86' ">5.01</MinimumRequiredVersion>
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x64' ">5.02</MinimumRequiredVersion>
@@ -128,8 +128,8 @@
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL=1;_DISABLE_DEPRECATE_STATIC_CPPLIB=1;_STATIC_CPPLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <!--可选，_msvcrt.h自动会添加这些设置-->
-      <AdditionalDependencies>msvcrt_vista.lib;ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--可选，msvcrt.lib自动会添加这些设置-->
+      <AdditionalDependencies>msvcrt_Platform.lib;ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   

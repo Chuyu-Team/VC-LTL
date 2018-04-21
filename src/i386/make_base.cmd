@@ -1,4 +1,5 @@
 @call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+@call "%~dp0..\..\nmake_helper.cmd"
 
 set libfileroot=%~dp0..\..\x86
 
@@ -8,6 +9,7 @@ copy "%~dp0msvcrt.lib" "%libfile%" /y
 
 echo 删除msvcrt.dll导出符号
 
+::删除过期符号
 lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\misc\dlllib\objfre\i386\gs_report.obj
 lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\eh\dlllib\objfre\i386\ehvecctr.obj
 lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\eh\dlllib\objfre\i386\ehvecdtr.obj
@@ -19,6 +21,9 @@ lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\libw32\lib\dlllib\..\.
 lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\startup\dlllib\objfre\i386\ptd_from_dll.obj
 lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\mbstring\safe\objfre\i386\mbsnbset_s_l.obj
 lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\misc\dlllib\objfre\i386\loadcfg.obj
+
+::在gs_support.obj中插入lib导入库
+lib "%libfile%" /remove:e:\5359.obj.x86fre\minkernel\crts\crtw32\misc\dlllib\objfre\i386\gs_support.obj
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%libfile%" x86 "%~dp0..\msvcrt_forward.def" msvcrt.dll msvcrt3.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" CreateWeak  /MACHINE:x86 /def:"%~dp0..\msvcrt_forward.def"  /out:"%libfileroot%\objs\msvcrt_forward.obj"
@@ -57,11 +62,16 @@ lib "%libfiletmp%" /remove:msvcrt.dll
 
 pushd "%libfileroot%"
 
-md "%libfileroot%\Advanced"
-md "%libfileroot%\Light"
+md "%libfileroot%\Vista"
+md "%libfileroot%\Vista\Advanced"
+md "%libfileroot%\Vista\Light"
+
+md "%libfileroot%\WinXP"
+md "%libfileroot%\WinXP\Advanced"
+md "%libfileroot%\WinXP\Light\"
 
 ::生成msvcrt_light.lib for vista
-set tagetlibfile=%libfileroot%\Light\msvcrt_Vista.lib
+set tagetlibfile=%libfileroot%\Vista\Light\msvcrt_Platform.lib
 copy "%libfiletmp%" "%tagetlibfile%" /y
 lib "%tagetlibfile%" objs\msvcrt_light.obj
 
@@ -69,7 +79,7 @@ lib "%tagetlibfile%" objs\msvcrt_light.obj
 lib "%tagetlibfile%" /remove:msvcrt2.dll
 
 ::生成msvcrt_light_xp.lib
-set tagetlibfile=%libfileroot%\Light\msvcrt_WinXP.lib
+set tagetlibfile=%libfileroot%\WinXP\Light\msvcrt_Platform.lib
 copy "%libfiletmp%" "%tagetlibfile%" /y
 lib "%tagetlibfile%" objs\msvcrt_winxp.obj
 lib "%tagetlibfile%" objs\msvcrt_light.obj
@@ -79,7 +89,7 @@ lib "%tagetlibfile%" objs\msvcrt_light.obj
 lib "%tagetlibfile%" /remove:msvcrt2.dll
 
 ::生成msvcrt_advanced.lib for vista
-set tagetlibfile=%libfileroot%\Advanced\msvcrt_Vista.lib
+set tagetlibfile=%libfileroot%\Vista\Advanced\msvcrt_Platform.lib
 copy "%libfiletmp%" "%tagetlibfile%" /y
 lib "%tagetlibfile%" objs\msvcrt_advanced.obj
 
@@ -87,7 +97,7 @@ lib "%tagetlibfile%" objs\msvcrt_advanced.obj
 lib "%tagetlibfile%" /remove:msvcrt2.dll
 
 ::生成msvcrt_advanced_xp.lib
-set tagetlibfile=%libfileroot%\Advanced\msvcrt_WinXP.lib
+set tagetlibfile=%libfileroot%\WinXP\Advanced\msvcrt_Platform.lib
 copy "%libfiletmp%" "%tagetlibfile%" /y
 lib "%tagetlibfile%" objs\msvcrt_winxp.obj
 lib "%tagetlibfile%" objs\msvcrt_advanced.obj
@@ -95,6 +105,12 @@ lib "%tagetlibfile%" objs\msvcrt_advanced.obj
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x86 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x86 "%~dp0..\msvcrt_advanced.def" msvcrt.dll msvcrt2.dll
 lib "%tagetlibfile%" /remove:msvcrt2.dll
+
+::插入LibraryLoadHelper
+set INCLUDE=%INCLUDE%;%~dp0..\ucrt\inc;%~dp0..\14.13.26128\vcruntime
+cl /O1 /MD /Fo"objs\\" /c /D "NDEBUG" /D "_NO__LTL_Initialization" /D "__NO_LTL_LIB" /D "_Allow_LTL_Mode" "%~dp0..\LibraryLoadHelper.c"
+lib "%libfile%" objs\LibraryLoadHelper.obj
+::lib "%libfile%" objs\LibraryLoadHelper.obj
 
 
 ::添加通用转发器
