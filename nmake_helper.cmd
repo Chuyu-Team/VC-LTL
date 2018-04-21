@@ -38,10 +38,7 @@ echo VC-LTL仅支持VS 2015以及2017
 goto ExitHelper
 )
 
-if /i "%Platform%" == "" (
-set Platform=x86
-goto Start_VC_LTL
-)
+if /i "%Platform%" == "" goto Start_VC_LTL
 
 if /i "%Platform%" == "x86" goto Start_VC_LTL
 
@@ -54,13 +51,13 @@ goto ExitHelper
 
 set PlatformShortName=%Platform%
 
-if /i "%PlatformShortName%" == "" set PlatformShortName=x86
+if "%PlatformShortName%" == "" set PlatformShortName=x86
 
-if /i "%VC_LTL_Root%" == "" call:FoundVC_LTL_Root
+if "%VC_LTL_Root%" == "" call:FoundVC_LTL_Root
 
-if /i "%VC-LTLUsedToolsVersion%" == "" call:FoundVCToolsVersion
+if "%VC-LTLUsedToolsVersion%" == "" call:FoundVCToolsVersion
 
-if /i "%VC-LTLTargetUniversalCRTVersion%" == "" call:FoundUCRTVersion
+if "%VC-LTLTargetUniversalCRTVersion%" == "" call:FoundUCRTVersion
 
 
 
@@ -76,7 +73,7 @@ if /i "%SupportWinXP%" == "true" (set OsPlatformName=WinXP) else (set OsPlatform
 
 echo VC-LTL %OsPlatformName% Support
 
-if /i "%DisableAdvancedSupport%" == "true" (set LTL_Mode=Light ) else (set LTL_Mode=Advanced)
+if /i "%DisableAdvancedSupport%" == "true" (set LTL_Mode=Light) else (set LTL_Mode=Advanced)
 
 echo VC-LTL %LTL_Mode% Mode
 
@@ -116,12 +113,8 @@ goto:eof
 ::搜索 VC工具集版本
 :FoundVCToolsVersion
 
-
-if "%VC-LTLUsedToolsVersion%" NEQ "" (
-
 set VC-LTLUsedToolsVersion=%VCToolsVersion%
-goto ReadVC2015VersionEnd
-)
+if "%VC-LTLUsedToolsVersion%" NEQ "" goto ReadVC2015VersionEnd
 
 set VC-LTLUsedToolsVersion=14.0.24231
 reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53} /v DisplayVersion > nul
@@ -146,7 +139,6 @@ if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 
 set VC-LTLUsedToolsVersion=%__DefaultVCToolsVersion%
 goto:eof
-)
 
 :ReadVC2015VersionEnd
 
@@ -159,14 +151,14 @@ goto:eof
 ::搜索UCRT版本
 :FoundUCRTVersion
 
-if "%UCRTVersion%" NEQ "" (
 set VC-LTLTargetUniversalCRTVersion=%UCRTVersion%
+
+if "%VC-LTLTargetUniversalCRTVersion%" == "" goto FoundUCRTVersionEnd
 
 if exist "%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%" goto:eof
 
-)
 
-
+:FoundUCRTVersionEnd
 
 ::找不到指定UCRT版本则默认为10240
 set VC-LTLTargetUniversalCRTVersion=10.0.10240.0
