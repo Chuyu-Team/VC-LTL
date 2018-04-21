@@ -71,11 +71,11 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 ### 2. 加载VC-LTL（仅Release）
 #### 2.1. 添加Shared属性表
-将属性表 `Shared.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `Shared.props` 即可。
+将属性表 `VC-LTL helper for Visual Studio.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `VC-LTL helper for Visual Studio.props` 即可。
 
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
 
-> 如果你不希望使用 `Shared.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
+> 如果你不希望使用 `VC-LTL helper for Visual Studio.props` 属性表，那么请手工将属性表的设置转移到你的工程配置中。
 
 
 #### 2.2. 配置工程属性
@@ -83,7 +83,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
-> 如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `Shared.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+> 如果需要支持XP，请在平台工具集中，切换到Windows XP，或者修改 `VC-LTL helper for Visual Studio.props` 启用 `<SupportWinXP>true</SupportWinXP>` 即可。
 
 
 ### 3. 重新编译（仅Release）
@@ -100,18 +100,18 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 解决方案：
 
-1：请务必确保Shared.props已经添加到工程。
+1：请务必确保 `VC-LTL helper for Visual Studio.props` 已经添加到工程。
 
 2：确保以下设置正确：
 * VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
-* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
+* VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 #### 4.2. 无法解析外部符号 delete 等
-问题原因：没有正确引入vc.lib、msvcrt_advanced.obj。
+问题原因：没有正确引入vc.lib、msvcrt_Platform.lib。
 
 解决方案：
 * VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
-* 连接器 - 输入 - 附加依赖项 - 【√ 从父项或项目默认设置继承(I)】
+* VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 #### 4.3. 检测到RuntimeLibrary的不匹配项
 问题原因：引入了没有使用VC-LTL编译的静态lib文件。
@@ -131,7 +131,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 |  模块  | 一般模式 | XP工具集            | UCRT模式 | 相关文件 
 |  ----  | -------- | --------            | -------- | --------
-|   CRT  | 91.726%  | 88.389%             |   100%   | ltl.lib，ltlxp.lib，msvcrt.lib，msvcrt_advanced.obj，msvcrt_light.obj，msvcrt_win2003.obj，msvcrt_winxp.obj，ucrt.lib，vc.lib
+|   CRT  | 91.726%  | 88.389%             |   100%   | ltl.lib，msvcrt.lib，msvcrt_Platform.lib，ucrt.lib，vc.lib
 |   STL  | 100%     | 100.1%（超标准支持）|   100%   | ltlcprt.lib，ltlcprtxp.lib
 | ConcRT | 100%     | 100%                |   100%   | libconcrt.lib，libconcrtxp.lib
 |   ATL  | 100%     | 100%                |   100%   | -
