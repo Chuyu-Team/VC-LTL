@@ -70,7 +70,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 
 ### 2. 加载VC-LTL（仅Release）
-#### 2.1. 添加Shared属性表
+#### 2.1. 添加VC-LTL属性表
 将属性表 `VC-LTL helper for Visual Studio.props` 复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键 `添加现有属性表` ，然后选择 `VC-LTL helper for Visual Studio.props` 即可。
 
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
