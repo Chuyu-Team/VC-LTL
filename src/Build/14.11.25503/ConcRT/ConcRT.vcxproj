@@ -142,25 +142,25 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrtxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrt</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrtxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrt</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
     <ClCompile>

@@ -82,22 +82,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>ltl</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|Win32'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
-    <TargetName>ltlxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <TargetName>ltl</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140|x64'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>ltl</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v140xp|x64'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
-    <TargetName>ltlxp</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\</OutDir>
+    <TargetName>ltl</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v140|Win32'">
     <ClCompile>
