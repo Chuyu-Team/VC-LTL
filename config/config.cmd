@@ -44,12 +44,19 @@ if "%VC-LTLUsedToolsVersion%" == "" call:FoundVCToolsVersion
 
 if "%VC-LTLTargetUniversalCRTVersion%" == "" call:FoundUCRTVersion
 
-
+echo #######################################################################
+echo #                                                                     #
+echo #     *         *      * *             *        * * * * *  *          #
+echo #      *       *     *                 *            *      *          #
+echo #       *     *     *       * * * * *  *            *      *          #
+echo #        *   *       *                 *            *      *          #
+echo #          *           * *             * * * *      *      * * * *    #
+echo #                                                                     #
+echo #######################################################################
 
 echo VC-LTL Path : %VC_LTL_Root%
 echo VC-LTL Tools Version : %VC-LTLUsedToolsVersion%
 echo VC-LTL UCRT Version : %VC-LTLTargetUniversalCRTVersion%
-
 echo Platform : %PlatformShortName%
 
 
@@ -65,11 +72,6 @@ echo Using VC-LTL %OsPlatformName% %LTL_Mode% Mode
 set INCLUDE=%VC_LTL_Root%\config\%OsPlatformName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\include;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\atlmfc\include;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%;%INCLUDE%
 
 set LIB=%VC_LTL_Root%\%PlatformShortName%;%VC_LTL_Root%\%PlatformShortName%\%OsPlatformName%\%LTL_Mode%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%\%OsPlatformName%;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%\lib\%PlatformShortName%;%LIB%
-
-
-echo 环境变量修改完成，现在你可以使用VC-LTL编译代码啦。
-
-
 
 goto:eof
 
