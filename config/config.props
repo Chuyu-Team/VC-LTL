@@ -146,6 +146,23 @@
   <ItemGroup />
 
   <Target Name="VC_LTL_PlatformPrepareForBuild_Config">
+    <Message Text="
+  ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+  ◆                                                                                                ◆
+  ◆                 *         *      * *             *        * * * * *  *                         ◆
+  ◆                  *       *     *                 *            *      *                         ◆
+  ◆                   *     *     *       * * * * *  *            *      *                         ◆
+  ◆                    *   *       *                 *            *      *                         ◆
+  ◆                      *           * *             * * * *      *      * * * *                   ◆
+  ◆                                                                                                ◆
+  ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+  
+  VC-LTL Path      : $(VC_LTL_Root)
+  VC Tools Version : $(VC-LTLUsedToolsVersion)
+  UCRT Version     : $(VC-LTLTargetUniversalCRTVersion)
+  Platform         : $(PlatformShortName)
+  Using VC-LTL $(OsPlatformName) $(LTL_Mode) Mode
+" Importance="high" Condition="('$(SupportLTL)'=='true') Or ('$(SupportLTL)'=='ucrt')"/>
     <Warning Code="LTL2000" Text="VC-LTL不兼容 Debug 配置，VC-LTL已经自动禁用，请切换到 Release 配置然后继续。" Condition="'$(UseDebugLibraries)'=='true'" />
     <Warning Code="LTL2001" Text="VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。" Condition="'$(UseOfMFC)'!='false'" />
     <Warning Code="LTL2002" Text="VC-LTL不兼容 $(PlatformShortName) 平台，已经自动禁用VC-LTL。" Condition="'$(SupportPlatform)'!='true'"/>
