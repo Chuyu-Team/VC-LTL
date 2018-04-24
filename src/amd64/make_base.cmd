@@ -1,5 +1,5 @@
 @call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-@call "%~dp0..\..\nmake_helper.cmd"
+@call "%~dp0..\..\VC-LTL helper for nmake.cmd"
 
 set libfileroot=%~dp0..\..\x64
 
@@ -113,8 +113,8 @@ lib "%libfile%" "%~dp0ntdlllite.lib"
 
 ::插入LibraryLoadHelper
 set INCLUDE=%INCLUDE%;%~dp0..\ucrt\inc;%~dp0..\14.13.26128\vcruntime
-cl /O1 /MD /Fo"objs\\" /c /D "NDEBUG" /D "_NO__LTL_Initialization" /D "__NO_LTL_LIB" /D "_Allow_LTL_Mode" "%~dp0..\LibraryLoadHelper.c"
-lib "%libfile%" objs\LibraryLoadHelper.obj
+cl /O1 /MD /Fo"objs\\gs_support_fix.obj" /c /D "NDEBUG" /D "_NO__LTL_Initialization" /D "__NO_LTL_LIB" /D "_Allow_LTL_Mode" "%~dp0..\LibraryLoadHelper.c"
+lib "%libfile%" objs\gs_support_fix.obj
 ::lib "%libfile%" objs\LibraryLoadHelper.obj
 
 ::添加通用转发器

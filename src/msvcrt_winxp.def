@@ -1,5 +1,8 @@
 
 [Symbols]
+;WinXP²»´æÔÚ_invalid_parameter
+_invalid_parameter=_invalid_parameter_advanced
+
 ;msvcrt_winxp.cpp
 __CxxFrameHandler3=__CxxFrameHandler3_downlevel
 _controlfp_s=_controlfp_s_downlevel
