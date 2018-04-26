@@ -11,12 +11,12 @@
 ## Changes
 
 ### 3.0.0.1 2018-04-26 18:48
-* 解决BUG #27，非中文环境调用_set_abort_behavior输出警告问题（感谢 myfreeer）
-* 解决BUG #21，特定情况nothrow符号冲突问题（感谢 waiting4love）
+* 解决[BUG 27](issues/27)，非中文环境调用_set_abort_behavior输出警告问题（感谢 myfreeer）
+* 解决[BUG 21](issues/21)，特定情况nothrow符号冲突问题（感谢 waiting4love）
 * 解决BUG，解决x64系统无法使用__p__*系列函数问题。（感谢 昌平）
 * 改进体验，当RC中意外引入_msvcrt.h时 自动跳过处理，避免RC报错。（感谢 风清凉）
 * 改进体验，“Shared.props”改名为“VC-LTL helper for Visual Studio.props”并大幅度增强对某些极端工程的支持。
-* 改进体验 #25，添加“VC-LTL helper for nmake.cmd”，方便nmake引入VC-LTL。
+* 改进[体验 25](issues/25)，添加“VC-LTL helper for nmake.cmd”，方便nmake引入VC-LTL。
 * 改进体验，添加“VC-LTL helper for cmake.cmake”，方便cmake引入VC-LTL（感谢 Sandro）。
 
 
