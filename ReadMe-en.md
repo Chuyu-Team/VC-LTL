@@ -52,6 +52,7 @@ Let's say goodbye to the Visual Studio 2008.
 * 10.0.10240.0
 * 10.0.15063.0 (Will be removed when the next SDK version come out.)
 * 10.0.16299.0 (Recommend to use)
+* 10.0.17134.0
 
 ### Supported Windows Versions
 Notice: All versions we mentioned is started with RTM.
