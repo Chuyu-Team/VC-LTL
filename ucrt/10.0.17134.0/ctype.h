@@ -90,7 +90,7 @@ _Check_return_ _ACRTIMP int __cdecl __iscsym(_In_ int _C);
         #endif
 
         #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-            extern int __mb_cur_max;
+            _ACRTIMP extern int __mb_cur_max;
         #else
             #define __mb_cur_max (___mb_cur_max_func())
         #endif
