@@ -61,7 +61,10 @@ VC-LTL默认搜索顺序
     <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
   </PropertyGroup>
   
-  <ImportGroup Label="PropertySheets">
-    <Import Project="$(VC_LTL_Root)\Config\config.props" Condition=" ('$(VC_LTL_Root)'!='') And (Exists('$(VC_LTL_Root)\Config\config.props'))"/>
+  <ImportGroup Condition=" '$(VC_LTL_Root)'!=''">
+    <Import Project="$(VC_LTL_Root)\Config\config.props" Condition="Exists('$(VC_LTL_Root)\Config\config.props')"/>
+
+    <!--兼容模式，尝试加载老版本-->
+    <Import Project="$(VC_LTL_Root)\Shared.props" Condition="(!Exists('$(VC_LTL_Root)\Config\config.props')) And (Exists('$(VC_LTL_Root)\Shared.props'))"/>
   </ImportGroup>
 </Project>

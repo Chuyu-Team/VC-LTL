@@ -36,8 +36,11 @@
     <!--<SupportWinXP>true</SupportWinXP>-->
   </PropertyGroup>
   
-  <ImportGroup Label="PropertySheets">
-    <Import Project="$(VC_LTL_Root)\Config\config.props" Condition=" ('$(VC_LTL_Root)'!='') And (Exists('$(VC_LTL_Root)\Config\config.props'))"/>
+  <ImportGroup Condition=" '$(VC_LTL_Root)'!=''">
+    <Import Project="$(VC_LTL_Root)\Config\config.props" Condition="Exists('$(VC_LTL_Root)\Config\config.props')"/>
+
+    <!--兼容模式，尝试加载老版本-->
+    <Import Project="$(VC_LTL_Root)\Shared.props" Condition="(!Exists('$(VC_LTL_Root)\Config\config.props')) And (Exists('$(VC_LTL_Root)\Shared.props'))"/>
   </ImportGroup>
 
   <Target Name="VC_LTL_PlatformPrepareForBuild_Shared">
