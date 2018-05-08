@@ -65,6 +65,6 @@ VC-LTL默认搜索顺序
     <Import Project="$(VC_LTL_Root)\Config\config.props" Condition="Exists('$(VC_LTL_Root)\Config\config.props')"/>
 
     <!--兼容模式，尝试加载老版本-->
-    <Import Project="$(VC_LTL_Root)\Shared.props" Condition="(!Exists('$(VC_LTL_Root)\Config\config.props')) And (Exists('$(VC_LTL_Root)\Shared.props'))"/>
+    <Import Project="$(VC_LTL_Root)\ltlvcrt.props" Condition="(!Exists('$(VC_LTL_Root)\Config\config.props')) And (Exists('$(VC_LTL_Root)\ltlvcrt.props'))"/>
   </ImportGroup>
 </Project>
