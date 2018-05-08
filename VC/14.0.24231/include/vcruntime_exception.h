@@ -21,55 +21,54 @@ _CRT_BEGIN_C_HEADER
 struct __std_exception_data
 {
     char const* _What;
-    int        _DoFree;
+	int        _DoFree;
 };
 
-extern void __cdecl __std_exception_copy(
+_VCRTIMP void __cdecl __std_exception_copy(
     _In_  __std_exception_data const* _From,
     _Out_ __std_exception_data*       _To
     );
 
-extern void __cdecl __std_exception_destroy(
+_VCRTIMP void __cdecl __std_exception_destroy(
     _Inout_ __std_exception_data* _Data
     );
 
 _CRT_END_C_HEADER
 
+
+
+namespace std {
+
 class exception
 {
 public:
 
-	exception() throw();
+    exception() throw();
 
-	explicit exception(char const* const& _Message) throw();
+    explicit exception(char const* const _Message) throw();
 
-	exception(char const* const& _Message, int) throw()
+    exception(char const* const _Message, int) throw()
 #ifndef _ATL_XP_TARGETING
 		;
 #else
-		:_Data{ _Message,0}
+		:_Data{ _Message,0 }
 	{
 
 	}
 #endif
 
-	exception(exception const& _Other) throw();
+    exception(exception const& _Other) throw();
 
-	exception& operator=(exception const& _Other) throw();
+    exception& operator=(exception const& _Other) throw();
 
-	virtual ~exception() throw();
+    virtual ~exception() throw();
 
-	virtual char const* what() const;
+    virtual char const* what() const;
 
 private:
 
-	__std_exception_data _Data;
+    __std_exception_data _Data;
 };
-
-
-namespace std {
-
-using ::exception;
 
 class bad_exception
     : public exception

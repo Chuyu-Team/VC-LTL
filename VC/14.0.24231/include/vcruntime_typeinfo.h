@@ -95,13 +95,13 @@ public:
 #endif
 
 		return value;
-	}
+    }
 
-    int operator==(type_info const& _Other) const throw();
+    bool operator==(type_info const& _Other) const throw();
 
-    int operator!=(type_info const& _Other) const throw();
+    bool operator!=(type_info const& _Other) const throw();
 
-    int before(type_info const& _Other) const throw();
+    bool before(type_info const& _Other) const throw();
 
     char const* name() const throw();
 
