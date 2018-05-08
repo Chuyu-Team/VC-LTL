@@ -1,0 +1,645 @@
+// iosfwd standard header
+#pragma once
+#ifndef _IOSFWD_
+#define _IOSFWD_
+#ifndef RC_INVOKED
+#include <cstdio>
+#include <cstring>
+#include <cwchar>
+#include <xstddef>
+
+#include <crtdbg.h>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+		// STREAM POSITIONING TYPES (from <streambuf>)
+using streamoff = long long;
+using streamsize = long long;
+
+  #ifdef _M_CEE_PURE
+extern const streamoff _BADOFF;
+
+  #else /* _M_CEE_PURE */
+extern _CRTDATA2_IMPORT _PGLOBAL const streamoff _BADOFF;
+  #endif /* _M_CEE_PURE */
+
+		// CLASS TEMPLATE fpos (from <streambuf>)
+template<class _Statetype>
+	class fpos
+	{	// store arbitrary file position
+public:
+	__CLR_OR_THIS_CALL fpos(streamoff _Off = 0)
+		: _Myoff(_Off), _Fpos(0), _Mystate()
+		{	// construct with stream offset
+		}
+
+	__CLR_OR_THIS_CALL fpos(_Statetype _State, fpos_t _Fileposition)
+		: _Myoff(0), _Fpos(_Fileposition), _Mystate(_State)
+		{	// construct with conversion state and C file position
+		}
+
+	_NODISCARD _Statetype __CLR_OR_THIS_CALL state() const
+		{	// return conversion state
+		return (_Mystate);
+		}
+
+	void __CLR_OR_THIS_CALL state(_Statetype _State)
+		{	// set conversion state
+		_Mystate = _State;
+		}
+
+	_NODISCARD fpos_t __CLR_OR_THIS_CALL seekpos() const
+		{	// return C file position
+		return (_Fpos);
+		}
+
+	__CLR_OR_THIS_CALL operator streamoff() const
+		{	// return offset
+		return (_Myoff + _Fpos);
+		}
+
+	_NODISCARD streamoff __CLR_OR_THIS_CALL operator-(const fpos& _Right) const
+		{	// return difference of file positions as an offset
+		return ((streamoff)*this - (streamoff)_Right);
+		}
+
+	fpos& __CLR_OR_THIS_CALL operator+=(streamoff _Off)
+		{	// add offset
+		_Myoff += _Off;
+		return (*this);
+		}
+
+	fpos& __CLR_OR_THIS_CALL operator-=(streamoff _Off)
+		{	// subtract offset
+		_Myoff -= _Off;
+		return (*this);
+		}
+
+	_NODISCARD fpos __CLR_OR_THIS_CALL operator+(streamoff _Off) const
+		{	// return this + offset
+		fpos _Tmp = *this;
+		return (_Tmp += _Off);
+		}
+
+	_NODISCARD fpos __CLR_OR_THIS_CALL operator-(streamoff _Off) const
+		{	// return this - offset
+		fpos _Tmp = *this;
+		return (_Tmp -= _Off);
+		}
+
+	_NODISCARD bool __CLR_OR_THIS_CALL operator==(const fpos& _Right) const
+		{	// test for file position equality
+		return ((streamoff)*this == (streamoff)_Right);
+		}
+
+	_NODISCARD bool __CLR_OR_THIS_CALL operator==(streamoff _Right) const
+		{	// test for file position equality with streamoff
+		return ((streamoff)*this == _Right);
+		}
+
+	_NODISCARD bool __CLR_OR_THIS_CALL operator!=(const fpos& _Right) const
+		{	// test for file position inequality
+		return (!(*this == _Right));
+		}
+
+private:
+	streamoff _Myoff;	// stream offset
+	fpos_t _Fpos;	// C file position
+	_Statetype _Mystate;	// current conversion state
+	};
+
+ #define _POS_TYPE_FROM_STATE(postype, state, position) postype(state, position)
+ #define _POS_TYPE_TO_FPOS_T(pos) pos.seekpos()
+ #define _POS_TYPE_TO_STATE(pos) pos.state()
+
+using streampos = fpos<_Mbstatet>;
+
+using wstreampos = streampos;
+
+		// STRUCT TEMPLATE _Char_traits (FROM <string>)
+template<class _Elem,
+	class _Int_type>
+	struct _Char_traits
+	{	// properties of a string or stream element
+	using char_type = _Elem;
+	using int_type = _Int_type;
+	using pos_type = streampos;
+	using off_type = streamoff;
+	using state_type = _Mbstatet;
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR int compare(_In_reads_(_Count) const _Elem * _First1,
+		_In_reads_(_Count) const _Elem * _First2, size_t _Count) _NOEXCEPT // strengthened
+		{	// compare [_First1, _First1 + _Count) with [_First2, ...)
+		for (; 0 < _Count; --_Count, ++_First1, ++_First2)
+			{
+			if (*_First1 != *_First2)
+				{
+				return (*_First1 < *_First2 ? -1 : +1);
+				}
+			}
+
+		return (0);
+		}
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR size_t length(_In_z_ const _Elem * _First) _NOEXCEPT // strengthened
+		{	// find length of null-terminated sequence
+		size_t _Count = 0;
+		while (*_First != _Elem())
+			{
+			++_Count;
+			++_First;
+			}
+
+		return (_Count);
+		}
+
+	static _Elem * copy(_Out_writes_all_(_Count) _Elem * const _First1,
+		_In_reads_(_Count) const _Elem * _First2, size_t _Count) _NOEXCEPT // strengthened
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		return (static_cast<_Elem *>(_CSTD memcpy(_First1, _First2, _Count * sizeof(_Elem))));
+		}
+
+	_Pre_satisfies_(_Dest_size >= _Count) static _Elem * _Copy_s(
+		_Out_writes_all_(_Dest_size) _Elem * const _First1, const size_t _Dest_size,
+		_In_reads_(_Count) const _Elem * const _First2, const size_t _Count) _NOEXCEPT
+		{	// copy [_First2, _First2 + _Count) to [_First1, _First1 + _Dest_size)
+		_SCL_SECURE_CRT_VALIDATE(_Count <= _Dest_size, nullptr);
+		return (copy(_First1, _First2, _Count));
+		}
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR const _Elem * find(_In_reads_(_Count) const _Elem * _First,
+		size_t _Count, const _Elem& _Ch) _NOEXCEPT // strengthened
+		{	// look for _Ch in [_First, _First + _Count)
+		for (; 0 < _Count; --_Count, ++_First)
+			{
+			if (*_First == _Ch)
+				{
+				return (_First);
+				}
+			}
+
+		return (nullptr);
+		}
+
+	static _Elem * move(_Out_writes_all_(_Count) _Elem * const _First1,
+		_In_reads_(_Count) const _Elem * _First2, size_t _Count) _NOEXCEPT // strengthened
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...), allowing overlap
+		return (static_cast<_Elem *>(_CSTD memmove(_First1, _First2, _Count * sizeof(_Elem))));
+		}
+
+	static _Elem * assign(_Out_writes_all_(_Count) _Elem * const _First,
+		size_t _Count, const _Elem _Ch) _NOEXCEPT // strengthened
+		{	// assign _Count * _Ch to [_First, ...)
+		_Elem * _Next = _First;
+		for (; 0 < _Count; --_Count, ++_Next)
+			{
+			*_Next = _Ch;
+			}
+
+		return (_First);
+		}
+
+	static _CHAR_TRAITS_CONSTEXPR void assign(_Elem& _Left, const _Elem& _Right) _NOEXCEPT
+		{	// assign an element
+		_Left = _Right;
+		}
+
+	_NODISCARD static constexpr bool eq(const _Elem& _Left, const _Elem& _Right) _NOEXCEPT
+		{	// test for element equality
+		return (_Left == _Right);
+		}
+
+	_NODISCARD static constexpr bool lt(const _Elem& _Left, const _Elem& _Right) _NOEXCEPT
+		{	// test if _Left precedes _Right
+		return (_Left < _Right);
+		}
+
+	_NODISCARD static constexpr _Elem to_char_type(const int_type& _Meta) _NOEXCEPT
+		{	// convert metacharacter to character
+		return (static_cast<_Elem>(_Meta));
+		}
+
+	_NODISCARD static constexpr int_type to_int_type(const _Elem& _Ch) _NOEXCEPT
+		{	// convert character to metacharacter
+		return (static_cast<int_type>(_Ch));
+		}
+
+	_NODISCARD static constexpr bool eq_int_type(const int_type& _Left, const int_type& _Right) _NOEXCEPT
+		{	// test for metacharacter equality
+		return (_Left == _Right);
+		}
+
+	_NODISCARD static constexpr int_type not_eof(const int_type& _Meta) _NOEXCEPT
+		{	// return anything but EOF
+		return (_Meta != eof() ? _Meta : !eof());
+		}
+
+	_NODISCARD static constexpr int_type eof() _NOEXCEPT
+		{	// return end-of-file metacharacter
+		return (static_cast<int_type>(EOF));
+		}
+	};
+
+		// STRUCT TEMPLATE _WChar_traits
+template<class _Elem>
+	struct _WChar_traits
+	{	// char_traits for the char16_t-likes: char16_t, wchar_t, unsigned short
+	using char_type = _Elem;
+	using int_type = unsigned short;
+	using pos_type = streampos;
+	using off_type = streamoff;
+	using state_type = _Mbstatet;
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR int compare(_In_reads_(_Count) const _Elem * const _First1,
+			_In_reads_(_Count) const _Elem * const _First2, const size_t _Count) _NOEXCEPT // strengthened
+		{	// compare [_First1, _First1 + _Count) with [_First2, ...)
+#if _HAS_CONSTEXPR_CHAR_TRAITS
+		if constexpr (is_same_v<_Elem, wchar_t>)
+			{
+			return (__builtin_wmemcmp(_First1, _First2, _Count));
+			}
+		else
+			{
+			return (_Char_traits<_Elem, unsigned short>::compare(_First1, _First2, _Count));
+			}
+#else /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		return (_CSTD wmemcmp(reinterpret_cast<const wchar_t *>(_First1),
+			reinterpret_cast<const wchar_t *>(_First2), _Count));
+#endif /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		}
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR size_t length(_In_z_ const _Elem * _First) _NOEXCEPT // strengthened
+		{	// find length of null-terminated sequence
+#if _HAS_CONSTEXPR_CHAR_TRAITS
+		if constexpr (is_same_v<_Elem, wchar_t>)
+			{
+			return (__builtin_wcslen(_First));
+			}
+		else
+			{
+			return (_Char_traits<_Elem, unsigned short>::length(_First));
+			}
+#else /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		return (_CSTD wcslen(reinterpret_cast<const wchar_t *>(_First)));
+#endif /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		}
+
+	static _Elem * copy(_Out_writes_all_(_Count) _Elem * const _First1,
+			_In_reads_(_Count) const _Elem * const _First2, const size_t _Count) _NOEXCEPT // strengthened
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		return (reinterpret_cast<_Elem *>(_CSTD wmemcpy(reinterpret_cast<wchar_t *>(_First1),
+			reinterpret_cast<const wchar_t *>(_First2), _Count)));
+		}
+
+	_Pre_satisfies_(_Size_in_words >= _Count) static _Elem * _Copy_s(
+			_Out_writes_all_(_Size_in_words) _Elem * const _First1, const size_t _Size_in_words,
+			_In_reads_(_Count) const _Elem * const _First2, const size_t _Count) _NOEXCEPT
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		_CRT_SECURE_WMEMCPY(reinterpret_cast<wchar_t *>(_First1), _Size_in_words,
+			reinterpret_cast<const wchar_t *>(_First2), _Count);
+		return (_First1);
+		}
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR const _Elem * find(_In_reads_(_Count) const _Elem * _First,
+			const size_t _Count, const _Elem& _Ch) _NOEXCEPT // strengthened
+		{	// look for _Ch in [_First, _First + _Count)
+#if _HAS_CONSTEXPR_CHAR_TRAITS
+		if constexpr (is_same_v<_Elem, wchar_t>)
+			{
+			return (__builtin_wmemchr(_First, _Ch, _Count));
+			}
+		else
+			{
+			return (_Char_traits<_Elem, unsigned short>::find(_First, _Count, _Ch));
+			}
+#else /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		return (reinterpret_cast<const _Elem *>(_CSTD wmemchr(
+			reinterpret_cast<const wchar_t *>(_First), _Ch, _Count)));
+#endif /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		}
+
+	static _Elem * move(_Out_writes_all_(_Count) _Elem * const _First1,
+			_In_reads_(_Count) const _Elem * const _First2, const size_t _Count) _NOEXCEPT // strengthened
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		return (reinterpret_cast<_Elem *>(_CSTD wmemmove(reinterpret_cast<wchar_t *>(_First1),
+			reinterpret_cast<const wchar_t *>(_First2), _Count)));
+		}
+
+	static _Elem * assign(_Out_writes_all_(_Count) _Elem * const _First, size_t _Count, _Elem _Ch)
+			_NOEXCEPT // strengthened
+		{	// assign _Count * _Ch to [_First, ...)
+		return (reinterpret_cast<_Elem *>(_CSTD wmemset(reinterpret_cast<wchar_t *>(_First), _Ch, _Count)));
+		}
+
+	static _CHAR_TRAITS_CONSTEXPR void assign(_Elem& _Left, const _Elem& _Right) _NOEXCEPT
+		{	// assign an element
+		_Left = _Right;
+		}
+
+	_NODISCARD static constexpr bool eq(const _Elem& _Left, const _Elem& _Right) _NOEXCEPT
+		{	// test for element equality
+		return (_Left == _Right);
+		}
+
+	_NODISCARD static constexpr bool lt(const _Elem& _Left, const _Elem& _Right) _NOEXCEPT
+		{	// test if _Left precedes _Right
+		return (_Left < _Right);
+		}
+
+	_NODISCARD static constexpr _Elem to_char_type(const int_type& _Meta) _NOEXCEPT
+		{	// convert metacharacter to character
+		return (_Meta);
+		}
+
+	_NODISCARD static constexpr int_type to_int_type(const _Elem& _Ch) _NOEXCEPT
+		{	// convert character to metacharacter
+		return (_Ch);
+		}
+
+	_NODISCARD static constexpr bool eq_int_type(const int_type& _Left, const int_type& _Right) _NOEXCEPT
+		{	// test for metacharacter equality
+		return (_Left == _Right);
+		}
+
+	_NODISCARD static constexpr int_type not_eof(const int_type& _Meta) _NOEXCEPT
+		{	// return anything but EOF
+		return (_Meta != eof() ? _Meta : !eof());
+		}
+
+	_NODISCARD static constexpr int_type eof() _NOEXCEPT
+		{	// return end-of-file metacharacter
+		return (WEOF);
+		}
+	};
+
+		// STRUCT TEMPLATE char_traits
+template<class _Elem>
+	struct char_traits
+		: _Char_traits<_Elem, long>
+	{	// properties of a string or stream unknown element
+	};
+
+		// STRUCT char_traits<char16_t>
+template<>
+	struct char_traits<char16_t>
+		: _WChar_traits<char16_t>
+	{	// properties of a string or stream char16_t element
+	};
+
+using u16streampos = streampos;
+
+		// STRUCT char_traits<char32_t>
+template<>
+	struct char_traits<char32_t>
+		: _Char_traits<char32_t, unsigned int>
+	{	// properties of a string or stream char32_t element
+	};
+
+using u32streampos = streampos;
+
+		// STRUCT char_traits<wchar_t>
+template<>
+	struct char_traits<wchar_t>
+		: _WChar_traits<wchar_t>
+	{	// properties of a string or stream wchar_t element
+	};
+
+ #ifdef _NATIVE_WCHAR_T_DEFINED
+		// STRUCT char_traits<unsigned short>
+template<>
+	struct char_traits<unsigned short>
+		: _WChar_traits<unsigned short>
+	{	// properties of a string or stream unsigned short element
+	};
+ #endif /* _NATIVE_WCHAR_T_DEFINED */
+
+		// STRUCT char_traits<char> (FROM <string>)
+template<>
+	struct char_traits<char>
+	{	// properties of a string or stream char element
+	using char_type = char;
+	using int_type = int;
+	using pos_type = streampos;
+	using off_type = streamoff;
+	using state_type = _Mbstatet;
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR int compare(_In_reads_(_Count) const char * const _First1,
+		_In_reads_(_Count) const char * const _First2, const size_t _Count) _NOEXCEPT // strengthened
+		{	// compare [_First1, _First1 + _Count) with [_First2, ...)
+#if _HAS_CONSTEXPR_CHAR_TRAITS
+		return (__builtin_memcmp(_First1, _First2, _Count));
+#else /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		return (_CSTD memcmp(_First1, _First2, _Count));
+#endif /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		}
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR size_t length(_In_z_ const char * const _First) _NOEXCEPT // strengthened
+		{	// find length of null-terminated string
+#if _HAS_CONSTEXPR_CHAR_TRAITS
+		return (__builtin_strlen(_First));
+#else /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		return (_CSTD strlen(_First));
+#endif /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		}
+
+	static char * copy(_Out_writes_(_Count) char * const _First1,
+		_In_reads_(_Count) const char * const _First2, const size_t _Count) _NOEXCEPT // strengthened
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		return (static_cast<char *>(_CSTD memcpy(_First1, _First2, _Count)));
+		}
+
+	_Pre_satisfies_(_Size_in_bytes >= _Count) static char * _Copy_s(
+		_Out_writes_all_(_Size_in_bytes) char * const _First1, const size_t _Size_in_bytes,
+		_In_reads_(_Count) const char * const _First2, const size_t _Count) _NOEXCEPT
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		_CRT_SECURE_MEMCPY(_First1, _Size_in_bytes, _First2, _Count);
+		return (_First1);
+		}
+
+	_NODISCARD static _CHAR_TRAITS_CONSTEXPR const char * find(_In_reads_(_Count) const char * const _First,
+		const size_t _Count, const char& _Ch) _NOEXCEPT // strengthened
+		{	// look for _Ch in [_First, _First + _Count)
+#if _HAS_CONSTEXPR_CHAR_TRAITS
+		return (__builtin_char_memchr(_First, _Ch, _Count));
+#else /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		return (static_cast<const char *>(_CSTD memchr(_First, _Ch, _Count)));
+#endif /* _HAS_CONSTEXPR_CHAR_TRAITS */
+		}
+
+	static char * move(_Out_writes_all_(_Count) char * const _First1,
+		_In_reads_(_Count) const char * const _First2, const size_t _Count) _NOEXCEPT // strengthened
+		{	// copy [_First2, _First2 + _Count) to [_First1, ...)
+		return (static_cast<char *>(_CSTD memmove(_First1, _First2, _Count)));
+		}
+
+	static char * assign(_Out_writes_all_(_Count) char * const _First,
+		const size_t _Count, const char _Ch) _NOEXCEPT // strengthened
+		{	// assign _Count * _Ch to [_First, ...)
+		return (static_cast<char *>(_CSTD memset(_First, _Ch, _Count)));
+		}
+
+	static _CHAR_TRAITS_CONSTEXPR void assign(char& _Left, const char& _Right) _NOEXCEPT
+		{	// assign an element
+		_Left = _Right;
+		}
+
+	_NODISCARD static constexpr bool eq(const char& _Left, const char& _Right) _NOEXCEPT
+		{	// test for element equality
+		return (_Left == _Right);
+		}
+
+	_NODISCARD static constexpr bool lt(const char& _Left, const char& _Right) _NOEXCEPT
+		{	// test if _Left precedes _Right
+		return (static_cast<unsigned char>(_Left) < static_cast<unsigned char>(_Right));
+		}
+
+	_NODISCARD static constexpr char to_char_type(const int_type& _Meta) _NOEXCEPT
+		{	// convert metacharacter to character
+		return (static_cast<char>(_Meta));
+		}
+
+	_NODISCARD static constexpr int_type to_int_type(const char& _Ch) _NOEXCEPT
+		{	// convert character to metacharacter
+		return (static_cast<unsigned char>(_Ch));
+		}
+
+	_NODISCARD static constexpr bool eq_int_type(const int_type& _Left, const int_type& _Right) _NOEXCEPT
+		{	// test for metacharacter equality
+		return (_Left == _Right);
+		}
+
+	_NODISCARD static constexpr int_type not_eof(const int_type& _Meta) _NOEXCEPT
+		{	// return anything but EOF
+		return (_Meta != eof() ? _Meta : !eof());
+		}
+
+	_NODISCARD static constexpr int_type eof() _NOEXCEPT
+		{	// return end-of-file metacharacter
+		return (EOF);
+		}
+	};
+
+		// FORWARD REFERENCES
+template<class _Ty>
+	class allocator;
+class ios_base;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_ios;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class istreambuf_iterator;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class ostreambuf_iterator;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_streambuf;
+
+#pragma vtordisp(push, 2)	// compiler bug workaround
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_istream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_ostream;
+#pragma vtordisp(pop)	// compiler bug workaround
+
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_iostream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>,
+	class _Alloc = allocator<_Elem>>
+	class basic_stringbuf;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>,
+	class _Alloc = allocator<_Elem>>
+	class basic_istringstream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>,
+	class _Alloc = allocator<_Elem>>
+	class basic_ostringstream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>,
+	class _Alloc = allocator<_Elem>>
+	class basic_stringstream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_filebuf;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_ifstream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_ofstream;
+template<class _Elem,
+	class _Traits = char_traits<_Elem>>
+	class basic_fstream;
+
+ #if defined(_DLL_CPPLIB)
+template<class _Elem,
+	class _InIt >
+	class num_get;
+template<class _Elem,
+	class _OutIt >
+	class num_put;
+template<class _Elem>
+	class collate;
+ #endif /* defined(_DLL_CPPLIB) */
+
+		// char TYPEDEFS
+using ios = basic_ios<char, char_traits<char>>;
+using streambuf = basic_streambuf<char, char_traits<char>>;
+using istream = basic_istream<char, char_traits<char>>;
+using ostream = basic_ostream<char, char_traits<char>>;
+using iostream = basic_iostream<char, char_traits<char>>;
+using stringbuf = basic_stringbuf<char, char_traits<char>, allocator<char>>;
+using istringstream = basic_istringstream<char, char_traits<char>, allocator<char>>;
+using ostringstream = basic_ostringstream<char, char_traits<char>, allocator<char>>;
+using stringstream = basic_stringstream<char, char_traits<char>, allocator<char>>;
+using filebuf = basic_filebuf<char, char_traits<char>>;
+using ifstream = basic_ifstream<char, char_traits<char>>;
+using ofstream = basic_ofstream<char, char_traits<char>>;
+using fstream = basic_fstream<char, char_traits<char>>;
+
+		// wchar_t TYPEDEFS
+using wios = basic_ios<wchar_t, char_traits<wchar_t>>;
+using wstreambuf = basic_streambuf<wchar_t, char_traits<wchar_t>>;
+using wistream = basic_istream<wchar_t, char_traits<wchar_t>>;
+using wostream = basic_ostream<wchar_t, char_traits<wchar_t>>;
+using wiostream = basic_iostream<wchar_t, char_traits<wchar_t>>;
+using wstringbuf = basic_stringbuf<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
+using wistringstream = basic_istringstream<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
+using wostringstream = basic_ostringstream<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
+using wstringstream = basic_stringstream<wchar_t, char_traits<wchar_t>, allocator<wchar_t>>;
+using wfilebuf = basic_filebuf<wchar_t, char_traits<wchar_t>>;
+using wifstream = basic_ifstream<wchar_t, char_traits<wchar_t>>;
+using wofstream = basic_ofstream<wchar_t, char_traits<wchar_t>>;
+using wfstream = basic_fstream<wchar_t, char_traits<wchar_t>>;
+
+ #if defined(_CRTBLD)
+		// unsigned short TYPEDEFS
+using ushistream = basic_istream<unsigned short, char_traits<unsigned short>>;
+using ushostream = basic_ostream<unsigned short, char_traits<unsigned short>>;
+using ushfilebuf = basic_filebuf<unsigned short, char_traits<unsigned short>>;
+ #endif /* defined(_CRTBLD) */
+_STD_END
+
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _IOSFWD_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

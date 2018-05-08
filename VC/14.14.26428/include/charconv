@@ -1,0 +1,481 @@
+// charconv standard header
+// Copyright (c) Microsoft Corporation. All rights reserved.
+#pragma once
+#ifndef _CHARCONV_
+#define _CHARCONV_
+#ifndef RC_INVOKED
+
+#include <string.h>
+#include <type_traits>
+#include <xerrc.h>
+#include <xutility>
+
+#if !_HAS_CXX17
+ #error The contents of <charconv> are only available with C++17.
+#endif /* !_HAS_CXX17 */
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+	// ENUM CLASS chars_format
+enum class chars_format
+	{
+	scientific	= 0b001,
+	fixed		= 0b010,
+	hex			= 0b100,
+	general		= fixed | scientific
+	};
+
+_BITMASK_OPS(chars_format)
+
+	// STRUCT to_chars_result
+struct to_chars_result
+	{
+	char * ptr;
+	errc ec;
+	};
+
+	// FUNCTION to_chars (INTEGER TO STRING)
+template<class _RawTy> inline
+	to_chars_result _Integer_to_chars(char * _First, char * const _Last, const _RawTy _Raw_value,
+		const int _Base) _NOEXCEPT // strengthened
+	{
+#if _ITERATOR_DEBUG_LEVEL == 2
+	_DEBUG_RANGE(_First, _Last);
+
+	if (_Base < 2 || _Base > 36)
+		{
+		_DEBUG_ERROR("invalid base in to_chars()");
+		}
+#endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+	using _Unsigned = make_unsigned_t<_RawTy>;
+
+	_Unsigned _Value = static_cast<_Unsigned>(_Raw_value);
+
+	if _CONSTEXPR_IF (is_signed_v<_RawTy>)
+		{
+		if (_Raw_value < 0)
+			{
+			if (_First == _Last)
+				{
+				return { _Last, errc::value_too_large };
+				}
+
+			*_First++ = '-';
+
+			_Value = static_cast<_Unsigned>(0 - _Value);
+			}
+		}
+
+	constexpr size_t _Buff_size = sizeof(_Unsigned) * CHAR_BIT;	// enough for base 2
+	char _Buff[_Buff_size];
+	char * const _Buff_end = _Buff + _Buff_size;
+	char * _RNext = _Buff_end;
+
+	static constexpr char _Digits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+		'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+	static_assert(_STD size(_Digits) == 36);
+
+	switch (_Base)
+		{
+		case 10:
+			{	// Derived from _UIntegral_to_buff()
+			constexpr bool _Use_chunks = sizeof(_Unsigned) > sizeof(size_t);
+
+			if _CONSTEXPR_IF (_Use_chunks)
+				{	// For 64-bit numbers on 32-bit platforms, work in chunks to avoid 64-bit divisions.
+				while (_Value > 0xFFFF'FFFFU)
+					{
+					_Uint32t _Chunk = static_cast<_Uint32t>(_Value % 1'000'000'000);
+					_Value = static_cast<_Unsigned>(_Value / 1'000'000'000);
+
+					for (int _Idx = 0; _Idx != 9; ++_Idx)
+						{
+						*--_RNext = '0' + _Chunk % 10;
+						_Chunk /= 10;
+						}
+					}
+				}
+
+			using _Truncated = conditional_t<_Use_chunks, _Uint32t, _Unsigned>;
+
+			_Truncated _Trunc = static_cast<_Truncated>(_Value);
+
+			do
+				{
+				*--_RNext = '0' + _Trunc % 10;
+				_Trunc /= 10;
+				}
+			while (_Trunc != 0);
+			break;
+			}
+
+		case 2:
+			do
+				{
+				*--_RNext = '0' + (_Value & 0b1);
+				_Value >>= 1;
+				}
+			while (_Value != 0);
+			break;
+
+		case 4:
+			do
+				{
+				*--_RNext = '0' + (_Value & 0b11);
+				_Value >>= 2;
+				}
+			while (_Value != 0);
+			break;
+
+		case 8:
+			do
+				{
+				*--_RNext = '0' + (_Value & 0b111);
+				_Value >>= 3;
+				}
+			while (_Value != 0);
+			break;
+
+		case 16:
+			do
+				{
+				*--_RNext = _Digits[_Value & 0b1111];
+				_Value >>= 4;
+				}
+			while (_Value != 0);
+			break;
+
+		case 32:
+			do
+				{
+				*--_RNext = _Digits[_Value & 0b11111];
+				_Value >>= 5;
+				}
+			while (_Value != 0);
+			break;
+
+		default:
+			do
+				{
+				*--_RNext = _Digits[_Value % _Base];
+				_Value = static_cast<_Unsigned>(_Value / _Base);
+				}
+			while (_Value != 0);
+			break;
+		}
+
+	const ptrdiff_t _Digits_written = _Buff_end - _RNext;
+
+	if (_Last - _First < _Digits_written)
+		{
+		return { _Last, errc::value_too_large };
+		}
+
+	_CSTD memcpy(_First, _RNext, _Digits_written);
+
+	return { _First + _Digits_written, errc{} };
+	}
+
+inline to_chars_result to_chars(char * const _First, char * const _Last, const char _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const signed char _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const unsigned char _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const short _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const unsigned short _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const int _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const unsigned int _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const long _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const unsigned long _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const long long _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+inline to_chars_result to_chars(char * const _First, char * const _Last, const unsigned long long _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_to_chars(_First, _Last, _Value, _Base));
+	}
+
+	// STRUCT from_chars_result
+struct from_chars_result
+	{
+	const char * ptr;
+	errc ec;
+	};
+
+	// FUNCTION from_chars (STRING TO INTEGER)
+inline unsigned char _Digit_from_char(const char _Ch) _NOEXCEPT // strengthened
+	{	// convert ['0', '9'] ['A', 'Z'] ['a', 'z'] to [0, 35], everything else to 255
+	static constexpr unsigned char _Digit_from_byte[] = {
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 255, 255, 255, 255, 255,
+		255, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+		25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 255, 255, 255, 255, 255,
+		255, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+		25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
+	static_assert(_STD size(_Digit_from_byte) == 256);
+
+	return (_Digit_from_byte[static_cast<unsigned char>(_Ch)]);
+	}
+
+template<class _RawTy> inline
+	from_chars_result _Integer_from_chars(const char * const _First, const char * const _Last, _RawTy& _Raw_value,
+		const int _Base) _NOEXCEPT // strengthened
+	{
+#if _ITERATOR_DEBUG_LEVEL == 2
+	_DEBUG_RANGE(_First, _Last);
+
+	if (_Base < 2 || _Base > 36)
+		{
+		_DEBUG_ERROR("invalid base in from_chars()");
+		}
+#endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+	bool _Minus_sign = false;
+
+	const char * _Next = _First;
+
+	if _CONSTEXPR_IF (is_signed_v<_RawTy>)
+		{
+		if (_Next != _Last && *_Next == '-')
+			{
+			_Minus_sign = true;
+			++_Next;
+			}
+		}
+
+	using _Unsigned = make_unsigned_t<_RawTy>;
+
+	constexpr _Unsigned _Uint_max = static_cast<_Unsigned>(-1);
+	constexpr _Unsigned _Int_max = static_cast<_Unsigned>(_Uint_max >> 1);
+	constexpr _Unsigned _Abs_int_min = static_cast<_Unsigned>(_Int_max + 1);
+
+	_Unsigned _Risky_val;
+	_Unsigned _Max_digit;
+
+	if _CONSTEXPR_IF (is_signed_v<_RawTy>)
+		{
+		if (_Minus_sign)
+			{
+			_Risky_val = static_cast<_Unsigned>(_Abs_int_min / _Base);
+			_Max_digit = static_cast<_Unsigned>(_Abs_int_min % _Base);
+			}
+		else
+			{
+			_Risky_val = static_cast<_Unsigned>(_Int_max / _Base);
+			_Max_digit = static_cast<_Unsigned>(_Int_max % _Base);
+			}
+		}
+	else
+		{
+		_Risky_val = static_cast<_Unsigned>(_Uint_max / _Base);
+		_Max_digit = static_cast<_Unsigned>(_Uint_max % _Base);
+		}
+
+	_Unsigned _Value = 0;
+
+	bool _Overflowed = false;
+
+	for ( ; _Next != _Last; ++_Next)
+		{
+		const unsigned char _Digit = _Digit_from_char(*_Next);
+
+		if (_Digit >= _Base)
+			{
+			break;
+			}
+
+		if (_Value < _Risky_val	// never overflows
+			|| (_Value == _Risky_val && _Digit <= _Max_digit))	// overflows for certain digits
+			{
+			_Value = static_cast<_Unsigned>(_Value * _Base + _Digit);
+			}
+		else	// _Value > _Risky_val always overflows
+			{
+			_Overflowed = true;	// keep going, _Next still needs to be updated, _Value is now irrelevant
+			}
+		}
+
+	if (_Next - _First == static_cast<ptrdiff_t>(_Minus_sign))
+		{
+		return { _First, errc::invalid_argument };
+		}
+
+	if (_Overflowed)
+		{
+		return { _Next, errc::result_out_of_range };
+		}
+
+	if _CONSTEXPR_IF (is_signed_v<_RawTy>)
+		{
+		if (_Minus_sign)
+			{
+			_Value = static_cast<_Unsigned>(0 - _Value);
+			}
+		}
+
+	_Raw_value = static_cast<_RawTy>(_Value);	// implementation-defined for negative, N4713 7.8 [conv.integral]/3
+
+	return { _Next, errc{} };
+	}
+
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, char& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, signed char& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, unsigned char& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, short& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, unsigned short& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, int& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, unsigned int& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, long& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, unsigned long& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, long long& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, unsigned long long& _Value,
+	const int _Base = 10) _NOEXCEPT // strengthened
+	{
+	return (_Integer_from_chars(_First, _Last, _Value, _Base));
+	}
+
+	// FUNCTION to_chars (FLOATING-POINT TO STRING)
+inline to_chars_result to_chars(char * const _First, char * const _Last,
+	const float _Value) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline to_chars_result to_chars(char * const _First, char * const _Last,
+	const double _Value) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline to_chars_result to_chars(char * const _First, char * const _Last,
+	const long double _Value) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+
+inline to_chars_result to_chars(char * const _First, char * const _Last, const float _Value,
+	const chars_format _Fmt) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline to_chars_result to_chars(char * const _First, char * const _Last, const double _Value,
+	const chars_format _Fmt) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline to_chars_result to_chars(char * const _First, char * const _Last, const long double _Value,
+	const chars_format _Fmt) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+
+inline to_chars_result to_chars(char * const _First, char * const _Last, const float _Value,
+	const chars_format _Fmt, const int _Precision) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline to_chars_result to_chars(char * const _First, char * const _Last, const double _Value,
+	const chars_format _Fmt, const int _Precision) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline to_chars_result to_chars(char * const _First, char * const _Last, const long double _Value,
+	const chars_format _Fmt, const int _Precision) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+
+	// FUNCTION from_chars (STRING TO FLOATING-POINT)
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, float& _Value,
+	const chars_format _Fmt = chars_format::general) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, double& _Value,
+	const chars_format _Fmt = chars_format::general) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+inline from_chars_result from_chars(const char * const _First, const char * const _Last, long double& _Value,
+	const chars_format _Fmt = chars_format::general) _NOEXCEPT // strengthened
+	= delete;	// NOT YET IMPLEMENTED
+
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _CHARCONV_ */

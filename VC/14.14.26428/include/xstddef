@@ -1,0 +1,549 @@
+// xstddef internal header
+#pragma once
+#ifndef _XSTDDEF_
+#define _XSTDDEF_
+#ifndef RC_INVOKED
+#include <cstddef>
+#include <cstdlib>
+
+#include <initializer_list>
+
+#include <xtr1common>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+		// EXCEPTION MACROS
+ #if _HAS_EXCEPTIONS
+ #define _TRY_BEGIN	try {
+ #define _CATCH(x)	} catch (x) {
+ #define _CATCH_ALL	} catch (...) {
+ #define _CATCH_END	}
+
+ #define _RAISE(x)	throw x
+ #define _RERAISE	throw
+
+ #if defined(MRTDLL) && defined(_M_CEE) && !defined(_M_CEE_PURE) && defined(_CRTBLD)
+  #if defined(_DEBUG)
+   #define _THROW(x)	_invoke_watson(_CRT_WIDE(#x), __FUNCTIONW__, __FILEW__, __LINE__, 0)
+  #else /* defined(_DEBUG) */
+   #define _THROW(x)	_invoke_watson(0, 0, 0, 0, 0)
+  #endif /* defined(_DEBUG) */
+ #else /* defined(MRTDLL) etc. */
+  #define _THROW(x)	throw x
+ #endif /* defined(MRTDLL) etc. */
+
+ #else /* _HAS_EXCEPTIONS */
+ #define _TRY_BEGIN	{ if (1) {
+ #define _CATCH(x)	} else if (0) {
+ #define _CATCH_ALL	} else if (0) {
+ #define _CATCH_END	} }
+
+ #if defined(_DEBUG)
+  #define _RAISE(x)	_invoke_watson(_CRT_WIDE(#x), __FUNCTIONW__, __FILEW__, __LINE__, 0)
+ #else /* defined(_DEBUG) */
+  #define _RAISE(x)	_invoke_watson(0, 0, 0, 0, 0)
+ #endif /* defined(_DEBUG) */
+
+ #define _RERAISE
+ #define _THROW(x)	x._Raise()
+ #endif /* _HAS_EXCEPTIONS */
+
+		// MISCELLANEOUS MACROS
+#define _EMPTY_ARGUMENT		/* for empty macro argument */
+
+		// TYPE DEFINITIONS
+template<class _Ty>
+	struct _Always_false
+		: false_type
+	{	// false value attached to a dependent name (for static_assert)
+	};
+
+		// FUNCTIONAL STUFF (from <functional>)
+ #if _HAS_AUTO_PTR_ETC
+		// STRUCT TEMPLATE unary_function
+template<class _Arg,
+	class _Result>
+	struct unary_function
+	{	// base class for unary functions
+	typedef _Arg argument_type;
+	typedef _Result result_type;
+	};
+
+		// STRUCT TEMPLATE binary_function
+template<class _Arg1,
+	class _Arg2,
+	class _Result>
+	struct binary_function
+	{	// base class for binary functions
+	typedef _Arg1 first_argument_type;
+	typedef _Arg2 second_argument_type;
+	typedef _Result result_type;
+	};
+ #endif /* _HAS_AUTO_PTR_ETC */
+
+		// STRUCT TEMPLATE plus
+template<class _Ty = void>
+	struct plus
+	{	// functor for operator+
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty result_type;
+
+	constexpr _Ty operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator+ to operands
+		return (_Left + _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE minus
+template<class _Ty = void>
+	struct minus
+	{	// functor for operator-
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty result_type;
+
+	constexpr _Ty operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator- to operands
+		return (_Left - _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE multiplies
+template<class _Ty = void>
+	struct multiplies
+	{	// functor for operator*
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty result_type;
+
+	constexpr _Ty operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator* to operands
+		return (_Left * _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE equal_to
+template<class _Ty = void>
+	struct equal_to
+	{	// functor for operator==
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef bool result_type;
+
+	constexpr bool operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator== to operands
+		return (_Left == _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE not_equal_to
+template<class _Ty = void>
+	struct not_equal_to
+	{	// functor for operator!=
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef bool result_type;
+
+	constexpr bool operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator!= to operands
+		return (_Left != _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE greater
+template<class _Ty = void>
+	struct greater
+	{	// functor for operator>
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef bool result_type;
+
+	constexpr bool operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator> to operands
+		return (_Left > _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE less
+template<class _Ty = void>
+	struct less
+	{	// functor for operator<
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef bool result_type;
+
+	constexpr bool operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator< to operands
+		return (_Left < _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE greater_equal
+template<class _Ty = void>
+	struct greater_equal
+	{	// functor for operator>=
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef bool result_type;
+
+	constexpr bool operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator>= to operands
+		return (_Left >= _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE less_equal
+template<class _Ty = void>
+	struct less_equal
+	{	// functor for operator<=
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty first_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef _Ty second_argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef bool result_type;
+
+	constexpr bool operator()(const _Ty& _Left, const _Ty& _Right) const
+		{	// apply operator<= to operands
+		return (_Left <= _Right);
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION plus
+template<>
+	struct plus<void>
+	{	// transparent functor for operator+
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			+ static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator+ to operands
+		return (static_cast<_Ty1&&>(_Left)
+			+ static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION minus
+template<>
+	struct minus<void>
+	{	// transparent functor for operator-
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			- static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator- to operands
+		return (static_cast<_Ty1&&>(_Left)
+			- static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION multiplies
+template<>
+	struct multiplies<void>
+	{	// transparent functor for operator*
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			* static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator* to operands
+		return (static_cast<_Ty1&&>(_Left)
+			* static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION equal_to
+template<>
+	struct equal_to<void>
+	{	// transparent functor for operator==
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			== static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator== to operands
+		return (static_cast<_Ty1&&>(_Left)
+			== static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION not_equal_to
+template<>
+	struct not_equal_to<void>
+	{	// transparent functor for operator!=
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			!= static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator!= to operands
+		return (static_cast<_Ty1&&>(_Left)
+			!= static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION greater
+template<>
+	struct greater<void>
+	{	// transparent functor for operator>
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			> static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator> to operands
+		return (static_cast<_Ty1&&>(_Left)
+			> static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION less
+template<>
+	struct less<void>
+	{	// transparent functor for operator<
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			< static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator< to operands
+		return (static_cast<_Ty1&&>(_Left)
+			< static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION greater_equal
+template<>
+	struct greater_equal<void>
+	{	// transparent functor for operator>=
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			>= static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator>= to operands
+		return (static_cast<_Ty1&&>(_Left)
+			>= static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// STRUCT TEMPLATE SPECIALIZATION less_equal
+template<>
+	struct less_equal<void>
+	{	// transparent functor for operator<=
+	typedef int is_transparent;
+
+	template<class _Ty1,
+		class _Ty2>
+		constexpr auto operator()(_Ty1&& _Left, _Ty2&& _Right) const
+		-> decltype(static_cast<_Ty1&&>(_Left)
+			<= static_cast<_Ty2&&>(_Right))
+		{	// transparently apply operator<= to operands
+		return (static_cast<_Ty1&&>(_Left)
+			<= static_cast<_Ty2&&>(_Right));
+		}
+	};
+
+		// FUNCTION TEMPLATE addressof
+template<class _Ty>
+	_NODISCARD constexpr _Ty * addressof(_Ty& _Val) _NOEXCEPT
+	{	// return address of _Val
+	return (__builtin_addressof(_Val));
+	}
+
+template<class _Ty>
+	const _Ty * addressof(const _Ty&&) = delete;
+
+		// FUNCTION TEMPLATE _Unfancy
+template<class _Ptrty> inline
+	auto _Unfancy(_Ptrty _Ptr)
+	{	// converts from a fancy pointer to a plain pointer
+	return (_STD addressof(*_Ptr));
+	}
+
+template<class _Ty> inline
+	_Ty * _Unfancy(_Ty * _Ptr)
+	{	// do nothing for plain pointers
+	return (_Ptr);
+	}
+_STD_END
+
+#define _EMIT_CDECL(FUNC, OPT1, OPT2, OPT3) \
+	FUNC(__cdecl, OPT1, OPT2, OPT3)
+
+ #ifdef _M_CEE
+#define _EMIT_CLRCALL(FUNC, OPT1, OPT2, OPT3) \
+	FUNC(__clrcall, OPT1, OPT2, OPT3)
+
+ #else /* _M_CEE */
+#define _EMIT_CLRCALL(FUNC, OPT1, OPT2, OPT3)
+ #endif /* _M_CEE */
+
+ #if defined(_M_IX86) && !defined(_M_CEE)
+#define _EMIT_FASTCALL(FUNC, OPT1, OPT2, OPT3) \
+	FUNC(__fastcall, OPT1, OPT2, OPT3)
+
+ #else /* defined(_M_IX86) && !defined(_M_CEE) */
+#define _EMIT_FASTCALL(FUNC, OPT1, OPT2, OPT3)
+ #endif /* defined(_M_IX86) && !defined(_M_CEE) */
+
+ #ifdef _M_IX86
+#define _EMIT_STDCALL(FUNC, OPT1, OPT2, OPT3) \
+	FUNC(__stdcall, OPT1, OPT2, OPT3)
+#define _EMIT_THISCALL(FUNC, OPT1, OPT2, OPT3) \
+	FUNC(__thiscall, OPT1, OPT2, OPT3)
+
+ #else /* _M_IX86 */
+#define _EMIT_STDCALL(FUNC, OPT1, OPT2, OPT3)
+#define _EMIT_THISCALL(FUNC, OPT1, OPT2, OPT3)
+ #endif /* _M_IX86 */
+
+ #if ((defined(_M_IX86) && _M_IX86_FP >= 2) \
+	|| defined(_M_X64)) && !defined(_M_CEE)
+#define _EMIT_VECTORCALL(FUNC, OPT1, OPT2, OPT3) \
+	FUNC(__vectorcall, OPT1, OPT2, OPT3)
+
+ #else /* defined(_M_IX86) && _M_IX86_FP >= 2 etc. */
+#define _EMIT_VECTORCALL(FUNC, OPT1, OPT2, OPT3)
+ #endif /* defined(_M_IX86) && _M_IX86_FP >= 2 etc. */
+
+#define _NON_MEMBER_CALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_CDECL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_CLRCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_FASTCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_STDCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_VECTORCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT)
+
+#define _NON_MEMBER_CALL_CV(FUNC, REF_OPT, NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL(FUNC, , REF_OPT, NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL(FUNC, const, REF_OPT, NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL(FUNC, volatile, REF_OPT, NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL(FUNC, const volatile, REF_OPT, NOEXCEPT_OPT)
+
+#define _NON_MEMBER_CALL_CV_REF(FUNC, NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL_CV(FUNC, , NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL_CV(FUNC, &, NOEXCEPT_OPT) \
+	_NON_MEMBER_CALL_CV(FUNC, &&, NOEXCEPT_OPT)
+
+#if _HAS_NOEXCEPT_FUNCTION_TYPES
+ #define _NON_MEMBER_CALL_CV_REF_NOEXCEPT(FUNC) \
+	_NON_MEMBER_CALL_CV_REF(FUNC, ) \
+	_NON_MEMBER_CALL_CV_REF(FUNC, noexcept)
+#else /* _HAS_NOEXCEPT_FUNCTION_TYPES */
+ #define _NON_MEMBER_CALL_CV_REF_NOEXCEPT(FUNC) \
+	_NON_MEMBER_CALL_CV_REF(FUNC, )
+#endif /* _HAS_NOEXCEPT_FUNCTION_TYPES */
+
+#define _MEMBER_CALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_CDECL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_CLRCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_FASTCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_STDCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_THISCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT) \
+	_EMIT_VECTORCALL(FUNC, CV_OPT, REF_OPT, NOEXCEPT_OPT)
+
+#define _MEMBER_CALL_CV(FUNC, REF_OPT, NOEXCEPT_OPT) \
+	_MEMBER_CALL(FUNC, , REF_OPT, NOEXCEPT_OPT) \
+	_MEMBER_CALL(FUNC, const, REF_OPT, NOEXCEPT_OPT) \
+	_MEMBER_CALL(FUNC, volatile, REF_OPT, NOEXCEPT_OPT) \
+	_MEMBER_CALL(FUNC, const volatile, REF_OPT, NOEXCEPT_OPT)
+
+#define _MEMBER_CALL_CV_REF(FUNC, NOEXCEPT_OPT) \
+	_MEMBER_CALL_CV(FUNC, , NOEXCEPT_OPT) \
+	_MEMBER_CALL_CV(FUNC, &, NOEXCEPT_OPT) \
+	_MEMBER_CALL_CV(FUNC, &&, NOEXCEPT_OPT)
+
+#if _HAS_NOEXCEPT_FUNCTION_TYPES
+ #define _MEMBER_CALL_CV_REF_NOEXCEPT(FUNC) \
+	_MEMBER_CALL_CV_REF(FUNC, ) \
+	_MEMBER_CALL_CV_REF(FUNC, noexcept)
+#else /* _HAS_NOEXCEPT_FUNCTION_TYPES */
+ #define _MEMBER_CALL_CV_REF_NOEXCEPT(FUNC) \
+	_MEMBER_CALL_CV_REF(FUNC, )
+#endif /* _HAS_NOEXCEPT_FUNCTION_TYPES */
+
+#define _CLASS_DEFINE_CONST(CLASS) \
+	CLASS(_EMPTY_ARGUMENT) \
+	CLASS(const)
+
+#define _CLASS_DEFINE_CV(CLASS) \
+	CLASS(_EMPTY_ARGUMENT) \
+	CLASS(const) \
+	CLASS(volatile) \
+	CLASS(const volatile)
+
+#if _HAS_NOEXCEPT_FUNCTION_TYPES
+ #define _CLASS_DEFINE_CV_REF_NOEXCEPT(CLASS) \
+	CLASS(_EMPTY_ARGUMENT) \
+	CLASS(const) \
+	CLASS(volatile) \
+	CLASS(const volatile) \
+	CLASS(&) \
+	CLASS(const &) \
+	CLASS(volatile &) \
+	CLASS(const volatile &) \
+	CLASS(&&) \
+	CLASS(const &&) \
+	CLASS(volatile &&) \
+	CLASS(const volatile &&) \
+	CLASS(noexcept) \
+	CLASS(const noexcept) \
+	CLASS(volatile noexcept) \
+	CLASS(const volatile noexcept) \
+	CLASS(& noexcept) \
+	CLASS(const & noexcept) \
+	CLASS(volatile & noexcept) \
+	CLASS(const volatile & noexcept) \
+	CLASS(&& noexcept) \
+	CLASS(const && noexcept) \
+	CLASS(volatile && noexcept) \
+	CLASS(const volatile && noexcept)
+#else /* _HAS_NOEXCEPT_FUNCTION_TYPES */
+ #define _CLASS_DEFINE_CV_REF_NOEXCEPT(CLASS) \
+	CLASS(_EMPTY_ARGUMENT) \
+	CLASS(const) \
+	CLASS(volatile) \
+	CLASS(const volatile) \
+	CLASS(&) \
+	CLASS(const &) \
+	CLASS(volatile &) \
+	CLASS(const volatile &) \
+	CLASS(&&) \
+	CLASS(const &&) \
+	CLASS(volatile &&) \
+	CLASS(const volatile &&)
+#endif /* _HAS_NOEXCEPT_FUNCTION_TYPES */
+
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _XSTDDEF_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

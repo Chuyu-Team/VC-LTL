@@ -1,0 +1,37 @@
+// csignal standard header
+#pragma once
+#ifndef _CSIGNAL_
+#define _CSIGNAL_
+#ifndef RC_INVOKED
+
+#include <yvals.h>
+#include <signal.h>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+ #ifndef _M_CEE_PURE
+using _CSTD sig_atomic_t; using _CSTD raise; using _CSTD signal;
+
+ #else /* _M_CEE_PURE */
+using _CSTD sig_atomic_t; using _CSTD raise;
+ #endif /* _M_CEE_PURE */
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _CSIGNAL_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

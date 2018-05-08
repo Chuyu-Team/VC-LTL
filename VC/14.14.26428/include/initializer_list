@@ -1,0 +1,84 @@
+// initializer_list standard header
+#pragma once
+#ifndef _INITIALIZER_LIST_
+#define _INITIALIZER_LIST_
+#ifndef RC_INVOKED
+#include <cstddef>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+		// CLASS TEMPLATE initializer_list
+template<class _Elem>
+	class initializer_list
+	{	// list of pointers to elements
+public:
+	typedef _Elem value_type;
+	typedef const _Elem& reference;
+	typedef const _Elem& const_reference;
+	typedef size_t size_type;
+
+	typedef const _Elem* iterator;
+	typedef const _Elem* const_iterator;
+
+	constexpr initializer_list() _NOEXCEPT
+		: _First(nullptr), _Last(nullptr)
+		{	// empty list
+		}
+
+	constexpr initializer_list(const _Elem *_First_arg,
+		const _Elem *_Last_arg) _NOEXCEPT
+		: _First(_First_arg), _Last(_Last_arg)
+		{	// construct with pointers
+		}
+
+	_NODISCARD constexpr const _Elem * begin() const _NOEXCEPT
+		{	// get beginning of list
+		return (_First);
+		}
+
+	_NODISCARD constexpr const _Elem * end() const _NOEXCEPT
+		{	// get end of list
+		return (_Last);
+		}
+
+	_NODISCARD constexpr size_t size() const _NOEXCEPT
+		{	// get length of list
+		return (static_cast<size_t>(_Last - _First));
+		}
+
+private:
+	const _Elem *_First;
+	const _Elem *_Last;
+	};
+
+		// FUNCTION TEMPLATE begin
+template<class _Elem>
+	_NODISCARD constexpr const _Elem * begin(initializer_list<_Elem> _Ilist) _NOEXCEPT
+	{	// get beginning of sequence
+	return (_Ilist.begin());
+	}
+
+		// FUNCTION TEMPLATE end
+template<class _Elem>
+	_NODISCARD constexpr const _Elem * end(initializer_list<_Elem> _Ilist) _NOEXCEPT
+	{	// get end of sequence
+	return (_Ilist.end());
+	}
+_STD_END
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _INITIALIZER_LIST_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

@@ -1,0 +1,109 @@
+// typeinfo standard header
+
+/***
+*typeinfo - Defines the type_info structure and exceptions used for RTTI
+*
+*	Copyright (c) Microsoft Corporation. All rights reserved.
+*	Modified January 1996 by P.J. Plauger
+*
+*Purpose:
+*       Defines the type_info structure and exceptions used for
+*       Runtime Type Identification.
+*
+*       [Public]
+*
+****/
+
+#pragma once
+
+#ifndef _TYPEINFO_
+#define _TYPEINFO_
+#ifndef RC_INVOKED
+#include <exception>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+#pragma warning(disable: 4275)	// non dll-interface class 'X' used as base for dll-interface class 'Y'
+
+#include <vcruntime_typeinfo.h>
+
+ _STD_BEGIN
+
+// size in pointers of std::function and std::any (roughly 3 pointers larger than std::string when building debug)
+constexpr int _Small_object_num_ptrs = 6 + 16 / sizeof (void *);
+
+ #if !(_HAS_EXCEPTIONS)
+
+		// CLASS bad_cast
+class _CRTIMP2_IMPORT bad_cast
+	: public exception
+	{	// base of all bad cast exceptions
+public:
+	bad_cast(const char *_Message = "bad cast") _NOEXCEPT
+		: exception(_Message)
+		{	// construct from message string
+		}
+
+	virtual ~bad_cast() _NOEXCEPT
+		{	// destroy the object
+		}
+
+protected:
+	virtual void _Doraise() const
+		{	// perform class-specific exception handling
+		_RAISE(*this);
+		}
+	};
+
+		// CLASS bad_typeid
+class _CRTIMP2_IMPORT bad_typeid
+	: public exception
+	{	// base of all bad typeid exceptions
+public:
+	bad_typeid(const char *_Message = "bad typeid") _NOEXCEPT
+		: exception(_Message)
+		{	// construct from message string
+		}
+
+	virtual ~bad_typeid() _NOEXCEPT
+		{	// destroy the object
+		}
+
+protected:
+	virtual void _Doraise() const
+		{	// perform class-specific exception handling
+		_RAISE(*this);
+		}
+	};
+
+class _CRTIMP2_IMPORT __non_rtti_object
+	: public bad_typeid
+	{	// report a non RTTI object
+public:
+	__non_rtti_object(const char *_Message)
+		: bad_typeid(_Message)
+		{	// construct from message string
+		}
+	};
+ #endif /* _HAS_EXCEPTIONS */
+
+ _STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma pack(pop)
+#pragma warning(pop)
+#endif /* RC_INVOKED */
+#endif // _TYPEINFO_
+
+/*
+ * Copyright (c) Microsoft Corporation.  ALL RIGHTS RESERVED.
+ * Modified January 1996 by P.J. Plauger
+ * Modified November 1998 by P.J. Plauger
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

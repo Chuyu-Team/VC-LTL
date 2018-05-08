@@ -1,0 +1,481 @@
+// exception standard header
+#pragma once
+#ifndef _EXCEPTION_
+#define _EXCEPTION_
+#ifndef RC_INVOKED
+
+#include <type_traits>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+
+_CXX17_DEPRECATE_UNCAUGHT_EXCEPTION _CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL uncaught_exception() _NOEXCEPT;
+_CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL uncaught_exceptions() _NOEXCEPT;
+
+_STD_END
+
+ #if _HAS_EXCEPTIONS
+
+#include <malloc.h>
+#include <vcruntime_exception.h>
+
+_STD_BEGIN
+
+using ::terminate;
+
+#ifndef _M_CEE_PURE
+using ::set_terminate;
+using ::terminate_handler;
+
+_NODISCARD inline terminate_handler __CRTDECL get_terminate() _NOEXCEPT
+	{	// get current terminate handler
+	return (_get_terminate());
+	}
+#endif /* _M_CEE_PURE */
+
+#if _HAS_UNEXPECTED
+using ::unexpected;
+
+ #ifndef _M_CEE_PURE
+using ::set_unexpected;
+using ::unexpected_handler;
+
+_NODISCARD inline unexpected_handler __CRTDECL get_unexpected() _NOEXCEPT
+	{	// get current unexpected handler
+	return (_get_unexpected());
+	}
+ #endif /* _M_CEE_PURE */
+#endif /* _HAS_UNEXPECTED */
+
+_STD_END
+
+ #else /* _HAS_EXCEPTIONS */
+
+		// CLASS exception
+_STDEXT_BEGIN
+class exception;
+_STDEXT_END
+
+_STD_BEGIN
+
+using _STDEXT exception;
+
+typedef void (__cdecl *_Prhand)(const exception&);
+extern _CRTIMP2_NCEEPURE_IMPORT _Prhand _Raise_handler;	// pointer to raise handler
+
+_STD_END
+
+_STDEXT_BEGIN
+class exception
+	{	// base of all library exceptions
+public:
+
+	static _STD _Prhand _Set_raise_handler(_STD _Prhand _Pnew)
+		{	// register a handler for _Raise calls
+		const _STD _Prhand _Pold = _STD _Raise_handler;
+		_STD _Raise_handler = _Pnew;
+		return (_Pold);
+		}
+
+	// this constructor is necessary to compile
+	// successfully header new for _HAS_EXCEPTIONS==0 scenario
+	explicit __CLR_OR_THIS_CALL exception(const char *_Message = "unknown", int = 1) _NOEXCEPT
+		: _Ptr(_Message)
+		{	// construct from message string
+		}
+
+	__CLR_OR_THIS_CALL exception(const exception& _Right) _NOEXCEPT
+		: _Ptr(_Right._Ptr)
+		{	// construct by copying _Right
+		}
+
+	exception& __CLR_OR_THIS_CALL operator=(const exception& _Right) _NOEXCEPT
+		{	// assign _Right
+		_Ptr = _Right._Ptr;
+		return (*this);
+		}
+
+	virtual __CLR_OR_THIS_CALL ~exception() _NOEXCEPT
+		{	// destroy the object
+		}
+
+	_NODISCARD virtual const char * __CLR_OR_THIS_CALL what() const _NOEXCEPT
+		{	// return pointer to message string
+		return (_Ptr != 0 ? _Ptr : "unknown exception");
+		}
+
+	void __CLR_OR_THIS_CALL _Raise() const
+		{	// raise the exception
+		if (_STD _Raise_handler != 0)
+			(*_STD _Raise_handler)(*this);	// call raise handler if present
+
+		_Doraise();	// call the protected virtual
+		_RAISE(*this);	// raise this exception
+		}
+
+protected:
+	virtual void __CLR_OR_THIS_CALL _Doraise() const
+		{	// perform class-specific exception handling
+		}
+
+protected:
+	const char *_Ptr;	// the message pointer
+	};
+
+	// CLASS bad_exception
+class bad_exception : public exception
+	{	// base of all bad exceptions
+public:
+	__CLR_OR_THIS_CALL bad_exception(const char *_Message = "bad exception") _NOEXCEPT
+		: exception(_Message)
+		{	// construct from message string
+		}
+
+	virtual __CLR_OR_THIS_CALL ~bad_exception() _NOEXCEPT
+		{	// destroy the object
+		}
+
+protected:
+	virtual void __CLR_OR_THIS_CALL _Doraise() const
+		{	// raise this exception
+		_RAISE(*this);
+		}
+	};
+
+	// CLASS bad_alloc
+class bad_alloc : public exception
+	{	// base of all bad allocation exceptions
+public:
+	__CLR_OR_THIS_CALL bad_alloc() _NOEXCEPT
+		: exception("bad allocation", 1)
+		{	// construct from message string with no memory allocation
+		}
+
+	virtual __CLR_OR_THIS_CALL ~bad_alloc() _NOEXCEPT
+		{	// destroy the object
+		}
+
+private:
+	friend class bad_array_new_length;
+
+	__CLR_OR_THIS_CALL bad_alloc(const char *_Message) _NOEXCEPT
+		: exception(_Message, 1)
+		{	// construct from message string with no memory allocation
+		}
+
+protected:
+	virtual void __CLR_OR_THIS_CALL _Doraise() const
+		{	// perform class-specific exception handling
+		_RAISE(*this);
+		}
+	};
+
+_STDEXT_END
+
+_STD_BEGIN
+		// DUMMY FUNCTION DECLARATIONS
+typedef void (__cdecl *terminate_handler)();
+
+inline terminate_handler __CRTDECL set_terminate(terminate_handler) _NOEXCEPT
+	{	// register a terminate handler
+	return 0;
+	}
+
+inline void __CRTDECL terminate() _NOEXCEPT
+	{	// handle exception termination
+	}
+
+_NODISCARD inline terminate_handler __CRTDECL get_terminate() _NOEXCEPT
+	{	// get current terminate handler
+	return (0);
+	}
+
+#if _HAS_UNEXPECTED
+typedef void (__cdecl *unexpected_handler)();
+
+inline unexpected_handler __CRTDECL set_unexpected(unexpected_handler) _NOEXCEPT
+	{	// register an unexpected handler
+	return 0;
+	}
+
+inline void __CRTDECL unexpected()
+	{	// handle unexpected exception
+	}
+
+_NODISCARD inline unexpected_handler __CRTDECL get_unexpected() _NOEXCEPT
+	{	// get current unexpected handler
+	return (0);
+	}
+#endif /* _HAS_UNEXPECTED */
+
+using _STDEXT bad_alloc;
+using _STDEXT bad_exception;
+
+_STD_END
+
+ #endif /* _HAS_EXCEPTIONS */
+
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCreate(_Out_ void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrDestroy(_Inout_ void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCopy(_Out_ void*, _In_ const void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrAssign(_Inout_ void*, _In_ const void*);
+_CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL __ExceptionPtrCompare(_In_ const void*, _In_ const void*);
+_CRTIMP2_PURE bool __CLRCALL_PURE_OR_CDECL __ExceptionPtrToBool(_In_ const void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrSwap(_Inout_ void*, _Inout_ void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCurrentException(_Out_ void*);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrRethrow(_In_ const void*);
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL __ExceptionPtrCopyException(
+	_Inout_ void*, _In_ const void*, _In_ const void*);
+
+_STD_BEGIN
+
+class exception_ptr
+	{
+public:
+	exception_ptr() _NOEXCEPT
+		{
+		__ExceptionPtrCreate(this);
+		}
+
+	exception_ptr(nullptr_t) _NOEXCEPT
+		{
+		__ExceptionPtrCreate(this);
+		}
+
+	~exception_ptr() _NOEXCEPT
+		{
+		__ExceptionPtrDestroy(this);
+		}
+
+	exception_ptr(const exception_ptr& _Rhs) _NOEXCEPT
+		{
+		__ExceptionPtrCopy(this, &_Rhs);
+		}
+
+	exception_ptr& operator=(const exception_ptr& _Rhs) _NOEXCEPT
+		{
+		__ExceptionPtrAssign(this, &_Rhs);
+		return *this;
+		}
+
+	exception_ptr& operator=(nullptr_t) _NOEXCEPT
+		{
+		exception_ptr _Ptr;
+		__ExceptionPtrAssign(this, &_Ptr);
+		return *this;
+		}
+
+	explicit operator bool() const _NOEXCEPT
+		{
+		return __ExceptionPtrToBool(this);
+		}
+
+	[[noreturn]] void _RethrowException() const
+		{
+		__ExceptionPtrRethrow(this);
+		}
+
+	static exception_ptr _Current_exception() _NOEXCEPT
+		{
+		exception_ptr _Retval;
+		__ExceptionPtrCurrentException(&_Retval);
+		return _Retval;
+		}
+
+	static exception_ptr _Copy_exception(_In_ void* _Except, _In_ const void* _Ptr)
+		{
+		exception_ptr _Retval;
+		if (!_Ptr)
+			{
+			// unsupported exceptions
+			return _Retval;
+			}
+		__ExceptionPtrCopyException(&_Retval, _Except, _Ptr);
+		return _Retval;
+		}
+
+private:
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wunused-private-field"
+#endif /* __clang__ */
+	void* _Data1;
+	void* _Data2;
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#endif /* __clang__ */
+	};
+
+inline void swap(exception_ptr& _Lhs, exception_ptr& _Rhs) _NOEXCEPT
+	{
+	__ExceptionPtrSwap(&_Lhs, &_Rhs);
+	}
+
+_NODISCARD inline bool operator==(const exception_ptr& _Lhs, const exception_ptr& _Rhs) _NOEXCEPT
+	{
+	return __ExceptionPtrCompare(&_Lhs, &_Rhs);
+	}
+
+_NODISCARD inline bool operator==(nullptr_t, const exception_ptr& _Rhs) _NOEXCEPT
+	{
+	return !_Rhs;
+	}
+
+_NODISCARD inline bool operator==(const exception_ptr& _Lhs, nullptr_t) _NOEXCEPT
+	{
+	return !_Lhs;
+	}
+
+_NODISCARD inline bool operator!=(const exception_ptr& _Lhs, const exception_ptr& _Rhs) _NOEXCEPT
+	{
+	return !(_Lhs == _Rhs);
+	}
+
+_NODISCARD inline bool operator!=(nullptr_t _Lhs, const exception_ptr& _Rhs) _NOEXCEPT
+	{
+	return !(_Lhs == _Rhs);
+	}
+
+_NODISCARD inline bool operator!=(const exception_ptr& _Lhs, nullptr_t _Rhs) _NOEXCEPT
+	{
+	return !(_Lhs == _Rhs);
+	}
+
+_NODISCARD inline exception_ptr current_exception() _NOEXCEPT
+	{
+	return exception_ptr::_Current_exception();
+	}
+
+[[noreturn]] inline void rethrow_exception(_In_ exception_ptr _Ptr)
+	{
+	_Ptr._RethrowException();
+	}
+
+template<class _Ex> void *__GetExceptionInfo(_Ex);
+
+template<class _Ex> _NODISCARD exception_ptr make_exception_ptr(_Ex _Except) _NOEXCEPT
+	{
+	return exception_ptr::_Copy_exception(_STD addressof(_Except), __GetExceptionInfo(_Except));
+	}
+
+	// CLASS nested_exception
+class nested_exception
+	{	// wrap an exception_ptr
+public:
+	nested_exception() _NOEXCEPT
+		: _Exc(_STD current_exception())
+		{	// default construct
+		}
+
+	nested_exception(const nested_exception&) _NOEXCEPT = default;
+	nested_exception& operator=(const nested_exception&) _NOEXCEPT = default;
+	virtual ~nested_exception() _NOEXCEPT
+		{
+		}
+
+	[[noreturn]] void rethrow_nested() const
+		{	// throw wrapped exception_ptr
+		if (_Exc)
+			_STD rethrow_exception(_Exc);
+		else
+			_STD terminate();
+		}
+
+	_NODISCARD exception_ptr nested_ptr() const _NOEXCEPT
+		{	// return wrapped exception_ptr
+		return (_Exc);
+		}
+
+private:
+	exception_ptr _Exc;
+	};
+
+	// FUNCTION TEMPLATE throw_with_nested
+template<class _Ty,
+	class _Uty>
+	struct _With_nested
+		: _Uty, nested_exception
+	{	// glue user exception to nested_exception
+	explicit _With_nested(_Ty&& _Arg)
+		: _Uty(_STD forward<_Ty>(_Arg)), nested_exception()
+		{	// store user exception and current_exception()
+		}
+	};
+
+template<class _Ty>
+	[[noreturn]] inline void _Throw_with_nested(_Ty&& _Arg, true_type)
+	{	// throw user exception glued to nested_exception
+	using _Uty = decay_t<_Ty>;
+	using _Glued = _With_nested<_Ty, _Uty>;
+
+	_THROW(_Glued(_STD forward<_Ty>(_Arg)));
+	}
+
+template<class _Ty>
+	[[noreturn]] inline void _Throw_with_nested(_Ty&& _Arg, false_type)
+	{	// throw user exception by itself
+	_THROW(_STD forward<_Ty>(_Arg));
+	}
+
+template<class _Ty>
+	[[noreturn]] inline void throw_with_nested(_Ty&& _Arg)
+	{	// throw user exception, glued to nested_exception if possible
+	typedef decay_t<_Ty> _Uty;
+
+	bool_constant<
+		is_class_v<_Uty>
+		&& !is_base_of_v<nested_exception, _Uty>
+		&& !is_final_v<_Uty>> _Tag;
+
+	_Throw_with_nested(_STD forward<_Ty>(_Arg), _Tag);
+	}
+
+#ifdef _CPPRTTI
+	// FUNCTION TEMPLATE rethrow_if_nested
+template<class _Ty> inline
+	void _Rethrow_if_nested(const _Ty *_Ptr, true_type)
+	{	// use dynamic_cast
+	const auto _Nested = dynamic_cast<const nested_exception *>(_Ptr);
+
+	if (_Nested)
+		_Nested->rethrow_nested();
+	}
+
+template<class _Ty> inline
+	void _Rethrow_if_nested(const _Ty *, false_type)
+	{	// can't use dynamic_cast
+	}
+
+template<class _Ty> inline
+	void rethrow_if_nested(const _Ty& _Arg)
+	{	// detect nested_exception inheritance
+	bool_constant<is_polymorphic_v<_Ty> && (!is_base_of_v<nested_exception, _Ty>
+		|| is_convertible_v<_Ty *, nested_exception *>)> _Tag;
+
+	_Rethrow_if_nested(_STD addressof(_Arg), _Tag);
+	}
+#else /* _CPPRTTI */
+template<class _Ty>
+	void rethrow_if_nested(const _Ty&) = delete;	// requires /GR option
+#endif /* _CPPRTTI */
+
+_STD_END
+
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _EXCEPTION_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

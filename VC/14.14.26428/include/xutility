@@ -1,0 +1,4365 @@
+// xutility internal header
+#pragma once
+#ifndef _XUTILITY_
+#define _XUTILITY_
+#ifndef RC_INVOKED
+#include <climits>
+#include <cstdlib>
+#include <utility>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+#if (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_CEE_PURE)
+_EXTERN_C
+// The "noalias" attribute tells the compiler optimizer that pointers going into these hand-vectorized algorithms
+// won't be stored beyond the lifetime of the function, and that the function will only reference arrays denoted by
+// those pointers. The optimizer also assumes in that case that a pointer parameter is not returned to the caller via
+// the return value, so functions using "noalias" must usually return void. This attribute is valuable because these
+// functions are in native code objects that the compiler cannot analyze. In the absence of the noalias attribute, the
+// compiler has to assume that the denoted arrays are "globally address taken", and that any later calls to
+// unanalyzable routines may modify those arrays.
+__declspec(noalias) void __cdecl __std_reverse_trivially_swappable_1(void * _First, void * _Last) _NOEXCEPT;
+__declspec(noalias) void __cdecl __std_reverse_trivially_swappable_2(void * _First, void * _Last) _NOEXCEPT;
+__declspec(noalias) void __cdecl __std_reverse_trivially_swappable_4(void * _First, void * _Last) _NOEXCEPT;
+__declspec(noalias) void __cdecl __std_reverse_trivially_swappable_8(void * _First, void * _Last) _NOEXCEPT;
+_END_EXTERN_C
+#endif /* (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_CEE_PURE) */
+
+_STD_BEGIN
+		// MACRO _DEBUG_ERROR
+ #ifdef _DEBUG
+_CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Debug_message(const wchar_t *,
+	const wchar_t *, unsigned int);
+ #endif /* _DEBUG */
+
+ #if _ITERATOR_DEBUG_LEVEL == 2
+  #define _DEBUG_ERROR(mesg)	\
+	_DEBUG_ERROR2(mesg, __FILEW__, __LINE__)
+
+  #define _DEBUG_ERROR2(mesg, file, line)	\
+	_STD _Debug_message(L ## mesg, file, line),	\
+	_SCL_SECURE_INVALID_PARAMETER(mesg)
+
+using _Dbfile_t = const wchar_t *;
+using _Dbline_t = unsigned int;
+ #else /* _ITERATOR_DEBUG_LEVEL == 2 */
+  #define _DEBUG_ERROR(mesg)
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+
+		// MACRO _IDL_VERIFY
+#if _ITERATOR_DEBUG_LEVEL == 2
+ #define _IDL_VERIFY(assertion, message) if (!(assertion)) { _DEBUG_ERROR2(message, __FILEW__, __LINE__); }
+#elif _ITERATOR_DEBUG_LEVEL == 1
+ #define _IDL_VERIFY(assertion, message) _SCL_SECURE_VALIDATE(assertion)
+#else /* _ITERATOR_DEBUG_LEVEL == 0 */
+ #define _IDL_VERIFY(assertion, message)
+#endif /* _ITERATOR_DEBUG_LEVEL */
+
+
+		// MACRO _IDL_VERIFY_ALWAYS
+#if _ITERATOR_DEBUG_LEVEL == 2
+ #define _IDL_VERIFY_ALWAYS(assertion, message) if (!(assertion)) { _DEBUG_ERROR2(message, __FILEW__, __LINE__); }
+#else /* ^^^ _ITERATOR_DEBUG_LEVEL == 2 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 2 vvv */
+ #define _IDL_VERIFY_ALWAYS(assertion, message) _SCL_SECURE_ALWAYS_VALIDATE(assertion)
+#endif /* _ITERATOR_DEBUG_LEVEL */
+
+
+		// CLASSES _Container_base*, _Iterator_base*
+struct _Container_proxy;
+struct _Container_base12;
+struct _Iterator_base12;
+
+struct _Container_base0
+	{	// base of all containers
+	void _Orphan_all() _NOEXCEPT
+		{	// orphan all iterators
+		}
+
+	void _Swap_all(_Container_base0&) _NOEXCEPT
+		{	// swap all iterators
+		}
+	};
+
+struct _Iterator_base0
+	{	// base of all iterators
+	void _Adopt(const void *) _NOEXCEPT
+		{	// adopt this iterator by parent
+		}
+
+	const _Container_base0 *_Getcont() const _NOEXCEPT
+		{	// get owning container
+		return (0);
+		}
+	};
+
+		// CLASS _Container_proxy
+struct _Container_proxy
+	{	// store head of iterator chain and back pointer
+	_Container_proxy() _NOEXCEPT
+		: _Mycont(0), _Myfirstiter(0)
+		{	// construct from pointers
+		}
+
+	const _Container_base12 *_Mycont;
+	_Iterator_base12 *_Myfirstiter;
+	};
+
+struct _Container_base12
+	{	// store pointer to _Container_proxy
+public:
+	_Container_base12()
+		: _Myproxy(0)
+		{	// construct childless container
+		}
+
+	_Container_base12(const _Container_base12&) _NOEXCEPT
+		: _Myproxy(0)
+		{	// copy a container
+		}
+
+	_Container_base12& operator=(const _Container_base12&) _NOEXCEPT
+		{	// assign a container
+		return (*this);
+		}
+
+	_Iterator_base12 **_Getpfirst() const _NOEXCEPT
+		{	// get address of iterator chain
+		return (_Myproxy == 0 ? 0 : &_Myproxy->_Myfirstiter);
+		}
+
+	void _Orphan_all() _NOEXCEPT;	// orphan all iterators
+	void _Swap_all(_Container_base12&) _NOEXCEPT;	// swap all iterators
+
+	_Container_proxy *_Myproxy;
+	};
+
+struct _Iterator_base12
+	{	// store links to container proxy, next iterator
+public:
+	_Iterator_base12() _NOEXCEPT
+		: _Myproxy(0), _Mynextiter(0)
+		{	// construct orphaned iterator
+		}
+
+	_Iterator_base12(const _Iterator_base12& _Right) _NOEXCEPT
+		: _Myproxy(0), _Mynextiter(0)
+		{	// copy an iterator
+		*this = _Right;
+		}
+
+	_Iterator_base12& operator=(const _Iterator_base12& _Right) _NOEXCEPT
+		{	// assign an iterator
+		if (_Myproxy == _Right._Myproxy)
+			;
+		else if (_Right._Myproxy != 0)
+			_Adopt(_Right._Myproxy->_Mycont);
+		else
+			{	// becoming invalid, disown current parent
+ #if _ITERATOR_DEBUG_LEVEL == 2
+			_Lockit _Lock(_LOCK_DEBUG);
+			_Orphan_me();
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+			}
+
+		return (*this);
+		}
+
+	~_Iterator_base12() _NOEXCEPT
+		{	// destroy the iterator
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		_Lockit _Lock(_LOCK_DEBUG);
+		_Orphan_me();
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+		}
+
+	void _Adopt(const _Container_base12 *_Parent) _NOEXCEPT
+		{	// adopt this iterator by parent
+		if (_Parent == 0)
+			{	// no future parent, just disown current parent
+ #if _ITERATOR_DEBUG_LEVEL == 2
+			_Lockit _Lock(_LOCK_DEBUG);
+			_Orphan_me();
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+			}
+		else
+			{	// have a parent, do adoption
+			_Container_proxy *_Parent_proxy = _Parent->_Myproxy;
+
+ #if _ITERATOR_DEBUG_LEVEL == 2
+			if (_Myproxy != _Parent_proxy)
+				{	// change parentage
+				_Lockit _Lock(_LOCK_DEBUG);
+				_Orphan_me();
+				_Mynextiter = _Parent_proxy->_Myfirstiter;
+				_Parent_proxy->_Myfirstiter = this;
+				_Myproxy = _Parent_proxy;
+				}
+
+ #else /* _ITERATOR_DEBUG_LEVEL == 2 */
+			_Myproxy = _Parent_proxy;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+			}
+		}
+
+	void _Clrcont() _NOEXCEPT
+		{	// disown owning container
+		_Myproxy = 0;
+		}
+
+	const _Container_base12 *_Getcont() const _NOEXCEPT
+		{	// get owning container
+		return (_Myproxy == 0 ? 0 : _Myproxy->_Mycont);
+		}
+
+	_Iterator_base12 **_Getpnext() _NOEXCEPT
+		{	// get address of remaining iterator chain
+		return (&_Mynextiter);
+		}
+
+	void _Orphan_me() _NOEXCEPT
+		{	// cut ties with parent
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		if (_Myproxy != 0)
+			{	// adopted, remove self from list
+			_Iterator_base12 **_Pnext = &_Myproxy->_Myfirstiter;
+			while (*_Pnext != 0 && *_Pnext != this)
+				_Pnext = &(*_Pnext)->_Mynextiter;
+
+			if (*_Pnext == 0)
+				{
+				_DEBUG_ERROR("ITERATOR LIST CORRUPTED!");
+				}
+
+			*_Pnext = _Mynextiter;
+			_Myproxy = 0;
+			}
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+		}
+
+	_Container_proxy *_Myproxy;
+	_Iterator_base12 *_Mynextiter;
+	};
+
+		// MEMBER FUNCTIONS FOR _Container_base12
+inline void _Container_base12::_Orphan_all() _NOEXCEPT
+	{	// orphan all iterators
+ #if _ITERATOR_DEBUG_LEVEL == 2
+	if (_Myproxy != 0)
+		{	// proxy allocated, drain it
+		_Lockit _Lock(_LOCK_DEBUG);
+
+		for (_Iterator_base12 **_Pnext = &_Myproxy->_Myfirstiter;
+			*_Pnext != 0; *_Pnext = (*_Pnext)->_Mynextiter)
+			(*_Pnext)->_Myproxy = 0;
+		_Myproxy->_Myfirstiter = 0;
+		}
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+	}
+
+inline void _Container_base12::_Swap_all(_Container_base12& _Right) _NOEXCEPT
+	{	// swap all iterators
+ #if _ITERATOR_DEBUG_LEVEL == 2
+	_Lockit _Lock(_LOCK_DEBUG);
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+	_Container_proxy *_Temp = _Myproxy;
+	_Myproxy = _Right._Myproxy;
+	_Right._Myproxy = _Temp;
+
+	if (_Myproxy != 0)
+		_Myproxy->_Mycont = (_Container_base12 *)this;
+	if (_Right._Myproxy != 0)
+		_Right._Myproxy->_Mycont = (_Container_base12 *)&_Right;
+	}
+
+ #if _ITERATOR_DEBUG_LEVEL == 0
+using _Container_base = _Container_base0;
+using _Iterator_base = _Iterator_base0;
+
+ #else /* _ITERATOR_DEBUG_LEVEL == 0 */
+using _Container_base = _Container_base12;
+using _Iterator_base = _Iterator_base12;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+
+	// CLASS TEMPLATE _Compressed_pair
+struct _Zero_then_variadic_args_t
+	{	// tag type for value-initializing first,
+	};	// constructing second from remaining args
+
+struct _One_then_variadic_args_t
+	{	// tag type for constructing first from one arg,
+	};	// constructing second from remaining args
+
+template<class _Ty1,
+	class _Ty2,
+	bool = is_empty_v<_Ty1> && !is_final_v<_Ty1>>
+	class _Compressed_pair final
+		: private _Ty1
+	{	// store a pair of values, deriving from empty first
+private:
+	_Ty2 _Myval2;
+
+	using _Mybase = _Ty1;	// for visualization
+
+public:
+	template<class... _Other2>
+		constexpr explicit _Compressed_pair(_Zero_then_variadic_args_t,
+			_Other2&&... _Val2)
+		: _Ty1(), _Myval2(_STD forward<_Other2>(_Val2)...)
+		{	// construct from forwarded values
+		}
+
+	template<class _Other1,
+		class... _Other2>
+		_Compressed_pair(_One_then_variadic_args_t,
+			_Other1&& _Val1, _Other2&&... _Val2)
+		: _Ty1(_STD forward<_Other1>(_Val1)),
+			_Myval2(_STD forward<_Other2>(_Val2)...)
+		{	// construct from forwarded values
+		}
+
+
+	_Ty1& _Get_first() _NOEXCEPT
+		{	// return reference to first
+		return (*this);
+		}
+
+	const _Ty1& _Get_first() const _NOEXCEPT
+		{	// return const reference to first
+		return (*this);
+		}
+
+	volatile _Ty1& _Get_first() volatile _NOEXCEPT
+		{	// return volatile reference to first
+		return (*this);
+		}
+
+	const volatile _Ty1& _Get_first() const volatile _NOEXCEPT
+		{	// return const volatile reference to first
+		return (*this);
+		}
+
+	_Ty2& _Get_second() _NOEXCEPT
+		{	// return reference to second
+		return (_Myval2);
+		}
+
+	const _Ty2& _Get_second() const _NOEXCEPT
+		{	// return const reference to second
+		return (_Myval2);
+		}
+
+	volatile _Ty2& _Get_second() volatile _NOEXCEPT
+		{	// return volatile reference to second
+		return (_Myval2);
+		}
+
+	const volatile _Ty2& _Get_second() const volatile _NOEXCEPT
+		{	// return const volatile reference to second
+		return (_Myval2);
+		}
+	};
+
+template<class _Ty1,
+	class _Ty2>
+	class _Compressed_pair<_Ty1, _Ty2, false> final
+	{	// store a pair of values, not deriving from first
+private:
+	_Ty1 _Myval1;
+	_Ty2 _Myval2;
+
+public:
+	template<class... _Other2>
+		constexpr explicit _Compressed_pair(_Zero_then_variadic_args_t,
+			_Other2&&... _Val2)
+		: _Myval1(), _Myval2(_STD forward<_Other2>(_Val2)...)
+		{	// construct from forwarded values
+		}
+
+	template<class _Other1,
+		class... _Other2>
+		_Compressed_pair(_One_then_variadic_args_t,
+			_Other1&& _Val1, _Other2&&... _Val2)
+		: _Myval1(_STD forward<_Other1>(_Val1)),
+			_Myval2(_STD forward<_Other2>(_Val2)...)
+		{	// construct from forwarded values
+		}
+
+
+	_Ty1& _Get_first() _NOEXCEPT
+		{	// return reference to first
+		return (_Myval1);
+		}
+
+	const _Ty1& _Get_first() const _NOEXCEPT
+		{	// return const reference to first
+		return (_Myval1);
+		}
+
+	volatile _Ty1& _Get_first() volatile _NOEXCEPT
+		{	// return volatile reference to first
+		return (_Myval1);
+		}
+
+	const volatile _Ty1& _Get_first() const volatile _NOEXCEPT
+		{	// return const volatile reference to first
+		return (_Myval1);
+		}
+
+	_Ty2& _Get_second() _NOEXCEPT
+		{	// return reference to second
+		return (_Myval2);
+		}
+
+	const _Ty2& _Get_second() const _NOEXCEPT
+		{	// return const reference to second
+		return (_Myval2);
+		}
+
+	volatile _Ty2& _Get_second() volatile _NOEXCEPT
+		{	// return volatile reference to second
+		return (_Myval2);
+		}
+
+	const volatile _Ty2& _Get_second() const volatile _NOEXCEPT
+		{	// return const volatile reference to second
+		return (_Myval2);
+		}
+	};
+
+		// STRUCT TEMPLATE _Is_checked_helper
+template<class _Ty,
+	class = void>
+	struct _Is_checked_helper
+		: false_type
+	{	// default definition
+	};
+
+template<class _Ty>
+	struct _Is_checked_helper<_Ty, void_t<
+		typename _Ty::_Unchecked_type>>
+		: true_type
+	{	// defined if _Ty::_Unchecked_type exists
+	};
+
+		// FUNCTION TEMPLATE _Is_checked
+template<class _Iter> inline
+	typename _Is_checked_helper<_Iter>::type _Is_checked(_Iter)
+	{	// return type is true_type if iterator is checked
+	return {};
+	}
+
+		// FUNCTION TEMPLATE _Unchecked
+template<class _Iter>
+	constexpr _Iter _Unchecked(_Iter _Src)
+	{	// construct unchecked from checked, generic
+	return (_Src);
+	}
+
+		// ALIAS TEMPLATE _Unchecked_t
+template<class _Iter>
+	using _Unchecked_t = decltype(_Unchecked(_STD declval<_Iter>()));
+
+		// FUNCTION TEMPLATE _Unchecked_idl0
+ #if _ITERATOR_DEBUG_LEVEL == 0
+
+template<class _Iter> inline
+	_Unchecked_t<_Iter> _Unchecked_idl0(_Iter _Src)
+	{	// uncheck _Src in IDL == 0 only
+	return (_Unchecked(_Src));
+	}
+
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+
+template<class _Iter> inline
+	_Iter _Unchecked_idl0(_Iter _Src)
+	{	// don't uncheck _Src for IDL > 0
+	return (_Src);
+	}
+
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		// FUNCTION TEMPLATE _Rechecked
+template<class _Iter,
+	class _UIter>
+	constexpr _Iter& _Rechecked(_Iter& _Dest, const _UIter _Src)
+	{	// reset checked from unchecked, generic
+	_Dest = _Src;
+	return (_Dest);
+	}
+
+		// MACRO _DEPRECATE_UNCHECKED AND FRIENDS
+#define _DEFINE_DEPRECATE_UNCHECKED(_Func) \
+struct _Unchecked_iterators \
+	{	/* Warns about unchecked iterators */ \
+	static void _SCL_INSECURE_DEPRECATE_FN(_Func) _Deprecate(false_type) \
+		{	/* Detected unchecked iterator, warn */ \
+		} \
+	\
+	static void _Deprecate(true_type) \
+		{	/* Detected checked iterator, do not warn */ \
+		} \
+	}
+
+#define _USE_DEPRECATE_UNCHECKED(_Iter) \
+	(_Unchecked_iterators::_Deprecate(_Is_checked(_Iter)))
+
+#define _DEPRECATE_UNCHECKED(_Func, _Iter) \
+	_DEFINE_DEPRECATE_UNCHECKED(_Func); \
+	_USE_DEPRECATE_UNCHECKED(_Iter)
+
+
+		// FUNCTION TEMPLATE _Pass_fn
+		// TRANSITION, VSO#386225
+template<class _Fx>
+	struct _Ref_fn
+	{	// pass function object by value as a reference
+	template<class... _Args>
+		constexpr decltype(auto) operator()(_Args&&... _Vals)
+		{	// forward function call operator
+		return (_Fn(_STD forward<_Args>(_Vals)...));
+		}
+
+	_Fx& _Fn;
+	};
+
+template<class _Fn>
+	_INLINE_VAR constexpr bool _Pass_functor_by_value_v = sizeof(_Fn) <= sizeof(void *)
+		&& conjunction_v<
+			is_trivially_copy_constructible<_Fn>,
+			is_trivially_destructible<_Fn>>;
+
+template<class _Fn,
+	enable_if_t<_Pass_functor_by_value_v<_Fn>, int> = 0>
+	constexpr _Fn _Pass_fn(_Fn _Val)
+	{	// pass functor by value
+	return (_Val);
+	}
+
+template<class _Fn,
+	enable_if_t<!_Pass_functor_by_value_v<_Fn>, int> = 0>
+	constexpr _Ref_fn<_Fn> _Pass_fn(_Fn& _Val)
+	{	// pass functor by "reference"
+	return {_Val};
+	}
+
+		// ITERATOR STUFF (from <iterator>)
+		// ITERATOR TAGS (from <iterator>)
+struct input_iterator_tag
+	{	// identifying tag for input iterators
+	};
+
+struct output_iterator_tag
+	{	// identifying tag for output iterators
+	};
+
+struct forward_iterator_tag
+	: input_iterator_tag
+	{	// identifying tag for forward iterators
+	};
+
+struct bidirectional_iterator_tag
+	: forward_iterator_tag
+	{	// identifying tag for bidirectional iterators
+	};
+
+struct random_access_iterator_tag
+	: bidirectional_iterator_tag
+	{	// identifying tag for random-access iterators
+	};
+
+		// POINTER ITERATOR TAGS
+struct _General_ptr_iterator_tag
+	{	// general case, no special optimizations
+	};
+
+struct _Trivially_copyable_ptr_iterator_tag
+	: _General_ptr_iterator_tag
+	{	// iterator is a pointer to a trivially copyable type
+	};
+
+struct _Really_trivial_ptr_iterator_tag
+	: _Trivially_copyable_ptr_iterator_tag
+	{	// iterator is a pointer to a trivial type
+	};
+
+		// STRUCT _Unused_parameter
+struct _Unused_parameter
+	{	// generic unused parameter struct
+	constexpr _Unused_parameter() _NOEXCEPT = default;
+	template<class _Ty>
+		constexpr _Unused_parameter(_Ty&&) _NOEXCEPT {}
+	};
+
+		// ALIAS _Any_tag
+using _Any_tag = _Unused_parameter; // generic fallback/default/"other" target for tag dispatch
+
+		// ALIAS TEMPLATE _Algorithm_int_t
+template<class _Ty>
+	using _Algorithm_int_t = conditional_t<is_integral_v<_Ty>, _Ty, ptrdiff_t>;
+
+		// STRUCT TEMPLATE iterator_traits
+template<class,
+	class = void>
+	struct _Iterator_traits_base
+	{	// empty for non-iterators
+	};
+
+template<class _Iter>
+	struct _Iterator_traits_base<_Iter, void_t<
+		typename _Iter::iterator_category,
+		typename _Iter::value_type,
+		typename _Iter::difference_type,
+		typename _Iter::pointer,
+		typename _Iter::reference
+		>>
+	{	// defined if _Iter::* types exist
+	using iterator_category = typename _Iter::iterator_category;
+	using value_type = typename _Iter::value_type;
+	using difference_type = typename _Iter::difference_type;
+
+	using pointer = typename _Iter::pointer;
+	using reference = typename _Iter::reference;
+	};
+
+template<class _Ty,
+	bool = is_object_v<_Ty>>
+	struct _Iterator_traits_pointer_base
+	{	// iterator properties for pointers to object
+	using iterator_category = random_access_iterator_tag;
+	using value_type = remove_cv_t<_Ty>;
+	using difference_type = ptrdiff_t;
+
+	using pointer = _Ty *;
+	using reference = _Ty&;
+	};
+
+template<class _Ty>
+	struct _Iterator_traits_pointer_base<_Ty, false>
+	{	// iterator properties for pointers to non-object
+		// not actually iterators, as no arithmetic is possible -> no members
+	};
+
+template<class _Iter>
+	struct iterator_traits
+		: _Iterator_traits_base<_Iter>
+	{	// get traits from iterator _Iter, if possible
+	};
+
+template<class _Ty>
+	struct iterator_traits<_Ty *>
+		: _Iterator_traits_pointer_base<_Ty>
+	{	// get traits from pointer, if possible
+	};
+
+		// ALIAS TEMPLATE _Iter_value_t
+template<class _Iter>
+	using _Iter_value_t = typename iterator_traits<_Iter>::value_type;
+
+		// ALIAS TEMPLATE _Iter_diff_t
+template<class _Iter>
+	using _Iter_diff_t = typename iterator_traits<_Iter>::difference_type;
+
+		// ALIAS TEMPLATE _Common_diff_t
+template<class... _Iters>
+	using _Common_diff_t = common_type_t<_Iter_diff_t<_Iters>...>;
+
+		// ALIAS TEMPLATE _Iter_cat_t
+template<class _Iter>
+	using _Iter_cat_t = typename iterator_traits<_Iter>::iterator_category;
+
+		// VARIABLE TEMPLATE _Is_iterator_v
+template<class _Ty,
+	class = void>
+	_INLINE_VAR constexpr bool _Is_iterator_v = false;
+
+template<class _Ty>
+	_INLINE_VAR constexpr bool _Is_iterator_v<_Ty, void_t<_Iter_cat_t<_Ty>>> = true;
+
+		// TRAIT _Is_iterator
+template<class _Ty>
+	struct _Is_iterator
+		: bool_constant<_Is_iterator_v<_Ty>>
+	{
+	};
+
+		// VARIABLE TEMPLATE _Is_input_iter_v
+template<class _Iter>
+	_INLINE_VAR constexpr bool _Is_input_iter_v = is_convertible_v<_Iter_cat_t<_Iter>, input_iterator_tag>;
+
+		// VARIABLE TEMPLATE _Is_fwd_iter_v
+template<class _Iter>
+	_INLINE_VAR constexpr bool _Is_fwd_iter_v = is_convertible_v<_Iter_cat_t<_Iter>, forward_iterator_tag>;
+
+		// VARIABLE TEMPLATE _Is_bidi_iter_v
+template<class _Iter>
+	_INLINE_VAR constexpr bool _Is_bidi_iter_v = is_convertible_v<_Iter_cat_t<_Iter>, bidirectional_iterator_tag>;
+
+		// VARIABLE TEMPLATE _Is_random_iter_v
+template<class _Iter>
+	_INLINE_VAR constexpr bool _Is_random_iter_v = is_convertible_v<_Iter_cat_t<_Iter>, random_access_iterator_tag>;
+
+#if _HAS_DEDUCTION_GUIDES
+		// STRUCT TEMPLATE _Is_allocator
+struct _Unique_tag_is_allocator
+	{	// TRANSITION, C1XX
+	};
+
+template<class _Ty,
+	class = void>
+	struct _Is_allocator
+		: false_type
+	{	// selected when _Ty can't possibly be an allocator
+	};
+
+template<class _Ty>
+	struct _Is_allocator<_Ty, void_t<
+		_Unique_tag_is_allocator,
+		typename _Ty::value_type,
+		decltype(_STD declval<_Ty&>().deallocate(_STD declval<_Ty&>().allocate(size_t{1}), size_t{1}))
+	>>
+		: true_type
+	{	// selected when _Ty resembles an allocator, N4687 26.2.1 [container.requirements.general]/17
+	};
+
+		// ALIAS TEMPLATES FOR DEDUCTION GUIDES, N4687 26.4.1 [associative.general]/2
+template<class _Iter>
+	using _Guide_key_t = remove_const_t<typename iterator_traits<_Iter>::value_type::first_type>;
+
+template<class _Iter>
+	using _Guide_val_t = typename iterator_traits<_Iter>::value_type::second_type;
+
+template<class _Iter>
+	using _Guide_pair_t = pair<add_const_t<typename iterator_traits<_Iter>::value_type::first_type>,
+		typename iterator_traits<_Iter>::value_type::second_type>;
+#endif /* _HAS_DEDUCTION_GUIDES */
+
+		// STRUCT TEMPLATE _Priority_tag
+template<size_t _Value>
+	struct _Priority_tag
+		: _Priority_tag<_Value - 1>
+	{	// priority tag for tag dispatch
+	};
+
+template<>
+	struct _Priority_tag<0>
+	{	// base case priority tag for tag dispatch
+	};
+
+#if _HAS_CXX17
+		// STRUCT TEMPLATE is_execution_policy
+template<class _Ty>
+	struct is_execution_policy
+		: false_type
+	{
+	};
+
+template<class _Ty>
+	_INLINE_VAR constexpr bool is_execution_policy_v = is_execution_policy<_Ty>::value;
+
+		// ALIAS TEMPLATE _Enable_if_execution_policy_t
+		// Note: The _NOEXCEPT specifiers on all parallel algorithm overloads enforce termination as per
+		// N4713 23.19.4 [execpol.seq]/2, 23.19.5 [execpol.par]/2, and 23.19.6 [execpol.parunseq]/2
+template<class _ExPo>
+	using _Enable_if_execution_policy_t = typename remove_reference_t<_ExPo>::_Standard_execution_policy;
+
+#define _REQUIRE_PARALLEL_ITERATOR(_Iter) static_assert(_Is_fwd_iter_v<_Iter>, \
+	"Parallel algorithms require forward iterators or stronger.")
+
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE _Idl_distance
+struct _Distance_unknown {};
+
+ #if _ITERATOR_DEBUG_LEVEL == 0
+template<class _Checked,
+	class _Iter> inline
+	_Distance_unknown _Idl_distance(const _Iter&, const _Iter&)
+	{	// always give up under IDL0 because _Unchecked_n blindly unwraps there
+	return {};
+	}
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+template<class _Checked,
+	class _Iter> inline
+	_Distance_unknown _Idl_distance1(const _Iter&, const _Iter&, input_iterator_tag)
+	{	// _Idl_distance for non-random-access iterators
+	return {};
+	}
+
+template<class _Checked,
+	class _Iter> inline
+	_Iter_diff_t<_Checked> _Idl_distance1(const _Iter& _First, const _Iter& _Last, random_access_iterator_tag)
+	{	// _Idl_distance for random-access iterators
+	return (static_cast<_Iter_diff_t<_Checked>>(_Last - _First));
+	}
+
+template<class _Checked,
+	class _Iter> inline
+	auto _Idl_distance(const _Iter& _First, const _Iter& _Last)
+	{	// tries to get the distance between _First and _Last if they are random-access iterators
+	return (_Idl_distance1<_Checked>(_First, _Last, _Iter_cat_t<_Iter>()));
+	}
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+
+		// FUNCTION TEMPLATE _Unchecked_n
+ #if _ITERATOR_DEBUG_LEVEL == 0
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n(_Iter _Src, _Diff)
+	{	// blindly unwrap _Src under IDL == 0
+	return (_Unchecked(_Src));
+	}
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+template<class _Diff>
+	constexpr _Diff _Get_max_possible()
+	{	// gets the maximum possible value of _Diff (without creating circular dependencies by including <limits>)
+	return (static_cast<_Diff>(static_cast<make_unsigned_t<_Diff>>(-1) >> 1));
+	}
+
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n1(_Iter _Src, _Diff, false_type)
+	{	// checking range [_Src, _Src + _Diff) not possible; leave _Src wrapped
+	return (_Src);
+	}
+
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n1(_Iter _Src, _Diff _Count, true_type)
+	{	// check range [_Src, _Src + _Count) and unwrap _Src
+	if (0 < _Count)
+		{
+		// checks that the range [_Src, _Src + _Count) is valid by forming the end iterator
+		constexpr auto _Max_possible = _Get_max_possible<_Iter_diff_t<_Iter>>();
+		_IDL_VERIFY(_Count <= _Max_possible, "integer overflow");
+		static_cast<void>(_Src + static_cast<_Iter_diff_t<_Iter>>(_Count));
+		}
+
+	return (_Unchecked(_Src));
+	}
+
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n(_Iter _Src, _Diff _Count)
+	{	// if possible, checks the range [_Src, _Src + _Count) and unwraps _Src; otherwise, returns _Src unchanged
+	return (_Unchecked_n1(_Src, _Count, bool_constant<_Is_random_iter_v<_Iter>>{}));
+	}
+
+template<class _Iter> inline
+	auto _Unchecked_n(_Iter _Src, _Distance_unknown)
+	{	// always returns _Src unchanged because range size is unknown
+	return (_Src);
+	}
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+
+		// FUNCTION TEMPLATE _Unchecked_n_backward
+ #if _ITERATOR_DEBUG_LEVEL == 0
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n_backward(_Iter _Src, _Diff)
+	{	// blindly unwrap _Src under IDL == 0
+	return (_Unchecked(_Src));
+	}
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n_backward1(_Iter _Src, _Diff, bidirectional_iterator_tag)
+	{	// checking range [_Src - _Count, _Src) not possible; leave _Src wrapped
+	return (_Src);
+	}
+
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n_backward1(_Iter _Src, _Diff _Count, random_access_iterator_tag)
+	{	// check range [_Src - _Count, _Src) and unwrap _Src
+	if (0 < _Count)
+		{
+		constexpr auto _Max_possible = _Get_max_possible<_Iter_diff_t<_Iter>>();
+		_IDL_VERIFY(_Count <= _Max_possible, "integer overflow");
+		// checks that the range [_Src - _Count, _Src) is valid by forming the begin iterator
+		static_cast<void>(_Src - static_cast<_Iter_diff_t<_Iter>>(_Count));
+		}
+
+	return (_Unchecked(_Src));
+	}
+
+template<class _Iter,
+	class _Diff> inline
+	auto _Unchecked_n_backward(_Iter _Src, _Diff _Count)
+	{	// if possible, checks the range [_Src - _Count, _Src) and unwraps _Src; otherwise, returns _Src unchanged
+	return (_Unchecked_n_backward1(_Src, _Count, _Iter_cat_t<_Iter>()));
+	}
+
+template<class _Iter> inline
+	auto _Unchecked_n_backward(_Iter _Src, _Distance_unknown)
+	{	// always returns _Src unchanged because range size is unknown
+	return (_Src);
+	}
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+
+		// STRUCT TEMPLATE _Is_same_size
+template<class _Ty1,
+	class _Ty2>
+	struct _Is_same_size
+		: bool_constant<sizeof(_Ty1) == sizeof(_Ty2)>
+	{	// determine whether two types have the same size
+	};
+
+		// STRUCT TEMPLATE _Unwrap_enum AND ALIAS
+template<class _Elem,
+	bool _Is_enum = is_enum_v<_Elem>>
+	struct _Unwrap_enum
+	{	// if _Elem is an enum, gets its underlying type; otherwise leaves _Elem unchanged
+	using type = underlying_type_t<_Elem>;
+	};
+
+template<class _Elem>
+	struct _Unwrap_enum<_Elem, false>
+	{	// passthrough non-enum type
+	using type = _Elem;
+	};
+
+template<class _Elem>
+	using _Unwrap_enum_t = typename _Unwrap_enum<_Elem>::type;
+
+		// STRUCT TEMPLATE _Both_or_neither_bool
+template<class _Ty1,
+	class _Ty2>
+	struct _Both_or_neither_bool
+		: bool_constant<is_same_v<bool, _Ty1> == is_same_v<bool, _Ty2>>
+	{	// determines if both _Ty1 and _Ty2 are exactly bool, or neither are
+	};
+
+		// FUNCTION TEMPLATES _Ptr_copy_cat AND _Ptr_move_cat
+template<class _Source,
+	class _Dest>
+	struct _Ptr_cat_helper
+	{	// determines _Ptr_cat's result in the most general case
+	using _USource = _Unwrap_enum_t<_Source>;
+	using _UDest = _Unwrap_enum_t<_Dest>;
+	using type = conditional_t<conjunction_v<
+			_Is_same_size<_USource, _UDest>,
+			is_integral<_USource>,
+			is_integral<_UDest>,
+			_Both_or_neither_bool<_USource, _UDest>
+		>, _Really_trivial_ptr_iterator_tag, _General_ptr_iterator_tag>;
+	};
+
+template<class _Elem>
+	struct _Ptr_cat_helper<_Elem, _Elem>
+	{	// determines _Ptr_cat's result when the types are the same
+	using type = conditional_t<
+		is_trivially_copyable_v<_Elem>,
+		conditional_t<is_trivial_v<_Elem>,
+			_Really_trivial_ptr_iterator_tag,
+			_Trivially_copyable_ptr_iterator_tag>,
+		_General_ptr_iterator_tag>;
+	};
+
+template<class _Anything>
+	struct _Ptr_cat_helper<_Anything *, const _Anything *>
+	{	// determines _Ptr_cat's result when all we do is add const to a pointer
+	using type = _Really_trivial_ptr_iterator_tag;
+	};
+
+template<class _Anything>
+	struct _Ptr_cat_helper<_Anything *, volatile _Anything *>
+	{	// determines _Ptr_cat's result when all we do is add volatile to a pointer
+	using type = _Really_trivial_ptr_iterator_tag;
+	};
+
+template<class _Anything>
+	struct _Ptr_cat_helper<_Anything *, const volatile _Anything *>
+	{	// determines _Ptr_cat's result when all we do is add cv to a pointer
+	using type = _Really_trivial_ptr_iterator_tag;
+	};
+
+template<class _Source,
+	class _Dest> inline
+	_General_ptr_iterator_tag _Ptr_copy_cat(const _Source&, const _Dest&)
+	{	// return pointer copy optimization category for arbitrary iterators
+	return {};
+	}
+
+template<class _Source,
+	class _Dest> inline
+	conditional_t<is_trivially_assignable_v<_Dest&, _Source&>,
+		typename _Ptr_cat_helper<remove_cv_t<_Source>, remove_cv_t<_Dest>>::type,
+		_General_ptr_iterator_tag>
+		_Ptr_copy_cat(_Source * const&, _Dest * const&)
+	{	// return pointer copy optimization category for pointers
+	return {};
+	}
+
+template<class _Source,
+	class _Dest> inline
+	_General_ptr_iterator_tag _Ptr_move_cat(const _Source&, const _Dest&)
+	{	// return pointer move optimization category for arbitrary iterators
+	return {};
+	}
+
+template<class _Source,
+	class _Dest> inline
+	conditional_t<is_trivially_assignable_v<_Dest&, _Source>,
+		typename _Ptr_cat_helper<remove_cv_t<_Source>, remove_cv_t<_Dest>>::type,
+		_General_ptr_iterator_tag>
+		_Ptr_move_cat(_Source * const&, _Dest * const&)
+	{	// return pointer move optimization category for pointers
+	return {};
+	}
+
+		// DEBUG TESTING MACROS
+
+ #if _ITERATOR_DEBUG_LEVEL < 2
+  #define _DEBUG_LT(x, y)	((x) < (y))
+  #define _DEBUG_LT_PRED(pred, x, y)	pred(x, y)
+  #define _DEBUG_ORDER_UNCHECKED(first, last, pred)
+  #define _DEBUG_ORDER_SET_UNCHECKED(otherIter, first, last, pred)
+  #define _DEBUG_RANGE(first, last)
+  #define _DEBUG_RANGE2(first, last, file, line)
+
+ #else /* _ITERATOR_DEBUG_LEVEL < 2 */
+
+  #define _FILENAME	__FILEW__
+
+  #ifndef _DEBUG_LT_IMPL
+   #define _DEBUG_LT_IMPL	_Debug_lt
+  #endif /* _DEBUG_LT_IMPL */
+
+  #define _DEBUG_LT(x, y) \
+	_DEBUG_LT_IMPL(x, y, _FILENAME, __LINE__)
+
+  #ifndef _DEBUG_LT_PRED_IMPL
+   #define _DEBUG_LT_PRED_IMPL	_Debug_lt_pred
+  #endif /* _DEBUG_LT_PRED_IMPL */
+
+  #define _DEBUG_LT_PRED(pred, x, y)	\
+	_DEBUG_LT_PRED_IMPL(pred, x, y, _FILENAME, __LINE__)
+
+  #ifndef _DEBUG_ORDER_UNCHECKED_IMPL
+   #define _DEBUG_ORDER_UNCHECKED_IMPL	_Debug_order_unchecked
+  #endif /* _DEBUG_ORDER_IMPL */
+
+  #define _DEBUG_ORDER_UNCHECKED(first, last, pred)	\
+	_DEBUG_ORDER_UNCHECKED_IMPL(first, last, pred, _FILENAME, __LINE__)
+
+  #ifndef _DEBUG_ORDER_SET_UNCHECKED_IMPL
+   #define _DEBUG_ORDER_SET_UNCHECKED_IMPL	_Debug_order_set_unchecked
+  #endif /* _DEBUG_ORDER_SET_UNCHECKED_IMPL */
+
+  #define _DEBUG_ORDER_SET_UNCHECKED(otherIter, first, last, pred)	\
+	_DEBUG_ORDER_SET_UNCHECKED_IMPL<otherIter>(first, last, pred, _FILENAME, __LINE__)
+
+  #ifndef _DEBUG_RANGE_IMPL
+   #define _DEBUG_RANGE_IMPL	_Debug_range
+  #endif /* _DEBUG_RANGE_IMPL */
+
+  #define _DEBUG_RANGE(first, last)	\
+	_DEBUG_RANGE_IMPL(first, last, _FILENAME, __LINE__)
+  #define _DEBUG_RANGE2(first, last, file, line)	\
+	_DEBUG_RANGE_IMPL(first, last, file, line)
+
+		// FUNCTION TEMPLATE _Debug_lt_pred
+template<class _Pr,
+	class _Ty1,
+	class _Ty2>
+	constexpr bool _Debug_lt_pred(_Pr&& _Pred,
+		_Ty1&& _Left, _Ty2&& _Right,
+		_Dbfile_t _File, _Dbline_t _Line)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Pred(_Left, _Right)) && _NOEXCEPT_OPER(_Pred(_Right, _Left)))
+	{	// test if _Pred(_Left, _Right) and _Pred is strict weak ordering
+	return (_Pred(_Left, _Right)
+		? (_Pred(_Right, _Left)
+			? (_DEBUG_ERROR2("invalid comparator", _File, _Line), true)
+			: true)
+		: false);
+	}
+
+		// FUNCTION TEMPLATE _Debug_lt
+template<class _Ty1,
+	class _Ty2>
+	constexpr bool _Debug_lt(_Ty1&& _Left, _Ty2&& _Right,
+		_Dbfile_t _File, _Dbline_t _Line)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_Left < _Right) && _NOEXCEPT_OPER(_Right < _Left))
+	{	// test if _Left < _Right and operator< is strict weak ordering
+	return (_Debug_lt_pred(less<>(),
+		_STD forward<_Ty1>(_Left), _STD forward<_Ty2>(_Right), _File, _Line));
+	}
+
+		// FUNCTION TEMPLATE _Debug_range
+template<class _InIt>
+	constexpr void _Debug_range2(_InIt _First, _InIt _Last,
+		_Dbfile_t, _Dbline_t, input_iterator_tag)
+	{	// test iterator pair for valid range, arbitrary iterators
+	static_cast<void>(_First == _Last);	// make sure they're comparable
+	}
+
+template<class _RanIt>
+	constexpr void _Debug_range2(_RanIt _First, _RanIt _Last,
+		_Dbfile_t _File, _Dbline_t _Line, random_access_iterator_tag)
+	{	// test iterator pair for valid range, random-access iterators
+	if (_Last < _First)
+		{
+		_DEBUG_ERROR2("invalid iterator range", _File, _Line);
+		}
+	}
+
+template<class _InIt>
+	constexpr void _Debug_range(_InIt _First, _InIt _Last,
+		_Dbfile_t _File, _Dbline_t _Line)
+	{	// test iterator pair for valid range
+	_Debug_range2(_First, _Last, _File, _Line, _Iter_cat_t<_InIt>());
+	}
+
+		// FUNCTION TEMPLATE _Debug_order_unchecked
+template<class _InIt,
+	class _Sentinel,
+	class _Pr> inline
+	void _Debug_order_unchecked2(_InIt, _Sentinel, _Pr&,
+		_Dbfile_t, _Dbline_t, input_iterator_tag)
+	{	// (don't) test if range is ordered by predicate, input iterators
+	}
+
+template<class _FwdIt,
+	class _Sentinel,
+	class _Pr> inline
+	void _Debug_order_unchecked2(_FwdIt _First, _Sentinel _Last, _Pr& _Pred,
+		_Dbfile_t _File, _Dbline_t _Line, forward_iterator_tag)
+	{	// test if range is ordered by predicate, forward iterators
+	if (_First != _Last)
+		{
+		for (_FwdIt _Next = _First; ++_Next != _Last; _First = _Next)
+			{
+			if (_DEBUG_LT_PRED(_Pred, *_Next, *_First))
+				{
+				_DEBUG_ERROR2("sequence not ordered", _File, _Line);
+				}
+			}
+		}
+	}
+
+template<class _InIt,
+	class _Sentinel,
+	class _Pr> inline
+	void _Debug_order_unchecked(_InIt _First, _Sentinel _Last, _Pr&& _Pred,
+		_Dbfile_t _File, _Dbline_t _Line)
+	{	// test if range is ordered by predicate
+	_Debug_order_unchecked2(_First, _Last, _Pred, _File, _Line, _Iter_cat_t<_InIt>());
+	}
+
+		// FUNCTION TEMPLATE _Debug_order_set_unchecked
+template<class _InIt,
+	class _Pr> inline
+	void _Debug_order_set_unchecked2(_InIt, _InIt, _Pr&,
+		_Dbfile_t, _Dbline_t, input_iterator_tag, _Priority_tag<0>)
+	{	// (don't) test if range is ordered by predicate, input iterators or different types
+	}
+
+template<class _FwdIt,
+	class _Pr> inline
+	void _Debug_order_set_unchecked2(_FwdIt _First, _FwdIt _Last, _Pr& _Pred,
+		_Dbfile_t _File, _Dbline_t _Line, forward_iterator_tag, _Priority_tag<1>)
+	{	// test if range is ordered by predicate, forward iterators and same types
+	_Debug_order_unchecked2(_First, _Last, _Pred, _File, _Line, forward_iterator_tag{});
+	}
+
+template<class _OtherIt,
+	class _InIt,
+	class _Pr> inline
+	void _Debug_order_set_unchecked(_InIt _First, _InIt _Last, _Pr&& _Pred,
+		_Dbfile_t _File, _Dbline_t _Line)
+	{	// test if range is ordered by predicate
+	_Debug_order_set_unchecked2(_First, _Last, _Pred, _File, _Line, _Iter_cat_t<_InIt>(),
+		_Priority_tag<is_same<_Iter_value_t<_OtherIt>, _Iter_value_t<_InIt>>::value>());
+	}
+ #endif /* _ITERATOR_DEBUG_LEVEL < 2 */
+
+ #if _ITERATOR_DEBUG_LEVEL == 0
+  #define _DEBUG_ARRAY_SIZE(_Array, _Desired)
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+template<class _Ty,
+	size_t _Actual,
+	class _Diff> inline
+	void _Debug_array_size1(_Ty (&)[_Actual], _Diff _Desired)
+	{	// verify that _Actual is >= _Desired
+	_SCL_SECURE_VALIDATE_RANGE(_Actual >= _Desired);
+	}
+  #define _DEBUG_ARRAY_SIZE(_Array, _Desired) _Debug_array_size1(_Array, _Desired)
+ #else /* _ITERATOR_DEBUG_LEVEL == 2 */
+template<class _Ty,
+	size_t _Actual,
+	class _Diff> inline
+	void _Debug_array_size2(_Ty (&)[_Actual], _Diff _Desired,
+		_Dbfile_t _File, _Dbline_t _Line)
+	{	// verify that _Actual is >= _Desired
+	if (_Actual < static_cast<common_type_t<size_t, _Diff>>(_Desired))
+		{
+		_DEBUG_ERROR2("array too small", _File, _Line);
+		}
+	}
+  #define _DEBUG_ARRAY_SIZE(_Array, _Desired) _Debug_array_size2(_Array, _Desired, _FILENAME, __LINE__)
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		// MORE ITERATOR STUFF (from <iterator>)
+		// FUNCTION TEMPLATE advance
+template<class _InIt,
+	class _Diff>
+	_CONSTEXPR17 void _Advance1(_InIt& _Where, _Diff _Off, input_iterator_tag)
+	{	// increment iterator by offset, input iterators
+ #if _ITERATOR_DEBUG_LEVEL == 2
+	if (_Off < 0)
+		{
+		_DEBUG_ERROR("negative offset in advance");
+		}
+
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+	for (; 0 < _Off; --_Off)
+		{
+		++_Where;
+		}
+	}
+
+template<class _BidIt,
+	class _Diff>
+	_CONSTEXPR17 void _Advance1(_BidIt& _Where, _Diff _Off, bidirectional_iterator_tag)
+	{	// increment iterator by offset, bidirectional iterators
+	for (; 0 < _Off; --_Off)
+		{
+		++_Where;
+		}
+
+	// the following warning is triggered if _Diff is unsigned
+#pragma warning(suppress: 6294)	// Ill-defined for-loop: initial condition does not satisfy test.
+								// Loop body not executed.
+	for (; _Off < 0; ++_Off)
+		{
+		--_Where;
+		}
+	}
+
+template<class _RanIt,
+	class _Diff>
+	_CONSTEXPR17 void _Advance1(_RanIt& _Where, _Diff _Off, random_access_iterator_tag)
+	{	// increment iterator by offset, random-access iterators
+	_Where += _Off;
+	}
+
+template<class _InIt,
+	class _Diff>
+	_CONSTEXPR17 void advance(_InIt& _Where, _Diff _Off)
+	{	// increment iterator by offset, arbitrary iterators
+		// we remove_const_t before _Iter_cat_t for better diagnostics if the user passes an iterator that is const
+	_Advance1(_Where, _Off, _Iter_cat_t<remove_const_t<_InIt>>());
+	}
+
+		// FUNCTION TEMPLATE distance
+template<class _InIt>
+	_CONSTEXPR17 _Iter_diff_t<_InIt> _Distance1(_InIt _First, _InIt _Last, input_iterator_tag)
+	{	// return distance between iterators; input
+	_Iter_diff_t<_InIt> _Off = 0;
+	for (; _First != _Last; ++_First)
+		++_Off;
+
+	return (_Off);
+	}
+
+template<class _RanIt>
+	_CONSTEXPR17 _Iter_diff_t<_RanIt> _Distance1(_RanIt _First, _RanIt _Last, random_access_iterator_tag)
+	{	// return distance between iterators; random-access
+	return (_Last - _First);
+	}
+
+template<class _InIt>
+	_NODISCARD _CONSTEXPR17 _Iter_diff_t<_InIt> distance(_InIt _First, _InIt _Last)
+	{	// return distance between iterators
+	return (_Distance1(_First, _Last, _Iter_cat_t<_InIt>()));
+	}
+
+		// FUNCTION TEMPLATE _Next_iter
+template<class _InIt>
+	constexpr _InIt _Next_iter(_InIt _First)
+	{	// increment iterator
+	return (++_First);
+	}
+
+		// FUNCTION TEMPLATE next
+template<class _InIt>
+	_NODISCARD _CONSTEXPR17 _InIt next(_InIt _First, _Iter_diff_t<_InIt> _Off = 1)
+	{	// increment iterator
+	static_assert(_Is_input_iter_v<_InIt>, "next requires input iterator");
+
+	_STD advance(_First, _Off);
+	return (_First);
+	}
+
+		// FUNCTION TEMPLATE _Prev_iter
+template<class _BidIt>
+	constexpr _BidIt _Prev_iter(_BidIt _First)
+	{	// decrement iterator
+	return (--_First);
+	}
+
+		// FUNCTION TEMPLATE prev
+template<class _BidIt>
+	_NODISCARD _CONSTEXPR17 _BidIt prev(_BidIt _First, _Iter_diff_t<_BidIt> _Off = 1)
+	{	// decrement iterator
+	static_assert(_Is_bidi_iter_v<_BidIt>, "prev requires bidirectional iterator");
+
+	_STD advance(_First, -_Off);
+	return (_First);
+	}
+
+		// CLASS TEMPLATE reverse_iterator
+template<class _Ty>
+	struct pointer_traits;
+
+template<class _Iterator>
+	constexpr _Iterator _Operator_arrow(_Iterator _Target, true_type)
+	{	// return operator-> where _Iterator is a pointer
+	return (_Target);
+	}
+
+template<class _Iterator>
+	constexpr decltype(auto) _Operator_arrow(_Iterator&& _Target, false_type)
+	{	// return operator-> where _Iterator is a class type
+	return (_STD forward<_Iterator>(_Target).operator->());
+	}
+
+template<class _RanIt>
+	class reverse_iterator
+	{	// wrap iterator to run it backwards
+public:
+	using iterator_category = typename iterator_traits<_RanIt>::iterator_category;
+	using value_type = typename iterator_traits<_RanIt>::value_type;
+	using difference_type = typename iterator_traits<_RanIt>::difference_type;
+	using pointer = typename iterator_traits<_RanIt>::pointer;
+	using reference = typename iterator_traits<_RanIt>::reference;
+
+	using iterator_type = _RanIt;
+
+	_CONSTEXPR17 reverse_iterator()
+		: current()
+		{	// construct with value-initialized wrapped iterator
+		}
+
+	_CONSTEXPR17 explicit reverse_iterator(_RanIt _Right)
+		: current(_Right)
+		{	// construct wrapped iterator from _Right
+		}
+
+	template<class _Other>
+		_CONSTEXPR17 reverse_iterator(const reverse_iterator<_Other>& _Right)
+		: current(_Right.base())
+		{	// initialize with compatible base
+		}
+
+	template<class _Other>
+		_CONSTEXPR17 reverse_iterator& operator=(const reverse_iterator<_Other>& _Right)
+		{	// assign from compatible base
+		current = _Right.base();
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 _RanIt base() const
+		{	// return wrapped iterator
+		return (current);
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator*() const
+		{	// return designated value
+		_RanIt _Tmp = current;
+		return (*--_Tmp);
+		}
+
+	_NODISCARD _CONSTEXPR17 pointer operator->() const
+		{	// return pointer to class object
+		_RanIt _Tmp = current;
+		--_Tmp;
+		return (_Operator_arrow(_Tmp, is_pointer<_RanIt>()));
+		}
+
+	_CONSTEXPR17 reverse_iterator& operator++()
+		{	// preincrement
+		--current;
+		return (*this);
+		}
+
+	_CONSTEXPR17 reverse_iterator operator++(int)
+		{	// postincrement
+		reverse_iterator _Tmp = *this;
+		--current;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 reverse_iterator& operator--()
+		{	// predecrement
+		++current;
+		return (*this);
+		}
+
+	_CONSTEXPR17 reverse_iterator operator--(int)
+		{	// postdecrement
+		reverse_iterator _Tmp = *this;
+		++current;
+		return (_Tmp);
+		}
+
+// N.B. functions valid for random-access iterators only beyond this point
+
+	_CONSTEXPR17 reverse_iterator& operator+=(difference_type _Off)
+		{	// increment by integer
+		current -= _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 reverse_iterator operator+(difference_type _Off) const
+		{	// return this + integer
+		return (reverse_iterator(current - _Off));
+		}
+
+	_CONSTEXPR17 reverse_iterator& operator-=(difference_type _Off)
+		{	// decrement by integer
+		current += _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 reverse_iterator operator-(difference_type _Off) const
+		{	// return this - integer
+		return (reverse_iterator(current + _Off));
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator[](difference_type _Off) const
+		{	// subscript
+		return (*(*this + _Off));
+		}
+
+protected:
+	_RanIt current;	// the wrapped iterator
+	};
+
+template<class _RanIt>
+	struct _Is_checked_helper<reverse_iterator<_RanIt>>
+		: public _Is_checked_helper<_RanIt>
+	{	// mark reverse_iterator as checked if its wrapped iterator is checked
+	};
+
+template<class _RanIt>
+	_NODISCARD _CONSTEXPR17 reverse_iterator<_RanIt> operator+(
+		typename reverse_iterator<_RanIt>::difference_type _Off,
+		const reverse_iterator<_RanIt>& _Right)
+	{	// return reverse_iterator + integer
+	return (_Right + _Off);
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 auto operator-(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+			-> decltype(_Right.base() - _Left.base())
+	{	// return difference of reverse_iterators
+	return (_Right.base() - _Left.base());
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator==(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+	{	// test for reverse_iterator equality
+	return (_Left.base() == _Right.base());
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator!=(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+	{	// test for reverse_iterator inequality
+	return (!(_Left == _Right));
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator<(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+	{	// test for reverse_iterator < reverse_iterator
+	return (_Right.base() < _Left.base());
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator>(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+	{	// test for reverse_iterator > reverse_iterator
+	return (_Right < _Left);
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator<=(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+	{	// test for reverse_iterator <= reverse_iterator
+	return (!(_Right < _Left));
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator>=(const reverse_iterator<_RanIt1>& _Left,
+		const reverse_iterator<_RanIt2>& _Right)
+	{	// test for reverse_iterator >= reverse_iterator
+	return (!(_Left < _Right));
+	}
+
+		// FUNCTION TEMPLATE make_reverse_iterator
+template<class _RanIt>
+	_NODISCARD _CONSTEXPR17 reverse_iterator<_RanIt> make_reverse_iterator(_RanIt _Iter)
+	{	// make reverse_iterator from iterator
+	return (reverse_iterator<_RanIt>(_Iter));
+	}
+
+		// FUNCTION TEMPLATES begin AND end
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto begin(_Container& _Cont) -> decltype(_Cont.begin())
+	{	// get beginning of sequence
+	return (_Cont.begin());
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto begin(const _Container& _Cont) -> decltype(_Cont.begin())
+	{	// get beginning of sequence
+	return (_Cont.begin());
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto end(_Container& _Cont) -> decltype(_Cont.end())
+	{	// get end of sequence
+	return (_Cont.end());
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto end(const _Container& _Cont) -> decltype(_Cont.end())
+	{	// get end of sequence
+	return (_Cont.end());
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD constexpr _Ty *begin(_Ty (&_Array)[_Size]) _NOEXCEPT
+	{	// get beginning of array
+	return (_Array);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD constexpr _Ty *end(_Ty (&_Array)[_Size]) _NOEXCEPT
+	{	// get end of array
+	return (_Array + _Size);
+	}
+
+		// FUNCTION TEMPLATES cbegin AND cend
+template<class _Container>
+	_NODISCARD constexpr auto cbegin(const _Container& _Cont)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_STD begin(_Cont)))
+		-> decltype(_STD begin(_Cont))
+	{	// get beginning of sequence
+	return (_STD begin(_Cont));
+	}
+
+template<class _Container>
+	_NODISCARD constexpr auto cend(const _Container& _Cont)
+		_NOEXCEPT_COND(_NOEXCEPT_OPER(_STD end(_Cont)))
+		-> decltype(_STD end(_Cont))
+	{	// get end of sequence
+	return (_STD end(_Cont));
+	}
+
+		// FUNCTION TEMPLATES rbegin AND rend
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto rbegin(_Container& _Cont) -> decltype(_Cont.rbegin())
+	{	// get beginning of reversed sequence
+	return (_Cont.rbegin());
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto rbegin(const _Container& _Cont) -> decltype(_Cont.rbegin())
+	{	// get beginning of reversed sequence
+	return (_Cont.rbegin());
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto rend(_Container& _Cont) -> decltype(_Cont.rend())
+	{	// get end of reversed sequence
+	return (_Cont.rend());
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto rend(const _Container& _Cont) -> decltype(_Cont.rend())
+	{	// get end of reversed sequence
+	return (_Cont.rend());
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD _CONSTEXPR17 reverse_iterator<_Ty *> rbegin(_Ty (&_Array)[_Size])
+	{	// get beginning of reversed array
+	return (reverse_iterator<_Ty *>(_Array + _Size));
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD _CONSTEXPR17 reverse_iterator<_Ty *> rend(_Ty (&_Array)[_Size])
+	{	// get end of reversed array
+	return (reverse_iterator<_Ty *>(_Array));
+	}
+
+template<class _Elem>
+	_NODISCARD _CONSTEXPR17 reverse_iterator<const _Elem *>
+		rbegin(initializer_list<_Elem> _Ilist)
+	{	// get beginning of reversed sequence
+	return (reverse_iterator<const _Elem *>(_Ilist.end()));
+	}
+
+template<class _Elem>
+	_NODISCARD _CONSTEXPR17 reverse_iterator<const _Elem *>
+		rend(initializer_list<_Elem> _Ilist)
+	{	// get end of reversed sequence
+	return (reverse_iterator<const _Elem *>(_Ilist.begin()));
+	}
+
+		// FUNCTION TEMPLATES crbegin AND crend
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto crbegin(const _Container& _Cont)
+		-> decltype(_STD rbegin(_Cont))
+	{	// get beginning of reversed sequence
+	return (_STD rbegin(_Cont));
+	}
+
+template<class _Container>
+	_NODISCARD _CONSTEXPR17 auto crend(const _Container& _Cont)
+		-> decltype(_STD rend(_Cont))
+	{	// get end of reversed sequence
+	return (_STD rend(_Cont));
+	}
+
+
+template<class _Container>
+	_NODISCARD constexpr auto size(const _Container& _Cont)
+		-> decltype(_Cont.size())
+	{	// get size() for container
+	return (_Cont.size());
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD constexpr size_t size(const _Ty(&)[_Size]) _NOEXCEPT
+	{	// get dimension for array
+	return (_Size);
+	}
+
+template<class _Container>
+	_NODISCARD constexpr auto empty(const _Container& _Cont)
+		-> decltype(_Cont.empty())
+	{	// get empty() for container
+	return (_Cont.empty());
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD constexpr bool empty(const _Ty(&)[_Size]) _NOEXCEPT
+	{	// get dimension==0 for array (can't happen)
+	return (false);
+	}
+
+template<class _Elem>
+	_NODISCARD constexpr bool empty(
+		initializer_list<_Elem> _Ilist) _NOEXCEPT
+	{	// get dimension==0 for initializer_list
+	return (_Ilist.size() == 0);
+	}
+
+template<class _Container>
+	_NODISCARD constexpr auto data(_Container& _Cont)
+		-> decltype(_Cont.data())
+	{	// get data() for container
+	return (_Cont.data());
+	}
+
+template<class _Container>
+	_NODISCARD constexpr auto data(const _Container& _Cont)
+		-> decltype(_Cont.data())
+	{	// get pointer to data of const container
+	return (_Cont.data());
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD constexpr _Ty *data(_Ty(&_Array)[_Size]) _NOEXCEPT
+	{	// get pointer to data of array
+	return (_Array);
+	}
+
+template<class _Elem>
+	_NODISCARD constexpr const _Elem *data(
+		initializer_list<_Elem> _Ilist) _NOEXCEPT
+	{	// get pointer to data of initializer_list
+	return (_Ilist.begin());
+	}
+
+
+		// CLASS TEMPLATE _Array_const_iterator
+#if _ITERATOR_DEBUG_LEVEL != 0
+struct _Iterator_base12_compatible
+	{	// TRANSITION, for binary compatibility
+	_Container_proxy * _Myproxy{};
+	_Iterator_base12 * _Mynextiter{};
+	};
+#endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+
+template<class _Ty,
+	size_t _Size>
+	class _Array_const_iterator
+#if _ITERATOR_DEBUG_LEVEL != 0
+		: private _Iterator_base12_compatible
+#endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+	{	// iterator for nonmutable array
+public:
+	using iterator_category = random_access_iterator_tag;
+
+	using value_type = _Ty;
+	using difference_type = ptrdiff_t;
+	using pointer = const _Ty *;
+	using reference = const _Ty&;
+	enum {_EEN_SIZE = _Size};	// helper for expression evaluator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	_CONSTEXPR17 _Array_const_iterator()
+		: _Ptr()
+		{	// construct with null pointer
+		}
+
+	_CONSTEXPR17 explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
+		: _Ptr(_Parg + _Off)
+		{	// construct with pointer and offset
+		}
+
+	using _Unchecked_type = pointer;
+
+	_NODISCARD _CONSTEXPR17 reference operator*() const
+		{	// return designated object
+		return (*_Ptr);
+		}
+
+	_NODISCARD _CONSTEXPR17 pointer operator->() const
+		{	// return pointer to class object
+		return (_Ptr);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator++()
+		{	// preincrement
+		++_Ptr;
+		return (*this);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator operator++(int)
+		{	// postincrement
+		_Array_const_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator--()
+		{	// predecrement
+		--_Ptr;
+		return (*this);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator operator--(int)
+		{	// postdecrement
+		_Array_const_iterator _Tmp = *this;
+		--*this;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator+=(ptrdiff_t _Off)
+		{	// increment by integer
+		_Ptr += _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 _Array_const_iterator operator+(ptrdiff_t _Off) const
+		{	// return this + integer
+		_Array_const_iterator _Tmp = *this;
+		return (_Tmp += _Off);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator-=(ptrdiff_t _Off)
+		{	// decrement by integer
+		return (*this += -_Off);
+		}
+
+	_NODISCARD _CONSTEXPR17 _Array_const_iterator operator-(ptrdiff_t _Off) const
+		{	// return this - integer
+		_Array_const_iterator _Tmp = *this;
+		return (_Tmp -= _Off);
+		}
+
+	_NODISCARD _CONSTEXPR17 ptrdiff_t operator-(const _Array_const_iterator& _Right) const
+		{	// return difference of iterators
+		return (_Ptr - _Right._Ptr);
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator[](ptrdiff_t _Off) const
+		{	// subscript
+		return (*(*this + _Off));
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator==(const _Array_const_iterator& _Right) const
+		{	// test for iterator equality
+		return (_Ptr == _Right._Ptr);
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator!=(const _Array_const_iterator& _Right) const
+		{	// test for iterator inequality
+		return (!(*this == _Right));
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator<(const _Array_const_iterator& _Right) const
+		{	// test if this < _Right
+		return (_Ptr < _Right._Ptr);
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator>(const _Array_const_iterator& _Right) const
+		{	// test if this > _Right
+		return (_Right < *this);
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator<=(const _Array_const_iterator& _Right) const
+		{	// test if this <= _Right
+		return (!(_Right < *this));
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator>=(const _Array_const_iterator& _Right) const
+		{	// test if this >= _Right
+		return (!(*this < _Right));
+		}
+
+	pointer _Ptr;	// beginning of array
+
+ #else /* _ITERATOR_DEBUG_LEVEL == 0 */
+	_CONSTEXPR17 _Array_const_iterator()
+		: _Ptr(),
+		_Idx(0)
+		{	// construct with null pointer
+		}
+
+	_CONSTEXPR17 explicit _Array_const_iterator(pointer _Parg, size_t _Off = 0)
+		: _Ptr(_Parg),
+		_Idx(_Off)
+		{	// construct with pointer and offset
+		}
+
+	using _Unchecked_type = pointer;
+
+	_NODISCARD _CONSTEXPR17 reference operator*() const
+		{	// return designated object
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		if (_Ptr == 0
+			|| _Size <= _Idx)
+			{	// report error
+			_DEBUG_ERROR("array iterator not dereferencable");
+			}
+
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+		_SCL_SECURE_VALIDATE(_Ptr != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Idx < _Size);
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		_Analysis_assume_(_Ptr != 0);
+
+		return (_Ptr[_Idx]);
+		}
+
+	_NODISCARD _CONSTEXPR17 pointer operator->() const
+		{	// return pointer to class object
+		return (pointer_traits<pointer>::pointer_to(**this));
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator++()
+		{	// preincrement
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		if (_Ptr == 0
+			|| _Size <= _Idx)
+			{	// report error
+			_DEBUG_ERROR("array iterator not incrementable");
+			}
+
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+		_SCL_SECURE_VALIDATE(_Ptr != 0);
+		_SCL_SECURE_VALIDATE_RANGE(_Idx < _Size);
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		++_Idx;
+		return (*this);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator operator++(int)
+		{	// postincrement
+		_Array_const_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator--()
+		{	// predecrement
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		if (_Ptr == 0
+			|| _Idx <= 0)
+			{	// report error
+			_DEBUG_ERROR("array iterator not decrementable");
+			}
+
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+		_SCL_SECURE_VALIDATE(_Ptr != 0);
+		_SCL_SECURE_VALIDATE_RANGE(0 < _Idx);
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		--_Idx;
+		return (*this);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator operator--(int)
+		{	// postdecrement
+		_Array_const_iterator _Tmp = *this;
+		--*this;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator+=(ptrdiff_t _Off)
+		{	// increment by integer
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		if (_Size < _Idx + _Off)
+			{	// report error
+			_DEBUG_ERROR("array iterator + offset out of range");
+			}
+
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+		_SCL_SECURE_VALIDATE_RANGE(_Idx + _Off <= _Size);
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		_Idx += _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 _Array_const_iterator operator+(ptrdiff_t _Off) const
+		{	// return this + integer
+		_Array_const_iterator _Tmp = *this;
+		return (_Tmp += _Off);
+		}
+
+	_CONSTEXPR17 _Array_const_iterator& operator-=(ptrdiff_t _Off)
+		{	// decrement by integer
+		return (*this += -_Off);
+		}
+
+	_NODISCARD _CONSTEXPR17 _Array_const_iterator operator-(ptrdiff_t _Off) const
+		{	// return this - integer
+		_Array_const_iterator _Tmp = *this;
+		return (_Tmp -= _Off);
+		}
+
+	_NODISCARD _CONSTEXPR17 ptrdiff_t operator-(const _Array_const_iterator& _Right) const
+		{	// return difference of iterators
+		_Compat(_Right);
+		return (static_cast<ptrdiff_t>(_Idx - _Right._Idx));
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator[](ptrdiff_t _Off) const
+		{	// subscript
+		return (*(*this + _Off));
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator==(const _Array_const_iterator& _Right) const
+		{	// test for iterator equality
+		_Compat(_Right);
+		return (_Idx == _Right._Idx);
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator!=(const _Array_const_iterator& _Right) const
+		{	// test for iterator inequality
+		return (!(*this == _Right));
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator<(const _Array_const_iterator& _Right) const
+		{	// test if this < _Right
+		_Compat(_Right);
+		return (_Idx < _Right._Idx);
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator>(const _Array_const_iterator& _Right) const
+		{	// test if this > _Right
+		return (_Right < *this);
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator<=(const _Array_const_iterator& _Right) const
+		{	// test if this <= _Right
+		return (!(_Right < *this));
+		}
+
+	_NODISCARD _CONSTEXPR17 bool operator>=(const _Array_const_iterator& _Right) const
+		{	// test if this >= _Right
+		return (!(*this < _Right));
+		}
+
+ #if _ITERATOR_DEBUG_LEVEL == 2
+	_CONSTEXPR17 void _Compat(const _Array_const_iterator& _Right) const
+		{	// test for compatible iterator pair
+		if (_Ptr != _Right._Ptr)
+			{	// report error
+			_DEBUG_ERROR("array iterators incompatible");
+			}
+		}
+
+ #elif _ITERATOR_DEBUG_LEVEL == 1
+	_CONSTEXPR17 void _Compat(const _Array_const_iterator& _Right) const
+		{	// test for compatible iterator pair
+		_SCL_SECURE_VALIDATE_RANGE(_Ptr == _Right._Ptr);
+		}
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+	pointer _Ptr;	// beginning of array
+	size_t _Idx;	// offset into array
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	};
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD _CONSTEXPR17 _Array_const_iterator<_Ty, _Size> operator+(
+		ptrdiff_t _Off,
+		_Array_const_iterator<_Ty, _Size> _Next)
+	{	// add offset to iterator
+	return (_Next += _Off);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 _Array_const_iterator<_Ty, _Size>& _Rechecked(_Array_const_iterator<_Ty, _Size>& _Iter,
+		const typename _Array_const_iterator<_Ty, _Size>::_Unchecked_type _Right)
+	{	// reset from unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	_Iter._Ptr = _Right;
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	_Iter._Idx = _Right - _Iter._Ptr;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	return (_Iter);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 typename _Array_const_iterator<_Ty, _Size>::_Unchecked_type _Unchecked(
+		const _Array_const_iterator<_Ty, _Size>& _Iter)
+	{	// make an unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	return (_Iter._Ptr);
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	return (_Iter._Ptr + _Iter._Idx);
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	}
+
+		// CLASS TEMPLATE _Array_iterator
+template<class _Ty,
+	size_t _Size>
+	class _Array_iterator
+		: public _Array_const_iterator<_Ty, _Size>
+	{	// iterator for mutable array
+public:
+	using _Mybase = _Array_const_iterator<_Ty, _Size>;
+	using iterator_category = random_access_iterator_tag;
+
+	using value_type = _Ty;
+	using difference_type = ptrdiff_t;
+	using pointer = _Ty *;
+	using reference = _Ty&;
+
+	_CONSTEXPR17 _Array_iterator()
+		{	// construct with null pointer
+		}
+
+	_CONSTEXPR17 explicit _Array_iterator(pointer _Parg, size_t _Off = 0)
+		: _Mybase(_Parg, _Off)
+		{	// construct with pointer and offset
+		}
+	enum {_EEN_SIZE = _Size};	// helper for expression evaluator
+	using _Unchecked_type = pointer;
+
+	_NODISCARD _CONSTEXPR17 reference operator*() const
+		{	// return designated object
+		return (const_cast<reference>(_Mybase::operator*()));
+		}
+
+	_NODISCARD _CONSTEXPR17 pointer operator->() const
+		{	// return pointer to class object
+		return (const_cast<pointer>(_Mybase::operator->()));
+		}
+
+	_CONSTEXPR17 _Array_iterator& operator++()
+		{	// preincrement
+		++*static_cast<_Mybase *>(this);
+		return (*this);
+		}
+
+	_CONSTEXPR17 _Array_iterator operator++(int)
+		{	// postincrement
+		_Array_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 _Array_iterator& operator--()
+		{	// predecrement
+		--*static_cast<_Mybase *>(this);
+		return (*this);
+		}
+
+	_CONSTEXPR17 _Array_iterator operator--(int)
+		{	// postdecrement
+		_Array_iterator _Tmp = *this;
+		--*this;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 _Array_iterator& operator+=(ptrdiff_t _Off)
+		{	// increment by integer
+		*static_cast<_Mybase *>(this) += _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 _Array_iterator operator+(ptrdiff_t _Off) const
+		{	// return this + integer
+		_Array_iterator _Tmp = *this;
+		return (_Tmp += _Off);
+		}
+
+	_CONSTEXPR17 _Array_iterator& operator-=(ptrdiff_t _Off)
+		{	// decrement by integer
+		return (*this += -_Off);
+		}
+
+	_NODISCARD _CONSTEXPR17 _Array_iterator operator-(ptrdiff_t _Off) const
+		{	// return this - integer
+		_Array_iterator _Tmp = *this;
+		return (_Tmp -= _Off);
+		}
+
+	_NODISCARD _CONSTEXPR17 ptrdiff_t operator-(const _Mybase& _Right) const
+		{	// return difference of iterators
+		return (*static_cast<const _Mybase *>(this) - _Right);
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator[](ptrdiff_t _Off) const
+		{	// subscript
+		return (*(*this + _Off));
+		}
+	};
+
+template<class _Ty,
+	size_t _Size>
+	_NODISCARD _CONSTEXPR17 _Array_iterator<_Ty, _Size> operator+(
+		ptrdiff_t _Off,
+		_Array_iterator<_Ty, _Size> _Next)
+	{	// add offset to iterator
+	return (_Next += _Off);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 _Array_iterator<_Ty, _Size>& _Rechecked(_Array_iterator<_Ty, _Size>& _Iter,
+		const typename _Array_iterator<_Ty, _Size>::_Unchecked_type _Right)
+	{	// reset from unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	_Iter._Ptr = _Right;
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	_Iter._Idx = _Right - _Iter._Ptr;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	return (_Iter);
+	}
+
+template<class _Ty,
+	size_t _Size>
+	_CONSTEXPR17 typename _Array_iterator<_Ty, _Size>::_Unchecked_type _Unchecked(
+		const _Array_iterator<_Ty, _Size>& _Iter)
+	{	// make an unchecked iterator
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	return (const_cast<_Ty *>(_Iter._Ptr));
+ #else /* ^^^ _ITERATOR_DEBUG_LEVEL == 0 ^^^ // vvv _ITERATOR_DEBUG_LEVEL != 0 vvv */
+	return (const_cast<_Ty *>(_Iter._Ptr + _Iter._Idx));
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+	}
+
+		// CLASS TEMPLATE move_iterator
+template<class _RanIt>
+	class move_iterator
+	{	// wrap iterator to move rvalues
+public:
+	using iterator_category = typename iterator_traits<_RanIt>::iterator_category;
+	using value_type = typename iterator_traits<_RanIt>::value_type;
+	using difference_type = typename iterator_traits<_RanIt>::difference_type;
+	using pointer = _RanIt;
+	using _Ref0 = typename iterator_traits<_RanIt>::reference;
+	using reference = conditional_t<is_reference_v<_Ref0>, remove_reference_t<_Ref0>&&, _Ref0>;
+	using iterator_type = _RanIt;
+
+	_CONSTEXPR17 move_iterator()
+		: current()
+		{	// construct with value-initialized wrapped iterator
+		}
+
+	_CONSTEXPR17 explicit move_iterator(iterator_type _Right)
+		: current(_Right)
+		{	// construct wrapped iterator from _Right
+		}
+
+	template<class _RanIt2>
+		_CONSTEXPR17 move_iterator(const move_iterator<_RanIt2>& _Right)
+		: current(_Right.base())
+		{	// initialize with compatible base
+		}
+
+	template<class _RanIt2>
+		_CONSTEXPR17 move_iterator& operator=(const move_iterator<_RanIt2>& _Right)
+		{	// assign with compatible base
+		current = _Right.base();
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 _RanIt base() const
+		{	// return wrapped iterator
+		return (current);
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator*() const
+		{	// return designated value
+		return (static_cast<reference>(*current));
+		}
+
+	_NODISCARD _CONSTEXPR17 pointer operator->() const
+		{	// return pointer to class object
+		return (current);
+		}
+
+	_CONSTEXPR17 move_iterator& operator++()
+		{	// preincrement
+		++current;
+		return (*this);
+		}
+
+	_CONSTEXPR17 move_iterator operator++(int)
+		{	// postincrement
+		move_iterator _Tmp = *this;
+		++current;
+		return (_Tmp);
+		}
+
+	_CONSTEXPR17 move_iterator& operator--()
+		{	// predecrement
+		--current;
+		return (*this);
+		}
+
+	_CONSTEXPR17 move_iterator operator--(int)
+		{	// postdecrement
+		move_iterator _Tmp = *this;
+		--current;
+		return (_Tmp);
+		}
+
+// N.B. functions valid for random-access iterators only beyond this point
+
+	_CONSTEXPR17 move_iterator& operator+=(difference_type _Off)
+		{	// increment by integer
+		current += _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 move_iterator operator+(difference_type _Off) const
+		{	// return this + integer
+		return (move_iterator(current + _Off));
+		}
+
+	_CONSTEXPR17 move_iterator& operator-=(difference_type _Off)
+		{	// decrement by integer
+		current -= _Off;
+		return (*this);
+		}
+
+	_NODISCARD _CONSTEXPR17 move_iterator operator-(difference_type _Off) const
+		{	// return this - integer
+		return (move_iterator(current - _Off));
+		}
+
+	_NODISCARD _CONSTEXPR17 reference operator[](difference_type _Off) const
+		{	// subscript
+		return (_STD move(current[_Off]));
+		}
+
+protected:
+	iterator_type current;	// the wrapped iterator
+	};
+
+template<class _RanIt>
+	struct _Is_checked_helper<move_iterator<_RanIt>>
+		: public _Is_checked_helper<_RanIt>
+	{	// mark move_iterator as checked if its wrapped iterator is checked
+	};
+
+template<class _RanIt>
+	_NODISCARD _CONSTEXPR17 move_iterator<_RanIt> operator+(
+		typename move_iterator<_RanIt>::difference_type _Off,
+		const move_iterator<_RanIt>& _Right)
+	{	// return move_iterator + integer
+	return (_Right + _Off);
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 auto operator-(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+			-> decltype(_Left.base() - _Right.base())
+	{	// return difference of move_iterators
+	return (_Left.base() - _Right.base());
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator==(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+	{	// test for move_iterator equality
+	return (_Left.base() == _Right.base());
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator!=(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+	{	// test for move_iterator inequality
+	return (!(_Left == _Right));
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator<(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+	{	// test for move_iterator < move_iterator
+	return (_Left.base() < _Right.base());
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator>(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+	{	// test for move_iterator > move_iterator
+	return (_Right < _Left);
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator<=(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+	{	// test for move_iterator <= move_iterator
+	return (!(_Right < _Left));
+	}
+
+template<class _RanIt1,
+	class _RanIt2>
+	_NODISCARD _CONSTEXPR17 bool operator>=(
+		const move_iterator<_RanIt1>& _Left,
+		const move_iterator<_RanIt2>& _Right)
+	{	// test for move_iterator >= move_iterator
+	return (!(_Left < _Right));
+	}
+
+		// FUNCTION TEMPLATE make_move_iterator
+template<class _RanIt>
+	_NODISCARD _CONSTEXPR17 move_iterator<_RanIt> make_move_iterator(_RanIt _Iter)
+	{	// make move_iterator from iterator
+	return (move_iterator<_RanIt>(_Iter));
+	}
+
+		// STRUCT TEMPLATE _Char_traits_eq
+template<class _Traits>
+	struct _Char_traits_eq
+	{
+	using _Elem = typename _Traits::char_type;
+
+	bool operator()(_Elem _Left, _Elem _Right) const
+		{
+		return (_Traits::eq(_Left, _Right));
+		}
+	};
+
+		// STRUCT TEMPLATE _Char_traits_lt
+template<class _Traits>
+	struct _Char_traits_lt
+	{
+	using _Elem = typename _Traits::char_type;
+
+	bool operator()(_Elem _Left, _Elem _Right) const
+		{
+		return (_Traits::lt(_Left, _Right));
+		}
+	};
+
+		// FUNCTION TEMPLATE copy
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Copy_memmove(_InIt _First, _InIt _Last, _OutIt _Dest)
+	{	// implement copy-like function as memmove
+	const char * const _First_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_First));
+	const char * const _Last_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_Last));
+	char * const _Dest_ch = const_cast<char *>(reinterpret_cast<volatile char *>(_Dest));
+	const size_t _Count = _Last_ch - _First_ch;
+	_CSTD memmove(_Dest_ch, _First_ch, _Count);
+	return (reinterpret_cast<_OutIt>(_Dest_ch + _Count));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Copy_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _Last) to [_Dest, ...), arbitrary iterators
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		*_Dest = *_First;
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Copy_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// copy [_First, _Last) to [_Dest, ...), pointers to trivially copyable
+	return (_Copy_memmove(_First, _Last, _Dest));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Copy_unchecked(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// copy [_First, _Last) to [_Dest, ...)
+		// note: _Copy_unchecked is called directly from elsewhere in the STL
+	return (_Copy_unchecked1(_First, _Last,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Copy_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// copy [_First, _Last) to [_Dest, ...), no _SCL_INSECURE_DEPRECATE_FN warnings
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
+	return (_Rechecked(_Dest,
+		_Copy_unchecked(_UFirst, _ULast, _UDest)));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt copy(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// copy [_First, _Last) to [_Dest, ...)
+	_DEPRECATE_UNCHECKED(copy, _Dest);
+	return (_Copy_no_deprecate(_First, _Last, _Dest));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _DestTy,
+	size_t _DestSize> inline
+	_DestTy *copy(_InIt _First, _InIt _Last, _DestTy (&_Dest)[_DestSize])
+	{	// copy [_First, _Last) to [_Dest, ...)
+	return (_Unchecked(
+		_Copy_no_deprecate(_First, _Last,
+			_Array_iterator<_DestTy, _DestSize>(_Dest))));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_FwdIt2 copy(_ExPo&&, _FwdIt1 _First, _FwdIt1 _Last, _FwdIt2 _Dest) _NOEXCEPT
+	{	// copy [_First, _Last) to [_Dest, ...)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	return (_STD copy(_First, _Last, _Dest));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _FwdIt1,
+	class _DestTy,
+	size_t _DestSize,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_DestTy *copy(_ExPo&&, _FwdIt1 _First, _FwdIt1 _Last, _DestTy (&_Dest)[_DestSize]) _NOEXCEPT
+	{	// copy [_First, _Last) to [_Dest, ...)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	return (_STD copy(_First, _Last, _Dest));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE copy_n
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt _Copy_n_unchecked2(_InIt _First, _Diff _Count,
+		_OutIt _Dest, input_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), input iterators
+	if (0 < _Count)
+		{
+		*_Dest = *_First;
+		while (0 < --_Count)
+			*++_Dest = *++_First;
+		return (++_Dest);
+		}
+
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt _Copy_n_unchecked2(_InIt _First, _Diff _Count,
+		_OutIt _Dest, forward_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), forward iterators
+	for (; 0 < _Count; --_Count, (void)++_Dest, ++_First)
+		*_Dest = *_First;
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt _Copy_n_unchecked1(_InIt _First, _Diff _Count,
+		_OutIt _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), no special optimization
+		// note that we must dispatch on iterator power here to avoid incrementing
+		// istream_iterator too many times; see LWG# 2471
+	return (_Copy_n_unchecked2(_First, _Count,
+		_Dest, _Iter_cat_t<_InIt>()));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt _Copy_n_unchecked1(_InIt _First, _Diff _Count,
+		_OutIt _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), memmove optimization
+	if (0 < _Count)
+		return (_Copy_memmove(_First, _First + _Count, _Dest));
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt _Copy_n_unchecked(_InIt _First, _Diff _Count,
+		_OutIt _Dest)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), choose optimization
+	return (_Copy_n_unchecked1(_First, _Count,
+		_Dest, _Ptr_copy_cat(_First, _Dest)));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt copy_n(_InIt _First, _Diff _Count_raw, _OutIt _Dest)
+	{	// copy [_First, _First + _Count) to [_Dest, ...)
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	_DEPRECATE_UNCHECKED(copy_n, _Dest);
+	return (_Rechecked(_Dest,
+		_Copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Unchecked_n(_Dest, _Count))));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _SourceTy,
+	size_t _SourceSize,
+	class _Diff,
+	class _OutIt> inline
+	_OutIt copy_n(_SourceTy (&_First)[_SourceSize], _Diff _Count_raw, _OutIt _Dest)
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array source
+		// Note that we _DEPRECATE_UNCHECKED _Dest because _Count logically goes with _First
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	_DEPRECATE_UNCHECKED(copy_n, _Dest);
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	return (_Rechecked(_Dest,
+		_Copy_n_unchecked(_First, _Count, _Unchecked_n(_Dest, _Count))));
+	}
+
+template<class _InIt,
+	class _Diff,
+	class _DestTy,
+	size_t _DestSize> inline
+	_DestTy *copy_n(_InIt _First, _Diff _Count_raw, _DestTy (&_Dest)[_DestSize])
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array dest
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Copy_n_unchecked(_Unchecked_n(_First, _Count), _Count, _Dest));
+	}
+
+template<class _SourceTy,
+	size_t _SourceSize,
+	class _Diff,
+	class _DestTy,
+	size_t _DestSize> inline
+	_DestTy *copy_n(_SourceTy (&_First)[_SourceSize], _Diff _Count_raw, _DestTy (&_Dest)[_DestSize])
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array source/dest
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	_DEBUG_ARRAY_SIZE(_First, _Count);
+	_DEBUG_ARRAY_SIZE(_Dest, _Count);
+	return (_Copy_n_unchecked(_First, _Count, _Dest));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+#if _HAS_CXX17
+ template<class _ExPo,
+	class _FwdIt1,
+	class _Diff,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_FwdIt2 copy_n(_ExPo&&, _FwdIt1 _First, _Diff _Count_raw, _FwdIt2 _Dest) _NOEXCEPT
+	{	// copy [_First, _First + _Count) to [_Dest, ...)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	return (_STD copy_n(_First, _Count_raw, _Dest));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _SourceTy,
+	size_t _SourceSize,
+	class _Diff,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_FwdIt2 copy_n(_ExPo&&, _SourceTy (&_First)[_SourceSize], _Diff _Count_raw, _FwdIt2 _Dest) _NOEXCEPT
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array source
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	return (_STD copy_n(_First, _Count_raw, _Dest));
+	}
+
+template<class _ExPo,
+	class _FwdIt1,
+	class _Diff,
+	class _DestTy,
+	size_t _DestSize,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_DestTy *copy_n(_ExPo&&, _FwdIt1 _First, _Diff _Count_raw, _DestTy (&_Dest)[_DestSize]) _NOEXCEPT
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array dest
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	return (_STD copy_n(_First, _Count_raw, _Dest));
+	}
+
+template<class _ExPo,
+	class _SourceTy,
+	size_t _SourceSize,
+	class _Diff,
+	class _DestTy,
+	size_t _DestSize,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_DestTy *copy_n(_ExPo&&, _SourceTy (&_First)[_SourceSize], _Diff _Count_raw, _DestTy (&_Dest)[_DestSize]) _NOEXCEPT
+	{	// copy [_First, _First + _Count) to [_Dest, ...), array source/dest
+		// not parallelized as benchmarks show it isn't worth it
+	return (_STD copy_n(_First, _Count_raw, _Dest));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE copy_backward
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Copy_backward_memmove(_BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest)
+	{	// implement copy_backward-like function as memmove
+	const char * const _First_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_First));
+	const char * const _Last_ch = const_cast<const char *>(reinterpret_cast<const volatile char *>(_Last));
+	char * const _Dest_ch = const_cast<char *>(reinterpret_cast<volatile char *>(_Dest));
+	const size_t _Count = _Last_ch - _First_ch;
+	return (static_cast<_BidIt2>(
+		_CSTD memmove(_Dest_ch - _Count, _First_ch, _Count)));
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Copy_backward_unchecked(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _General_ptr_iterator_tag)
+	{	// copy [_First, _Last) backwards to [..., _Dest), no special optimization
+	while (_First != _Last)
+		*--_Dest = *--_Last;
+	return (_Dest);
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Copy_backward_unchecked(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// copy [_First, _Last) backwards to [..., _Dest), memmove optimization
+	return (_Copy_backward_memmove(_First, _Last, _Dest));
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 copy_backward(_BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest)
+	{	// copy [_First, _Last) backwards to [..., _Dest)
+	_DEPRECATE_UNCHECKED(copy_backward, _Dest);
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked_n_backward(_Dest, _Idl_distance<_BidIt1>(_UFirst, _ULast));
+	return (_Rechecked(_Dest,
+		_Copy_backward_unchecked(_UFirst, _ULast, _UDest, _Ptr_copy_cat(_UFirst, _UDest))));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _BidIt1,
+	class _BidIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_BidIt2 copy_backward(_ExPo&&, _BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest) _NOEXCEPT
+	{	// copy [_First, _Last) backwards to [..., _Dest)
+		// not parallelized as benchmarks show it isn't worth it
+	return (_STD copy_backward(_First, _Last, _Dest));
+	}
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE move
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Move_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _Last) to [_Dest, ...), no special optimization
+	for (; _First != _Last; ++_Dest, (void)++_First)
+		*_Dest = _STD move(*_First);
+	return (_Dest);
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Move_unchecked1(_InIt _First, _InIt _Last,
+		_OutIt _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// move [_First, _Last) to [_Dest, ...), memmove optimization
+	return (_Copy_memmove(_First, _Last, _Dest));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Move_unchecked(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// move [_First, _Last) to [_Dest, ...), choose optimization
+		// note: _Move_unchecked is called directly from elsewhere in the STL
+	return (_Move_unchecked1(_First, _Last,
+		_Dest, _Ptr_move_cat(_First, _Dest)));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt _Move_no_deprecate(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// move [_First, _Last) to [_Dest, ...), no _SCL_INSECURE_DEPRECATE_FN warnings
+		// note: _Move_no_deprecate is called directly from elsewhere in the STL
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked_n(_Dest, _Idl_distance<_InIt>(_UFirst, _ULast));
+	return (_Rechecked(_Dest,
+		_Move_unchecked(_UFirst, _ULast, _UDest)));
+	}
+
+template<class _InIt,
+	class _OutIt> inline
+	_OutIt move(_InIt _First, _InIt _Last,
+		_OutIt _Dest)
+	{	// move [_First, _Last) to [_Dest, ...)
+	_DEPRECATE_UNCHECKED(move, _Dest);
+	return (_Move_no_deprecate(_First, _Last, _Dest));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt,
+	class _DestTy,
+	size_t _DestSize> inline
+	_DestTy *move(_InIt _First, _InIt _Last, _DestTy (&_Dest)[_DestSize])
+	{	// move [_First, _Last) to [_Dest, ...)
+	return (_Unchecked(
+		_Move_no_deprecate(_First, _Last,
+			_Array_iterator<_DestTy, _DestSize>(_Dest))));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_FwdIt2 move(_ExPo&&, _FwdIt1 _First, _FwdIt1 _Last, _FwdIt2 _Dest) _NOEXCEPT
+	{	// move [_First, _Last) to [_Dest, ...)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	return (_STD move(_First, _Last, _Dest));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _FwdIt1,
+	class _DestTy,
+	size_t _DestSize,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_DestTy *move(_ExPo&&, _FwdIt1 _First, _FwdIt1 _Last, _DestTy (&_Dest)[_DestSize]) _NOEXCEPT
+	{	// move [_First, _Last) to [_Dest, ...)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	return (_STD move(_First, _Last, _Dest));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE move_backward
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Move_backward_unchecked1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _General_ptr_iterator_tag)
+	{	// move [_First, _Last) backwards to [..., _Dest), no special optimization
+	while (_First != _Last)
+		*--_Dest = _STD move(*--_Last);
+	return (_Dest);
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Move_backward_unchecked1(_BidIt1 _First, _BidIt1 _Last,
+		_BidIt2 _Dest, _Trivially_copyable_ptr_iterator_tag)
+	{	// move [_First, _Last) backwards to [..., _Dest), memmove optimization
+	return (_Copy_backward_memmove(_First, _Last, _Dest));
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 _Move_backward_unchecked(_BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest)
+	{	// move [_First, _Last) backwards to [..., _Dest), choose optimization
+		// note: _Move_backward_unchecked is called directly from elsewhere in the STL
+	return (_Move_backward_unchecked1(_First, _Last,
+		_Dest, _Ptr_move_cat(_First, _Dest)));
+	}
+
+template<class _BidIt1,
+	class _BidIt2> inline
+	_BidIt2 move_backward(_BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest)
+	{	// move [_First, _Last) backwards to [..., _Dest)
+	_DEPRECATE_UNCHECKED(move_backward, _Dest);
+	_DEBUG_RANGE(_First, _Last);
+	const auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	const auto _UDest = _Unchecked_n_backward(_Dest, _Idl_distance<_BidIt1>(_UFirst, _ULast));
+	return (_Rechecked(_Dest,
+		_Move_backward_unchecked(_UFirst, _ULast, _UDest)));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _BidIt1,
+	class _BidIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_BidIt2 move_backward(_ExPo&&, _BidIt1 _First, _BidIt1 _Last, _BidIt2 _Dest) _NOEXCEPT
+	{	// move [_First, _Last) backwards to [..., _Dest)
+		// not parallelized as benchmarks show it isn't worth it
+	return (_STD move_backward(_First, _Last, _Dest));
+	}
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE fill
+template<class _Ty>
+	struct _Is_character
+		: false_type
+		{	// by default, not a character type
+		};
+
+template<>
+	struct _Is_character<char>
+		: true_type
+		{	// chars are characters
+		};
+
+template<>
+	struct _Is_character<signed char>
+		: true_type
+		{	// signed chars are also characters
+		};
+
+template<>
+	struct _Is_character<unsigned char>
+		: true_type
+		{	// unsigned chars are also characters
+		};
+
+template<class _FwdIt,
+	class _Ty>
+	struct _Fill_memset_is_safe_helper
+	{	// determines if _FwdIt and _Ty are eligible for memset optimization in fill
+	using _Value_type = _Iter_value_t<_FwdIt>;
+
+	using _Raw_ty = _Unwrap_enum_t<_Ty>;
+	using _Raw_value_type = _Unwrap_enum_t<_Value_type>;
+
+	using type = _Conjunction_t<
+		is_pointer<_FwdIt>,
+		disjunction<
+			conjunction<
+				_Is_character<_Raw_ty>,
+				_Is_character<_Raw_value_type>>,
+			conjunction<
+				is_same<bool, _Raw_ty>,
+				is_same<bool, _Raw_value_type>>>,
+		is_convertible<_Ty, _Value_type>>;
+	};
+
+template<class _FwdIt,
+	class _Ty> inline
+	typename _Fill_memset_is_safe_helper<_FwdIt, _Ty>::type
+	_Fill_memset_is_safe(const _FwdIt&, const _Ty&)
+	{	// type deduction for _Fill_memset_is_safe_helper
+	return {};
+	}
+
+template<class _FwdIt,
+	class _Ty> inline
+	void _Fill_unchecked1(_FwdIt _First, _FwdIt _Last, const _Ty& _Val, false_type)
+	{	// copy _Val through [_First, _Last), no special optimization
+	for (; _First != _Last; ++_First)
+		*_First = _Val;
+	}
+
+template<class _FwdIt,
+	class _Ty> inline
+	void _Fill_unchecked1(_FwdIt _First, _FwdIt _Last, const _Ty& _Val, true_type)
+	{	// copy _Val through [_First, _Last), memset optimization
+	_CSTD memset(_First, static_cast<unsigned char>(_Val), _Last - _First);
+	}
+
+template<class _FwdIt,
+	class _Ty> inline
+	void _Fill_unchecked(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
+	{	// copy _Val through [_First, _Last), choose optimization
+	_Fill_unchecked1(_First, _Last, _Val, _Fill_memset_is_safe(_First, _Val));
+	}
+
+template<class _FwdIt,
+	class _Ty> inline
+	void fill(_FwdIt _First, _FwdIt _Last, const _Ty& _Val)
+	{	// copy _Val through [_First, _Last)
+	_DEBUG_RANGE(_First, _Last);
+	_Fill_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val);
+	}
+
+ #if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	void fill(_ExPo&&, _FwdIt _First, _FwdIt _Last, const _Ty& _Val) _NOEXCEPT
+	{	// copy _Val through [_First, _Last)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	return (_STD fill(_First, _Last, _Val));
+	}
+ #endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE fill_n
+template<class _OutIt,
+	class _Diff,
+	class _Ty> inline
+	_OutIt _Fill_n_unchecked1(_OutIt _Dest, _Diff _Count, const _Ty& _Val, false_type)
+	{	// copy _Val _Count times through [_Dest, ...), no special optimization
+	for (; 0 < _Count; --_Count, (void)++_Dest)
+		*_Dest = _Val;
+	return (_Dest);
+	}
+
+template<class _OutIt,
+	class _Diff,
+	class _Ty> inline
+	_OutIt _Fill_n_unchecked1(_OutIt _Dest, _Diff _Count, const _Ty& _Val, true_type)
+	{	// copy _Val _Count times through [_Dest, ...), memset optimization
+	if (0 < _Count)
+		{
+		_CSTD memset(_Dest, static_cast<unsigned char>(_Val), _Count);
+		return (_Dest + _Count);
+		}
+
+	return (_Dest);
+	}
+
+template<class _OutIt,
+	class _Diff,
+	class _Ty> inline
+	_OutIt _Fill_n_unchecked(_OutIt _Dest, _Diff _Count, const _Ty& _Val)
+	{	// copy _Val _Count times through [_Dest, ...), choose optimization
+		// note: _Fill_n_unchecked is called directly from elsewhere in the STL
+	return (_Fill_n_unchecked1(_Dest, _Count, _Val, _Fill_memset_is_safe(_Dest, _Val)));
+	}
+
+template<class _OutIt,
+	class _Diff,
+	class _Ty> inline
+	_OutIt fill_n(_OutIt _Dest, _Diff _Count_raw, const _Ty& _Val)
+	{	// copy _Val _Count times through [_Dest, ...)
+	const _Algorithm_int_t<_Diff> _Count = _Count_raw;
+	return (_Rechecked(_Dest,
+		_Fill_n_unchecked(_Unchecked_n(_Dest, _Count), _Count, _Val)));
+	}
+
+ #if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt,
+	class _Diff,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_FwdIt fill_n(_ExPo&&, _FwdIt _Dest, _Diff _Count_raw, const _Ty& _Val) _NOEXCEPT
+	{	// copy _Val _Count times through [_Dest, ...)
+		// not parallelized as benchmarks show it isn't worth it
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt);
+	return (_STD fill_n(_Dest, _Count_raw, _Val));
+	}
+ #endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE equal
+template<class _Elem1,
+	class _Elem2>
+	struct _Value_equality_is_bitwise_equality
+		: bool_constant<static_cast<_Elem1>(-1) == static_cast<_Elem2>(-1)>
+	{	// Tests whether the usual arithmetic conversions will preserve the bit-pattern
+		// when promoting to int
+		// e.g. short == unsigned short -> false
+		//      int == unsigned int -> true
+	};
+
+template<class _Elem1,
+	class _Elem2,
+	class _Pr>
+	struct _Equal_memcmp_is_safe_helper
+		: false_type
+	{	// determines whether it is safe to call memcmp to compare things;
+		// defaults to false
+	};
+
+template<class _Elem1,
+	class _Elem2>
+	struct _Equal_memcmp_is_safe_helper<_Elem1, _Elem2, equal_to<>>
+		: _Conjunction_t<
+			_Is_same_size<_Elem1, _Elem2>,
+			_Is_nonbool_integral<_Elem1>,
+			_Is_nonbool_integral<_Elem2>,
+			negation<is_volatile<_Elem1>>,
+			negation<is_volatile<_Elem2>>,
+			// note that order matters here, as being integral is a precondition
+			// of _Value_equality_is_bitwise_equality
+			_Value_equality_is_bitwise_equality<_Elem1, _Elem2>
+		>
+	{	// allow memcmping same-size integral non-bool non-volatile bitwise types using equal_to<>
+	};
+
+template<class _Elem1,
+	class _Elem2>
+	struct _Equal_memcmp_is_safe_helper<_Elem1 *, _Elem2 *, equal_to<>>
+		: is_same<remove_cv_t<_Elem1>, remove_cv_t<_Elem2>>::type
+	{	// allow memcmping pointers-to-cv-T with equal_to<>
+	};
+
+#if _HAS_STD_BYTE
+template<>
+	struct _Equal_memcmp_is_safe_helper<byte, byte, equal_to<>>
+		: true_type
+	{	// allow memcmping std::byte
+	};
+#endif // _HAS_STD_BYTE
+
+template<class _Elem>
+	struct _Equal_memcmp_is_safe_helper<_Elem, _Elem, _Char_traits_eq<char_traits<_Elem>>>
+		: _Equal_memcmp_is_safe_helper<_Elem, _Elem, equal_to<>>::type
+	{	// builtin char_traits::eq behaves like equal_to<>
+	};
+
+template<class _Elem>
+	struct _Equal_memcmp_is_safe_helper<_Elem, _Elem, equal_to<_Elem>>
+		: _Equal_memcmp_is_safe_helper<_Elem, _Elem, equal_to<>>::type
+	{	// treat equal_to with exact T as equal_to<>
+		// this is safe because we only activate the optimization for builtin _Elem (and std::byte)
+	};
+
+template<class _Iter1,
+	class _Iter2,
+	class _Pr> inline
+	false_type _Equal_memcmp_is_safe(const _Iter1&, const _Iter2&, const _Pr&)
+	{	// return equal optimization category for arbitrary iterators
+	return {};
+	}
+
+template<class _Obj1,
+	class _Obj2,
+	class _Pr> inline
+	typename _Equal_memcmp_is_safe_helper<
+		remove_const_t<_Obj1>,
+		remove_const_t<_Obj2>,
+		_Pr>::type
+		_Equal_memcmp_is_safe(_Obj1 * const&, _Obj2 * const&, const _Pr&)
+	{	// return equal optimization category for pointers
+	return {};
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_unchecked1(_InIt1 _First1, const _InIt1 _Last1,
+		_InIt2 _First2, _Pr _Pred, false_type)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, no special optimization
+	for (; _First1 != _Last1; ++_First1, (void)++_First2)
+		{
+		if (!_Pred(*_First1, *_First2))
+			{
+			return (false);
+			}
+		}
+
+	return (true);
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_unchecked1(const _InIt1 _First1, const _InIt1 _Last1,
+		const _InIt2 _First2, _Pr, true_type)
+	{	// compare [_First1, _Last1) to [_First2, ...), memcmp optimization
+	const auto _First1_ch = reinterpret_cast<const char *>(_First1);
+	const auto _First2_ch = reinterpret_cast<const char *>(_First2);
+	const size_t _Count = reinterpret_cast<const char *>(_Last1) - _First1_ch;
+	return (_CSTD memcmp(_First1_ch, _First2_ch, _Count) == 0);
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_unchecked(const _InIt1 _First1, const _InIt1 _Last1,
+		const _InIt2 _First2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred, choose optimization
+	return (_Equal_unchecked1(_First1, _Last1, _First2, _Pred,
+		_Equal_memcmp_is_safe(_First1, _First2, _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr>
+	_NODISCARD inline bool equal(const _InIt1 _First1, const _InIt1 _Last1,
+		const _InIt2 _First2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	_DEPRECATE_UNCHECKED(equal, _First2);
+	_DEBUG_RANGE(_First1, _Last1);
+	const auto _UFirst1 = _Unchecked(_First1);
+	const auto _ULast1 = _Unchecked(_Last1);
+	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance<_InIt1>(_UFirst1, _ULast1));
+	return (_Equal_unchecked(_UFirst1, _ULast1, _UFirst2, _Pass_fn(_Pred)));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt1,
+	class _RightTy,
+	size_t _RightSize,
+	class _Pr,
+	enable_if_t<!is_same_v<_RightTy *, _Pr>, int> = 0>
+	_NODISCARD inline bool equal(const _InIt1 _First1, const _InIt1 _Last1, _RightTy (&_First2)[_RightSize], _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, ...) using _Pred
+	return (_STD equal(_First1, _Last1,
+		_Array_iterator<_RightTy, _RightSize>(_First2), _Pass_fn(_Pred)));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool equal(_ExPo&& _Exec, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		const _FwdIt2 _First2, _Pr _Pred) _NOEXCEPT;
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _FwdIt1,
+	class _RightTy,
+	size_t _RightSize,
+	class _Pr,
+	enable_if_t<is_execution_policy_v<decay_t<_ExPo>> && !is_same_v<_RightTy *, _Pr>, int> = 0>
+	_NODISCARD inline bool equal(_ExPo&& _Exec, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		_RightTy (&_First2)[_RightSize], _Pr _Pred) _NOEXCEPT;
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+#endif /* _HAS_CXX17 */
+
+template<class _InIt1,
+	class _InIt2>
+	_NODISCARD inline bool equal(const _InIt1 _First1, const _InIt1 _Last1, const _InIt2 _First2)
+	{	// compare [_First1, _Last1) to [_First2, ...)
+	return (_STD equal(_First1, _Last1, _First2, equal_to<>()));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _InIt1,
+	class _RightTy,
+	size_t _RightSize>
+	_NODISCARD inline bool equal(const _InIt1 _First1, const _InIt1 _Last1, _RightTy (&_First2)[_RightSize])
+	{	// compare [_First1, _Last1) to [_First2, ...)
+	return (_STD equal(_First1, _Last1, _First2, equal_to<>()));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool equal(_ExPo&& _Exec, const _FwdIt1 _First1, const _FwdIt1 _Last1, const _FwdIt2 _First2)
+		_NOEXCEPT
+	{	// compare [_First1, _Last1) to [_First2, ...)
+	return (_STD equal(_STD forward<_ExPo>(_Exec), _First1, _Last1, _First2, equal_to<>()));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _ExPo,
+	class _FwdIt1,
+	class _RightTy,
+	size_t _RightSize,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool equal(_ExPo&& _Exec, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		_RightTy (&_First2)[_RightSize]) _NOEXCEPT
+	{	// compare [_First1, _Last1) to [_First2, ...)
+	return (_STD equal(_STD forward<_ExPo>(_Exec), _First1, _Last1, _First2, equal_to<>()));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+#endif /* _HAS_CXX17 */
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_unchecked(_InIt1 _First1, const _InIt1 _Last1,
+		_InIt2 _First2, const _InIt2 _Last2, _Pr _Pred,
+		input_iterator_tag, input_iterator_tag)
+	{	// compare [_First1, _Last1) to [_First2, _Last2)
+		// using _Pred, arbitrary iterators
+	for (;;)
+		{
+		if (_First1 == _Last1)
+			{
+			return (_First2 == _Last2);
+			}
+
+		if (_First2 == _Last2)
+			{
+			return (false);
+			}
+
+		if (!_Pred(*_First1, *_First2))
+			{
+			return (false);
+			}
+
+		++_First1;
+		++_First2;
+		}
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Equal_unchecked(const _InIt1 _First1, const _InIt1 _Last1,
+		const _InIt2 _First2, const _InIt2 _Last2, _Pr _Pred,
+		random_access_iterator_tag, random_access_iterator_tag)
+	{	// compare [_First1, _Last1) to [_First2, _Last2)
+		// using _Pred, random-access iterators
+	if (_Last1 - _First1 != _Last2 - _First2)
+		{
+		return (false);
+		}
+
+	return (_Equal_unchecked(_First1, _Last1, _First2, _Pred));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr>
+	_NODISCARD inline bool equal(const _InIt1 _First1, const _InIt1 _Last1,
+		const _InIt2 _First2, const _InIt2 _Last2, _Pr _Pred)
+	{	// compare [_First1, _Last1) to [_First2, _Last2) using _Pred
+	_DEBUG_RANGE(_First1, _Last1);
+	_DEBUG_RANGE(_First2, _Last2);
+	return (_Equal_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
+		_Unchecked(_First2), _Unchecked(_Last2), _Pass_fn(_Pred),
+			_Iter_cat_t<_InIt1>(), _Iter_cat_t<_InIt2>()));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool equal(_ExPo&& _Exec, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		const _FwdIt2 _First2, const _FwdIt2 _Last2, _Pr _Pred) _NOEXCEPT;
+#endif /* _HAS_CXX17 */
+
+template<class _InIt1,
+	class _InIt2>
+	_NODISCARD inline bool equal(const _InIt1 _First1, const _InIt1 _Last1, const _InIt2 _First2, const _InIt2 _Last2)
+	{	// compare [_First1, _Last1) to [_First2, _Last2)
+	return (_STD equal(_First1, _Last1, _First2, _Last2, equal_to<>()));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool equal(_ExPo&& _Exec, const _FwdIt1 _First1, const _FwdIt1 _Last1,
+		const _FwdIt2 _First2, const _FwdIt2 _Last2) _NOEXCEPT
+	{	// compare [_First1, _Last1) to [_First2, _Last2)
+	return (_STD equal(_STD forward<_ExPo>(_Exec), _First1, _Last1, _First2, _Last2, equal_to<>()));
+	}
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE lexicographical_compare
+template<class _Elem1,
+	class _Elem2,
+	class _FTy>
+	struct _Lex_compare_check_element_types_helper
+		: _Conjunction_t<
+			_Is_character<_Elem1>,
+			_Is_character<_Elem2>,
+			_Is_character<_FTy>,
+			is_unsigned<_FTy>
+		>
+	{	// checks the lex_compare unwrapped element types for memcmp safety for builtin functors (e.g. less<unsigned char>)
+	};
+
+template<class _Elem1,
+	class _Elem2>
+	struct _Lex_compare_check_element_types_helper<_Elem1, _Elem2, void>
+		: _Conjunction_t<
+			_Is_character<_Elem1>,
+			_Is_character<_Elem2>,
+			is_unsigned<_Elem1>,
+			is_unsigned<_Elem2>
+		>
+	{	// checks the lex_compare unwrapped element types for memcmp safety for transparent functors (e.g. less<>)
+	};
+
+#if _HAS_STD_BYTE
+template<>
+	struct _Lex_compare_check_element_types_helper<byte, byte, byte>
+		: true_type
+	{	// std::byte with builtin functors (e.g. less<byte>) is memcmp safe
+	};
+
+template<>
+	struct _Lex_compare_check_element_types_helper<byte, byte, void>
+		: true_type
+	{	// std::byte with transparent functors (e.g. less<>) is memcmp safe
+	};
+#endif // _HAS_STD_BYTE
+
+template<class _Memcmp_pr>
+	struct _Lex_compare_optimize
+	{	// optimization tag for lexicographical_compare
+	};
+
+template<class _Memcmp_pr,
+	class _Obj1,
+	class _Obj2,
+	class _FTy>
+	using _Lex_compare_check_element_types = _Lex_compare_optimize<conditional_t<
+		_Lex_compare_check_element_types_helper<remove_const_t<_Obj1>, remove_const_t<_Obj2>, _FTy>::value,
+		_Memcmp_pr, void>>;	// checks the lex_compare element types for memcmp safety
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	_Lex_compare_optimize<void> _Lex_compare_memcmp_classify(const _InIt1&, const _InIt2&, const _Pr&)
+	{	// return lex_compare optimization category for arbitrary iterators
+	return {};
+	}
+
+template<class _Obj1,
+	class _Obj2,
+	class _FTy> inline
+	_Lex_compare_check_element_types<less<int>, _Obj1, _Obj2, _FTy>
+		_Lex_compare_memcmp_classify(_Obj1 * const&, _Obj2 * const&, const less<_FTy>&)
+	{	// return lex_compare optimization category for pointer iterators and less<_FTy>
+	return {};
+	}
+
+template<class _Obj1,
+	class _Obj2,
+	class _FTy> inline
+	_Lex_compare_check_element_types<greater<int>, _Obj1, _Obj2, _FTy>
+		_Lex_compare_memcmp_classify(_Obj1 * const&, _Obj2 * const&, const greater<_FTy>&)
+	{	// return lex_compare optimization category for pointer iterators and greater<_FTy>
+	return {};
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr> inline
+	bool _Lex_compare_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr _Pred, _Lex_compare_optimize<void>)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pred, no special optimization
+	for (; _First1 != _Last1 && _First2 != _Last2; ++_First1, (void)++_First2)
+		{	// something to compare, do it
+		if (_DEBUG_LT_PRED(_Pred, *_First1, *_First2))
+			return (true);
+		else if (_Pred(*_First2, *_First1))
+			return (false);
+		}
+
+	return (_First1 == _Last1 && _First2 != _Last2);
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr,
+	class _Memcmp_pr> inline
+	bool _Lex_compare_unchecked(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr, _Lex_compare_optimize<_Memcmp_pr>)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) memcmp optimization
+	const size_t _Num1 = _Last1 - _First1;
+	const size_t _Num2 = _Last2 - _First2;
+	const int _Ans = _CSTD memcmp(_First1, _First2, _Num1 < _Num2 ? _Num1 : _Num2);
+	return (_Memcmp_pr{}(_Ans, 0) || (_Ans == 0 && _Num1 < _Num2));
+	}
+
+template<class _InIt1,
+	class _InIt2,
+	class _Pr>
+	_NODISCARD inline bool lexicographical_compare(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2, _Pr _Pred)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pred
+	_DEBUG_RANGE(_First1, _Last1);
+	_DEBUG_RANGE(_First2, _Last2);
+	const auto _UFirst1 = _Unchecked(_First1);
+	const auto _ULast1 = _Unchecked(_Last1);
+	const auto _UFirst2 = _Unchecked(_First2);
+	const auto _ULast2 = _Unchecked(_Last2);
+	return (_Lex_compare_unchecked(_UFirst1, _ULast1, _UFirst2, _ULast2, _Pass_fn(_Pred),
+		_Lex_compare_memcmp_classify(_UFirst1, _UFirst2, _Pred)));
+	}
+
+template<class _InIt1,
+	class _InIt2>
+	_NODISCARD inline bool lexicographical_compare(_InIt1 _First1, _InIt1 _Last1,
+		_InIt2 _First2, _InIt2 _Last2)
+	{	// order [_First1, _Last1) vs. [_First2, _Last2)
+	return (_STD lexicographical_compare(_First1, _Last1,
+		_First2, _Last2, less<>()));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	class _Pr,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool lexicographical_compare(_ExPo&&, _FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred) _NOEXCEPT
+	{	// order [_First1, _Last1) vs. [_First2, _Last2) using _Pred
+		// not parallelized at present, parallelism expected to be feasible in a future release
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	return (_STD lexicographical_compare(_First1, _Last1, _First2, _Last2, _Pass_fn(_Pred)));
+	}
+
+template<class _ExPo,
+	class _FwdIt1,
+	class _FwdIt2,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline bool lexicographical_compare(_ExPo&&, _FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2) _NOEXCEPT
+	{	// order [_First1, _Last1) vs. [_First2, _Last2)
+		// not parallelized at present, parallelism expected to be feasible in a future release
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt1);
+	_REQUIRE_PARALLEL_ITERATOR(_FwdIt2);
+	return (_STD lexicographical_compare(_First1, _Last1, _First2, _Last2));
+	}
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE find
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, true_type, true_type, _Any_tag)
+	{	// signed _Elem, signed _Ty
+	return (SCHAR_MIN <= _Val && _Val <= SCHAR_MAX);
+	}
+
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, true_type, false_type, true_type)
+	{	// signed _Elem, unsigned _Ty, -1 == static_cast<_Ty>(-1)
+	return (_Val <= SCHAR_MAX || static_cast<_Ty>(SCHAR_MIN) <= _Val);
+	}
+
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, true_type, false_type, false_type)
+	{	// signed _Elem, unsigned _Ty, -1 != static_cast<_Ty>(-1)
+	return (_Val <= SCHAR_MAX);
+	}
+
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, false_type, true_type, _Any_tag)
+	{	// unsigned _Elem, signed _Ty
+	return (0 <= _Val && _Val <= UCHAR_MAX);
+	}
+
+template<class _Ty> inline
+	bool _Within_limits(const _Ty& _Val, false_type, false_type, _Any_tag)
+	{	// unsigned _Elem, unsigned _Ty
+	return (_Val <= UCHAR_MAX);
+	}
+
+template<class _InIt,
+	class _Ty> inline
+	bool _Within_limits(_InIt, const _Ty& _Val)
+	{	// check whether _Val is within the limits of _Elem
+	using _Elem = remove_pointer_t<_InIt>;
+	return (_Within_limits(_Val, is_signed<_Elem>(), is_signed<_Ty>(),
+		bool_constant<-1 == static_cast<_Ty>(-1)>()));
+	}
+
+template<class _InIt> inline
+	bool _Within_limits(_InIt, const bool&)
+	{	// bools are always within the limits of _Elem
+	return (true);
+	}
+
+template<class _InIt,
+	class _Ty> inline
+	_InIt _Find_unchecked1(_InIt _First, const _InIt _Last, const _Ty& _Val, true_type)
+	{	// find first byte matching integral _Val
+	if (!_Within_limits(_First, _Val))
+		return (_Last);
+	_First = static_cast<_InIt>(_CSTD memchr(
+		_First, static_cast<unsigned char>(_Val), _Last - _First));
+	return (_First ? _First : _Last);
+	}
+
+template<class _InIt,
+	class _Ty> inline
+	_InIt _Find_unchecked1(_InIt _First, const _InIt _Last, const _Ty& _Val, false_type)
+	{	// find first matching _Val
+	for (; _First != _Last; ++_First)
+		if (*_First == _Val)
+			break;
+	return (_First);
+	}
+
+template<class _InIt,
+	class _Ty> inline
+	_InIt _Find_unchecked(const _InIt _First, const _InIt _Last, const _Ty& _Val)
+	{	// find first matching _Val; choose optimization
+	// activate optimization for pointers to (const) bytes and integral values
+	using _Memchr_opt = bool_constant<is_integral_v<_Ty> && _Is_any_of_v<_InIt,
+		char *, signed char *, unsigned char *, const char *, const signed char *, const unsigned char *>>;
+
+	return (_Find_unchecked1(_First, _Last, _Val, _Memchr_opt()));
+	}
+
+template<class _InIt,
+	class _Ty>
+	_NODISCARD inline _InIt find(_InIt _First, const _InIt _Last, const _Ty& _Val)
+	{	// find first matching _Val
+	_DEBUG_RANGE(_First, _Last);
+	return (_Rechecked(_First,
+		_Find_unchecked(_Unchecked(_First), _Unchecked(_Last), _Val)));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline _FwdIt find(_ExPo&& _Exec, _FwdIt _First, const _FwdIt _Last, const _Ty& _Val) _NOEXCEPT;
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE _Find_pr
+template<class _InIt,
+	class _Ty,
+	class _Pr> inline
+	_InIt _Find_pr(_InIt _First, _InIt _Last, const _Ty& _Val, _Pr _Pred)
+	{	// find first matching _Val, using _Pred
+	for (; _First != _Last; ++_First)
+		{
+		if (_Pred(*_First, _Val))
+			{
+			break;
+			}
+		}
+
+	return (_First);
+	}
+
+		// FUNCTION TEMPLATE count
+template<class _InIt,
+	class _Ty>
+	_NODISCARD inline _Iter_diff_t<_InIt> count(const _InIt _First, const _InIt _Last, const _Ty& _Val)
+	{	// count elements that match _Val
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	const auto _ULast = _Unchecked(_Last);
+	_Iter_diff_t<_InIt> _Count = 0;
+
+	for (; _UFirst != _ULast; ++_UFirst)
+		{
+		if (*_UFirst == _Val)
+			{
+			++_Count;
+			}
+		}
+
+	return (_Count);
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt,
+	class _Ty,
+	_Enable_if_execution_policy_t<_ExPo> = 0>
+	_NODISCARD inline _Iter_diff_t<_FwdIt> count(_ExPo&& _Exec,
+		const _FwdIt _First, const _FwdIt _Last, const _Ty& _Val) _NOEXCEPT;
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE _Count_pr
+template<class _InIt,
+	class _Ty,
+	class _Pr> inline
+	_Iter_diff_t<_InIt> _Count_pr(_InIt _First, _InIt _Last, const _Ty& _Val, _Pr _Pred)
+	{	// count elements that match _Val, using _Pred
+	_Iter_diff_t<_InIt> _Count = 0;
+
+	for (; _First != _Last; ++_First)
+		{
+		if (_Pred(*_First, _Val))
+			{
+			++_Count;
+			}
+		}
+
+	return (_Count);
+	}
+
+		// FUNCTION TEMPLATE _Trim_matching_suffixes
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	void _Trim_matching_suffixes(_FwdIt1&, _FwdIt2&, _Pr,
+		forward_iterator_tag, forward_iterator_tag)
+	{	// trim matching suffixes, forward iterators (do nothing)
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	void _Trim_matching_suffixes(_FwdIt1& _Last1, _FwdIt2& _Last2, _Pr _Pred,
+		bidirectional_iterator_tag, bidirectional_iterator_tag)
+	{	// trim matching suffixes, bidirectional iterators
+	// assumptions: same lengths, non-empty, !_Pred(*_First1, *_First2)
+	while (_Pred(*--_Last1, *--_Last2))
+		;	// find last inequality
+	++_Last1;
+	++_Last2;
+	}
+
+		// FUNCTION TEMPLATE _Check_match_counts
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Check_match_counts(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, _Last2), using _Pred, same lengths
+	_Trim_matching_suffixes(_Last1, _Last2, _Pred,
+		_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>());
+	for (_FwdIt1 _Next1 = _First1; _Next1 != _Last1; ++_Next1)
+		{
+		if (_Next1 == _Find_pr(_First1, _Next1, *_Next1, _Pred))
+			{	// new value, compare match counts
+			_Iter_diff_t<_FwdIt2> _Count2 = _Count_pr(_First2, _Last2, *_Next1, _Pred);
+			if (_Count2 == 0)
+				{
+				return (false);	// second range lacks value, fail
+				}
+
+			_FwdIt1 _Skip1 = _Next_iter(_Next1);
+			_Iter_diff_t<_FwdIt1> _Count1 = _Count_pr(_Skip1, _Last1, *_Next1, _Pred) + 1;
+			if (_Count2 != _Count1)
+				{
+				return (false);	// match counts differ, fail
+				}
+			}
+		}
+
+	return (true);
+	}
+
+		// FUNCTION TEMPLATE is_permutation
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Is_permutation_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1, _FwdIt2 _First2, _Pr _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
+	for (; _First1 != _Last1; ++_First1, (void)++_First2)
+		{
+		if (!_Pred(*_First1, *_First2))
+			{	// found first inequality, check match counts in suffix
+				// narrowing _Iter_diff_t<_FwdIt1> to _Iter_diff_t<_FwdIt2> is OK because if
+				// the 2nd range is shorter than the 1st, the user already triggered UB
+			auto _Last2 = _STD next(_First2, static_cast<_Iter_diff_t<_FwdIt2>>(_STD distance(_First1, _Last1)));
+			return (_Check_match_counts(_First1, _Last1, _First2, _Last2, _Pred));
+			}
+		}
+
+	return (true);
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr>
+	_NODISCARD inline bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _Pr _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
+	_DEPRECATE_UNCHECKED(is_permutation, _First2);
+	_DEBUG_RANGE(_First1, _Last1);
+	const auto _UFirst1 = _Unchecked(_First1);
+	const auto _ULast1 = _Unchecked(_Last1);
+	const auto _UFirst2 = _Unchecked_n(_First2, _Idl_distance<_FwdIt1>(_UFirst1, _ULast1));
+	return (_Is_permutation_unchecked(_UFirst1, _ULast1, _UFirst2, _Pass_fn(_Pred)));
+	}
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _FwdIt1,
+	class _RightTy,
+	size_t _RightSize,
+	class _Pr,
+	class = enable_if_t<!is_same_v<_RightTy *, _Pr>>>
+	_NODISCARD inline bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_RightTy (&_First2)[_RightSize], _Pr _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, ...), using _Pred
+	return (_STD is_permutation(_First1, _Last1,
+		_Array_iterator<_RightTy, _RightSize>(_First2), _Pass_fn(_Pred)));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+template<class _FwdIt1,
+	class _FwdIt2> inline
+	bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2)
+	{	// test if [_First1, _Last1) == permuted [_First2, ...)
+	return (_STD is_permutation(_First1, _Last1,
+		_First2, equal_to<>()));
+	}
+
+
+ #if _ITERATOR_DEBUG_ARRAY_OVERLOADS
+template<class _FwdIt1,
+	class _RightTy,
+	size_t _RightSize>
+	_NODISCARD inline bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1, _RightTy (&_First2)[_RightSize])
+	{	// test if [_First1, _Last1) == permuted [_First2, ...)
+	return (_STD is_permutation(_First1, _Last1, _First2, equal_to<>()));
+	}
+ #endif /* _ITERATOR_DEBUG_ARRAY_OVERLOADS */
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Is_permutation_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred,
+		forward_iterator_tag, forward_iterator_tag)
+	{	// test if [_First1, _Last1) == permuted [_First2, _Last2),
+		// using _Pred, arbitrary iterators
+	for (; _First1 != _Last1 && _First2 != _Last2; ++_First1, (void)++_First2)
+		{
+		if (!_Pred(*_First1, *_First2))
+			{	// found first inequality, check match counts in suffix
+			if (_STD distance(_First1, _Last1) == _STD distance(_First2, _Last2))
+				{
+				return (_Check_match_counts(_First1, _Last1, _First2, _Last2, _Pred));
+				}
+			else
+				{
+				return (false);	// lengths differ, fail
+				}
+			}
+		}
+
+	return (_First1 == _Last1 && _First2 == _Last2);
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr> inline
+	bool _Is_permutation_unchecked(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred,
+		random_access_iterator_tag, random_access_iterator_tag)
+	{	// test if [_First1, _Last1) == permuted [_First2, _Last2),
+		// using _Pred, random-access iterators
+	if (_Last1 - _First1 != _Last2 - _First2)
+		{
+		return (false);
+		}
+
+	return (_Is_permutation_unchecked(_First1, _Last1, _First2, _Pred));
+	}
+
+template<class _FwdIt1,
+	class _FwdIt2,
+	class _Pr>
+	_NODISCARD inline bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2, _Pr _Pred)
+	{	// test if [_First1, _Last1) == permuted [_First2, _Last2),
+		// using _Pred
+	_DEBUG_RANGE(_First1, _Last1);
+	_DEBUG_RANGE(_First2, _Last2);
+	return (_Is_permutation_unchecked(_Unchecked(_First1), _Unchecked(_Last1),
+		_Unchecked(_First2), _Unchecked(_Last2), _Pass_fn(_Pred),
+		_Iter_cat_t<_FwdIt1>(), _Iter_cat_t<_FwdIt2>()));
+	}
+
+		// FUNCTION TEMPLATE is_permutation WITH TWO RANGES
+template<class _FwdIt1,
+	class _FwdIt2>
+	_NODISCARD inline bool is_permutation(_FwdIt1 _First1, _FwdIt1 _Last1,
+		_FwdIt2 _First2, _FwdIt2 _Last2)
+	{	// test if [_First1, _Last1) == permuted [_First2, _Last2)
+	return (_STD is_permutation(_First1, _Last1, _First2, _Last2, equal_to<>()));
+	}
+
+		// FUNCTION TEMPLATE reverse
+template<class _BidIt> inline
+	void _Reverse_unchecked1(_BidIt _First, _BidIt _Last, integral_constant<size_t, 0>)
+	{	// reverse elements in [_First, _Last), general bidirectional iterators
+	for (; _First != _Last && _First != --_Last; ++_First)
+		{
+		_STD iter_swap(_First, _Last);
+		}
+	}
+
+#if (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_CEE_PURE) && !defined(_M_HYBRID)
+template<class _BidIt> inline
+	void _Reverse_unchecked1(const _BidIt _First, const _BidIt _Last, integral_constant<size_t, 1>)
+	{	// reverse elements in [_First, _Last), pointers to trivially swappable of size 1
+	__std_reverse_trivially_swappable_1(_First, _Last);
+	}
+
+template<class _BidIt> inline
+	void _Reverse_unchecked1(const _BidIt _First, const _BidIt _Last, integral_constant<size_t, 2>)
+	{	// reverse elements in [_First, _Last), pointers to trivially swappable of size 2
+	__std_reverse_trivially_swappable_2(_First, _Last);
+	}
+
+template<class _BidIt> inline
+	void _Reverse_unchecked1(const _BidIt _First, const _BidIt _Last, integral_constant<size_t, 4>)
+	{	// reverse elements in [_First, _Last), pointers to trivially swappable of size 4
+	__std_reverse_trivially_swappable_4(_First, _Last);
+	}
+
+template<class _BidIt> inline
+	void _Reverse_unchecked1(const _BidIt _First, const _BidIt _Last, integral_constant<size_t, 8>)
+	{	// reverse elements in [_First, _Last), pointers to trivially swappable of size 8
+	__std_reverse_trivially_swappable_8(_First, _Last);
+	}
+#endif /* (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_CEE_PURE) && !defined(_M_HYBRID) */
+
+template<class _BidIt> inline
+	void _Reverse_unchecked(const _BidIt _First, const _BidIt _Last)
+	{	// reverse elements in [_First, _Last), choose optimization
+#if (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_CEE_PURE) && !defined(_M_HYBRID)
+	using _Elem = remove_pointer_t<_BidIt>;
+	constexpr size_t _Opt = is_pointer_v<_BidIt>
+		&& _Is_trivially_swappable_v<_Elem>
+		&& !is_volatile_v<_Elem>
+		&& (sizeof(_Elem) == 1
+			|| sizeof(_Elem) == 2
+			|| sizeof(_Elem) == 4
+			|| sizeof(_Elem) == 8) ? sizeof(_Elem) : 0;
+#else /* ^^^ vectorize ^^^ // vvv no vectorize vvv */
+	constexpr size_t _Opt = 0;
+#endif /* (defined(_M_IX86) || defined(_M_X64)) && !defined(_M_CEE_PURE) && !defined(_M_HYBRID) */
+	_Reverse_unchecked1(_First, _Last, integral_constant<size_t, _Opt>{});
+	}
+
+template<class _BidIt> inline
+	void reverse(const _BidIt _First, const _BidIt _Last)
+	{	// reverse elements in [_First, _Last)
+	_DEBUG_RANGE(_First, _Last);
+	_Reverse_unchecked(_Unchecked(_First), _Unchecked(_Last));
+	}
+
+ #if _HAS_CXX17
+template<class _ExPo,
+	class _BidIt,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	void reverse(_ExPo&&, _BidIt _First, _BidIt _Last) _NOEXCEPT
+	{	// reverse elements in [_First, _Last)
+		// not parallelized as benchmarks show it isn't worth it
+	return (_STD reverse(_First, _Last));
+	}
+ #endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE rotate
+template<class _FwdIt> inline
+	_FwdIt _Rotate_unchecked1(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last,
+		forward_iterator_tag)
+	{	// rotate [_First, _Last) left by distance(_First, _Mid) positions, forward iterators
+	for (_FwdIt _Next = _Mid, _Res = _Last; ; )
+		{	// swap [_First, ...) into place
+		_STD iter_swap(_First, _Next);
+		if (++_First == _Mid)
+			{	// quit if done, else define next interval
+			if (++_Next == _Last)
+				return (_Res == _Last ? _Mid : _Res);
+			else
+				_Mid = _Next;	// mark end of next interval
+			}
+		else if (++_Next == _Last)
+			{	// wrap to last end
+			if (_Res == _Last)
+				_Res = _First;
+			_Next = _Mid;
+			}
+		}
+	}
+
+template<class _BidIt> inline
+	pair<_BidIt, _BidIt> _Reverse_until_sentinel_unchecked(
+		_BidIt _First, _BidIt _Sentinel, _BidIt _Last)
+	{	// reverse until either _First or _Last hits _Sentinel
+	while (_First != _Sentinel && _Last != _Sentinel)
+		{
+		_STD iter_swap(_First, --_Last);
+		++_First;
+		}
+
+	return (_STD make_pair(_First, _Last));
+	}
+
+template<class _BidIt> inline
+	_BidIt _Rotate_unchecked1(_BidIt _First, _BidIt _Mid, _BidIt _Last,
+		bidirectional_iterator_tag)
+	{	// rotate [_First, _Last) left by distance(_First, _Mid) positions, bidirectional iterators
+	_Reverse_unchecked(_First, _Mid);
+	_Reverse_unchecked(_Mid, _Last);
+	pair<_BidIt, _BidIt> _Tmp = _Reverse_until_sentinel_unchecked(_First, _Mid, _Last);
+	_Reverse_unchecked(_Tmp.first, _Tmp.second);
+	return (_Mid != _Tmp.first ? _Tmp.first : _Tmp.second);
+	}
+
+template<class _RanIt> inline
+	_RanIt _Rotate_unchecked1(_RanIt _First, _RanIt _Mid, _RanIt _Last,
+		random_access_iterator_tag)
+	{	// rotate [_First, _Last) left by distance(_First, _Mid) positions, random-access iterators
+	_Reverse_unchecked(_First, _Mid);
+	_Reverse_unchecked(_Mid, _Last);
+	_Reverse_unchecked(_First, _Last);
+	return (_First + (_Last - _Mid));
+	}
+
+template<class _FwdIt> inline
+	_FwdIt _Rotate_unchecked(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last)
+	{	// rotate [_First, _Last) left by distance(_First, _Mid) positions
+	if (_First == _Mid)
+		return (_Last);
+	if (_Mid == _Last)
+		return (_First);
+	return (_Rotate_unchecked1(_First, _Mid, _Last, _Iter_cat_t<_FwdIt>()));
+	}
+
+template<class _FwdIt> inline
+	_FwdIt rotate(_FwdIt _First, _FwdIt _Mid, _FwdIt _Last)
+	{	// exchange the ranges [_First, _Mid) and [_Mid, _Last)
+		// that is, rotates [_First, _Last) left by distance(_First, _Mid) positions
+		// returns the iterator pointing at *_First's new home
+	_DEBUG_RANGE(_First, _Mid);
+	_DEBUG_RANGE(_Mid, _Last);
+	return (_Rechecked(_First,
+		_Rotate_unchecked(_Unchecked(_First), _Unchecked(_Mid),
+		_Unchecked(_Last))));
+	}
+
+#if _HAS_CXX17
+template<class _ExPo,
+	class _FwdIt,
+	_Enable_if_execution_policy_t<_ExPo> = 0> inline
+	_FwdIt rotate(_ExPo&&, _FwdIt _First, _FwdIt _Mid, _FwdIt _Last) _NOEXCEPT
+	{	// rotate [_First, _Last) left by distance(_First, _Mid) positions
+		// not parallelized as benchmarks show it isn't worth it
+	return (_STD rotate(_First, _Mid, _Last));
+	}
+#endif /* _HAS_CXX17 */
+
+		// FUNCTION TEMPLATE lower_bound
+template<class _FwdIt,
+	class _Ty,
+	class _Pr>
+	_NODISCARD inline _FwdIt lower_bound(_FwdIt _First, const _FwdIt _Last,
+		const _Ty& _Val, _Pr _Pred)
+	{	// find first element not before _Val, using _Pred
+	_DEBUG_RANGE(_First, _Last);
+	auto _UFirst = _Unchecked(_First);
+	_Iter_diff_t<_FwdIt> _Count = _STD distance(_UFirst, _Unchecked(_Last));
+
+	while (0 < _Count)
+		{	// divide and conquer, find half that contains answer
+		_Iter_diff_t<_FwdIt> _Count2 = _Count >> 1; // TRANSITION, VSO#433486
+		const auto _UMid = _STD next(_UFirst, _Count2);
+		if (_Pred(*_UMid, _Val))
+			{	// try top half
+			_UFirst = _Next_iter(_UMid);
+			_Count -= _Count2 + 1;
+			}
+		else
+			{
+			_Count = _Count2;
+			}
+		}
+
+	return (_Rechecked(_First, _UFirst));
+	}
+
+	// CLASS TEMPLATE _Rng_from_urng
+template<class _Diff,
+	class _Urng>
+	class _Rng_from_urng
+	{	// wrap a URNG as an RNG
+public:
+	using _Ty0 = make_unsigned_t<_Diff>;
+	using _Ty1 = typename _Urng::result_type;
+
+	using _Udiff = conditional_t<sizeof (_Ty1) < sizeof (_Ty0), _Ty0, _Ty1>;
+
+	explicit _Rng_from_urng(_Urng& _Func)
+		: _Ref(_Func), _Bits(CHAR_BIT * sizeof (_Udiff)), _Bmask(_Udiff(-1))
+		{	// construct from URNG
+		for (; (_Urng::max)() - (_Urng::min)() < _Bmask; _Bmask >>= 1)
+			--_Bits;
+		}
+
+	_Diff operator()(_Diff _Index)
+		{	// adapt _Urng closed range to [0, _Index)
+		for (;;)
+			{	// try a sample random value
+			_Udiff _Ret = 0;	// random bits
+			_Udiff _Mask = 0;	// 2^N - 1, _Ret is within [0, _Mask]
+
+			while (_Mask < _Udiff(_Index - 1))
+				{	// need more random bits
+				_Ret <<= _Bits - 1;	// avoid full shift
+				_Ret <<= 1;
+				_Ret |= _Get_bits();
+				_Mask <<= _Bits - 1;	// avoid full shift
+				_Mask <<= 1;
+				_Mask |= _Bmask;
+				}
+
+			// _Ret is [0, _Mask], _Index - 1 <= _Mask, return if unbiased
+			if (_Ret / _Index < _Mask / _Index
+				|| _Mask % _Index == _Udiff(_Index - 1))
+				return (_Ret % _Index);
+			}
+		}
+
+	_Udiff _Get_all_bits()
+		{	// return a random value
+		_Udiff _Ret = 0;
+
+		for (size_t _Num = 0; _Num < CHAR_BIT * sizeof (_Udiff);
+			_Num += _Bits)
+			{	// don't mask away any bits
+			_Ret <<= _Bits - 1;	// avoid full shift
+			_Ret <<= 1;
+			_Ret |= _Get_bits();
+			}
+
+		return (_Ret);
+		}
+
+	_Rng_from_urng(const _Rng_from_urng&) = delete;
+	_Rng_from_urng& operator=(const _Rng_from_urng&) = delete;
+
+private:
+	_Udiff _Get_bits()
+		{	// return a random value within [0, _Bmask]
+		for (;;)
+			{	// repeat until random value is in range
+			_Udiff _Val = _Ref() - (_Urng::min)();
+
+			if (_Val <= _Bmask)
+				return (_Val);
+			}
+		}
+
+	_Urng& _Ref;	// reference to URNG
+	size_t _Bits;	// number of random bits generated by _Get_bits()
+	_Udiff _Bmask;	// 2^_Bits - 1
+	};
+
+		// CLASS TEMPLATE _Yarn
+template<class _Elem>
+	class _CRTIMP2_PURE_IMPORT _Yarn
+	{	// wrap a NTBS
+public:
+	__CLR_OR_THIS_CALL _Yarn()
+		: _Myptr(0), _Nul(0)
+		{	// default construct
+		}
+
+	__CLR_OR_THIS_CALL _Yarn(const _Yarn& _Right)
+		: _Myptr(0), _Nul(0)
+		{	// construct from _Yarn
+		*this = _Right;
+		}
+
+	__CLR_OR_THIS_CALL _Yarn(const _Elem * _Right)
+		: _Myptr(0), _Nul(0)
+		{	// construct from NTBS
+		*this = _Right;
+		}
+
+	_Yarn& __CLR_OR_THIS_CALL operator=(const _Yarn& _Right)
+		{	// assign from _Yarn
+		return (*this = _Right._Myptr);
+		}
+
+	_Yarn& __CLR_OR_THIS_CALL operator=(const _Elem * _Right)
+		{	// assign from NTBS
+		if (_Myptr != _Right)
+			{	// new value, discard old and copy new
+			_Tidy();
+
+			if (_Right != 0)
+				{	// new is not empty, copy it
+				const _Elem *_Ptr = _Right;
+				while (*_Ptr != (_Elem)0)
+					++_Ptr;
+				size_t _Count = ((const char *)++_Ptr - (const char *)_Right);
+
+ #ifdef _DEBUG
+				_Myptr = (_Elem *)_malloc_dbg(_Count, _CRT_BLOCK,
+					__FILE__, __LINE__);
+
+ #else /* _DEBUG */
+				_Myptr = (_Elem *)_CSTD malloc(_Count);
+ #endif /* _DEBUG */
+
+				if (_Myptr != 0)
+					_CSTD memcpy(_Myptr, _Right, _Count);
+				}
+			}
+
+		return (*this);
+		}
+
+	__CLR_OR_THIS_CALL ~_Yarn() _NOEXCEPT
+		{	// destroy the object
+		_Tidy();
+		}
+
+	bool __CLR_OR_THIS_CALL empty() const
+		{	// test if empty string
+		return (_Myptr == 0);
+		}
+
+	_Ret_z_ const _Elem *__CLR_OR_THIS_CALL c_str() const
+		{	// return NTBS
+		return (_Myptr != 0 ? _Myptr : &_Nul);
+		}
+
+	bool __CLR_OR_THIS_CALL _Empty() const
+		{	// test if empty string
+		return (_Myptr == 0);
+		}
+
+	_Ret_z_ const _Elem *__CLR_OR_THIS_CALL _C_str() const
+		{	// return NTBS
+		return (_Myptr != 0 ? _Myptr : &_Nul);
+		}
+
+private:
+	void __CLR_OR_THIS_CALL _Tidy()
+		{	// discard any string
+		if (_Myptr != 0)
+
+ #ifdef _DEBUG
+			_free_dbg(_Myptr, _CRT_BLOCK);
+
+ #else /* _DEBUG */
+			_CSTD free(_Myptr);
+ #endif /* _DEBUG */
+
+		_Myptr = 0;
+		}
+
+	_Elem * _Myptr;	// pointer to allocated string
+	_Elem _Nul;		// nul terminator for unallocated string
+	};
+
+
+		// CLASS TEMPLATE back_insert_iterator
+template<class _Container>
+	class back_insert_iterator
+	{	// wrap pushes to back of container as output iterator
+public:
+	using iterator_category = output_iterator_tag;
+	using value_type = void;
+	using difference_type = void;
+	using pointer = void;
+	using reference = void;
+
+	using container_type = _Container;
+
+	explicit back_insert_iterator(_Container& _Cont)
+		: container(_STD addressof(_Cont))
+		{	// construct with container
+		}
+
+	back_insert_iterator& operator=(const typename _Container::value_type& _Val)
+		{	// push value into container
+		container->push_back(_Val);
+		return (*this);
+		}
+
+	back_insert_iterator& operator=(typename _Container::value_type&& _Val)
+		{	// push value into container
+		container->push_back(_STD move(_Val));
+		return (*this);
+		}
+
+	_NODISCARD back_insert_iterator& operator*()
+		{	// pretend to return designated value
+		return (*this);
+		}
+
+	back_insert_iterator& operator++()
+		{	// pretend to preincrement
+		return (*this);
+		}
+
+	back_insert_iterator operator++(int)
+		{	// pretend to postincrement
+		return (*this);
+		}
+
+protected:
+	_Container *container;	// pointer to container
+	};
+
+template<class _Container>
+	struct _Is_checked_helper<back_insert_iterator<_Container>>
+		: public true_type
+	{	// mark back_insert_iterator as checked
+	};
+
+
+		// FUNCTION TEMPLATE back_inserter
+template<class _Container>
+	_NODISCARD inline back_insert_iterator<_Container> back_inserter(_Container& _Cont)
+	{	// return a back_insert_iterator
+	return (back_insert_iterator<_Container>(_Cont));
+	}
+
+
+	// STRUCT TEMPLATE _Has_allocator_type
+template<class _Ty,
+	class _Alloc,
+	class = void>
+	struct _Has_allocator_type
+		: false_type
+	{	// tests for suitable _Ty::allocator_type
+	};
+
+template<class _Ty,
+	class _Alloc>
+	struct _Has_allocator_type<_Ty, _Alloc, void_t<typename _Ty::allocator_type>>
+		: is_convertible<_Alloc, typename _Ty::allocator_type>::type
+	{	// tests for suitable _Ty::allocator_type
+	};
+
+		// STRUCT allocator_arg_t
+struct allocator_arg_t
+	{	// tag type for added allocator argument
+	};
+
+_INLINE_VAR constexpr allocator_arg_t allocator_arg{};
+
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_alloc();
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *);
+
+		// STRUCT TEMPLATE uses_allocator
+template<class _Ty,
+	class _Alloc>
+	struct uses_allocator
+		: _Has_allocator_type<_Ty, _Alloc>::type
+	{	// determine whether _Ty has an allocator_type member type
+	};
+
+template<class _Ty,
+	class _Alloc>
+	_INLINE_VAR constexpr bool uses_allocator_v = uses_allocator<_Ty, _Alloc>::value;
+
+		// STRUCT TEMPLATE iterator
+template<class _Category,
+	class _Ty,
+	class _Diff = ptrdiff_t,
+	class _Pointer = _Ty *,
+	class _Reference = _Ty&>
+	struct _CXX17_DEPRECATE_ITERATOR_BASE_CLASS iterator
+	{	// base type for iterator classes
+	using iterator_category = _Category;
+	using value_type = _Ty;
+	using difference_type = _Diff;
+	using pointer = _Pointer;
+	using reference = _Reference;
+	};
+_STD_END
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _XUTILITY_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
