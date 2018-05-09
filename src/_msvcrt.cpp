@@ -87,10 +87,12 @@ extern "C"
 
 	__declspec(dllimport) extern _iobuf _iob[_IOB_ENTRIES];
 
-	FILE* __cdecl __acrt_iob_func(unsigned in)
+	FILE* __cdecl __acrt_iob_func_downlevel(unsigned in)
 	{
 		return &_iob[in];
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(__acrt_iob_func_downlevel);
 
 	/*unsigned long long __cdecl wcstoull(
 		_In_z_                   wchar_t const* _String,
