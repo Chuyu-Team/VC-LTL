@@ -284,9 +284,9 @@ PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
 #define __crtCreateThreadpoolTimer CreateThreadpoolTimer
 #endif
 
-_CRTIMP int __cdecl __crtCompareStringA(uintptr_t, ...);
+_CRTIMP int __cdecl __crtCompareStringA(/*Unknow*/);
 
-_CRTIMP int __cdecl __crtCompareStringA_WinXP
+typedef int (__cdecl * __crtCompareStringA_WinXP)
 (
     _In_ LCID     _Locale,
     _In_ DWORD    _DwCmpFlags,
@@ -297,7 +297,7 @@ _CRTIMP int __cdecl __crtCompareStringA_WinXP
     _In_ int      _Code_page
 );
 
-_CRTIMP int __cdecl __crtCompareStringA_Vista
+typedef int (__cdecl * __crtCompareStringA_Vista)
 (
 	_In_opt_ _locale_t _Plocinfo,
 	_In_ LCID     _Locale,
@@ -327,21 +327,21 @@ __forceinline int __cdecl __crtCompareStringA_Current
 		if (_Plocinfo&&_Code_page == 0)
 			_Code_page = _Plocinfo->locinfo->_locale_lc_codepage;
 
-		return __crtCompareStringA(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
+		return ((__crtCompareStringA_WinXP)__crtCompareStringA)(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
 	}
 	else
 #endif
 	{
-		return __crtCompareStringA((uintptr_t)_Plocinfo,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
+		return ((__crtCompareStringA_Vista)__crtCompareStringA)(_Plocinfo,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page);
 	}
 }
 
 #define __crtCompareStringA(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page) __crtCompareStringA_Current(NULL,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page)
 #define __acrt_CompareStringA __crtCompareStringA_Current
 
-_CRTIMP int __cdecl __crtCompareStringW(LCID, ...);
+_CRTIMP int __cdecl __crtCompareStringW(/*Unknow*/);
 
-_CRTIMP int __cdecl __crtCompareStringW_WinXP
+typedef int (__cdecl * __crtCompareStringW_WinXP)
 (
     _In_ LCID     _Locale,
     _In_ DWORD    _DwCmpFlags,
@@ -351,7 +351,7 @@ _CRTIMP int __cdecl __crtCompareStringW_WinXP
     _In_ int      _CchCount2
 );
 
-_CRTIMP int __cdecl __crtCompareStringW_Vista
+typedef int (__cdecl * __crtCompareStringW_Vista)
 (
 	_In_opt_ _locale_t _Plocinfo,
 	_In_ LCID     _Locale,
@@ -375,20 +375,21 @@ __forceinline int __cdecl __crtCompareStringW_Current
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
 	{
-		return __crtCompareStringW(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
+		return ((__crtCompareStringW_WinXP)__crtCompareStringW)(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
 	}
 	else
 #endif
 	{
-		return __crtCompareStringW(0,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
+		return ((__crtCompareStringW_Vista)__crtCompareStringW)(NULL,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
 	}
 }
 
 #define __crtCompareStringW __crtCompareStringW_Current
+#define __acrt_CompareStringW __crtCompareStringW_Current
 
-_CRTIMP int __cdecl __crtLCMapStringW(LCID, ...);
+_CRTIMP int __cdecl __crtLCMapStringW(/*Unknow*/);
 
-_CRTIMP int __cdecl __crtLCMapStringW_WinXP
+typedef int (__cdecl * __crtLCMapStringW_WinXP)
 (
     _In_ LCID _Locale,
     _In_ DWORD _DWMapFlag,
@@ -398,7 +399,7 @@ _CRTIMP int __cdecl __crtLCMapStringW_WinXP
     _In_ int _CchDest
 );
 
-_CRTIMP int __cdecl __crtLCMapStringW_Vista
+typedef int (__cdecl * __crtLCMapStringW_Vista)
 (
 	_In_opt_ _locale_t _Plocinfo,
 	_In_ LCID _Locale,
@@ -422,20 +423,21 @@ __forceinline int __cdecl __crtLCMapStringW_Current
 #ifdef _ATL_XP_TARGETING
 	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
 	{
-		return __crtLCMapStringW(_Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
+		return ((__crtLCMapStringW_WinXP)__crtLCMapStringW)(_Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
 	}
 	else
 #endif
 	{
-		return __crtLCMapStringW(0, _Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
+		return ((__crtLCMapStringW_Vista)__crtLCMapStringW)(NULL, _Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
 	}
 }
 
 #define __crtLCMapStringW __crtLCMapStringW_Current
+#define __acrt_LCMapStringW __crtLCMapStringW_Current
 
-_CRTIMP int __cdecl __crtLCMapStringA(uintptr_t, ...);
+_CRTIMP int __cdecl __crtLCMapStringA(/*Unknow*/);
 
-_CRTIMP int __cdecl __crtLCMapStringA_WinXP
+typedef int (__cdecl * __crtLCMapStringA_WinXP)
 (
 	_In_ LCID _Locale,
 	_In_ DWORD _DwMapFlag,
@@ -447,7 +449,7 @@ _CRTIMP int __cdecl __crtLCMapStringA_WinXP
 	_In_ BOOL _BError
 );
 
-_CRTIMP int __cdecl __crtLCMapStringA_Vista
+typedef int (__cdecl * __crtLCMapStringA_Vista)
 (
 	_In_opt_ _locale_t _Plocinfo,
 	_In_ LCID _Locale,
@@ -479,12 +481,12 @@ __forceinline int __cdecl __crtLCMapStringA_Current
 		if (_Plocinfo&&_Code_page == 0)
 			_Code_page = _Plocinfo->locinfo->_locale_lc_codepage;
 
-		return __crtLCMapStringA(_Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
+		return ((__crtLCMapStringA_WinXP)__crtLCMapStringA)(_Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
 	}
 	else
 #endif
 	{
-		return __crtLCMapStringA((uintptr_t)_Plocinfo, _Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
+		return ((__crtLCMapStringA_Vista)__crtLCMapStringA)(_Plocinfo, _Locale, _DwMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest, _Code_page, _BError);
 	}
 }
 
