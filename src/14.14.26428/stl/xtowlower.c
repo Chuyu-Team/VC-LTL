@@ -14,7 +14,7 @@ _CRTIMP2_PURE wchar_t __CLRCALL_PURE_OR_CDECL _Towlower(wchar_t _Ch, const _Ctyp
 		if (L'A' <= _Ch && _Ch <= L'Z')
 			_Res = (wchar_t)(_Ch - L'A' + L'a');
 		}
-	else if (__crtLCMapStringW(_Ctype->_LocaleName, LCMAP_LOWERCASE,
+	else if (__crtLCMapStringW(__acrt_LocaleNameToLCID(_Ctype->_LocaleName,0), LCMAP_LOWERCASE,
 			&_Ch, 1, &_Res, 1) == 0)
 		_Res = _Ch;
 	return (_Res);

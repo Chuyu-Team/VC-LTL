@@ -46,21 +46,25 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Toupper (
         unsigned char inbuffer[3];
         unsigned char outbuffer[3];
 
-        const wchar_t *locale_name;
+        //const wchar_t *locale_name;
+		LCID _Locale;
         UINT codepage;
 
         if (ploc == 0)
         {
-            locale_name = ___lc_locale_name_func()[LC_CTYPE];
+            //locale_name = ___lc_locale_name_func()[LC_CTYPE];
+			_Locale = ___lc_handle_func()[LC_CTYPE];
             codepage = ___lc_codepage_func();
         }
         else
         {
-            locale_name = ploc->_LocaleName;
+            //locale_name = ploc->_LocaleName;
+			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
             codepage = ploc->_Page;
         }
 
-        if (locale_name == NULL)
+        //if (locale_name == NULL)
+		if (_Locale == 0)
         {
             if ( (c >= 'a') && (c <= 'z') )
                 c = c - ('a' - 'A');
@@ -101,7 +105,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Toupper (
         }
 
         /* convert wide char to uppercase */
-        if (0 == (size = __crtLCMapStringA(locale_name, LCMAP_UPPERCASE,
+        if (0 == (size = __crtLCMapStringA(_Locale, LCMAP_UPPERCASE,
             (const char *)inbuffer, size, (char *)outbuffer, 3, codepage, TRUE)))
         {
             return c;

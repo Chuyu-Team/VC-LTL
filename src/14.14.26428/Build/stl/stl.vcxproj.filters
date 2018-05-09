@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\atomic.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cerr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\clog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cond.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cout.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cthread.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\excptptr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\filesys.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\fiopen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\future.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\iomanip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ios.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\iosptrs.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\iostream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\locale.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\locale0.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\multprec.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\mutex.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\nothrow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ppltasks.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\raisehan.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\sharedmutex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\stdhndlr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\syserror.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\taskscheduler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\thread0.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\uncaught_exception.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\uncaught_exceptions.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ushcerr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ushcin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ushclog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ushcout.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ushiostr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\wcerr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\wcin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\wclog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\wcout.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\wiostrea.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\wlocale.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xalloc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xcosh.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdateord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdint.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdnorm.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdscale.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdtento.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdtest.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xdunscal.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xexp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfcosh.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfdint.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfdnorm.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfdscale.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfdtento.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfdtest.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfdunsca.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xferaise.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfexp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfprec.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfsinh.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xfvalues.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xgetwctype.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlcosh.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xldint.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xldscale.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xldtento.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xldtest.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xldunsca.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlexp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlgamma.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlocale.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlpoly.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlprec.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlsinh.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xlvalues.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xmbtowc.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xmtx.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xnotify.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xonce.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xpoly.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xprec.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xrngabort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xrngdev.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xsinh.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstod.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstof.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstoflt.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstol.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstold.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstoll.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstopfx.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstoul.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstoull.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstoxflt.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstrcoll.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xstrxfrm.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xthrow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xtime.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xtowlower.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xtowupper.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xvalues.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwcscoll.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwcsxfrm.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwctomb.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwstod.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwstof.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwstoflt.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwstold.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwstopfx.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\xwstoxfl.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\_tolower.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\_toupper.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\vector_algorithms.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\parallel_algorithms.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(SolutionDir)winapi_thunks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
