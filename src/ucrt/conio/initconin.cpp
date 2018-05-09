@@ -73,24 +73,6 @@ extern "C" BOOL __cdecl __dcrt_read_console_input(
     return console_input_reopen_and_retry(
         [lpBuffer, nLength, lpNumberOfEventsRead]()
         {
-            return ::ReadConsoleInput(
-                __dcrt_lowio_console_input_handle,
-                lpBuffer,
-                nLength,
-                lpNumberOfEventsRead
-                );
-        });
-}
-
-extern "C" BOOL __cdecl __dcrt_read_console_input_w(
-    _Out_ PINPUT_RECORD lpBuffer,
-    _In_  DWORD         nLength,
-    _Out_ LPDWORD       lpNumberOfEventsRead
-    )
-{
-    return console_input_reopen_and_retry(
-        [lpBuffer, nLength, lpNumberOfEventsRead]()
-        {
             return ::ReadConsoleInputW(
                 __dcrt_lowio_console_input_handle,
                 lpBuffer,
@@ -100,7 +82,7 @@ extern "C" BOOL __cdecl __dcrt_read_console_input_w(
         });
 }
 
-extern "C" BOOL __cdecl __dcrt_read_console_w(
+extern "C" BOOL __cdecl __dcrt_read_console(
     _Out_ LPVOID  lpBuffer,
     _In_  DWORD   nNumberOfCharsToRead,
     _Out_ LPDWORD lpNumberOfCharsRead
@@ -133,7 +115,7 @@ extern "C" BOOL __cdecl __dcrt_get_number_of_console_input_events(
         });
 }
 
-extern "C" BOOL __cdecl __dcrt_peek_console_input(
+extern "C" BOOL __cdecl __dcrt_peek_console_input_a(
     _Out_ PINPUT_RECORD lpBuffer,
     _In_  DWORD         nLength,
     _Out_ LPDWORD       lpNumberOfEventsRead
@@ -142,7 +124,7 @@ extern "C" BOOL __cdecl __dcrt_peek_console_input(
     return console_input_reopen_and_retry(
         [lpBuffer, nLength, lpNumberOfEventsRead]()
         {
-            return ::PeekConsoleInput(
+            return ::PeekConsoleInputA(
                 __dcrt_lowio_console_input_handle,
                 lpBuffer,
                 nLength,

@@ -10,6 +10,7 @@
 
 #include <direct.h>
 #include <corecrt_internal_traits.h>
+#include <corecrt_internal_win32_buffer.h>
 #include <malloc.h>
 #include <stdlib.h>
 
@@ -82,38 +83,17 @@ static int __cdecl common_chdir(_In_z_ Character const* const path) throw()
     //
     //     =D:=D:\nt\private\mytests
 
-    // TODO class-ify this pattern.
-    Character local_buffer[_MAX_PATH + 1];
-    __crt_unique_heap_ptr<Character> heap_buffer;
+    Character buffer_initial_storage[MAX_PATH + 1];
+    __crt_internal_win32_buffer<Character> current_directory_buffer(buffer_initial_storage);
 
-    DWORD buffer_count = static_cast<DWORD>(_countof(local_buffer));
-    Character* buffer = local_buffer;
+    errno_t const err = __acrt_get_current_directory(current_directory_buffer);
 
-    for (;;)
-    {
-        DWORD const result = traits::get_current_directory(buffer_count, buffer);
-        if (result == 0)
-        {
-            __acrt_errno_map_os_error(GetLastError());
-            return -1; // NOTE: The function has been partially succesful.
-        }
-        else if (result < buffer_count)
-        {
-#pragma warning(suppress:__WARNING_USING_UNINIT_VAR)                       // 6001 Prefast doesn't understand perfect forwarding.
-#pragma warning(suppress:__WARNING_MISSING_ZERO_TERMINATION2)              // 6054 Prefast doesn't understand perfect forwarding.
-#pragma warning(suppress:__WARNING_PRECONDITION_NULLTERMINATION_VIOLATION) // 26035 Prefast doesn't understand perfect forwarding.
-            return set_cwd_environment_variable(local_buffer);
-        }
-
-        heap_buffer = _calloc_crt_t(Character, result);
-        buffer = heap_buffer.get();
-        if (buffer == nullptr)
-        {
-            return -1;
-        }
-
-        buffer_count = result;
+    if (err != 0) {
+        // Appropriate error already set
+        return -1;
     }
+
+    return set_cwd_environment_variable(current_directory_buffer.data());
 }
 
 

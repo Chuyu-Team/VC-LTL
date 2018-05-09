@@ -126,21 +126,23 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsspn_l_downlevel);
 _LCRT_DEFINE_IAT_SYMBOL(_mbsspnp_l_downlevel);
 #endif
 
+#if 0
+#ifndef _RETURN_PTR
+extern "C" size_t (__cdecl _mbsspn)
+#else  /* _RETURN_PTR */
+extern "C" unsigned char * (__cdecl _mbsspnp)
+#endif  /* _RETURN_PTR */
+        (
+        const unsigned char *string,
+        const unsigned char *charset
+        )
+{
+#ifndef _RETURN_PTR
+        return _mbsspn_l(string, charset, nullptr);
+#else  /* _RETURN_PTR */
+        return _mbsspnp_l(string, charset, nullptr);
+#endif  /* _RETURN_PTR */
+}
 #endif
 
-//#ifndef _RETURN_PTR
-//extern "C" size_t (__cdecl _mbsspn)
-//#else  /* _RETURN_PTR */
-//extern "C" unsigned char * (__cdecl _mbsspnp)
-//#endif  /* _RETURN_PTR */
-//        (
-//        const unsigned char *string,
-//        const unsigned char *charset
-//        )
-//{
-//#ifndef _RETURN_PTR
-//        return _mbsspn_l(string, charset, nullptr);
-//#else  /* _RETURN_PTR */
-//        return _mbsspnp_l(string, charset, nullptr);
-//#endif  /* _RETURN_PTR */
-//}
+#endif //_ATL_XP_TARGETING

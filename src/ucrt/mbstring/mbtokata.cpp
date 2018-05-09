@@ -50,9 +50,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbctokata_l_downlevel);
 
 #endif
 
-//extern "C" unsigned int (__cdecl _mbctokata)(
-//        unsigned int c
-//        )
-//{
-//    return _mbctokata_l(c, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbctokata)(
+        unsigned int c
+        )
+{
+    return _mbctokata_l(c, nullptr);
+}*/

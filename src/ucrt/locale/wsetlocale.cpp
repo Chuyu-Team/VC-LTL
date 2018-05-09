@@ -381,7 +381,7 @@ _locale_t __cdecl _create_locale(
     if ( (_category < LC_MIN) || (_category > LC_MAX) || _locale == nullptr)
         return nullptr;
 
-    if ( MultiByteToWideChar(CP_ACP, 0, _locale, -1, _wlocale, _countof(_wlocale)) == 0 )
+    if ( __acrt_MultiByteToWideChar(CP_ACP, 0, _locale, -1, _wlocale, _countof(_wlocale)) == 0 )
     { // conversion to wide char failed
         return nullptr;
     }
@@ -482,9 +482,17 @@ wchar_t * __cdecl _wsetlocale (
                     // to some other locale, we keep locale_changed = 0. Other functions that
                     // depend on locale use this variable to optimize performance for C locale
                     // which is normally the case in applications.
-                    if (_wlocale != nullptr && wcscmp(_wlocale, __acrt_wide_c_locale_string) != 0)
+                    if (_wlocale != nullptr)
                     {
-                        __acrt_set_locale_changed();
+                        if (wcscmp(_wlocale, __acrt_wide_c_locale_string) != 0)
+                        {
+                            __acrt_set_locale_changed();
+                        }
+                        // If it is again set to the C locale, could we not retain that state?
+                        // else
+                        // {
+                        //    __acrt_set_locale_unchanged();
+                        // }
                     }
 
                     (void)_updatetlocinfoEx_nolock(&ptd->_locale_info, ptloci);
@@ -646,7 +654,7 @@ static wchar_t * __cdecl _wsetlocale_set_cat (
     if (!_expandlocale(wlocale, lctemp, _countof(lctemp), localeNameString, _countof(localeNameString), &cptemp))
         return nullptr;
 
-    // if this cateogory's locale hadn't changed
+    // if this category's locale hadn't changed
     if (wcscmp(lctemp, ploci->lc_category[category].wlocale) == 0)
     {
         return ploci->lc_category[category].wlocale;
@@ -905,14 +913,32 @@ wchar_t * _expandlocale (
             if (localeNameOutput)
                 _ERRCHECK(wcsncpy_s(localeNameOutput, localeNameSizeInChars, names.szLocaleName, wcslen(names.szLocaleName) + 1));
         }
-        else if (__acrt_IsValidLocaleName(expr))
+        else if (names.szLanguage[0] && __acrt_IsValidLocaleName(names.szLanguage))
         {
-            // Get default ANSI code page - don't fail if we can't get the value
-            if (__acrt_GetLocaleInfoEx(expr, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
-                                       (LPWSTR)&iCodePage, sizeof(iCodePage) / sizeof(wchar_t)) == 0
-                    || iCodePage == 0) // for locales have no assoicated ANSI codepage
+            if (names.szCodePage[0])
             {
-                iCodePage = GetACP();
+                // Allow .utf8/.utf-8 for BCP-47 tags.  (Other codepages not allowed)
+                if (_wcsicmp(names.szCodePage, L"utf8") == 0 ||
+                    _wcsicmp(names.szCodePage, L"utf-8") == 0)
+                {
+                    // Use UTF-8
+                    iCodePage = CP_UTF8;
+                }
+                else
+                {
+                    // Other codepage tokens (fr-FR.1252, etc.) aren't supported for BCP-47 tags (eg: Use Unicode!)
+                    // restore locale name to cache
+                    _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), localeNameOutput, wcslen(localeNameOutput) + 1));
+                    return nullptr;  /* input unrecognized as supported locale name */
+                }
+            }
+            // Get default ANSI code page - fall back to UTF-8 if fail or Unicode-Only
+            // (failure shouldn't be possible because IsValidLocaleName worked)
+            else if (__acrt_GetLocaleInfoEx(expr, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
+                                            (LPWSTR)&iCodePage, sizeof(iCodePage) / sizeof(wchar_t)) == 0
+                     || iCodePage == 0) // for Unicode-only locales
+            {
+                iCodePage = CP_UTF8;
             }
 
             // Copy code page
@@ -925,7 +951,7 @@ wchar_t * _expandlocale (
             _ERRCHECK(wcsncpy_s(localeNameOutput, localeNameSizeInChars, expr, charactersInExpression + 1));
 
             // Finally, make sure the locale name is cached for subsequent use
-            _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), expr, charactersInExpression + 1));
+            _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), names.szLanguage, charactersInExpression + 1));
         }
         else
         {
@@ -965,6 +991,9 @@ void _wcscats ( wchar_t *outstr, size_t numberOfElements, int n, ...)
     va_end(substr);
 }
 
+// Parse the wlocale string to find the array of language/region/codepage strings (if available)
+// in the form .CodePage, Language, Language_Region, Language_Region.Codepage, or Language.CodePage
+// If the input is a BCP-47 tag, then that tag is returned in the names language.
 int __lc_wcstolc ( __crt_locale_strings *names, const wchar_t *wlocale)
 {
     int i;
@@ -985,16 +1014,32 @@ int __lc_wcstolc ( __crt_locale_strings *names, const wchar_t *wlocale)
         return 0;
     }
 
+    // Looks like Language_Country.Codepage
     for (i=0; ; i++)
     {
+        // _ language/country separator, . is before codepage, either , or \0 are end of string.
         len = wcscspn(wlocale, L"_.,");
         if (len == 0)
-            return -1;  /* syntax error */
+            return -1;  /* syntax error, can't start with a separator */
 
         wch = wlocale[len];
 
-        if ((i==0) && (len<MAX_LANG_LEN) && (wch!=L'.'))
+        if ((i == 0) && (len < MAX_LANG_LEN))
+        {
             _ERRCHECK(wcsncpy_s(names->szLanguage, _countof(names->szLanguage), wlocale, len));
+            if (wch == L'.')
+            {
+                // '.' is a delimiter before codepage, so codepage is expected next (skip country)
+                i++;
+
+                // We only allow .utf8 for mixed codepages, no number codepages allowed.
+                if (wlocale[len + 1] != 'u' && wlocale[len + 1] != 'U')
+                {
+                    // .other codepage not allowed
+                    return -1;
+                }
+            }
+        }
 
         else if ((i==1) && (len<MAX_CTRY_LEN) && (wch!=L'_'))
             _ERRCHECK(wcsncpy_s(names->szCountry, _countof(names->szCountry), wlocale, len));
@@ -1020,6 +1065,7 @@ int __lc_wcstolc ( __crt_locale_strings *names, const wchar_t *wlocale)
     return 0;
 }
 // Append locale name pieces together in the form of "Language_country.CodePage"
+// Note that the preferred form is the BCP-47 tag, but we don't want to change legacy names
 void __lc_lctowcs ( wchar_t *locale, size_t numberOfElements, const __crt_locale_strings *names)
 {
     _ERRCHECK(wcscpy_s(locale, numberOfElements, names->szLanguage));

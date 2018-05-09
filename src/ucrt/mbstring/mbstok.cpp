@@ -60,16 +60,18 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbstok_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * __cdecl _mbstok(
-//        unsigned char * string,
-//        const unsigned char * sepset
-//        )
-//{
-//    /* We call the deprecated _mbstok_l (and not _mbstok_s_l) so that we keep one
-//     * single nextoken in the single thread case, i.e. the nextoken declared as static
-//     * inside _mbstok_l
-//     */
-//    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-//    return _mbstok_l(string, sepset, nullptr);
-//    _END_SECURE_CRT_DEPRECATION_DISABLE
-//}
+#if 0
+extern "C" unsigned char * __cdecl _mbstok(
+        unsigned char * string,
+        const unsigned char * sepset
+        )
+{
+    /* We call the deprecated _mbstok_l (and not _mbstok_s_l) so that we keep one
+     * single nextoken in the single thread case, i.e. the nextoken declared as static
+     * inside _mbstok_l
+     */
+    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+    return _mbstok_l(string, sepset, nullptr);
+    _END_SECURE_CRT_DEPRECATION_DISABLE
+}
+#endif

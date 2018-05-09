@@ -104,13 +104,13 @@ static errno_t __cdecl fp_format_nan_or_infinity(
 _Success_(return == 0)
 static errno_t fp_format_e_internal(
     _Maybe_unsafe_(_Inout_updates_z_, result_buffer_count) char*     const result_buffer,
-    _In_fits_precision_(precision)                          size_t    const result_buffer_count,
-    _In_                                                    int       const precision,
-    _In_                                                    bool      const capitals,
-    _In_                                                    unsigned  const min_exponent_digits,
-    _In_                                                    STRFLT    const pflt,
-    _In_                                                    bool      const g_fmt,
-    _In_opt_                                                _locale_t const locale
+    _In_fits_precision_(precision)                         size_t    const result_buffer_count,
+    _In_                                                   int       const precision,
+    _In_                                                   bool      const capitals,
+    _In_                                                   unsigned  const min_exponent_digits,
+    _In_                                                   STRFLT    const pflt,
+    _In_                                                   bool      const g_fmt,
+    _In_opt_                                               _locale_t const locale
     ) throw()
 {
     // The max length if calculated like this:

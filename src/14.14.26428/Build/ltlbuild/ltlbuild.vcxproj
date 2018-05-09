@@ -23,9 +23,9 @@
     <ProjectGuid>{1855E9A9-A39C-4A2F-8C9C-027FB362BDC2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ltlbuild</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildThisFileDirectory)..\Shared.props"/>
+  <Import Project="$(MSBuildThisFileDirectory)..\Shared.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>

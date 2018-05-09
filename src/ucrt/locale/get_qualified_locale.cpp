@@ -25,6 +25,7 @@ extern "C" {
 
 
 //  non-NLS language string table
+//  The three letter Windows names are non-standard and very limited and should not be used.
 extern __crt_locale_string_table const __acrt_rg_language[]
 {
     { L"american",                    L"ENU" },
@@ -95,6 +96,7 @@ extern __crt_locale_string_table const __acrt_rg_language[]
 };
 
 //  non-NLS country/region string table
+//  The three letter Windows names are non-standard and very limited and should not be used.
 extern __crt_locale_string_table const __acrt_rg_country[]
 {
     { L"america",                     L"USA" },
@@ -169,7 +171,7 @@ BOOL __cdecl __acrt_get_qualified_locale(const __crt_locale_strings* lpInStr, UI
 {
     int iCodePage;
     __crt_qualified_locale_data* _psetloc_data = &__acrt_getptd()->_setloc_data;
-    _psetloc_data->_cacheLocaleName[0] = '\x0'; // Initialize to invariant localename
+    _psetloc_data->_cacheLocaleName[0] = L'\x0'; // Initialize to invariant localename
 
     //  initialize pointer to call locale info routine based on operating system
 
@@ -202,7 +204,8 @@ BOOL __cdecl __acrt_get_qualified_locale(const __crt_locale_strings* lpInStr, UI
         }
 
         // still not done?
-        if (_psetloc_data->iLocState == 0) {
+        if (_psetloc_data->iLocState == 0)
+        {
             //  first attempt failed, try substituting the language name
             //  convert non-NLS language strings to three-letter abbrevs
             if (TranslateName(__acrt_rg_language, static_cast<int>(__acrt_rg_language_count - 1),
@@ -232,13 +235,24 @@ BOOL __cdecl __acrt_get_qualified_locale(const __crt_locale_strings* lpInStr, UI
         return FALSE;
 
     //  process codepage value
-    iCodePage = ProcessCodePage(lpInStr ? lpInStr->szCodePage: nullptr, _psetloc_data);
+    if (lpInStr == nullptr || *lpInStr->szLanguage || *lpInStr->szCodePage )
+    {
+        // If there's no input, then get the current codepage
+        // If they explicitly chose a language, use that default codepage
+        // If they explicilty set a codepage, then use that
+        iCodePage = ProcessCodePage(lpInStr ? lpInStr->szCodePage : nullptr, _psetloc_data);
+    }
+    else
+    {
+        // No language or codepage means that they want to set to the
+        // user default settings, get that codepage (could be UTF-8)
+        iCodePage = GetACP();
+    }
 
     //  verify codepage validity
-    // In future releases CP_UTF8 will be allowed at any time, however currently it is only
-    // permitted if the system codepage is also set to UTF-8.
-    if (!iCodePage || iCodePage == CP_UTF7 || (iCodePage == CP_UTF8 && GetACP() != CP_UTF8) ||
-        !IsValidCodePage((WORD)iCodePage))
+    //  CP_UTF7 is unexpected and has never been previously permitted.
+    //  CP_UTF8 is the current preferred codepage
+    if (!iCodePage || iCodePage == CP_UTF7 || !IsValidCodePage((WORD)iCodePage))
         return FALSE;
 
     //  set codepage
@@ -250,16 +264,16 @@ BOOL __cdecl __acrt_get_qualified_locale(const __crt_locale_strings* lpInStr, UI
     //  set locale name and codepage results
     if (lpOutStr)
     {
-        lpOutStr->szLocaleName[0] = L'\x0'; // Init the locale name to emptry string
+        lpOutStr->szLocaleName[0] = L'\x0'; // Init the locale name to empty string
 
         _ERRCHECK(wcsncpy_s(lpOutStr->szLocaleName, _countof(lpOutStr->szLocaleName), _psetloc_data->_cacheLocaleName, wcslen(_psetloc_data->_cacheLocaleName) + 1));
 
-        // Get and store the Enlgish language lang name, to be returned to user
+        // Get and store the English language lang name, to be returned to user
         if (__acrt_GetLocaleInfoEx(lpOutStr->szLocaleName, LOCALE_SENGLISHLANGUAGENAME,
                                     lpOutStr->szLanguage, MAX_LANG_LEN) == 0)
             return FALSE;
 
-        // Get and store the Enlgish language country name, to be returned to user
+        // Get and store the English language country name, to be returned to user
         if (__acrt_GetLocaleInfoEx(lpOutStr->szLocaleName, LOCALE_SENGLISHCOUNTRYNAME,
                                     lpOutStr->szCountry, MAX_CTRY_LEN) == 0)
             return FALSE;
@@ -271,7 +285,15 @@ BOOL __cdecl __acrt_get_qualified_locale(const __crt_locale_strings* lpInStr, UI
                                     lpOutStr->szCountry, MAX_CTRY_LEN) == 0)
                 return FALSE;
 
-        _itow_s((int)iCodePage, (wchar_t *)lpOutStr->szCodePage, MAX_CP_LEN, 10);
+        if (iCodePage == CP_UTF8)
+        {
+            // We want UTF-8 to look like utf8, not 65001
+            _ERRCHECK(wcsncpy_s(lpOutStr->szCodePage, _countof(lpOutStr->szCodePage), L"utf8", 5));
+        }
+        else
+        {
+            _itow_s((int)iCodePage, (wchar_t *)lpOutStr->szCodePage, MAX_CP_LEN, 10);
+        }
     }
 
     return TRUE;
@@ -329,6 +351,19 @@ static BOOL TranslateName (
 *   After global variables are initialized, the LangCountryEnumProcEx
 *   routine is registered as an EnumSystemLocalesEx callback to actually
 *   perform the matching as the locale names are enumerated.
+*
+*
+*WARNING:
+*   This depends on an exact match with a localized string that can change!
+*   It is strongly recommended that locales be selected with valid BCP-47
+*   tags instead of the English names.
+*
+*   This API is also very brute-force and resource intensive, reading in all
+*   of the locales, forcing them to be cached, and looking up their names.
+*
+*WARNING:
+*   In the event of a 2 or 3 letter friendly name (Asu, Edo, Ewe, Yi, ...)
+*   then this function will fail
 *
 *Entry:
 *   pchLanguage     - language string
@@ -527,6 +562,22 @@ static BOOL CALLBACK LangCountryEnumProcEx(LPWSTR lpLocaleString, DWORD dwFlags,
 *   registered as an EnumSystemLocalesEx callback to actually perform
 *   the matching as the locale names are enumerated.
 *
+*WARNING:
+*   This depends on an exact match with a localized string that can change!
+*   It is strongly recommended that locales be selected with valid BCP-47
+*   tags instead of the English names.
+*
+*   This API is also very brute-force and resource intensive, reading in all
+*   of the locales, forcing them to be cached, and looking up their names.
+*
+*WARNING:
+*   In the event of a 3 letter BCP-47 tag that happens to match a Windows
+*   propriatary language code, this function will return the wrong answer!
+*
+*WARNING:
+*   In the event of a 2 or 3 letter friendly name (Asu, Edo, Ewe, Yi, ...)
+*   then this function will fail
+*
 *Entry:
 *   pchLanguage     - language string
 *   bAbbrevLanguage - language string is a three-letter abbreviation
@@ -621,7 +672,7 @@ static void GetLocaleNameFromDefault (__crt_qualified_locale_data* _psetloc_data
     _psetloc_data->iLocState |= (__LOC_FULL | __LOC_LANGUAGE);
 
     // Store the default user locale name. The returned buffer size includes the
-    // terminating null character, so only store if the size retrned is > 1
+    // terminating null character, so only store if the size returned is > 1
     if (__acrt_GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH) > 1)
     {
         _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), localeName, wcslen(localeName) + 1));
@@ -640,7 +691,8 @@ static void GetLocaleNameFromDefault (__crt_qualified_locale_data* _psetloc_data
 *   lpCodePageStr - pointer to codepage string
 *
 *Exit:
-*   Returns numeric value of codepage.
+*   Returns numeric value of codepage, zero if GetLocaleInfoEx failed.
+*   (which then would mean caller aborts and locale is not set)
 *
 *Exceptions:
 *
@@ -652,21 +704,39 @@ static int ProcessCodePage (LPCWSTR lpCodePageStr, __crt_qualified_locale_data* 
     if (!lpCodePageStr || !*lpCodePageStr || wcscmp(lpCodePageStr, L"ACP") == 0)
     {
         //  get ANSI codepage for the country locale name
+        //  CONSIDER: If system is running UTF-8 ACP, then always return UTF-8?
         if (__acrt_GetLocaleInfoEx(_psetloc_data->_cacheLocaleName, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
                                  (LPWSTR) &iCodePage, sizeof(iCodePage) / sizeof(wchar_t)) == 0)
             return 0;
-        if (iCodePage == 0) // for locales have no assoicated ANSI codepage, e.g. Hindi locale
+
+        // Locales with no code page ("Unicode only locales") should return UTF-8
+        // (0, 1 & 2 are Unicode-Only ACP, OEMCP & MacCP flags)
+        if (iCodePage < 3)
         {
-            return GetACP();
+            return CP_UTF8;
         }
 
+    }
+    else if (_wcsicmp(lpCodePageStr, L"utf8") == 0 ||
+             _wcsicmp(lpCodePageStr, L"utf-8") == 0)
+    {
+        // Use UTF-8
+        return CP_UTF8;
     }
     else if (wcscmp(lpCodePageStr, L"OCP") == 0)
     {
         //  get OEM codepage for the country locale name
+        //  CONSIDER: If system is running UTF-8 ACP, then always return UTF-8?
         if (__acrt_GetLocaleInfoEx(_psetloc_data->_cacheLocaleName, LOCALE_IDEFAULTCODEPAGE | LOCALE_RETURN_NUMBER,
                                  (LPWSTR) &iCodePage, sizeof(iCodePage) / sizeof(wchar_t)) == 0)
             return 0;
+
+        // Locales with no code page ("unicode only locales") should return UTF-8
+        // (0, 1 & 2 are Unicode-Only ACP, OEMCP & MacCP flags)
+        if (iCodePage < 3)
+        {
+            return CP_UTF8;
+        }
     }
     else
     {

@@ -45,10 +45,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbccpy_l_downlevel);
 
 #endif
 
-//extern "C" void (__cdecl _mbccpy)(
-//        unsigned char *dst,
-//        const unsigned char *src
-//        )
-//{
-//    _mbccpy_s_l(dst, 2, nullptr, src, nullptr);
-//}
+/*extern "C" void (__cdecl _mbccpy)(
+        unsigned char *dst,
+        const unsigned char *src
+        )
+{
+    _mbccpy_s_l(dst, 2, nullptr, src, nullptr);
+}*/

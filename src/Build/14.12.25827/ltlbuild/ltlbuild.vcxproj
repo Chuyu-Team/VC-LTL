@@ -23,7 +23,7 @@
     <ProjectGuid>{CB9502D7-50B1-4159-A5D2-08EDE3F38BC3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ltlbuild</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
     <VC-LTLUsedToolsVersion>14.12.25827</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

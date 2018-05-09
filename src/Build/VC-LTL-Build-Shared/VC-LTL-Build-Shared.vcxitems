@@ -128,7 +128,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\heap\align.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\locks.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\string_utilities.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\winapi_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\locale\GetStringTypeA.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\locale\lcidtoname_downlevel.cpp">

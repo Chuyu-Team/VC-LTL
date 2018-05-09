@@ -150,9 +150,9 @@ extern "C" unsigned char * (__cdecl _mbsupr_l_downlevel)(
 _LCRT_DEFINE_IAT_SYMBOL(_mbsupr_l_downlevel);
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsupr)(
-//        unsigned char *string
-//        )
-//{
-//    return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
-//}
+/*extern "C" unsigned char * (__cdecl _mbsupr)(
+        unsigned char *string
+        )
+{
+    return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
+}*/

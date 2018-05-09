@@ -18,6 +18,7 @@
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
 
+
 /***
 * _mbsnicoll - Collate n characters of strings, ignoring case (MBCS)
 *
@@ -92,11 +93,11 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnicoll_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _mbsnicoll)(
-//        const unsigned char *s1,
-//        const unsigned char *s2,
-//        size_t n
-//        )
-//{
-//    return _mbsnicoll_l(s1, s2, n, nullptr);
-//}
+/*extern "C" int (__cdecl _mbsnicoll)(
+        const unsigned char *s1,
+        const unsigned char *s2,
+        size_t n
+        )
+{
+    return _mbsnicoll_l(s1, s2, n, nullptr);
+}*/

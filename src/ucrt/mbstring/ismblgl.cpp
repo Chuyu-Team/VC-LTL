@@ -50,9 +50,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbclegal_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _ismbclegal)(
-//        unsigned int c
-//        )
-//{
-//    return _ismbclegal_l(c, nullptr);
-//}
+/*extern "C" int (__cdecl _ismbclegal)(
+        unsigned int c
+        )
+{
+    return _ismbclegal_l(c, nullptr);
+}*/

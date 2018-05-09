@@ -16,6 +16,7 @@
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
 
+
 /***
 * _mbctolower - Convert character to lower case (MBCS)
 *
@@ -86,9 +87,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbctolower_l_downlevel);
 
 #endif
 
-//extern "C" unsigned int (__cdecl _mbctolower) (
-//        unsigned int c
-//        )
-//{
-//    return _mbctolower_l(c, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbctolower) (
+        unsigned int c
+        )
+{
+    return _mbctolower_l(c, nullptr);
+}*/

@@ -34,15 +34,21 @@ extern "C" errno_t __cdecl _gcvt_s(
     _LocaleUpdate locale_update(nullptr);
     char const decimal_point = *locale_update.GetLocaleT()->locinfo->lconv->decimal_point;
 
-    char result_string[_CVTBUFSIZE + 1];
+    // We only call __acrt_fltout in order to parse the correct exponent value (strflt.decpt).
+    // Therefore, we don't want to generate any digits, so we pass a buffer size only large
+    // enough to hold the inf, nan, or ind string to prevent failure.
+
+    size_t const restricted_count = 7; // "1#SNAN" + 1 null terminator
+    char result_string[restricted_count];
 
     _strflt strflt{};
+
     __acrt_fltout(
         reinterpret_cast<_CRT_DOUBLE const&>(value),
-        _countof(result_string),
+        precision,
         &strflt,
         result_string,
-        _countof(result_string));
+        restricted_count);
 
     int const magnitude = strflt.decpt - 1;
 

@@ -35,7 +35,7 @@
 
 extern "C" intptr_t __cdecl _loaddll(char* szName)
 {
-    return reinterpret_cast<intptr_t>(LoadLibraryExA(szName, nullptr, 0));
+    return reinterpret_cast<intptr_t>(__acrt_LoadLibraryExA(szName, nullptr, 0));
 }
 
 /***

@@ -20,7 +20,7 @@
 * _mbsnicmp - Compare n characters of strings, ignoring case (MBCS)
 *
 *Purpose:
-*       Compares up to n charcters of two strings for lexical order.
+*       Compares up to n charcters of two strings for ordinal order.
 *       Strings are compared on a character basis, not a byte basis.
 *       Case of characters is not considered.
 *
@@ -114,11 +114,11 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnicmp_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _mbsnicmp)(
-//        const unsigned char *s1,
-//        const unsigned char *s2,
-//        size_t n
-//        )
-//{
-//    return _mbsnicmp_l(s1, s2, n, nullptr);
-//}
+/*extern "C" int (__cdecl _mbsnicmp)(
+        const unsigned char *s1,
+        const unsigned char *s2,
+        size_t n
+        )
+{
+    return _mbsnicmp_l(s1, s2, n, nullptr);
+}*/

@@ -11,6 +11,9 @@
 
 
 // This function simply calls GetTempPathW() and converts the wide string to multibyte.
+// Note that GetTempPathA is not UTF-8 aware. This is because APIs using temporary paths
+// must not depend on the current locale setting and must use the ACP or OEMCP since
+// the returned data must be a static buffer and this behavior is guaranteed by MSDN documentation.
 extern "C" DWORD __cdecl __acrt_GetTempPathA(DWORD nBufferLength, LPSTR lpBuffer)
 {
     wchar_t wide_buffer[_MAX_PATH + 1] = {};
@@ -24,7 +27,7 @@ extern "C" DWORD __cdecl __acrt_GetTempPathA(DWORD nBufferLength, LPSTR lpBuffer
     bool const use_oem_code_page = !__acrt_AreFileApisANSI();
     int const code_page = use_oem_code_page ? CP_OEMCP : CP_ACP;
 #pragma warning(suppress:__WARNING_W2A_BEST_FIT) // 38021 Prefast recommends WC_NO_BEST_FIT_CHARS.
-    int const wctmb_result = WideCharToMultiByte(code_page, 0, wide_buffer, -1, lpBuffer, nBufferLength, nullptr, nullptr);
+    int const wctmb_result = __acrt_WideCharToMultiByte(code_page, 0, wide_buffer, -1, lpBuffer, nBufferLength, nullptr, nullptr);
     if (wctmb_result == 0)
     {
         return 0;

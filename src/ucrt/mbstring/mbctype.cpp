@@ -535,6 +535,16 @@ static const wchar_t* CPtoLocaleName (int codepage)
 *
 *Entry:
 *       codepage - user requested code page/world script
+*
+*       Docs specify:
+*          _MB_CP_SBCS    0 - Use a single byte codepage 
+*          _MB_CP_OEM    -2 - use the OEMCP
+*          _MB_CP_ANSI   -3 - use the ACP
+*          _MB_CP_LOCALE -4 - use the codepage for a previous setlocale call
+*          Codepage #       - use the specified codepage (UTF-7 is disallowed)
+*                           - 54936 and other interesting stateful codepages aren't
+*                           - explicitly disallowed but I can't imagine them working right.
+*
 *Exit:
 *       requested code page
 *
@@ -569,10 +579,14 @@ static int getSystemCP(int codepage)
 }
 
 /***
-*setSBUpLow() - Set single byte upper/lower mappings
+*setSBUpLow() - Set single byte range upper/lower mappings
 *
 *Purpose:
 *           Set single byte mapping for tolower/toupper.
+*           Basically this is ASCII-mapping plus a few if you're a lucky
+*           SBCS codepage.
+*           DBCS + UTF ranges > 0x7f are basically ignored.
+*
 *Entry:
 *
 *Exit:
@@ -592,8 +606,13 @@ static void setSBUpLow (__crt_multibyte_data* ptmbci)
     USHORT  wVector[512];
 
     //    test if codepage exists
-    if (GetCPInfo(ptmbci->mbcodepage, &cpInfo) != 0)
+    if (ptmbci->mbcodepage != CP_UTF8 && GetCPInfo(ptmbci->mbcodepage, &cpInfo) != 0)
     {
+        // This code attempts to generate casing tables for characters 0-255
+        // For DBCS codepages that will be basically ASCII casing but won't help DBCS mapping. 
+        // For SBCS codepages that will include the codepage-specific characters.
+        // Mappings do not appear to include Turkish-i variations.
+
         //  if so, create vector 0-255
         for (ich = 0; ich < 256; ich++)
             sbVector[ich] = (UCHAR) ich;
@@ -624,36 +643,44 @@ static void setSBUpLow (__crt_multibyte_data* ptmbci)
         //  set mapping array with lower or upper mapping value
 
         for (ich = 0; ich < 256; ich++)
+        {
             if (wVector[ich] & _UPPER)
             {
+                // WARNING: +1 because the mbctype array starts with a -1 EOF character
                 ptmbci->mbctype[ich + 1] |= _SBUP;
                 ptmbci->mbcasemap[ich] = lowVector[ich];
             }
             else if (wVector[ich] & _LOWER)
             {
+                // WARNING: +1 because the mbctype array starts with a -1 EOF character
                 ptmbci->mbctype[ich + 1] |= _SBLOW;
                 ptmbci->mbcasemap[ich] = upVector[ich];
             }
             else
                 ptmbci->mbcasemap[ich] = 0;
+        }
     }
     else
     {
-        //  if no codepage, set 'A'-'Z' as upper, 'a'-'z' as lower
-
+        //  Either no codepage or UTF-8 (which looks a lot like ASCII in the lower bits)
+        //  Set 'A'-'Z' as upper, 'a'-'z' as lower (eg: ASCII casing)
         for (ich = 0; ich < 256; ich++)
+        {
             if (ich >= (UINT)'A' && ich <= (UINT)'Z')
             {
+                // WARNING: +1 because the mbctype array starts with a -1 EOF character
                 ptmbci->mbctype[ich + 1] |= _SBUP;
                 ptmbci->mbcasemap[ich] = static_cast<unsigned char>(ich + ('a' - 'A'));
             }
             else if (ich >= (UINT)'a' && ich <= (UINT)'z')
             {
+                // WARNING: +1 because the mbctype array starts with a -1 EOF character
                 ptmbci->mbctype[ich + 1] |= _SBLOW;
                 ptmbci->mbcasemap[ich] = static_cast<unsigned char>(ich - ('a' - 'A'));
             }
             else
                 ptmbci->mbcasemap[ich] = 0;
+        }
     }
 }
 
@@ -710,7 +737,9 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
                 ptmbci->ismbcodepage = 1;
                 ptmbci->mblocalename = CPtoLocaleName(ptmbci->mbcodepage);
                 for (irg = 0; irg < NUM_ULINFO; irg++)
+                {
                     ptmbci->mbulinfo[irg] = __rgcode_page_info[icp].mbulinfo[irg];
+                }
 
                 /* return success */
                 setSBUpLow(ptmbci);
@@ -719,22 +748,55 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
         }
 
         /*  verify codepage validity */
-        // In future releases CP_UTF8 will be allowed at any time, however currently it is only
-        // permitted if the system codepage is also set to UTF-8.
-        if (codepage == 0 || codepage == CP_UTF7 || (codepage == CP_UTF8 && GetACP() != CP_UTF8) ||
-            !IsValidCodePage((WORD)codepage))
+        // Unclear why UTF7 is excluded yet stateful and other complex encodings are not
+        if (codepage == 0 || codepage == CP_UTF7 || !IsValidCodePage((WORD)codepage))
         {
             /* return failure, code page not changed */
             return -1;
         }
 
-        /* code page not supported by CRT, try the OS */
-        if (GetCPInfo(codepage, &cpInfo) != 0) {
+        // Special case for UTF-8
+        if (codepage == CP_UTF8)
+        {
+            ptmbci->mbcodepage = CP_UTF8;
+            ptmbci->mblocalename = nullptr;
+
+            // UTF-8 does not have lead or trail bytes in the terms
+            // the CRT thinks of it for DBCS codepages, so we'll
+            // clear the flags for all bytes.
+            // Note that this array is 257 bytes because there's a
+            // "-1" that is used someplaces for EOF.  So this array
+            // is actually -1 based.
+            for (ich = 0; ich < NUM_ULINFO; ich++)
+            {
+                ptmbci->mbctype[ich] = 0;
+            }
+
+            // not really a multibyte code page, we'll have to test
+            // ptmbci->mbcodepage == CP_UTF8 when we use this structure.
+            ptmbci->ismbcodepage = 0;
+
+            // CJK encodings have some full-width mappings, but not here.
+            for (irg = 0; irg < NUM_ULINFO; irg++)
+            {
+                ptmbci->mbulinfo[irg] = 0;
+            }
+
+            setSBUpLow(ptmbci);
+
+            // return success
+            return 0;
+        }
+        /* code page not supported by CRT, try the OS */\
+        else if (GetCPInfo(codepage, &cpInfo) != 0)
+        {
             BYTE *lbptr;
 
             /* clear the table */
             for (ich = 0; ich < NUM_CHARS; ich++)
+            {
                 ptmbci->mbctype[ich] = 0;
+            }
 
             ptmbci->mbcodepage = codepage;
             ptmbci->mblocalename = nullptr;
@@ -751,7 +813,9 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
 
                 /* All chars > 1 must be considered valid trail bytes */
                 for (ich = 0x01; ich < 0xFF; ich++)
+                {
                     ptmbci->mbctype[ich + 1] |= _M2;
+                }
 
                 /* code page has changed */
                 ptmbci->mblocalename = CPtoLocaleName(ptmbci->mbcodepage);
@@ -760,11 +824,15 @@ extern "C" int __cdecl _setmbcp_nolock(int codepage, __crt_multibyte_data* ptmbc
                 ptmbci->ismbcodepage = 1;
             }
             else
+            {
                 /* single-byte code page */
                 ptmbci->ismbcodepage = 0;
+            }
 
             for (irg = 0; irg < NUM_ULINFO; irg++)
+            {
                 ptmbci->mbulinfo[irg] = 0;
+            }
 
             setSBUpLow(ptmbci);
             /* return success */

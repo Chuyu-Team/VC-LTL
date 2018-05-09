@@ -52,31 +52,33 @@ extern "C" wchar_t * __cdecl _wcsupr_l_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_wcsupr_l_downlevel);
 #endif
 
-//extern "C" wchar_t * __cdecl _wcsupr (
-//        wchar_t * wsrc
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        wchar_t * p;
-//
-//        /* validation section */
-//        _VALIDATE_RETURN(wsrc != nullptr, EINVAL, nullptr);
-//
-//        for (p=wsrc; *p; ++p)
-//        {
-//                if (L'a' <= *p && *p <= L'z')
-//                        *p += (wchar_t)(L'A' - L'a');
-//        }
-//
-//        return wsrc;
-//    }
-//    else
-//    {
-//        _wcsupr_s_l(wsrc, (size_t)(-1), nullptr);
-//        return wsrc;
-//    }
-//}
+#if 0
+extern "C" wchar_t * __cdecl _wcsupr (
+        wchar_t * wsrc
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        wchar_t * p;
+
+        /* validation section */
+        _VALIDATE_RETURN(wsrc != nullptr, EINVAL, nullptr);
+
+        for (p=wsrc; *p; ++p)
+        {
+                if (L'a' <= *p && *p <= L'z')
+                        *p += (wchar_t)(L'A' - L'a');
+        }
+
+        return wsrc;
+    }
+    else
+    {
+        _wcsupr_s_l(wsrc, (size_t)(-1), nullptr);
+        return wsrc;
+    }
+}
+#endif
 
 /***
 *errno_t _wcsupr_s(string, size_t) - map lower-case characters in a string to upper-case
@@ -132,7 +134,7 @@ static errno_t __cdecl _wcsupr_s_l_stat (
 
 
     /* Inquire size of wdst string */
-    if ( (dstsize = __crtLCMapStringW(
+    if ( (dstsize = __acrt_LCMapStringW(
                     _lc_ctype,
                     LCMAP_UPPERCASE,
                     wsrc,
@@ -159,7 +161,7 @@ static errno_t __cdecl _wcsupr_s_l_stat (
     }
 
     /* Map wrc string to wide-character wdst string in alternate case */
-    if (__crtLCMapStringW(
+    if (__acrt_LCMapStringW(
                 _lc_ctype,
                 LCMAP_UPPERCASE,
                 wsrc,

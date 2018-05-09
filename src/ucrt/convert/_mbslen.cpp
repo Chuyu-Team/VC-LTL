@@ -20,6 +20,7 @@
 #include <msvcrt_IAT.h>
 
 
+
 _Check_return_
 _Post_satisfies_((return <= _String_length_(string) && return <= max_size) || return == (size_t)-1)
 static size_t __cdecl common_mbstrlen_l(
@@ -30,20 +31,18 @@ static size_t __cdecl common_mbstrlen_l(
 {
     //_LocaleUpdate locale_update(locale);
 
-	auto _locale_mb_cur_max = ___mb_cur_max_l_func(locale);
-
     _ASSERTE(
-        _locale_mb_cur_max == 1 ||
-        _locale_mb_cur_max == 2);
+        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 1 ||
+        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 2);
 
     // Handle single byte character sets:
-    if (_locale_mb_cur_max == 1)
+    if (___mb_cur_max_l_func(locale) == 1)
     {
         return strnlen(string, max_size);
     }
 
     // Verify that all of the multibyte characters are valid:
-    if (MultiByteToWideChar(
+    if (__acrt_MultiByteToWideChar(
             locale? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func(),
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             string,
@@ -91,17 +90,18 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbstrlen_l_downlevel);
 
 #endif
 
-//extern "C" size_t __cdecl _mbstrlen(char const* const string)
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        return strlen(string);
-//    }
-//    else
-//    {
-//        return _mbstrlen_l(string, nullptr);
-//    }
-//}
+/*extern "C" size_t __cdecl _mbstrlen(char const* const string)
+{
+    if (!__acrt_locale_changed())
+    {
+        return strlen(string);
+    }
+    else
+    {
+        return _mbstrlen_l(string, nullptr);
+    }
+}*/
+
 
 
 #ifdef _ATL_XP_TARGETING

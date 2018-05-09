@@ -56,7 +56,7 @@ extern "C" wint_t __cdecl _towupper_l_downlevel (
     }
 
     /* convert wide char to uppercase */
-    if ( 0 == __crtLCMapStringW(
+    if ( 0 == __acrt_LCMapStringW(
                 plocinfo->locinfo->lc_handle[LC_CTYPE],
                 LCMAP_UPPERCASE,
                 (LPCWSTR)&c,
@@ -92,10 +92,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_towupper_l_downlevel);
 *
 *******************************************************************************/
 
-//extern "C" wint_t __cdecl towupper (
-//        wint_t c
-//        )
-//{
-//
-//    return _towupper_l(c, nullptr);
-//}
+/*extern "C" wint_t __cdecl towupper (
+        wint_t c
+        )
+{
+
+    return _towupper_l(c, nullptr);
+}*/

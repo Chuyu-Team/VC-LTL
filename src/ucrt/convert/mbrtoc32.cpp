@@ -6,95 +6,144 @@
 
 #include <errno.h>
 #include <uchar.h>
-#include <corecrt_internal.h>
+#include <corecrt_internal_mbstring.h>
+#include <stdint.h>
 #include <msvcrt_IAT.h>
 
-extern "C" size_t __cdecl mbrtoc32_downlevel(char32_t * pwc, const char * s, size_t nin, mbstate_t * pst)
-{ /* translate UTF-8 multibyte to UCS-4 char32_t, restartably */
-    unsigned char *su;
+using namespace __crt_mbstring;
 
-    static mbstate_t internal_pst{};
-    if (!pst)
-    {
-        pst = &internal_pst;
-    }
-
-    char state = (char)pst->_State; /* number of extra bytes expected */
-    unsigned long wc = pst->_Wchar; /* cumulative character */
-
-    if (s == 0)
-    { /* find homing sequence */
-        pwc = 0;
-        s = "";
-        nin = 1;
-    }
-
-    for (su = (unsigned char *)s; ; ++su, --nin)
-    { /* consume an input byte */
-        if (nin == 0)
-        { /* report incomplete conversion */
-            pst->_Wchar = wc;
-            pst->_State = state;
-            return ((size_t)-2);
-        }
-        else if (0 < state)
-        { /* fold in a successor byte */
-            if ((*su & 0xc0) != 0x80)
-            { /* report invalid sequence */
-                errno = EILSEQ;
-                return ((size_t)-1);
-            }
-            wc = (unsigned long)((wc << 6) | (*su & 0x3f));
-            --state;
-        }
-        else if ((*su & 0x80) == 0)
-        {
-            wc = *su; /* consume a single byte */
-        }
-        else if ((*su & 0xe0) == 0xc0)
-        { /* consume first of two bytes */
-            wc = (unsigned long)(*su & 0x1f);
-            state = 1;
-        }
-        else if ((*su & 0xf0) == 0xe0)
-        { /* consume first of three bytes */
-            wc = (unsigned long)(*su & 0x0f);
-            state = 2;
-        }
-        else if ((*su & 0xf8) == 0xf0)
-        { /* consume first of four bytes */
-            wc = (unsigned long)(*su & 0x07);
-            state = 3;
-        }
-        else if ((*su & 0xfc) == 0xf8)
-        { /* consume first of five bytes */
-            wc = (unsigned long)(*su & 0x03);
-            state = 4;
-        }
-        else if ((*su & 0xfc) == 0xfc)
-        { /* consume first of six bytes */
-            wc = (unsigned long)(*su & 0x03);
-            state = 5;
-        }
-        else
-        { /* report invalid sequence */
-            errno = EILSEQ;
-            return ((size_t)-1);
-        }
-
-        if (state == 0)
-        { /* produce an output wchar */
-            if (pwc != 0)
-                *pwc = char32_t(wc);
-            pst->_State = 0;
-            return (wc == 0 ? 0 : (const char *)++su - s);
-        }
-    }
+extern "C" size_t __cdecl mbrtoc32_downlevel(char32_t* pc32, const char* s, size_t n, mbstate_t* ps)
+{
+    // TODO: Bug 13307590 says this is always assuming UTF-8.
+    return __mbrtoc32_utf8(pc32, s, n, ps);
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(mbrtoc32_downlevel);
 
-/*
- * Copyright (c) 1992-2013 by P.J. Plauger.  ALL RIGHTS RESERVED.
- * Consult your license regarding permissions and restrictions.
- V6.40:0009 */
+size_t __cdecl __crt_mbstring::__mbrtoc32_utf8(char32_t* pc32, const char* s, size_t n, mbstate_t* ps)
+{
+    const char* begin = s;
+    static mbstate_t internal_pst{};
+    if (ps == nullptr)
+    {
+        ps = &internal_pst;
+    }
+
+    if (!s)
+    {
+        s = "";
+        n = 1;
+        pc32 = nullptr;
+    }
+
+    if (n == 0)
+    {
+        return INCOMPLETE;
+    }
+
+    // Retrieve the first byte from the string, or from the previous state
+    uint8_t length;
+    uint8_t bytes_needed;
+    char32_t c32;
+    const bool init_state = (ps->_State == 0);
+    if (init_state)
+    {
+        const uint8_t first_byte = static_cast<uint8_t>(*s++);
+
+        // Optimize for ASCII if in initial state
+        if ((first_byte & 0x80) == 0)
+        {
+            if (pc32 != nullptr)
+            {
+                *pc32 = first_byte;
+            }
+            return first_byte != '\0' ? 1 : 0;
+        }
+
+        if ((first_byte & 0xe0) == 0xc0)
+        {
+            length = 2;
+        }
+        else if ((first_byte & 0xf0) == 0xe0)
+        {
+            length = 3;
+        }
+        else if ((first_byte & 0xf8) == 0xf0)
+        {
+            length = 4;
+        }
+        else
+        {
+            return return_illegal_sequence(ps);
+        }
+        bytes_needed = length;
+        // Mask out the length bits
+        c32 = first_byte & ((1 << (7 - length)) - 1);
+    }
+    else
+    {
+        c32 = ps->_Wchar;
+        length = static_cast<uint8_t>(ps->_Byte);
+        bytes_needed = static_cast<uint8_t>(ps->_State);
+
+        // Make sure we don't have some sort of invalid/corrupted state.
+        // Any input that left behind state would have been more than one byte long
+        // and the first byte should have been processed already.
+        if (length < 2 || length > 4 || bytes_needed < 1 || bytes_needed >= length)
+        {
+            return return_illegal_sequence(ps);
+        }
+    }
+
+    // Don't read more bytes than we're allowed
+    if (bytes_needed < n)
+    {
+        n = bytes_needed;
+    }
+
+    // We've already read the first byte.
+    // All remaining bytes should be continuation bytes
+    while (static_cast<size_t>(s - begin) < n)
+    {
+        uint8_t current_byte = static_cast<uint8_t>(*s++);
+        if ((current_byte & 0xc0) != 0x80)
+        {
+            // Not a continuation character
+            return return_illegal_sequence(ps);
+        }
+        c32 = (c32 << 6) | (current_byte & 0x3f);
+    }
+
+    if (n < bytes_needed)
+    {
+        // Store state and return incomplete
+        auto bytes_remaining = static_cast<uint8_t>(bytes_needed - n);
+        static_assert(sizeof(mbstate_t::_Wchar) >= sizeof(char32_t), "mbstate_t has broken mbrtoc32");
+        ps->_Wchar = c32;
+        ps->_Byte = length;
+        ps->_State = bytes_remaining;
+        return INCOMPLETE;
+    }
+
+    if ((0xd800 <= c32 && c32 <= 0xdfff) || (0x10ffff < c32))
+    {
+        // Invalid code point (surrogate or out of range)
+        return return_illegal_sequence(ps);
+    }
+
+    constexpr char32_t min_legal[3]{ 0x80, 0x800, 0x10000 };
+    if (c32 < min_legal[length - 2])
+    {
+        // Overlong encoding
+        return return_illegal_sequence(ps);
+    }
+
+    // Success! Store results
+    if (pc32 != nullptr)
+    {
+        *pc32 = c32;
+    }
+
+    return reset_and_return(c32 == U'\0' ? 0 : bytes_needed, ps);
+}
+

@@ -134,26 +134,11 @@ extern "C" size_t __cdecl _Strftime_l (
     _VALIDATE_RETURN(format != nullptr,  EINVAL, 0)
     _VALIDATE_RETURN(timeptr != nullptr, EINVAL, 0)
 
-    // Get the number of characters, including terminating null, needed for conversion:
-    int const cch_wformat = MultiByteToWideChar(lc_time_cp, 0 , format, -1, nullptr, 0);
-    if (cch_wformat == 0)
-    {
-        __acrt_errno_map_os_error(GetLastError());
-        return 0;
-    }
+    __crt_internal_win32_buffer<wchar_t> wformat;
 
-    // Allocate enough space for wide char format string:
-    __crt_unique_heap_ptr<wchar_t> const wformat(_malloc_crt_t(wchar_t, cch_wformat));
-    if (wformat.get() == nullptr)
-    {
-        // malloc should set the errno, if any
-        return 0;
-    }
+    errno_t const cvt1 = __acrt_mbs_to_wcs_cp(format, wformat, lc_time_cp);
 
-    // Copy format to a wide-char string:
-    if (MultiByteToWideChar(lc_time_cp, 0 , format, -1, wformat.get(), cch_wformat) == 0)
-    {
-        __acrt_errno_map_os_error(GetLastError());
+    if (cvt1 != 0) {
         return 0;
     }
 
@@ -166,23 +151,22 @@ extern "C" size_t __cdecl _Strftime_l (
         return 0;
     }
 
-    size_t const wcsftime_result = _Wcsftime_l(wstring.get(), maxsize, wformat.get(), timeptr, lc_time_arg, locale);
+    size_t const wcsftime_result = _Wcsftime_l(wstring.get(), maxsize, wformat.data(), timeptr, lc_time_arg, locale);
     if (wcsftime_result == 0)
     {
         return 0;
     }
 
-    // Copy output from wide char string
-    int const conversion_result = WideCharToMultiByte(lc_time_cp, 0, wstring.get(), -1, string, static_cast<int>(maxsize), nullptr, nullptr);
-    if (conversion_result == 0)
-    {
-        __acrt_errno_map_os_error(GetLastError());
+    __crt_no_alloc_win32_buffer<char> copy_back(string, maxsize);
+    errno_t const cvt2 = __acrt_wcs_to_mbs_cp(wstring.get(), copy_back, lc_time_cp);
+
+    if (cvt2 != 0) {
         return 0;
     }
 
     // The WideCharToMultiByte result includes the null terminator; the strftime
     // function result does not:
-    return conversion_result - 1;
+    return copy_back.size() - 1;
 }
 
 extern "C" size_t __cdecl _Strftime(

@@ -66,7 +66,7 @@ extern "C" BOOL __cdecl __acrt_GetStringTypeA(
         : (locale ? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func());
 
     // Find out how big a buffer we need:
-    int const required_extent = MultiByteToWideChar(
+    int const required_extent = __acrt_MultiByteToWideChar(
         actual_code_page,
         error ? (MB_PRECOMPOSED | MB_ERR_INVALID_CHARS) : MB_PRECOMPOSED,
         string,
@@ -85,7 +85,7 @@ extern "C" BOOL __cdecl __acrt_GetStringTypeA(
     memset(buffer.get(), 0, sizeof(wchar_t) * required_extent);
 
     // Do the conversion:
-    int const actual_extent = MultiByteToWideChar(
+    int const actual_extent = __acrt_MultiByteToWideChar(
         actual_code_page,
         MB_PRECOMPOSED,
         string,

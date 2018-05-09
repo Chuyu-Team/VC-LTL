@@ -56,7 +56,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcalnum_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbcalnum(unsigned int const c)
-//{
-//    return _ismbcalnum_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcalnum(unsigned int const c)
+{
+    return _ismbcalnum_l(c, nullptr);
+}*/

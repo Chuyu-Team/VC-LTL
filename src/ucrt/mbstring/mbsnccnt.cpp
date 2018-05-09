@@ -68,10 +68,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnccnt_l_downlevel);
 
 #endif
 
-//extern "C" size_t (__cdecl _mbsnccnt)(
-//        const unsigned char *string,
-//        size_t bcnt
-//        )
-//{
-//    return _mbsnccnt_l(string, bcnt, nullptr);
-//}
+/*extern "C" size_t (__cdecl _mbsnccnt)(
+        const unsigned char *string,
+        size_t bcnt
+        )
+{
+    return _mbsnccnt_l(string, bcnt, nullptr);
+}*/

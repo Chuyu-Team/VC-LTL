@@ -22,11 +22,17 @@
 * _mbscmp - Compare MBCS strings
 *
 *Purpose:
-*       Compares two strings for lexical order.   Strings
-*       are compared on a character basis, not a byte basis.
+*       Compares two strings in ordinal order. 
+*       Single byte strings are compared byte-by-byte
+*       Double byte strings are compared by character
+*           (basically ensuring that double byte sequences are higher than single byte)
+*       UTF-8 is compared byte-by-byte, which work since its the same as character order.
 *
 *Entry:
 *       char *s1, *s2 = strings to compare
+*
+*WARNING:
+*       No validation for improper UTF-8 strings, mixed up lead/trail byte orders are not defined.
 *
 *Exit:
 *       Returns <0 if s1 < s2
@@ -38,6 +44,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
+
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbscmp_l_downlevel(
         const unsigned char *s1,
@@ -80,10 +87,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbscmp_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _mbscmp)(
-//        const unsigned char *s1,
-//        const unsigned char *s2
-//        )
-//{
-//    return _mbscmp_l(s1, s2, nullptr);
-//}
+/*extern "C" int (__cdecl _mbscmp)(
+        const unsigned char *s1,
+        const unsigned char *s2
+        )
+{
+    return _mbscmp_l(s1, s2, nullptr);
+}*/

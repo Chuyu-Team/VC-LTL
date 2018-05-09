@@ -19,31 +19,31 @@
 
 // These functions return the error string to be used when we are unable to return
 // the actual error string.
-//_Ret_z_
-//static char* get_failure_string(char) throw()
-//{
-//    return const_cast<char*>("Visual C++ CRT: Not enough memory to complete call to strerror.");
-//}
+/*_Ret_z_
+static char* get_failure_string(char) throw()
+{
+    return const_cast<char*>("Visual C++ CRT: Not enough memory to complete call to strerror.");
+}
 
-//_Ret_z_
-//static wchar_t* get_failure_string(wchar_t) throw()
-//{
-//    return const_cast<wchar_t*>(L"Visual C++ CRT: Not enough memory to complete call to strerror.");
-//}
+_Ret_z_
+static wchar_t* get_failure_string(wchar_t) throw()
+{
+    return const_cast<wchar_t*>(L"Visual C++ CRT: Not enough memory to complete call to strerror.");
+}
 
 
 
 // These functions return a reference to the thread-local pointer to the buffer
 // to be used to store the error string.
-//static char*& get_ptd_buffer(__acrt_ptd* const ptd, char) throw()
-//{
-//    return ptd->_strerror_buffer;
-//}
+static char*& get_ptd_buffer(__acrt_ptd* const ptd, char) throw()
+{
+    return ptd->_strerror_buffer;
+}
 
-//static wchar_t*& get_ptd_buffer(__acrt_ptd* const ptd, wchar_t) throw()
-//{
-//    return ptd->_wcserror_buffer;
-//}
+static wchar_t*& get_ptd_buffer(__acrt_ptd* const ptd, wchar_t) throw()
+{
+    return ptd->_wcserror_buffer;
+}*/
 
 
 
@@ -75,34 +75,34 @@ static errno_t copy_string_into_buffer(
 // Maps an error number to an error message string.  The error number should be
 // one of the errno values.  The string is valid until the next call (on this
 // thread) to one of the strerror functions.  The CRT owns the string.
-//template <typename Character>
-//_Ret_z_
-//static Character* __cdecl common_strerror(int const error_number)
-//{
-//    __acrt_ptd* const ptd = __acrt_getptd_noexit();
-//    if (!ptd)
-//        return get_failure_string(Character());
-//
-//    Character*& buffer = get_ptd_buffer(ptd, Character());
-//    if (!buffer)
-//        buffer = _calloc_crt_t(Character, strerror_buffer_count).detach();
-//
-//    if (!buffer)
-//        return get_failure_string(Character());
-//
-//    _ERRCHECK(copy_string_into_buffer(_get_sys_err_msg(error_number), buffer, strerror_buffer_count, strerror_buffer_count - 1));
-//    return buffer;
-//}
+/*template <typename Character>
+_Ret_z_
+static Character* __cdecl common_strerror(int const error_number)
+{
+    __acrt_ptd* const ptd = __acrt_getptd_noexit();
+    if (!ptd)
+        return get_failure_string(Character());
 
-//extern "C" char* __cdecl strerror(int const error_number)
-//{
-//    return common_strerror<char>(error_number);
-//}
+    Character*& buffer = get_ptd_buffer(ptd, Character());
+    if (!buffer)
+        buffer = _calloc_crt_t(Character, strerror_buffer_count).detach();
 
-//extern "C" wchar_t* __cdecl _wcserror(int const error_number)
-//{
-//    return common_strerror<wchar_t>(error_number);
-//}
+    if (!buffer)
+        return get_failure_string(Character());
+
+    _ERRCHECK(copy_string_into_buffer(_get_sys_err_msg(error_number), buffer, strerror_buffer_count, strerror_buffer_count - 1));
+    return buffer;
+}
+
+extern "C" char* __cdecl strerror(int const error_number)
+{
+    return common_strerror<char>(error_number);
+}
+
+extern "C" wchar_t* __cdecl _wcserror(int const error_number)
+{
+    return common_strerror<wchar_t>(error_number);
+}*/
 
 
 

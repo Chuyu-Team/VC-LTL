@@ -23,7 +23,7 @@
     <ProjectGuid>{0CEFF689-41FF-40C3-B6B9-ED503A7B28B4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ConcRT</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\Shared.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -84,7 +84,7 @@
     <ProjectGuid>{F664A0EC-DAA2-4DEA-BBCE-5EE4BD61ADAA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ConcRT</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
     <VC-LTLUsedToolsVersion>14.12.25827</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

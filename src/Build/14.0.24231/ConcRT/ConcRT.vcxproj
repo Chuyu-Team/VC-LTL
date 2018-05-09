@@ -5,7 +5,7 @@
     <ProjectGuid>{90006B3D-34B8-40CC-BB08-5D270C3EB406}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ConcRT</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
     <VC-LTLUsedToolsVersion>14.0.24231</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">

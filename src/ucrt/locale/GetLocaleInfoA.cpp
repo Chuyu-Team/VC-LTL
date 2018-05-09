@@ -35,7 +35,7 @@ static int __cdecl InternalGetLocaleInfoA(
         return 0;
 
     // Convert from wide to narrow strings:
-    return WideCharToMultiByte(
+    return __acrt_WideCharToMultiByte(
         code_page,
         0,
         buffer.get(),

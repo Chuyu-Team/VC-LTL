@@ -10,6 +10,7 @@
 #include <msvcrt_IAT.h>
 
 
+
 // This is the error table that defines the mapping between OS error codes and
 // errno values.
 namespace
@@ -122,9 +123,9 @@ extern "C" int __cdecl __acrt_errno_from_os_error(unsigned long const oserrno)
 // These safely set and get the value of the calling thread's errno
 extern "C" errno_t _set_errno_downlevel(int const value)
 {
-    //__acrt_ptd* const ptd{__acrt_getptd_noexit()};
-    //if (!ptd)
-    //    return ENOMEM;
+    /*__acrt_ptd* const ptd{__acrt_getptd_noexit()};
+    if (!ptd)
+        return ENOMEM;*/
 
     errno = value;
     return 0;
@@ -150,9 +151,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_get_errno_downlevel);
 // These safely set and get the value of the calling thread's doserrno
 extern "C" errno_t _set_doserrno_downlevel(unsigned long const value)
 {
-    //__acrt_ptd* const ptd{__acrt_getptd_noexit()};
-    //if (!ptd)
-    //    return ENOMEM;
+    /*__acrt_ptd* const ptd{__acrt_getptd_noexit()};
+    if (!ptd)
+        return ENOMEM;*/
 
     _doserrno = value;
     return 0;
@@ -177,23 +178,23 @@ _LCRT_DEFINE_IAT_SYMBOL(_get_doserrno_downlevel);
 
 // These return pointers to the calling thread's errno and doserrno values,
 // respectively, and are used to implement errno and _doserrno in the header.
-//static int           errno_no_memory   {ENOMEM};
-//static unsigned long doserrno_no_memory{ERROR_NOT_ENOUGH_MEMORY};
-//
-//extern "C" int* __cdecl _errno()
-//{
-//    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
-//    if (!ptd)
-//        return &errno_no_memory;
-//
-//    return &ptd->_terrno;
-//}
-//
-//extern "C" unsigned long* __cdecl __doserrno()
-//{
-//    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
-//    if (!ptd)
-//        return &doserrno_no_memory;
-//
-//    return &ptd->_tdoserrno;
-//}
+/*static int           errno_no_memory   {ENOMEM};
+static unsigned long doserrno_no_memory{ERROR_NOT_ENOUGH_MEMORY};
+
+extern "C" int* __cdecl _errno()
+{
+    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
+    if (!ptd)
+        return &errno_no_memory;
+
+    return &ptd->_terrno;
+}
+
+extern "C" unsigned long* __cdecl __doserrno()
+{
+    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
+    if (!ptd)
+        return &doserrno_no_memory;
+
+    return &ptd->_tdoserrno;
+}*/

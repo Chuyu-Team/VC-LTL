@@ -145,13 +145,13 @@ _LCRT_DEFINE_IAT_SYMBOL(_strxfrm_l_downlevel);
 
 #endif
 
-//extern "C" size_t __cdecl strxfrm (
-//        char *_string1,
-//        const char *_string2,
-//        size_t _count
-//        )
-//{
-//
-//    return _strxfrm_l(_string1, _string2, _count, nullptr);
-//
-//}
+/*extern "C" size_t __cdecl strxfrm (
+        char *_string1,
+        const char *_string2,
+        size_t _count
+        )
+{
+
+    return _strxfrm_l(_string1, _string2, _count, nullptr);
+
+}*/

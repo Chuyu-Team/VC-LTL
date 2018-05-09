@@ -105,12 +105,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsset_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsset)(
-//        unsigned char *string,
-//        unsigned int val
-//        )
-//{
-//_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-//    return _mbsset_l(string, val, nullptr);
-//_END_SECURE_CRT_DEPRECATION_DISABLE
-//}
+/*extern "C" unsigned char * (__cdecl _mbsset)(
+        unsigned char *string,
+        unsigned int val
+        )
+{
+_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+    return _mbsset_l(string, val, nullptr);
+_END_SECURE_CRT_DEPRECATION_DISABLE
+}*/

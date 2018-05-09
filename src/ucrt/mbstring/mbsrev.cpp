@@ -109,9 +109,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsrev_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsrev)(
-//        unsigned char *string
-//        )
-//{
-//    return _mbsrev_l(string, nullptr);
-//}
+/*extern "C" unsigned char * (__cdecl _mbsrev)(
+        unsigned char *string
+        )
+{
+    return _mbsrev_l(string, nullptr);
+}*/

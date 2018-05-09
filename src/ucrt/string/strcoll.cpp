@@ -79,10 +79,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_strcoll_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl strcoll (
-//        const char *_string1,
-//        const char *_string2
-//        )
-//{
-//    return _strcoll_l(_string1, _string2, nullptr);
-//}
+/*extern "C" int __cdecl strcoll (
+        const char *_string1,
+        const char *_string2
+        )
+{
+    return _strcoll_l(_string1, _string2, nullptr);
+}*/

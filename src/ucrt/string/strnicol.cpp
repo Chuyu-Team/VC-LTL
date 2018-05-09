@@ -15,6 +15,7 @@
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
 
+
 /***
 *int _strnicoll() - Collate locale strings without regard to case
 *
@@ -85,18 +86,18 @@ _LCRT_DEFINE_IAT_SYMBOL(_strnicoll_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _strnicoll (
-//        const char *_string1,
-//        const char *_string2,
-//        size_t count
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        return _strnicmp(_string1, _string2, count);
-//    }
-//    else
-//    {
-//        return _strnicoll_l(_string1, _string2, count, nullptr);
-//    }
-//}
+/*extern "C" int __cdecl _strnicoll (
+        const char *_string1,
+        const char *_string2,
+        size_t count
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        return _strnicmp(_string1, _string2, count);
+    }
+    else
+    {
+        return _strnicoll_l(_string1, _string2, count, nullptr);
+    }
+}*/

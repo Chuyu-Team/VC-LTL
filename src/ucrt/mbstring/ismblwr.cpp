@@ -57,7 +57,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbclower_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbclower(unsigned int const c)
-//{
-//    return _ismbclower_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbclower(unsigned int const c)
+{
+    return _ismbclower_l(c, nullptr);
+}*/

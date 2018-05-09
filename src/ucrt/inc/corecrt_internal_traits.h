@@ -11,6 +11,7 @@
 #pragma once
 
 #include <corecrt_internal.h>
+#include <corecrt_internal_win32_buffer.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -28,14 +29,13 @@ struct __crt_char_traits;
 
 #define _CORECRT_APPLY_TO_MAPPINGS(_APPLY)                                                                                                       \
     _APPLY(capture_argv,                       __acrt_capture_narrow_argv,                       __acrt_capture_wide_argv                      ) \
-    _APPLY(create_process,                     CreateProcessA,                                   CreateProcessW                                ) \
-    _APPLY(find_first_file_ex,                 FindFirstFileExA,                                 FindFirstFileExW                              ) \
-    _APPLY(find_next_file,                     FindNextFileA,                                    FindNextFileW                                 ) \
+    _APPLY(create_process,                     __acrt_CreateProcessA,                            CreateProcessW                                ) \
+    _APPLY(find_first_file_ex,                 __acrt_FindFirstFileExA,                          FindFirstFileExW                              ) \
+    _APPLY(find_next_file,                     __acrt_FindNextFileA,                             FindNextFileW                                 ) \
     _APPLY(free_environment_strings,           FreeEnvironmentStringsA,                          FreeEnvironmentStringsW                       ) \
     _APPLY(ftprintf,                           fprintf,                                          fwprintf                                      ) \
-    _APPLY(get_current_directory,              GetCurrentDirectoryA,                             GetCurrentDirectoryW                          ) \
     _APPLY(get_environment_from_os,            __dcrt_get_narrow_environment_from_os,            __dcrt_get_wide_environment_from_os           ) \
-    _APPLY(get_module_file_name,               GetModuleFileNameA,                               GetModuleFileNameW                            ) \
+    _APPLY(get_module_file_name,               __acrt_GetModuleFileNameA,                        GetModuleFileNameW                            ) \
     _APPLY(get_or_create_environment_nolock,   __dcrt_get_or_create_narrow_environment_nolock,   __dcrt_get_or_create_wide_environment_nolock  ) \
     _APPLY(get_temp_path,                      __acrt_GetTempPathA,                              GetTempPathW                                  ) \
     _APPLY(getc_nolock,                        _getc_nolock,                                     _getwc_nolock                                 ) \
@@ -45,12 +45,12 @@ struct __crt_char_traits;
     _APPLY(itot_s,                             _itoa_s,                                          _itow_s                                       ) \
     _APPLY(message_box,                        __acrt_MessageBoxA,                               __acrt_MessageBoxW                            ) \
     _APPLY(open_file,                          _openfile,                                        _wopenfile                                    ) \
-    _APPLY(output_debug_string,                OutputDebugStringA,                               OutputDebugStringW                            ) \
+    _APPLY(output_debug_string,                __acrt_OutputDebugStringA,                        OutputDebugStringW                            ) \
     _APPLY(pack_command_line_and_environment,  __acrt_pack_narrow_command_line_and_environment,  __acrt_pack_wide_command_line_and_environment ) \
     _APPLY(puttc_nolock,                       _fputc_nolock,                                    _fputwc_nolock                                ) \
     _APPLY(puttch_nolock,                      _putch_nolock,                                    _putwch_nolock                                ) \
-    _APPLY(set_current_directory,              SetCurrentDirectoryA,                             SetCurrentDirectoryW                          ) \
-    _APPLY(set_environment_variable,           SetEnvironmentVariableA,                          SetEnvironmentVariableW                       ) \
+    _APPLY(set_current_directory,              __acrt_SetCurrentDirectoryA,                      SetCurrentDirectoryW                          ) \
+    _APPLY(set_environment_variable,           __acrt_SetEnvironmentVariableA,                   SetEnvironmentVariableW                       ) \
     _APPLY(set_program_name,                   _set_pgmptr,                                      _set_wpgmptr                                  ) \
     _APPLY(set_variable_in_environment_nolock, __dcrt_set_variable_in_narrow_environment_nolock, __dcrt_set_variable_in_wide_environment_nolock) \
     _APPLY(show_message_box,                   __acrt_show_narrow_message_box,                   __acrt_show_wide_message_box                  ) \
@@ -65,6 +65,7 @@ struct __crt_char_traits;
     _APPLY(tcserror_s,                         strerror_s,                                       _wcserror_s                                   ) \
     _APPLY(tcsicmp,                            _stricmp,                                         _wcsicmp                                      ) \
     _APPLY(tcslen,                             strlen,                                           wcslen                                        ) \
+    _APPLY(tcsnlen_s,                          strnlen_s,                                        wcsnlen_s                                     ) \
     _APPLY(tcsncat_s,                          strncat_s,                                        wcsncat_s                                     ) \
     _APPLY(tcsncmp,                            strncmp,                                          wcsncmp                                       ) \
     _APPLY(tcsncpy_s,                          strncpy_s,                                        wcsncpy_s                                     ) \
@@ -177,15 +178,58 @@ struct __crt_integer_traits<long long>
 // char <=> wchar_t conversion utilities
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-// These functions wrap MultiByteToWideChar and WideCharToMultiByte in overloads
-// with the same name, to allow them to be called from within function templates
-// that may be instantiated to operate on either narrow or wide strings.
+// Complete list of internal conversion functions (only some defined here):
+// * __acrt_WideCharToMultiByte / __acrt_MultiByteToWideChar
+//     * Provides option compatibility to ensure we don't get ERROR_INVALID_FLAGS due to code page changes.
+//     * Other functions in this list use this to be implemented.
+// * wcstombs / mbstowcs
+//     * Public conversion functions, also used internally.
+//     * Should try to use _l variants when possible to avoid overhead of grabbing per-thread data.
+// * __acrt_mbs_to_wcs / __acrt_wcs_to_mbs
+//     * Should be used by default - uses wcstombs / mbstowcs.
+//     * Provides automatic space allocation with __crt_win32_buffer.
+// * __acrt_mbs_to_wcs_cp / __acrt_wcs_to_mbs_cp
+//     * Should be used by default, using code page instead of _locale_t.
+//     * Less optimizations - can't detect "C" locale for quick conversion.
+//     * Provides automatic space allocation with __crt_win32_buffer.
+//     * Uses __acrt_WideChartoMultiByte / __acrt_MultiByteToWideChar.
+// * __crt_compute_required_transform_buffer_count / __crt_transform_string
+//     * Used by environment initialization.
+//     * Only one (narrow or wide) environment may be available from the OS,
+//       the other needs to be cloned into the other.
+//
+// Places where we don't use current global locale, user-supplied locale, or ACP/UTF-8 adapter:
+// CP_ACP - __acrt_GetTempPathA (via tmpnam)
+//     * Documented to do so on MSDN.
+//     * Required by API design - static buffer returned to user
+//     * Therefore, characters cannot be modified according to locale.
+// CP_ACP - Environment Initialization
+//     * This is done at startup and does not change based off of locale, so using the ACP is correct.
+// GetConsoleCP() - write_double_translated_ansi_nolock (via _write)
+// GetConsoleCP() - _getch
+// CP_UTF8 - write_text_utf8_nolock (via _write)
+//
+// The following functions previous to UTF-8 awareness used the ACP for char conversions.
+// To avoid backwards compatibility issues, they will still use the ACP, except when the currently
+// set locale is CP_UTF8.
+// * _access
+// * _chmod
+// * _findfile*
+// * _mkdir
+// * _remove
+// * _rename
+// * _rmdir
+// * _sopen
+// * _stat*
+// * _unlink
+//
+
 inline size_t __crt_compute_required_transform_buffer_count(
             unsigned    const code_page,
     _In_z_  char const* const string
     )
 {
-    return static_cast<size_t>(MultiByteToWideChar(code_page, 0, string, -1, nullptr, 0));
+    return static_cast<size_t>(__acrt_MultiByteToWideChar(code_page, 0, string, -1, nullptr, 0));
 }
 
 inline size_t __crt_compute_required_transform_buffer_count(
@@ -193,7 +237,7 @@ inline size_t __crt_compute_required_transform_buffer_count(
     _In_z_  wchar_t const*  const string
     )
 {
-    return static_cast<size_t>(WideCharToMultiByte(code_page, 0, string, -1, nullptr, 0, nullptr, nullptr));
+    return static_cast<size_t>(__acrt_WideCharToMultiByte(code_page, 0, string, -1, nullptr, 0, nullptr, nullptr));
 }
 
 _Success_(return > 0 && return <= buffer_count)
@@ -205,7 +249,7 @@ inline size_t __crt_transform_string(
     )
 {
     int const int_count = static_cast<int>(buffer_count);
-    return static_cast<size_t>(MultiByteToWideChar(code_page, 0, string, -1, buffer, int_count));
+    return static_cast<size_t>(__acrt_MultiByteToWideChar(code_page, 0, string, -1, buffer, int_count));
 }
 
 _Success_(return > 0 && return <= buffer_count)
@@ -217,9 +261,7 @@ inline size_t __crt_transform_string(
     )
 {
     int const int_count = static_cast<int>(buffer_count);
-    return static_cast<size_t>(WideCharToMultiByte(code_page, 0, string, -1, buffer, int_count, nullptr, nullptr));
+    return static_cast<size_t>(__acrt_WideCharToMultiByte(code_page, 0, string, -1, buffer, int_count, nullptr, nullptr));
 }
-
-
 
 #pragma pack(pop)

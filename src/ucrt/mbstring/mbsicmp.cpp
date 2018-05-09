@@ -24,7 +24,7 @@
 * _mbsicmp - Case-insensitive string comparision routine (MBCS)
 *
 *Purpose:
-*       Compares two strings for lexical order without regard to case.
+*       Compares two strings for ordinal order without regard to case.
 *       Strings are compared on a character basis, not a byte basis.
 *
 *Entry:
@@ -142,10 +142,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsicmp_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _mbsicmp)(
-//        const unsigned char *s1,
-//        const unsigned char *s2
-//        )
-//{
-//    return _mbsicmp_l(s1, s2, nullptr);
-//}
+/*extern "C" int (__cdecl _mbsicmp)(
+        const unsigned char *s1,
+        const unsigned char *s2
+        )
+{
+    return _mbsicmp_l(s1, s2, nullptr);
+}*/

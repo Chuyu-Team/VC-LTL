@@ -42,7 +42,7 @@ extern "C" unsigned int __cdecl _mbcjistojms_l_downlevel(
 {
         unsigned int h, l;
         //_LocaleUpdate _loc_update(plocinfo);
-		
+
         if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP)
             return (c);
 
@@ -71,13 +71,12 @@ extern "C" unsigned int __cdecl _mbcjistojms_l_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_mbcjistojms_l_downlevel);
 
 #endif
-
-//extern "C" unsigned int (__cdecl _mbcjistojms)(
-//    unsigned int c
-//    )
-//{
-//    return _mbcjistojms_l(c, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbcjistojms)(
+    unsigned int c
+    )
+{
+    return _mbcjistojms_l(c, nullptr);
+}*/
 
 
 /***
@@ -145,10 +144,9 @@ extern "C" unsigned int __cdecl _mbcjmstojis_l_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_mbcjmstojis_l_downlevel);
 
 #endif
-
-//extern "C" unsigned int (__cdecl _mbcjmstojis)(
-//        unsigned int c
-//        )
-//{
-//    return _mbcjmstojis_l(c, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbcjmstojis)(
+        unsigned int c
+        )
+{
+    return _mbcjmstojis_l(c, nullptr);
+}*/

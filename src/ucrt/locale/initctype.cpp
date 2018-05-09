@@ -110,14 +110,28 @@ int __cdecl __acrt_locale_initialize_ctype (
 
         mb_cur_max = (unsigned short) cpInfo.MaxCharSize;
 
-        /* zero out leadbytes so GetStringType and LCMapStringA
-           don't interpret them as multi-byte chars */
+        /* zero (space actually) out leadbytes so GetStringType and
+           LCMapStringA don't interpret them as multi-byte chars */
         if (mb_cur_max > 1)
         {
-            for (cp = (unsigned char *)cpInfo.LeadByte; cp[0] && cp[1]; cp += 2)
+            if (ploci->_public._locale_lc_codepage == CP_UTF8)
             {
-                for (i = cp[0]; i <= cp[1]; i++)
+                // For UTF-8 anything above 0x7f is part of a multibyte sequence and
+                // would confuse the codepage/character code below.
+                for (i = 0x80; i <= 0xff; i++)
+                {
+                    // spaces are safe.
                     cbuffer[i] = ' ';
+                }
+            }
+            else
+            {
+                // use the lead byte table to mark off the appropriate bytes
+                for (cp = (unsigned char *)cpInfo.LeadByte; cp[0] && cp[1]; cp += 2)
+                {
+                    for (i = cp[0]; i <= cp[1]; i++)
+                        cbuffer[i] = ' ';
+                }
             }
         }
 
@@ -168,13 +182,29 @@ int __cdecl __acrt_locale_initialize_ctype (
            restore original values for lead-byte entries for clmap/cumap */
         if (mb_cur_max > 1)
         {
-            for (cp = (unsigned char *)cpInfo.LeadByte; cp[0] && cp[1]; cp += 2)
+            if (ploci->_public._locale_lc_codepage == CP_UTF8)
             {
-                for (i = cp[0]; i <= cp[1]; i++)
+                // For UTF-8 anything above 0x7f is part of a multibyte sequence
+                // "real" leadbytes start with C0 and end at F7
+                // However, C0 & C1 are overlong encoded ASCII, F5 & F6 would be > U+10FFFF.
+                // Note that some starting with E0 and F0 are overlong and not legal though.
+                for (i = 0xC2; i <= 0xF5; i++)
                 {
-                    newctype1[_COFFSET+i+1] = _LEADBYTE;
-                    newclmap[_COFFSET+i+1] = static_cast<unsigned char>(i);
-                    newcumap[_COFFSET+i+1] = static_cast<unsigned char>(i);
+                    newctype1[_COFFSET + i + 1] = _LEADBYTE;
+                    newclmap[_COFFSET + i + 1] = static_cast<unsigned char>(i);
+                    newcumap[_COFFSET + i + 1] = static_cast<unsigned char>(i);
+                }
+            }
+            else
+            {
+                for (cp = (unsigned char *)cpInfo.LeadByte; cp[0] && cp[1]; cp += 2)
+                {
+                    for (i = cp[0]; i <= cp[1]; i++)
+                    {
+                        newctype1[_COFFSET + i + 1] = _LEADBYTE;
+                        newclmap[_COFFSET + i + 1] = static_cast<unsigned char>(i);
+                        newcumap[_COFFSET + i + 1] = static_cast<unsigned char>(i);
+                    }
                 }
             }
         }

@@ -56,7 +56,7 @@ static _Success_(return != 0) int __cdecl __acrt_LCMapStringA_stat(
     if (cchSrc > 0)
     {
         int cchSrcCnt = static_cast<int>(__strncnt(lpSrcStr, cchSrc));
-        
+
         // Include the null terminator if the source string is terminated within
         // the buffer.
         if (cchSrcCnt < cchSrc)
@@ -92,14 +92,14 @@ static _Success_(return != 0) int __cdecl __acrt_LCMapStringA_stat(
 
     /* find out how big a buffer we need (includes nullptr if any) */
     if ( 0 == (inbuff_size =
-               MultiByteToWideChar( code_page,
-                                    bError ? MB_PRECOMPOSED |
-                                        MB_ERR_INVALID_CHARS :
-                                        MB_PRECOMPOSED,
-                                    lpSrcStr,
-                                    cchSrc,
-                                    nullptr,
-                                    0 )) )
+               __acrt_MultiByteToWideChar( code_page,
+                                           bError ? MB_PRECOMPOSED |
+                                               MB_ERR_INVALID_CHARS :
+                                               MB_PRECOMPOSED,
+                                           lpSrcStr,
+                                           cchSrc,
+                                           nullptr,
+                                           0 )) )
         return 0;
 
     /* allocate enough space for wide chars */
@@ -108,24 +108,24 @@ static _Success_(return != 0) int __cdecl __acrt_LCMapStringA_stat(
         return 0;
 
     /* do the conversion */
-    if ( 0 == MultiByteToWideChar( code_page,
-                                   MB_PRECOMPOSED,
-                                   lpSrcStr,
-                                   cchSrc,
-                                   inwbuffer.get(),
-                                   inbuff_size) )
+    if ( 0 == __acrt_MultiByteToWideChar( code_page,
+                                          MB_PRECOMPOSED,
+                                          lpSrcStr,
+                                          cchSrc,
+                                          inwbuffer.get(),
+                                          inbuff_size) )
         return retval;
 
     /* get size required for string mapping */
     if ( 0 == (retval = __acrt_LCMapStringEx( LocaleName,
-                                      dwMapFlags,
-                                      inwbuffer.get(),
-                                      inbuff_size,
-                                      nullptr,
-                                      0,
-                                      nullptr,
-                                      nullptr,
-                                      0)) )
+                                              dwMapFlags,
+                                              inwbuffer.get(),
+                                              inbuff_size,
+                                              nullptr,
+                                              0,
+                                              nullptr,
+                                              nullptr,
+                                              0)) )
         return retval;
 
     if (dwMapFlags & LCMAP_SORTKEY) {
@@ -179,27 +179,27 @@ static _Success_(return != 0) int __cdecl __acrt_LCMapStringA_stat(
         if (0 == cchDest) {
             /* get size required */
             if ( 0 == (retval =
-                       WideCharToMultiByte( code_page,
-                                            0,
-                                            outwbuffer.get(),
-                                            outbuff_size,
-                                            nullptr,
-                                            0,
-                                            nullptr,
-                                            nullptr )) )
+                       __acrt_WideCharToMultiByte( code_page,
+                                                   0,
+                                                   outwbuffer.get(),
+                                                   outbuff_size,
+                                                   nullptr,
+                                                   0,
+                                                   nullptr,
+                                                   nullptr )) )
                 return retval;
         }
         else {
             /* convert mapping */
             if ( 0 == (retval =
-                       WideCharToMultiByte( code_page,
-                                            0,
-                                            outwbuffer.get(),
-                                            outbuff_size,
-                                            lpDestStr,
-                                            cchDest,
-                                            nullptr,
-                                            nullptr )) )
+                       __acrt_WideCharToMultiByte( code_page,
+                                                   0,
+                                                   outwbuffer.get(),
+                                                   outbuff_size,
+                                                   lpDestStr,
+                                                   cchDest,
+                                                   nullptr,
+                                                   nullptr )) )
                 return retval;
         }
     }

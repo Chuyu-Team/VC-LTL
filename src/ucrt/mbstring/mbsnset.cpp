@@ -140,13 +140,13 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnset_l_downlevel);
 
 #endif
 
-//unsigned char * (__cdecl _mbsnset)(
-//        unsigned char *string,
-//        unsigned int val,
-//        size_t count
-//        )
-//{
-//_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-//    return _mbsnset_l(string, val, count, nullptr);
-//_END_SECURE_CRT_DEPRECATION_DISABLE
-//}
+/*unsigned char * (__cdecl _mbsnset)(
+        unsigned char *string,
+        unsigned int val,
+        size_t count
+        )
+{
+_BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+    return _mbsnset_l(string, val, count, nullptr);
+_END_SECURE_CRT_DEPRECATION_DISABLE
+}*/

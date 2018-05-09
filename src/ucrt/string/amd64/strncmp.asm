@@ -7,7 +7,7 @@
 ;
 ;Purpose:
 ;       defines strncmp() - compare first n characters of two strings
-;       for lexical order.
+;       for ordinal order.
 ;
 ;*******************************************************************************
 include ksamd64.inc
@@ -16,7 +16,7 @@ include ksamd64.inc
 ;int strncmp(first, last, count) - compare first count chars of strings
 ;
 ;Purpose:
-;       Compares two strings for lexical order.  The comparison stops
+;       Compares two strings for ordinal order.  The comparison stops
 ;       after: (1) a difference between the strings is found, (2) the end
 ;       of the strings is reached, or (3) count characters have been
 ;       compared.

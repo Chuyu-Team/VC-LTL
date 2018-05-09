@@ -56,7 +56,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcgraph_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbcgraph(unsigned int const c)
-//{
-//    return _ismbcgraph_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcgraph(unsigned int const c)
+{
+    return _ismbcgraph_l(c, nullptr);
+}*/

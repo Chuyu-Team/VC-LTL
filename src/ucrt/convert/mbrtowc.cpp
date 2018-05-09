@@ -7,14 +7,17 @@
 *       Convert a multibyte character into the equivalent wide character.
 *
 *******************************************************************************/
-#include <corecrt_internal.h>
+#include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <wchar.h>
 #include <limits.h>
 #include <stdio.h>
+#include <uchar.h>
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
+
+using namespace __crt_mbstring;
 
 /***
 *errno_t _mbrtowc_s_l() - Helper function to convert multibyte char to wide character.
@@ -76,10 +79,16 @@ static errno_t __cdecl _mbrtowc_s_l(
     }
 
     //_LocaleUpdate _loc_update(plocinfo);
-
-    const int locale_mb_cur_max = ___mb_cur_max_func();
 	const auto _locale_lc_codepage = ___lc_codepage_func();
 
+    if (/*_loc_update.GetLocaleT()->locinfo->_public.*/_locale_lc_codepage == CP_UTF8)
+    {
+        const size_t retval = __mbrtowc_utf8(dst, s, n, pmbst);
+        _ASSIGN_IF_NOT_NULL(pRetValue, static_cast<int>(retval));
+        return errno;
+    }
+
+    const int locale_mb_cur_max = ___mb_cur_max_func();
     _ASSERTE(locale_mb_cur_max == 1 || locale_mb_cur_max == 2);
 
     if (___lc_handle_func()[LC_CTYPE] == 0)
@@ -94,7 +103,7 @@ static errno_t __cdecl _mbrtowc_s_l(
         /* complete two-byte multibyte character */
         ((char *) pmbst)[1] = *s;
         if (locale_mb_cur_max <= 1 ||
-            (MultiByteToWideChar(
+            (__acrt_MultiByteToWideChar(
             _locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             (char *) pmbst,
@@ -124,7 +133,7 @@ static errno_t __cdecl _mbrtowc_s_l(
             return 0;
         }
         else if (locale_mb_cur_max <= 1 ||
-            (MultiByteToWideChar(_locale_lc_codepage,
+            (__acrt_MultiByteToWideChar(_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             static_cast<int>(__min(strlen(s), INT_MAX)),
@@ -146,7 +155,7 @@ static errno_t __cdecl _mbrtowc_s_l(
     }
     else {
         /* single byte char */
-        if (MultiByteToWideChar(
+        if (__acrt_MultiByteToWideChar(
             _locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
@@ -205,7 +214,6 @@ _LCRT_DEFINE_IAT_SYMBOL(btowc_downlevel);
 
 #endif
 
-
 /***
 *size_t mbrlen(s, n, pst) - determine next multibyte code, restartably
 *
@@ -236,7 +244,6 @@ extern "C" size_t __cdecl mbrlen_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(mbrlen_downlevel);
 
 #endif
-
 
 /***
 *size_t mbrtowc(pwc, s, n, pst) - translate multibyte to wchar_t, restartably
@@ -310,9 +317,15 @@ static size_t __cdecl _mbsrtowcs_helper(
     size_t nwc = 0;
     //_LocaleUpdate _loc_update(nullptr);
 
+    // Use the static cached state if necessary
     if (pst == nullptr)
     {
         pst = &mbst;
+    }
+
+    if (___lc_codepage_func() == CP_UTF8)
+    {
+        return __mbsrtowcs_utf8(wcs, ps, n, pst);
     }
 
     if (wcs == nullptr)
@@ -356,6 +369,28 @@ static size_t __cdecl _mbsrtowcs_helper(
 }
 
 #ifdef _ATL_XP_TARGETING
+/***
+*errno_t mbsrtowcs_s() - Convert multibyte char string to wide char string.
+*
+*Purpose:
+*       Convert a multi-byte char string into the equivalent wide char string,
+*       according to the LC_CTYPE category of the current locale.
+*       Same as mbsrtowcs_s(), but the destination may not be null terminated.
+*       If there's not enough space, we return EINVAL.
+*
+*Entry:
+*       wchar_t *pwcs = pointer to destination wide character string buffer
+*       const char **s = pointer to source multibyte character string
+*       size_t n = maximum number of wide characters to store (not including the terminating null character)
+*       mbstate_t *pst = pointer to the conversion state
+*
+*Exit:
+*       The nunber if wide characters written to *wcs, not including any terminating null character)
+*
+*Exceptions:
+*       Input parameters are validated. Refer to the validation section of the function.
+*
+*******************************************************************************/
 extern "C" size_t __cdecl mbsrtowcs_downlevel(
     wchar_t *wcs,
     const char **ps,
@@ -378,7 +413,7 @@ _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_downlevel);
 *Purpose:
 *       Convert a multi-byte char string into the equivalent wide char string,
 *       according to the LC_CTYPE category of the current locale.
-*       Same as mbstowcs(), but the destination is ensured to be null terminated.
+*       Same as mbsrtowcs(), but the destination is ensured to be null terminated.
 *       If there's not enough space, we return EINVAL.
 *
 *Entry:
@@ -387,7 +422,7 @@ _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_downlevel);
 *       wchar_t *pwcs = pointer to destination wide character string buffer
 *       size_t sizeInWords = size of the destination buffer
 *       const char **s = pointer to source multibyte character string
-*       size_t n = maximum number of wide characters to store (not including the terminating nullptr)
+*       size_t n = maximum number of wide characters to store (not including the terminating null character)
 *       mbstate_t *pst = pointer to the conversion state
 *
 *Exit:
@@ -458,3 +493,125 @@ extern "C" errno_t __cdecl mbsrtowcs_s_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_s_downlevel);
 
 #endif
+
+size_t __cdecl __crt_mbstring::__mbrtowc_utf8(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps)
+{
+    static_assert(sizeof(wchar_t) == 2, "wchar_t is assumed to be 16 bits");
+    char32_t c32;
+    const size_t retval = __mbrtoc32_utf8(&c32, s, n, ps);
+    // If we succesfully consumed a character, write the result after a quick range check
+    if (retval <= 4)
+    {
+        if (c32 > 0xffff)
+        {
+            // A 4-byte UTF-8 character won't fit into a single UTF-16 wchar
+            // So return the "replacement char"
+            c32 = 0xfffd;
+        }
+        _ASSIGN_IF_NOT_NULL(pwc, static_cast<wchar_t>(c32));
+    }
+    return retval;
+}
+
+size_t __cdecl __crt_mbstring::__mbsrtowcs_utf8(wchar_t* dst, const char** src, size_t len, mbstate_t* ps)
+{
+    const char* current_src = *src;
+
+    auto compute_available = [](const char* s) -> size_t
+    {
+        // We shouldn't just blindly request to read 4 bytes, because there might not be 4 bytes left to read.
+        if (s[0] == '\0')
+        {
+            return 1;
+        }
+        else if (s[1] == '\0')
+        {
+            return 2;
+        }
+        else if (s[2] == '\0')
+        {
+            return 3;
+        }
+        return 4;
+    };
+
+    if (dst != nullptr)
+    {
+        wchar_t* current_dest = dst;
+        for (; len > 0; --len)
+        {
+            const size_t avail = compute_available(current_src);
+            char32_t c32;
+            const size_t retval = __mbrtoc32_utf8(&c32, current_src, avail, ps);
+            if (retval == __crt_mbstring::INVALID)
+            {
+                // Set src to the beginning of the invalid char
+                *src = current_src;
+                errno = EILSEQ;
+                return retval;
+            }
+            else if (retval == 0)
+            {
+                current_src = nullptr;
+                *current_dest = L'\0';
+                break;
+            }
+            else if (c32 > 0xffff)
+            {
+                // This is going to take two output wchars. Make sure we have enough room for this output.
+                if (len > 1)
+                {
+                    --len;
+                    c32 -= 0x10000;
+                    const char16_t high_surrogate = static_cast<char16_t>((c32 >> 10) | 0xd800);
+                    const char16_t low_surrogate = static_cast<char16_t>((c32 & 0x03ff) | 0xdc00);
+                    *current_dest++ = high_surrogate;
+                    *current_dest++ = low_surrogate;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                *current_dest++ = static_cast<wchar_t>(c32);
+            }
+            current_src += retval;
+        }
+        *src = current_src;
+        return current_dest - dst;
+    }
+    else
+    {
+        size_t total_count = 0;
+        for (;; ++total_count)
+        {
+            const size_t avail = compute_available(current_src);
+
+            const size_t retval = __mbrtoc32_utf8(nullptr, current_src, avail, ps);
+            if (retval == __crt_mbstring::INVALID)
+            {
+                errno = EILSEQ;
+                return retval;
+            }
+            else if (retval == 0)
+            {
+                break;
+            }
+            else if (retval == 4)
+            {
+                // SMP characters take two UTF-16 wide chars
+                ++total_count;
+            }
+            else
+            {
+                // This should be impossible. Means we encountered a multibyte char
+                // that extended past the null terminator, or is more than 4 bytes long
+                _ASSERTE(retval != __crt_mbstring::INCOMPLETE);
+            }
+            current_src += retval;
+        }
+        return total_count;
+    }
+}

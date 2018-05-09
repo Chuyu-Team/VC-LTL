@@ -17,6 +17,7 @@
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
 
+
 /***
 * _mbscoll - Collate MBCS strings
 *
@@ -37,6 +38,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
+
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _mbscoll_l_downlevel(
         const unsigned char *s1,
@@ -80,10 +82,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbscoll_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _mbscoll)(
-//        const unsigned char *s1,
-//        const unsigned char *s2
-//        )
-//{
-//    return _mbscoll_l(s1, s2, nullptr);
-//}
+/*extern "C" int (__cdecl _mbscoll)(
+        const unsigned char *s1,
+        const unsigned char *s2
+        )
+{
+    return _mbscoll_l(s1, s2, nullptr);
+}*/

@@ -39,7 +39,7 @@ extern "C" int __cdecl _ismbchira_l_downlevel(
         )
 {
     //_LocaleUpdate _loc_update(plocinfo);
-	
+
     return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x829f && c <= 0x82f1);
 }
 
@@ -47,12 +47,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbchira_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbchira(
-//        unsigned int c
-//        )
-//{
-//    return _ismbchira_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbchira(
+        unsigned int c
+        )
+{
+    return _ismbchira_l(c, nullptr);
+}*/
 
 
 /***
@@ -85,12 +85,12 @@ extern "C" int __cdecl _ismbckata_l_downlevel (
 _LCRT_DEFINE_IAT_SYMBOL(_ismbckata_l_downlevel);
 
 #endif
-//extern "C" int __cdecl _ismbckata(
-//        unsigned int c
-//        )
-//{
-//    return _ismbckata_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbckata(
+        unsigned int c
+        )
+{
+    return _ismbckata_l(c, nullptr);
+}*/
 
 
 /***
@@ -126,9 +126,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcsymbol_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _ismbcsymbol)(
-//        unsigned int c
-//        )
-//{
-//    return _ismbcsymbol_l(c, nullptr);
-//}
+/*extern "C" int (__cdecl _ismbcsymbol)(
+        unsigned int c
+        )
+{
+    return _ismbcsymbol_l(c, nullptr);
+}*/

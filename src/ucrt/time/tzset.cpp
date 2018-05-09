@@ -4,7 +4,7 @@
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 //
 // Defines the _tzset() function which updates the global time zone state, and
-// the _isindst() function, which tests whether a time is in Daylight Savings 
+// the _isindst() function, which tests whether a time is in Daylight Savings
 // Time or not.
 //
 #include <corecrt_internal_time.h>
@@ -143,8 +143,8 @@ static void __cdecl tzset_from_system_nolock() throw()
 
         // Try to grab the name strings for both the time zone and the daylight
         // zone.  Note the wide character strings in tz_info must be converted
-        // to multibyte character strings.  The locale code page must be used 
-        // for this.  Note that if setlocale() has not yet been called with 
+        // to multibyte character strings.  The locale code page must be used
+        // for this.  Note that if setlocale() has not yet been called with
         // LC_ALL or LC_CTYPE, then the code page will be 0, which is CP_ACP,
         // so we will use the host's default ANSI code page.
         //
@@ -156,7 +156,7 @@ static void __cdecl tzset_from_system_nolock() throw()
         unsigned const code_page = ___lc_codepage_func();
 
         int used_default_char;
-        int const status0 = WideCharToMultiByte(
+        int const status0 = __acrt_WideCharToMultiByte(
             code_page,
             0,
             tz_info.StandardName,
@@ -175,7 +175,7 @@ static void __cdecl tzset_from_system_nolock() throw()
             tzname[0][0] = '\0';
         }
 
-        int const status1 = WideCharToMultiByte(
+        int const status1 = __acrt_WideCharToMultiByte(
             code_page,
             0,
             tz_info.DaylightName,
@@ -205,7 +205,7 @@ static void __cdecl tzset_from_environment_nolock(_In_z_ char* tz_env) throw()
     _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
     char** tzname = _tzname;
     _END_SECURE_CRT_DEPRECATION_DISABLE
-            
+
     long timezone = 0;
     int  daylight = 0;
     _ERRCHECK(_get_timezone(&timezone));
@@ -260,7 +260,7 @@ static void __cdecl tzset_from_environment_nolock(_In_z_ char* tz_env) throw()
         {
             // Process, then skip over, the seconds:
             timezone += atol(++tz_env);
-            while (*tz_env >= '0' && *tz_env <= '9') 
+            while (*tz_env >= '0' && *tz_env <= '9')
                 ++tz_env;
         }
     }

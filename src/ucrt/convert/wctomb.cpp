@@ -8,8 +8,14 @@
 // (or *return_value, for the _s-suffixed functions) depends on the destination
 // and destination_count:
 //  * If destination == nullptr && count == 0, number of bytes needed for conversion
-//  * If destination == nullptr && count >  0, the state information
 //  * If destination != nullptr:  the number of bytes used for the conversion
+//  * If destination == nullptr && count >  0, the state information
+//    (0 for no state dependency, 1 if a state dependent encoding)
+//
+// Historically Windows has not supported state-dependent encodings for wctomb,
+// however UTF-8 can possible require more than one input wchar_t and maintain
+// state between calls.
+//
 // The return_value pointer may be null.
 //
 #include <corecrt_internal.h>
@@ -30,6 +36,7 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
     _locale_t const locale
     )
 {
+    // Did the caller request if this is a state dependent encoding?
     if (!destination && destination_count > 0)
     {
         // Indicate do not have state-dependent encodings:
@@ -47,13 +54,15 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
     _VALIDATE_RETURN_ERRCODE(destination_count <= INT_MAX, EINVAL);
 
     //_LocaleUpdate locale_update(locale);
-	auto _lc_ctype = (locale ? locale->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE];
 
-
-    if (!_lc_ctype)
+    // Check for C-locale behavior, which merely casts it to char (if in range)
+    // for ASCII-ish behavior.
+    if (!(locale ? locale->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE])
     {
+        // See if the WCHAR is > ASCII-ish range
         if (wchar > 255)  // Validate high byte
         {
+            // Too big, can't convert, clear buffer and return error
             if (destination != nullptr && destination_count > 0)
             {
                 memset(destination, 0, destination_count);
@@ -62,6 +71,7 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
             return errno = EILSEQ;
         }
 
+        // ASCII-ish, just cast to a (char)
         if (destination != nullptr)
         {
             _VALIDATE_RETURN_ERRCODE(destination_count > 0, ERANGE);
@@ -70,16 +80,18 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
 
         if (return_value != nullptr)
         {
+            // casting one WCHAR emits a single char
             *return_value = 1;
         }
 
+        // We're done
         return 0;
     }
     else
     {
         BOOL default_used{};
-        int const size = WideCharToMultiByte(
-			locale? locale->locinfo->_locale_lc_codepage:___lc_codepage_func(),
+        int const size = __acrt_WideCharToMultiByte(
+            locale? locale->locinfo->_locale_lc_codepage:___lc_codepage_func(),
             0,
             &wchar,
             1,
@@ -108,6 +120,8 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
 
         return 0;
     }
+
+    // The last thing was an if/else, so we already returned.
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_wctomb_s_l_downlevel);
@@ -144,7 +158,7 @@ extern "C" int __cdecl _wctomb_l_downlevel(
     errno_t const e = _wctomb_s_l(
         &return_value,
         destination,
-		locale->locinfo->_locale_mb_cur_max,
+        locale->locinfo->_locale_mb_cur_max,
         wchar,
 		locale);
 
@@ -160,20 +174,20 @@ _LCRT_DEFINE_IAT_SYMBOL(_wctomb_l_downlevel);
 
 // Disable the OACR error that warns that 'MB_CUR_MAX' doesn't properly constrain buffer 'destination'.
 // wctomb() doesn't take a buffer size, so the function's contract is inherently dangerous.
-//__pragma(warning(push))
-//__pragma(warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY)) // 26015
-//
-//extern "C" int __cdecl wctomb(
-//    char*   const destination,
-//    wchar_t const wchar
-//    )
-//{
-//    int return_value{};
-//    errno_t const e = _wctomb_s_l(&return_value, destination, MB_CUR_MAX, wchar, nullptr);
-//    if (e != 0)
-//        return -1;
-//
-//    return return_value;
-//}
-//
-//__pragma(warning(pop))
+/*__pragma(warning(push))
+__pragma(warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY)) // 26015
+
+extern "C" int __cdecl wctomb(
+    char*   const destination,
+    wchar_t const wchar
+    )
+{
+    int return_value{};
+    errno_t const e = _wctomb_s_l(&return_value, destination, MB_CUR_MAX, wchar, nullptr);
+    if (e != 0)
+        return -1;
+
+    return return_value;
+}
+
+__pragma(warning(pop))*/

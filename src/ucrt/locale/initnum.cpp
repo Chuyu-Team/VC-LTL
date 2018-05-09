@@ -146,6 +146,7 @@ int __cdecl __acrt_locale_initialize_numeric (
                     /* Clean up before returning failure */
                     __acrt_locale_free_numeric(lc);
                     _free_crt(lc);
+                    _free_crt(lconv_num_refcount);
                     _free_crt(lc_refcount);
                     return -1;
             }

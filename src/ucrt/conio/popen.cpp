@@ -83,7 +83,7 @@ static process_handle_pair* __idpairs;
 // found, a pointer to it is returned; if the stream is not found, null is
 // returned.
 //
-// If the stream is null, a new entry is allocated and a pointer to it is 
+// If the stream is null, a new entry is allocated and a pointer to it is
 // returned.  If no entries are available and expansion of the table fails,
 // null is returned.
 //
@@ -178,7 +178,7 @@ static Character const* __cdecl get_path() throw()
     Character* path_value = nullptr;
     if (_ERRCHECK_EINVAL(stdio_traits::tdupenv_s_crt(&path_value, nullptr, path_name)) != 0)
         return nullptr;
-    
+
     return path_value;
 }
 
@@ -236,7 +236,7 @@ static FILE* __cdecl common_popen_nolock(
     typedef __acrt_stdio_char_traits<Character> stdio_traits;
 
     HANDLE const process_handle = GetCurrentProcess();
-    
+
     // We only return the second pipe handle to the caller; for the first pipe,
     // we just need to use the HANDLE:
     __crt_unique_handle new_pipe_handle;
@@ -261,7 +261,7 @@ static FILE* __cdecl common_popen_nolock(
         return nullptr;
 
     // Obtain a proces handle pair in which to store the process handle:
-    unique_process_handle_pair id_pair(idtab(nullptr)); 
+    unique_process_handle_pair id_pair(idtab(nullptr));
     if (!id_pair)
         return nullptr;
 
@@ -273,7 +273,7 @@ static FILE* __cdecl common_popen_nolock(
         ? comspec_variable.get()
         : default_cmd_exe;
 
-    typename stdio_traits::startup_info_type startup_info = { 0 };
+    STARTUPINFOW startup_info = { 0 };
     startup_info.cb = sizeof(startup_info);
 
     // The following arguments are used by the OS for duplicating the handles:

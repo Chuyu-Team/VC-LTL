@@ -19,7 +19,7 @@ include ksamd64.inc
 ;strcmp - compare two strings, returning less than, equal to, or greater than
 ;
 ;Purpose:
-;       Compares two string, determining their lexical order.  Unsigned
+;       Compares two string, determining their ordinal order.  Unsigned
 ;       comparison is used.
 ;
 ;       Algorithm:

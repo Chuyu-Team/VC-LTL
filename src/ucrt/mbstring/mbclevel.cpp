@@ -54,12 +54,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcl0_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _ismbcl0)(
-//        unsigned int c
-//        )
-//{
-//    return _ismbcl0_l(c, nullptr);
-//}
+/*extern "C" int (__cdecl _ismbcl0)(
+        unsigned int c
+        )
+{
+    return _ismbcl0_l(c, nullptr);
+}*/
 
 
 /***
@@ -98,12 +98,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcl1_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _ismbcl1)(
-//    unsigned int c
-//    )
-//{
-//    return _ismbcl1_l(c, nullptr);
-//}
+/*extern "C" int (__cdecl _ismbcl1)(
+    unsigned int c
+    )
+{
+    return _ismbcl1_l(c, nullptr);
+}*/
 
 
 /***
@@ -141,9 +141,9 @@ extern "C" int __cdecl _ismbcl2_l_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_ismbcl2_l_downlevel);
 
 #endif
-//extern "C" int __cdecl _ismbcl2(
-//        unsigned int c
-//        )
-//{
-//    return _ismbcl2_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcl2(
+        unsigned int c
+        )
+{
+    return _ismbcl2_l(c, nullptr);
+}*/

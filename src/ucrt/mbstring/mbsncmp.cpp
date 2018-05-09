@@ -22,8 +22,11 @@
 *int mbsncmp(s1, s2, n) - Compare n characters of two MBCS strings
 *
 *Purpose:
-*       Compares up to n charcters of two strings for lexical order.
+*       Compares up to n characters of two strings for ordinal order.
 *       Strings are compared on a character basis, not a byte basis.
+*
+*       UTF-8 and SBCS are merely compared in byte order.
+*       DBCS are compared by codepoint to ensure double byte chars sort last
 *
 *Entry:
 *       unsigned char *s1, *s2 = strings to compare
@@ -88,11 +91,11 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsncmp_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _mbsncmp)(
-//        const unsigned char *s1,
-//        const unsigned char *s2,
-//        size_t n
-//        )
-//{
-//    return _mbsncmp_l(s1, s2, n, nullptr);
-//}
+/*extern "C" int (__cdecl _mbsncmp)(
+        const unsigned char *s1,
+        const unsigned char *s2,
+        size_t n
+        )
+{
+    return _mbsncmp_l(s1, s2, n, nullptr);
+}*/

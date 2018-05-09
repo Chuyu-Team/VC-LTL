@@ -56,7 +56,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcalpha_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbcalpha(unsigned int const c)
-//{
-//    return _ismbcalpha_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcalpha(unsigned int const c)
+{
+    return _ismbcalpha_l(c, nullptr);
+}*/

@@ -100,7 +100,7 @@ extern "C" wint_t __cdecl _getwch_nolock()
             // Get a console input event:
             INPUT_RECORD input_record;
             DWORD num_read;
-            if (__dcrt_read_console_input_w(&input_record, 1, &num_read) == FALSE)
+            if (__dcrt_read_console_input(&input_record, 1, &num_read) == FALSE)
             {
                 result = WEOF;
                 __leave;

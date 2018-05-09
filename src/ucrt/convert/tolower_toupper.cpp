@@ -14,6 +14,7 @@
 #include <msvcrt_IAT.h>
 
 
+
 typedef bool (__cdecl internal_istype_l_type)(int, _locale_t);
 typedef int  (__cdecl internal_map_type     )(int, _locale_t);
 
@@ -81,7 +82,7 @@ static int __cdecl common_tox_l(int const c, DWORD const map_flag, _locale_t con
         static_cast<int>(in_count),
         reinterpret_cast<char*>(out_buffer),
         static_cast<int>(_countof(out_buffer)),
-		locale->locinfo->_locale_lc_codepage,
+        locale->locinfo->_locale_lc_codepage,
         TRUE);
 
     if (out_count == 0)
@@ -107,17 +108,17 @@ _LCRT_DEFINE_IAT_SYMBOL(_tolower_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl tolower(int const c)
-//{
-//    return __acrt_locale_changed()
-//        ? _tolower_l(c, nullptr)
-//        : __ascii_tolower(c);
-//}
+/*extern "C" int __cdecl tolower(int const c)
+{
+    return __acrt_locale_changed()
+        ? _tolower_l(c, nullptr)
+        : __ascii_tolower(c);
+}
 
-//extern "C" int (__cdecl _tolower)(int const c)
-//{
-//    return c - 'A' + 'a';
-//}
+extern "C" int (__cdecl _tolower)(int const c)
+{
+    return c - 'A' + 'a';
+}*/
 
 
 #ifdef _ATL_XP_TARGETING
@@ -132,14 +133,14 @@ _LCRT_DEFINE_IAT_SYMBOL(_toupper_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl toupper(int const c)
-//{
-//    return __acrt_locale_changed()
-//        ? _toupper_l(c, nullptr)
-//        : __ascii_toupper(c);
-//}
+/*extern "C" int __cdecl toupper(int const c)
+{
+    return __acrt_locale_changed()
+        ? _toupper_l(c, nullptr)
+        : __ascii_toupper(c);
+}
 
-//extern "C" int (__cdecl _toupper)(int const c)
-//{
-//    return c - 'a' + 'A';
-//}
+extern "C" int (__cdecl _toupper)(int const c)
+{
+    return c - 'a' + 'A';
+}*/

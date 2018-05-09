@@ -57,31 +57,33 @@ extern "C" char * __cdecl _strlwr_l_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_strlwr_l_downlevel);
 #endif
 
-//extern "C" char * __cdecl _strlwr (
-//        char * string
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        char * cp;
-//
-//        /* validation section */
-//        _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
-//
-//        for (cp=string; *cp; ++cp)
-//        {
-//            if ('A' <= *cp && *cp <= 'Z')
-//                *cp += 'a' - 'A';
-//        }
-//
-//        return(string);
-//    }
-//    else
-//    {
-//        _strlwr_s_l(string, (size_t)(-1), nullptr);
-//        return string;
-//    }
-//}
+#if 0
+extern "C" char * __cdecl _strlwr (
+        char * string
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        char * cp;
+
+        /* validation section */
+        _VALIDATE_RETURN(string != nullptr, EINVAL, nullptr);
+
+        for (cp=string; *cp; ++cp)
+        {
+            if ('A' <= *cp && *cp <= 'Z')
+                *cp += 'a' - 'A';
+        }
+
+        return(string);
+    }
+    else
+    {
+        _strlwr_s_l(string, (size_t)(-1), nullptr);
+        return string;
+    }
+}
+#endif
 
 /***
 *errno_t _strlwr_s(string, size_t) - map upper-case characters in a string to lower-case

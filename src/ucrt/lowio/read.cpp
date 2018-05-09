@@ -7,9 +7,10 @@
 //
 #include <corecrt_internal_lowio.h>
 
-
-
-// This lookup table returns:
+// Lookup table for UTF-8 lead bytes
+// Probably preferable to just ask if the bits are set than use an entire
+// table, however the macros using this were #defined in the header so
+// removing this extern table would break apps compiled to an earlier verison.
 //    1 for pattern 110xxxxx - 1 trailbyte
 //    2 for pattern 1110xxxx - 2 trailbytes
 //    3 for pattern 11110xxx - 3 trailbytes
@@ -287,7 +288,7 @@ static int __cdecl translate_ansi_or_utf8_nolock(
         // Now that we've found the last lead byte, determine whether the
         // character is complete or incomplete.  We compute the number of
         // trailbytes...
-        unsigned const trailbyte_count = _utf8_no_of_trailbytes(*result_it);
+        unsigned const trailbyte_count = _utf8_no_of_trailbytes(static_cast<const unsigned char>(*result_it));
         if (trailbyte_count == 0)
         {
             // Oh, apparently that wasn't a lead byte; the file contains invalid
@@ -340,7 +341,7 @@ static int __cdecl translate_ansi_or_utf8_nolock(
     }
 
     // Finally, we can translate the characters into the result buffer:
-    int const characters_translated = static_cast<int>(MultiByteToWideChar(
+    int const characters_translated = static_cast<int>(__acrt_MultiByteToWideChar(
             CP_UTF8,
             0,
             source_buffer,

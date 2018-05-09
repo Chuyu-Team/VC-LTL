@@ -181,7 +181,7 @@ static write_result __cdecl write_double_translated_ansi_nolock(
         // Translate the Unicode character into Multibyte in the console codepage
         // and write the character to the file:
         char mb_buffer[MB_LEN_MAX];
-        DWORD const size = static_cast<DWORD>(WideCharToMultiByte(
+        DWORD const size = static_cast<DWORD>(__acrt_WideCharToMultiByte(
             console_cp, 0, &wc, 1, mb_buffer, sizeof(mb_buffer), nullptr, nullptr));
 
         if(size == 0)
@@ -451,7 +451,7 @@ static write_result __cdecl write_text_utf8_nolock(
         // This is the second translation, where we translate the UTF-16 text to
         // UTF-8, into the UTF-8 buffer:
         char utf8_buf[(BUF_SIZE * 2) / 3];
-        DWORD const bytes_converted = static_cast<DWORD>(WideCharToMultiByte(
+        DWORD const bytes_converted = static_cast<DWORD>(__acrt_WideCharToMultiByte(
                 CP_UTF8,
                 0,
                 utf16_buf,

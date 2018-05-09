@@ -81,7 +81,7 @@ extern "C" int __cdecl _wcsnicoll_l_downlevel (
         return (int)(f - l);
     }
 
-    if ( 0 == (ret = __crtCompareStringW(
+    if ( 0 == (ret = __acrt_CompareStringW(
                     _lc_collate,
                                SORT_STRINGSORT | NORM_IGNORECASE,
                                _string1,
@@ -100,34 +100,36 @@ _LCRT_DEFINE_IAT_SYMBOL(_wcsnicoll_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _wcsnicoll (
-//        const wchar_t *_string1,
-//        const wchar_t *_string2,
-//        size_t count
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        wchar_t f, l;
-//
-//        /* validation section */
-//        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
-//
-//        do
-//        {
-//            f = __ascii_towlower(*_string1);
-//            l = __ascii_towlower(*_string2);
-//            _string1++;
-//            _string2++;
-//        }
-//        while ( (--count) && f && (f == l) );
-//
-//        return (int)(f - l);
-//    }
-//    else
-//    {
-//        return _wcsnicoll_l(_string1, _string2, count, nullptr);
-//    }
-//}
+#if 0
+extern "C" int __cdecl _wcsnicoll (
+        const wchar_t *_string1,
+        const wchar_t *_string2,
+        size_t count
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        wchar_t f, l;
+
+        /* validation section */
+        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
+
+        do
+        {
+            f = __ascii_towlower(*_string1);
+            l = __ascii_towlower(*_string2);
+            _string1++;
+            _string2++;
+        }
+        while ( (--count) && f && (f == l) );
+
+        return (int)(f - l);
+    }
+    else
+    {
+        return _wcsnicoll_l(_string1, _string2, count, nullptr);
+    }
+}
+#endif

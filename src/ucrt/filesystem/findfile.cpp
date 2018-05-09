@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <corecrt_internal_win32_buffer.h>
 
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -80,14 +80,17 @@ static unsigned long convert_file_size_to_integer(DWORD const high, DWORD const 
 
 template <typename WideFileData, typename NarrowFileData>
 _Success_(return)
-static bool __cdecl copy_wide_to_narrow_find_data(WideFileData const& wfd, _Out_ NarrowFileData& fd) throw()
+static bool __cdecl copy_wide_to_narrow_find_data(WideFileData const& wfd, _Out_ NarrowFileData& fd, unsigned int const code_page) throw()
 {
-    char* name = nullptr;
-    if (!__acrt_copy_to_char(wfd.name, &name))
-        return false;
+    __crt_internal_win32_buffer<char> name;
 
-    _ERRCHECK(strcpy_s(fd.name, _countof(fd.name), name));
-    _free_crt(name);
+    errno_t const cvt = __acrt_wcs_to_mbs_cp(wfd.name, name, code_page);
+
+    if (cvt != 0) {
+        return false;
+    }
+
+    _ERRCHECK(strcpy_s(fd.name, name.size(), name.data()));
 
     fd.attrib       = wfd.attrib;
     fd.time_create  = wfd.time_create;
@@ -168,20 +171,24 @@ static intptr_t __cdecl common_find_first_wide(wchar_t const* const pattern, _Ou
 
 template <typename WideFileData, typename NarrowFileData>
 _Success_(return != -1)
-static intptr_t __cdecl common_find_first_narrow(char const* const pattern, _Out_ NarrowFileData* const result) throw()
+static intptr_t __cdecl common_find_first_narrow(char const* const pattern, _Out_ NarrowFileData* const result, unsigned int const code_page) throw()
 {
     _VALIDATE_RETURN(result != nullptr, EINVAL, -1);
 
-    __crt_unique_heap_ptr<wchar_t> wide_pattern;
-    if (!__acrt_copy_path_to_wide_string(pattern, wide_pattern.get_address_of()))
+    __crt_internal_win32_buffer<wchar_t> wide_pattern;
+
+    errno_t const cvt = __acrt_mbs_to_wcs_cp(pattern, wide_pattern, code_page);
+
+    if (cvt != 0) {
         return -1;
+    }
 
     WideFileData wide_result;
-    intptr_t const handle = common_find_first_wide(wide_pattern.get(), &wide_result);
+    intptr_t const handle = common_find_first_wide(wide_pattern.data(), &wide_result);
     if (handle == -1)
         return -1;
 
-    if (!copy_wide_to_narrow_find_data(wide_result, *result))
+    if (!copy_wide_to_narrow_find_data(wide_result, *result, code_page))
         return -1;
 
     return handle;
@@ -190,25 +197,25 @@ static intptr_t __cdecl common_find_first_narrow(char const* const pattern, _Out
 // Narrow name, 32-bit time_t, 32-bit size
 extern "C" intptr_t __cdecl _findfirst32(char const* const pattern, _finddata32_t* const result)
 {
-    return common_find_first_narrow<_wfinddata32_t>(pattern, result);
+    return common_find_first_narrow<_wfinddata32_t>(pattern, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Narrow name, 32-bit time_t, 64-bit size
 extern "C" intptr_t __cdecl _findfirst32i64(char const* const pattern, _finddata32i64_t* const result)
 {
-    return common_find_first_narrow<_wfinddata32i64_t>(pattern, result);
+    return common_find_first_narrow<_wfinddata32i64_t>(pattern, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Narrow name, 64-bit time_t, 32-bit size
 extern "C" intptr_t __cdecl _findfirst64i32(char const* const pattern, _finddata64i32_t* const result)
 {
-    return common_find_first_narrow<_wfinddata64i32_t>(pattern, result);
+    return common_find_first_narrow<_wfinddata64i32_t>(pattern, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Narrow name, 64-bit time_t, 64-bit size
 extern "C" intptr_t __cdecl _findfirst64(char const* const pattern, __finddata64_t* const result)
 {
-    return common_find_first_narrow<_wfinddata64_t>(pattern, result);
+    return common_find_first_narrow<_wfinddata64_t>(pattern, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Wide name, 32-bit time_t, 32-bit size
@@ -306,14 +313,14 @@ static int __cdecl common_find_next_wide(intptr_t const handle, WideFileData* co
 }
 
 template <typename WideFileData, typename NarrowFileData>
-static int __cdecl common_find_next_narrow(intptr_t const pattern, NarrowFileData* const result) throw()
+static int __cdecl common_find_next_narrow(intptr_t const pattern, NarrowFileData* const result, unsigned int const code_page) throw()
 {
     WideFileData wide_result;
     int const return_value = common_find_next_wide(pattern, &wide_result);
     if (return_value == -1)
         return -1;
 
-    if (!copy_wide_to_narrow_find_data(wide_result, *result))
+    if (!copy_wide_to_narrow_find_data(wide_result, *result, code_page))
         return -1;
 
     return return_value;
@@ -322,25 +329,25 @@ static int __cdecl common_find_next_narrow(intptr_t const pattern, NarrowFileDat
 // Narrow name, 32-bit time_t, 32-bit size
 extern "C" int __cdecl _findnext32(intptr_t const handle, _finddata32_t* const result)
 {
-    return common_find_next_narrow<_wfinddata32_t>(handle, result);
+    return common_find_next_narrow<_wfinddata32_t>(handle, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Narrow name, 32-bit time_t, 64-bit size
 extern "C" int __cdecl _findnext32i64(intptr_t const handle, _finddata32i64_t* const result)
 {
-    return common_find_next_narrow<_wfinddata32i64_t>(handle, result);
+    return common_find_next_narrow<_wfinddata32i64_t>(handle, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Narrow name, 64-bit time_t, 32-bit size
 extern "C" int __cdecl _findnext64i32(intptr_t const handle, _finddata64i32_t* const result)
 {
-    return common_find_next_narrow<_wfinddata64i32_t>(handle, result);
+    return common_find_next_narrow<_wfinddata64i32_t>(handle, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Narrow name, 64-bit time_t, 64-bit size
 extern "C" int __cdecl _findnext64(intptr_t const handle, __finddata64_t* const result)
 {
-    return common_find_next_narrow<_wfinddata64_t>(handle, result);
+    return common_find_next_narrow<_wfinddata64_t>(handle, result, __acrt_get_utf8_acp_compatibility_codepage());
 }
 
 // Wide name, 32-bit time_t, 32-bit size

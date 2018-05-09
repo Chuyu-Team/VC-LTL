@@ -81,30 +81,32 @@ _LCRT_DEFINE_IAT_SYMBOL(_wcsicmp_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _wcsicmp (
-//        const wchar_t * dst,
-//        const wchar_t * src
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        wchar_t f,l;
-//
-//        /* validation section */
-//        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
-//
-//        do  {
-//            f = __ascii_towlower(*dst);
-//            l = __ascii_towlower(*src);
-//            dst++;
-//            src++;
-//        } while ( (f) && (f == l) );
-//        return (int)(f - l);
-//    }
-//    else
-//    {
-//        return _wcsicmp_l(dst, src, nullptr);
-//    }
-//}
+#if 0
+extern "C" int __cdecl _wcsicmp (
+        const wchar_t * dst,
+        const wchar_t * src
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        wchar_t f,l;
+
+        /* validation section */
+        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
+
+        do  {
+            f = __ascii_towlower(*dst);
+            l = __ascii_towlower(*src);
+            dst++;
+            src++;
+        } while ( (f) && (f == l) );
+        return (int)(f - l);
+    }
+    else
+    {
+        return _wcsicmp_l(dst, src, nullptr);
+    }
+}
+#endif
 

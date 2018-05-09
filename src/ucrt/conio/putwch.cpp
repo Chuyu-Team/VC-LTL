@@ -25,7 +25,7 @@ extern "C" wint_t __cdecl _putwch_nolock(wchar_t const c)
 
     // Write character to console:
     DWORD charsWritten;
-    if (__dcrt_write_console_w(&c, 1, &charsWritten) == FALSE)
+    if (__dcrt_write_console(&c, 1, &charsWritten) == FALSE)
         return WEOF;
 
     return c;

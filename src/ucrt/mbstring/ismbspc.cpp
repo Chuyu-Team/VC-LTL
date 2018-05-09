@@ -55,7 +55,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcspace_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbcspace(unsigned int const c)
-//{
-//    return _ismbcspace_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcspace(unsigned int const c)
+{
+    return _ismbcspace_l(c, nullptr);
+}*/

@@ -86,9 +86,9 @@ extern "C" unsigned int __cdecl _mbctoupper_l_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_mbctoupper_l_downlevel);
 
 #endif
-//unsigned int (__cdecl _mbctoupper)(
-//        unsigned int c
-//        )
-//{
-//    return _mbctoupper_l(c, nullptr);
-//}
+/*unsigned int (__cdecl _mbctoupper)(
+        unsigned int c
+        )
+{
+    return _mbctoupper_l(c, nullptr);
+}*/

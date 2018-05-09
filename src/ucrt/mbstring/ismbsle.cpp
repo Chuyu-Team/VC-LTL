@@ -76,10 +76,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbslead_l_downlevel);
 
 #endif
 
-//extern "C" int (__cdecl _ismbslead)(
-//        const unsigned char *string,
-//        const unsigned char *current
-//        )
-//{
-//        return _ismbslead_l(string, current, nullptr);
-//}
+/*extern "C" int (__cdecl _ismbslead)(
+        const unsigned char *string,
+        const unsigned char *current
+        )
+{
+        return _ismbslead_l(string, current, nullptr);
+}*/

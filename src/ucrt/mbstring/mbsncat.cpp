@@ -107,13 +107,13 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsncat_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsncat)(
-//        unsigned char *dst,
-//        const unsigned char *src,
-//        size_t cnt
-//        )
-//{
-//    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-//    return _mbsncat_l(dst, src, cnt, nullptr);
-//    _END_SECURE_CRT_DEPRECATION_DISABLE
-//}
+/*extern "C" unsigned char * (__cdecl _mbsncat)(
+        unsigned char *dst,
+        const unsigned char *src,
+        size_t cnt
+        )
+{
+    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
+    return _mbsncat_l(dst, src, cnt, nullptr);
+    _END_SECURE_CRT_DEPRECATION_DISABLE
+}*/

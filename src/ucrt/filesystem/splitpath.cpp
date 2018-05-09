@@ -46,13 +46,21 @@ static void __cdecl reset_buffers(
     reset_buffer(components->_extension, components->_extension_count);
 }
 
-static bool __cdecl is_lead_byte(char const c) throw()
+// is_lead_byte helper 
+// these functions are only used to ensure that trailing bytes that might
+// look like slashes or periods aren't misdetected.
+// UTF-8/UTF-16 don't have that problem as trail bytes never look like \ or .
+static bool __cdecl needs_trail_byte(char const c) throw()
 {
+    // UTF-8 is OK here as the caller is really only concerned about trail
+    // bytes that look like . or \ and UTF-8 trail bytes never will.
     return _ismbblead(c) != 0;
 }
 
-static bool __cdecl is_lead_byte(wchar_t) throw()
+static bool __cdecl needs_trail_byte(wchar_t) throw()
 {
+    // UTF-16 is OK here as the caller is really only concerned about trail
+    // characters that look like . or \ and UTF-16 surrogate pairs never will.
     return false;
 }
 
@@ -125,7 +133,8 @@ static errno_t __cdecl common_splitpath_internal(
     Character const* last_dot   = nullptr;
     for (; *p != '\0'; ++p)
     {
-        if (is_lead_byte(*p))
+        // UTF-8 will never look like slashes or periods so this will be OK for UTF-8
+        if (needs_trail_byte(*p))
         {
             // For narrow character strings, skip any multibyte characters to avoid
             // matching trail bytes that "look like" slashes or periods.  This ++p

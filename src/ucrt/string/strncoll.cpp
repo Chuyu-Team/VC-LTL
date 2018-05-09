@@ -86,23 +86,25 @@ _LCRT_DEFINE_IAT_SYMBOL(_strncoll_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _strncoll (
-//        const char *_string1,
-//        const char *_string2,
-//        size_t count
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        /* validation section */
-//        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
-//
-//        return strncmp(_string1, _string2, count);
-//    }
-//    else
-//    {
-//        return _strncoll_l(_string1, _string2, count, nullptr);
-//    }
-//}
+#if 0
+extern "C" int __cdecl _strncoll (
+        const char *_string1,
+        const char *_string2,
+        size_t count
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        /* validation section */
+        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
+
+        return strncmp(_string1, _string2, count);
+    }
+    else
+    {
+        return _strncoll_l(_string1, _string2, count, nullptr);
+    }
+}
+#endif

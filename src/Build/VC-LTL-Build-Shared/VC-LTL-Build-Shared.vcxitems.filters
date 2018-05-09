@@ -408,9 +408,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\errno.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\internal\string_utilities.cpp">
-      <Filter>ucrt</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\misc\invalid_parameter.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>

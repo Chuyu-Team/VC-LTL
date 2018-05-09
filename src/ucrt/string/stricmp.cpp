@@ -36,6 +36,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
+
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl _stricmp_l_downlevel (
         const char * dst,
@@ -92,21 +93,23 @@ extern "C" int __cdecl __ascii_stricmp (
     return(f - l);
 }
 
-//extern "C" int __cdecl _stricmp (
-//        const char * dst,
-//        const char * src
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        /* validation section */
-//        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
-//
-//        return __ascii_stricmp(dst, src);
-//    }
-//    else
-//    {
-//        return _stricmp_l(dst, src, nullptr);
-//    }
-//}
+#if 0
+extern "C" int __cdecl _stricmp (
+        const char * dst,
+        const char * src
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        /* validation section */
+        _VALIDATE_RETURN(dst != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(src != nullptr, EINVAL, _NLSCMPERROR);
+
+        return __ascii_stricmp(dst, src);
+    }
+    else
+    {
+        return _stricmp_l(dst, src, nullptr);
+    }
+}
+#endif

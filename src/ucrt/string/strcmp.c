@@ -4,7 +4,7 @@
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
 *Purpose:
-*       Compares two string, determining their lexical order.
+*       Compares two string, determining their ordinal order.
 *
 *******************************************************************************/
 

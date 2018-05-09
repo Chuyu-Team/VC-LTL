@@ -88,7 +88,7 @@ static Character* create_environment_string(
         }
 
         size_t const buffer_count = traits::tcslen(name) + 1;
-       
+
         __crt_unique_heap_ptr<Character> buffer(_calloc_crt_t(Character, buffer_count));
         if (!buffer)
             return nullptr;
@@ -164,7 +164,7 @@ static int __cdecl common_putenv_nolock(
     ) throw()
 {
     typedef __crt_char_traits<Character> traits;
-    
+
     // Ensure that the environment is initialized:
     if (!_environ_table.value() && !_wenviron_table.value())
         return -1;
@@ -181,8 +181,8 @@ static int __cdecl common_putenv_nolock(
 
     if (traits::set_variable_in_environment_nolock(new_option.detach(), 1) != 0)
         return -1;
-    
-    // See if the "other" environment type exists; if it doesn't, we're done. 
+
+    // See if the "other" environment type exists; if it doesn't, we're done.
     // Otherwise, put the new option into the other environment as well.
     if (!other_environment_exists(Character()))
         return 0;

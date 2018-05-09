@@ -205,11 +205,11 @@ static intptr_t __cdecl execute_command(
 
     _doserrno = 0;
 
-    typename traits::startup_info_type startup_info = { };
+    STARTUPINFOW startup_info = { };
     startup_info.cb          = sizeof(startup_info);
     startup_info.cbReserved2 = static_cast<WORD>(handle_data_size);
     startup_info.lpReserved2 = handle_data.get();
-        
+
     PROCESS_INFORMATION process_info;
     BOOL const create_process_status = traits::create_process(
         const_cast<Character*>(file_name),

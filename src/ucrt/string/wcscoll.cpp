@@ -14,6 +14,7 @@
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
 
+
 /***
 *int wcscoll() - Collate wide-character locale strings
 *
@@ -53,10 +54,10 @@ extern "C" int __cdecl _wcscoll_l_downlevel (
 
 	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
 
-    if (_lc_collate==0)
+    if (_lc_collate == 0)
         return (wcscmp(_string1, _string2));
 
-    if ( 0 == (ret = __crtCompareStringW(
+    if ( 0 == (ret = __acrt_CompareStringW(
                     _lc_collate,
                     SORT_STRINGSORT,
                     _string1,
@@ -76,21 +77,23 @@ _LCRT_DEFINE_IAT_SYMBOL(_wcscoll_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl wcscoll (
-//        const wchar_t *_string1,
-//        const wchar_t *_string2
-//        )
-//{
-//    if (!__acrt_locale_changed())
-//    {
-//        /* validation section */
-//        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
-//        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
-//
-//        return (wcscmp(_string1, _string2));
-//    }
-//    else
-//    {
-//        return _wcscoll_l(_string1, _string2, nullptr);
-//    }
-//}
+#if 0
+extern "C" int __cdecl wcscoll (
+        const wchar_t *_string1,
+        const wchar_t *_string2
+        )
+{
+    if (!__acrt_locale_changed())
+    {
+        /* validation section */
+        _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
+
+        return (wcscmp(_string1, _string2));
+    }
+    else
+    {
+        return _wcscoll_l(_string1, _string2, nullptr);
+    }
+}
+#endif

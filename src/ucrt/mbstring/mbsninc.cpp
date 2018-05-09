@@ -37,7 +37,6 @@
 *******************************************************************************/
 
 #ifdef _ATL_XP_TARGETING
-
 extern "C" unsigned char * __cdecl _mbsninc_l_downlevel(
         const unsigned char *string,
         size_t ccnt,
@@ -54,10 +53,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsninc_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsninc)(
-//        const unsigned char *string,
-//        size_t ccnt
-//        )
-//{
-//    return _mbsninc_l(string, ccnt, nullptr);
-//}
+/*extern "C" unsigned char * (__cdecl _mbsninc)(
+        const unsigned char *string,
+        size_t ccnt
+        )
+{
+    return _mbsninc_l(string, ccnt, nullptr);
+}*/

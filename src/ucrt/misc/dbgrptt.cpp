@@ -660,7 +660,7 @@ int __cdecl _VCrtDbgReportW
 
         if (_CrtDbgMode[nRptType] & _CRTDBG_MODE_DEBUG)
         {
-            __acrt_OutputDebugStringW(szOutMessage);
+            ::OutputDebugStringW(szOutMessage);
         }
 
         if (_CrtDbgMode[nRptType] & _CRTDBG_MODE_WNDW)

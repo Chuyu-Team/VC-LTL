@@ -36,6 +36,7 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
+
 #ifdef _ATL_XP_TARGETING
 extern "C" unsigned char * __cdecl _mbsdec_l_downlevel(
         const unsigned char *string,
@@ -108,10 +109,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsdec_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsdec)(
-//        const unsigned char *string,
-//        const unsigned char *current
-//        )
-//{
-//    return _mbsdec_l(string, current, nullptr);
-//}
+/*extern "C" unsigned char * (__cdecl _mbsdec)(
+        const unsigned char *string,
+        const unsigned char *current
+        )
+{
+    return _mbsdec_l(string, current, nullptr);
+}*/

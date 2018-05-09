@@ -7,7 +7,7 @@
 *       Convert a wide character into the equivalent multibyte character.
 *
 *******************************************************************************/
-#include <corecrt_internal.h>
+#include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
 #include <wchar.h>
 #include <stdlib.h>
@@ -17,6 +17,8 @@
 #include <locale.h>
 #include "..\..\winapi_thunks.h"
 #include <msvcrt_IAT.h>
+
+using namespace __crt_mbstring;
 
 /***
 *errno_t _wcrtomb_s_l() - Helper function to convert wide character to multibyte character.
@@ -68,8 +70,9 @@ static errno_t __cdecl _wcrtomb_s_l(
     //_LocaleUpdate locale_update(locale);
 
     _ASSERTE(
-		locale._locale_mb_cur_max == 1 ||
-		locale._locale_mb_cur_max == 2);
+        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 1 ||
+        locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 2 ||
+        locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage == CP_UTF8);
 
     if (state)
         state->_Wchar = 0;
@@ -92,7 +95,7 @@ static errno_t __cdecl _wcrtomb_s_l(
     }
 
     BOOL default_used{};
-    int const size = WideCharToMultiByte(
+    int const size = __acrt_WideCharToMultiByte(
         locale._locale_lc_codepage,
         0,
         &wchar,
@@ -209,12 +212,18 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     /* validation section */
     _VALIDATE_RETURN(source != nullptr, EINVAL, (size_t)-1);
 
+    //_LocaleUpdate locale_update(nullptr);
+	wcrtomb_locale_t_hepler _locale_t_hepler;
+
+    if (_locale_t_hepler._locale_lc_codepage == CP_UTF8)
+    {
+        return __wcsrtombs_utf8(destination, source, n, state);
+    }
+
     char buf[MB_LEN_MAX];
     int i = 0;
     size_t nc = 0;
     wchar_t const* wcs = *source;
-    //_LocaleUpdate locale_update(nullptr);
-	wcrtomb_locale_t_hepler _locale_t_hepler;
 
     if (!destination)
     {
@@ -384,7 +393,6 @@ _LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_s_downlevel);
 
 #endif
 
-
 // Converts a wide character into a one-byte character
 #ifdef _ATL_XP_TARGETING
 extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
@@ -395,7 +403,8 @@ extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
     int  return_value = -1;
     char local_buffer[MB_LEN_MAX];
 
-    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, nullptr, wcrtomb_locale_t_hepler());
+    mbstate_t state{};
+    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, &state, wcrtomb_locale_t_hepler());
     if (e == 0 && return_value == 1)
         return local_buffer[0];
 
@@ -405,3 +414,99 @@ extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
 _LCRT_DEFINE_IAT_SYMBOL(wctob_downlevel);
 
 #endif
+
+size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, size_t len, mbstate_t* ps)
+{
+    const wchar_t* current_src = *src;
+    char buf[MB_LEN_MAX];
+
+    if (dst != nullptr)
+    {
+        char* current_dest = dst;
+
+        // Wide chars are actually UTF-16, so a code point might take 2 input units (a surrogate pair)
+        // In case of a failure, keep track of where the current code point began, which might be the previous
+        // wchar for a surrogate pair
+        const wchar_t* start_of_code_point = current_src;
+        for (;;)
+        {
+            // If we don't have at least 4 MB_CUR_LEN bytes available in the buffer
+            // the next char isn't guaranteed to fit, so put it into a temp buffer
+            char* temp;
+            if (len < 4)
+            {
+                temp = buf;
+            }
+            else
+            {
+                temp = current_dest;
+            }
+            const size_t retval = __c16rtomb_utf8(temp, *current_src, ps);
+
+            if (retval == __crt_mbstring::INVALID)
+            {
+                // Set src to the beginning of the invalid char
+                // If this was the second half of a surrogate pair, return the beginning of the surrogate pair
+                *src = start_of_code_point;
+                return retval;
+            }
+
+            if (temp == current_dest)
+            {
+                // We wrote in-place. Nothing to do.
+            }
+            else if (len < retval)
+            {
+                // Won't fit, so bail out
+                // If this was the second half of a surrogate pair, make sure we return that location
+                current_src = start_of_code_point;
+                break;
+            }
+            else
+            {
+                // Will fit in remaining buffer, so let's copy it over
+                memcpy(current_dest, temp, retval);
+            }
+
+            if (retval > 0 && current_dest[retval - 1] == '\0')
+            {
+                // Reached null terminator, so break out, but don't count that last terminating byte
+                current_src = nullptr;
+                current_dest += retval - 1;
+                break;
+            }
+
+            ++current_src;
+            if (retval > 0)
+            {
+                start_of_code_point = current_src;
+            }
+
+            len -= retval;
+            current_dest += retval;
+        }
+        *src = current_src;
+        return current_dest - dst;
+    }
+    else
+    {
+        size_t total_count = 0;
+        for (;;)
+        {
+            const size_t retval = __c16rtomb_utf8(buf, *current_src, ps);
+            if (retval == __crt_mbstring::INVALID)
+            {
+                return retval;
+            }
+            else if (retval > 0 && buf[retval - 1] == '\0')
+            {
+                // Hit null terminator. Don't count it in the return value.
+                total_count += retval - 1;
+                break;
+            }
+            total_count += retval;
+            ++current_src;
+        }
+        return total_count;
+    }
+}

@@ -7,10 +7,13 @@
 *       Convert a multibyte character into the equivalent wide character.
 *
 *******************************************************************************/
-#include <corecrt_internal.h>
+#include <corecrt_internal_mbstring.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <wchar.h>
 #include <msvcrt_IAT.h>
+
+using namespace __crt_mbstring;
 
 /***
 *int mbtowc() - Convert multibyte char to wide character.
@@ -50,10 +53,14 @@ extern "C" int __cdecl _mbtowc_l_downlevel(
 	if (!plocinfo)
 		return mbtowc(pwc, s, n);
 
+    static mbstate_t internal_state{};
     if (!s || n == 0)
+    {
         /* indicate do not have state-dependent encodings,
         handle zero length string */
+        internal_state = {};
         return 0;
+    }
 
     if (!*s)
     {
@@ -65,7 +72,17 @@ extern "C" int __cdecl _mbtowc_l_downlevel(
 
 
     //_LocaleUpdate _loc_update(plocinfo);
-    _ASSERTE(plocinfo->locinfo->_locale_mb_cur_max == 1 || plocinfo->locinfo->_locale_mb_cur_max == 2);
+
+    if (plocinfo->locinfo->_locale_lc_codepage == CP_UTF8)
+    {
+        int result = static_cast<int>(__mbrtowc_utf8(pwc, s, n, &internal_state));
+        if (result < 0)
+            result = -1;
+        return result;
+    }
+
+    _ASSERTE(_loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 1 ||
+             _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 2);
 
     if (plocinfo->locinfo->lc_handle[LC_CTYPE] == 0)
     {
@@ -76,10 +93,14 @@ extern "C" int __cdecl _mbtowc_l_downlevel(
 
     if (_isleadbyte_l((unsigned char) *s, plocinfo))
     {
+        _ASSERTE(_loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage != CP_UTF8 && L"UTF-8 isn't supported in this _mbtowc_l function yet!!!");
+
         /* multi-byte char */
+        // If this is a lead byte, then the codepage better be a multibyte codepage
+        _ASSERTE(_loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max > 1);
 
         if ((plocinfo->locinfo->_locale_mb_cur_max <= 1) || ((int) n < plocinfo->locinfo->_locale_mb_cur_max) ||
-            (MultiByteToWideChar(plocinfo->locinfo->_locale_lc_codepage,
+            (__acrt_MultiByteToWideChar(plocinfo->locinfo->_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             plocinfo->locinfo->_locale_mb_cur_max,
@@ -97,7 +118,7 @@ extern "C" int __cdecl _mbtowc_l_downlevel(
     }
     else {
         /* single byte char */
-        if (MultiByteToWideChar(plocinfo->locinfo->_locale_lc_codepage,
+        if (__acrt_MultiByteToWideChar(plocinfo->locinfo->_locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             1,
@@ -117,11 +138,11 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbtowc_l_downlevel);
 #endif
 
 
-//extern "C" int __cdecl mbtowc(
-//    wchar_t  *pwc,
-//    const char *s,
-//    size_t n
-//    )
-//{
-//    return _mbtowc_l(pwc, s, n, nullptr);
-//}
+/*extern "C" int __cdecl mbtowc(
+    wchar_t  *pwc,
+    const char *s,
+    size_t n
+    )
+{
+    return _mbtowc_l(pwc, s, n, nullptr);
+}*/

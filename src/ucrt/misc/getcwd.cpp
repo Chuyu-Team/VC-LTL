@@ -12,6 +12,7 @@
 *
 *******************************************************************************/
 #include <corecrt_internal.h>
+#include <corecrt_internal_win32_buffer.h>
 #include <direct.h>
 #include <errno.h>
 #include <malloc.h>
@@ -106,100 +107,23 @@ static int __cdecl is_valid_drive(unsigned const drive_number) throw()
 *Exceptions:
 *
 *******************************************************************************/
-__success(return != 0 && return < max_count)
-static unsigned __cdecl get_full_path_name(
-    _Out_writes_opt_z_(max_count) char* const   buffer,
-    _In_z_ char const*                  const   path,
-    unsigned                            const   max_count
+
+template <typename Character, typename DynamicResizingPolicy>
+_Success_(return)
+static bool __cdecl common_getdcwd_impl(
+    Character const * const                               path,
+    __crt_win32_buffer<Character, DynamicResizingPolicy>& buffer
     ) throw()
 {
-    return GetFullPathNameA(path, max_count, buffer, nullptr);
-}
+    errno_t const err = __acrt_get_full_path_name_cp(path, buffer, __acrt_get_utf8_acp_compatibility_codepage());
 
-__success(return != 0 && return < max_count)
-static unsigned __cdecl get_full_path_name(
-    _Out_writes_opt_z_(max_count) wchar_t*  const   buffer,
-    _In_z_ wchar_t const*                   const   path,
-    unsigned                                const   max_count
-    ) throw()
-{
-    return GetFullPathNameW(path, max_count, buffer, nullptr);
-}
-
-template <typename Character>
-_Success_(return != 0)
-_Ret_z_
-static Character* __cdecl common_getdcwd_user_buffer(
-    _In_z_ Character*                       const   drive_string,
-    _Out_writes_z_(buffer_count) Character* const   buffer,
-    unsigned                                const   buffer_count
-    ) throw()
-{
-    _VALIDATE_RETURN(buffer_count > 0, EINVAL, nullptr);
-
-    unsigned const path_count = get_full_path_name(buffer, drive_string, buffer_count);
-    if (path_count >= buffer_count)
-    {
-        errno = ERANGE;
-        return nullptr;
+    if (err != 0) {
+        // Appropriate error already set.
+        return false;
     }
 
-    if (path_count == 0)
-    {
-        __acrt_errno_map_os_error(GetLastError());
-        return nullptr;
-    }
-
-    return buffer;
+    return true;
 }
-
-template <typename Character>
-_Success_(return != 0)
-_Ret_z_
-static Character* __cdecl common_getdcwd_dynamic_buffer(
-    _In_z_ Character*      const drive_string,
-    unsigned               const max_count,
-    int                    const block_use,
-    _In_opt_z_ char const* const file_name,
-    int                    const line_number
-    ) throw()
-{
-    // These are referenced only in the Debug CRT build
-    UNREFERENCED_PARAMETER(block_use);
-    UNREFERENCED_PARAMETER(file_name);
-    UNREFERENCED_PARAMETER(line_number);
-
-    unsigned const required_count = get_full_path_name(nullptr, drive_string, 0);
-    if (required_count == 0)
-    {
-        __acrt_errno_map_os_error(GetLastError());
-        return nullptr;
-    }
-
-    unsigned const actual_count = __max(max_count, required_count);
-
-    __crt_unique_heap_ptr<Character, __crt_public_free_policy> buffer(
-        static_cast<Character*>(_calloc_dbg(
-            actual_count,
-            sizeof(Character),
-            block_use,
-            file_name,
-            line_number)));
-
-    if (buffer.get() == nullptr)
-    {
-        _doserrno = ERROR_NOT_ENOUGH_MEMORY;
-        errno = ENOMEM;
-        return nullptr;
-    }
-
-    Character* const result = common_getdcwd_user_buffer(drive_string, buffer.get(), actual_count);
-    if (result == nullptr)
-        return nullptr;
-
-    return buffer.detach();
-}
-
 
 template <typename Character>
 _Success_(return != 0)
@@ -246,14 +170,29 @@ static Character* __cdecl common_getdcwd(
     }
 
     if (user_buffer != nullptr)
-    {
+    {   // Using user buffer. Fail if not enough space.
         _VALIDATE_RETURN(max_count > 0, EINVAL, nullptr);
         user_buffer[0] = '\0';
-        return common_getdcwd_user_buffer(drive_string, user_buffer, static_cast<unsigned>(max_count));
-    }
 
-    return common_getdcwd_dynamic_buffer(drive_string, static_cast<unsigned>(max_count), block_use, file_name, line_number);
-}
+        __crt_no_alloc_win32_buffer<Character> buffer(user_buffer, max_count);
+        if (common_getdcwd_impl(drive_string, buffer))
+        {
+            return user_buffer;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    else
+    {   // Always new memory suitable for debug mode and releasing to the user.
+        __crt_public_win32_buffer<Character> buffer(
+            __crt_win32_buffer_debug_info(block_use, file_name, line_number)
+            );
+        common_getdcwd_impl(drive_string, buffer);
+        return buffer.detach();
+    }
+};
 
 
 

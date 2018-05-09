@@ -79,7 +79,7 @@ extern "C" errno_t __cdecl _cgetws_s(wchar_t* const string_buffer, size_t const 
         __dcrt_set_input_console_mode(ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT | ENABLE_ECHO_INPUT);
 
         ULONG wchars_read;
-        BOOL read_console_result = __dcrt_read_console_w(
+        BOOL read_console_result = __dcrt_read_console(
             string,
             static_cast<DWORD>(size_remaining),
             &wchars_read);

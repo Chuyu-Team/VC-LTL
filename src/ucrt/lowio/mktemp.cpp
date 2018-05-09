@@ -116,7 +116,6 @@ static errno_t __cdecl common_mktemp_s(
     return 0;
 }
 
-#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _mktemp_s(
     char*  const template_string,
     size_t const buffer_size_in_chars
@@ -124,9 +123,7 @@ extern "C" errno_t __cdecl _mktemp_s(
 {
     return common_mktemp_s(template_string, buffer_size_in_chars);
 }
-#endif
 
-#ifdef _ATL_XP_TARGETING
 extern "C" errno_t __cdecl _wmktemp_s(
     wchar_t* const template_string,
     size_t   const buffer_size_in_chars
@@ -134,7 +131,6 @@ extern "C" errno_t __cdecl _wmktemp_s(
 {
     return common_mktemp_s(template_string, buffer_size_in_chars);
 }
-#endif
 
 
 
@@ -145,28 +141,28 @@ extern "C" errno_t __cdecl _wmktemp_s(
 // On success, returns the pointer to the modified template string.  On failure,
 // nullptr is returned (e.g. if the template string is malformed or there are no
 // more unique names).
-//template <typename Character>
-//static Character* __cdecl common_mktemp(
-//    Character* const template_string
-//    ) throw()
-//{
-//    typedef __crt_char_traits<Character> traits;
-//
-//    _VALIDATE_RETURN(template_string != nullptr, EINVAL, nullptr);
-//
-//    errno_t const result = common_mktemp_s(
-//        template_string,
-//        static_cast<size_t>(traits::tcslen(template_string) + 1));
-//
-//    return result == 0 ? template_string : nullptr;
-//}
+template <typename Character>
+static Character* __cdecl common_mktemp(
+    Character* const template_string
+    ) throw()
+{
+    typedef __crt_char_traits<Character> traits;
 
-//extern "C" char* __cdecl _mktemp(char* const template_string)
-//{
-//    return common_mktemp(template_string);
-//}
+    _VALIDATE_RETURN(template_string != nullptr, EINVAL, nullptr);
 
-//extern "C" wchar_t* __cdecl _wmktemp(wchar_t* const template_string)
-//{
-//    return common_mktemp(template_string);
-//}
+    errno_t const result = common_mktemp_s(
+        template_string,
+        static_cast<size_t>(traits::tcslen(template_string) + 1));
+
+    return result == 0 ? template_string : nullptr;
+}
+
+extern "C" char* __cdecl _mktemp(char* const template_string)
+{
+    return common_mktemp(template_string);
+}
+
+extern "C" wchar_t* __cdecl _wmktemp(wchar_t* const template_string)
+{
+    return common_mktemp(template_string);
+}

@@ -41,7 +41,7 @@ extern "C" int __cdecl _cputws(wchar_t const* string)
                 : static_cast<DWORD>(length);
 
             DWORD wchars_written;
-            if (__dcrt_write_console_w(
+            if (__dcrt_write_console(
                 string,
                 wchars_to_write,
                 &wchars_written) == FALSE)

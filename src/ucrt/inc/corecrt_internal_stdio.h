@@ -124,15 +124,15 @@ struct __crt_stdio_stream_data : public FILE
 };
 
 // Ensure that __crt_stdio_stream_data* and FILE* pointers are freely convertible:
-//static_assert(
-//    offsetof(__crt_stdio_stream_data, _public_file) == 0,
-//    "FILE member of __crt_stdio_stream_data is not at offset zero."
-//    );
+/*static_assert(
+    offsetof(__crt_stdio_stream_data, _public_file) == 0,
+    "FILE member of __crt_stdio_stream_data is not at offset zero."
+    );
 
-//static_assert(
-//    sizeof(FILE) == sizeof(void*),
-//    "FILE structure has unexpected size."
-//    );
+static_assert(
+    sizeof(FILE) == sizeof(void*),
+    "FILE structure has unexpected size."
+    );*/
 
 
 class __crt_stdio_stream
@@ -260,9 +260,9 @@ extern "C" _ACRTIMP extern __crt_stdio_stream_data** __piob;
 // __acrt_stdio_is_initialized cannot be with the rest of
 // stdio initialization logic since referencing those symbols
 // pulls in the stdio initializers.
-//inline bool __acrt_stdio_is_initialized() {
-//    return __piob != 0;
-//}
+/*inline bool __acrt_stdio_is_initialized() {
+    return __piob != 0;
+}*/
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //
@@ -464,13 +464,15 @@ struct __acrt_stdio_stream_mode
 // They handle individual parts of the parsing.
 inline bool __acrt_stdio_parse_mode_plus(__acrt_stdio_stream_mode& result, bool& seen_plus) throw()
 {
-    if (seen_plus)
+    if (seen_plus) {
         return false;
+    }
 
     seen_plus = true;
 
-    if (result._lowio_mode & _O_RDWR)
+    if (result._lowio_mode & _O_RDWR) {
         return false;
+    }
 
     result._lowio_mode |= _O_RDWR;
     result._lowio_mode &= ~(_O_RDONLY | _O_WRONLY);
@@ -481,8 +483,9 @@ inline bool __acrt_stdio_parse_mode_plus(__acrt_stdio_stream_mode& result, bool&
 
 inline bool __acrt_stdio_parse_mode_b(__acrt_stdio_stream_mode& result) throw()
 {
-    if (result._lowio_mode & (_O_TEXT | _O_BINARY))
+    if (result._lowio_mode & (_O_TEXT | _O_BINARY)) {
         return false;
+    }
 
     result._lowio_mode |= _O_BINARY;
     return true;
@@ -490,8 +493,9 @@ inline bool __acrt_stdio_parse_mode_b(__acrt_stdio_stream_mode& result) throw()
 
 inline bool __acrt_stdio_parse_mode_t(__acrt_stdio_stream_mode& result) throw()
 {
-    if (result._lowio_mode & (_O_TEXT | _O_BINARY))
+    if (result._lowio_mode & (_O_TEXT | _O_BINARY)) {
         return false;
+    }
 
     result._lowio_mode |= _O_TEXT;
     return true;
@@ -499,8 +503,9 @@ inline bool __acrt_stdio_parse_mode_t(__acrt_stdio_stream_mode& result) throw()
 
 inline bool __acrt_stdio_parse_mode_c(__acrt_stdio_stream_mode& result, bool& seen_commit_mode) throw()
 {
-    if (seen_commit_mode)
+    if (seen_commit_mode) {
         return false;
+    }
 
     seen_commit_mode = true;
     result._stdio_mode |= _IOCOMMIT;
@@ -509,8 +514,9 @@ inline bool __acrt_stdio_parse_mode_c(__acrt_stdio_stream_mode& result, bool& se
 
 inline bool __acrt_stdio_parse_mode_n(__acrt_stdio_stream_mode& result, bool& seen_commit_mode) throw()
 {
-    if (seen_commit_mode)
+    if (seen_commit_mode) {
         return false;
+    }
 
     seen_commit_mode = true;
     result._stdio_mode &= ~_IOCOMMIT;
@@ -519,8 +525,9 @@ inline bool __acrt_stdio_parse_mode_n(__acrt_stdio_stream_mode& result, bool& se
 
 inline bool __acrt_stdio_parse_mode_S(__acrt_stdio_stream_mode& result, bool& seen_scan_mode) throw()
 {
-    if (seen_scan_mode)
+    if (seen_scan_mode) {
         return false;
+    }
 
     seen_scan_mode = true;
     result._lowio_mode |= _O_SEQUENTIAL;
@@ -529,8 +536,9 @@ inline bool __acrt_stdio_parse_mode_S(__acrt_stdio_stream_mode& result, bool& se
 
 inline bool __acrt_stdio_parse_mode_R(__acrt_stdio_stream_mode& result, bool& seen_scan_mode) throw()
 {
-    if (seen_scan_mode)
+    if (seen_scan_mode) {
         return false;
+    }
 
     seen_scan_mode = true;
     result._lowio_mode |= _O_RANDOM;
@@ -539,8 +547,9 @@ inline bool __acrt_stdio_parse_mode_R(__acrt_stdio_stream_mode& result, bool& se
 
 inline bool __acrt_stdio_parse_mode_T(__acrt_stdio_stream_mode& result) throw()
 {
-    if (result._lowio_mode & _O_SHORT_LIVED)
+    if (result._lowio_mode & _O_SHORT_LIVED) {
         return false;
+    }
 
     result._lowio_mode |= _O_SHORT_LIVED;
     return true;
@@ -548,8 +557,9 @@ inline bool __acrt_stdio_parse_mode_T(__acrt_stdio_stream_mode& result) throw()
 
 inline bool __acrt_stdio_parse_mode_D(__acrt_stdio_stream_mode& result) throw()
 {
-    if (result._lowio_mode & _O_TEMPORARY)
+    if (result._lowio_mode & _O_TEMPORARY) {
         return false;
+    }
 
     result._lowio_mode |= _O_TEMPORARY;
     return true;
@@ -558,6 +568,17 @@ inline bool __acrt_stdio_parse_mode_D(__acrt_stdio_stream_mode& result) throw()
 inline bool __acrt_stdio_parse_mode_N(__acrt_stdio_stream_mode& result) throw()
 {
     result._lowio_mode |= _O_NOINHERIT;
+    return true;
+}
+
+inline bool __acrt_stdio_parse_mode_x(__acrt_stdio_stream_mode& result) throw()
+{
+    if (!(result._lowio_mode & _O_TRUNC)) {
+        // 'x' only permitted with 'w'
+        return false;
+    }
+
+    result._lowio_mode |= _O_EXCL;
     return true;
 }
 
@@ -616,6 +637,7 @@ __acrt_stdio_stream_mode __cdecl __acrt_stdio_parse_mode(
     // [5] 'T' (indicating the file is short-lived)
     // [6] 'D' (indicating the file is temporary)
     // [7] 'N' (indicating the file should not be inherited by child processes)
+    // [8] 'x' (indicating the file must be created and it is an error if it already exists)
     bool seen_commit_mode   = false;
     bool seen_plus          = false;
     bool seen_scan_mode     = false;
@@ -634,6 +656,7 @@ __acrt_stdio_stream_mode __cdecl __acrt_stdio_parse_mode(
         case 'T': continue_loop = __acrt_stdio_parse_mode_T   (result);                   break;
         case 'D': continue_loop = __acrt_stdio_parse_mode_D   (result);                   break;
         case 'N': continue_loop = __acrt_stdio_parse_mode_N   (result);                   break;
+        case 'x': continue_loop = __acrt_stdio_parse_mode_x   (result);                   break;
 
         // If we encounter any spaces, skip them:
         case ' ':

@@ -46,7 +46,7 @@ static wchar_t const* __cdecl find_end_of_double_null_terminated_sequence(wchar_
 
     return last + 1; // Return the pointer one-past-the-end of the double null terminator
 }
- 
+
 
 
 extern "C" wchar_t* __cdecl __dcrt_get_wide_environment_from_os() throw()
@@ -55,7 +55,7 @@ extern "C" wchar_t* __cdecl __dcrt_get_wide_environment_from_os() throw()
     if (!environment)
         return nullptr;
 
-    // Find the 
+    // Find the
     wchar_t const* const first = environment.get();
     wchar_t const* const last = find_end_of_double_null_terminated_sequence(first);
 
@@ -86,7 +86,7 @@ extern "C" char* __cdecl __dcrt_get_narrow_environment_from_os() throw()
 
     size_t const required_wide_count = last - first;
 #pragma warning(suppress:__WARNING_W2A_BEST_FIT) // 38021 Prefast recommends WC_NO_BEST_FIT_CHARS.
-    size_t const required_narrow_count = static_cast<size_t>(WideCharToMultiByte(
+    size_t const required_narrow_count = static_cast<size_t>(__acrt_WideCharToMultiByte(
         CP_ACP,
         0,
         environment.get(),
@@ -104,7 +104,7 @@ extern "C" char* __cdecl __dcrt_get_narrow_environment_from_os() throw()
         return nullptr;
 
 #pragma warning(suppress:__WARNING_W2A_BEST_FIT) // 38021 Prefast recommends WC_NO_BEST_FIT_CHARS.
-    int const conversion_result = WideCharToMultiByte(
+    int const conversion_result = __acrt_WideCharToMultiByte(
         CP_ACP,
         0,
         environment.get(),

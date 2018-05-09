@@ -8,6 +8,7 @@
 //
 #include <conio.h>
 #include <corecrt_internal_lowio.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -181,9 +182,52 @@ static NormKeyVals const NormalKeys[] =
     { /* 88 */ { 224, 134 }, { 224, 136 }, { 224, 138 }, { 224, 140 } }
 };
 
+// The primary purpose of the pushback buffer is so that if a
+// multi-byte character or extended key code is read, we can return
+// the first byte and store the rest of the data in the buffer for
+// subsequent calls. UTF-8 characters can be up to 4 bytes long, so
+// the pushback buffer must be able to store the 3 remaining bytes.
+size_t const getch_pushback_buffer_capacity = 3;
 
+static int getch_pushback_buffer[getch_pushback_buffer_capacity];
+static int getch_pushback_buffer_index = 0;
+static int getch_pushback_buffer_current_size = 0;
 
-static int chbuf = EOF; // Push-back buffer
+static bool is_getch_pushback_buffer_full()
+{
+    return getch_pushback_buffer_current_size >= getch_pushback_buffer_capacity;
+}
+
+static void add_to_getch_pushback_buffer(int const c)
+{
+    _ASSERTE(!is_getch_pushback_buffer_full());
+    getch_pushback_buffer[getch_pushback_buffer_current_size++] = c;
+}
+
+static int peek_next_getch_pushback_buffer()
+{
+    if (getch_pushback_buffer_current_size == 0) {
+        return EOF;
+    }
+
+    return getch_pushback_buffer[getch_pushback_buffer_index];
+}
+
+static int get_next_getch_pushback_buffer()
+{
+    if (getch_pushback_buffer_current_size == 0) {
+        return EOF;
+    }
+
+    int const ret_val = getch_pushback_buffer[getch_pushback_buffer_index++];
+
+    if (getch_pushback_buffer_index == getch_pushback_buffer_current_size) {
+        getch_pushback_buffer_index = 0;
+        getch_pushback_buffer_current_size = 0;
+    }
+
+    return ret_val;
+}
 
 extern "C" extern intptr_t __dcrt_lowio_console_input_handle;
 
@@ -231,15 +275,15 @@ extern "C" int __cdecl _getche()
 extern "C" int __cdecl _getch_nolock()
 {
     // Check the pushback buffer for a character.  If one is present, return it:
-    if (chbuf != EOF)
+    int const pushback = get_next_getch_pushback_buffer();
+    if (pushback != EOF)
     {
-        int const c = static_cast<unsigned char>(chbuf & 0xff);
-        chbuf = EOF;
-        return c;
+        return pushback;
     }
 
-    if (__dcrt_lowio_ensure_console_input_initialized() == FALSE)
+    if (__dcrt_lowio_ensure_console_input_initialized() == FALSE) {
         return EOF;
+    }
 
     // Switch console to raw mode:
     DWORD old_console_mode;
@@ -255,6 +299,7 @@ extern "C" int __cdecl _getch_nolock()
             // Get a console input event:
             INPUT_RECORD input_record;
             DWORD num_read;
+
             if (__dcrt_read_console_input(&input_record, 1, &num_read) == FALSE || num_read == 0)
             {
                 result = EOF;
@@ -264,11 +309,29 @@ extern "C" int __cdecl _getch_nolock()
             // Look for, and decipher, key events.
             if (input_record.EventType == KEY_EVENT && input_record.Event.KeyEvent.bKeyDown)
             {
-                // Easy case:  if UnicodeChar is non-zero, we can just return it:
-                unsigned char const c = static_cast<unsigned char>(input_record.Event.KeyEvent.uChar.AsciiChar);
+                // Simple case:  if UnicodeChar is non-zero, we can convert it to char and return it.
+                wchar_t const c = input_record.Event.KeyEvent.uChar.UnicodeChar;
                 if (c != 0)
                 {
-                    result = c;
+                    wchar_t const c_buffer[2] = {c, L'\0'};
+                    char mb_chars[4];
+
+                    size_t const amount_written = __acrt_wcs_to_mbs_cp_array(
+                        c_buffer,
+                        mb_chars,
+                        GetConsoleCP()
+                        );
+
+                    // Mask with 0xFF to just get lowest byte
+                    if (amount_written >= 1) {
+                        result = mb_chars[0] & 0xFF;
+                    }
+
+                    if (amount_written >= 2) {
+                        for (size_t i = 1; i < amount_written; ++i) {
+                            add_to_getch_pushback_buffer(mb_chars[i] & 0xFF);
+                        }
+                    }
                     __leave;
                 }
 
@@ -277,8 +340,9 @@ extern "C" int __cdecl _getch_nolock()
                 CharPair const* const cp = _getextendedkeycode(&input_record.Event.KeyEvent);
                 if (cp != nullptr)
                 {
-                    chbuf = cp->SecondChar;
-                    result = cp->LeadChar;
+                    // Mask with 0xFF to just get lowest byte
+                    add_to_getch_pushback_buffer(cp->SecondChar & 0xFF);
+                    result = cp->LeadChar & 0xFF;
                     __leave;
                 }
             }
@@ -298,11 +362,10 @@ extern "C" int __cdecl _getche_nolock()
 {
     // Check the pushback buffer for a character.  If one is present, return
     // it without echoing:
-    if (chbuf != EOF)
+    int const pushback = get_next_getch_pushback_buffer();
+    if (pushback != EOF)
     {
-        int const c = static_cast<unsigned char>(chbuf & 0xff);
-        chbuf = EOF;
-        return c;
+        return pushback;
     }
 
     // Otherwise, read the next character from the console and echo it:
@@ -339,30 +402,38 @@ extern "C" int __cdecl _kbhit()
 extern "C" int __cdecl _kbhit_nolock()
 {
     // If a character has been pushed back, return TRUE:
-    if (chbuf != -1)
+    if (peek_next_getch_pushback_buffer() != EOF) {
         return TRUE;
+    }
 
-    if (__dcrt_lowio_ensure_console_input_initialized() == FALSE)
+    if (__dcrt_lowio_ensure_console_input_initialized() == FALSE) {
         return FALSE;
+    }
 
     // Peek at all pending console events:
     DWORD num_pending;
-    if (__dcrt_get_number_of_console_input_events(&num_pending) == FALSE)
+    if (__dcrt_get_number_of_console_input_events(&num_pending) == FALSE) {
         return FALSE;
+    }
 
-    if (num_pending == 0)
+    if (num_pending == 0) {
         return FALSE;
+    }
 
     __crt_scoped_stack_ptr<INPUT_RECORD> const input_buffer(_malloca_crt_t(INPUT_RECORD, num_pending));
-    if (input_buffer.get() == nullptr)
+    if (input_buffer.get() == nullptr) {
         return FALSE;
+    }
 
     DWORD num_peeked;
-    if (__dcrt_peek_console_input(input_buffer.get(), num_pending, &num_peeked) == FALSE)
+    // AsciiChar is not read, so using the narrow Win32 API is permitted.
+    if (__dcrt_peek_console_input_a(input_buffer.get(), num_pending, &num_peeked) == FALSE) {
         return FALSE;
+    }
 
-    if (num_peeked == 0 || num_peeked > num_pending)
+    if (num_peeked == 0 || num_peeked > num_pending) {
         return FALSE;
+    }
 
     // Scan all of the peeked events to determine if any is a key event
     // that should be recognized:
@@ -409,11 +480,12 @@ extern "C" int __cdecl _ungetch(int const c)
 extern "C" int __cdecl _ungetch_nolock(int const c)
 {
     // Fail if the character is EOF or the pusback buffer is nonempty:
-    if (c == EOF || chbuf != EOF)
+    if (c == EOF || is_getch_pushback_buffer_full()) {
         return EOF;
+    }
 
-    chbuf = (c & 0xFF);
-    return chbuf;
+    add_to_getch_pushback_buffer(c);
+    return c;
 }
 
 
@@ -488,7 +560,9 @@ extern "C" CharPair const* __cdecl _getextendedkeycode(KEY_EVENT_RECORD* const p
         // Make sure it wasn't a keyboard event which should not be recognized
         // (e.g. the shift key was pressed):
         if ((pCP->LeadChar != 0 && pCP->LeadChar != 224) || pCP->SecondChar == 0)
+        {
             return nullptr;
+        }
 
         return pCP;
     }

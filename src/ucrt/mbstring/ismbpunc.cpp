@@ -56,10 +56,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcpunct_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbcpunct(unsigned int const c)
-//{
-//    return _ismbcpunct_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcpunct(unsigned int const c)
+{
+    return _ismbcpunct_l(c, nullptr);
+}*/
 
 /***
 * _ismbcblank - Test if character is blank (MBCS)

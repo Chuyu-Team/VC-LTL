@@ -51,7 +51,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbctohira_l_downlevel);
 
 #endif
 
-//extern "C" unsigned int __cdecl _mbctohira(unsigned int c)
-//{
-//    return _mbctohira_l(c, nullptr);
-//}
+/*extern "C" unsigned int __cdecl _mbctohira(unsigned int c)
+{
+    return _mbctohira_l(c, nullptr);
+}*/

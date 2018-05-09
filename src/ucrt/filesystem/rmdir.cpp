@@ -7,8 +7,7 @@
 //
 #include <corecrt_internal.h>
 #include <direct.h>
-
-
+#include <corecrt_internal_win32_buffer.h>
 
 // Removes the directory specified by the path.  The directory must be empty, it
 // must not be the current working directory, and it must not be the root of any
@@ -16,12 +15,17 @@
 // failure.
 extern "C" int __cdecl _rmdir(char const* const path)
 {
-    if (path == nullptr)
+    if (path == nullptr) {
         return _wrmdir(nullptr);
+    }
 
-    __crt_unique_heap_ptr<wchar_t> wide_path;
-    if (!__acrt_copy_path_to_wide_string(path, wide_path.get_address_of()))
+    __crt_internal_win32_buffer<wchar_t> wide_path;
+
+    errno_t const cvt = __acrt_mbs_to_wcs_cp(path, wide_path, __acrt_get_utf8_acp_compatibility_codepage());
+
+    if (cvt != 0) {
         return -1;
+    }
 
-    return _wrmdir(wide_path.get());
+    return _wrmdir(wide_path.data());
 }

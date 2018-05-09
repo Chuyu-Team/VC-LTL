@@ -23,7 +23,7 @@
     <ProjectGuid>{6B580084-BE05-46EC-8633-51D9E456A07E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>stl</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
     <ProjectName>stl</ProjectName>
     <VC-LTLUsedToolsVersion>14.0.24225</VC-LTLUsedToolsVersion>
   </PropertyGroup>

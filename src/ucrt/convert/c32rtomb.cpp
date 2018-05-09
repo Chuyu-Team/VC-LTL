@@ -4,67 +4,91 @@
 //      Copyright (c) Microsoft Corporation. All rights reserved.
 //
 
+#include <corecrt_internal_mbstring.h>
 #include <uchar.h>
+#include <stdint.h>
 #include <msvcrt_IAT.h>
 
-extern "C" size_t __cdecl c32rtomb_downlevel(char * s, char32_t c32, mbstate_t * /* pst */)
-{ /* translate UCS-4 char32_t to UTF-8 multibyte, restartably */
-    unsigned char *su;
-    unsigned long wc;
-    int nextra;
-    char buf[6];
+using namespace __crt_mbstring;
 
-    if (s == 0)
-    { /* find homing sequence */
-        s = &buf[0];
-        c32 = 0;
-    }
-
-    su = (unsigned char *)s;
-
-    wc = (unsigned long)c32;
-    if ((wc & ~0x7fUL) == 0)
-    { /* generate a single byte */
-        *su++ = (unsigned char)wc;
-        nextra = 0;
-    }
-    else if ((wc & ~0x7ffUL) == 0)
-    { /* generate two bytes */
-        *su++ = (unsigned char)(0xc0 | wc >> 6);
-        nextra = 1;
-    }
-    else if ((wc & ~0xffffUL) == 0)
-    { /* generate three bytes */
-        *su++ = (unsigned char)(0xe0 | wc >> 12);
-        nextra = 2;
-    }
-    else if ((wc & ~0x1fffffUL) == 0)
-    { /* generate four bytes */
-        *su++ = (unsigned char)(0xf0 | wc >> 18);
-        nextra = 3;
-    }
-    else if ((wc & ~0x3ffffffUL) == 0)
-    { /* generate five bytes */
-        *su++ = (unsigned char)(0xf8 | wc >> 24);
-        nextra = 4;
-    }
-    else
-    { /* generate six bytes */
-        *su++ = (unsigned char)(0xfc | ((wc >> 30) & 0x03));
-        nextra = 5;
-    }
-
-    for (; 0 < nextra;)
-    {
-        *su++ = (unsigned char)(0x80 | ((wc >> 6 * --nextra) & 0x3f));
-    }
-
-    return ((char *)su - s);
+extern "C" size_t __cdecl c32rtomb_downlevel(char* s, char32_t c32, mbstate_t* ps)
+{
+    // TODO: Bug 13307590 says this is always assuming UTF-8.
+    return __c32rtomb_utf8(s, c32, ps);
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(c32rtomb_downlevel);
 
-/*
- * Copyright (c) 1992-2013 by P.J. Plauger.  ALL RIGHTS RESERVED.
- * Consult your license regarding permissions and restrictions.
- V6.40:0009 */
+size_t __cdecl __crt_mbstring::__c32rtomb_utf8(char* s, char32_t c32, mbstate_t* ps)
+{
+    if (!s)
+    {
+        // Equivalent to c32rtomb(buf, U'\0', ps) for some internal buffer buf
+        *ps = {};
+        return 1;
+    }
+
+    if (c32 == U'\0')
+    {
+        *s = '\0';
+        *ps = {};
+        return 1;
+    }
+
+    // Fast path for ASCII
+    if ((c32 & ~0x7f) == 0)
+    {
+        *s = static_cast<char>(c32);
+        return 1;
+    }
+
+    // Figure out how many trail bytes we need
+    size_t trail_bytes;
+    uint8_t lead_byte;
+    if ((c32 & ~0x7ff) == 0)
+    {
+        trail_bytes = 1;
+        lead_byte = 0xc0;
+    }
+    else if ((c32 & ~0xffff) == 0)
+    {
+        // high/low surrogates are only valid in UTF-16 encoded data
+        if (0xd800 <= c32 && c32 <= 0xdfff)
+        {
+            return return_illegal_sequence(ps);
+        }
+        trail_bytes = 2;
+        lead_byte = 0xe0;
+    }
+    else if ((c32 & ~0x001fffff) == 0)
+    {
+        // Unicode's max code point is 0x10ffff
+        if (0x10ffff < c32)
+        {
+            return return_illegal_sequence(ps);
+        }
+        trail_bytes = 3;
+        lead_byte = 0xf0;
+    }
+    else
+    {
+        return return_illegal_sequence(ps);
+    }
+    _ASSERTE(1 <= trail_bytes && trail_bytes <= 3);
+
+    // Put six bits into each of the trail bytes
+    // Lowest bits are in the last UTF-8 byte.
+    // Filling back to front.
+    for (size_t i = trail_bytes; i > 0; --i)
+    {
+        s[i] = (c32 & 0x3f) | 0x80;
+        c32 >>= 6;
+    }
+
+    // The first byte needs the upper (trail_bytes + 1) bits to store the length
+    // And the lower (7 - trail_bytes) to store the upper bits of the code point
+    _ASSERTE(c32 < (1u << (7 - trail_bytes)));
+    s[0] = static_cast<uint8_t>(c32) | lead_byte;
+
+    return reset_and_return(trail_bytes + 1, ps);
+}

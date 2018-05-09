@@ -60,23 +60,25 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsinc_l_downlevel);
 
 #endif
 
-//extern "C" unsigned char * (__cdecl _mbsinc)(
-//        const unsigned char *current
-//        )
-//{
-//        /* validation section */
-//        _VALIDATE_RETURN(current != nullptr, EINVAL, nullptr);
-//
-//        if ( _ismbblead(*(current++)))
-//        {
-//            /* don't move forward two if we get leadbyte, EOS
-//               also don't assert here as we are too low level
-//            */
-//            if(*current!='\0')
-//            {
-//                current++;
-//            }
-//        }
-//
-//        return (unsigned char *)current;
-//}
+#if 0
+extern "C" unsigned char * (__cdecl _mbsinc)(
+        const unsigned char *current
+        )
+{
+        /* validation section */
+        _VALIDATE_RETURN(current != nullptr, EINVAL, nullptr);
+
+        if ( _ismbblead(*(current++)))
+        {
+            /* don't move forward two if we get leadbyte, EOS
+               also don't assert here as we are too low level
+            */
+            if(*current!='\0')
+            {
+                current++;
+            }
+        }
+
+        return (unsigned char *)current;
+}
+#endif

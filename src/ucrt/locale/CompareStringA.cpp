@@ -145,7 +145,7 @@ static int __cdecl InternalCompareStringA(
      */
 
     /* find out how big a buffer we need (includes nullptr if any) */
-    if ( 0 == (buff_size1 = MultiByteToWideChar( code_page,
+    if ( 0 == (buff_size1 = __acrt_MultiByteToWideChar( code_page,
                                                  MB_PRECOMPOSED |
                                                     MB_ERR_INVALID_CHARS,
                                                  lpString1,
@@ -160,7 +160,7 @@ static int __cdecl InternalCompareStringA(
         return 0;
 
     /* do the conversion */
-    if ( 0 == MultiByteToWideChar( code_page,
+    if ( 0 == __acrt_MultiByteToWideChar( code_page,
                                    MB_PRECOMPOSED,
                                    lpString1,
                                    cchCount1,
@@ -169,7 +169,7 @@ static int __cdecl InternalCompareStringA(
         return 0;
 
     /* find out how big a buffer we need (includes nullptr if any) */
-    if ( 0 == (buff_size2 = MultiByteToWideChar( code_page,
+    if ( 0 == (buff_size2 = __acrt_MultiByteToWideChar( code_page,
                                                  MB_PRECOMPOSED |
                                                     MB_ERR_INVALID_CHARS,
                                                  lpString2,
@@ -183,7 +183,7 @@ static int __cdecl InternalCompareStringA(
     if (wbuffer2.get() == nullptr)
         return 0;
 
-    int const actual_size = MultiByteToWideChar(
+    int const actual_size = __acrt_MultiByteToWideChar(
         code_page,
         MB_PRECOMPOSED,
         lpString2,

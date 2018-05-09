@@ -153,9 +153,9 @@ EXTERN_C unsigned char * (__cdecl _mbslwr_l_downlevel)(
 _LCRT_DEFINE_IAT_SYMBOL(_mbslwr_l_downlevel);
 #endif
 
-//unsigned char * (__cdecl _mbslwr)(
-//        unsigned char *string
-//        )
-//{
-//    return (_mbslwr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
-//}
+/*unsigned char * (__cdecl _mbslwr)(
+        unsigned char *string
+        )
+{
+    return (_mbslwr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
+}*/

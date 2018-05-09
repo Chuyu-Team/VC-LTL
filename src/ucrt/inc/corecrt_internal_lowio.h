@@ -33,13 +33,38 @@ _CRT_BEGIN_C_HEADER
 /* Independent byte has most significant bit set to 0 */
 #define  _utf8_is_independent(c)    (_msbit(c) == 0)
 
-/* Any leadbyte will have the patterns 11000xxx 11100xxx or 11110xxx */
-#define  _utf8_is_leadbyte(c)       (_lookuptrailbytes[(unsigned char)c] != 0)
-
 /* Get no of trailing bytes from the lookup table */
-#define  _utf8_no_of_trailbytes(c)  _lookuptrailbytes[(unsigned char)c]
+//    1 for pattern 110xxxxx - 1 trailbyte
+//    2 for pattern 1110xxxx - 2 trailbytes
+//    3 for pattern 11110xxx - 3 trailbytes
+//    0 for everything else, including invalid patterns.
+// We return 0 for invalid patterns because we rely on MultiByteToWideChar to
+// do the validations.
 
+extern char _lookuptrailbytes[256];
+__inline char _utf8_no_of_trailbytes(const unsigned char c)
+{
+    return _lookuptrailbytes[c];
+}
+// It may be faster to just look up the bytes than to use the lookup table.
+//__inline char _utf8_no_of_trailbytes(const unsigned char c)
+//{
+//    // ASCII range is a single character
+//    if ((c & 0x80) == 0) return 0;
+//    // Trail bytes 10xxxxxx aren't lead bytes
+//    if ((c & 0x40) == 0) return 0;
+//    // 110xxxxx is a 2 byte sequence (1 trail byte)
+//    if ((c & 0x20) == 0) return 1;
+//    // 1110xxxx is a 3 byte sequence (2 trail bytes)
+//    if ((c & 0x10) == 0) return 2;
+//    // 11110xxx is a 4 byte sequence (3 trail bytes)
+//    if ((c & 0x08) == 0) return 3;
+//    // Anything with 5 or more lead bits is illegal
+//    return 0;
+//}
 
+/* Any leadbyte will have the patterns 11000xxx 11100xxx or 11110xxx */
+#define  _utf8_is_leadbyte(c)       (_utf8_no_of_trailbytes(static_cast<const unsigned char>(c)) != 0)
 
 enum class __crt_lowio_text_mode : char
 {
@@ -121,8 +146,6 @@ struct __crt_lowio_handle_data
 #define _tm_unicode_safe(i) (_pioinfo_safe(i)->unicode)
 
 typedef __crt_lowio_handle_data* __crt_lowio_handle_data_array[IOINFO_ARRAYS];
-
-extern char _lookuptrailbytes[256];
 
 // Special, static lowio file object used only for more graceful handling
 // of a C file handle value of -1 (results from common errors at the stdio
@@ -212,13 +235,7 @@ BOOL __cdecl __dcrt_read_console_input(
     _Out_ LPDWORD       lpNumberOfEventsRead
     );
 
-BOOL __cdecl __dcrt_read_console_input_w(
-    _Out_ PINPUT_RECORD lpBuffer,
-    _In_  DWORD         nLength,
-    _Out_ LPDWORD       lpNumberOfEventsRead
-    );
-
-BOOL __cdecl __dcrt_read_console_w(
+BOOL __cdecl __dcrt_read_console(
     _Out_ LPVOID  lpBuffer,
     _In_  DWORD   nNumberOfCharsToRead,
     _Out_ LPDWORD lpNumberOfCharsRead
@@ -228,7 +245,7 @@ BOOL __cdecl __dcrt_get_number_of_console_input_events(
     _Out_ LPDWORD lpcNumberOfEvents
     );
 
-BOOL __cdecl __dcrt_peek_console_input(
+BOOL __cdecl __dcrt_peek_console_input_a(
     _Out_ PINPUT_RECORD lpBuffer,
     _In_  DWORD         nLength,
     _Out_ LPDWORD       lpNumberOfEventsRead
@@ -244,7 +261,7 @@ BOOL __cdecl __dcrt_set_input_console_mode(
 
 BOOL __cdecl __dcrt_lowio_ensure_console_output_initialized(void);
 
-BOOL __cdecl __dcrt_write_console_w(
+BOOL __cdecl __dcrt_write_console(
     _In_  void const * lpBuffer,
     _In_  DWORD        nNumberOfCharsToWrite,
     _Out_ LPDWORD      lpNumberOfCharsWritten

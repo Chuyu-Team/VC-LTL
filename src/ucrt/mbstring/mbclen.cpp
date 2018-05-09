@@ -46,10 +46,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbclen_l_downlevel);
 
 #endif
 
-//extern "C" size_t __cdecl _mbclen(unsigned char const* c)
-//{
-//    /*  Don't return two if we have leadbyte, EOS.
-//        Don't assert here; too low level
-//    */
-//    return (_ismbblead(*c) && c[1]!='\0')  ? 2 : 1;
-//}
+#if 0
+extern "C" size_t __cdecl _mbclen(unsigned char const* c)
+{
+    /*  Don't return two if we have leadbyte, EOS.
+        Don't assert here; too low level
+    */
+    return (_ismbblead(*c) && c[1]!='\0')  ? 2 : 1;
+}
+#endif

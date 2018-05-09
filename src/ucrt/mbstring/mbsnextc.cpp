@@ -66,9 +66,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnextc_l_downlevel);
 
 #endif
 
-//extern "C" unsigned int (__cdecl _mbsnextc)(
-//        const unsigned char *s
-//        )
-//{
-//    return _mbsnextc_l(s, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbsnextc)(
+        const unsigned char *s
+        )
+{
+    return _mbsnextc_l(s, nullptr);
+}*/

@@ -57,7 +57,7 @@ extern "C" wint_t __cdecl _towlower_l_downlevel (
     }
 
     /* convert wide char to lowercase */
-    if ( 0 == __crtLCMapStringW(
+    if ( 0 == __acrt_LCMapStringW(
                 plocinfo->locinfo->lc_handle[LC_CTYPE],
                 LCMAP_LOWERCASE,
                 (LPCWSTR)&c,
@@ -93,10 +93,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_towlower_l_downlevel);
 *
 *******************************************************************************/
 
-//extern "C" wint_t __cdecl towlower (
-//        wint_t c
-//        )
-//{
-//
-//    return _towlower_l(c, nullptr);
-//}
+/*extern "C" wint_t __cdecl towlower (
+        wint_t c
+        )
+{
+
+    return _towlower_l(c, nullptr);
+}*/

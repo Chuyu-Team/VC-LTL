@@ -4,7 +4,7 @@
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 //
 // Defines wcscmp(), which compares two wide character strings, determining
-// their lexical order.
+// their ordinal order.
 //
 // Note that the comparison is performed with unsigned elements (wchar_t is
 // unsigned in this implementation), so the null character (0) is less than

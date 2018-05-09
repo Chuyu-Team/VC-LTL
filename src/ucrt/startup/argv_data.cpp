@@ -84,19 +84,19 @@ _LCRT_DEFINE_IAT_SYMBOL(_get_pgmptr_downlevel);
 _END_SECURE_CRT_DEPRECATION_DISABLE
 
 
+#if 0
+bool __cdecl __acrt_initialize_command_line()
+{
+    _acmdln = GetCommandLineA();
+    _wcmdln = GetCommandLineW();
+    return true;
+}
 
-//bool __cdecl __acrt_initialize_command_line()
-//{
-//    _acmdln = GetCommandLineA();
-//    _wcmdln = GetCommandLineW();
-//    return true;
-//}
-//
-//bool __cdecl __acrt_uninitialize_command_line(bool const /* terminating */)
-//{
-//    return true;
-//}
-
+bool __cdecl __acrt_uninitialize_command_line(bool const /* terminating */)
+{
+    return true;
+}
+#endif
 
 
 } // extern "C"

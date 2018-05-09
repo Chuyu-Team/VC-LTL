@@ -336,7 +336,7 @@ static file_options decode_options(int const oflag, int const shflag, int const 
 {
     file_options result;
     result.crt_flags  = 0;
-    result.access     = decode_access_flags(oflag); 
+    result.access     = decode_access_flags(oflag);
     result.create     = decode_open_create_flags(oflag);
     result.share      = decode_sharing_flags(shflag, result.access);
     result.attributes = FILE_ATTRIBUTE_NORMAL;
@@ -428,7 +428,7 @@ static errno_t truncate_ctrl_z_if_present(int const fh) throw()
     // Now, rewind the file pointer back to the beginning:
     if (_lseeki64_nolock(fh, 0, SEEK_SET) == -1)
         return errno;
-    
+
     return 0;
 }
 
@@ -731,7 +731,7 @@ extern "C" errno_t __cdecl _wsopen_nolock(
     {
         DWORD const last_error = GetLastError();
         __acrt_errno_map_os_error(last_error);
-        
+
         _osfile(*pfh) &= ~FOPEN;
         CloseHandle(os_handle);
 
@@ -841,13 +841,15 @@ extern "C" errno_t __cdecl _sopen_nolock(
     )
 {
     // At this point we know path is not null already
-    wchar_t* wide_path = nullptr;
-    if (!__acrt_copy_path_to_wide_string(path, &wide_path))
+    __crt_internal_win32_buffer<wchar_t> wide_path;
+
+    errno_t const cvt = __acrt_mbs_to_wcs_cp(path, wide_path, __acrt_get_utf8_acp_compatibility_codepage());
+
+    if (cvt != 0) {
         return -1;
+    }
 
-    __crt_unique_heap_ptr<wchar_t> const wide_path_cleanup(wide_path);
-
-    return _wsopen_nolock(punlock_flag, pfh, wide_path, oflag, shflag, pmode, secure);
+    return _wsopen_nolock(punlock_flag, pfh, wide_path.data(), oflag, shflag, pmode, secure);
 }
 
 

@@ -66,21 +66,21 @@ static thread_local _invalid_parameter_handler _thread_local_iph=nullptr;
 
 #endif
 
-//extern "C" void __cdecl __acrt_initialize_invalid_parameter_handler(void* const encoded_null)
-//{
-//#if defined _CRT_GLOBAL_STATE_ISOLATION
-//    const _invalid_parameter_handler encoded_os_iph = __crt_fast_encode_pointer(invalid_parameter_handler_continue);
-//#endif
-//    const _invalid_parameter_handler iph[] =
-//    {
-//        reinterpret_cast<_invalid_parameter_handler>(encoded_null)
-//#if defined _CRT_GLOBAL_STATE_ISOLATION
-//        ,encoded_os_iph
-//#endif
-//    };
-//
-//    __acrt_invalid_parameter_handler.initialize_from_array(iph);
-//}
+/*extern "C" void __cdecl __acrt_initialize_invalid_parameter_handler(void* const encoded_null)
+{
+#if defined _CRT_GLOBAL_STATE_ISOLATION
+    const _invalid_parameter_handler encoded_os_iph = __crt_fast_encode_pointer(invalid_parameter_handler_continue);
+#endif
+    const _invalid_parameter_handler iph[] =
+    {
+        reinterpret_cast<_invalid_parameter_handler>(encoded_null)
+#if defined _CRT_GLOBAL_STATE_ISOLATION
+        ,encoded_os_iph
+#endif
+    };
+
+    __acrt_invalid_parameter_handler.initialize_from_array(iph);
+}*/
 
 
 
@@ -141,7 +141,6 @@ extern "C" __declspec(noreturn) void __cdecl _invalid_parameter_noinfo_noreturn_
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_invalid_parameter_noinfo_noreturn_downlevel);
-
 
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+

@@ -64,7 +64,7 @@ static BOOL console_output_reopen_and_retry(Func const& fp) throw()
     return result;
 }
 
-extern "C" BOOL __cdecl __dcrt_write_console_w(
+extern "C" BOOL __cdecl __dcrt_write_console(
     _In_  void const * lpBuffer,
     _In_  DWORD        nNumberOfCharsToWrite,
     _Out_ LPDWORD      lpNumberOfCharsWritten

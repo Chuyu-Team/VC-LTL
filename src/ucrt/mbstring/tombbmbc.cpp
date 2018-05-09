@@ -228,7 +228,7 @@ extern "C" unsigned int __cdecl _mbbtombc_l_downlevel(
 {
     int i;
     //_LocaleUpdate _loc_update(plocinfo);
-	
+
     if ((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) != _KANJI_CP)
         return (c);
 
@@ -263,12 +263,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbbtombc_l_downlevel);
 
 #endif
 
-//extern "C" unsigned int (__cdecl _mbbtombc)(
-//    unsigned int c
-//    )
-//{
-//    return _mbbtombc_l(c, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbbtombc)(
+    unsigned int c
+    )
+{
+    return _mbbtombc_l(c, nullptr);
+}*/
 
 /***
 *unsigned int _mbctombb(c) - convert mbcvalue to mbbvalue.
@@ -332,9 +332,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbctombb_l_downlevel);
 
 #endif
 
-//extern "C" unsigned int (__cdecl _mbctombb)(
-//    unsigned int c
-//    )
-//{
-//    return _mbctombb_l(c, nullptr);
-//}
+/*extern "C" unsigned int (__cdecl _mbctombb)(
+    unsigned int c
+    )
+{
+    return _mbctombb_l(c, nullptr);
+}*/

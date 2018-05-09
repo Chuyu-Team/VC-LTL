@@ -55,7 +55,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcupper_l_downlevel);
 
 #endif
 
-//extern "C" int __cdecl _ismbcupper(unsigned int const c)
-//{
-//    return _ismbcupper_l(c, nullptr);
-//}
+/*extern "C" int __cdecl _ismbcupper(unsigned int const c)
+{
+    return _ismbcupper_l(c, nullptr);
+}*/

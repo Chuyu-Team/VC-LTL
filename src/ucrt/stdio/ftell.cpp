@@ -122,7 +122,7 @@ static __int64 __cdecl common_ftell_translated_utf8_nolock(
         }
         else
         {
-            raw_it += _utf8_no_of_trailbytes(*raw_it);
+            raw_it += _utf8_no_of_trailbytes(static_cast<const unsigned char>(*raw_it));
         }
     }
 

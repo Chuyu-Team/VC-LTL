@@ -101,10 +101,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsstr_l_downlevel);
 
 #endif
 
-//extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsstr)(
-//        const unsigned char *str1,
-//        const unsigned char *str2
-//        )
-//{
-//    return _mbsstr_l(str1, str2, nullptr);
-//}
+/*extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsstr)(
+        const unsigned char *str1,
+        const unsigned char *str2
+        )
+{
+    return _mbsstr_l(str1, str2, nullptr);
+}*/

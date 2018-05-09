@@ -33,18 +33,11 @@
 
         typedef intptr_t (__cdecl* fp_get_heap_handle)();
 
-        // Get the privately exported function _get_heap_handle() from MSVCRT
-        // Note: on x86 it is 447, while on amd64 it is 342.
-        #if defined _M_IX86
-        char const* const get_heap_handle_name = MAKEINTRESOURCEA(447);
-        #elif defined _M_AMD64
-        char const* const get_heap_handle_name = MAKEINTRESOURCEA(342);
-        #endif
-
+        // Get the exported function _get_heap_handle() from MSVCRT
         fp_get_heap_handle const get_msvcrt_heap_handle =
             reinterpret_cast<fp_get_heap_handle>(GetProcAddress(
                 msvcrt_module_handle,
-                get_heap_handle_name));
+                "_get_heap_handle"));
 
         if (!get_msvcrt_heap_handle)
         {
