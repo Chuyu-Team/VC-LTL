@@ -47,27 +47,53 @@ if(${SupportLTL} STREQUAL "true")
 			set(__DefaultVCToolsVersion "14.0.23918")
 
 			#VC 2015只能自己读取注册表解决
-			GET_FILENAME_COMPONENT(VCToolsVersion "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B0791F3A-6A88-3650-AECF-8AFBE227EC53};DisplayVersion]" NAME)
-			if (${VCToolsVersion} STREQUAL "registry")
-				GET_FILENAME_COMPONENT(VCToolsVersion "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B0791F3A-6A88-3650-AECF-8AFBE227EC53};DisplayVersion]" NAME)
+
+			#计算机已经安装Visual Studio 2015 Update3 v14.0.24234（Visual Studio 2017 15.7中的2015平台工具集），与14.0.24231完全一致
+			if(NOT VC-LTLUsedToolsVersion)
+				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{BDE574B5-6CFE-32B2-9854-C827567E9D6F};DisplayVersion]" NAME)
+				if (${LTLDisplayVersionTmp} STREQUAL "registry")
+					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{BDE574B5-6CFE-32B2-9854-C827567E9D6F};DisplayVersion]" NAME)
+				endif()
+
+				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
+					set(VC-LTLUsedToolsVersion "14.0.24231")
+				endif()
 			endif()
 
-			if (${VCToolsVersion} STREQUAL "registry")
-				GET_FILENAME_COMPONENT(VCToolsVersion "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09};DisplayVersion]" NAME)
-			endif()
-			if (${VCToolsVersion} STREQUAL "registry")
-				GET_FILENAME_COMPONENT(VCToolsVersion "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09};DisplayVersion]" NAME)
+			#计算机已经安装Visual Studio 2015 Update3 v14.0.24231（Visual Studio 2017 15.6中的2015平台工具集）
+			if(NOT VC-LTLUsedToolsVersion)
+				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B0791F3A-6A88-3650-AECF-8AFBE227EC53};DisplayVersion]" NAME)
+				if (${LTLDisplayVersionTmp} STREQUAL "registry")
+					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B0791F3A-6A88-3650-AECF-8AFBE227EC53};DisplayVersion]" NAME)
+				endif()
+
+				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
+					set(VC-LTLUsedToolsVersion "14.0.24231")
+				endif()
 			endif()
 
-			if (${VCToolsVersion} STREQUAL "registry")
-				GET_FILENAME_COMPONENT(VCToolsVersion "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A};DisplayVersion]" NAME)
-			endif()
-			if (${VCToolsVersion} STREQUAL "registry")
-				GET_FILENAME_COMPONENT(VCToolsVersion "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A};DisplayVersion]" NAME)
+			#计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017 15.5中的2015平台工具集）
+			if(NOT VC-LTLUsedToolsVersion)
+				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09};DisplayVersion]" NAME)
+				if (${LTLDisplayVersionTmp} STREQUAL "registry")
+					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09};DisplayVersion]" NAME)
+				endif()
+
+				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
+					set(VC-LTLUsedToolsVersion "14.0.24225")
+				endif()
 			endif()
 
-			if (NOT ${VCToolsVersion} STREQUAL "registry")
-				set(VC-LTLUsedToolsVersion ${VCToolsVersion})
+			#计算机已经安装Visual Studio 2015 Update3 v14.0.24210（正统Visual Studio 2015）
+			if(NOT VC-LTLUsedToolsVersion)
+				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A};DisplayVersion]" NAME)
+				if (${LTLDisplayVersionTmp} STREQUAL "registry")
+					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A};DisplayVersion]" NAME)
+				endif()
+
+				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
+					set(VC-LTLUsedToolsVersion "14.0.24210")
+				endif()
 			endif()
 
 		elseif(${MSVC_VERSION} LESS 1920)

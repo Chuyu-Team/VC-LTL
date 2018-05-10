@@ -77,29 +77,21 @@ goto:eof
 
 
 
-
-
-::搜索VC-LTL目录
-:FoundVC_LTL_Root
-
-if exist "%~dp0_msvcrt.h" set VC_LTL_Root=%~dp0&& goto:eof
-
-if exist "%~dp0..\_msvcrt.h" set VC_LTL_Root=%~dp0..&& goto:eof
-
-::读取注册表 HKCU\Code\VC-LTL@Root
-for /f "tokens=1,2*" %%i in ('reg query "HKCU\Code\VC-LTL" /v Root ') do set VC_LTL_Root=%%k
-
-
-goto:eof
-
-
-
 ::搜索 VC工具集版本
 :FoundVCToolsVersion
 
 set VC-LTLUsedToolsVersion=%VCToolsVersion%
 if "%VC-LTLUsedToolsVersion%" NEQ "" goto ReadVC2015VersionEnd
 
+::计算机已经安装Visual Studio 2015 Update3 v14.0.24234（Visual Studio 2017 15.7中的2015平台工具集），与14.0.24231完全一致
+set VC-LTLUsedToolsVersion=14.0.24231
+reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F} /v DisplayVersion > nul
+if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
+
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F} /v DisplayVersion > nul
+if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
+
+::计算机已经安装Visual Studio 2015 Update3 v14.0.24231（Visual Studio 2017 15.6中的2015平台工具集）
 set VC-LTLUsedToolsVersion=14.0.24231
 reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53} /v DisplayVersion > nul
 if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
@@ -107,6 +99,7 @@ if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53} /v DisplayVersion > nul
 if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 
+::计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017 15.5中的2015平台工具集）
 set VC-LTLUsedToolsVersion=14.0.24225
 reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09} /v DisplayVersion > nul
 if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
@@ -114,6 +107,7 @@ if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09} /v DisplayVersion > nul
 if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 
+::计算机已经安装Visual Studio 2015 Update3 v14.0.24210（正统Visual Studio 2015）
 set VC-LTLUsedToolsVersion=14.0.24210
 reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A} /v DisplayVersion > nul
 if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
@@ -121,6 +115,7 @@ if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A} /v DisplayVersion > nul
 if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
 
+::如果找不到，那么指定为当前支持的最低版本 2015 Update2
 set VC-LTLUsedToolsVersion=%__DefaultVCToolsVersion%
 goto:eof
 

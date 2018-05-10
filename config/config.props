@@ -11,28 +11,23 @@
 
 -->
 
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VC_LTL_PlatformPrepareForBuild_Config">
-  <PropertyGroup>
-    <!--先判断Sln目录是否已经有了VC-LTL，如果已经存在，那么优先使用本地工程中的VC-LTL-->
-    <VC_LTL_Root Condition=" ('$(VC_LTL_Root)'=='') And (Exists('$(SolutionDir)VC-LTL\_msvcrt.h')) ">$(SolutionDir)VC-LTL</VC_LTL_Root>
-    <!--如果本地工程没有，那么继续尝试通过注册表获取VC-LTL路径-->
-    <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">$(Registry:HKEY_CURRENT_USER\Code\VC-LTL@Root)</VC_LTL_Root>
-    <!--如果还是没有，那么走最极端方案，开启翻滚模式-->
-    <VC_LTL_Root Condition=" '$(VC_LTL_Root)'=='' ">..\VC-LTL</VC_LTL_Root>
-  </PropertyGroup>
-  
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VC_LTL_PlatformPrepareForBuild_Config">  
   <PropertyGroup Condition=" ('$(VCToolsVersion)'=='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
+    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24234（Visual Studio 2017 15.7中的2015平台工具集），与14.0.24231完全一致-->
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F}@DisplayVersion)'!='') ">14.0.24231</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F}@DisplayVersion)'!='') "            >14.0.24231</VC-LTLUsedToolsVersion>
+
     <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24231（Visual Studio 2017 15.6中的2015平台工具集）-->
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53}@DisplayVersion)</VC-LTLUsedToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53}@DisplayVersion)</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53}@DisplayVersion)'!='') ">14.0.24231</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{B0791F3A-6A88-3650-AECF-8AFBE227EC53}@DisplayVersion)'!='') "            >14.0.24231</VC-LTLUsedToolsVersion>
 
     <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017 15.5中的2015平台工具集）-->
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)'!='') ">14.0.24225</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09}@DisplayVersion)'!='') "            >14.0.24225</VC-LTLUsedToolsVersion>
 
     <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24210（正统Visual Studio 2015）-->
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)'!='') ">14.0.24210</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)'!='') "            >14.0.24210</VC-LTLUsedToolsVersion>
 
 
     <!--如果找不到，那么指定为当前支持的最低版本 2015 Update2-->
