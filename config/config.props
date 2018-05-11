@@ -83,12 +83,10 @@
     <OsPlatformName Condition=" '$(SupportWinXP)'!='true' ">Vista</OsPlatformName>
 
     <!--15.7新特性，检测Spectre缓解方案是否已经启用。-->
-    <SupportLTLSpectreMitigation Condition=" (('$(SpectreMitigation)'=='') Or ('$(SpectreMitigation)'=='false'))">false</SupportLTLSpectreMitigation>
-    <SupportLTLSpectreMitigation Condition=" (('$(SupportLTLSpectreMitigation)'=='') And (Exists('$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)')))">true</SupportLTLSpectreMitigation>
+    <VC-LTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VC-LTLLibDirMod>
     
     <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library Condition=" '$(SupportLTLSpectreMitigation)'!='true' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
-    <VC_LTL_Library Condition=" '$(SupportLTLSpectreMitigation)'=='true' ">$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SupportLTL)'=='true' ">
@@ -172,6 +170,6 @@
     <Warning Code="LTL3000" Text="VC-LTL不支持 VC $(VCToolsVersion)，已临时切换到 VC $(VC-LTLUsedToolsVersion) 来维持基础功能。这可能是你的IDE版本过低，建议升级到最新IDE然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundToolsVersion)'=='false')" />
     <Warning Code="LTL3001" Text="VC-LTL不支持 SDK $(TargetUniversalCRTVersion)，目前已临时切换到 SDK $(VC-LTLTargetUniversalCRTVersion) 来维持基础功能。这可能是你的SDK版本过低，建议切换到最新SDK然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundTargetUniversalCRTVersion)'=='false')" />
     <Warning Code="LTL3002" Text="VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
-    <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(SupportLTLSpectreMitigation)'=='')"/>
+    <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(VC-LTLLibDirMod)'!='$(VCLibDirMod)')"/>
   </Target>
 </Project>
