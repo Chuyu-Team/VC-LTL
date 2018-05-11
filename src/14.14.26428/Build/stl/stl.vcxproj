@@ -1,12 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="v141xp_Spectre|Win32">
+      <Configuration>v141xp_Spectre</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="v141xp_Spectre|x64">
+      <Configuration>v141xp_Spectre</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="v141xp|Win32">
       <Configuration>v141xp</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="v141xp|x64">
       <Configuration>v141xp</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="v141_Spectre|Win32">
+      <Configuration>v141_Spectre</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="v141_Spectre|x64">
+      <Configuration>v141_Spectre</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="v141|Win32">
@@ -34,12 +50,28 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>Spectre</SpectreMitigation>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>Spectre</SpectreMitigation>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -48,12 +80,28 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>Spectre</SpectreMitigation>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SpectreMitigation>Spectre</SpectreMitigation>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -64,7 +112,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\ltlvcrt.props" />
   </ImportGroup>
@@ -72,7 +128,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\ltlvcrt.props" />
   </ImportGroup>
@@ -83,11 +147,23 @@
     <TargetName>ltlcprtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>ltlcprtxp</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\WinXP\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>ltlcprt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,13 +171,48 @@
     <TargetName>ltlcprtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>ltlcprtxp</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\WinXP\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>ltlcprt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\Vista\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -147,7 +258,52 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -191,6 +347,28 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\atomic.c" />
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cerr.cpp" />
@@ -198,9 +376,13 @@
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\clog.cpp" />
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cond.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cout.cpp" />
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\cthread.c" />
@@ -217,9 +399,13 @@
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\multprec.cpp" />
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\mutex.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|Win32'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp_Spectre|x64'">CompileAsCpp</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141_Spectre|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\nothrow.cpp" />
     <ClCompile Include="$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl\ppltasks.cpp" />
