@@ -60,8 +60,8 @@ Let's say goodbye to the Visual Studio 2008.
 | Windows XP, Windows Server 2003                     | √  | √  | -   | -
 | Windows Vista, Windows Server 2008                  | √  | √  | -   | -
 | Windows 7, Windows Server 2008 R2                   | √  | √  | -   | -
-| Windows 8, Windows Server 2012, Windows RT          | √  | √  | √ (Requires [KB2999226](https://support.microsoft.com/zh-cn/help/2999226/update-for-universal-c-runtime-in-windows) to be installed)  | -
-| Windows 8.1, Windows Server 2012 R2, Windows RT 8.1 | √  | √  | √ (Requires [KB2999226](https://support.microsoft.com/zh-cn/help/2999226/update-for-universal-c-runtime-in-windows) to be installed)  | -
+| Windows 8, Windows Server 2012, Windows RT          | √  | √  | √ (Requires [KB2999226](http://support.microsoft.com/kb/2999226) to be installed)  | -
+| Windows 8.1, Windows Server 2012 R2, Windows RT 8.1 | √  | √  | √ (Requires [KB2999226](http://support.microsoft.com/kb/2999226) to be installed)  | -
 | Windows 10, Windows Server 2016                     | √  | √  | √ | √
 
 > The binaries compiled with the VC-LTL is compatible with Windows XP and 

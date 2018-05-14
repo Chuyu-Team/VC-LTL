@@ -46,8 +46,8 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 | Windows XP、Windows Server 2003                     | √  | √  | -   | -
 | Windows Vista、Windows Server 2008                  | √  | √  | -   | -
 | Windows 7、Windows Server 2008 R2                   | √  | √  | -   | -
-| Windows 8、Windows Server 2012、Windows RT          | √  | √  | √（需要安装KB2999226）  | -
-| Windows 8.1、Windows Server 2012 R2、Windows RT 8.1 | √  | √  | √（需要安装KB2999226）  | -
+| Windows 8、Windows Server 2012、Windows RT          | √  | √  | √（需要安装[KB2999226](http://support.microsoft.com/kb/2999226)）  | -
+| Windows 8.1、Windows Server 2012 R2、Windows RT 8.1 | √  | √  | √（需要安装[KB2999226](http://support.microsoft.com/kb/2999226)）  | -
 | Windows 10、Windows Server 2016                     | √  | √  | √ | √
 
 > 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
