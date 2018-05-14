@@ -90,6 +90,8 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ### 3. 重新编译（仅Release）
 现在是不是体积就小了很多。如果你编译不通过，可以先参考 第 4 节。如果还是不通过可以反馈，共同改进VC-LTL。
 
+温馨提示：使用VC-LTL编译时必须采用MD编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
+
 > 如果正确引用VC-LTL，那么 会在生成时输出 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
