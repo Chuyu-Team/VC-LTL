@@ -55,14 +55,14 @@ Let's say goodbye to the Visual Studio 2008.
 * 10.0.17134.0
 
 ### Supported Windows Versions
-Notice: All versions we mentioned is started with RTM.
-
-* x86 and x64 of Windows XP / Windows Server 2003 (Need to enable the XP Support.)
-* x86 and x64 of Windows Vista / Windows Server 2008
-* x86 and x64 of Windows 7 / Windows Server 2008 R2
-* x86 and x64 of Windows 8 / Windows Server 2012
-* x86 and x64 of Windows 8.1 / Windows Server 2012 R2
-* x86, x64 and arm64 of Windows 10 / Windows Server 2016
+|         OS                                          | x86 | x64 | arm | arm64 
+|        ----                                         | --- | --- | --- | ----
+| Windows XP, Windows Server 2003                     | √  | √  | -   | -
+| Windows Vista, Windows Server 2008                  | √  | √  | -   | -
+| Windows 7, Windows Server 2008 R2                   | √  | √  | -   | -
+| Windows 8, Windows Server 2012, Windows RT          | √  | √  | √ (Requires [KB2999226](https://support.microsoft.com/zh-cn/help/2999226/update-for-universal-c-runtime-in-windows) to be installed)  | -
+| Windows 8.1, Windows Server 2012 R2, Windows RT 8.1 | √  | √  | √ (Requires [KB2999226](https://support.microsoft.com/zh-cn/help/2999226/update-for-universal-c-runtime-in-windows) to be installed)  | -
+| Windows 10, Windows Server 2016                     | √  | √  | √ | √
 
 > The binaries compiled with the VC-LTL is compatible with Windows XP and 
 later, even in the environment which installed no hotfixes.
@@ -151,7 +151,7 @@ later, even in the environment which installed no hotfixes.
 
 |  Module  | Normal Mode |  XP Support  | UCRT Mode | Files 
 |  ------  | ----------- |  ----------  | --------- | --------
-|  CRT     | 91.726%     | 88.389%      |    100%   | ltl.lib，msvcrt.lib，msvcrt_Platform.lib，ucrt.lib，vc.lib
+|  CRT     | 91.911%     | 88.845%      |    100%   | ltl.lib，msvcrt.lib，msvcrt_Platform.lib，ucrt.lib，vc.lib
 |  STL     | 100%        | 100.1% ([1]) |    100%   | ltlcprt.lib，ltlcprtxp.lib
 |  ConcRT  | 100%        | 100%         |    100%   | libconcrt.lib，libconcrtxp.lib
 |  ATL     | 100%        | 100%         |    100%   | -

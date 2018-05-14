@@ -41,12 +41,14 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 * 10.0.17134.0
 
 ### 支持的操作系统
-* 基于x86以及x64的 Windows XP、Windows Server 2003（需要启用WinXP Support）
-* 基于x86以及x64的 Windows Vista、Windows Server 2008
-* 基于x86以及x64的 Windows 7、Windows Server 2008 R2
-* 基于x86以及x64的 Windows 8、Windows Server 2012
-* 基于x86以及x64的 Windows 8.1、Windows Server 2012 R2
-* 基于x86、x64以及arm64的 Windows 10、Windows Server 2016
+|   操作系统                                          | x86 | x64 | arm | arm64 
+|    ----                                             | --- | --- | --- | ----
+| Windows XP、Windows Server 2003                     | √  | √  | -   | -
+| Windows Vista、Windows Server 2008                  | √  | √  | -   | -
+| Windows 7、Windows Server 2008 R2                   | √  | √  | -   | -
+| Windows 8、Windows Server 2012、Windows RT          | √  | √  | √（需要安装KB2999226）  | -
+| Windows 8.1、Windows Server 2012 R2、Windows RT 8.1 | √  | √  | √（需要安装KB2999226）  | -
+| Windows 10、Windows Server 2016                     | √  | √  | √ | √
 
 > 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
 
@@ -134,7 +136,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 |  模块  | 一般模式 | XP工具集            | UCRT模式 | 相关文件 
 |  ----  | -------- | --------            | -------- | --------
-|   CRT  | 91.726%  | 88.389%             |   100%   | ltl.lib，msvcrt.lib，msvcrt_Platform.lib，ucrt.lib，vc.lib
+|   CRT  | 91.911%  | 88.845%             |   100%   | ltl.lib，msvcrt.lib，msvcrt_Platform.lib，ucrt.lib，vc.lib
 |   STL  | 100%     | 100.1%（超标准支持）|   100%   | ltlcprt.lib，ltlcprtxp.lib
 | ConcRT | 100%     | 100%                |   100%   | libconcrt.lib，libconcrtxp.lib
 |   ATL  | 100%     | 100%                |   100%   | -
