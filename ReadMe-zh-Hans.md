@@ -32,13 +32,13 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 * Visual Studio 2015
 * Visual Studio 2017
 
-### 支持的Windows SDK版本
-* 7.X（WinXP平台工具集）
-* 8.1
-* 10.0.10240.0
-* 10.0.15063.0（强烈建议使用16299，下个Windows SDK发布时将删除对15063的支持！）
-* 10.0.16299.0（推荐使用）
-* 10.0.17134.0
+### 支持的编译工具
+|    编译工具    | 支持文件      
+| -------------- | --
+| Visual Studio  | VC-LTL helper for Visual Studio.props
+| CMake          | VC-LTL helper for cmake.cmake
+| NMake          | VC-LTL helper for nmake.cmd
+| CL             | VC-LTL helper for nmake.cmd
 
 ### 支持的操作系统
 |   操作系统                                          | x86 | x64 | arm | arm64 

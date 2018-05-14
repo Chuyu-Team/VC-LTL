@@ -46,13 +46,13 @@ Let's say goodbye to the Visual Studio 2008.
 * Visual Studio 2015
 * Visual Studio 2017
 
-### Supported Windows SDK Versions
-* 7.x (Windows XP Platform Toolset)
-* 8.1
-* 10.0.10240.0
-* 10.0.15063.0 (Will be removed when the next SDK version come out.)
-* 10.0.16299.0 (Recommend to use)
-* 10.0.17134.0
+### Supported Build Tools
+|   Build Tool   | Helper      
+| -------------- | --
+| Visual Studio  | VC-LTL helper for Visual Studio.props
+| CMake          | VC-LTL helper for cmake.cmake
+| NMake          | VC-LTL helper for nmake.cmd
+| CL             | VC-LTL helper for nmake.cmd
 
 ### Supported Windows Versions
 |         OS                                          | x86 | x64 | arm | arm64 
