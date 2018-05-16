@@ -47,10 +47,10 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ### 2.2. 支持的编译工具
 |    编译工具    | 支持文件
 | -------------- | --
-| Visual Studio  | [VC-LTL helper for Visual Studio.props](ReadMe-zh-Hans.md#32-在Visual Studio中使用VC-LTL)
-| CMake          | [VC-LTL helper for cmake.cmake](ReadMe-zh-Hans.md#33-在CMake中使用VC-LTL)
-| NMake          | [VC-LTL helper for nmake.cmd](ReadMe-zh-Hans.md#34-在NMake/纯CL中使用VC-LTL)
-| CL             | [VC-LTL helper for nmake.cmd](ReadMe-zh-Hans.md#34-在NMake/纯CL中使用VC-LTL)
+| Visual Studio  | [VC-LTL helper for Visual Studio.props](ReadMe-zh-Hans.md#32-在visual-studio中使用vc-ltl)
+| CMake          | [VC-LTL helper for cmake.cmake](ReadMe-zh-Hans.md#33-在cmake中使用vc-ltl)
+| NMake          | [VC-LTL helper for nmake.cmd](ReadMe-zh-Hans.md#34-在nmake纯cl中使用vc-ltl)
+| CL             | [VC-LTL helper for nmake.cmd](ReadMe-zh-Hans.md#34-在nmake纯cl中使用vc-ltl)
 
 ### 2.3. 支持的操作系统
 |   操作系统                                          | x86 | x64 | arm | arm64 
@@ -92,7 +92,8 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 将属性表 `VC-LTL helper for cmake.cmake` 复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在 `CMakeLists.txt` 中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
 
 示例：
-``
+
+```
 cmake_minimum_required(VERSION 3.5.2)
 project(ltltest)
 
@@ -100,7 +101,7 @@ include("VC-LTL helper for cmake.cmake")
 
 add_subdirectory(src)
 
-``
+```
 
 #### 3.3.2. 调整配置工程
 
@@ -129,9 +130,12 @@ add_subdirectory(src)
 
 ## 4. 常见问题
 ### 4.1. 未共享到msvcrt.dll
-问题原因：未正确引用VC-LTL。建议看看生成日志，是否包含 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+问题原因：
+
+未正确引用VC-LTL。建议看看生成日志，是否包含 `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
 解决方案：
+
 1：请务必确保 `VC-LTL helper for Visual Studio.props` 已经添加到工程。
 
 2：确保以下设置正确：
@@ -139,20 +143,27 @@ add_subdirectory(src)
 * VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 ### 4.2. 无法解析外部符号 delete 等
-问题原因：没有正确引入vc.lib、msvcrt_Platform.lib。
+问题原因：
+
+没有正确引入vc.lib、msvcrt_Platform.lib。
 
 解决方案：
 * VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
 * VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 ### 4.3. 检测到RuntimeLibrary的不匹配项
-问题原因：引入了没有使用VC-LTL编译的静态lib文件。
+问题原因：
+
+引入了没有使用VC-LTL编译的静态lib文件。
 
 解决方案：
+
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
 
 ### 4.4. 支持XP时从msvcrt.dll导入大量XP不支持的函数
-问题原因：可能没有开启引用消除
+问题原因：
+
+可能没有开启引用消除
 
 解决方案：
 * C/C++ - 所有选项 - 移除未引用的代码和数据 - 【是(/Zc:inline)】
