@@ -3,11 +3,11 @@
 
 ## 1. 关于VC-LTL
 
-VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级高度兼容。创建初衷是为了解决**运行库部署问题**以及**Fls128上限问题**。
+VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级高度兼容。创建初衷是为了解决`运行库部署问题`以及`Fls128上限问题`。
 
-在大型项目中往往有众多模块，如果都采用静态编译那么造成的空间浪费先不说，最后也会因为**Fls上限**导致程序无法正常运行。
+在大型项目中往往有众多模块，如果都采用静态编译那么造成的空间浪费先不说，最后也会因为`Fls上限`导致程序无法正常运行。
 
-而VC-LTL能让你的项目如同系统文件一样共享系统内置**msvcrt.dll**，有效的解决**Fls上限**以及**运行时部署问题**，同时**大大缩减程序体积**，可以说一箭三雕！
+而VC-LTL能让你的项目如同系统文件一样共享系统内置`msvcrt.dll`，有效的解决`Fls上限`以及`运行时部署问题`，同时`大大缩减程序体积`，可以说一箭三雕！
 
 大家都可以免费，无条件，甚至是用于商业环境。当然我也希望如果大家可以在程序的说明文件中声明下使用了VC-LTL，来使更多人受益。
 
@@ -67,14 +67,14 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ## 3. 使用方法
 
 ### 3.1. 安装VC-LTL
-假如，你将VC-LTL下载至**D:\Src\VC-LTL**（具体位置无任何要求），双击**D:\Src\VC-LTL\Install.cmd**即可。
+假如，你将VC-LTL下载至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
 
-> 脚本会在**HKCU\Code\VC-LTL**创建注册表。
+> 脚本会在`HKCU\Code\VC-LTL`创建注册表。
 
 ### 3.2. 在Visual Studio中使用VC-LTL
 
 #### 3.2.1. 添加VC-LTL属性表
-将属性表**VC-LTL helper for Visual Studio.props**复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键**添加现有属性表**，然后选择**VC-LTL helper for Visual Studio.props**即可。
+将属性表`VC-LTL helper for Visual Studio.props`复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL helper for Visual Studio.props`即可。
 
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
 
@@ -83,13 +83,13 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
-> 如果需要支持XP，请在平台工具集中，切换到**Windows XP**，或者修改**VC-LTL helper for Visual Studio.props**启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+> 如果需要支持XP，请在平台工具集中，切换到`Windows XP`，或者修改`VC-LTL helper for Visual Studio.props`启用 `<SupportWinXP>true</SupportWinXP>` 即可。
 
 ### 3.3. 在CMake中使用VC-LTL
 
 #### 3.3.1. 添加VC-LTL配置文件
 
-将属性表**VC-LTL helper for cmake.cmake**复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在**CMakeLists.txt**中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
+将属性表`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
 
 示例：
 
@@ -104,25 +104,25 @@ add_subdirectory(src)
 
 #### 3.3.2. 调整配置工程
 
-> 确保使用VC-LTL时使用**/MD**编译代码，如需XP支持，修改**VC-LTL helper for cmake.cmake**启用 `set(SupportWinXP "true")` 即可。
+> 确保使用VC-LTL时使用`/MD`编译代码，如需XP支持，修改`VC-LTL helper for cmake.cmake`启用 `set(SupportWinXP "true")` 即可。
 
 ### 3.4. 在NMake/纯CL中使用VC-LTL
 
 #### 3.4.1. 运行VC-LTL辅助脚本
 
-将属性表**VC-LTL helper for nmake.cmd**复制到你的工程目录。启动**vcvars32.bat/vcvars64.bat**执行此脚本即可，脚本将自动修改**include**以及**lib**环境变量。
+将属性表`VC-LTL helper for nmake.cmd`复制到你的工程目录。启动`vcvars32.bat/vcvars64.bat`执行此脚本即可，脚本将自动修改`include`以及`lib`环境变量。
 
 #### 3.4.2. 配置工程属性
 
-> 确保使用VC-LTL时使用**/MD**编译代码，如需XP支持，修改**VC-LTL helper for nmake.cmd**启用 `set SupportWinXP=true`，并且需要自行调整连接器最低系统支持为**5.01**（WinXP x86）或者**5.02**（WinXP x64）。
+> 确保使用VC-LTL时使用`/MD`编译代码，如需XP支持，修改`VC-LTL helper for nmake.cmd`启用 `set SupportWinXP=true`，并且需要自行调整连接器最低系统支持为`5.01`（WinXP x86）或者`5.02`（WinXP x64）。
 
 
 ### 3.5. 重新编译（仅Release）
 现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](ReadMe-zh-Hans.md#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
 
-温馨提示：使用VC-LTL编译时必须采用**/MD**编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
+温馨提示：使用VC-LTL编译时必须采用`/MD`编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
 
-> 如果正确引用VC-LTL，那么 会在生成时输出 **note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。**
+> 如果正确引用VC-LTL，那么 会在生成时输出：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
@@ -130,7 +130,7 @@ add_subdirectory(src)
 ## 4. 常见问题
 ### 4.1. 未共享到msvcrt.dll
 #### 问题原因
-未正确引用VC-LTL。建议看看生成日志，是否包含 **note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。**
+未正确引用VC-LTL。建议看看生成日志，是否包含：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
 #### 解决方案
 1：请务必确保 `VC-LTL helper for Visual Studio.props` 已经添加到工程。
@@ -169,7 +169,7 @@ add_subdirectory(src)
 
 ## 5. 已知问题
 * 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
-* 由于WinXP本身BUG，printf相关函数无法正常支持**%ll**。当你需要兼容XP时，请优先考虑使用**%I64**代替。_s 版本也存在此问题。
+* 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 
 ## 附：已知使用VC-LTL的官方项目
