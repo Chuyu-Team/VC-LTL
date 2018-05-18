@@ -67,7 +67,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ## 3. 使用方法
 
 ### 3.1. 安装VC-LTL
-假如，你将VC-LTL下载至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
+假如，你将[VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
 
 > 脚本会在`HKCU\Code\VC-LTL`创建注册表。
 
@@ -89,7 +89,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 #### 3.3.1. 添加VC-LTL配置文件
 
-将属性表`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
+将模块文件`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
 
 示例：
 
@@ -110,7 +110,7 @@ add_subdirectory(src)
 
 #### 3.4.1. 运行VC-LTL辅助脚本
 
-将属性表`VC-LTL helper for nmake.cmd`复制到你的工程目录。启动`vcvars32.bat/vcvars64.bat`执行此脚本即可，脚本将自动修改`include`以及`lib`环境变量。
+将辅助脚本`VC-LTL helper for nmake.cmd`复制到你的工程目录。启动`vcvars32.bat/vcvars64.bat`执行此脚本即可，脚本将自动修改`include`以及`lib`环境变量。
 
 #### 3.4.2. 配置工程属性
 

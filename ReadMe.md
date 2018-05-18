@@ -10,6 +10,15 @@
 
 ## Changes
 
+### 3.0.0.2 2018-05-18 21:07
+* 新增Fea，添加VC 14.0.24234以及14.14.26428支持
+* 新增Fea，添加UCRT 10.0.17134.0支持
+* 新增Fea，添加Spectre缓解库支持
+* 解决Bug，找不到gets符号问题（感谢 npc）
+
+> VC-LTL本次从仓库中剔除了lib文件，VC-LTL用户请下载[VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases)，然后再使用VC-LTL编译代码。
+
+
 ### 3.0.0.1 2018-04-26 18:48
 * 解决[BUG 27](https://github.com/Chuyu-Team/VC-LTL/issues/27)，非中文环境调用_set_abort_behavior输出警告问题（感谢 myfreeer）。
 * 解决[BUG 21](https://github.com/Chuyu-Team/VC-LTL/issues/21)，特定情况nothrow符号冲突问题（感谢 waiting4love）。
