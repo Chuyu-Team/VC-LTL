@@ -42,10 +42,9 @@ from the pure C source code.
 * 拥有比微软原版更好的兼容性，即使想兼容Windows XP RTM也可以安心的对新编译器说“Yes”。
 * 完全的开放代码，广泛的接受用户意见，希望大家能踊跃的 pull requests，为VC-LTL添砖加瓦。
 
-Let's say goodbye to the Visual Studio 2008.
+> Let's say goodbye to the Visual Studio 2008.
 
 ## 2. VC-LTL Compatibility
-此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
 |  Module  | Normal Mode |  XP Support  | UCRT Mode | Files 
 |  ------  | ----------- |  ----------  | --------- | --------
@@ -64,10 +63,10 @@ Let's say goodbye to the Visual Studio 2008.
 ### 2.2. Supported Build Tools
 |   Build Tool   | Helper      
 | -------------- | --
-| Visual Studio  | [VC-LTL helper for Visual Studio.props](ReadMe.md#32-在visual-studio中使用vc-ltl)
-| CMake          | [VC-LTL helper for cmake.cmake](ReadMe.md#33-在cmake中使用vc-ltl)
-| NMake          | [VC-LTL helper for nmake.cmd](ReadMe.md#34-在nmake纯cl中使用vc-ltl)
-| CL             | [VC-LTL helper for nmake.cmd](ReadMe.md#34-在nmake纯cl中使用vc-ltl)
+| Visual Studio  | [VC-LTL helper for Visual Studio.props](#32-using-vc-ltl-in-visual-studio)
+| CMake          | [VC-LTL helper for cmake.cmake](#33-using-vc-ltl-in-cmake)
+| NMake          | [VC-LTL helper for nmake.cmd](#34-using-vc-ltl-in-nmakecl)
+| CL             | [VC-LTL helper for nmake.cmd](#34-using-vc-ltl-in-nmakecl)
 
 ### 2.3. Supported Windows Versions
 |         OS                                          | x86 | x64 | arm | arm64 
@@ -82,34 +81,34 @@ Let's say goodbye to the Visual Studio 2008.
 > The binaries compiled with the VC-LTL is compatible with Windows XP and 
 later, even in the environment which installed no hotfixes.
 
-## 3. 使用方法
+## 3. How to used?
 
-### 3.1. 安装VC-LTL
-假如，你将[VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
+### 3.1. Install VC-LTL
+If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
 
-> 脚本会在`HKCU\Code\VC-LTL`创建注册表。
+> The script will save the information in the registry `HKCU\Code\VC-LTL`.
 
-### 3.2. 在Visual Studio中使用VC-LTL
+### 3.2. Using VC-LTL in Visual Studio
 
-#### 3.2.1. 添加VC-LTL属性表
-将属性表`VC-LTL helper for Visual Studio.props`复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL helper for Visual Studio.props`即可。
+#### 3.2.1. Add VC-LTL Property Sheet
+Copy `VC-LTL helper for Visual Studio.props` to your project, then open the Property Manager ( View - Property Manager ) and right-click on the Release Configuration, click on `Add Existing Property Sheet...`,and finally select `VC-LTL helper for Visual Studio.props`.
 
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/AddShared.png)
 
-#### 3.2.2. 配置工程属性
-* C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
+#### 3.2.2. Configure Project Properties
+* C/C++ - Code Generation -`Runtime Library` adjust to `Multi-threaded DLL (/MD)`
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationProject.png)
 
-> 如果需要支持XP，请在平台工具集中，切换到`Windows XP`，或者修改`VC-LTL helper for Visual Studio.props`启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+> If you need to support XP, please use the `Windows XP toolset` in the platform toolset, or modify `VC-LTL helper for Visual Studio.props` to enable `<SupportWinXP>true</SupportWinXP>`.
 
-### 3.3. 在CMake中使用VC-LTL
+### 3.3. Using VC-LTL in CMake
 
-#### 3.3.1. 添加VC-LTL配置文件
+#### 3.3.1. Add VC-LTL Module File
 
-将模块文件`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
+Coyp `VC-LTL helper for cmake.cmake` to your project. Then add `include("VC-LTL helper for cmake.cmake")` to `CMakeLists.txt`.
 
-示例：
+Example:
 
 ```
 cmake_minimum_required(VERSION 3.5.2)
@@ -120,37 +119,36 @@ include("VC-LTL helper for cmake.cmake")
 add_subdirectory(src)
 ```
 
-#### 3.3.2. 调整配置工程
+#### 3.3.2. Modify The Configuration
 
-> 确保使用VC-LTL时使用`/MD`编译代码，如需XP支持，修改`VC-LTL helper for cmake.cmake`启用 `set(SupportWinXP "true")` 即可。
+> Make sure to use `/MD` to compile project when using VC-LTL. For XP support, please modify `VC-LTL helper for cmake.cmake` to enable `set(SupportWinXP "true")`.
 
-### 3.4. 在NMake/纯CL中使用VC-LTL
+### 3.4. Using VC-LTL in NMake/CL
 
-#### 3.4.1. 运行VC-LTL辅助脚本
+#### 3.4.1. Run VC-LTL Cmd Script
 
-将辅助脚本`VC-LTL helper for nmake.cmd`复制到你的工程目录。启动`vcvars32.bat/vcvars64.bat`执行此脚本即可，脚本将自动修改`include`以及`lib`环境变量。
+Copy `VC-LTL helper for nmake.cmd` to your project. Run `vcvars32.bat` or `vcvars64.bat` and execute this script. The script will automatically modify the `include` and `lib` environment variables.
 
-#### 3.4.2. 配置工程属性
+#### 3.4.2. Modify The Configuration
 
-> 确保使用VC-LTL时使用`/MD`编译代码，如需XP支持，修改`VC-LTL helper for nmake.cmd`启用 `set SupportWinXP=true`，并且需要自行调整连接器最低系统支持为`5.01`（WinXP x86）或者`5.02`（WinXP x64）。
+> Make sure to use `/MD` to compile project when using VC-LTL. For XP support, modify `VC-LTL helper for nmake.cmd` to enable `set SupportWinXP=true` and need to adjust the minimum system support for ` 5.01` (WinXP x86) or `5.02` (WinXP x64).
 
+### 3.5. Rebuild (Release only)
+Is the file size smaller? If you fail to compile, please refer to [4. FAQ](#4-FAQ). You can also feedback and work together to improve VC-LTL.
 
-### 3.5. 重新编译（仅Release）
-现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](ReadMe.md#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
+Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static libraries must also be recompiled with VC-LTL.
 
-温馨提示：使用VC-LTL编译时必须采用`/MD`编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
-
-> 如果正确引用VC-LTL，那么 会在生成时输出：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+> If VC-LTL is referenced correctly, it will be output at the time of generation: `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`.
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
 
-## 4. 常见问题
+## 4. FAQ
 ### 4.1. 未共享到msvcrt.dll
-#### 问题原因
+#### Problem
 未正确引用VC-LTL。建议看看生成日志，是否包含：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
-#### 解决方案
+#### Workaround
 1：请务必确保 `VC-LTL helper for Visual Studio.props` 已经添加到工程。
 
 2：确保以下设置正确：
@@ -158,36 +156,36 @@ add_subdirectory(src)
 * VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 ### 4.2. 无法解析外部符号 delete 等
-#### 问题原因
+#### Problem
 
 没有正确引入vc.lib、msvcrt_Platform.lib。
 
-#### 解决方案
+#### Workaround
 * VC++ 目录 - 包含目录 - 【√ 从父项或项目默认设置继承(I)】
 * VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 ### 4.3. 检测到RuntimeLibrary的不匹配项
-#### 问题原因
+#### Problem
 
 引入了没有使用VC-LTL编译的静态lib文件。
 
-#### 解决方案
+#### Workaround
 
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
 
 ### 4.4. 支持XP时从msvcrt.dll导入大量XP不支持的函数
-#### 问题原因
+#### Problem
 
 可能没有开启引用消除
 
-#### 解决方案
+#### Workaround
 * C/C++ - 所有选项 - 移除未引用的代码和数据 - 【是(/Zc:inline)】
 * 连接器 - 所有选项 - 引用 - 【是(/OPT:REF)】
 
 
-## 5. 已知问题
-* 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
-* 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
+## 5. Known Issues
+* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
+* 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 
 ### The known VC-LTL compatible projects 
@@ -218,14 +216,14 @@ compatible with the following projects.
 
 
 ### 3.0.0.1 2018-04-26 18:48
-* 解决[Bug 27](https://github.com/Chuyu-Team/VC-LTL/issues/27)，非中文环境调用_set_abort_behavior输出警告问题（感谢 myfreeer）。
-* 解决[Bug 21](https://github.com/Chuyu-Team/VC-LTL/issues/21)，特定情况nothrow符号冲突问题（感谢 waiting4love）。
-* 解决Bug，解决x64系统无法使用__p__*系列函数问题。（感谢 昌平）。
-* 改进体验，当RC中意外引入_msvcrt.h时 自动跳过处理，避免RC报错。（感谢 风清凉）。
-* 改进体验，“Shared.props”改名为“VC-LTL helper for Visual Studio.props”并大幅度增强对某些极端工程的支持。
-* 新增[Fea 25](https://github.com/Chuyu-Team/VC-LTL/issues/25)，添加“VC-LTL helper for nmake.cmd”，方便nmake引入VC-LTL。
-* 新增Fea，添加“VC-LTL helper for cmake.cmake”，方便cmake引入VC-LTL（感谢 Sandro）。
-* 新增Fea，全面支持ARM、ARM64支持。
+* Fix [Bug 27](https://github.com/Chuyu-Team/VC-LTL/issues/27), `_set_abort_behavior` maybe output a warning message (Thanks myfreeer).
+* Fix [Bug 21](https://github.com/Chuyu-Team/VC-LTL/issues/21), `nothrow` symbol conflict problem.
+* Fix Bug, solved the x64 system cann't use the __p__ functions (Thanks 昌平).
+* Improve, solved an error when RC include _msvcrt.h (Thanks 风清凉).
+* Improve, `Shared.props` rename to `VC-LTL helper for Visual Studio.props` and improve support.
+* Add [Fea 25](https://github.com/Chuyu-Team/VC-LTL/issues/25), add `VC-LTL helper for nmake.cmd`, provide NMake support.
+* Add Fea, add `VC-LTL helper for cmake.cmake`, provide CMake support (Thanks Sandro).
+* Add Fea, add ARM and ARM64 support.
 
 
 ### 2.0.0.8 2018-03-23 14:58
@@ -269,7 +267,7 @@ compatible with the following projects.
 ### 2.0.0.2 2017-11-05 14:14
 * 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持
 * 为Windows XP添加 _time32、_fseeki64静态实现
-* 解决BUG 14，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）
+* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）
 * 新增C++类，mutex、thread、xtime、xonce支持
 * 优化编译方式，消除无意义符号，减少ltl库体积
 
@@ -306,8 +304,8 @@ compatible with the following projects.
 
 
 ### 1.0.0.10 2017-07-28 20:28
-* 解决Bug 9，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
-* 解决Bug 8，修复typeid功能无法使用问题（感谢 HwangBae）
+* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
+* 解决[Bug 8](https://github.com/Chuyu-Team/VC-LTL/issues/8)，修复typeid功能无法使用问题（感谢 HwangBae）
 * 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积
 * 解决Bug，修复无法使用__argc、__argv、__wargv、_environ、_wenviron全局变量问题（感谢 亮叔叔）
 * 解决微软Bug，修复使用ATL库的程序不支持XP RTM问题
@@ -351,5 +349,5 @@ compatible with the following projects.
 * 解决C编译不通过问题
 
 
-### 1.0.0.1 13:42 2016/5/23
+### 1.0.0.1 2016-05-23 13:42
 * 解决C++异常无法使用问题
