@@ -145,7 +145,7 @@ Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static 
 
 ## 4. FAQ
 ### 4.1. 未共享到msvcrt.dll
-#### Problem
+#### Cause
 未正确引用VC-LTL。建议看看生成日志，是否包含：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
 
 #### Workaround
@@ -156,7 +156,7 @@ Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static 
 * VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 ### 4.2. 无法解析外部符号 delete 等
-#### Problem
+#### Cause
 
 没有正确引入vc.lib、msvcrt_Platform.lib。
 
@@ -165,7 +165,7 @@ Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static 
 * VC++ 目录 - 库目录 - 【√ 从父项或项目默认设置继承(I)】
 
 ### 4.3. 检测到RuntimeLibrary的不匹配项
-#### Problem
+#### Cause
 
 引入了没有使用VC-LTL编译的静态lib文件。
 
@@ -174,7 +174,7 @@ Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static 
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
 
 ### 4.4. 支持XP时从msvcrt.dll导入大量XP不支持的函数
-#### Problem
+#### Cause
 
 可能没有开启引用消除
 
@@ -187,11 +187,6 @@ Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static 
 * 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
-
-### The known VC-LTL compatible projects 
-This list simply indicates that some developers have already compiled these 
-projects successfully with using the VC-LTL. Do not mean the VC-LTL is only 
-compatible with the following projects.
 
 ## Excursus - Known project using VC-LTL
 
