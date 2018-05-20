@@ -1,5 +1,6 @@
 ﻿# VC-LTL——编译精巧的程序原来如此简单
 
+- [English](ReadMe.md)
 
 ## 1. 关于VC-LTL
 
@@ -47,10 +48,10 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ### 2.2. 支持的编译工具
 |    编译工具    | 支持文件
 | -------------- | --
-| Visual Studio  | [VC-LTL helper for Visual Studio.props](ReadMe-zh-Hans.md#32-在visual-studio中使用vc-ltl)
-| CMake          | [VC-LTL helper for cmake.cmake](ReadMe-zh-Hans.md#33-在cmake中使用vc-ltl)
-| NMake          | [VC-LTL helper for nmake.cmd](ReadMe-zh-Hans.md#34-在nmake纯cl中使用vc-ltl)
-| CL             | [VC-LTL helper for nmake.cmd](ReadMe-zh-Hans.md#34-在nmake纯cl中使用vc-ltl)
+| Visual Studio  | [VC-LTL helper for Visual Studio.props](ReadMe.osc.md#32-在visual-studio中使用vc-ltl)
+| CMake          | [VC-LTL helper for cmake.cmake](ReadMe.osc.md#33-在cmake中使用vc-ltl)
+| NMake          | [VC-LTL helper for nmake.cmd](ReadMe.osc.md#34-在nmake纯cl中使用vc-ltl)
+| CL             | [VC-LTL helper for nmake.cmd](ReadMe.osc.md#34-在nmake纯cl中使用vc-ltl)
 
 ### 2.3. 支持的操作系统
 |   操作系统                                          | x86 | x64 | arm | arm64 
@@ -67,7 +68,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ## 3. 使用方法
 
 ### 3.1. 安装VC-LTL
-假如，你将[VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
+假如，你将[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
 
 > 脚本会在`HKCU\Code\VC-LTL`创建注册表。
 
@@ -118,7 +119,7 @@ add_subdirectory(src)
 
 
 ### 3.5. 重新编译（仅Release）
-现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](ReadMe-zh-Hans.md#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
+现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](ReadMe.osc.md#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
 
 温馨提示：使用VC-LTL编译时必须采用`/MD`编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
 
@@ -182,3 +183,151 @@ add_subdirectory(src)
 | [librech551](https://github.com/rgwan/librech551)            | 开源跨平台的CH55x ISP软件。使用VC-LTL移除运行时依赖。
 | [Dism++](https://www.chuyu.me/)                              | Dism GUI版。初雨团队自身项目，使用VC-LTL有效减少程序体积，减少安装包大小。
 | [360安全卫士](https://www.360.cn/)                           | 奇虎360推出的上网安全软件。360EvtMgr.exe、360leakfixer.exe、360Util.dll、leakrepair.dll等文件使用VC-LTL编译，在VC-LTL的支持下：升级新编译器，减少文件尺寸，完美兼容WinXP，一箭三雕。
+
+## 更新日志
+
+### 3.0.0.2 2018-05-18 21:07
+* 新增Fea，添加VC 14.0.24234以及14.14.26428支持
+* 新增Fea，添加UCRT 10.0.17134.0支持
+* 新增Fea，添加Spectre缓解库支持
+* 解决Bug，找不到gets符号问题（感谢 npc）
+
+> VC-LTL本次从仓库中剔除了lib文件，VC-LTL用户请下载[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)，然后再使用VC-LTL编译代码。
+
+
+### 3.0.0.1 2018-04-26 18:48
+* 解决[Bug 27](https://github.com/Chuyu-Team/VC-LTL/issues/27)，非中文环境调用_set_abort_behavior输出警告问题（感谢 myfreeer）。
+* 解决[Bug 21](https://github.com/Chuyu-Team/VC-LTL/issues/21)，特定情况nothrow符号冲突问题（感谢 waiting4love）。
+* 解决Bug，解决x64系统无法使用__p__*系列函数问题。（感谢 昌平）。
+* 改进体验，当RC中意外引入_msvcrt.h时 自动跳过处理，避免RC报错。（感谢 风清凉）。
+* 改进体验，“Shared.props”改名为“VC-LTL helper for Visual Studio.props”并大幅度增强对某些极端工程的支持。
+* 新增[Fea 25](https://github.com/Chuyu-Team/VC-LTL/issues/25)，添加“VC-LTL helper for nmake.cmd”，方便nmake引入VC-LTL。
+* 新增Fea，添加“VC-LTL helper for cmake.cmake”，方便cmake引入VC-LTL（感谢 Sandro）。
+* 新增Fea，全面支持ARM、ARM64支持。
+
+
+### 2.0.0.8 2018-03-23 14:58
+* 解决一些潜在找不到符号问题以及链接失败问题（感谢 Too Simple）
+* 修正__crtLCMapString相关字符串操作兼容性问题（感谢 Too Simple）
+* 解决_getptd_noexit在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题。（感谢 亮亮）
+* 添加最新Vistual Studio 2017 15.6支持
+
+
+### 2.0.0.7 2018-03-06 17:17
+* 重新整理VC-LTL，尽可能减少对原版改动
+* 解决一些Bug（感谢 亮亮、layerfsd、waiting4love）
+
+
+### 2.0.0.6 2018-01-17 17:15
+* 添加Vistual Studio 2017 15.5新增函数支持
+* 新增Shared.props改进属性表引用灵活性
+* 新增VC-LTL轻量模式以及高级模式支持（修改Shared.props可以调整模式）
+* 继续扩充CRT函数支持
+
+
+### 2.0.0.5 2017-12-10 20:56
+* 新增C++ 17 align new/delete支持
+* 解决兼容WinXP时可能出现的ntdll.lib依赖失败以及某些函数转发切换到weak别名技术
+
+> 本次更新主要添加对Vistual Studio 2017 15.5以及更高版本新增的C++ 17功能支持
+
+
+### 2.0.0.4 2017-12-03 20:40
+* 全面覆盖STL、ConcRT库，让C++如鱼得水，尽情使用STL。
+* 全新的weak别名转发技术，实现零jmp解决新老CRT命名冲突。
+
+
+### 2.0.0.3 2017-11-18 14:18
+* Vista编译模式，CRT函数覆盖率达到90%以上
+* XP编译模式，CRT函数覆盖率达到80%以上
+* 简化注册表引用方式。
+* 添加std::thread支持
+
+
+### 2.0.0.2 2017-11-05 14:14
+* 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持
+* 为Windows XP添加 _time32、_fseeki64静态实现
+* 解决Bug 14，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）
+* 新增C++类，mutex、thread、xtime、xonce支持
+* 优化编译方式，消除无意义符号，减少ltl库体积
+
+
+### 2.0.0.1 2017-10-29 22:23
+* 新增iostream、stringstream支持
+* 解决使用_fstat32、_fstat32i64、_fstat64i32、_stat32、_stat32i64、_stat64i32、_wstat32、_wstat32i64、_wstat64i32导致编译不通过问题
+* 修正 __acrt_iob_func 始终返回输入流问题
+* 解决 type_info operator != 功能无法使用问题（感谢  sonyps5201314）
+* 解决_daylight，_dstbias，_timezone，_tzname无法使用问题（感谢  sonyps5201314）
+* 解决32位 SSE高精度数据函数无法使用问题，比如_libm_sse2_tan_precise，_libm_sse2_sqrt_precise，_libm_sse2_sin_precise（感谢 stsm85）
+
+
+### 1.0.0.13 2017-10-11 14:00
+* 解决Bug，atanh、acosh、asinh无法使用问题（感谢 stsm85）
+* 新增Windows 10 16299 UCRT支持
+* 移除Windows 10 14393 UCRT支持
+
+> 16299已经发布，因此移除老版本14393支持。相关项目请迁徙到15063或者最新16299。
+
+### 1.0.0.12 2017-09-15 13:33
+* 解决Bug，使用strcat_s时在Windows XP中提示找不到指定符号。（感谢 stsm85）
+* 解决Bug，解决SSE2除法导致编译不通过问题（感谢 stsm85）
+* 解决Bug，解决wcstoll、vsnprintf、rand_s、strtoll无法使用问题（感谢 stsm85）
+* 代码调整，消除所有VC-LTL编译警告，强迫症患者福音。
+
+> 本次更新后，FastCopy、winpck相关程序直接可以使用VC-LTL编译。
+
+
+### 1.0.0.11 2017-08-23 19:00
+* 解决Bug，使用_difftime64时Windows XP无法运行。
+* 解决Bug，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）
+* 更新VC141头文件以及实现，全部同步到最新14.11
+
+
+### 1.0.0.10 2017-07-28 20:28
+* 解决Bug 9，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
+* 解决Bug 8，修复typeid功能无法使用问题（感谢 HwangBae）
+* 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积
+* 解决Bug，修复无法使用__argc、__argv、__wargv、_environ、_wenviron全局变量问题（感谢 亮叔叔）
+* 解决微软Bug，修复使用ATL库的程序不支持XP RTM问题
+
+
+### 1.0.0.9 2017-05-26 14:46
+* 改进Windows XP支持
+* 优化库结构裁剪ltl库体积
+* 解决使用自定义异常导致程序编译不通过问题
+* 调整*_p系列函数定义，以免使用*_p系列函数时编译不通过
+* 解决使用浮点除法时导致编译不通过问题
+
+
+### 1.0.0.8 2017-04-25 20:37
+* 简化库引用方式
+* 更新14393 ucrt到最新版（2017-01-05版）
+* 添加15063 ucrt支持
+
+
+### 1.0.0.7 2017-04-22 19:26
+* 初步添加Windows XP支持
+* 添加C++异常支持
+* 添加/GS特性支持
+* 添加/guard:cf支持
+* VC140库升级到Vistual Studio 2015 Update3
+
+
+### 1.0.0.6 2017-3-18 13:46
+* 优化文件引用
+
+
+### 1.0.0.5 2017-3-16 20:53
+* 新增VC 2017支持
+
+
+### 1.0.0.3 2016-11-28 12:54
+* 改进对C工程的兼容性
+
+
+### 1.0.0.2 2016-06-14 12:52
+* 解决C编译不通过问题
+
+
+### 1.0.0.1 13:42 2016/5/23
+* 解决C++异常无法使用问题
