@@ -48,10 +48,10 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 ### 2.2. 支持的编译工具
 |    编译工具    | 支持文件
 | -------------- | --
-| Visual Studio  | [VC-LTL helper for Visual Studio.props](ReadMe.osc.md#32-在visual-studio中使用vc-ltl)
-| CMake          | [VC-LTL helper for cmake.cmake](ReadMe.osc.md#33-在cmake中使用vc-ltl)
-| NMake          | [VC-LTL helper for nmake.cmd](ReadMe.osc.md#34-在nmake纯cl中使用vc-ltl)
-| CL             | [VC-LTL helper for nmake.cmd](ReadMe.osc.md#34-在nmake纯cl中使用vc-ltl)
+| Visual Studio  | [VC-LTL helper for Visual Studio.props](#32-在visual-studio中使用vc-ltl)
+| CMake          | [VC-LTL helper for cmake.cmake](#33-在cmake中使用vc-ltl)
+| NMake          | [VC-LTL helper for nmake.cmd](#34-在nmake纯cl中使用vc-ltl)
+| CL             | [VC-LTL helper for nmake.cmd](#34-在nmake纯cl中使用vc-ltl)
 
 ### 2.3. 支持的操作系统
 |   操作系统                                          | x86 | x64 | arm | arm64 
@@ -90,7 +90,7 @@ VC-LTL 是一个基于微软VC修改的开源VC库，与微软原版库源码级
 
 #### 3.3.1. 添加VC-LTL配置文件
 
-将模块文件`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加配置上添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
+将模块文件`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
 
 示例：
 
@@ -119,11 +119,11 @@ add_subdirectory(src)
 
 
 ### 3.5. 重新编译（仅Release）
-现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](ReadMe.osc.md#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
+现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
 
 温馨提示：使用VC-LTL编译时必须采用`/MD`编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
 
-> 如果正确引用VC-LTL，那么 会在生成时输出：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+> 如果正确引用VC-LTL，那么 会在生成时输出：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`。
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
@@ -131,7 +131,7 @@ add_subdirectory(src)
 ## 4. 常见问题
 ### 4.1. 未共享到msvcrt.dll
 #### 问题原因
-未正确引用VC-LTL。建议看看生成日志，是否包含：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`
+未正确引用VC-LTL。建议看看生成日志，是否包含：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`。
 
 #### 解决方案
 1：请务必确保 `VC-LTL helper for Visual Studio.props` 已经添加到工程。
@@ -169,8 +169,8 @@ add_subdirectory(src)
 
 
 ## 5. 已知问题
-* 由于WinXP本身BUG，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
-* 由于WinXP本身BUG，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
+* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
+* 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 
 ## 附：已知使用VC-LTL的官方项目
@@ -247,7 +247,7 @@ add_subdirectory(src)
 ### 2.0.0.2 2017-11-05 14:14
 * 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持
 * 为Windows XP添加 _time32、_fseeki64静态实现
-* 解决Bug 14，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）
+* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）
 * 新增C++类，mutex、thread、xtime、xonce支持
 * 优化编译方式，消除无意义符号，减少ltl库体积
 
@@ -284,8 +284,8 @@ add_subdirectory(src)
 
 
 ### 1.0.0.10 2017-07-28 20:28
-* 解决Bug 9，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
-* 解决Bug 8，修复typeid功能无法使用问题（感谢 HwangBae）
+* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）
+* 解决[Bug 8](https://github.com/Chuyu-Team/VC-LTL/issues/8)，修复typeid功能无法使用问题（感谢 HwangBae）
 * 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积
 * 解决Bug，修复无法使用__argc、__argv、__wargv、_environ、_wenviron全局变量问题（感谢 亮叔叔）
 * 解决微软Bug，修复使用ATL库的程序不支持XP RTM问题
@@ -329,5 +329,5 @@ add_subdirectory(src)
 * 解决C编译不通过问题
 
 
-### 1.0.0.1 13:42 2016/5/23
+### 1.0.0.1 2016-05-23 13:42
 * 解决C++异常无法使用问题
