@@ -134,7 +134,7 @@ Copy `VC-LTL helper for nmake.cmd` to your project. Run `vcvars32.bat` or `vcvar
 > Make sure to use `/MD` to compile project when using VC-LTL. For XP support, modify `VC-LTL helper for nmake.cmd` to enable `set SupportWinXP=true` and need to adjust the minimum system support for ` 5.01` (WinXP x86) or `5.02` (WinXP x64).
 
 ### 3.5. Rebuild (Release only)
-Is the file size smaller? If you fail to compile, please refer to [4. FAQ](#4-fag). You can also feedback and work together to improve VC-LTL.
+Is the file size smaller? If you fail to compile, please refer to [4. FAQ](#4-faq). You can also feedback and work together to improve VC-LTL.
 
 Tips: Compile with VC-LTL must be compiled with `/MD`, and all dependent static libraries must also be recompiled with VC-LTL.
 
