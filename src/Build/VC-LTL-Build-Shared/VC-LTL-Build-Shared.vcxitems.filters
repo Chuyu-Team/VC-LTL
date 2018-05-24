@@ -426,5 +426,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\startup\argv_data.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\ucrt\lowio\txtmode.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

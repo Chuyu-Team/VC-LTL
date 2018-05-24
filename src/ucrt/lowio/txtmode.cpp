@@ -8,16 +8,22 @@
 //
 #include <corecrt_internal.h>
 #include <stdlib.h>
+#include <msvcrt_IAT.h>
 
 // Clients of the static CRT can choose to access _fmode directly as a global variable; they do so as if it was declared as an int.
 // Because state separation is disabled in the static CRT, the dual_state_global<int> has the same representation as an int, so this is okay, if a bit messy.
-__crt_state_management::dual_state_global<int> _fmode;  // This is automatically initialized to zero by the compiler
+EXTERN_C _ACRTIMP extern int _fmode;  // This is automatically initialized to zero by the compiler
+
+#ifndef _AMD64_
+#error "仅需要在x64中编译"
+#endif
 
 
-
-extern "C" int* __cdecl __p__fmode()
+extern "C" int* __cdecl __p__fmode_downlevel()
 {
     _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-    return &_fmode.value();
+    return &_fmode;
     _END_SECURE_CRT_DEPRECATION_DISABLE
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__p__fmode_downlevel);
