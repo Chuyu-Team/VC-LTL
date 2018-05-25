@@ -17,6 +17,10 @@ goto Help
 
 :Install
 echo.
+echo.Start writing to the registry
+echo.[HKCU\Code\VC-LTL]
+echo.Root="%~dp0"
+echo.
 reg ADD HKCU\Code\VC-LTL /v Root /t REG_SZ /d "%~dp0\" /f
 echo.
 goto ExitScript
@@ -41,16 +45,7 @@ goto ExitScript
 set IsTextMode=Yes
 echo.Welcome to use VC-LTL Installer! If you want to invoke this script 
 echo.silently, please use /? parameter to read help.
-reg query HKCU\Code\VC-LTL >nul 2>nul && goto TextUnInstall || goto TextInstall
-
-:TextInstall
-echo. 
-set /p Answer=VC-LTL does not exist, do you want to install it (Y/N)?
-if /i "%Answer%"=="Y" goto Install
-echo.
-echo.Operation canceled.
-echo.
-goto ExitScript
+reg query HKCU\Code\VC-LTL /v Root >nul 2>nul && goto TextUnInstall || goto Install
 
 :TextUnInstall
 echo. 
