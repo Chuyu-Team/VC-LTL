@@ -9,9 +9,6 @@
 
 #include <vcruntime.h>
 
-#define _UCRT_VERISON 16299
-#include "..\..\_msvcrt.h"
-
 _CRT_BEGIN_C_HEADER
 
 
