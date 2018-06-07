@@ -55,7 +55,7 @@
     <!--XP Mode-->
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v140_xp')">true</SupportPlatformToolsetWinXP>
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v141_xp')">true</SupportPlatformToolsetWinXP>
-    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014_xp')">true</SupportPlatformToolsetNormal>
+    <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014_xp')">true</SupportPlatformToolsetWinXP>
 
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141')">true</SupportPlatformToolsetNormal>
