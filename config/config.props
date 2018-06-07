@@ -55,14 +55,15 @@
     <!--XP Mode-->
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v140_xp')">true</SupportPlatformToolsetWinXP>
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v141_xp')">true</SupportPlatformToolsetWinXP>
-    <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM-vs2015_xp')">true</SupportPlatformToolsetWinXP>
-    <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM-vs2017_xp')">true</SupportPlatformToolsetWinXP>
-    
+    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014_xp')">true</SupportPlatformToolsetNormal>
+
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141')">true</SupportPlatformToolsetNormal>
-    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2015')">true</SupportPlatformToolsetNormal>
-    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2017')">true</SupportPlatformToolsetNormal>
-    
+    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014')">true</SupportPlatformToolsetNormal>
+    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_c2')">true</SupportPlatformToolsetNormal>
+    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_3_7')">true</SupportPlatformToolsetNormal>
+    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141_clang_c2')">true</SupportPlatformToolsetNormal>
+
     <SupportPlatformToolset Condition="('$(SupportPlatformToolsetWinXP)'=='true') Or ('$(SupportPlatformToolsetNormal)'=='true')">true</SupportPlatformToolset>
 
     <!--VC-LTL仅支持x86、x64、arm、arm64-->
