@@ -58,7 +58,7 @@ lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt
 lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\logbf.obj
 lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\logb.obj
 ::lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\libm_error.obj
-::lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\hypotf.obj
+lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\hypotf.obj
 lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\hypot.obj
 lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\fmod.obj
 lib "%libfile%" /remove:d:\th.obj.amd64fre\minkernel\crts\ucrt\src\appcrt\dll\mt\..\..\tran\noti386\mt\objfre\amd64\floorf.obj
