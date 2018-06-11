@@ -13,346 +13,352 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="objs">
+      <UniqueIdentifier>{01758dda-cfd8-417a-93cd-6f763ccf6f31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\_tolower.c">
+    <ClCompile Include="..\..\stl\atomic.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\_toupper.c">
+    <ClCompile Include="..\..\stl\cerr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\cout.cpp">
+    <ClCompile Include="..\..\stl\cin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ios.cpp">
+    <ClCompile Include="..\..\stl\clog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\iosptrs.cpp">
+    <ClCompile Include="..\..\stl\cond.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\locale.cpp">
+    <ClCompile Include="..\..\stl\cout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\locale0.cpp">
+    <ClCompile Include="..\..\stl\cthread.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\syserror.cpp">
+    <ClCompile Include="..\..\stl\excptptr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\uncaught.cpp">
+    <ClCompile Include="..\..\stl\filesys.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\wiostrea.cpp">
+    <ClCompile Include="..\..\stl\fiopen.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\wlocale.cpp">
+    <ClCompile Include="..\..\stl\future.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdateord.cpp">
+    <ClCompile Include="..\..\stl\iomanip.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xgetwctype.c">
+    <ClCompile Include="..\..\stl\ios.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlocale.cpp">
+    <ClCompile Include="..\..\stl\iosptrs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlock.cpp">
+    <ClCompile Include="..\..\stl\iostream.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xmbtowc.c">
+    <ClCompile Include="..\..\stl\locale.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xmtx.c">
+    <ClCompile Include="..\..\stl\locale0.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xrngdev.cpp">
+    <ClCompile Include="..\..\stl\multprec.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstol.c">
+    <ClCompile Include="..\..\stl\mutex.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstoll.c">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\stl\nothrow.cpp">
+      <Filter>objs</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstoul.c">
+    <ClCompile Include="..\..\stl\ppltasks.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstoull.c">
+    <ClCompile Include="..\..\stl\raisehan.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstoxflt.c">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\stl\sharedmutex.cpp">
+      <Filter>objs</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstrxfrm.c">
+    <ClCompile Include="..\..\stl\stdhndlr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xthrow.cpp">
+    <ClCompile Include="..\..\stl\syserror.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xtowlower.c">
+    <ClCompile Include="..\..\stl\taskscheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xtowupper.c">
+    <ClCompile Include="..\..\stl\thread0.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwcscoll.c">
+    <ClCompile Include="..\..\stl\uncaught.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwcsxfrm.c">
+    <ClCompile Include="..\..\stl\ushcerr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwctomb.c">
+    <ClCompile Include="..\..\stl\ushcin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstrcoll.c">
+    <ClCompile Include="..\..\stl\ushclog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\fiopen.cpp">
+    <ClCompile Include="..\..\stl\ushcout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\iomanip.cpp">
+    <ClCompile Include="..\..\stl\ushiostr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\cin.cpp">
+    <ClCompile Include="..\..\stl\wcerr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\wcerr.cpp">
+    <ClCompile Include="..\..\stl\wcin.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\wcin.cpp">
+    <ClCompile Include="..\..\stl\wclog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\wclog.cpp">
+    <ClCompile Include="..\..\stl\wcout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\wcout.cpp">
+    <ClCompile Include="..\..\stl\wiostrea.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\cerr.cpp">
+    <ClCompile Include="..\..\stl\wlocale.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\clog.cpp">
+    <ClCompile Include="..\..\stl\xalloc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\thread0.cpp">
+    <ClCompile Include="..\..\stl\xcosh.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xonce.cpp">
+    <ClCompile Include="..\..\stl\xdateord.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xtime.c">
+    <ClCompile Include="..\..\stl\xdint.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\cond.c">
+    <ClCompile Include="..\..\stl\xdnorm.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\cthread.c">
+    <ClCompile Include="..\..\stl\xdscale.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\nothrow.cpp">
+    <ClCompile Include="..\..\stl\xdtento.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xnotify.c">
+    <ClCompile Include="..\..\stl\xdtest.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\excptptr.cpp">
+    <ClCompile Include="..\..\stl\xdunscal.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\future.cpp">
+    <ClCompile Include="..\..\stl\xexp.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ppltasks.cpp">
+    <ClCompile Include="..\..\stl\xfcosh.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\taskscheduler.cpp">
+    <ClCompile Include="..\..\stl\xfdint.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\mutex.c">
+    <ClCompile Include="..\..\stl\xfdnorm.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\atomic.c">
+    <ClCompile Include="..\..\stl\xfdscale.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\filesys.cpp">
+    <ClCompile Include="..\..\stl\xfdtento.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\iostream.cpp">
+    <ClCompile Include="..\..\stl\xfdtest.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\multprec.cpp">
+    <ClCompile Include="..\..\stl\xfdunsca.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\raisehan.cpp">
+    <ClCompile Include="..\..\stl\xferaise.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\sharedmutex.cpp">
+    <ClCompile Include="..\..\stl\xfexp.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\stdhndlr.cpp">
+    <ClCompile Include="..\..\stl\xfprec.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ushcerr.cpp">
+    <ClCompile Include="..\..\stl\xfsinh.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ushcin.cpp">
+    <ClCompile Include="..\..\stl\xfvalues.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ushclog.cpp">
+    <ClCompile Include="..\..\stl\xgetwctype.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ushcout.cpp">
+    <ClCompile Include="..\..\stl\xlcosh.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\ushiostr.cpp">
+    <ClCompile Include="..\..\stl\xldint.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xalloc.cpp">
+    <ClCompile Include="..\..\stl\xldscale.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xcosh.c">
+    <ClCompile Include="..\..\stl\xldtento.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdint.c">
+    <ClCompile Include="..\..\stl\xldtest.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdnorm.c">
+    <ClCompile Include="..\..\stl\xldunsca.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdscale.c">
+    <ClCompile Include="..\..\stl\xlexp.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdtento.c">
+    <ClCompile Include="..\..\stl\xlgamma.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdtest.c">
+    <ClCompile Include="..\..\stl\xlocale.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xdunscal.c">
+    <ClCompile Include="..\..\stl\xlock.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xexp.c">
+    <ClCompile Include="..\..\stl\xlpoly.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfcosh.c">
+    <ClCompile Include="..\..\stl\xlprec.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlgamma.cpp">
+    <ClCompile Include="..\..\stl\xlsinh.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xrngabort.cpp">
+    <ClCompile Include="..\..\stl\xlvalues.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfdint.c">
+    <ClCompile Include="..\..\stl\xmbtowc.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfdnorm.c">
+    <ClCompile Include="..\..\stl\xmtx.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfdscale.c">
+    <ClCompile Include="..\..\stl\xnotify.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfdtento.c">
+    <ClCompile Include="..\..\stl\xonce.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfdtest.c">
+    <ClCompile Include="..\..\stl\xpoly.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfdunsca.c">
+    <ClCompile Include="..\..\stl\xprec.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xferaise.c">
+    <ClCompile Include="..\..\stl\xrngabort.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfexp.c">
+    <ClCompile Include="..\..\stl\xrngdev.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfprec.c">
+    <ClCompile Include="..\..\stl\xsinh.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfsinh.c">
+    <ClCompile Include="..\..\stl\xstod.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xfvalues.c">
+    <ClCompile Include="..\..\stl\xstof.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlcosh.c">
+    <ClCompile Include="..\..\stl\xstoflt.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xldint.c">
+    <ClCompile Include="..\..\stl\xstol.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xldscale.c">
+    <ClCompile Include="..\..\stl\xstold.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xldtento.c">
+    <ClCompile Include="..\..\stl\xstoll.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xldtest.c">
+    <ClCompile Include="..\..\stl\xstopfx.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xldunsca.c">
+    <ClCompile Include="..\..\stl\xstoul.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlexp.c">
+    <ClCompile Include="..\..\stl\xstoull.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlpoly.c">
+    <ClCompile Include="..\..\stl\xstoxflt.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlprec.c">
+    <ClCompile Include="..\..\stl\xstrcoll.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlsinh.c">
+    <ClCompile Include="..\..\stl\xstrxfrm.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xlvalues.c">
+    <ClCompile Include="..\..\stl\xthrow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xpoly.c">
+    <ClCompile Include="..\..\stl\xtime.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xprec.c">
+    <ClCompile Include="..\..\stl\xtowlower.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xsinh.c">
+    <ClCompile Include="..\..\stl\xtowupper.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstod.c">
+    <ClCompile Include="..\..\stl\xvalues.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstof.c">
+    <ClCompile Include="..\..\stl\xwcscoll.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstoflt.c">
+    <ClCompile Include="..\..\stl\xwcsxfrm.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstold.c">
+    <ClCompile Include="..\..\stl\xwctomb.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xstopfx.c">
+    <ClCompile Include="..\..\stl\xwstod.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xvalues.c">
+    <ClCompile Include="..\..\stl\xwstof.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwstod.c">
+    <ClCompile Include="..\..\stl\xwstoflt.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwstof.c">
+    <ClCompile Include="..\..\stl\xwstold.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwstoflt.c">
+    <ClCompile Include="..\..\stl\xwstopfx.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwstold.c">
+    <ClCompile Include="..\..\stl\xwstoxfl.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwstopfx.c">
+    <ClCompile Include="..\..\stl\_tolower.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.24210\stl\xwstoxfl.c">
+    <ClCompile Include="..\..\stl\_toupper.c">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\locale0_implib.cpp">
+      <Filter>objs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,16 +16,19 @@
     <Filter Include="源文件\vc">
       <UniqueIdentifier>{8c1bb663-d9c1-45e1-b556-287f00f87ce7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\vc\objs">
+      <UniqueIdentifier>{cc2e47e8-0c60-4f20-b3e1-1cab7ef77930}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)14.0.24225\vcruntime\unexpected.cpp">
+    <ClCompile Include="..\..\vcruntime\unexpected.cpp">
       <Filter>源文件\vc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\14.0.24225\vcruntime\utility_desktop.cpp">
-      <Filter>源文件\vc</Filter>
+    <ClCompile Include="..\..\vcruntime\utility_desktop.cpp">
+      <Filter>源文件\vc\objs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\14.0.24225\vcruntime\std_nothrow.cpp">
-      <Filter>源文件\vc</Filter>
+    <ClCompile Include="..\..\vcruntime\std_nothrow.cpp">
+      <Filter>源文件\vc\objs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

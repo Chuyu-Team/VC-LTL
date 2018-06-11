@@ -1,20 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="v141xp|Win32">
-      <Configuration>v141xp</Configuration>
+    <ProjectConfiguration Include="Dynamic|Win32">
+      <Configuration>Dynamic</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="v141xp|x64">
-      <Configuration>v141xp</Configuration>
+    <ProjectConfiguration Include="Dynamic|x64">
+      <Configuration>Dynamic</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="v141|Win32">
-      <Configuration>v141</Configuration>
+    <ProjectConfiguration Include="Redist|Win32">
+      <Configuration>Redist</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="v141|x64">
-      <Configuration>v141</Configuration>
+    <ProjectConfiguration Include="Redist|x64">
+      <Configuration>Redist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static_WinXP|Win32">
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static_WinXP|x64">
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static|Win32">
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static|x64">
+      <Configuration>Static</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -24,84 +40,158 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>msvcprt141</RootNamespace>
     <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
-    <VC-LTLUsedToolsVersion>14.13.26128</VC-LTLUsedToolsVersion>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\Shared.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SupportWinXP>true</SupportWinXP>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SupportWinXP>true</SupportWinXP>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>msvcprt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>msvcp140_ltl</TargetName>
+    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
     <TargetName>ltlcprt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>msvcprt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
+    <TargetName>msvcp140_ltl</TargetName>
+    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -116,6 +206,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -124,7 +215,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -139,6 +230,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,7 +239,60 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CRTDLL2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>ucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ProgramDatabaseFile>$(OutDir)msvcprt.pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CRTDLL2;_CRTIMP3=_CRTIMP2;_CRTIMP4=_CRTIMP2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -161,6 +306,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,7 +315,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -183,6 +329,57 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CRTDLL2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)msvcprt.pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CRTDLL2;_CRTIMP3=_CRTIMP2;_CRTIMP4=_CRTIMP2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,131 +389,477 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\atomic.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\cerr.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\cin.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\clog.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\cond.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
+    <ClCompile Include="..\..\stl\atomic.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\cout.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\cthread.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\excptptr.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\filesys.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\fiopen.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\future.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\iomanip.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ios.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\iosptrs.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\iostream.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\locale.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\locale0.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\multprec.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\mutex.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='v141|x64'">CompileAsCpp</CompileAs>
+    <ClCompile Include="..\..\stl\cerr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\nothrow.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ppltasks.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\raisehan.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\sharedmutex.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\stdhndlr.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\syserror.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\taskscheduler.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\thread0.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\uncaught.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ushcerr.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ushcin.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ushclog.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ushcout.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\ushiostr.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\wcerr.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\wcin.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\wclog.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\wcout.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\wiostrea.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\wlocale.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xalloc.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xcosh.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdateord.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdint.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdnorm.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdscale.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdtento.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdtest.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xdunscal.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xexp.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfcosh.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfdint.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfdnorm.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfdscale.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfdtento.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfdtest.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfdunsca.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xferaise.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfexp.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfprec.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfsinh.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xfvalues.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xgetwctype.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlcosh.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xldint.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xldscale.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xldtento.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xldtest.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xldunsca.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlexp.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlgamma.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlocale.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlock.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlpoly.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlprec.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlsinh.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xlvalues.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xmbtowc.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xmtx.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xnotify.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xonce.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xpoly.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xprec.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xrngabort.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xrngdev.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xsinh.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstod.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstof.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstoflt.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstol.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstold.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstoll.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstopfx.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstoul.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstoull.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstoxflt.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstrcoll.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xstrxfrm.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xthrow.cpp" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xtime.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xtowlower.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xtowupper.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xvalues.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwcscoll.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwcsxfrm.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwctomb.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwstod.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwstof.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwstoflt.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwstold.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwstopfx.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\xwstoxfl.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\_tolower.c" />
-    <ClCompile Include="$(SolutionDir)14.13.26128\stl\_toupper.c" />
-    <ClCompile Include="..\..\..\14.13.26128\stl\parallel_algorithms.cpp" />
-    <ClCompile Include="..\..\..\14.13.26128\stl\vector_algorithms.cpp" />
+    <ClCompile Include="..\..\stl\cin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\clog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\cond.c">
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\cout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\cthread.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\excptptr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\filesys.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\fiopen.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\future.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\iomanip.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ios.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\iosptrs.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\iostream.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\locale.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\locale0.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\multprec.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\mutex.c">
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\nothrow.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ppltasks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\raisehan.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\sharedmutex.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\stdhndlr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\syserror.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\taskscheduler.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\thread0.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\uncaught.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ushcerr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ushcin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ushclog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ushcout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\ushiostr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\wcerr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\wcin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\wclog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\wcout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\wiostrea.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\wlocale.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xalloc.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xcosh.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdateord.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdint.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdnorm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdscale.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdtento.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdtest.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xdunscal.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xexp.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfcosh.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfdint.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfdnorm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfdscale.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfdtento.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfdtest.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfdunsca.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xferaise.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfexp.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfprec.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfsinh.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xfvalues.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xgetwctype.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlcosh.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xldint.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xldscale.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xldtento.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xldtest.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xldunsca.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlexp.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlgamma.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlocale.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlock.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlpoly.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlprec.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlsinh.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xlvalues.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xmbtowc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xmtx.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xnotify.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xonce.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xpoly.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xprec.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xrngabort.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xrngdev.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xsinh.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstod.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstof.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstoflt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstol.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstold.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstoll.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstopfx.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstoul.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstoull.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstoxflt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstrcoll.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xstrxfrm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xthrow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xtime.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xtowlower.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xtowupper.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xvalues.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwcscoll.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwcsxfrm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwctomb.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwstod.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwstof.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwstoflt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwstold.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwstopfx.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xwstoxfl.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\_tolower.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\_toupper.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\parallel_algorithms.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\vector_algorithms.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\memory_resource.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\locale0_implib.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+      <ExcludedFromBuild Condition="'$(Configuration)'!='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h" />

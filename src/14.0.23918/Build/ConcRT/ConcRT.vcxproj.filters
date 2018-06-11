@@ -15,181 +15,181 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSWrapper.cpp">
+    <ClCompile Include="..\..\concrt\Agent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSThreadVirtualProcessor.cpp">
+    <ClCompile Include="..\..\concrt\CacheLocalScheduleGroup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Agent.cpp">
+    <ClCompile Include="..\..\concrt\cds_cache_aligned_allocator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\CacheLocalScheduleGroup.cpp">
+    <ClCompile Include="..\..\concrt\Chores.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\cds_cache_aligned_allocator.cpp">
+    <ClCompile Include="..\..\concrt\concurrent_hash.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Chores.cpp">
+    <ClCompile Include="..\..\concrt\concurrent_queue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\concurrent_hash.cpp">
+    <ClCompile Include="..\..\concrt\concurrent_vector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\concurrent_queue.cpp">
+    <ClCompile Include="..\..\concrt\Context.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\concurrent_vector.cpp">
+    <ClCompile Include="..\..\concrt\ContextBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Context.cpp">
+    <ClCompile Include="..\..\concrt\CurrentScheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ContextBase.cpp">
+    <ClCompile Include="..\..\concrt\event.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\CurrentScheduler.cpp">
+    <ClCompile Include="..\..\concrt\Exceptions.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\event.cpp">
+    <ClCompile Include="..\..\concrt\ExecutionResource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Exceptions.cpp">
+    <ClCompile Include="..\..\concrt\ExternalContextBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ExecutionResource.cpp">
+    <ClCompile Include="..\..\concrt\FairScheduleGroup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ExternalContextBase.cpp">
+    <ClCompile Include="..\..\concrt\FreeThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\FairScheduleGroup.cpp">
+    <ClCompile Include="..\..\concrt\FreeVirtualProcessorRoot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\FreeThreadProxy.cpp">
+    <ClCompile Include="..\..\concrt\HillClimbing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\FreeVirtualProcessorRoot.cpp">
+    <ClCompile Include="..\..\concrt\InternalContextBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\HillClimbing.cpp">
+    <ClCompile Include="..\..\concrt\location.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\InternalContextBase.cpp">
+    <ClCompile Include="..\..\concrt\Platform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\location.cpp">
+    <ClCompile Include="..\..\concrt\ppl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Platform.cpp">
+    <ClCompile Include="..\..\concrt\RealizedChore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ppl.cpp">
+    <ClCompile Include="..\..\concrt\ResourceManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\RealizedChore.cpp">
+    <ClCompile Include="..\..\concrt\rtlocks.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ResourceManager.cpp">
+    <ClCompile Include="..\..\concrt\ScheduleGroupBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\rtlocks.cpp">
+    <ClCompile Include="..\..\concrt\SchedulerBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ScheduleGroupBase.cpp">
+    <ClCompile Include="..\..\concrt\SchedulerPolicyBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SchedulerBase.cpp">
+    <ClCompile Include="..\..\concrt\SchedulerProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SchedulerPolicyBase.cpp">
+    <ClCompile Include="..\..\concrt\SchedulingNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SchedulerProxy.cpp">
+    <ClCompile Include="..\..\concrt\SchedulingRing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SchedulingNode.cpp">
+    <ClCompile Include="..\..\concrt\SearchAlgorithms.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SchedulingRing.cpp">
+    <ClCompile Include="..\..\concrt\staticinits.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SearchAlgorithms.cpp">
+    <ClCompile Include="..\..\concrt\SubAllocator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\staticinits.cpp">
+    <ClCompile Include="..\..\concrt\TaskCollection.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\SubAllocator.cpp">
+    <ClCompile Include="..\..\concrt\TaskCollectionBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\TaskCollection.cpp">
+    <ClCompile Include="..\..\concrt\ThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\TaskCollectionBase.cpp">
+    <ClCompile Include="..\..\concrt\ThreadProxyFactoryManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ThreadProxy.cpp">
+    <ClCompile Include="..\..\concrt\ThreadScheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ThreadProxyFactoryManager.cpp">
+    <ClCompile Include="..\..\concrt\ThreadVirtualProcessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ThreadScheduler.cpp">
+    <ClCompile Include="..\..\concrt\Timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\ThreadVirtualProcessor.cpp">
+    <ClCompile Include="..\..\concrt\Trace.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Timer.cpp">
+    <ClCompile Include="..\..\concrt\Transmogrificator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Trace.cpp">
+    <ClCompile Include="..\..\concrt\TransmogrifiedPrimary.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\Transmogrificator.cpp">
+    <ClCompile Include="..\..\concrt\UMSBackgroundPoller.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\TransmogrifiedPrimary.cpp">
+    <ClCompile Include="..\..\concrt\UMSFreeThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSBackgroundPoller.cpp">
+    <ClCompile Include="..\..\concrt\UMSFreeVirtualProcessorRoot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSFreeThreadProxy.cpp">
+    <ClCompile Include="..\..\concrt\UMSSchedulerProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSFreeVirtualProcessorRoot.cpp">
+    <ClCompile Include="..\..\concrt\UMSSchedulingContext.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSSchedulerProxy.cpp">
+    <ClCompile Include="..\..\concrt\UMSThreadInternalContext.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSSchedulingContext.cpp">
+    <ClCompile Include="..\..\concrt\UMSThreadProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSThreadInternalContext.cpp">
+    <ClCompile Include="..\..\concrt\UMSThreadScheduler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSThreadProxy.cpp">
+    <ClCompile Include="..\..\concrt\UMSThreadVirtualProcessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\UMSThreadScheduler.cpp">
+    <ClCompile Include="..\..\concrt\UMSWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\utils.cpp">
+    <ClCompile Include="..\..\concrt\utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\VirtualProcessor.cpp">
+    <ClCompile Include="..\..\concrt\VirtualProcessor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\VirtualProcessorRoot.cpp">
+    <ClCompile Include="..\..\concrt\VirtualProcessorRoot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\WinRTWrapper.cpp">
+    <ClCompile Include="..\..\concrt\WinRTWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)14.0.23918\concrt\WorkQueue.cpp">
+    <ClCompile Include="..\..\concrt\WorkQueue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

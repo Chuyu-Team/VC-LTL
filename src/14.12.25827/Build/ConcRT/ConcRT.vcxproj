@@ -1,83 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="v141xp|Win32">
-      <Configuration>v141xp</Configuration>
+    <ProjectConfiguration Include="Redist|Win32">
+      <Configuration>Redist</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="v141xp|x64">
-      <Configuration>v141xp</Configuration>
+    <ProjectConfiguration Include="Redist|x64">
+      <Configuration>Redist</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="v141|Win32">
-      <Configuration>v141</Configuration>
+    <ProjectConfiguration Include="Static_WinXP|Win32">
+      <Configuration>Static_WinXP</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="v141|x64">
-      <Configuration>v141</Configuration>
+    <ProjectConfiguration Include="Static_WinXP|x64">
+      <Configuration>Static_WinXP</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Agent.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\CacheLocalScheduleGroup.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\cds_cache_aligned_allocator.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Chores.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\concurrent_hash.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\concurrent_queue.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\concurrent_vector.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Context.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ContextBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\CurrentScheduler.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\event.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Exceptions.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ExecutionResource.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ExternalContextBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\FairScheduleGroup.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\FreeThreadProxy.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\FreeVirtualProcessorRoot.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\HillClimbing.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\InternalContextBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\location.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Platform.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ppl.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\RealizedChore.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ResourceManager.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\rtlocks.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ScheduleGroupBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SchedulerBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SchedulerPolicyBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SchedulerProxy.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SchedulingNode.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SchedulingRing.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SearchAlgorithms.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\staticinits.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\SubAllocator.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\TaskCollection.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\TaskCollectionBase.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ThreadProxy.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ThreadProxyFactoryManager.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ThreadScheduler.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\ThreadVirtualProcessor.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Timer.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Trace.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\Transmogrificator.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\TransmogrifiedPrimary.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSBackgroundPoller.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSFreeThreadProxy.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSFreeVirtualProcessorRoot.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSSchedulerProxy.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSSchedulingContext.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSThreadInternalContext.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSThreadProxy.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSThreadScheduler.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSThreadVirtualProcessor.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\UMSWrapper.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\utils.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\VirtualProcessor.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\VirtualProcessorRoot.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\WinRTWrapper.cpp" />
-    <ClCompile Include="$(SolutionDir)14.12.25827\concrt\WorkQueue.cpp" />
+    <ProjectConfiguration Include="Static|Win32">
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static|x64">
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -85,84 +32,122 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ConcRT</RootNamespace>
     <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
-    <VC-LTLUsedToolsVersion>14.12.25827</VC-LTLUsedToolsVersion>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\Shared.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SupportWinXP>true</SupportWinXP>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SupportWinXP>true</SupportWinXP>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrtWinXp.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(SolutionDir)..\ltlvcrt.props" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
+    <TargetName>concrt140_ltl</TargetName>
+    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrtxp</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)ucrt\inc;$(IncludePath)</IncludePath>
     <TargetName>libconcrt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir);$(SolutionDir)\ucrt\inc;$(IncludePath)</IncludePath>
+    <TargetName>concrt140_ltl</TargetName>
+    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -183,7 +168,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -204,7 +189,30 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141xp|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0601;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\concrt.lib</ImportLibrary>
+      <AdditionalDependencies>msvcprt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -224,7 +232,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -242,9 +250,90 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0601;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\concrt.lib</ImportLibrary>
+      <AdditionalDependencies>msvcprt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\concrt\Agent.cpp" />
+    <ClCompile Include="..\..\concrt\CacheLocalScheduleGroup.cpp" />
+    <ClCompile Include="..\..\concrt\cds_cache_aligned_allocator.cpp" />
+    <ClCompile Include="..\..\concrt\Chores.cpp" />
+    <ClCompile Include="..\..\concrt\concurrent_hash.cpp" />
+    <ClCompile Include="..\..\concrt\concurrent_queue.cpp" />
+    <ClCompile Include="..\..\concrt\concurrent_vector.cpp" />
+    <ClCompile Include="..\..\concrt\Context.cpp" />
+    <ClCompile Include="..\..\concrt\ContextBase.cpp" />
+    <ClCompile Include="..\..\concrt\CurrentScheduler.cpp" />
+    <ClCompile Include="..\..\concrt\event.cpp" />
+    <ClCompile Include="..\..\concrt\Exceptions.cpp" />
+    <ClCompile Include="..\..\concrt\ExecutionResource.cpp" />
+    <ClCompile Include="..\..\concrt\ExternalContextBase.cpp" />
+    <ClCompile Include="..\..\concrt\FairScheduleGroup.cpp" />
+    <ClCompile Include="..\..\concrt\FreeThreadProxy.cpp" />
+    <ClCompile Include="..\..\concrt\FreeVirtualProcessorRoot.cpp" />
+    <ClCompile Include="..\..\concrt\HillClimbing.cpp" />
+    <ClCompile Include="..\..\concrt\InternalContextBase.cpp" />
+    <ClCompile Include="..\..\concrt\location.cpp" />
+    <ClCompile Include="..\..\concrt\Platform.cpp" />
+    <ClCompile Include="..\..\concrt\ppl.cpp" />
+    <ClCompile Include="..\..\concrt\RealizedChore.cpp" />
+    <ClCompile Include="..\..\concrt\ResourceManager.cpp" />
+    <ClCompile Include="..\..\concrt\rtlocks.cpp" />
+    <ClCompile Include="..\..\concrt\ScheduleGroupBase.cpp" />
+    <ClCompile Include="..\..\concrt\SchedulerBase.cpp" />
+    <ClCompile Include="..\..\concrt\SchedulerPolicyBase.cpp" />
+    <ClCompile Include="..\..\concrt\SchedulerProxy.cpp" />
+    <ClCompile Include="..\..\concrt\SchedulingNode.cpp" />
+    <ClCompile Include="..\..\concrt\SchedulingRing.cpp" />
+    <ClCompile Include="..\..\concrt\SearchAlgorithms.cpp" />
+    <ClCompile Include="..\..\concrt\staticinits.cpp" />
+    <ClCompile Include="..\..\concrt\SubAllocator.cpp" />
+    <ClCompile Include="..\..\concrt\TaskCollection.cpp" />
+    <ClCompile Include="..\..\concrt\TaskCollectionBase.cpp" />
+    <ClCompile Include="..\..\concrt\ThreadProxy.cpp" />
+    <ClCompile Include="..\..\concrt\ThreadProxyFactoryManager.cpp" />
+    <ClCompile Include="..\..\concrt\ThreadScheduler.cpp" />
+    <ClCompile Include="..\..\concrt\ThreadVirtualProcessor.cpp" />
+    <ClCompile Include="..\..\concrt\Timer.cpp" />
+    <ClCompile Include="..\..\concrt\Trace.cpp" />
+    <ClCompile Include="..\..\concrt\Transmogrificator.cpp" />
+    <ClCompile Include="..\..\concrt\TransmogrifiedPrimary.cpp" />
+    <ClCompile Include="..\..\concrt\UMSBackgroundPoller.cpp" />
+    <ClCompile Include="..\..\concrt\UMSFreeThreadProxy.cpp" />
+    <ClCompile Include="..\..\concrt\UMSFreeVirtualProcessorRoot.cpp" />
+    <ClCompile Include="..\..\concrt\UMSSchedulerProxy.cpp" />
+    <ClCompile Include="..\..\concrt\UMSSchedulingContext.cpp" />
+    <ClCompile Include="..\..\concrt\UMSThreadInternalContext.cpp" />
+    <ClCompile Include="..\..\concrt\UMSThreadProxy.cpp" />
+    <ClCompile Include="..\..\concrt\UMSThreadScheduler.cpp" />
+    <ClCompile Include="..\..\concrt\UMSThreadVirtualProcessor.cpp" />
+    <ClCompile Include="..\..\concrt\UMSWrapper.cpp" />
+    <ClCompile Include="..\..\concrt\utils.cpp" />
+    <ClCompile Include="..\..\concrt\VirtualProcessor.cpp" />
+    <ClCompile Include="..\..\concrt\VirtualProcessorRoot.cpp" />
+    <ClCompile Include="..\..\concrt\WinRTWrapper.cpp" />
+    <ClCompile Include="..\..\concrt\WorkQueue.cpp" />
+  </ItemGroup>
 </Project>
