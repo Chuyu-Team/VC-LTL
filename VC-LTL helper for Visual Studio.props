@@ -29,11 +29,14 @@ VC-LTL默认搜索顺序
   
   <!--#####################################################################VC-LTL设置#####################################################################-->
   <PropertyGroup>
+    <!--取消下方注释可以开启强制XP兼容模式，默认情况下仅在选择WinXP工具集时才开启。-->
+    <!--<SupportWinXP>true</SupportWinXP>-->
+
     <!--取消下方注释可以开启VC-LTL轻量模式，轻量模式更加注重体积控制，但是CRT规范将会维持在VS2008。如果你需要高度兼容微软UCRT，那么请不要打开此选项！！！-->
     <!--<DisableAdvancedSupport>true</DisableAdvancedSupport>-->
 
-    <!--取消下方注释可以开启强制XP兼容模式，默认情况下仅在选择WinXP工具集时才开启。-->
-    <!--<SupportWinXP>true</SupportWinXP>-->
+    <!--取消下方注释可以将C/C++库连接到动态库 ltlbase.dll、msvcp140_ltl.dll、concrt140_ltl.dll。-->
+    <!--<DisableStaticLibSupport>true</DisableStaticLibSupport>-->
   </PropertyGroup>
   <!--####################################################################################################################################################-->
 

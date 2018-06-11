@@ -3727,12 +3727,12 @@ struct allocator_arg_t
 
 constexpr allocator_arg_t allocator_arg{};
 
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xbad_alloc();
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *);
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_alloc();
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xinvalid_argument(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xlength_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xout_of_range(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xoverflow_error(_In_z_ const char *);
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xruntime_error(_In_z_ const char *);
 _STD_END
 
 namespace std {

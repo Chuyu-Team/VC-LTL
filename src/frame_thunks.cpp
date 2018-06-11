@@ -12,8 +12,6 @@
 #include "ehdata.h"
 #include <msvcrt_IAT.h>
 
-EXTERN_C DWORD __cdecl __LTL_GetOsMinVersion();
-
 
 
 
@@ -134,39 +132,4 @@ extern "C" void *__AdjustPointer(
 	return pRet;
 }
 
-#ifdef _X86_
-extern "C" void __stdcall _CallMemberFunction0(void *pthis, void *pmfn)
-{
-
-	__asm
-	{
-		mov		ecx, pthis
-		call	pmfn
-	}
-}
-#endif
-
-#ifdef _X86_
-extern "C" void __stdcall _CallMemberFunction1(void *pthis, void *pmfn, void *pthat)
-{
-	__asm
-	{
-		push    pthat
-		mov     ecx, pthis
-		call    pmfn
-	}
-}
-#endif
-
-#ifdef _X86_
-extern "C" void __stdcall _CallMemberFunction2(void *pthis, void *pmfn, void *pthat, int val2)
-{
-	__asm
-	{
-		push	val2
-		push	pthat
-		mov		ecx, pthis
-		call	pmfn
-	}
-}
-#endif
+_LCRT_DEFINE_IAT_SYMBOL(__AdjustPointer);

@@ -24,6 +24,14 @@
 #define _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(f) _CRT_CONCATENATE(__imp_, f)
 #endif
 
+
+#ifndef _LTL_Using_Dynamic_Lib
+
 #define _LCRT_DEFINE_IAT_SYMBOL(f)                                                          \
     extern "C" __declspec(selectany) void const* const _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(f) \
         = reinterpret_cast<void const*>(f)
+#else
+
+#define _LCRT_DEFINE_IAT_SYMBOL(f) __pragma(comment(linker,"/EXPORT:" _LCRT_DECLARE_ALTERNATE_NAME_PREFIX #f))
+
+#endif

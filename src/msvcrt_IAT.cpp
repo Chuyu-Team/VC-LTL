@@ -1,10 +1,17 @@
 #include "msvcrt_IAT.h"
 
 
+#ifndef _LTL_Using_Dynamic_Lib
+
 #define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)                                                          \
     extern "C" void __cdecl f();                                                            \
     _LCRT_DEFINE_IAT_SYMBOL(f)
 
+#else
+
+#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN _LCRT_DEFINE_IAT_SYMBOL
+
+#endif
 
 #ifdef _M_X64
 
@@ -247,7 +254,7 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(asinhf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(atanhf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(cbrtf);
 
-_Check_return_ float     __cdecl _chgsignf(_In_ float _X)
+extern "C" _Check_return_ float     __cdecl _chgsignf(_In_ float _X)
 {
 	/*
 
@@ -263,7 +270,7 @@ _Check_return_ float     __cdecl _chgsignf(_In_ float _X)
 }
 _LCRT_DEFINE_IAT_SYMBOL(_chgsignf);
 
-_Check_return_ float     __cdecl copysignf(_In_ float _Number, _In_ float _Sign)
+extern "C" _Check_return_ float     __cdecl copysignf(_In_ float _Number, _In_ float _Sign)
 {
 	*(unsigned long*)&_Number = ((*(unsigned long*)&_Number)&~0x80000000) | ((*(unsigned long*)&_Sign) & 0x80000000);
 
@@ -271,7 +278,7 @@ _Check_return_ float     __cdecl copysignf(_In_ float _Number, _In_ float _Sign)
 }
 _LCRT_DEFINE_IAT_SYMBOL(copysignf);
 
-_Check_return_ float     __cdecl _copysignf(_In_ float _Number, _In_ float _Sign)
+extern "C" _Check_return_ float     __cdecl _copysignf(_In_ float _Number, _In_ float _Sign)
 {
 	*(unsigned long*)&_Number = ((*(unsigned long*)&_Number)&~0x80000000) | ((*(unsigned long*)&_Sign) & 0x80000000);
 
@@ -287,7 +294,11 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(fdimf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(fmaf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(fmaxf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(fminf);
+
+#ifdef _M_IX86
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_hypotf);
+#endif
+
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(ilogbf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(lgammaf);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(llrintf);

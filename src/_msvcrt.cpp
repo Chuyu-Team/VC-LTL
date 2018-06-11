@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#if defined(NDEBUG)&&defined(_DLL)&&defined(_Build_By_LTL)
+#if defined(NDEBUG)&&defined(_DLL)&&defined(__Build_LTL)
 #define _CRT_BEST_PRACTICES_USAGE
 
 #include <vcruntime_new.h>
@@ -73,6 +73,8 @@ extern "C"
 		return true;
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(__scrt_initialize_onexit_tables);
+
 	/*void __std_terminate(void)
 	{
 		terminate();
@@ -139,6 +141,9 @@ extern "C"
 		return InitializeCriticalSectionEx(critical_section, spin_count, flags);
 #endif
 	}
+
+	_LCRT_DEFINE_IAT_SYMBOL(__vcrt_InitializeCriticalSectionEx);
+
 	//int __scrt_debugger_hook_flag = 0;
 
 	//void __cdecl _CRT_DEBUGGER_HOOK(int const reserved)
@@ -304,6 +309,8 @@ extern "C"
 		return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(wmemcpy_s);
+
 	errno_t __CRTDECL wmemmove_s(
 			_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 			_In_                         rsize_t        _N1,
@@ -314,6 +321,7 @@ extern "C"
 		return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
 
+	_LCRT_DEFINE_IAT_SYMBOL(wmemmove_s);
 
 	//	int __cdecl __stdio_common_vswprintf(
 	//		_In_                                    unsigned __int64 _Options,

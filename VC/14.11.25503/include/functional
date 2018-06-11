@@ -65,7 +65,7 @@ public:
 		}
 	};
 
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xbad_function_call();
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xbad_function_call();
 
 	// TEMPLATE FUNCTION _Test_callable
 template<class _Fty>

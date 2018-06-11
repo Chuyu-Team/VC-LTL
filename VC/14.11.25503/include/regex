@@ -152,7 +152,7 @@ enum error_type
 	};
 	}	// namespace regex_constants
 
-[[noreturn]] extern void __CLRCALL_PURE_OR_CDECL _Xregex_error(
+[[noreturn]] _CRTIMP2_PURE void __CLRCALL_PURE_OR_CDECL _Xregex_error(
 	regex_constants::error_type _Code);
 
 	// TEMPLATE CLASS regex_traits

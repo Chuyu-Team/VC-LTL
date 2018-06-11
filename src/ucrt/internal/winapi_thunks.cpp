@@ -1473,8 +1473,8 @@ EXTERN_C DWORD WINAPI __crtGetCurrentProcessorNumber(void)
 	}
 	else
 	{
-		//如果不支持此接口，那么都假定只有一组CPU
-		return 1;
+		//如果不支持此接口，那么假定是单核
+		return 0;
 	}
 }
 
@@ -2075,7 +2075,7 @@ namespace
 		BOOLEAN NeedDeleteFile;
 	} FILE_DISPOSITION_INFORMATION, *PFILE_DISPOSITION_INFORMATION;
 
-	EXTERN_C DWORD __LTL_GetOsMinVersion()
+	EXTERN_C _LTLIMP DWORD __cdecl __LTL_GetOsMinVersion()
 	{
 		auto pPeb = ((TEB*)NtCurrentTeb())->ProcessEnvironmentBlock;
 
@@ -2083,7 +2083,7 @@ namespace
 	}
 
 
-	EXTERN_C UINT64 __LTL_GetOsVersion()
+	EXTERN_C _LTLIMP UINT64 __cdecl __LTL_GetOsVersion()
 	{
 		auto pPeb = ((TEB*)NtCurrentTeb())->ProcessEnvironmentBlock;
 
@@ -2199,7 +2199,7 @@ namespace
 	//XP不支持CreateSymbolicLinkW，直接使用NT API实现行为
 
 
-	EXTERN_C BOOLEAN
+	EXTERN_C _LTLIMP BOOLEAN
 		WINAPI
 		__crtCreateSymbolicLinkW(
 			_In_ LPCWSTR lpSymlinkFileName,

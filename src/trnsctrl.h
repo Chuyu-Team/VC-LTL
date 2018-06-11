@@ -172,11 +172,35 @@ extern void   __stdcall _JumpToContinuation(void *, EHRegistrationNode *);
 //
 // For calling member functions:
 //
-extern "C" void __stdcall _CallMemberFunction0(void *pthis, void *pmfn);
+__forceinline void __stdcall _CallMemberFunction0(void *pthis, void *pmfn)
+{
+	__asm
+	{
+		mov		ecx, pthis
+		call	pmfn
+	}
+}
 
-extern "C" void __stdcall _CallMemberFunction1(void *pthis, void *pmfn, void *pthat);
+__forceinline void __stdcall _CallMemberFunction1(void *pthis, void *pmfn, void *pthat)
+{
+	__asm
+	{
+		push    pthat
+		mov     ecx, pthis
+		call    pmfn
+	}
+}
 
-extern "C" void __stdcall _CallMemberFunction2(void *pthis, void *pmfn, void *pthat, int val2);
+__forceinline void __stdcall _CallMemberFunction2(void *pthis, void *pmfn, void *pthat, int val2)
+{
+	__asm
+	{
+		push	val2
+		push	pthat
+		mov		ecx, pthis
+		call	pmfn
+	}
+}
 
 //
 // Translate an ebp-relative offset to a hard address based on address of

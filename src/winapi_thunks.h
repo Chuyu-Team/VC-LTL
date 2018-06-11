@@ -8,13 +8,13 @@ EXTERN_C_START
 #define MakeMiniVersion(v1,v2) (DWORD)(v2|(v1<<16))
 #define MakeVersion(v1,v2,v3,v4) (UINT64)(((UINT64)(v4))|((UINT64)v3<<16)|((UINT64)v2<<32)|((UINT64)v1<<48))
 
-DWORD __cdecl __LTL_GetOsMinVersion();
+_LTLIMP DWORD __cdecl __LTL_GetOsMinVersion();
 
-UINT64 __cdecl __LTL_GetOsVersion();
+_LTLIMP UINT64 __cdecl __LTL_GetOsVersion();
 
 
 #ifdef _ATL_XP_TARGETING
-BOOL WINAPI __crtInitOnceExecuteOnce(
+_LTLIMP BOOL WINAPI __crtInitOnceExecuteOnce(
 	_Inout_     PINIT_ONCE    InitOnce,
 	_In_        PINIT_ONCE_FN InitFn,
 	_Inout_opt_ PVOID         Parameter,
@@ -25,7 +25,7 @@ BOOL WINAPI __crtInitOnceExecuteOnce(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtInitializeConditionVariable(
+_LTLIMP VOID WINAPI __crtInitializeConditionVariable(
 	_Out_ PCONDITION_VARIABLE ConditionVariable
 );
 #else
@@ -33,7 +33,7 @@ VOID WINAPI __crtInitializeConditionVariable(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-BOOL WINAPI __crtSleepConditionVariableCS(
+_LTLIMP BOOL WINAPI __crtSleepConditionVariableCS(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PCRITICAL_SECTION   CriticalSection,
 	_In_    DWORD               dwMilliseconds
@@ -43,7 +43,7 @@ BOOL WINAPI __crtSleepConditionVariableCS(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-void WINAPI __crtWakeConditionVariable(
+_LTLIMP void WINAPI __crtWakeConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 );
 #else
@@ -51,7 +51,7 @@ void WINAPI __crtWakeConditionVariable(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID __crtWakeAllConditionVariable(
+_LTLIMP VOID __crtWakeAllConditionVariable(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable
 );
 #else
@@ -59,7 +59,7 @@ VOID __crtWakeAllConditionVariable(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtInitializeSRWLock(
+_LTLIMP VOID WINAPI __crtInitializeSRWLock(
 	_Out_ PSRWLOCK SRWLock
 );
 #else
@@ -67,7 +67,7 @@ VOID WINAPI __crtInitializeSRWLock(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtAcquireSRWLockExclusive(
+_LTLIMP VOID WINAPI __crtAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
 #else
@@ -75,12 +75,16 @@ VOID WINAPI __crtAcquireSRWLockExclusive(
 #endif
 
 //Win7以上版本可用
-BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
+_LTLIMP BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
-);
+	);
+
+_LTLIMP VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(
+	LPFILETIME const system_time
+	);
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtReleaseSRWLockExclusive(
+_LTLIMP VOID WINAPI __crtReleaseSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 );
 #else
@@ -88,7 +92,7 @@ VOID WINAPI __crtReleaseSRWLockExclusive(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-BOOL WINAPI __crtSleepConditionVariableSRW(
+_LTLIMP BOOL WINAPI __crtSleepConditionVariableSRW(
 	_Inout_ PCONDITION_VARIABLE ConditionVariable,
 	_Inout_ PSRWLOCK            SRWLock,
 	_In_    DWORD               dwMilliseconds,
@@ -98,22 +102,23 @@ BOOL WINAPI __crtSleepConditionVariableSRW(
 #define __crtSleepConditionVariableSRW SleepConditionVariableSRW
 #endif
 
-BOOLEAN __cdecl __crt_are_win7_sync_apis_available();
+_LTLIMP BOOLEAN __cdecl __crt_are_win7_sync_apis_available();
 
 #ifdef _ATL_XP_TARGETING
-BOOLEAN __cdecl __crt_are_vista_sync_apis_available();
+_LTLIMP BOOLEAN __cdecl __crt_are_vista_sync_apis_available();
 #else
 #define __crt_are_vista_sync_apis_available() true
 #endif
 
 #ifdef _ATL_XP_TARGETING
-BOOLEAN __cdecl __crt__Is_vista_threadpool_supported();
+_LTLIMP BOOLEAN __cdecl __crt__Is_vista_threadpool_supported();
 #else
 #define __crt__Is_vista_threadpool_supported() true
 #endif
 
 
 #ifdef _ATL_XP_TARGETING
+_LTLIMP
 VOID
 WINAPI
 __crtFreeLibraryWhenCallbackReturns(
@@ -125,6 +130,7 @@ __crtFreeLibraryWhenCallbackReturns(
 #endif
 
 #ifdef _ATL_XP_TARGETING
+_LTLIMP
 VOID
 WINAPI
 __crtCloseThreadpoolWork(
@@ -135,6 +141,7 @@ __crtCloseThreadpoolWork(
 #endif
 
 #ifdef _ATL_XP_TARGETING
+_LTLIMP
 VOID
 WINAPI
 __crtSubmitThreadpoolWork(
@@ -145,6 +152,7 @@ __crtSubmitThreadpoolWork(
 #endif
 
 #ifdef _ATL_XP_TARGETING
+_LTLIMP
 PTP_WORK
 WINAPI
 __crtCreateThreadpoolWork(
@@ -162,6 +170,7 @@ __crtCreateThreadpoolWork(
 #define __crtGetSystemTimePreciseAsFileTime __acrt_GetSystemTimePreciseAsFileTime
 
 #ifdef _ATL_XP_TARGETING
+_LTLIMP
 BOOLEAN
 WINAPI
 __crtCreateSymbolicLinkW(
@@ -195,19 +204,19 @@ PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
 #endif
 
 #ifdef _ATL_XP_TARGETING
-ULONGLONG WINAPI __crtGetTickCount64(VOID);
+_LTLIMP ULONGLONG WINAPI __crtGetTickCount64(VOID);
 #else
 #define __crtGetTickCount64 GetTickCount64
 #endif
 
 #if defined _ATL_XP_TARGETING && defined _X86_
-DWORD WINAPI __crtGetCurrentProcessorNumber(void);
+_LTLIMP DWORD WINAPI __crtGetCurrentProcessorNumber(void);
 #else
 #define __crtGetCurrentProcessorNumber GetCurrentProcessorNumber
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtFlushProcessWriteBuffers(void);
+_LTLIMP VOID WINAPI __crtFlushProcessWriteBuffers(void);
 #else
 #define __crtFlushProcessWriteBuffers FlushProcessWriteBuffers
 #endif
@@ -219,7 +228,7 @@ VOID WINAPI __crtFlushProcessWriteBuffers(void);
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtSetThreadpoolTimer(
+_LTLIMP VOID WINAPI __crtSetThreadpoolTimer(
 	_Inout_ PTP_TIMER pti,
 	_In_opt_ PFILETIME pftDueTime,
 	_In_ DWORD msPeriod,
@@ -230,7 +239,7 @@ VOID WINAPI __crtSetThreadpoolTimer(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtSetThreadpoolWait(
+_LTLIMP VOID WINAPI __crtSetThreadpoolWait(
 	_Inout_ PTP_WAIT pwa,
 	_In_opt_ HANDLE h,
 	_In_opt_ PFILETIME pftTimeout
@@ -240,7 +249,7 @@ VOID WINAPI __crtSetThreadpoolWait(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtCloseThreadpoolWait(
+_LTLIMP VOID WINAPI __crtCloseThreadpoolWait(
 	_Inout_ PTP_WAIT pwa
 	);
 #else
@@ -248,7 +257,7 @@ VOID WINAPI __crtCloseThreadpoolWait(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtWaitForThreadpoolTimerCallbacks(
+_LTLIMP VOID WINAPI __crtWaitForThreadpoolTimerCallbacks(
 	_Inout_ PTP_TIMER pti,
 	_In_ BOOL fCancelPendingCallbacks
 	);
@@ -257,7 +266,7 @@ VOID WINAPI __crtWaitForThreadpoolTimerCallbacks(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-PTP_WAIT WINAPI __crtCreateThreadpoolWait(
+_LTLIMP PTP_WAIT WINAPI __crtCreateThreadpoolWait(
 	_In_ PTP_WAIT_CALLBACK pfnwa,
 	_Inout_opt_ PVOID pv,
 	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
@@ -267,7 +276,7 @@ PTP_WAIT WINAPI __crtCreateThreadpoolWait(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-VOID WINAPI __crtCloseThreadpoolTimer(
+_LTLIMP VOID WINAPI __crtCloseThreadpoolTimer(
 	_Inout_ PTP_TIMER pti
 	);
 #else
@@ -275,7 +284,7 @@ VOID WINAPI __crtCloseThreadpoolTimer(
 #endif
 
 #ifdef _ATL_XP_TARGETING
-PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
+_LTLIMP PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
 	_In_ PTP_TIMER_CALLBACK pfnti,
 	_Inout_opt_ PVOID pv,
 	_In_opt_ PTP_CALLBACK_ENVIRON pcbe
