@@ -5735,7 +5735,7 @@ _CONCRTIMP void __cdecl _Trace_agents(Agents_EventType _Type, __int64 _AgentId, 
 #endif /* _DEBUG */
 
 #if defined(_DLL) && !defined(_STATIC_CPPLIB)
-    #define _LIB_STEM "concrt"
+    #define _LIB_STEM "concrt_ltl"
 #else /* defined(_DLL) && !defined(_STATIC_CPPLIB) */
 	#ifndef _ATL_XP_TARGETING
 		#define _LIB_STEM "libconcrt"

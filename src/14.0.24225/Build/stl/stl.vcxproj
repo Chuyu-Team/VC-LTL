@@ -158,7 +158,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
-    <TargetName>msvcprt</TargetName>
+    <TargetName>msvcprt_ltl</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
@@ -182,7 +182,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(IncludePath)</IncludePath>
-    <TargetName>msvcprt</TargetName>
+    <TargetName>msvcprt_ltl</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">

@@ -44,7 +44,7 @@
 #endif
 
 #if defined(_DLL) && !defined(_STATIC_CPPLIB)
-    #define _LIB_STEM "msvcprt"
+    #define _LIB_STEM "msvcprt_ltl"
 #else
     #ifdef _ATL_XP_TARGETING
 		#define _LIB_STEM "ltlcprtxp"
