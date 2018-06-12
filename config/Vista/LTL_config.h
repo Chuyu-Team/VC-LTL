@@ -18,4 +18,4 @@
 #endif
 
 
-_LTL_PushNote("进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
+_LTL_PushNote("进入ltl Vista模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。")
