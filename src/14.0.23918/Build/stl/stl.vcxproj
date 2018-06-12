@@ -844,6 +844,11 @@
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="stl.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)'!='Redist'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -38,7 +38,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{B31BFE67-12E9-4EEF-8EFB-06AAC3D27527}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>msvcprt141</RootNamespace>
+    <RootNamespace>stl</RootNamespace>
     <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\Shared.props" />
@@ -863,6 +863,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="stl.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)'!='Redist'">true</ExcludedFromBuild>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

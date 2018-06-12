@@ -155,7 +155,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
-    <TargetName>ltlbase</TargetName>
+    <TargetName>vcruntime140_ltl</TargetName>
     <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
@@ -175,7 +175,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
-    <TargetName>ltlbase</TargetName>
+    <TargetName>vcruntime140_ltl</TargetName>
     <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
@@ -239,7 +239,7 @@
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ltlbase.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\vcruntime140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
@@ -345,7 +345,7 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ltlbase.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\vcruntime140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
@@ -408,6 +408,11 @@
       <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)objs\</ObjectFileName>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ltlbuild.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)'!='Redist'">true</ExcludedFromBuild>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

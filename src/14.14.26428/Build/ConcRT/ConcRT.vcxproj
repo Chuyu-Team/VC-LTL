@@ -508,4 +508,9 @@
     <ClCompile Include="..\..\concrt\WinRTWrapper.cpp" />
     <ClCompile Include="..\..\concrt\WorkQueue.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ConcRT.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)'!='Redist'">true</ExcludedFromBuild>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>
