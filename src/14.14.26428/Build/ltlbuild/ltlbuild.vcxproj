@@ -595,6 +595,27 @@
     </MASM>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\frame_thunks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\LTL_Initialization.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\purevirt.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt_IAT.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt_winxp.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\vcruntime\unexpected.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>

@@ -29,7 +29,7 @@
 #include <corecrt_internal.h>
 
 
-__forceinline errno_t __cdecl _tcscpy_s(
+static __forceinline errno_t __cdecl _tcscpy_s(
 	_Out_writes_z_(_SizeInBytes) char*       _Destination,
 	_In_                         rsize_t     _SizeInBytes,
 	_In_z_                       char const* _Source
@@ -38,7 +38,7 @@ __forceinline errno_t __cdecl _tcscpy_s(
 	return strcpy_s(_Destination, _SizeInBytes, _Source);
 }
 
-__forceinline errno_t __cdecl _tcscpy_s(
+static __forceinline errno_t __cdecl _tcscpy_s(
 	_Out_writes_z_(_SizeInBytes) wchar_t*       _Destination,
 	_In_                         rsize_t     _SizeInBytes,
 	_In_z_                       wchar_t const* _Source
@@ -47,14 +47,14 @@ __forceinline errno_t __cdecl _tcscpy_s(
 	return wcscpy_s(_Destination, _SizeInBytes, _Source);
 }
 
-__forceinline size_t __cdecl _tcslen(
+static __forceinline size_t __cdecl _tcslen(
 	_In_z_ char const* _Str
 	)
 {
 	return strlen(_Str);
 }
 
-__forceinline size_t __cdecl _tcslen(
+static __forceinline size_t __cdecl _tcslen(
 	_In_z_ wchar_t const* _String
 	)
 {
@@ -63,24 +63,6 @@ __forceinline size_t __cdecl _tcslen(
 
 extern "C"
 {
-	/*void __fastcall _guard_check_icall(void*)
-	{
-	}*/
-
-	//切换到系统的msvrct后无需初始化onexit_table，msvcrt.dll内部会初始化
-	bool __cdecl __scrt_initialize_onexit_tables(int const module_type)
-	{
-		return true;
-	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(__scrt_initialize_onexit_tables);
-
-	/*void __std_terminate(void)
-	{
-		terminate();
-	}*/
-
-
 	struct __crt_stdio_stream_data :public _iobuf
 	{
 		CRITICAL_SECTION _lock;
@@ -128,21 +110,6 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(wcstof_downlevel);
 
-
-	BOOL __cdecl __vcrt_InitializeCriticalSectionEx(
-		LPCRITICAL_SECTION const critical_section,
-		DWORD              const spin_count,
-		DWORD              const flags
-	)
-	{
-#ifdef _ATL_XP_TARGETING
-		return InitializeCriticalSectionAndSpinCount(critical_section, spin_count);
-#else
-		return InitializeCriticalSectionEx(critical_section, spin_count, flags);
-#endif
-	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(__vcrt_InitializeCriticalSectionEx);
 
 	//int __scrt_debugger_hook_flag = 0;
 
@@ -358,7 +325,7 @@ extern "C"
 
 #ifdef _ATL_XP_TARGETING
 	extern "C++" template<typename time_t>
-	__forceinline double __cdecl common_difftime(
+	static __forceinline double __cdecl common_difftime(
 		_In_ time_t _Time1,
 		_In_ time_t _Time2
 		)
@@ -410,18 +377,18 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(_localtime32_downlevel);
 
-	extern "C++" __forceinline struct tm* __cdecl _localtime_t(_In_ __time32_t const* _Time)
+	extern "C++" static __forceinline struct tm* __cdecl _localtime_t(_In_ __time32_t const* _Time)
 	{
 		return _localtime32(_Time);
 	}
 
-	extern "C++" __forceinline struct tm* __cdecl _localtime_t(_In_ __time64_t const* _Time)
+	extern "C++" static __forceinline struct tm* __cdecl _localtime_t(_In_ __time64_t const* _Time)
 	{
 		return _localtime64(_Time);
 	}
 
 	extern "C++" template<typename time_t>
-	__forceinline errno_t __cdecl common_localtime_s(
+	static __forceinline errno_t __cdecl common_localtime_s(
 		_Out_ struct tm*        _Tm,
 		_In_  time_t const* _Time
 		)

@@ -14,17 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\frame_thunks.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LTL_Initialization.cpp">
-      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
-      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_advanced.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_IAT.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -113,6 +102,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\env\getpath.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\stat.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\heap\align.cpp">

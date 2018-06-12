@@ -19,6 +19,12 @@
     <Filter Include="源文件\vc\objs">
       <UniqueIdentifier>{cc2e47e8-0c60-4f20-b3e1-1cab7ef77930}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\ltl">
+      <UniqueIdentifier>{dcb5545f-77e6-40a3-b5a1-095ecc58eeaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\objs">
+      <UniqueIdentifier>{0372228d-b4b3-43e6-afe3-0cf326b8323a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vcruntime\unexpected.cpp">
@@ -29,6 +35,24 @@
     </ClCompile>
     <ClCompile Include="..\..\vcruntime\std_nothrow.cpp">
       <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\purevirt.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\LTL_Initialization.cpp">
+      <Filter>源文件\ltl\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frame_thunks.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt.cpp">
+      <Filter>源文件\ltl\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt_IAT.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt_winxp.cpp">
+      <Filter>源文件\ltl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

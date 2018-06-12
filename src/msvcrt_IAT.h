@@ -25,13 +25,20 @@
 #endif
 
 
-#ifndef _LTL_Using_Dynamic_Lib
+#if !defined _LTL_Using_Dynamic_Lib || defined __Build_OBJ
 
 #define _LCRT_DEFINE_IAT_SYMBOL(f)                                                          \
     extern "C" __declspec(selectany) void const* const _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(f) \
         = reinterpret_cast<void const*>(f)
+
+#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)                                                   \
+    extern "C" void __cdecl f();                                                            \
+    _LCRT_DEFINE_IAT_SYMBOL(f)
+
 #else
 
 #define _LCRT_DEFINE_IAT_SYMBOL(f) __pragma(comment(linker,"/EXPORT:" _LCRT_DECLARE_ALTERNATE_NAME_PREFIX #f))
+
+#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN _LCRT_DEFINE_IAT_SYMBOL
 
 #endif

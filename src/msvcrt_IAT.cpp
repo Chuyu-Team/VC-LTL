@@ -1,18 +1,6 @@
 #include "msvcrt_IAT.h"
 
 
-#ifndef _LTL_Using_Dynamic_Lib
-
-#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)                                                          \
-    extern "C" void __cdecl f();                                                            \
-    _LCRT_DEFINE_IAT_SYMBOL(f)
-
-#else
-
-#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN _LCRT_DEFINE_IAT_SYMBOL
-
-#endif
-
 #ifdef _M_X64
 
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_set_FMA3_enable);
@@ -428,18 +416,6 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcstok_s_downlevel);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wmakepath_s_downlevel);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(wscanf_s_downlevel);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wsplitpath_s_downlevel);
-
-#ifdef _M_IX86
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_seh_longjmp_unwind4_downlevel@4);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_local_unwind4_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_except_handler4_common_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ftol2_sse_excpt_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ftol2_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ftol2_sse_downlevel);
-#elif defined _M_AMD64
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(RTCastToVoid_downlevel);
-_LCRT_DEFINE_IAT_SYMBOL_EXTERN(RTDynamicCast_downlevel);
-#endif
 
 #endif
 

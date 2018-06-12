@@ -54,9 +54,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\misc\terminate.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LTL_Initialization.cpp">
-      <Filter>ltl\objs</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\isctype.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
@@ -405,17 +402,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\locale\GetStringTypeA.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\frame_thunks.cpp">
-      <Filter>ltl</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\misc\errno.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\misc\invalid_parameter.cpp">
       <Filter>ucrt</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_advanced.cpp">
-      <Filter>ltl</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_IAT.cpp">
       <Filter>ltl</Filter>
@@ -430,6 +421,9 @@
       <Filter>ucrt</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\stat.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
   </ItemGroup>
