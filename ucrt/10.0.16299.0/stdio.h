@@ -1439,7 +1439,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_0(
 		if (Count <= 0)
 			return Count;
 
-		if (Count == _BufferCount)
+		if ((size_t)Count == _BufferCount)
 		{
 			_Buffer[Count - 1] = '\0';
 		}

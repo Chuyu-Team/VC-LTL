@@ -1437,7 +1437,7 @@ _ACRTXPINLINE int __CRTDECL vsnprintf(
 	if (Count <= 0)
 		return Count;
 
-	if (Count == _BufferCount)
+	if ((size_t)Count == _BufferCount)
 	{
 		_Buffer[Count - 1] = '\0';
 	}
