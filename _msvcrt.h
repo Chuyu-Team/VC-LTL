@@ -46,14 +46,6 @@
 #define _Build_By_LTL 1
 #endif
 
-#ifdef _LTL_Using_Dynamic_Lib
-
-#ifdef _STATIC_CPPLIB
-#undef _STATIC_CPPLIB
-#endif
-
-#else
-
 #ifndef _DISABLE_DEPRECATE_STATIC_CPPLIB
 #define _DISABLE_DEPRECATE_STATIC_CPPLIB 1
 #endif
@@ -63,7 +55,6 @@
 #define _STATIC_CPPLIB 1
 #endif
 
-#endif //!_LTL_Using_Dynamic_Lib
 
 
 
@@ -109,17 +100,9 @@ _LTL_PushWarning(1004, "不引用_LTL_Initialization 可能导致某些补充函
 
 #endif //!_LIB
 
-#ifndef _LTLIMP
-#ifdef _LTL_Using_Dynamic_Lib
-#define _LTLIMP __declspec(dllimport)
-#else
-#define _LTLIMP
-#endif
-#endif
-
 _CRT_BEGIN_C_HEADER
-_LTLIMP unsigned long __cdecl __LTL_GetOsMinVersion();
-_LTLIMP unsigned long long __cdecl __LTL_GetOsVersion();
+extern unsigned long __cdecl __LTL_GetOsMinVersion();
+extern unsigned long long __cdecl __LTL_GetOsVersion();
 _CRT_END_C_HEADER
 
 #endif //!RC_INVOKED

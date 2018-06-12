@@ -87,17 +87,11 @@
     <OsPlatformName Condition=" '$(SupportWinXP)'=='true' ">WinXP</OsPlatformName>
     <OsPlatformName Condition=" '$(SupportWinXP)'!='true' ">Vista</OsPlatformName>
 
-    <!--查看Dynamic支持文件是否齐全，如果都在那么才开启Dynamic。-->
-    <LTL_LinkDirMod Condition=" ('$(DisableStaticLibSupport)'=='true')
-                    And (Exists('$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\$(OsPlatformName)\Dynamic'))
-                    And (Exists('$(VC_LTL_Root)\UCRT\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)\Dynamic'))">\Dynamic</LTL_LinkDirMod>
-
-
     <!--15.7新特性，检测Spectre缓解方案是否已经启用。-->
-    <VC-LTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\$(OsPlatformName)$(LTL_LinkDirMod)')))">$(VCLibDirMod)</VC-LTLLibDirMod>
+    <VC-LTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VC-LTLLibDirMod>
     
-    <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName)$(LTL_LinkDirMod);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName)\$(OsPlatformName)$(LTL_LinkDirMod);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)$(LTL_LinkDirMod)</VC_LTL_Library>
+    <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SupportLTL)'=='true' ">
@@ -115,10 +109,16 @@
     <ClCompile>
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'!='true' ">_ATL_XP_TARGETING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       
+      <!--可选，_msvcrt.h自动会添加这些设置-->
+      <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_ATL_XP_TARGETING=1;_NO_CRT_STDIO_INLINE=1;_Build_By_LTL=1;_DISABLE_DEPRECATE_STATIC_CPPLIB=1;_STATIC_CPPLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+
       <!--当兼容XP时，对于非 exe 的需要禁用线程安全初始化。避免XP中在DllMain中使用TLS而崩溃-->
       <AdditionalOptions Condition=" '$(ConfigurationType)'!='Application' ">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
+      <!--可选，msvcrt.lib自动会添加这些设置-->
+      <AdditionalDependencies Condition=" '$(SupportLTL)'=='true'">msvcrt_Platform.lib;ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x86' ">5.01</MinimumRequiredVersion>
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x64' ">5.02</MinimumRequiredVersion>
     </Link>
@@ -126,6 +126,14 @@
   
   <!--普通模式-->
   <ItemDefinitionGroup Condition=" ('$(SupportLTL)'=='true') And ('$(SupportWinXP)'!='true') ">
+    <ClCompile>
+      <!--可选，_msvcrt.h自动会添加这些设置-->
+      <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_NO_CRT_STDIO_INLINE=1;_Build_By_LTL=1;_DISABLE_DEPRECATE_STATIC_CPPLIB=1;_STATIC_CPPLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <!--可选，msvcrt.lib自动会添加这些设置-->
+      <AdditionalDependencies>msvcrt_Platform.lib;ltl.lib;vc.lib;ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   
   <!--UCRT模式-->
@@ -156,7 +164,7 @@
   VC Tools Version : $(VC-LTLUsedToolsVersion)
   UCRT Version     : $(VC-LTLTargetUniversalCRTVersion)
   Platform         : $(PlatformShortName)
-  Using VC-LTL $(OsPlatformName)$(LTL_LinkDirMod) $(LTL_Mode) Mode
+  Using VC-LTL $(OsPlatformName) $(LTL_Mode) Mode
 " Importance="high" Condition="('$(SupportLTL)'=='true') Or ('$(SupportLTL)'=='ucrt')"/>
     <Warning Code="LTL2000" Text="VC-LTL不兼容 Debug 配置，VC-LTL已经自动禁用，请切换到 Release 配置然后继续。" Condition="'$(UseDebugLibraries)'=='true'" />
     <Warning Code="LTL2001" Text="VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。" Condition="'$(UseOfMFC)'!='false'" />

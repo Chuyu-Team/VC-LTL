@@ -65,16 +65,13 @@ if /i "%SupportWinXP%" == "true" (set OsPlatformName=WinXP) else (set OsPlatform
 
 if /i "%DisableAdvancedSupport%" == "true" (set LTL_Mode=Light) else (set LTL_Mode=Advanced)
 
-set LTL_LinkDirMod=
-if /i "%DisableStaticLibSupport%" == "true" if exist "%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%\%OsPlatformName%\Dynamic" if exist "%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%\lib\%PlatformShortName%\Dynamic" set LTL_LinkDirMod=\Dynamic
-
-echo Using VC-LTL %OsPlatformName%%LTL_LinkDirMod% %LTL_Mode% Mode
+echo Using VC-LTL %OsPlatformName% %LTL_Mode% Mode
 
 
 ::ÐÞ¸ÄInclude
-set INCLUDE=%VC_LTL_Root%\config\%OsPlatformName%%LTL_LinkDirMod%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\include;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\atlmfc\include;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%;%INCLUDE%
+set INCLUDE=%VC_LTL_Root%\config\%OsPlatformName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\include;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\atlmfc\include;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%;%INCLUDE%
 
-set LIB=%VC_LTL_Root%\%PlatformShortName%;%VC_LTL_Root%\%PlatformShortName%\%OsPlatformName%\%LTL_Mode%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%\%OsPlatformName%%LTL_LinkDirMod%;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%\lib\%PlatformShortName%%LTL_LinkDirMod%;%LIB%
+set LIB=%VC_LTL_Root%\%PlatformShortName%;%VC_LTL_Root%\%PlatformShortName%\%OsPlatformName%\%LTL_Mode%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%\%OsPlatformName%;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%\lib\%PlatformShortName%;%LIB%
 
 goto:eof
 

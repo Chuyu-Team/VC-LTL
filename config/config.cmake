@@ -9,10 +9,6 @@ if(NOT DisableAdvancedSupport)
 	set(DisableAdvancedSupport "false")
 endif()
 
-if(NOT DisableStaticLibSupport)
-	set(DisableStaticLibSupport "false")
-endif()
-
 if(NOT SupportLTL)
 	set(SupportLTL "true")
 endif()
@@ -161,20 +157,6 @@ if(${SupportLTL} STREQUAL "true")
 		set(LTL_Mode "Advanced")
 	endif()
 
-	#设置LTL_LinkDirMod，Dynamic支持文件是否齐全，如果都在那么才开启Dynamic。
-	set(LTL_LinkDirMod "")
-	if(${DisableStaticLibSupport} STREQUAL "true")
-		find_file(FOUND_FILE Dynamic ${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName})
-		if(NOT ${FOUND_FILE} STREQUAL "FOUND_FILE-NOTFOUND")
-			find_file(FOUND_FILE Dynamic ${VC_LTL_Root}/UCRT/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
-			if(NOT ${FOUND_FILE} STREQUAL "FOUND_FILE-NOTFOUND")
-				set(LTL_LinkDirMod "/Dynamic")
-			endif()
-		endif()
-
-	endif()
-
-
 	#打印VC-LTL图标
 	message("###################################################################################################")
 	message("#                                                                                                 #")
@@ -193,11 +175,11 @@ if(${SupportLTL} STREQUAL "true")
 	message(" VC-LTL Tools Version :" ${VC-LTLUsedToolsVersion})
 	message(" VC-LTL UCRT Version  :" ${VC-LTLTargetUniversalCRTVersion})
 	message(" Platform             :" ${PlatformShortName})
-	message(" Using VC-LTL " ${OsPlatformName}${LTL_LinkDirMod} " " ${LTL_Mode} " Mode")
+	message(" Using VC-LTL " ${OsPlatformName} " " ${LTL_Mode} " Mode")
 	message("")
 
-    set(VC_LTL_Include ${VC_LTL_Root}/config/${OsPlatformName}${LTL_LinkDirMod};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/include;${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion})
-    set(VC_LTL_Library ${VC_LTL_Root}/${PlatformShortName};${VC_LTL_Root}/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName}${LTL_LinkDirMod};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName}${LTL_LinkDirMod})
+    set(VC_LTL_Include ${VC_LTL_Root}/config/${OsPlatformName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/include;${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion})
+    set(VC_LTL_Library ${VC_LTL_Root}/${PlatformShortName};${VC_LTL_Root}/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
 
 	#message("INCLUDE " $ENV{INCLUDE})
 	#message("LIB " $ENV{LIB})
