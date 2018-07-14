@@ -16,7 +16,6 @@
 #include <msvcrt_IAT.h>
 
 #define _FUNC_NAME _mbsncat_s_l_downlevel
-#define _FUNC_NAME_NO_LOCALE _mbsncat_s
 #define _COUNT _CountInChars
 #define _COUNT_IN_BYTES 0
 

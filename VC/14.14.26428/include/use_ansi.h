@@ -44,13 +44,9 @@
 #endif
 
 #if defined(_DLL) && !defined(_STATIC_CPPLIB)
-    #define _LIB_STEM "msvcprt_ltl"
+    #define _LIB_STEM "msvcprt"
 #else
-    #ifdef _ATL_XP_TARGETING
-		#define _LIB_STEM "ltlcprtxp"
-    #else
-		#define _LIB_STEM "ltlcprt"
-    #endif
+	#define _LIB_STEM "libcpmt"
 
     #if _ITERATOR_DEBUG_LEVEL != _IDL_DEFAULT
         #define _IDL_AFFIX _STRINGIZE(_ITERATOR_DEBUG_LEVEL)

@@ -49,10 +49,19 @@ struct __scrt_winmain_policy
     static _crt_app_type get_app_type() throw() { return _crt_gui_app; }
 };
 
+#if defined _M_IX86
+#define MinSubSystemVersion "5.01"
+#elif defined _M_AMD64
+#define MinSubSystemVersion "5.02"
+#endif
+
+
+
 #if defined _SCRT_STARTUP_MAIN
 
     using main_policy = __scrt_main_policy;
     using argv_policy = __scrt_narrow_argv_policy;
+	#define __SUBSYSTEM "CONSOLE"
 
     static void __cdecl initialize_environment() throw()
     {
@@ -61,13 +70,14 @@ struct __scrt_winmain_policy
 
     static int __cdecl invoke_main() throw()
     {
-        return main(__argc, __argv, _get_initial_narrow_environment());
+        return main(__argc, __argv, _environ);
     }
 
 #elif defined _SCRT_STARTUP_WMAIN
 
     using main_policy = __scrt_main_policy;
     using argv_policy = __scrt_wide_argv_policy;
+	#define __SUBSYSTEM "CONSOLE"
 
     static void __cdecl initialize_environment() throw()
     {
@@ -76,13 +86,14 @@ struct __scrt_winmain_policy
 
     static int __cdecl invoke_main() throw()
     {
-        return wmain(__argc, __wargv, _get_initial_wide_environment());
+        return wmain(__argc, __wargv, _wenviron);
     }
 
 #elif defined _SCRT_STARTUP_WINMAIN
 
     using main_policy = __scrt_winmain_policy;
     using argv_policy = __scrt_narrow_argv_policy;
+	#define __SUBSYSTEM "WINDOWS"
 
     static void __cdecl initialize_environment() throw()
     {
@@ -102,6 +113,7 @@ struct __scrt_winmain_policy
 
     using main_policy = __scrt_winmain_policy;
     using argv_policy = __scrt_wide_argv_policy;
+	#define __SUBSYSTEM "WINDOWS"
 
     static void __cdecl initialize_environment() throw()
     {
@@ -119,12 +131,17 @@ struct __scrt_winmain_policy
 
 #endif
 
+
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+#pragma comment(linker,"/SUBSYSTEM:" __SUBSYSTEM "," MinSubSystemVersion)
+#endif
+
 static int __cdecl pre_c_initialization() throw()
 {
     _set_app_type(main_policy::get_app_type());
 
     _set_fmode(_get_startup_file_mode());
-    _commode = _get_startup_commit_mode();
+    *__p__commode() = _commode = _get_startup_commit_mode();
 
     if (!__scrt_initialize_onexit_tables(__scrt_module_type::exe))
         __scrt_fastfail(FAST_FAIL_FATAL_APP_EXIT);
@@ -155,20 +172,25 @@ static int __cdecl pre_c_initialization() throw()
     }
     #endif
 
+	#ifndef __Build_LTL //反正是2个空函数，就不调用了
     _initialize_invalid_parameter_handler();
     _initialize_denormal_control();
+	#endif
 
     #ifdef _M_IX86
     _initialize_default_precision();
     #endif
 
+	#ifndef __Build_LTL
+	//默认禁用_get_startup_thread_locale_mode调用以支持WinXP，反正默认也是禁用thread locale。
     _configthreadlocale(_get_startup_thread_locale_mode());
 
+	//LTL模式中环境变量由argv_policy::configure_argv()初始化
     if (_should_initialize_environment())
         initialize_environment();
 
     __scrt_initialize_winrt();
-
+	#endif
     return 0;
 }
 
@@ -190,7 +212,9 @@ static void __cdecl pre_cpp_initialization() throw()
     // being called:
     __scrt_set_unhandled_exception_filter();
 
+#ifndef __Build_LTL //LTL模式中由argv_policy::configure_argv()初始化
     _set_new_mode(_get_startup_new_mode());
+#endif
 }
 
 // When both the PGO instrumentation library and the CRT are statically linked,
@@ -198,7 +222,9 @@ static void __cdecl pre_cpp_initialization() throw()
 // PGO is initialized, but defer some initialization steps to after.  See the
 // commentary in post_pgo_initialization for details.
 _CRTALLOC(".CRT$XIAA") static _PIFV pre_c_initializer    = pre_c_initialization;
+#ifndef __Build_LTL
 _CRTALLOC(".CRT$XIAC") static _PIFV post_pgo_initializer = post_pgo_initialization;
+#endif
 _CRTALLOC(".CRT$XCAA") static _PVFV pre_cpp_initializer  = pre_cpp_initialization;
 
 
@@ -246,12 +272,13 @@ static __declspec(noinline) int __cdecl __scrt_common_main_seh() throw()
 
         // If this module has any thread-local destructors, register the
         // callback function with the Unified CRT to run on exit.
+		#ifndef __Build_LTL //无法正确实现_register_thread_local_exe_atexit_callback，反正进程都要退出了，thread-local destructors不调关系也不大。
         _tls_callback_type const * const tls_dtor_callback = __scrt_get_dyn_tls_dtor_callback();
         if (*tls_dtor_callback != nullptr && __scrt_is_nonwritable_in_current_image(tls_dtor_callback))
         {
             _register_thread_local_exe_atexit_callback(*tls_dtor_callback);
         }
-
+		#endif
         //
         // Initialization is complete; invoke main...
         //

@@ -34,7 +34,7 @@
         #ifdef _DLL
             #define _CRTIMP __declspec(dllimport)
         #else
-            #define _CRTIMP
+            #define _CRTIMP __declspec(dllimport)
         #endif
     #endif
 #endif
@@ -107,8 +107,8 @@ _CRT_BEGIN_C_HEADER
         #define _VCRTIMP _CRTIMP
     #elif defined _VCRT_BUILD && defined CRTDLL
         #define _VCRTIMP __declspec(dllexport)
-    /*#elif defined _CORECRT_BUILD
-        #define _VCRTIMP*/
+    #elif defined _CORECRT_BUILD
+        #define _VCRTIMP
     #elif defined _DLL
         #define _VCRTIMP __declspec(dllimport)
     #else
@@ -121,7 +121,7 @@ _CRT_BEGIN_C_HEADER
         #if !defined _M_CEE_PURE
             #define _MRTIMP __declspec(dllexport)
         #else
-            #define _MRTIMP __declspec(dllimport)
+            #define _MRTIMP
         #endif
     #else
         #define _MRTIMP __declspec(dllimport)

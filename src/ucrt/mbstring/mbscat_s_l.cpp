@@ -19,8 +19,8 @@
 #ifdef _ATL_XP_TARGETING
 EXTERN_C errno_t __cdecl _mbscat_s_l_downlevel(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
-	if (!_LOCALE_ARG)
-		return _mbscat_s(_Dst, _SizeInBytes, _Src);
+	//if (!_LOCALE_ARG)
+	//	return _mbscat_s(_Dst, _SizeInBytes, _Src);
 
     unsigned char *p;
     size_t available;

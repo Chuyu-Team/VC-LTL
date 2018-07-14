@@ -14,6 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\exit_thunks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\inoutput_downlevel.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_IAT.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -21,13 +25,28 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\onexit_thunks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\report_runtime_error_thunks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\setlocal_thunks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\conio\cprintf.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\c16rtomb.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\c32rtomb.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\cfout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\cvt.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\isctype.cpp">
@@ -93,6 +112,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\_ctype.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\_fptostr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\_mbslen.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -104,13 +126,25 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\makepath.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\stat.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\heap\align.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\heap\recalloc.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\initialization.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\locks.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\shared_initialization.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\winapi_thunks.cpp">
@@ -188,6 +222,9 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbccpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbccpy_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -204,6 +241,9 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscat_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -219,6 +259,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscoll.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscpy_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
@@ -260,6 +303,9 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbcat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbcat_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -280,6 +326,9 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbcpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbcpy_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -296,6 +345,9 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbset_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -303,6 +355,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncat.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncat_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
@@ -323,6 +378,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncpy.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncpy_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
@@ -348,6 +406,9 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnset_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -367,6 +428,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsset.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsset_s_l.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
@@ -437,6 +501,21 @@
       <ExcludedFromBuild Condition="('$(SupportWinXP)'!='true') And ('$(Platform)'=='Win32')">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\startup\argv_winmain.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\input.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\ncommode.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\output.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\printf_count_output.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdlib\bsearch_s.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -449,13 +528,26 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdlib\qsort_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\memcpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\memicmp.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strcat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strcoll.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strcpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\stricmp.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
@@ -469,10 +561,17 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strncat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strncnt.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strncoll.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strncpy_s.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -484,6 +583,22 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strnlen.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strnset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strtok_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strupr.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -492,7 +607,14 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcscat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcscoll.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcscpy_s.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -508,6 +630,10 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsncat_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsncnt.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
@@ -516,11 +642,26 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsncpy_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsnicmp.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsnicol.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsnset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsset_s.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcstok_s.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>

@@ -40,7 +40,7 @@ _CRT_BEGIN_C_HEADER
     } FILE;
 #endif
 
-extern FILE* __cdecl __acrt_iob_func(unsigned);
+_ACRTIMP_ALT FILE* __cdecl __acrt_iob_func(unsigned);
 
 #define stdin  (__acrt_iob_func(0))
 #define stdout (__acrt_iob_func(1))
@@ -1129,13 +1129,13 @@ __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_ARGLIST_EX(
 
 _Success_(return >= 0)
 _Check_return_opt_ _CRT_INSECURE_DEPRECATE(_vsnwprintf_s)
-_CRT_STDIO_INLINE_VISTA_OR_LATER int __CRTDECL _vsnwprintf(
+_CRT_STDIO_INLINE int __CRTDECL _vsnwprintf(
     _Out_writes_(_BufferCount) _Post_maybez_ wchar_t*       _Buffer,
     _In_                                     size_t         _BufferCount,
     _In_z_ _Printf_format_string_            wchar_t const* _Format,
                                              va_list        _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE || defined _ATL_XP_TARGETING
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1178,35 +1178,30 @@ _CRT_STDIO_INLINE int __CRTDECL _vswprintf_c_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS_FOR_XP int __CRTDECL _vswprintf_c(
+_CRT_STDIO_INLINE int __CRTDECL _vswprintf_c(
     _Out_writes_z_(_BufferCount)  wchar_t*       const _Buffer,
     _In_                          size_t         const _BufferCount,
     _In_z_ _Printf_format_string_ wchar_t const* const _Format,
                                   va_list              _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE || !defined _ATL_XP_TARGETING
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-#ifdef _ATL_XP_TARGETING
-	#pragma warning(suppress : 4996)
-	return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
-#else
     return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
-#endif
 }
 #endif
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL _vswprintf_l(
+_CRT_STDIO_INLINE int __CRTDECL _vswprintf_l(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_                                    size_t         const _BufferCount,
     _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
     _In_opt_                                _locale_t      const _Locale,
                                             va_list              _ArgList
     )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1219,58 +1214,48 @@ _CRT_STDIO_INLINE_AWAYS int __CRTDECL _vswprintf_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL __vswprintf_l(
+_CRT_STDIO_INLINE int __CRTDECL __vswprintf_l(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
     _In_opt_                                _locale_t      const _Locale,
                                             va_list              _ArgList
     )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-    return _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
+    return _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
 }
 #endif
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS_FOR_XP int __CRTDECL _vswprintf(
+_CRT_STDIO_INLINE int __CRTDECL _vswprintf(
     _Pre_notnull_ _Post_z_        wchar_t*       const _Buffer,
     _In_z_ _Printf_format_string_ wchar_t const* const _Format,
                                   va_list              _ArgList
     )
-#if defined _NO_CRT_STDIO_INLINE || !defined _ATL_XP_TARGETING
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-#ifdef _ATL_XP_TARGETING
-	#pragma warning(suppress : 4996)
-	return _vsnwprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
-#else
-    return _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, NULL, _ArgList);
-#endif
+    return _vswprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
 }
 #endif
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL vswprintf(
+_CRT_STDIO_INLINE int __CRTDECL vswprintf(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_                                    size_t         const _BufferCount,
     _In_z_ _Printf_format_string_params_(1) wchar_t const* const _Format,
                                             va_list              _ArgList
     )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-#ifdef _ATL_XP_TARGETING
-	#pragma warning(suppress : 4996)
-	return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
-#else
     return _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
-#endif
 }
 #endif
 
@@ -1345,13 +1330,13 @@ _CRT_STDIO_INLINE int __CRTDECL _vswprintf_p_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL _vswprintf_p(
+_CRT_STDIO_INLINE int __CRTDECL _vswprintf_p(
     _Out_writes_z_(_BufferCount)  wchar_t*       const _Buffer,
     _In_                          size_t         const _BufferCount,
     _In_z_ _Printf_format_string_ wchar_t const* const _Format,
                                   va_list              _ArgList
     )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1413,11 +1398,11 @@ _CRT_STDIO_INLINE int __CRTDECL _vscwprintf_p_l(
 
 _Success_(return >= 0)
 _Check_return_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL _vscwprintf_p(
+_CRT_STDIO_INLINE int __CRTDECL _vscwprintf_p(
     _In_z_ _Printf_format_string_ wchar_t const* const _Format, 
                                   va_list              _ArgList
     )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1427,12 +1412,12 @@ _CRT_STDIO_INLINE_AWAYS int __CRTDECL _vscwprintf_p(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL __swprintf_l(
+_CRT_STDIO_INLINE int __CRTDECL __swprintf_l(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
     _In_opt_                                _locale_t      const _Locale,
     ...)
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1447,13 +1432,13 @@ _CRT_STDIO_INLINE_AWAYS int __CRTDECL __swprintf_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL _swprintf_l(
+_CRT_STDIO_INLINE int __CRTDECL _swprintf_l(
     _Pre_notnull_ _Post_z_                  wchar_t*       const _Buffer,
     _In_                                    size_t         const _BufferCount,
     _In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
     _In_opt_                                _locale_t      const _Locale,
     ...)
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1468,60 +1453,40 @@ _CRT_STDIO_INLINE_AWAYS int __CRTDECL _swprintf_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS_FOR_XP int __CRTDECL _swprintf(
+_CRT_STDIO_INLINE int __CRTDECL _swprintf(
     _Pre_notnull_ _Post_z_        wchar_t*       const _Buffer,
     _In_z_ _Printf_format_string_ wchar_t const* const _Format,
     ...)
-#if defined _NO_CRT_STDIO_INLINE && !defined _ATL_XP_TARGETING
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-#ifdef _ATL_XP_TARGETING
-	int _Result;
-	va_list _ArgList;
-	__crt_va_start(_ArgList, _Format);
-#pragma warning(suppress : 4996)
-	_Result = _vsnwprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
-	__crt_va_end(_ArgList);
-	return _Result;
-#else
     int _Result;
     va_list _ArgList;
     __crt_va_start(_ArgList, _Format);
     _Result = __vswprintf_l(_Buffer, _Format, NULL, _ArgList);
     __crt_va_end(_ArgList);
     return _Result;
-#endif
 }
 #endif
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL swprintf(
+_CRT_STDIO_INLINE int __CRTDECL swprintf(
     _Pre_notnull_ _Post_z_        wchar_t*       const _Buffer,
     _In_                          size_t         const _BufferCount,
     _In_z_ _Printf_format_string_ wchar_t const* const _Format,
     ...)
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-#ifdef _ATL_XP_TARGETING
-	int _Result;
-	va_list _ArgList;
-	__crt_va_start(_ArgList, _Format);
-#pragma warning(suppress : 4996)
-	_Result = _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
-	__crt_va_end(_ArgList);
-	return _Result;
-#else
     int _Result;
     va_list _ArgList;
     __crt_va_start(_ArgList, _Format);
     _Result = _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
     __crt_va_end(_ArgList);
     return _Result;
-#endif
 }
 #endif
 
@@ -1532,7 +1497,7 @@ _CRT_STDIO_INLINE_AWAYS int __CRTDECL swprintf(
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_2_ARGLIST_EX(
     _Success_(return >= 0)
-    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE_AWAYS, __CRTDECL, __swprintf_l, __vswprintf_l, _vswprintf_s_l,
+    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE, __CRTDECL, __swprintf_l, __vswprintf_l, _vswprintf_s_l,
     _Pre_notnull_ _Post_z_                  wchar_t,
     _Pre_notnull_ _Post_z_,                 wchar_t,        _Buffer,
     _In_z_ _Printf_format_string_params_(2) wchar_t const*, _Format,
@@ -1541,7 +1506,7 @@ __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_2_ARGLIST_EX(
 
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_ARGLIST_EX(
     _Success_(return >= 0)
-    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE_AWAYS_FOR_XP, __CRTDECL, _swprintf, _swprintf_s, _vswprintf, vswprintf_s,
+    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE, __CRTDECL, _swprintf, _swprintf_s, _vswprintf, vswprintf_s,
     _Pre_notnull_ _Post_z_,       wchar_t,        _Buffer,
     _In_z_ _Printf_format_string_ wchar_t const*, _Format
     )
@@ -1873,7 +1838,7 @@ _CRT_STDIO_INLINE int __CRTDECL _scwprintf_p(
             va_list _ArgList;
             __crt_va_start(_ArgList, _Format);
             #pragma warning(suppress: 28719)
-            _Result = vswprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);       
+            _Result = vswprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
             __crt_va_end(_ArgList);
             return _Result;
         }
@@ -1899,7 +1864,7 @@ _CRT_STDIO_INLINE int __CRTDECL _scwprintf_p(
             int _Result;
             va_list _ArgList;
             __crt_va_start(_ArgList, _Locale);
-            _Result = _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
+            _Result = _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
             __crt_va_end(_ArgList);
             return _Result;
         }
@@ -1912,7 +1877,7 @@ _CRT_STDIO_INLINE int __CRTDECL _scwprintf_p(
                                                     va_list              _ArgList
             ) throw()
         {
-            return _vswprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
+            return _vswprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
         }
 
     #endif  // __cplusplus

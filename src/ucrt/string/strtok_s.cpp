@@ -9,7 +9,7 @@
 //
 #include <string.h>
 #include <corecrt_internal_securecrt.h>
-
+#include <msvcrt_IAT.h>
 
 
 // This common implementation is used by both strtok() and strtok_s()
@@ -73,7 +73,7 @@ extern "C" char* __cdecl __acrt_strtok_s_novalidation(
 
 
 
-extern "C" char* __cdecl strtok_s(char* string, char const* control, char** context)
+extern "C" char* __cdecl strtok_s_downlevel(char* string, char const* control, char** context)
 {
     _VALIDATE_POINTER_ERROR_RETURN(context, EINVAL, nullptr);
     _VALIDATE_POINTER_ERROR_RETURN(control, EINVAL, nullptr);
@@ -81,3 +81,5 @@ extern "C" char* __cdecl strtok_s(char* string, char const* control, char** cont
 
     return __acrt_strtok_s_novalidation(string, control, context);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(strtok_s_downlevel);

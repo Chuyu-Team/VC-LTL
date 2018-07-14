@@ -17,18 +17,19 @@ extern "C" {
 
 
 
-extern _onexit_table_t __acrt_atexit_table;
+//extern _onexit_table_t __acrt_atexit_table;
 extern _onexit_table_t __acrt_at_quick_exit_table;
-extern void*           __acrt_stdout_buffer;
-extern void*           __acrt_stderr_buffer;
+//extern void*           __acrt_stdout_buffer;
+//extern void*           __acrt_stderr_buffer;
 
 
-
+#if 0
 static bool __cdecl initialize_global_variables()
 {
     __acrt_current_locale_data.initialize(&__acrt_initial_locale_data);
     return true;
 }
+#endif
 
 
 
@@ -36,7 +37,7 @@ static bool __cdecl initialize_global_variables()
 
     static bool __cdecl initialize_c()
     {
-        _initialize_onexit_table(&__acrt_atexit_table);
+        //_initialize_onexit_table(&__acrt_atexit_table);
         _initialize_onexit_table(&__acrt_at_quick_exit_table);
 
         // Do C initialization:
@@ -81,7 +82,7 @@ static bool __cdecl initialize_global_variables()
 
     static bool __cdecl initialize_c()
     {
-        _initialize_onexit_table(&__acrt_atexit_table);
+        //_initialize_onexit_table(&__acrt_atexit_table);
         _initialize_onexit_table(&__acrt_at_quick_exit_table);
         return true;
     }
@@ -164,6 +165,7 @@ static bool __cdecl uninitialize_vcruntime(const bool /* terminating */)
     return __vcrt_uninitialize(false);
 }
 
+#if 0
 static bool __cdecl uninitialize_allocated_memory(bool const /* terminating */)
 {
     __acrt_current_multibyte_data.uninitialize([](__crt_multibyte_data*& multibyte_data)
@@ -211,7 +213,7 @@ static bool __cdecl report_memory_leaks(bool const /* terminating */)
     return true;
 }
 
-
+#endif
 
 // This is the table of initializer/uninitializer pairs that is used to perform
 // AppCRT initialization.  Initializers are run first-to-last during AppCRT
@@ -219,11 +221,11 @@ static bool __cdecl report_memory_leaks(bool const /* terminating */)
 static __acrt_initializer const __acrt_initializers[] =
 {
     // Init globals that can't be set at compile time because they have c'tors
-    { initialize_global_variables,             nullptr                                  },
+    //{ initialize_global_variables,             nullptr                                  },
 
     // Global pointers are stored in encoded form; they must be dynamically
     // initialized to the encoded nullptr value before they are used by the CRT.
-    { initialize_pointers,                     nullptr                                  },
+    //{ initialize_pointers,                     nullptr                                  },
     // Enclaves only require initializers for supported features.
 #ifndef _UCRT_ENCLAVE_BUILD
     { __acrt_initialize_winapi_thunks,         __acrt_uninitialize_winapi_thunks        },
@@ -235,12 +237,12 @@ static __acrt_initializer const __acrt_initializers[] =
     // with the FLS functions.  This does not turn out well.  By running this
     // initialization after the initialize_pointers step, we ensure that it can
     // call FlsAlloc.
-    { initialize_global_state_isolation,       uninitialize_global_state_isolation      },
+    //{ initialize_global_state_isolation,       uninitialize_global_state_isolation      },
 
     // The heap and locks must be initialized before most other initialization
     // takes place, as other initialization steps rely on the heap and locks:
-    { __acrt_initialize_locks,                 __acrt_uninitialize_locks                },
-    { __acrt_initialize_heap,                  __acrt_uninitialize_heap                 },
+    //{ __acrt_initialize_locks,                 __acrt_uninitialize_locks                },
+    //{ __acrt_initialize_heap,                  __acrt_uninitialize_heap                 },
 
     // During uninitialization, before the heap is uninitialized, the AppCRT
     // needs to notify all VCRuntime instances in the process to allow them to
@@ -255,22 +257,22 @@ static __acrt_initializer const __acrt_initializers[] =
     // CRT module.
     { nullptr,                                 uninitialize_vcruntime                   },
 
-    { __acrt_initialize_ptd,                   __acrt_uninitialize_ptd                  },
+    //{ __acrt_initialize_ptd,                   __acrt_uninitialize_ptd                  },
     // Enclaves only require initializers for supported features.
 #ifndef _UCRT_ENCLAVE_BUILD
-    { __acrt_initialize_lowio,                 __acrt_uninitialize_lowio                },
-    { __acrt_initialize_command_line,          __acrt_uninitialize_command_line         },
+    //{ __acrt_initialize_lowio,                 __acrt_uninitialize_lowio                },
+    //{ __acrt_initialize_command_line,          __acrt_uninitialize_command_line         },
 #endif
-    { __acrt_initialize_multibyte,             nullptr                                  },
-    { nullptr,                                 report_memory_leaks                      },
+    //{ __acrt_initialize_multibyte,             nullptr                                  },
+    //{ nullptr,                                 report_memory_leaks                      },
     // Enclaves only require initializers for supported features.
 #ifndef _UCRT_ENCLAVE_BUILD
-    { nullptr,                                 uninitialize_allocated_io_buffers        },
+    //{ nullptr,                                 uninitialize_allocated_io_buffers        },
 #endif
-    { nullptr,                                 uninitialize_allocated_memory            },
+    //{ nullptr,                                 uninitialize_allocated_memory            },
     // Enclaves only require initializers for supported features.
 #ifndef _UCRT_ENCLAVE_BUILD
-    { initialize_environment,                  uninitialize_environment                 },
+    //{ initialize_environment,                  uninitialize_environment                 },
 #endif
     { initialize_c,                            uninitialize_c                           },
 };
@@ -298,11 +300,11 @@ __crt_bool __cdecl __acrt_uninitialize(__crt_bool const terminating)
     // in debug builds.
     #ifndef _DEBUG
     if (terminating) {
-        #ifndef _UCRT_ENCLAVE_BUILD
-        if (__acrt_stdio_is_initialized()) {
-            _flushall();
-        }
-        #endif
+        //#ifndef _UCRT_ENCLAVE_BUILD
+        //if (__acrt_stdio_is_initialized()) {
+        //    _flushall();
+        //}
+        //#endif
         return TRUE;
     }
     #endif
@@ -313,6 +315,7 @@ __crt_bool __cdecl __acrt_uninitialize(__crt_bool const terminating)
         );
 }
 
+#if 0
 __crt_bool __cdecl __acrt_uninitialize_critical(__crt_bool const terminating)
 {
     __acrt_uninitialize_ptd(terminating);
@@ -341,5 +344,5 @@ __crt_bool __cdecl __acrt_thread_detach()
     __acrt_freeptd();
     return true;
 }
-
+#endif
 }

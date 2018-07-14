@@ -75,11 +75,13 @@ _VCRT_DECLARE_ALTERNATE_NAME(__vcrt_thread_detach,         __scrt_stub_for_acrt_
 #define EXPAND_LINKER_OPTION_XMD(...) __VA_ARGS__
 #define EXPAND_LINKER_OPTION_MT(...)  __VA_ARGS__
 #define EXPAND_LINKER_OPTION_XMT(...) __VA_ARGS__
+#define EXPAND_LINKER_OPTION_SD(...)  __VA_ARGS__
 
 #define LINKER_OPTION_MD  "/disallowlib"
 #define LINKER_OPTION_XMD "/disallowlib"
 #define LINKER_OPTION_MT  "/disallowlib"
 #define LINKER_OPTION_XMT "/disallowlib"
+#define LINKER_OPTION_SD  "/defaultlib"
 
 #ifdef CRTDLL
     #ifdef _DEBUG
@@ -137,3 +139,8 @@ GENERATE_LINKER_OPTION(MD,  "ucrt.lib"    )
 GENERATE_LINKER_OPTION(XMD, "ucrtd.lib"   )
 GENERATE_LINKER_OPTION(MT,  "libucrt.lib" )
 GENERATE_LINKER_OPTION(XMT, "libucrtd.lib")
+
+GENERATE_LINKER_OPTION(MT, "libucrt_shared.lib")
+
+GENERATE_LINKER_OPTION(SD, "vc.lib")
+GENERATE_LINKER_OPTION(SD, "msvcrt_Platform.lib")

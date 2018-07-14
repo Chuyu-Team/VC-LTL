@@ -18,8 +18,8 @@
 #ifdef _ATL_XP_TARGETING
 EXTERN_C errno_t __cdecl _mbccpy_s_l_downlevel(unsigned char *_Dst, size_t _SizeInBytes, int *_PCopied, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
-	if (!_LOCALE_ARG)
-		return _mbccpy_s(_Dst, _SizeInBytes, _PCopied, _Src);
+	//if (!_LOCALE_ARG)
+	//	return _mbccpy_s(_Dst, _SizeInBytes, _PCopied, _Src);
 
     /* validation section */
     _ASSIGN_IF_NOT_NULL(_PCopied, 0);

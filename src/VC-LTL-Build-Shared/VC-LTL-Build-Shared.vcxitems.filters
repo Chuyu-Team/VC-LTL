@@ -13,6 +13,12 @@
     <Filter Include="ltl\objs">
       <UniqueIdentifier>{45f3db07-d698-4959-aaf2-d4ccbc2c3413}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ucrt\objs">
+      <UniqueIdentifier>{d2e4d1fa-a085-4609-8859-19093d97ff35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ucrt\amd64">
+      <UniqueIdentifier>{d79c54d1-6e1a-412a-a329-d0ee83fb2f60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\winapi_thunks.cpp">
@@ -420,11 +426,143 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\startup\argv_data.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
-      <Filter>ucrt</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\stat.cpp">
       <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\onexit_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\exit_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\startup\argv_winmain.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\heap\recalloc.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\ncommode.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\conio\cprintf.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\input.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\output.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdio\printf_count_output.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\cvt.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\cfout.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\_fptostr.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdlib\qsort_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\makepath.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbccpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbscpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbcat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbcpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnbset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsncpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsnset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\mbstring\mbsset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\memcpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strcat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strcpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strncat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strncpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strnlen.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strnset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\strtok_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcscat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcscpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsncat_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsncpy_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsnset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcsset_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcstok_s.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
+      <Filter>ucrt\amd64</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\initialization.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\shared_initialization.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\report_runtime_error_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\inoutput_downlevel.cpp">
+      <Filter>ltl\objs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -16,22 +16,22 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_11033
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_pdblkup_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_stack_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_userapi_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_amdsecgs_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_amdsecgs_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_amdsecgsrfg_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_cfgcheckthunk_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_chkstk_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_chkstk_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_chkstk2_.obj
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_guard_dispatch_.obj
 
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_rfgfailure_.obj
 
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_gshandler_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_gshandlerseh_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_gshandler_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_gshandlerseh_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_mpxinit_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_gshandlerseh_noexcept_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\_gshandlerseh_noexcept_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\gs_cookie.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\gs_report.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\gs_report.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\gs_support.obj
 
@@ -41,7 +41,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_11033
 
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\guard_support.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\loadcfg.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\loadcfg.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\pesect.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\dyn_tls_dtor.obj
@@ -61,14 +61,14 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_11033
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\matherr.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\new_mode.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\thread_locale.obj
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvccctr.obj
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvcccvb.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvccctr.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvcccvb.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvecctr.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvecctr.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehveccvb.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehveccvb.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvecdtr.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\ehvecdtr.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\std_type_info_static.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\tncleanup.obj
@@ -97,7 +97,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_11033
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\std_nothrow.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\throw_bad_alloc.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\thread_safe_statics.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\thread_safe_statics.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\dll_dllmain.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\amd64\dll_dllmain_stub.obj

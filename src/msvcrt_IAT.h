@@ -25,20 +25,31 @@
 #endif
 
 
+#ifdef __cplusplus
+#define __IAT_EXTERN_C extern "C"
+#define __IAT_reinterpret_cast(f) reinterpret_cast<void const*>(f) 
+#else
+#define __IAT_EXTERN_C
+#define __IAT_reinterpret_cast(f) f
+#endif
+
+
 #if !defined _LTL_Using_Dynamic_Lib || defined __Build_OBJ
 
-#define _LCRT_DEFINE_IAT_SYMBOL(f)                                                          \
-    extern "C" __declspec(selectany) void const* const _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(f) \
-        = reinterpret_cast<void const*>(f)
-
-#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)                                                   \
-    extern "C" void __cdecl f();                                                            \
-    _LCRT_DEFINE_IAT_SYMBOL(f)
-
+#define __IAT_EXPORT(f) ;
 #else
-
-#define _LCRT_DEFINE_IAT_SYMBOL(f) __pragma(comment(linker,"/EXPORT:" _LCRT_DECLARE_ALTERNATE_NAME_PREFIX #f))
-
-#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN _LCRT_DEFINE_IAT_SYMBOL
-
+#define __IAT_EXPORT(f) __pragma(comment(linker,"/EXPORT:" _LCRT_DECLARE_ALTERNATE_NAME_PREFIX #f));
 #endif
+
+
+
+
+#define _LCRT_DEFINE_IAT_SYMBOL(f)                                                              \
+    __IAT_EXPORT(f)                                                                             \
+    __IAT_EXTERN_C __declspec(selectany) void const* const _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(f) \
+        = __IAT_reinterpret_cast(f)
+
+
+#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)                                                       \
+    __IAT_EXTERN_C void __cdecl f();                                                            \
+    _LCRT_DEFINE_IAT_SYMBOL(f)

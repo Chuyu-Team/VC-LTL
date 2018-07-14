@@ -8,7 +8,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <mbstring.h>
 #include <stdlib.h>
-
+#include <msvcrt_IAT.h>
 
 
 static char const* previous_character(char const* const first, char const* const current) throw()
@@ -155,7 +155,7 @@ static errno_t __cdecl common_makepath_s(
 }
 
 
-
+#if 0
 extern "C" void __cdecl _makepath(
     char*       const result_buffer,
     char const* const drive,
@@ -178,9 +178,10 @@ extern "C" void __cdecl _wmakepath(
     _wmakepath_s(result_buffer, SIZE_MAX, drive, directory, file_name, extension);
 }
 
+#endif
 
 
-extern "C" errno_t __cdecl _makepath_s(
+extern "C" errno_t __cdecl _makepath_s_downlevel(
     char*       const result_buffer,
     size_t      const result_count,
     char const* const drive,
@@ -192,7 +193,9 @@ extern "C" errno_t __cdecl _makepath_s(
     return common_makepath_s(result_buffer, result_count, drive, directory, file_name, extension);
 }
 
-extern "C" errno_t __cdecl _wmakepath_s(
+_LCRT_DEFINE_IAT_SYMBOL(_makepath_s_downlevel);
+
+extern "C" errno_t __cdecl _wmakepath_s_downlevel(
     wchar_t*       const result_buffer,
     size_t         const result_count,
     wchar_t const* const drive,
@@ -203,3 +206,5 @@ extern "C" errno_t __cdecl _wmakepath_s(
 {
     return common_makepath_s(result_buffer, result_count, drive, directory, file_name, extension);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wmakepath_s_downlevel);

@@ -1423,25 +1423,21 @@ _CRT_STDIO_INLINE int __CRTDECL _vsnprintf(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_ACRTXPINLINE int __CRTDECL vsnprintf(
+_CRT_STDIO_INLINE int __CRTDECL vsnprintf(
     _Out_writes_(_BufferCount)    char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
                                   va_list           _ArgList
     )
-#ifndef _ATL_XP_TARGETING
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
-	auto Count = _vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
-	if (Count <= 0)
-		return Count;
+    int const _Result = __stdio_common_vsprintf(
+        _CRT_INTERNAL_LOCAL_PRINTF_OPTIONS | _CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR,
+        _Buffer, _BufferCount, _Format, NULL, _ArgList);
 
-	if ((size_t)Count == _BufferCount)
-	{
-		_Buffer[Count - 1] = '\0';
-	}
-	return Count;
+    return _Result < 0 ? -1 : _Result;
 }
 #endif
 
@@ -1459,7 +1455,7 @@ _CRT_STDIO_INLINE int __CRTDECL _vsprintf_l(
 {
     #pragma warning(push)
     #pragma warning(disable: 4996) // Deprecation
-    return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
+    return _vsnprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
     #pragma warning(pop)
 }
 #endif
@@ -1477,7 +1473,7 @@ _CRT_STDIO_INLINE int __CRTDECL vsprintf(
 {
     #pragma warning(push)
     #pragma warning(disable: 4996) // Deprecation
-    return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, NULL, _ArgList);
+    return _vsnprintf_l(_Buffer, (size_t)-1, _Format, NULL, _ArgList);
     #pragma warning(pop)
 }
 #endif
@@ -1620,22 +1616,18 @@ __DEFINE_CPP_OVERLOAD_SECURE_FUNC_0_3(
 
     _Success_(return >= 0)
     _Check_return_opt_
-	_CRT_STDIO_INLINE_AWAYS int __CRTDECL vsnprintf_s(
+    _CRT_STDIO_INLINE int __CRTDECL vsnprintf_s(
         _Out_writes_z_(_BufferCount)  char*       const _Buffer,
         _In_                          size_t      const _BufferCount,
         _In_                          size_t      const _MaxCount,
         _In_z_ _Printf_format_string_ char const* const _Format,
                                       va_list           _ArgList
         )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
     {
-#ifndef _ATL_XP_TARGETING
         return _vsnprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
-#else
-		return _vsnprintf_s(_Buffer, _BufferCount, _MaxCount, _Format, _ArgList);
-#endif
     }
 #endif
     
@@ -1700,11 +1692,11 @@ _CRT_STDIO_INLINE int __CRTDECL _vscprintf_p_l(
 #endif
 
 _Check_return_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL _vscprintf_p(
+_CRT_STDIO_INLINE int __CRTDECL _vscprintf_p(
     _In_z_ _Printf_format_string_ char const* const _Format,
                                   va_list           _ArgList
     )
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1800,7 +1792,7 @@ _CRT_STDIO_INLINE int __CRTDECL sprintf(
 #pragma warning(disable: 4996)
 __DEFINE_CPP_OVERLOAD_STANDARD_FUNC_0_1_ARGLIST(
     _Success_(return >= 0)
-    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE, __CRTDECL, sprintf, vsprintf,
+    int, __RETURN_POLICY_SAME, __EMPTY_DECLSPEC, __CRTDECL, sprintf, vsprintf,
     _Pre_notnull_ _Post_z_,       char,        _Buffer,
     _In_z_ _Printf_format_string_ char const*, _Format
     )
@@ -1880,12 +1872,12 @@ _CRT_STDIO_INLINE int __CRTDECL _sprintf_p_l(
 
 _Success_(return >= 0)
 _Check_return_opt_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL _sprintf_p(
+_CRT_STDIO_INLINE int __CRTDECL _sprintf_p(
     _Out_writes_z_(_BufferCount)  char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
     ...)
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1937,12 +1929,12 @@ _CRT_STDIO_INLINE int __CRTDECL _snprintf_l(
 
 _Success_(return >= 0)
 _Check_return_
-_CRT_STDIO_INLINE_AWAYS int __CRTDECL snprintf(
+_CRT_STDIO_INLINE int __CRTDECL snprintf(
     _Out_writes_z_(_BufferCount)  char*       const _Buffer,
     _In_                          size_t      const _BufferCount,
     _In_z_ _Printf_format_string_ char const* const _Format,
     ...)
-#if 0
+#if defined _NO_CRT_STDIO_INLINE
 ;
 #else
 {
@@ -1978,7 +1970,7 @@ _CRT_STDIO_INLINE int __CRTDECL _snprintf(
 
 __DEFINE_CPP_OVERLOAD_STANDARD_NFUNC_0_2_ARGLIST_EX(
     _Success_(return >= 0)
-    int, __RETURN_POLICY_SAME, _CRT_STDIO_INLINE, __CRTDECL, _snprintf, _vsnprintf,
+    int, __RETURN_POLICY_SAME, __EMPTY_DECLSPEC, __CRTDECL, _snprintf, _vsnprintf,
     _Pre_notnull_ _Post_maybez_ char,
     _Out_writes_(_BufferCount) _Post_maybez_, char,        _Buffer,
     _In_                                      size_t,      _BufferCount,

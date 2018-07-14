@@ -106,6 +106,7 @@ extern "C" inline int __cdecl __dcrt_multibyte_check_type(
 			return FALSE;
 	}
 
+	#pragma warning(suppress : 4838)
     char const bytes[] = { (c >> 8) & 0xff, c & 0xff };
 
     // The 'c' "character" could be two one-byte multibyte characters, so we

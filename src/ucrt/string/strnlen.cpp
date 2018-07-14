@@ -11,7 +11,7 @@
 #include <corecrt_internal_simd.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <msvcrt_IAT.h>
 
 
 // Disable "warning C4752: found Intel(R) Advanced Vector Extensions; consider
@@ -193,7 +193,7 @@ static __forceinline size_t __cdecl common_strnlen(
     return common_strnlen_c<Mode>(string, maximum_count);
 }
 
-extern "C" size_t __cdecl strnlen(
+extern "C" size_t __cdecl strnlen_downlevel(
     char const* const string,
     size_t      const maximum_count
     )
@@ -201,7 +201,9 @@ extern "C" size_t __cdecl strnlen(
     return common_strnlen<bounded>(reinterpret_cast<uint8_t const*>(string), maximum_count);
 }
 
-extern "C" size_t __cdecl wcsnlen(
+_LCRT_DEFINE_IAT_SYMBOL(strnlen_downlevel);
+
+extern "C" size_t __cdecl wcsnlen_downlevel(
     wchar_t const* const string,
     size_t         const maximum_count
     )
@@ -209,6 +211,9 @@ extern "C" size_t __cdecl wcsnlen(
     return common_strnlen<bounded>(reinterpret_cast<uint16_t const*>(string), maximum_count);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(wcsnlen_downlevel);
+
+#if 0
 #pragma function(wcslen)
 
 extern "C" size_t __cdecl wcslen(
@@ -217,3 +222,4 @@ extern "C" size_t __cdecl wcslen(
 {
     return common_strnlen<unbounded>(reinterpret_cast<uint16_t const*>(string), SIZE_MAX);
 }
+#endif

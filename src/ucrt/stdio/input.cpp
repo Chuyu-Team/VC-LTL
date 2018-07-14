@@ -7,6 +7,7 @@
 // of these functions.
 //
 #include <corecrt_internal_stdio_input.h>
+#include <msvcrt_IAT.h>
 
 using namespace __crt_stdio_input;
 
@@ -34,20 +35,20 @@ static int __cdecl common_vfscanf(
 
     return __acrt_lock_stream_and_call(stream, [&]()
     {
-        _LocaleUpdate locale_update(locale);
+        //_LocaleUpdate locale_update(locale);
 
         processor_type processor(
             stream_input_adapter<Character>(stream),
             options,
             format,
-            locale_update.GetLocaleT(),
+			locale/*locale_update.GetLocaleT()*/,
             arglist);
 
         return processor.process();
     });
 }
 
-extern "C" int __cdecl __stdio_common_vfscanf(
+extern "C" int __cdecl __stdio_common_vfscanf_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     char const*      const format,
@@ -58,7 +59,9 @@ extern "C" int __cdecl __stdio_common_vfscanf(
     return common_vfscanf(options, stream, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vfwscanf(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfscanf_downlevel);
+
+extern "C" int __cdecl __stdio_common_vfwscanf_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     wchar_t const*   const format,
@@ -68,6 +71,8 @@ extern "C" int __cdecl __stdio_common_vfwscanf(
 {
     return common_vfscanf(options, stream, format, locale, arglist);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfwscanf_downlevel);
 
 #endif /* _UCRT_ENCLAVE_BUILD */
 
@@ -97,19 +102,19 @@ static int __cdecl common_vsscanf(
     // in the buffer.
     size_t const buffer_count_for_stream = char_traits::tcsnlen(buffer, buffer_count);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     processor_type processor(
         string_input_adapter<Character>(buffer, buffer_count_for_stream),
         options,
         format,
-        locale_update.GetLocaleT(),
+		locale/*locale_update.GetLocaleT()*/,
         arglist);
 
     return processor.process();
 }
 
-extern "C" int __cdecl __stdio_common_vsscanf(
+extern "C" int __cdecl __stdio_common_vsscanf_downlevel(
     unsigned __int64 const options,
     char const*      const buffer,
     size_t           const buffer_count,
@@ -121,7 +126,9 @@ extern "C" int __cdecl __stdio_common_vsscanf(
     return common_vsscanf(options, buffer, buffer_count, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vswscanf(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsscanf_downlevel);
+
+extern "C" int __cdecl __stdio_common_vswscanf_downlevel(
     unsigned __int64 const options,
     wchar_t const*   const buffer,
     size_t           const buffer_count,
@@ -132,3 +139,5 @@ extern "C" int __cdecl __stdio_common_vswscanf(
 {
     return common_vsscanf(options, buffer, buffer_count, format, locale, arglist);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vswscanf_downlevel);

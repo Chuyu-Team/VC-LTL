@@ -385,7 +385,8 @@ extern "C" bool __cdecl __scrt_dllmain_after_initialize_c()
             return false;
         }
 
-        __scrt_dll_environment_policy::initialize_environment();
+		//configure_argv()已经初始化
+        //__scrt_dll_environment_policy::initialize_environment();
     }
 
     return true;

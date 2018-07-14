@@ -17,33 +17,33 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_stack_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_userapi_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg4_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg4gs_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg4_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg4gs_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_ftol2_.obj
 
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_ftol3_.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_cfgcheckthunk_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_chandler4gs_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_secchk_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_secchk_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehprolog.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\lldiv.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\lldvrm.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llmul.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llrem.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llshl.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llshr.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ulldiv.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ulldvrm.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ullrem.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ullshr.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\alloca16.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\chkstk.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\atlssup.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\lldiv.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\lldvrm.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llmul.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llrem.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llshl.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\llshr.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ulldiv.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ulldvrm.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ullrem.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ullshr.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\alloca16.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\chkstk.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\atlssup.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\dllsupp.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\gs_cookie.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\gs_report.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\gs_report.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\gs_support.obj
 
@@ -53,7 +53,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\guard_support.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\loadcfg.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\loadcfg.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\pesect.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\dyn_tls_dtor.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\dyn_tls_init.obj
@@ -75,14 +75,14 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\matherr.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\new_mode.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\thread_locale.obj
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvccctr.obj
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvcccvb.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvccctr.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvcccvb.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvecctr.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvecctr.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehveccvb.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehveccvb.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvecdtr.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ehvecdtr.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\std_type_info_static.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\tncleanup.obj
@@ -111,7 +111,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\std_nothrow.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\throw_bad_alloc.obj
 
-::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\thread_safe_statics.obj
+lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\thread_safe_statics.obj
 
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\dll_dllmain.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\dll_dllmain_stub.obj
@@ -127,7 +127,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\ucrt_stubs.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\vcruntime_stubs.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\utility_desktop.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\chandler4_noexcept.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\chandler4_noexcept.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\default_precision.obj
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\vmath.nativeproj_726318355\objr\x86\_svml_stanhf8_dispatch_.obj
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\vmath.nativeproj_726318355\objr\x86\_svml_stanhf8_avx_.obj

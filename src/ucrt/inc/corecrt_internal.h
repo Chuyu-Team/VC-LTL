@@ -819,7 +819,8 @@ __inline int __CRTDECL __acrt_isleadbyte_l_noupdate(
     _In_ _locale_t const locale
     )
 {
-    return locale->locinfo->_locale_pctype[(unsigned char)c] & _LEADBYTE;
+	unsigned short const* _locale_pctype = locale ? locale->locinfo->_locale_pctype : __pctype_func();
+    return _locale_pctype[(unsigned char)c] & _LEADBYTE;
 }
 
 
@@ -1858,6 +1859,8 @@ __forceinline errno_t _invoke_watson_if_oneof(
 // We use _VALIDATE_STREAM_ANSI_RETURN to ensure that ANSI file operations (e.g.
 // fprintf) aren't called on files opened as UNICODE. We do this check only if
 // it's an actual FILE pointer & not a string.
+#if 0
+//msvcrt.dll for xp 本身就不支持这些功能
 #define _VALIDATE_STREAM_ANSI_RETURN(stream, errorcode, retexpr)               \
     {                                                                          \
         __crt_stdio_stream const _Stream(stream);                              \
@@ -1869,6 +1872,12 @@ __forceinline errno_t _invoke_watson_if_oneof(
                 !_tm_unicode_safe(fn)))),                                      \
             errorcode, retexpr)                                                \
     }
+#else
+#define _VALIDATE_STREAM_ANSI_RETURN(stream, errorcode, retexpr)               \
+    {                                                                          \
+         _VALIDATE_RETURN(stream != NULL,errorcode,retexpr)                    \
+    }
+#endif
 
 #define _CHECK_FH_RETURN( handle, errorcode, retexpr )                         \
     {                                                                          \
@@ -1932,6 +1941,14 @@ __forceinline errno_t _invoke_watson_if_oneof(
         return _FunctionName##_l(_Arg1, _Arg2, _Arg3, NULL);                                  \
     }
 
+#define _REDIRECT_TO_L_VERSION_3_downlevel(_ReturnType, _FunctionName, _Type1, _Type2, _Type3)\
+    _REDIRECT_TO_L_VERSION_FUNC_PROLOGUE                                                      \
+    _ReturnType __cdecl _FunctionName##_downlevel(_Type1 _Arg1, _Type2 _Arg2, _Type3 _Arg3)   \
+    {                                                                                         \
+        return _FunctionName##_l(_Arg1, _Arg2, _Arg3, NULL);                        \
+    }
+
+
 #define _REDIRECT_TO_L_VERSION_4(_ReturnType, _FunctionName, _Type1, _Type2, _Type3, _Type4)  \
     _REDIRECT_TO_L_VERSION_FUNC_PROLOGUE                                                      \
     _ReturnType __cdecl _FunctionName(_Type1 _Arg1, _Type2 _Arg2, _Type3 _Arg3, _Type4 _Arg4) \
@@ -1939,6 +1956,12 @@ __forceinline errno_t _invoke_watson_if_oneof(
         return _FunctionName##_l(_Arg1, _Arg2, _Arg3, _Arg4, NULL);                           \
     }
 
+#define _REDIRECT_TO_L_VERSION_4_downlevel(_ReturnType, _FunctionName, _Type1, _Type2, _Type3, _Type4)    \
+    _REDIRECT_TO_L_VERSION_FUNC_PROLOGUE                                                                  \
+    _ReturnType __cdecl _FunctionName##_downlevel(_Type1 _Arg1, _Type2 _Arg2, _Type3 _Arg3, _Type4 _Arg4) \
+    {                                                                                                     \
+        return _FunctionName##_l(_Arg1, _Arg2, _Arg3, _Arg4, NULL);                                       \
+    }
 
 
 #ifdef __cplusplus

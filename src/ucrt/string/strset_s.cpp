@@ -8,10 +8,10 @@
 //
 #include <corecrt_internal_string_templates.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 
-
-extern "C" errno_t __cdecl _strset_s(
+extern "C" errno_t __cdecl _strset_s_downlevel(
     char*  const destination,
     size_t const size_in_elements,
     int    const value
@@ -19,3 +19,5 @@ extern "C" errno_t __cdecl _strset_s(
 {
     return common_tcsset_s(destination, size_in_elements, static_cast<char>(value));
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_strset_s_downlevel);

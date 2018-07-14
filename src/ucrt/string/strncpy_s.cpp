@@ -8,10 +8,10 @@
 //
 #include <corecrt_internal_string_templates.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
 
-
-extern "C" errno_t __cdecl strncpy_s(
+extern "C" errno_t __cdecl strncpy_s_downlevel(
     char*       const destination,
     size_t      const size_in_elements,
     char const* const source,
@@ -20,3 +20,5 @@ extern "C" errno_t __cdecl strncpy_s(
 {
     return common_tcsncpy_s(destination, size_in_elements, source, count);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(strncpy_s_downlevel);

@@ -156,10 +156,10 @@ public:
 
     bool write_character_without_count_update(Character const c) const throw()
     {
-        if (_stream.is_string_backed() && _stream->_base == nullptr)
-        {
-            return true;
-        }
+        //if (_stream.is_string_backed() && _stream->_base == nullptr)
+        //{
+         //   return true;
+        //}
 
         return char_traits::puttc_nolock(c, _stream.public_stream()) != char_traits::eof;
     }
@@ -171,11 +171,11 @@ public:
         __crt_deferred_errno_cache& status
         ) const throw()
     {
-        if (_stream.is_string_backed() && _stream->_base == nullptr)
-        {
-            *count_written += length;
-            return;
-        }
+        //if (_stream.is_string_backed() && _stream->_base == nullptr)
+        //{
+        //    *count_written += length;
+        //    return;
+        //}
 
         write_string_impl(string, length, count_written, status);
     }
@@ -441,7 +441,9 @@ inline void __cdecl force_decimal_point(_Inout_z_ char* buffer, _locale_t const 
 
     char holdchar = *buffer;
 
-    *buffer++ = *locale->locinfo->lconv->decimal_point;
+	auto const lconv = locale ? locale->locinfo->lconv : localeconv();
+
+    *buffer++ = *lconv->decimal_point;
 
     do
     {
@@ -467,7 +469,9 @@ inline void __cdecl force_decimal_point(_Inout_z_ char* buffer, _locale_t const 
 //     [-] digit [digit...] [(exponent part)]
 inline void __cdecl crop_zeroes(_Inout_z_ char* buffer, _locale_t const locale) throw()
 {
-    char const decimal_point = *locale->locinfo->lconv->decimal_point;
+	auto const lconv = locale ? locale->locinfo->lconv : localeconv();
+
+    char const decimal_point = *lconv->decimal_point;
 
     while (*buffer && *buffer != decimal_point)
         ++buffer;
@@ -2190,7 +2194,7 @@ private:
             // is unsuccessful, we ignore this character but do not fail the entire
             // output operation.
             char const local_buffer[2]{ static_cast<char>(wide_character & 0x00ff), '\0' };
-            if (_mbtowc_l(_buffer.data<wchar_t>(), local_buffer, _locale->locinfo->_public._locale_mb_cur_max, _locale) < 0)
+            if (_mbtowc_l(_buffer.data<wchar_t>(), local_buffer, _locale ? _locale->locinfo->_locale_mb_cur_max : ___mb_cur_max_func(), _locale) < 0)
                 _suppress_output = true;
         }
         else
@@ -2682,7 +2686,7 @@ private:
             for (int i{0}; i != _string_length; ++i)
             {
                 wchar_t wide_character{};
-                int const mbc_length{_mbtowc_l(&wide_character, p, _locale->locinfo->_public._locale_mb_cur_max, _locale)};
+                int const mbc_length{_mbtowc_l(&wide_character, p, _locale ? _locale->locinfo->_locale_mb_cur_max : ___mb_cur_max_func(), _locale)};
 
                 if (mbc_length <= 0)
                 {

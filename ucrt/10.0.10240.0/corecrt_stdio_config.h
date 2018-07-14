@@ -16,20 +16,10 @@ _CRT_BEGIN_C_HEADER
 
 #if defined _NO_CRT_STDIO_INLINE
     #undef _CRT_STDIO_INLINE
-    #define _CRT_STDIO_INLINE _CRTIMP
+    #define _CRT_STDIO_INLINE
 #elif !defined _CRT_STDIO_INLINE
     #define _CRT_STDIO_INLINE __inline
 #endif
-
-#if defined _ATL_XP_TARGETING
-#define _CRT_STDIO_INLINE_VISTA_OR_LATER _CRTIMP
-#define _CRT_STDIO_INLINE_AWAYS_FOR_XP   __inline
-#else
-#define _CRT_STDIO_INLINE_VISTA_OR_LATER _CRT_STDIO_INLINE
-#define _CRT_STDIO_INLINE_AWAYS_FOR_XP   _CRT_STDIO_INLINE
-#endif
-
-#define _CRT_STDIO_INLINE_AWAYS          __inline
 
 #if defined _M_IX86
     #define _CRT_INTERNAL_STDIO_SYMBOL_PREFIX "_"

@@ -9,8 +9,9 @@
 //
 #include <corecrt_internal_string_templates.h>
 #include <string.h>
+#include <msvcrt_IAT.h>
 
-extern "C" errno_t __cdecl _wcsnset_s(
+extern "C" errno_t __cdecl _wcsnset_s_downlevel(
     wchar_t* const destination,
     size_t   const size_in_elements,
     wchar_t  const value,
@@ -19,3 +20,5 @@ extern "C" errno_t __cdecl _wcsnset_s(
 {
     return common_tcsnset_s(destination, size_in_elements, value, count);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcsnset_s_downlevel);

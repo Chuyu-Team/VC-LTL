@@ -13,6 +13,7 @@
 #include <vcruntime_internal.h>
 #include <awint.h>
 #include <limits.h>
+#include <sdkddkver.h>
 
 int const Uninitialized    = 0;
 int const BeingInitialized = -1;
@@ -29,10 +30,13 @@ extern "C"
 
 static CRITICAL_SECTION   _Tss_mutex;
 static CONDITION_VARIABLE _Tss_cv;
+
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
 static HANDLE             _Tss_event;
 
 static decltype(SleepConditionVariableCS)* encoded_sleep_condition_variable_cs;
 static decltype(WakeAllConditionVariable)* encoded_wake_all_condition_variable;
+#endif
 
 
 
@@ -50,7 +54,7 @@ static decltype(WakeAllConditionVariable)* encoded_wake_all_condition_variable;
 // kernel32.dll.
 // The helper __scrt_is_event_api_used signals the usage of the event API for the
 // rest of the code (allows it to be hardcoded to false when guaranteed to not be used).
-#if defined _SCRT_ENCLAVE_BUILD || \
+#if defined _SCRT_ENCLAVE_BUILD || _CRT_NTDDI_MIN >= NTDDI_VISTA || \
     (!defined _CRT_WINDOWS && (defined _ONECORE || defined _KERNELX || defined _M_ARM || defined _M_ARM64))
     static void __cdecl __scrt_initialize_thread_safe_statics_platform_specific() throw()
     {
@@ -58,15 +62,15 @@ static decltype(WakeAllConditionVariable)* encoded_wake_all_condition_variable;
 
         InitializeConditionVariable(&_Tss_cv);
 
-        encoded_sleep_condition_variable_cs = __crt_fast_encode_pointer(&SleepConditionVariableCS);
-        encoded_wake_all_condition_variable = __crt_fast_encode_pointer(&WakeAllConditionVariable);
+        //encoded_sleep_condition_variable_cs = __crt_fast_encode_pointer(&SleepConditionVariableCS);
+        //encoded_wake_all_condition_variable = __crt_fast_encode_pointer(&WakeAllConditionVariable);
     }
 
     constexpr bool __scrt_is_event_api_used(HANDLE) { return false; }
 #else // ^^^ Modern Platforms ^^^ // vvv Ancient Platforms vvv //
     static void __cdecl __scrt_initialize_thread_safe_statics_platform_specific() throw()
     {
-        __vcrt_InitializeCriticalSectionEx(&_Tss_mutex, 4000, 0);
+        InitializeCriticalSectionAndSpinCount(&_Tss_mutex, 4000);
 
         // CONDITION_VARIABLE is available via this APISet starting on Windows 8.
         HMODULE kernel_dll = GetModuleHandleW(L"api-ms-win-core-synch-l1-2-0.dll");
@@ -113,10 +117,12 @@ static decltype(WakeAllConditionVariable)* encoded_wake_all_condition_variable;
 static void __cdecl __scrt_uninitialize_thread_safe_statics() throw()
 {
     DeleteCriticalSection(&_Tss_mutex);
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
     if (__scrt_is_event_api_used(_Tss_event))
     {
         CloseHandle(_Tss_event);
     }
+#endif
 }
 
 // Initializer for synchronization data structures.
@@ -158,6 +164,7 @@ extern "C" void __cdecl _Init_thread_unlock()
 // unlock call and the WaitForSingleObject call.
 extern "C" bool __cdecl _Init_thread_wait(DWORD const timeout)
 {
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
     if (!__scrt_is_event_api_used(_Tss_event))
     {
         return __crt_fast_decode_pointer(encoded_sleep_condition_variable_cs)(&_Tss_cv, &_Tss_mutex, timeout) != FALSE;
@@ -170,10 +177,14 @@ extern "C" bool __cdecl _Init_thread_wait(DWORD const timeout)
         _Init_thread_lock();
         return (res == WAIT_OBJECT_0);
     }
+#else
+	return SleepConditionVariableCS(&_Tss_cv, &_Tss_mutex, timeout) != FALSE;
+#endif
 }
 
 extern "C" void __cdecl _Init_thread_notify()
 {
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
     if (!__scrt_is_event_api_used(_Tss_event))
     {
         __crt_fast_decode_pointer(encoded_wake_all_condition_variable)(&_Tss_cv);
@@ -183,6 +194,9 @@ extern "C" void __cdecl _Init_thread_notify()
         SetEvent(_Tss_event);
         ResetEvent(_Tss_event);
     }
+#else
+	WakeAllConditionVariable(&_Tss_cv);
+#endif
 }
 
 DWORD const XpTimeout = 100; // ms

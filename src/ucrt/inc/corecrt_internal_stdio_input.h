@@ -1412,7 +1412,7 @@ private:
 
         wchar_t wide_temp{'?'};
 
-        _mbtowc_l(&wide_temp, narrow_temp, _locale->locinfo->_public._locale_mb_cur_max, _locale);
+        _mbtowc_l(&wide_temp, narrow_temp, _locale ? _locale->locinfo->_locale_mb_cur_max : ___mb_cur_max_func(), _locale);
 
         *buffer_pointer++ = c;
         --buffer_remaining;

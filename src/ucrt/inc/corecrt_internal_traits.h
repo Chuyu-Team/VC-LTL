@@ -38,7 +38,7 @@ struct __crt_char_traits;
     _APPLY(get_module_file_name,               __acrt_GetModuleFileNameA,                        GetModuleFileNameW                            ) \
     _APPLY(get_or_create_environment_nolock,   __dcrt_get_or_create_narrow_environment_nolock,   __dcrt_get_or_create_wide_environment_nolock  ) \
     _APPLY(get_temp_path,                      __acrt_GetTempPathA,                              GetTempPathW                                  ) \
-    _APPLY(getc_nolock,                        _getc_nolock,                                     _getwc_nolock                                 ) \
+    _APPLY(getc_nolock,                        getc,                                             getwc                                         ) \
     _APPLY(gettche_nolock,                     _getche_nolock,                                   _getwche_nolock                               ) \
     _APPLY(initialize_environment_nolock,      _initialize_narrow_environment,                   _initialize_wide_environment                  ) \
     _APPLY(istspace,                           isspace,                                          iswspace                                      ) \
@@ -47,8 +47,8 @@ struct __crt_char_traits;
     _APPLY(open_file,                          _openfile,                                        _wopenfile                                    ) \
     _APPLY(output_debug_string,                __acrt_OutputDebugStringA,                        OutputDebugStringW                            ) \
     _APPLY(pack_command_line_and_environment,  __acrt_pack_narrow_command_line_and_environment,  __acrt_pack_wide_command_line_and_environment ) \
-    _APPLY(puttc_nolock,                       _fputc_nolock,                                    _fputwc_nolock                                ) \
-    _APPLY(puttch_nolock,                      _putch_nolock,                                    _putwch_nolock                                ) \
+    _APPLY(puttc_nolock,                       fputc,                                            fputwc                                        ) \
+    _APPLY(puttch_nolock,                      _putch,                                           _putwch                                       ) \
     _APPLY(set_current_directory,              __acrt_SetCurrentDirectoryA,                      SetCurrentDirectoryW                          ) \
     _APPLY(set_environment_variable,           __acrt_SetEnvironmentVariableA,                   SetEnvironmentVariableW                       ) \
     _APPLY(set_program_name,                   _set_pgmptr,                                      _set_wpgmptr                                  ) \
@@ -90,7 +90,7 @@ struct __crt_char_traits;
     _APPLY(tspawnvpe,                          _spawnvpe,                                        _wspawnvpe                                    ) \
     _APPLY(ulltot_s,                           _ui64toa_s,                                       _ui64tow_s                                    ) \
     _APPLY(ultot_s,                            _ultoa_s,                                         _ultow_s                                      ) \
-    _APPLY(ungettc_nolock,                     _ungetc_nolock,                                   _ungetwc_nolock                               ) \
+    _APPLY(ungettc_nolock,                     ungetc,                                           ungetwc                                       ) \
     _APPLY(ungettch_nolock,                    _ungetch_nolock,                                  _ungetwch_nolock                              )
 
 template <>

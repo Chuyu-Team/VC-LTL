@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#if defined(NDEBUG)&&defined(_DLL)&&defined(__Build_LTL)
+#if defined(NDEBUG)&&defined(__Build_LTL)
 #define _CRT_BEST_PRACTICES_USAGE
 
 #include <vcruntime_new.h>
@@ -266,7 +266,7 @@ extern "C"
 		_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
 	}*/
 
-	errno_t __CRTDECL wmemcpy_s(
+	errno_t __CRTDECL wmemcpy_s_downlevel(
 		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 		_In_                         rsize_t        _N1,
 		_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -276,9 +276,9 @@ extern "C"
 		return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(wmemcpy_s);
+	_LCRT_DEFINE_IAT_SYMBOL(wmemcpy_s_downlevel);
 
-	errno_t __CRTDECL wmemmove_s(
+	errno_t __CRTDECL wmemmove_s_downlevel(
 			_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 			_In_                         rsize_t        _N1,
 			_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -288,7 +288,7 @@ extern "C"
 		return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(wmemmove_s);
+	_LCRT_DEFINE_IAT_SYMBOL(wmemmove_s_downlevel);
 
 	//	int __cdecl __stdio_common_vswprintf(
 	//		_In_                                    unsigned __int64 _Options,
@@ -432,16 +432,16 @@ extern "C"
 #endif
 
 	#undef _daylight
-	_CRTIMP extern int _daylight;
+	__declspec(dllimport) extern int _daylight;
 
 	#undef _dstbias
-	_CRTIMP extern long _dstbias;
+	__declspec(dllimport) extern long _dstbias;
 
 	#undef _timezone
-	_CRTIMP extern long _timezone;
+	__declspec(dllimport) extern long _timezone;
 
 	#undef _tzname
-	_CRTIMP extern char** _tzname;
+	__declspec(dllimport) extern char** _tzname;
 
 	errno_t __cdecl _get_daylight_downlevel(
 		_Out_ int* _Daylight
@@ -1324,41 +1324,7 @@ extern "C"
 	//	__declspec(dllimport) ioinfo* __pioinfo[];
 
 	
-	/*
-	从msvcrt.dll中获取ptd指针。
-	函数通过获取errno地址换算出ptd地址。函数行为在某些平台不能保证统一。
-	在WinXP中，如果msvcrt.dll内部内存申请失败那么将导致整个程序退出。
-	XP以上平台则不会发生此问题，能保证在内存申请失败时返回null。
-	*/
-	_ptd_msvcrt* __cdecl _getptd_noexit(void)
-	{
-		//_errno()不可能返回null
-		auto ptd = (_ptd_msvcrt*)(((byte*)_errno()) - FIELD_OFFSET(_ptd_msvcrt, _terrno));
-
-		/*
-		当 _thandle = -1，这表明此线程的ptd通过msvcrt.dll begin_thread 或者 __getptd_noexit 创建。
-		当 _thandle = 0，这表明此线程的ptd通过msvcrt.dll的DllMain创建。
-		当 _thandle = 其他，这表明msvcrt.dll内部内存已经申请失败。
-		*/
-		return ( ptd->_thandle == (uintptr_t)-1/*Current Thread Handle*/ || ptd->_thandle == 0 )? ptd : nullptr;
-	}
-
-
-	__declspec(dllimport) void __cdecl _amsg_exit(
-		int rterrnum
-	);
-
-	_ptd_msvcrt* __cdecl __acrt_getptd(void)  /* return address of per-thread CRT data */
-	{
-		auto ptd = _getptd_noexit();
-
-		if (!ptd)
-		{
-			_amsg_exit(16);
-		}
-
-		return ptd;
-	}
+	
 
 	float __cdecl _strtof_l_downlevel(
 		_In_z_                   char const* _String,
@@ -2845,8 +2811,8 @@ extern "C"
 #undef _sys_nerr
 #undef _sys_errlist
 
-	extern "C" _CRTIMP extern char const* const _sys_errlist[];
-	extern "C" _CRTIMP extern int const _sys_nerr;
+	extern "C" __declspec(dllimport) extern char const* const _sys_errlist[];
+	extern "C" __declspec(dllimport) extern int const _sys_nerr;
 
 	extern "C" int* __cdecl __sys_nerr_downlevel()
 	{

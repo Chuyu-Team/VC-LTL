@@ -9,7 +9,7 @@
 //
 #include <corecrt_internal_securecrt.h>
 #include <string.h>
-
+#include <msvcrt_IAT.h>
 
 
 // This common implementation is used by both strtok() and strtok_s()
@@ -69,7 +69,7 @@ extern "C" wchar_t* __cdecl __acrt_wcstok_s_novalidation(
 
 
 
-extern "C" wchar_t* __cdecl wcstok_s(
+extern "C" wchar_t* __cdecl wcstok_s_downlevel(
     wchar_t*       const string,
     wchar_t const* const control,
     wchar_t**      const context
@@ -81,3 +81,5 @@ extern "C" wchar_t* __cdecl wcstok_s(
 
     return __acrt_wcstok_s_novalidation(string, control, context);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(wcstok_s_downlevel);

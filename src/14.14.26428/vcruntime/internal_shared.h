@@ -481,25 +481,45 @@ extern "C++" {
 
 
 
-	EXTERN_C PVOID __fastcall __CRT_DecodePointer(
-		PVOID Ptr
-	);
+    enum : int
+    {
+        __crt_maximum_pointer_shift = sizeof(uintptr_t) * 8
+    };
 
-	EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
+    inline unsigned int __crt_rotate_pointer_value(unsigned int const value,
+        int const shift) noexcept
+    {
+        return RotateRight32(value, shift);
+    }
 
+    inline unsigned __int64 __crt_rotate_pointer_value(unsigned __int64 const value,
+        int const shift) noexcept
+    {
+        return RotateRight64(value, shift);
+    }
 
     // Fast alternatives to the encode/decode pointer functions that do not use
     // the EncodePointer and DecodePointer functions.
     template <typename T>
-    __forceinline T __crt_fast_decode_pointer(T const p) noexcept
+    T __crt_fast_decode_pointer(T const p) noexcept
     {
-        return reinterpret_cast<T>(__CRT_DecodePointer(p));
+        return reinterpret_cast<T>(
+            __crt_rotate_pointer_value(
+                reinterpret_cast<uintptr_t>(p) ^ __security_cookie,
+                __security_cookie % __crt_maximum_pointer_shift
+            )
+        );
     }
 
     template <typename T>
-    __forceinline T __crt_fast_encode_pointer(T const p) noexcept
+    T __crt_fast_encode_pointer(T const p) noexcept
     {
-        return reinterpret_cast<T>(__CRT_EncodePointer(p));
+        return reinterpret_cast<T>(
+            __crt_rotate_pointer_value(
+                reinterpret_cast<uintptr_t>(p),
+                __crt_maximum_pointer_shift - (__security_cookie % __crt_maximum_pointer_shift)
+            ) ^ __security_cookie
+        );
     }
 
     // The primary __crt_fast_encode_pointer template does not work properly
@@ -525,13 +545,13 @@ extern "C++" {
 
 
     template <typename T>
-    __forceinline T __crt_get_proc_address(HMODULE const m, char const* const f) noexcept
+    T __crt_get_proc_address(HMODULE const m, char const* const f) noexcept
     {
         return reinterpret_cast<T>(::GetProcAddress(m, f));
     }
 
     template <typename T, typename V>
-    __forceinline T* __crt_interlocked_exchange_pointer(T* const volatile* target, V const value) noexcept
+    T* __crt_interlocked_exchange_pointer(T* const volatile* target, V const value) noexcept
     {
         // This is required to silence a spurious unreferenced formal parameter
         // warning.
@@ -541,7 +561,7 @@ extern "C++" {
     }
 
     template <typename T, typename E, typename C>
-    __forceinline T __crt_interlocked_compare_exchange(T* const volatile target, E const exchange,
+    T __crt_interlocked_compare_exchange(T* const volatile target, E const exchange,
         C const comparand) noexcept
     {
         UNREFERENCED_PARAMETER(exchange);  // These are required to silence spurious
@@ -553,7 +573,7 @@ extern "C++" {
     }
 
     template <typename T, typename E, typename C>
-    __forceinline T* __crt_interlocked_compare_exchange_pointer(T* const volatile* target, E const exchange,
+    T* __crt_interlocked_compare_exchange_pointer(T* const volatile* target, E const exchange,
         C const comparand) noexcept
     {
         UNREFERENCED_PARAMETER(exchange);  // These are required to silence spurious
@@ -604,7 +624,7 @@ extern "C++" {
         #endif // _WIN64
 
         template <typename T>
-        __forceinline T __crt_interlocked_read(T const volatile* target) noexcept
+        T __crt_interlocked_read(T const volatile* target) noexcept
         {
             static_assert(sizeof(T) == sizeof(__int32), "Type being read must be 32 bits in size.");
             return (T)__crt_interlocked_read_32((__int32*)target);
@@ -612,7 +632,7 @@ extern "C++" {
 
 
         template <typename T>
-        __forceinline T* __crt_interlocked_read_pointer(T* const volatile* target) noexcept
+        T* __crt_interlocked_read_pointer(T* const volatile* target) noexcept
         {
             #ifdef _WIN64
             return (T*)__crt_interlocked_read_64((__int64*)target);

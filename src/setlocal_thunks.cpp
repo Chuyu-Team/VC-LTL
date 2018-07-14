@@ -5,11 +5,6 @@ setlocal.cpp 的修正实现，利用现有msvcrt 函数生成新的
 
 */
 
-#define _get_current_locale _get_current_locale_downlevel
-#define _create_locale      _create_locale_downlevel
-#define _wcreate_locale     _wcreate_locale_downlevel
-#define _configthreadlocale _configthreadlocale_downlevel
-
 #include <corecrt_internal.h>
 #include <locale.h>
 #include "winapi_thunks.h"
@@ -365,10 +360,8 @@ static void __cdecl __freetlocinfo(
 
 #ifndef _ATL_XP_TARGETING
 
-#undef _get_current_locale
-
 //WinXP不支持此接口
-EXTERN_C _locale_t __cdecl _get_current_locale(void)
+EXTERN_C _locale_t __cdecl _get_current_locale_downlevel(void)
 {
 	auto retval = (__crt_locale_pointers*)calloc(sizeof(__crt_locale_pointers), 1);
 	if (!retval)
@@ -408,7 +401,7 @@ EXTERN_C _locale_t __cdecl _get_current_locale(void)
 	return retval;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_get_current_locale);
+_LCRT_DEFINE_IAT_SYMBOL(_get_current_locale_downlevel);
 
 #endif
 
@@ -494,10 +487,8 @@ static _locale_t __cdecl common_create_locale(
 
 #ifndef _ATL_XP_TARGETING
 
-#undef _create_locale
-
 //WinXP不支持此接口
-EXTERN_C _locale_t __cdecl _create_locale(
+EXTERN_C _locale_t __cdecl _create_locale_downlevel(
 	_In_   int         _Category,
 	_In_z_ char const* _Locale
 )
@@ -505,16 +496,14 @@ EXTERN_C _locale_t __cdecl _create_locale(
 	return common_create_locale(_Category, _Locale);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_create_locale);
+_LCRT_DEFINE_IAT_SYMBOL(_create_locale_downlevel);
 
 #endif
 
 #ifndef _ATL_XP_TARGETING
 
-#undef _wcreate_locale
-
 //WinXP不支持此接口
-EXTERN_C _locale_t __cdecl _wcreate_locale(
+EXTERN_C _locale_t __cdecl _wcreate_locale_downlevel(
 	_In_   int            _category,
 	_In_z_ wchar_t const* _locale
 )
@@ -522,16 +511,14 @@ EXTERN_C _locale_t __cdecl _wcreate_locale(
 	return common_create_locale(_category, _locale);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wcreate_locale);
+_LCRT_DEFINE_IAT_SYMBOL(_wcreate_locale_downlevel);
 
 #endif
 
 #ifndef _ATL_XP_TARGETING
 
-#undef _configthreadlocale
-
 //WinXP不支持此接口
-EXTERN_C int __cdecl _configthreadlocale(int i)
+EXTERN_C int __cdecl _configthreadlocale_downlevel(int i)
 {
 	/*
 	* ownlocale flag struct:
@@ -583,7 +570,7 @@ EXTERN_C int __cdecl _configthreadlocale(int i)
 
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_configthreadlocale);
+_LCRT_DEFINE_IAT_SYMBOL(_configthreadlocale_downlevel);
 
 #endif
 

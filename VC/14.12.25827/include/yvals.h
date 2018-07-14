@@ -683,7 +683,7 @@ clients and process-global for mixed clients.
 
 	#ifndef _ALLOW_RUNTIME_LIBRARY_MISMATCH
 		#if !defined(_DLL) && !defined(_DEBUG)
-			#pragma detect_mismatch("RuntimeLibrary", "MT_StaticRelease")
+			#pragma detect_mismatch("RuntimeLibrary", "MT_LTL_StaticRelease")
 		#elif !defined(_DLL) && defined(_DEBUG)
 			#pragma detect_mismatch("RuntimeLibrary", "MTd_StaticDebug")
 		#elif defined(_DLL) && !defined(_DEBUG)

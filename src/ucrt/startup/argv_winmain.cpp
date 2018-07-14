@@ -15,8 +15,8 @@
 
 // In the function below, we need to ensure that we've initialized the mbc table
 // before we start performing character transformations.
-static void do_locale_initialization(unsigned char) throw() { __acrt_initialize_multibyte(); }
-static void do_locale_initialization(wchar_t)       throw() { /* no-op */                    }
+//static void do_locale_initialization(unsigned char) throw() { __acrt_initialize_multibyte(); }
+//static void do_locale_initialization(wchar_t)       throw() { /* no-op */                    }
 
 static unsigned char* get_command_line(unsigned char) throw()
 {
@@ -67,7 +67,7 @@ static bool __cdecl should_copy_another_character(wchar_t) throw()
 template <typename Character>
 static Character* __cdecl common_wincmdln() throw()
 {
-    do_locale_initialization(Character());
+    //do_locale_initialization(Character());
 
     static Character empty_string[] = { '\0' };
 

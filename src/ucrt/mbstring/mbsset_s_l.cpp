@@ -18,8 +18,8 @@
 #ifdef _ATL_XP_TARGETING
 EXTERN_C errno_t __cdecl _mbsset_s_l_downlevel(unsigned char *_Dst, size_t _SizeInBytes, unsigned int _Value, _LOCALE_ARG_DECL)
 {
-	if (!_LOCALE_ARG)
-		return _mbsset_s(_Dst, _SizeInBytes, _Value);
+	//if (!_LOCALE_ARG)
+	//	return _mbsset_s(_Dst, _SizeInBytes, _Value);
 
     int mbcs_error = 0;
     unsigned char *p;

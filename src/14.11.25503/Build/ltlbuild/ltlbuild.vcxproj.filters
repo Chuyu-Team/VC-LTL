@@ -25,10 +25,25 @@
     <Filter Include="源文件\ltl\objs">
       <UniqueIdentifier>{0372228d-b4b3-43e6-afe3-0cf326b8323a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\ltl\objs\x86">
+      <UniqueIdentifier>{5fa2c38a-86b2-4848-ab1e-ab04d5b2e53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\objs\x86">
+      <UniqueIdentifier>{de2d9002-2cdc-4924-b260-d65c17e7e708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\objs\x86\WinXP">
+      <UniqueIdentifier>{9d9be292-1581-481c-8349-b0c63a2a6fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\objs\amd64">
+      <UniqueIdentifier>{d6e89828-6b59-4bca-bbd5-ab4e4de29e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\objs\amd64">
+      <UniqueIdentifier>{93712192-b54a-4335-b1fd-57ee9aa6aaf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\vcruntime\unexpected.cpp">
-      <Filter>源文件\vc</Filter>
+    <ClCompile Include="..\..\vcruntime\throw_bad_alloc.cpp">
+      <Filter>源文件\vc\objs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vcruntime\utility_desktop.cpp">
       <Filter>源文件\vc\objs</Filter>
@@ -36,28 +51,183 @@
     <ClCompile Include="..\..\vcruntime\std_nothrow.cpp">
       <Filter>源文件\vc\objs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vcruntime\purevirt.cpp">
-      <Filter>源文件\vc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\LTL_Initialization.cpp">
-      <Filter>源文件\ltl\objs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\frame_thunks.cpp">
-      <Filter>源文件\ltl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vc_msvcrt.cpp">
       <Filter>源文件\ltl\objs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vc_msvcrt_IAT.cpp">
-      <Filter>源文件\ltl</Filter>
+    <ClCompile Include="..\..\vcruntime\gs_cookie.c">
+      <Filter>源文件\vc\objs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vc_msvcrt_winxp.cpp">
-      <Filter>源文件\ltl</Filter>
+    <ClCompile Include="..\..\vcruntime\gs_report.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\guard_support.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\thread_safe_statics.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\dll_dllmain_stub.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\dll_dllmain.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\exe_wwinmain.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\exe_wmain.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\exe_winmain.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\exe_main.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\tlsdtor.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\tlsdyn.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\tlssup.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\initializers.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\utility.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ucrt_stubs.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\vcruntime_stubs.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\tncleanup.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ehvcccvb.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ehvecdtr.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ehveccvb.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ehvecctr.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ehvccctr.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\new_mode.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\thread_locale.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\matherr.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\invalid_parameter_handler.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\fltused.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\file_mode.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\env_mode.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\commit_mode.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\argv_mode.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\mpxinit.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ucrt_detection.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\matherr_detection.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\dyn_tls_init.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\pesect.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\loadcfg.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\huge.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\checkcfg.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\gs_support.c">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\std_type_info_static.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\i386\ehprolg2.c">
+      <Filter>源文件\vc\objs\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\i386\ehprolg3.c">
+      <Filter>源文件\vc\objs\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\i386\ehprolg3a.c">
+      <Filter>源文件\vc\objs\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\new_scalar_nothrow.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\new_array_nothrow.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\default_precision.cpp">
+      <Filter>源文件\vc\objs\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\x64\gshandlereh.c">
+      <Filter>源文件\vc\objs\amd64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ftol2_downlevel.cpp">
+      <Filter>源文件\ltl\objs\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\i386\chandler4.c">
+      <Filter>源文件\vc\objs\x86\WinXP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ltlbuild.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\..\i386\dllsupp.asm">
+      <Filter>源文件\vc\objs\x86</Filter>
+    </MASM>
+    <MASM Include="..\..\..\i386\exception.asm">
+      <Filter>源文件\ltl\objs\x86</Filter>
+    </MASM>
+    <MASM Include="..\..\..\i386\exception2.asm">
+      <Filter>源文件\ltl\objs\x86</Filter>
+    </MASM>
+    <MASM Include="..\..\..\amd64\exception.asm">
+      <Filter>源文件\ltl\objs\amd64</Filter>
+    </MASM>
+    <MASM Include="..\..\..\amd64\exception2.asm">
+      <Filter>源文件\ltl\objs\amd64</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

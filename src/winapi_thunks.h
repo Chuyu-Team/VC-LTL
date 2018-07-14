@@ -3,14 +3,25 @@
 #include <corecrt_internal.h>
 #include <Windows.h>
 
+
+#ifndef _LTLIMP
+#if defined _LTL_Using_Dynamic_Lib
+#define _LTLIMP __declspec(dllexport)
+#elif defined _DLL
+#define _LTLIMP __declspec(dllimport)
+#else
+#define _LTLIMP
+#endif
+#endif //!_LTLIMP
+
 EXTERN_C_START
 
 #define MakeMiniVersion(v1,v2) (DWORD)(v2|(v1<<16))
 #define MakeVersion(v1,v2,v3,v4) (UINT64)(((UINT64)(v4))|((UINT64)v3<<16)|((UINT64)v2<<32)|((UINT64)v1<<48))
 
-_LTLIMP DWORD __cdecl __LTL_GetOsMinVersion();
+extern DWORD __cdecl __LTL_GetOsMinVersion();
 
-_LTLIMP UINT64 __cdecl __LTL_GetOsVersion();
+extern UINT64 __cdecl __LTL_GetOsVersion();
 
 
 #ifdef _ATL_XP_TARGETING
@@ -293,7 +304,7 @@ _LTLIMP PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
 #define __crtCreateThreadpoolTimer CreateThreadpoolTimer
 #endif
 
-_CRTIMP int __cdecl __crtCompareStringA(/*Unknow*/);
+__declspec(dllimport) int __cdecl __crtCompareStringA(/*Unknow*/);
 
 typedef int (__cdecl * __crtCompareStringA_WinXP)
 (
@@ -348,7 +359,7 @@ __forceinline int __cdecl __crtCompareStringA_Current
 #define __crtCompareStringA(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page) __crtCompareStringA_Current(NULL,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page)
 #define __acrt_CompareStringA __crtCompareStringA_Current
 
-_CRTIMP int __cdecl __crtCompareStringW(/*Unknow*/);
+__declspec(dllimport) int __cdecl __crtCompareStringW(/*Unknow*/);
 
 typedef int (__cdecl * __crtCompareStringW_WinXP)
 (
@@ -396,7 +407,7 @@ __forceinline int __cdecl __crtCompareStringW_Current
 #define __crtCompareStringW __crtCompareStringW_Current
 #define __acrt_CompareStringW __crtCompareStringW_Current
 
-_CRTIMP int __cdecl __crtLCMapStringW(/*Unknow*/);
+__declspec(dllimport) int __cdecl __crtLCMapStringW(/*Unknow*/);
 
 typedef int (__cdecl * __crtLCMapStringW_WinXP)
 (
@@ -444,7 +455,7 @@ __forceinline int __cdecl __crtLCMapStringW_Current
 #define __crtLCMapStringW __crtLCMapStringW_Current
 #define __acrt_LCMapStringW __crtLCMapStringW_Current
 
-_CRTIMP int __cdecl __crtLCMapStringA(/*Unknow*/);
+__declspec(dllimport) int __cdecl __crtLCMapStringA(/*Unknow*/);
 
 typedef int (__cdecl * __crtLCMapStringA_WinXP)
 (

@@ -13,6 +13,7 @@
 #include <vcruntime_internal.h>
 #include <awint.h>
 #include <limits.h>
+#include <sdkddkver.h>
 
 int const Uninitialized    = 0;
 int const BeingInitialized = -1;
@@ -29,10 +30,13 @@ extern "C"
 
 static CRITICAL_SECTION   _Tss_mutex;
 static CONDITION_VARIABLE _Tss_cv;
+
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
 static HANDLE             _Tss_event;
 
 static decltype(SleepConditionVariableCS)* encoded_sleep_condition_variable_cs;
 static decltype(WakeAllConditionVariable)* encoded_wake_all_condition_variable;
+#endif
 
 
 
@@ -40,10 +44,12 @@ static decltype(WakeAllConditionVariable)* encoded_wake_all_condition_variable;
 static void __cdecl __scrt_uninitialize_thread_safe_statics() throw()
 {
     DeleteCriticalSection(&_Tss_mutex);
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
     if (_Tss_event != nullptr)
     {
         CloseHandle(_Tss_event);
     }
+#endif
 }
 
 // Initializer for synchronization data structures.
@@ -58,21 +64,21 @@ static void __cdecl __scrt_uninitialize_thread_safe_statics() throw()
 // is not available via APISets until Windows 8.  Thus, for Windows OS components,
 // we use the "ancient" code path and first try the APISet and then fall back to
 // kernel32.dll.
-#if !defined _CRT_WINDOWS && (defined _ONECORE || defined _KERNELX || defined _M_ARM || defined _M_ARM64)
+#if !defined _CRT_WINDOWS && (defined _ONECORE || defined _KERNELX || defined _M_ARM || defined _M_ARM64 || _CRT_NTDDI_MIN >= NTDDI_VISTA)
     static void __cdecl __scrt_initialize_thread_safe_statics_platform_specific() throw()
     {
         InitializeCriticalSectionEx(&_Tss_mutex, 4000, 0);
 
-        _Tss_event = nullptr;
+        //_Tss_event = nullptr;
         InitializeConditionVariable(&_Tss_cv);
 
-        encoded_sleep_condition_variable_cs = __crt_fast_encode_pointer(&SleepConditionVariableCS);
-        encoded_wake_all_condition_variable = __crt_fast_encode_pointer(&WakeAllConditionVariable);
+        //encoded_sleep_condition_variable_cs = __crt_fast_encode_pointer(&SleepConditionVariableCS);
+        //encoded_wake_all_condition_variable = __crt_fast_encode_pointer(&WakeAllConditionVariable);
     }
 #else // ^^^ Modern Platforms ^^^ // vvv Ancient Platforms vvv //
     static void __cdecl __scrt_initialize_thread_safe_statics_platform_specific() throw()
     {
-        __vcrt_InitializeCriticalSectionEx(&_Tss_mutex, 4000, 0);
+        InitializeCriticalSectionAndSpinCount(&_Tss_mutex, 4000);
 
         // CONDITION_VARIABLE is available via this APISet starting on Windows 8.
         HMODULE kernel_dll = GetModuleHandleW(L"api-ms-win-core-synch-l1-2-0.dll");
@@ -151,6 +157,7 @@ extern "C" void __cdecl _Init_thread_unlock()
 // unlock call and the WaitForSingleObject call.
 extern "C" bool __cdecl _Init_thread_wait(DWORD const timeout)
 {
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
     if (_Tss_event == nullptr)
     {
         return __crt_fast_decode_pointer(encoded_sleep_condition_variable_cs)(&_Tss_cv, &_Tss_mutex, timeout) != FALSE;
@@ -163,10 +170,14 @@ extern "C" bool __cdecl _Init_thread_wait(DWORD const timeout)
         _Init_thread_lock();
         return (res == WAIT_OBJECT_0);
     }
+#else
+	return SleepConditionVariableCS(&_Tss_cv, &_Tss_mutex, timeout) != FALSE;
+#endif
 }
 
 extern "C" void __cdecl _Init_thread_notify()
 {
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
     if (_Tss_event == nullptr)
     {
         __crt_fast_decode_pointer(encoded_wake_all_condition_variable)(&_Tss_cv);
@@ -176,6 +187,9 @@ extern "C" void __cdecl _Init_thread_notify()
         SetEvent(_Tss_event);
         ResetEvent(_Tss_event);
     }
+#else
+	WakeAllConditionVariable(&_Tss_cv);
+#endif
 }
 
 DWORD const XpTimeout = 100; // ms

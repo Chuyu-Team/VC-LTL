@@ -5,10 +5,11 @@
 //
 // Implementation of _recalloc()
 //
+
 #include <corecrt_internal.h>
 #include <malloc.h>
 #include <string.h>
-
+#include <msvcrt_IAT.h>
 
 
 // This function provides the logic for the _recalloc() function.  It is called
@@ -19,7 +20,7 @@
 // _recalloc_base will have identical COMDATs, and the linker will fold
 // them when calling one from the CRT. This is necessary because recalloc
 // needs to support users patching in custom implementations.
-extern "C" __declspec(noinline) void* __cdecl _recalloc_base(
+extern "C" __declspec(noinline) void* __cdecl _recalloc_base_downlevel(
     void*  const block,
     size_t const count,
     size_t const size
@@ -43,6 +44,8 @@ extern "C" __declspec(noinline) void* __cdecl _recalloc_base(
     return new_block;
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_recalloc_base_downlevel);
+
 // Reallocates a block of memory in the heap.
 //
 // This function reallocates the block pointed to by 'block' such that it is
@@ -56,7 +59,7 @@ extern "C" __declspec(noinline) void* __cdecl _recalloc_base(
 // Both _recalloc_dbg and _recalloc_base must also be marked noinline
 // to prevent identical COMDAT folding from substituting calls to _recalloc
 // with either other function or vice versa.
-extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl _recalloc(
+extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl _recalloc_downlevel(
     void*  const block,
     size_t const count,
     size_t const size
@@ -65,6 +68,8 @@ extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl _recalloc(
     #ifdef _DEBUG
     return _recalloc_dbg(block, count, size, _NORMAL_BLOCK, nullptr, 0);
     #else
-    return _recalloc_base(block, count, size);
+    return _recalloc_base_downlevel(block, count, size);
     #endif
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_recalloc_downlevel);

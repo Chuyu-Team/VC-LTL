@@ -175,7 +175,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ecvt_s_downlevel);
 //	return 0;
 //}
 #ifdef _X86_
-EXTERN_C _CRTIMP extern unsigned int __lc_collate_cp;
+EXTERN_C __declspec(dllimport) extern unsigned int __lc_collate_cp;
 
 EXTERN_C unsigned int __cdecl ___lc_collate_cp_func_downlevel(void)
 {
@@ -438,7 +438,7 @@ EXTERN_C errno_t __cdecl tmpfile_s_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(tmpfile_s_downlevel);
 
 
-EXTERN_C _CRTIMP char* __cdecl _cgets(_Inout_z_ char* const string);
+EXTERN_C __declspec(dllimport) char* __cdecl _cgets(_Inout_z_ char* const string);
 
 EXTERN_C errno_t __cdecl _cgets_s_downlevel(
 	_Out_writes_z_(_BufferCount) char*   _Buffer,
@@ -473,7 +473,7 @@ EXTERN_C errno_t __cdecl _cgets_s_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_cgets_s_downlevel);
 
 
-EXTERN_C _CRTIMP wchar_t* __cdecl _cgetws(_Inout_z_ wchar_t* const string);
+EXTERN_C __declspec(dllimport) wchar_t* __cdecl _cgetws(_Inout_z_ wchar_t* const string);
 
 EXTERN_C errno_t __cdecl _cgetws_s_downlevel(
 	_Out_writes_to_(_BufferCount, *_SizeRead) wchar_t* _Buffer,
@@ -525,3 +525,491 @@ EXTERN_C errno_t __cdecl _chsize_s_downlevel(int const fh, __int64 const size)
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_chsize_s_downlevel);
+
+
+EXTERN_C __declspec(dllimport) int __cdecl _XcptFilter(
+	unsigned long       const xcptnum,
+	PEXCEPTION_POINTERS const pxcptinfoptrs
+	);
+
+EXTERN_C int __cdecl __CppXcptFilter_downlevel(
+	unsigned long       const xcptnum,
+	PEXCEPTION_POINTERS const pxcptinfoptrs
+	)
+{
+	if (xcptnum != ('msc' | 0xE0000000))
+		return EXCEPTION_CONTINUE_SEARCH;
+
+	return _XcptFilter(xcptnum, pxcptinfoptrs);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(__CppXcptFilter_downlevel);
+
+extern "C" int __cdecl _initterm_e_downlevel(_PIFV* const first, _PIFV* const last)
+{
+	for (_PIFV* it = first; it != last; ++it)
+	{
+		if (*it == nullptr)
+			continue;
+
+		int const result = (**it)();
+		if (result != 0)
+			return result;
+	}
+
+	return 0;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_initterm_e_downlevel);
+
+
+static __forceinline size_t __cdecl strlen_t(
+	_In_z_ char const* _Str
+	)
+{
+	return strlen(_Str);
+}
+
+static __forceinline size_t __cdecl strlen_t(
+	_In_z_ wchar_t const* const _Str
+	)
+{
+	return wcslen(_Str);
+}
+
+
+template<class _Fun, class ValueType,class CharType>
+static errno_t __cdecl common_xtox(
+								_Fun&& _xtox,
+	_In_                         ValueType _Value,
+	_Out_writes_z_(_BufferCount) CharType* _Buffer,
+	_In_                         size_t    _BufferCount,
+	_In_                         int       _Radix
+	)
+{
+	_VALIDATE_RETURN_ERRCODE(_Buffer != nullptr, EINVAL);
+	_VALIDATE_RETURN_ERRCODE(_BufferCount > 0, EINVAL);
+	_VALIDATE_RETURN_ERRCODE(2 <= _Radix && _Radix <= 36, EINVAL);
+
+	//最多保存33(32bit)/65(64bit)个,保证缓冲区充足
+	CharType Temp[sizeof(_Value)* 8 + 1];
+
+	if (_BufferCount >= _countof(Temp))
+	{
+		//缓冲区充足直接调用老版本
+		_xtox(_Value, _Buffer, _Radix);
+
+		return 0;
+	}
+
+	*Temp = CharType('\0');
+
+	_xtox(_Value, Temp, _Radix);
+
+	auto cTemp = strlen_t(Temp);
+
+	if (cTemp >= _BufferCount)
+	{
+		*_Buffer = CharType('\0');
+		_VALIDATE_RETURN_ERRCODE(cTemp < _BufferCount, ERANGE);
+	}
+
+	memcpy(_Buffer, Temp, (cTemp + 1) * sizeof(CharType));
+
+	return 0;
+}
+
+extern "C" errno_t __cdecl _i64toa_s_downlevel(
+	_In_                         __int64 _Value,
+	_Out_writes_z_(_BufferCount) char*   _Buffer,
+	_In_                         size_t  _BufferCount,
+	_In_                         int     _Radix
+	)
+{
+	return common_xtox(_i64toa,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_i64toa_s_downlevel);
+
+extern "C" errno_t __cdecl _i64tow_s_downlevel(
+	_In_                         __int64  _Value,
+	_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
+	_In_                         size_t   _BufferCount,
+	_In_                         int      _Radix
+	)
+{
+	return common_xtox(_i64tow,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_i64tow_s_downlevel);
+
+
+extern "C" errno_t __cdecl _itoa_s_downlevel(
+	_In_                         int    _Value,
+	_Out_writes_z_(_BufferCount) char*  _Buffer,
+	_In_                         size_t _BufferCount,
+	_In_                         int    _Radix
+	)
+{
+	return common_xtox(_itoa,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_itoa_s_downlevel);
+
+
+extern "C" errno_t __cdecl _itow_s_downlevel(
+	_In_                         int      _Value,
+	_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
+	_In_                         size_t   _BufferCount,
+	_In_                         int      _Radix
+	)
+{
+	return common_xtox(_itow,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_itow_s_downlevel);
+
+
+extern "C" errno_t __cdecl _ltoa_s_downlevel(
+	_In_                         long   _Value,
+	_Out_writes_z_(_BufferCount) char*  _Buffer,
+	_In_                         size_t _BufferCount,
+	_In_                         int    _Radix
+	)
+{
+	return common_xtox(_ltoa,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_ltoa_s_downlevel);
+
+
+extern "C" errno_t __cdecl _ltow_s_downlevel(
+	_In_                         long     _Value,
+	_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
+	_In_                         size_t   _BufferCount,
+	_In_                         int      _Radix
+	)
+{
+	return common_xtox(_ltow,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_ltow_s_downlevel);
+
+extern "C" errno_t __cdecl _ui64toa_s_downlevel(
+	_In_                         unsigned __int64 _Value,
+	_Out_writes_z_(_BufferCount) char*            _Buffer,
+	_In_                         size_t           _BufferCount,
+	_In_                         int              _Radix
+	)
+{
+	return common_xtox(_ui64toa,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_ui64toa_s_downlevel);
+
+
+extern "C" errno_t __cdecl _ui64tow_s_downlevel(
+	_In_                         unsigned __int64 _Value,
+	_Out_writes_z_(_BufferCount) wchar_t*         _Buffer,
+	_In_                         size_t           _BufferCount,
+	_In_                         int              _Radix
+	)
+{
+	return common_xtox(_ui64tow,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_ui64tow_s_downlevel);
+
+extern "C" errno_t __cdecl _ultoa_s_downlevel(
+	_In_                         unsigned long _Value,
+	_Out_writes_z_(_BufferCount) char*         _Buffer,
+	_In_                         size_t        _BufferCount,
+	_In_                         int           _Radix
+	)
+{
+	return common_xtox(_ultoa,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_ultoa_s_downlevel);
+
+
+extern "C" errno_t __cdecl _ultow_s_downlevel(
+	_In_                         unsigned long _Value,
+	_Out_writes_z_(_BufferCount) wchar_t*      _Buffer,
+	_In_                         size_t        _BufferCount,
+	_In_                         int           _Radix
+	)
+{
+	return common_xtox(_ultow,_Value, _Buffer, _BufferCount, _Radix);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_ultow_s_downlevel);
+
+extern "C" errno_t __cdecl _splitpath_s_downlevel(
+	_In_z_                             char const* _FullPath,
+	_Out_writes_opt_z_(_DriveCount)    char*       _Drive,
+	_In_                               size_t      _DriveCount,
+	_Out_writes_opt_z_(_DirCount)      char*       _Dir,
+	_In_                               size_t      _DirCount,
+	_Out_writes_opt_z_(_FilenameCount) char*       _Filename,
+	_In_                               size_t      _FilenameCount,
+	_Out_writes_opt_z_(_ExtCount)      char*       _Ext,
+	_In_                               size_t      _ExtCount
+	)
+{
+	if (_FullPath == nullptr
+		|| _Drive==nullptr && _DriveCount!=0
+		|| _Dir==nullptr && _DirCount!=0
+		|| _Filename==nullptr && _FilenameCount!=0
+		|| _Ext==nullptr && _ExtCount!=0)
+	{
+		if (_Drive&&_DriveCount)
+			*_Drive = '\0';
+
+		if (_Dir&&_DirCount)
+			*_Dir = '\0';
+
+		if (_Dir&&_DirCount)
+			*_Dir = '\0';
+
+		if (_Filename&&_FilenameCount)
+			*_Filename = '\0';
+
+		if (_Ext&&_ExtCount)
+			*_Ext = '\0';
+
+		_VALIDATE_RETURN_ERRCODE(false, EINVAL);
+	}
+
+	char _DriveTmp[_MAX_DRIVE] = {};
+	char _DirTmp[_MAX_DIR] = {};
+	char _FilenameTmp[_MAX_FNAME] = {};
+	char _ExtTmp[_MAX_EXT] = {};
+
+	errno = 0;
+
+	_splitpath(_FullPath, _Drive ? _DriveTmp : nullptr, _Dir ? _DirTmp : nullptr, _Filename ? _FilenameTmp : nullptr, _Ext ? _ExtTmp : nullptr);
+
+
+	auto __errno = errno;
+
+	if (__errno == 0)
+	{
+		//复制数据
+		if (_Drive)
+		{
+			auto DriveCountTmp = strlen(_DriveTmp);
+
+			if (DriveCountTmp >= _DriveCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Drive, _DriveTmp, (DriveCountTmp + 1) * sizeof(_Drive[0]));
+		}
+
+		if (_Dir)
+		{
+			auto _DirCountTmp = strlen(_DirTmp);
+
+			if (_DirCountTmp >= _DirCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Dir, _DirTmp, (_DirCountTmp + 1) * sizeof(_Dir[0]));
+		}
+
+		if (_Filename)
+		{
+			auto _FilenameCountTmp = strlen(_FilenameTmp);
+
+			if (_FilenameCountTmp >= _FilenameCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Filename, _FilenameTmp, (_FilenameCountTmp + 1) * sizeof(_Filename[0]));
+		}
+
+		if (_Ext)
+		{
+			auto _ExtCountTmp = strlen(_ExtTmp);
+
+			if (_ExtCountTmp >= _ExtCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Ext, _ExtTmp, (_ExtCount + 1) * sizeof(_Ext[0]));
+
+		}
+
+		return 0;
+	}
+
+_Error:
+
+
+	if (_Drive&&_DriveCount)
+		*_Drive = '\0';
+
+	if (_Dir&&_DirCount)
+		*_Dir = '\0';
+
+	if (_Dir&&_DirCount)
+		*_Dir = '\0';
+
+	if (_Filename&&_FilenameCount)
+		*_Filename = '\0';
+
+	if (_Ext&&_ExtCount)
+		*_Ext = '\0';
+
+	return __errno;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_splitpath_s_downlevel);
+
+extern "C" errno_t __cdecl _wsplitpath_s_downlevel(
+	_In_z_                             wchar_t const* _FullPath,
+	_Out_writes_opt_z_(_DriveCount)    wchar_t*       _Drive,
+	_In_                               size_t         _DriveCount,
+	_Out_writes_opt_z_(_DirCount)      wchar_t*       _Dir,
+	_In_                               size_t         _DirCount,
+	_Out_writes_opt_z_(_FilenameCount) wchar_t*       _Filename,
+	_In_                               size_t         _FilenameCount,
+	_Out_writes_opt_z_(_ExtCount)      wchar_t*       _Ext,
+	_In_                               size_t         _ExtCount
+	)
+{
+	if (_FullPath == nullptr
+		|| _Drive == nullptr && _DriveCount != 0
+		|| _Dir == nullptr && _DirCount != 0
+		|| _Filename == nullptr && _FilenameCount != 0
+		|| _Ext == nullptr && _ExtCount != 0)
+	{
+		if (_Drive&&_DriveCount)
+			*_Drive = L'\0';
+
+		if (_Dir&&_DirCount)
+			*_Dir = L'\0';
+
+		if (_Dir&&_DirCount)
+			*_Dir = L'\0';
+
+		if (_Filename&&_FilenameCount)
+			*_Filename = L'\0';
+
+		if (_Ext&&_ExtCount)
+			*_Ext = L'\0';
+
+		_VALIDATE_RETURN_ERRCODE(false, EINVAL);
+	}
+
+	wchar_t _DriveTmp[_MAX_DRIVE] = {};
+	wchar_t _DirTmp[_MAX_DIR] = {};
+	wchar_t _FilenameTmp[_MAX_FNAME] = {};
+	wchar_t _ExtTmp[_MAX_EXT] = {};
+
+	errno = 0;
+
+	_wsplitpath(_FullPath, _Drive ? _DriveTmp : nullptr, _Dir ? _DirTmp : nullptr, _Filename ? _FilenameTmp : nullptr, _Ext ? _ExtTmp : nullptr);
+
+
+	auto __errno = errno;
+
+	if (__errno == 0)
+	{
+		//复制数据
+		if (_Drive)
+		{
+			auto DriveCountTmp = wcslen(_DriveTmp);
+
+			if (DriveCountTmp >= _DriveCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Drive, _DriveTmp, (DriveCountTmp + 1) * sizeof(_Drive[0]));
+		}
+
+		if (_Dir)
+		{
+			auto _DirCountTmp = wcslen(_DirTmp);
+
+			if (_DirCountTmp >= _DirCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Dir, _DirTmp, (_DirCountTmp + 1) * sizeof(_Dir[0]));
+		}
+
+		if (_Filename)
+		{
+			auto _FilenameCountTmp = wcslen(_FilenameTmp);
+
+			if (_FilenameCountTmp >= _FilenameCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Filename, _FilenameTmp, (_FilenameCountTmp + 1) * sizeof(_Filename[0]));
+		}
+
+		if (_Ext)
+		{
+			auto _ExtCountTmp = wcslen(_ExtTmp);
+
+			if (_ExtCountTmp >= _ExtCount)
+			{
+				__errno = errno = ERANGE;
+
+				goto _Error;
+			}
+
+			memcpy(_Ext, _ExtTmp, (_ExtCount + 1) * sizeof(_Ext[0]));
+
+		}
+
+		return 0;
+	}
+
+_Error:
+
+
+	if (_Drive&&_DriveCount)
+		*_Drive = L'\0';
+
+	if (_Dir&&_DirCount)
+		*_Dir = L'\0';
+
+	if (_Dir&&_DirCount)
+		*_Dir = L'\0';
+
+	if (_Filename&&_FilenameCount)
+		*_Filename = L'\0';
+
+	if (_Ext&&_ExtCount)
+		*_Ext = L'\0';
+
+	return __errno;
+}
+
+
+_LCRT_DEFINE_IAT_SYMBOL(_wsplitpath_s_downlevel);

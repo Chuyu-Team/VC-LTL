@@ -10,6 +10,15 @@
 #include <vcruntime_internal.h>
 #include <rtcapi.h>
 
+#if defined _M_IX86
+#define MinSubSystemVersion "5.01"
+#elif defined _M_AMD64
+#define MinSubSystemVersion "5.02"
+#endif
+
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+#pragma comment(linker,"/SUBSYSTEM:WINDOWS," MinSubSystemVersion)
+#endif
 
 
 // The client may define a _pRawDllMain.  This function gets called for attach
@@ -54,7 +63,9 @@ static BOOL __cdecl dllmain_crt_process_attach(HMODULE const instance, LPVOID co
         __scrt_initialize_type_info();
         atexit(__scrt_uninitialize_type_info);
 
+		#ifndef __Build_LTL //msvcrt.dll模式不支持
         __scrt_initialize_default_local_stdio_options();
+		#endif
 
         if (_initterm_e(__xi_a, __xi_z) != 0)
             __leave;
@@ -192,10 +203,12 @@ static BOOL __cdecl dllmain_dispatch(
                 __leave;
         }
 
+#if 0 //遥测代码直接屏蔽
         if (reason == DLL_PROCESS_ATTACH)
         {
             __telemetry_main_invoke_trigger(instance);
         }
+#endif
 
         result = DllMain(instance, reason, reserved);
 
@@ -207,10 +220,12 @@ static BOOL __cdecl dllmain_dispatch(
             dllmain_raw(instance, DLL_PROCESS_DETACH, reserved);
         }
 
+#if 0 //遥测代码直接屏蔽
         if ((reason == DLL_PROCESS_ATTACH && !result) || reason == DLL_PROCESS_DETACH)
         {
             __telemetry_main_return_trigger(instance);
         }
+#endif
 
         if (reason == DLL_PROCESS_DETACH || reason == DLL_THREAD_DETACH)
         {

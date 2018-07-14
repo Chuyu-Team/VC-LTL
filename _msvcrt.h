@@ -18,8 +18,15 @@
 #error "调试版无法使用VC LTL，请切换到Release然后重新编译！"
 #endif
 
-#ifndef _DLL
-#error "由于VC LTL必须在MD编译选项才能使用，请将运行调整为MD！"
+#ifdef _DLL
+_LTL_PushWarning(1004,"从VC-LTL 4.0 开始MD模式将链接到VC-LTL自身的DLL中，如需静态编译（仅依赖msvcrt.dll），请切换到MT。")
+#endif
+
+#ifdef _ATL_XP_TARGETING
+//Windows XP的msvcrt有BUG，内部32位带符号整形。因此外部最大只允许0x3FFFFFFF
+#define _CRT_STDIO_SIZE_MAX 0x3FFFFFFF
+#else
+#define _CRT_STDIO_SIZE_MAX _CRT_SIZE_MAX
 #endif
 
 #include <LTL_config.h>
@@ -46,16 +53,6 @@
 #define _Build_By_LTL 1
 #endif
 
-#ifndef _DISABLE_DEPRECATE_STATIC_CPPLIB
-#define _DISABLE_DEPRECATE_STATIC_CPPLIB 1
-#endif
-
-#ifndef _STATIC_CPPLIB
-//静态整合C++库
-#define _STATIC_CPPLIB 1
-#endif
-
-
 
 
 #if _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==0
@@ -74,31 +71,12 @@ _LTL_PushWarning(1000, "此工具集已经停止维护，强烈建议你请升�
 #endif
 
 #ifdef __NO_LTL_LIB
-_LTL_PushWarning(1003, "进入ltl超越模式已经弃用，此选项将将被忽略。")
+_LTL_PushWarning(1003, "VC-LTL 2.0 开始ltl超越模式已经弃用，此选项将被忽略。")
 #endif
 
-#if !defined(_NO__LTL_Initialization)
-/*
-__LTL_Initialization用于初始化 LTL_Initialization.cpp 全局构造
-
-你可以定义 _NO__LTL_Initialization 来移除 LTL 初始化
-
-但是当你使用iostream等功能时将导致程序崩溃
-
-*/
-#if defined(_M_IX86)
-#pragma comment(linker,"/include:___LTL_Initialization")
-#elif defined(_M_AMD64)
-#pragma comment(linker,"/include:__LTL_Initialization")
-#else
-#error "不支持此CPU体系"
-#endif
-
-#else //!_NO__LTL_Initialization
-
-_LTL_PushWarning(1004, "不引用_LTL_Initialization 可能导致某些补充函数功能异常（比如time、iostream等），尤其是XP兼容模式，请三思而后行。")
-
-#endif //!_LIB
+#ifdef _NO__LTL_Initialization
+_LTL_PushWarning(1003, "VC-LTL 4.0 开始不在允许禁用VC-LTL初始化，此选项将被忽略。")
+#endif //!_NO__LTL_Initialization
 
 _CRT_BEGIN_C_HEADER
 extern unsigned long __cdecl __LTL_GetOsMinVersion();

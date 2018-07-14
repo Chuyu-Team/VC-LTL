@@ -7,7 +7,7 @@
 //
 #include <corecrt_internal.h>
 #include <search.h>
-
+#include <msvcrt_IAT.h>
 
 /* Temporarily define optimization macros (to be removed by the build team: RsmqblCompiler alias) */
 #if !defined(BEGIN_PRAGMA_OPTIMIZE_DISABLE)
@@ -92,7 +92,7 @@ static void __fileDECL shortsort(
     // array to sort.
 
     // Reentrancy diligence: Save (and unset) global-state mode to the stack before making callout to 'compare'
-    __crt_state_management::scoped_global_state_reset saved_state;
+    //__crt_state_management::scoped_global_state_reset saved_state;
 
     while (hi > lo)
     {
@@ -153,7 +153,7 @@ extern "C"
 #endif
 _CRT_SECURITYSAFECRITICAL_ATTRIBUTE
 #ifdef __USE_CONTEXT
-void __fileDECL qsort_s(
+void __fileDECL qsort_s_downlevel(
     void*  const base,
     size_t const num,
     size_t const width,
@@ -389,6 +389,10 @@ recurse:
         return;
     }
 }
+
+#ifdef __USE_CONTEXT
+_LCRT_DEFINE_IAT_SYMBOL(qsort_s_downlevel);
+#endif
 
 #undef __COMPARE
 #undef __SHORTSORT

@@ -120,7 +120,7 @@ static errno_t fp_format_e_internal(
     // 1 = extra space for rounding
     _VALIDATE_RETURN_ERRCODE(result_buffer_count > static_cast<size_t>(3 + (precision > 0 ? precision : 0) + 5 + 1), ERANGE);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     // Place the output in the buffer and round.  Leave space in the buffer
     // for the '-' sign (if any) and the decimal point (if any):
@@ -143,7 +143,10 @@ static errno_t fp_format_e_internal(
     if (precision > 0)
     {
         *p = *(p + 1);
-        *++p = *locale_update.GetLocaleT()->locinfo->lconv->decimal_point;
+
+		auto const lconv = locale ? locale->locinfo->lconv : localeconv();
+
+        *++p = *lconv->decimal_point;
     }
 
     // Find the end of the string, attach the exponent field and save the
@@ -284,7 +287,7 @@ static errno_t __cdecl fp_format_a(
 
     result_buffer[0] = '\0';
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     // the constraint for the size of buffer is:
     // 1 (sign)
@@ -368,7 +371,9 @@ static errno_t __cdecl fp_format_a(
     }
     else
     {
-        *pos = *locale_update.GetLocaleT()->locinfo->lconv->decimal_point;
+		auto const lconv = locale ? locale->locinfo->lconv : localeconv();
+
+        *pos = *lconv->decimal_point;
     }
 
     // Mantissa:
@@ -508,7 +513,7 @@ static errno_t fp_format_f_internal(
     _In_opt_                                                _locale_t const locale
     ) throw()
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     int const g_magnitude = pflt->decpt - 1;
 
@@ -547,7 +552,10 @@ static errno_t fp_format_f_internal(
     if (precision > 0)
     {
         shift_bytes(buffer, buffer_count, p, 1);
-        *p++ = *locale_update.GetLocaleT()->locinfo->lconv->decimal_point;
+
+		auto const lconv = locale ? locale->locinfo->lconv : localeconv();
+
+        *p++ = *lconv->decimal_point;
 
         // If the value is less than 1 then we may need to put zeroes out in
         // front of the first non-zero digit of the mantissa:

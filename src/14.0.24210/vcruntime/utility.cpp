@@ -382,7 +382,8 @@ extern "C" bool __cdecl __scrt_dllmain_after_initialize_c()
             return false;
         }
 
-        _initialize_narrow_environment();
+		//configure_argv()已经初始化
+        //_initialize_narrow_environment();
     }
 
     return true;

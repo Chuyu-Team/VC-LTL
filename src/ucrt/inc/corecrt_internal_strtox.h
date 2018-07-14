@@ -199,14 +199,14 @@ UnsignedInteger __cdecl parse_integer(
 
     _VALIDATE_RETURN(base == 0 || (2 <= base && base <= 36), EINVAL, 0);
 
-    _LocaleUpdate locale_update{locale};
+    //_LocaleUpdate locale_update{locale};
 
     UnsignedInteger number{0}; // number is the accumulator
 
     auto const initial_state = source.save_state();
 
     char_type c{source.get()};
-    while (is_space(c, locale_update.GetLocaleT()))
+    while (is_space(c, locale/*locale_update.GetLocaleT()*/))
         c = source.get();
 
     unsigned flags{is_signed ? FL_SIGNED : 0};

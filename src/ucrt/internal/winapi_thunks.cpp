@@ -1081,45 +1081,6 @@ __if_exists(try_get_GetProcessWindowStation)
 }
 
 
-enum : int
-{
-	__crt_maximum_pointer_shift = sizeof(uintptr_t) * 8
-};
-
-static __forceinline unsigned int __crt_rotate_pointer_value(unsigned int const value, int const shift) throw()
-{
-	return RotateRight32(value, shift);
-}
-
-static __forceinline unsigned __int64 __crt_rotate_pointer_value(unsigned __int64 const value, int const shift) throw()
-{
-	return RotateRight64(value, shift);
-}
-
-
-EXTERN_C PVOID __fastcall __CRT_DecodePointer(
-	PVOID Ptr
-)
-{
-	return reinterpret_cast<PVOID>(
-		__crt_rotate_pointer_value(
-			reinterpret_cast<uintptr_t>(Ptr) ^ __security_cookie,
-			__security_cookie % __crt_maximum_pointer_shift
-		)
-		);
-}
-
-EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr)
-{
-	return reinterpret_cast<PVOID>(
-		__crt_rotate_pointer_value(
-			reinterpret_cast<uintptr_t>(Ptr),
-			__crt_maximum_pointer_shift - (__security_cookie % __crt_maximum_pointer_shift)
-		) ^ __security_cookie
-		);
-}
-
-
 #ifdef _ATL_XP_TARGETING
 EXTERN_C BOOL WINAPI __crtInitOnceExecuteOnce(
 	_Inout_     PINIT_ONCE    InitOnce,
@@ -2075,20 +2036,6 @@ namespace
 		BOOLEAN NeedDeleteFile;
 	} FILE_DISPOSITION_INFORMATION, *PFILE_DISPOSITION_INFORMATION;
 
-	EXTERN_C _LTLIMP DWORD __cdecl __LTL_GetOsMinVersion()
-	{
-		auto pPeb = ((TEB*)NtCurrentTeb())->ProcessEnvironmentBlock;
-
-		return MakeMiniVersion(pPeb->OSMajorVersion, pPeb->OSMinorVersion);
-	}
-
-
-	EXTERN_C _LTLIMP UINT64 __cdecl __LTL_GetOsVersion()
-	{
-		auto pPeb = ((TEB*)NtCurrentTeb())->ProcessEnvironmentBlock;
-
-		return MakeVersion(pPeb->OSMajorVersion, pPeb->OSMinorVersion, pPeb->OSBuildNumber, 0);
-	}
 
 	EXTERN_C NTSYSAPI
 		NTSTATUS

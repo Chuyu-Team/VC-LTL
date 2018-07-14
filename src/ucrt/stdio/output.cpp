@@ -6,7 +6,7 @@
 // The standard _output functions, which perform formatted output to a stream.
 //
 #include <corecrt_internal_stdio_output.h>
-
+#include <msvcrt_IAT.h>
 
 
 using namespace __crt_stdio_output;
@@ -14,6 +14,7 @@ using namespace __crt_stdio_output;
 
 // Enclaves do not have a file system, but they do allow in-memory operations
 // from stdio.
+
 #ifndef _UCRT_ENCLAVE_BUILD
 
 template <template <typename, typename> class Base, typename Character>
@@ -36,21 +37,21 @@ static int __cdecl common_vfprintf(
 
     return __acrt_lock_stream_and_call(stream, [&]() -> int
     {
-        __acrt_stdio_temporary_buffering_guard const buffering(stream);
+        //__acrt_stdio_temporary_buffering_guard const buffering(stream);
 
-        _LocaleUpdate locale_update(locale);
+        //_LocaleUpdate locale_update(locale);
         processor_type processor(
             stream_output_adapter<Character>(stream),
             options,
             format,
-            locale_update.GetLocaleT(),
+            /*locale_update.GetLocaleT()*/locale,
             arglist);
 
         return processor.process();
     });
 }
 
-extern "C" int __cdecl __stdio_common_vfprintf(
+extern "C" int __cdecl __stdio_common_vfprintf_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     char const*      const format,
@@ -61,7 +62,9 @@ extern "C" int __cdecl __stdio_common_vfprintf(
     return common_vfprintf<standard_base>(options, stream, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vfwprintf(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfprintf_downlevel);
+
+extern "C" int __cdecl __stdio_common_vfwprintf_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     wchar_t const*   const format,
@@ -72,7 +75,9 @@ extern "C" int __cdecl __stdio_common_vfwprintf(
     return common_vfprintf<standard_base>(options, stream, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vfprintf_s(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfwprintf_downlevel);
+
+extern "C" int __cdecl __stdio_common_vfprintf_s_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     char const*      const format,
@@ -83,7 +88,10 @@ extern "C" int __cdecl __stdio_common_vfprintf_s(
     return common_vfprintf<format_validation_base>(options, stream, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vfwprintf_s(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfprintf_s_downlevel);
+
+
+extern "C" int __cdecl __stdio_common_vfwprintf_s_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     wchar_t const*   const format,
@@ -94,7 +102,9 @@ extern "C" int __cdecl __stdio_common_vfwprintf_s(
     return common_vfprintf<format_validation_base>(options, stream, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vfprintf_p(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfwprintf_s_downlevel);
+
+extern "C" int __cdecl __stdio_common_vfprintf_p_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     char const*      const format,
@@ -105,7 +115,9 @@ extern "C" int __cdecl __stdio_common_vfprintf_p(
     return common_vfprintf<positional_parameter_base>(options, stream, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vfwprintf_p(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfprintf_p_downlevel);
+
+extern "C" int __cdecl __stdio_common_vfwprintf_p_downlevel(
     unsigned __int64 const options,
     FILE*            const stream,
     wchar_t const*   const format,
@@ -115,9 +127,10 @@ extern "C" int __cdecl __stdio_common_vfwprintf_p(
 {
     return common_vfprintf<positional_parameter_base>(options, stream, format, locale, arglist);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfwprintf_p_downlevel);
 
 #endif /* _UCRT_ENCLAVE_BUILD */
-
 
 template <template <typename, typename> class Base, typename Character>
 _Success_(return >= 0)
@@ -141,7 +154,7 @@ static int __cdecl common_vsprintf(
     _VALIDATE_RETURN(format != nullptr,                      EINVAL, -1);
     _VALIDATE_RETURN(buffer_count == 0 || buffer != nullptr, EINVAL, -1);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     string_output_adapter_context<Character> context{};
     context._buffer         = buffer;
@@ -161,7 +174,7 @@ static int __cdecl common_vsprintf(
         string_output_adapter<Character>(&context),
         options,
         format,
-        locale_update.GetLocaleT(),
+        /*locale_update.GetLocaleT()*/locale,
         arglist);
 
     int const result = processor.process();
@@ -227,7 +240,7 @@ static int __cdecl common_vsprintf(
     return result;
 }
 
-extern "C" int __cdecl __stdio_common_vsprintf(
+extern "C" int __cdecl __stdio_common_vsprintf_downlevel(
     unsigned __int64 const options,
     char*            const buffer,
     size_t           const buffer_count,
@@ -239,7 +252,9 @@ extern "C" int __cdecl __stdio_common_vsprintf(
     return common_vsprintf<standard_base>(options, buffer, buffer_count, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vswprintf(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsprintf_downlevel);
+
+extern "C" int __cdecl __stdio_common_vswprintf_downlevel(
     unsigned __int64 const options,
     wchar_t*         const buffer,
     size_t           const buffer_count,
@@ -250,6 +265,8 @@ extern "C" int __cdecl __stdio_common_vswprintf(
 {
     return common_vsprintf<standard_base>(options, buffer, buffer_count, format, locale, arglist);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vswprintf_downlevel);
 
 template <typename Character>
 _Success_(return >= 0)
@@ -284,7 +301,7 @@ static int __cdecl common_vsprintf_s(
     return result;
 }
 
-extern "C" int __cdecl __stdio_common_vsprintf_s(
+extern "C" int __cdecl __stdio_common_vsprintf_s_downlevel(
     unsigned __int64 const options,
     char*            const buffer,
     size_t           const buffer_count,
@@ -296,7 +313,9 @@ extern "C" int __cdecl __stdio_common_vsprintf_s(
     return common_vsprintf_s(options, buffer, buffer_count, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vswprintf_s(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsprintf_s_downlevel);
+
+extern "C" int __cdecl __stdio_common_vswprintf_s_downlevel(
     unsigned __int64 const options,
     wchar_t*         const buffer,
     size_t           const buffer_count,
@@ -307,6 +326,8 @@ extern "C" int __cdecl __stdio_common_vswprintf_s(
 {
     return common_vsprintf_s(options, buffer, buffer_count, format, locale, arglist);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vswprintf_s_downlevel);
 
 template <typename Character>
 _Success_(return >= 0)
@@ -378,7 +399,7 @@ static int __cdecl common_vsnprintf_s(
     return result < 0 ? -1 : result;
 }
 
-extern "C" int __cdecl __stdio_common_vsnprintf_s(
+extern "C" int __cdecl __stdio_common_vsnprintf_s_downlevel(
     unsigned __int64 const options,
     char*            const buffer,
     size_t           const buffer_count,
@@ -391,7 +412,9 @@ extern "C" int __cdecl __stdio_common_vsnprintf_s(
     return common_vsnprintf_s(options, buffer, buffer_count, max_count, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vsnwprintf_s(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsnprintf_s_downlevel);
+
+extern "C" int __cdecl __stdio_common_vsnwprintf_s_downlevel(
     unsigned __int64 const options,
     wchar_t*         const buffer,
     size_t           const buffer_count,
@@ -404,7 +427,9 @@ extern "C" int __cdecl __stdio_common_vsnwprintf_s(
     return common_vsnprintf_s(options, buffer, buffer_count, max_count, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vsprintf_p(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsnwprintf_s_downlevel);
+
+extern "C" int __cdecl __stdio_common_vsprintf_p_downlevel(
     unsigned __int64 const options,
     char*            const buffer,
     size_t           const buffer_count,
@@ -416,7 +441,9 @@ extern "C" int __cdecl __stdio_common_vsprintf_p(
     return common_vsprintf<positional_parameter_base>(options, buffer, buffer_count, format, locale, arglist);
 }
 
-extern "C" int __cdecl __stdio_common_vswprintf_p(
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsprintf_p_downlevel);
+
+extern "C" int __cdecl __stdio_common_vswprintf_p_downlevel(
     unsigned __int64 const options,
     wchar_t*         const buffer,
     size_t           const buffer_count,
@@ -427,3 +454,5 @@ extern "C" int __cdecl __stdio_common_vswprintf_p(
 {
     return common_vsprintf<positional_parameter_base>(options, buffer, buffer_count, format, locale, arglist);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vswprintf_p_downlevel);

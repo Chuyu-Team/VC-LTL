@@ -21,7 +21,7 @@
 #include <conio.h>
 
 #if defined _X86_
-EXTERN_C _CRTIMP EXCEPTION_DISPOSITION __CxxFrameHandler(
+EXTERN_C __declspec(dllimport) EXCEPTION_DISPOSITION __CxxFrameHandler(
 	EHExceptionRecord  *pExcept,
 	EHRegistrationNode *pRN,
 	void *pContext,
@@ -83,7 +83,7 @@ EXTERN_C __declspec(naked) DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl
 	}
 }
 #elif defined _AMD64_
-EXTERN_C _CRTIMP EXCEPTION_DISPOSITION __CxxFrameHandler(
+EXTERN_C __declspec(dllimport) EXCEPTION_DISPOSITION __CxxFrameHandler(
 	EHExceptionRecord  *pExcept,
 	EHRegistrationNode RN,
 	CONTEXT *pContext,

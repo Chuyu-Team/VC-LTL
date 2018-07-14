@@ -212,26 +212,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprtxp</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprtxp</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprt</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>msvcprt_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\</OutDir>
+    <TargetName>msvcprt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -242,32 +242,32 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_Spectre|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprt</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprtxp</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprtxp</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\WinXP\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprt</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>msvcprt_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\Dynamic\</OutDir>
+    <TargetName>msvcprt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -278,7 +278,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_Spectre|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion)\stl;$(SolutionDir)ucrt\inc;$(SolutionDir);$(SolutionDir)$(VC-LTLUsedToolsVersion)\concrt;$(SolutionDir)boost_1_66_0;$(IncludePath)</IncludePath>
-    <TargetName>ltlcprt</TargetName>
+    <TargetName>libcpmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(SpectreMitigation)\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
@@ -297,6 +297,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -321,6 +322,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -345,6 +347,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -422,6 +425,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -445,6 +449,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -468,6 +473,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -491,6 +497,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -564,6 +571,7 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
