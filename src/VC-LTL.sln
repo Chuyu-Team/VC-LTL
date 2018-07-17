@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VC-LTL-Build-Shared", "VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems", "{939EC7F0-B12A-467F-9778-32C6FF9C208E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "14.0.24210", "14.0.24210", "{D66E44A8-D363-4C74-B41B-B0B837A192B3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConcRT", "14.0.24210\Build\ConcRT\ConcRT.vcxproj", "{BAB2C32C-E9C7-43ED-B061-4429C905AEF5}"
@@ -98,10 +96,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcruntime", "14.0.23918\Build\vcruntime\vcruntime.vcxproj", "{2B5BD743-4091-41BE-B452-F736BCE245CE}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems*{939ec7f0-b12a-467f-9778-32c6ff9c208e}*SharedItemsImports = 9
-		VC-LTL-Build-Shared\VC-LTL-Build-Shared.vcxitems*{ea6af334-bf41-4265-a355-c5667b6f4554}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Dynamic|x64 = Dynamic|x64
 		Dynamic|x86 = Dynamic|x86
