@@ -14,7 +14,7 @@
 // Because state separation is disabled in the static CRT, the dual_state_global<int> has the same representation as an int, so this is okay, if a bit messy.
 EXTERN_C _ACRTIMP extern int _fmode;  // This is automatically initialized to zero by the compiler
 
-#ifndef _AMD64_
+#if !defined _AMD64_ && !defined _ARM64_ && !defined _ARM_
 #error "仅需要在x64中编译"
 #endif
 

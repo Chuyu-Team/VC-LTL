@@ -1491,9 +1491,13 @@ int WINAPI __acrt_GetLocaleInfoEx(
 #define __acrt_GetLocaleInfoEx GetLocaleInfoEx
 #endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(
     _Out_ LPFILETIME system_time
     );
+#else
+#define __acrt_GetSystemTimePreciseAsFileTime GetSystemTimePreciseAsFileTime
+#endif
 
 #ifdef _ATL_XP_TARGETING
 int WINAPI __acrt_GetTimeFormatEx(

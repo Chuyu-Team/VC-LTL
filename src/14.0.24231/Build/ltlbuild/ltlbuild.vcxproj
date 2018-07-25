@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Dynamic|ARM">
+      <Configuration>Dynamic</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Dynamic|Win32">
       <Configuration>Dynamic</Configuration>
       <Platform>Win32</Platform>
@@ -9,6 +13,10 @@
       <Configuration>Dynamic</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Static_WinXP|ARM">
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Static_WinXP|Win32">
       <Configuration>Static_WinXP</Configuration>
       <Platform>Win32</Platform>
@@ -16,6 +24,10 @@
     <ProjectConfiguration Include="Static_WinXP|x64">
       <Configuration>Static_WinXP</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static|ARM">
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Static|Win32">
       <Configuration>Static</Configuration>
@@ -31,7 +43,7 @@
     <ProjectGuid>{D4EA3F1F-208A-4670-A907-4DCBC3F3E269}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ltlbuild</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\Shared.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -42,6 +54,14 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -50,6 +70,15 @@
     <CharacterSet>Unicode</CharacterSet>
     <DisableStaticLibSupport>true</DisableStaticLibSupport>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <DisableStaticLibSupport>true</DisableStaticLibSupport>
+    <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -57,6 +86,15 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <SupportWinXP>true</SupportWinXP>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <SupportWinXP>true</SupportWinXP>
+    <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -90,11 +128,23 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(SolutionDir)..\VC-LTL helper for Visual Studio.props" />
   </ImportGroup>
@@ -116,7 +166,17 @@
     <TargetName>libcmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'">
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
+    <TargetName>libcmt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
+    <TargetName>msvcrt</TargetName>
+    <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>msvcrt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\</OutDir>
@@ -125,6 +185,10 @@
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>libcmt</TargetName>
     <OutDir>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\WinXP\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM'">
+    <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
+    <TargetName>libcmt</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
@@ -148,7 +212,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_NTDDI_MIN=NTDDI_VISTA;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -168,6 +232,28 @@
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -175,7 +261,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_CRT_NTDDI_MIN=NTDDI_VISTA;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -197,9 +283,31 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
-    <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\vcruntime140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <IgnoreSpecificDefaultLibraries>ltl.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <ImportLibrary>$(OutDir)ltl.lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)ltl.pdb</ProgramDatabaseFile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <ClCompile>
@@ -208,7 +316,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_NTDDI_MIN=NTDDI_WINXP;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -228,6 +336,28 @@
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -235,7 +365,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_NTDDI_MIN=NTDDI_VISTA;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -260,7 +390,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_CRT_NTDDI_MIN=NTDDI_VISTA;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -279,9 +409,6 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
-    <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\vcruntime140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <ClCompile>
@@ -290,7 +417,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_NTDDI_MIN=NTDDI_WS03;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;_ATL_XP_TARGETING;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -312,6 +439,9 @@
     <ClCompile Include="..\..\..\ftol2_downlevel.cpp">
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\arm\gshandlereh.c">
+      <ExcludedFromBuild Condition="'$(Platform)'!='ARM'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\i386\chandler4.c">
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
@@ -365,7 +495,9 @@
     <ClCompile Include="..\..\vcruntime\loadcfg.c" />
     <ClCompile Include="..\..\vcruntime\matherr.cpp" />
     <ClCompile Include="..\..\vcruntime\matherr_detection.c" />
-    <ClCompile Include="..\..\vcruntime\mpxinit.c" />
+    <ClCompile Include="..\..\vcruntime\mpxinit.c">
+      <ExcludedFromBuild Condition="('$(Platform)'!='Win32') And('$(Platform)'!='x64') ">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\vcruntime\new_array_nothrow.cpp" />
     <ClCompile Include="..\..\vcruntime\new_mode.cpp" />
     <ClCompile Include="..\..\vcruntime\new_scalar_nothrow.cpp" />
@@ -411,13 +543,13 @@
     <MASM Include="..\..\..\amd64\exception.asm">
       <ExcludedFromBuild Condition="'$(Platform)'!='x64'">true</ExcludedFromBuild>
     </MASM>
-    <MASM Include="..\..\..\amd64\exception2.asm">
-      <ExcludedFromBuild Condition="'$(Platform)'!='x64'">true</ExcludedFromBuild>
-    </MASM>
+    <CustomBuild Include="..\..\..\arm\exception.asm">
+      <FileType>Document</FileType>
+      <Command>armasm -o "$(IntDir)%(fileName).asm.obj" "%(FullPath)"</Command>
+      <Outputs>$(IntDir)%(fileName).asm.obj</Outputs>
+      <ExcludedFromBuild Condition="'$(Platform)'!='ARM'">true</ExcludedFromBuild>
+    </CustomBuild>
     <MASM Include="..\..\..\i386\exception.asm">
-      <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
-    </MASM>
-    <MASM Include="..\..\..\i386\exception2.asm">
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
     </MASM>
     <MASM Include="..\..\i386\dllsupp.asm">

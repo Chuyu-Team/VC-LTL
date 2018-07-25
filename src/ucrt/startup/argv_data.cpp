@@ -30,7 +30,7 @@ _ACRTIMP extern  wchar_t*  _wcmdln; // The raw command line as a wide string
 
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 
-#ifdef _M_AMD64
+#if defined _M_AMD64 || defined _M_ARM64 || defined _M_ARM
 int*       __cdecl __p___argc_downlevel()   { return &__argc;   }
 _LCRT_DEFINE_IAT_SYMBOL(__p___argc_downlevel);
 
@@ -54,7 +54,7 @@ _LCRT_DEFINE_IAT_SYMBOL(__p__wcmdln_downlevel);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if defined _ATL_XP_TARGETING || defined _M_ARM64 || defined _M_ARM
 errno_t __cdecl _get_wpgmptr_downlevel(wchar_t** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result   != nullptr, EINVAL);
@@ -68,7 +68,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_get_wpgmptr_downlevel);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if defined _ATL_XP_TARGETING || defined _M_ARM64 || defined _M_ARM
 errno_t __cdecl _get_pgmptr_downlevel(char** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result  != nullptr, EINVAL);

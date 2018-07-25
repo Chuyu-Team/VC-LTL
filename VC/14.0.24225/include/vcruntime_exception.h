@@ -48,14 +48,10 @@ public:
     explicit exception(char const* const _Message) throw();
 
     exception(char const* const _Message, int) throw()
-#ifndef _ATL_XP_TARGETING
-		;
-#else
 		:_Data{ _Message,0 }
 	{
 
 	}
-#endif
 
     exception(exception const& _Other) throw();
 

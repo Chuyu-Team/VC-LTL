@@ -1,4 +1,5 @@
 ﻿#define __Build_OBJ
+#undef _CRT_BEST_PRACTICES_USAGE
 
 #include <msvcrt_IAT.h>
 #include <Windows.h>
@@ -452,3 +453,86 @@ EXTERN_C UINT64 __cdecl __LTL_GetOsVersion()
 
 	return MakeVersion(pPeb->OSMajorVersion, pPeb->OSMinorVersion, pPeb->OSBuildNumber, 0);
 }
+
+#undef _environ
+#undef _wenviron
+
+#if defined _M_ARM || defined _M_ARM64
+
+#define _Static_Environ
+
+//arm64的msvcrt未导出二个符号
+EXTERN_C char **    _environ = nullptr;
+EXTERN_C wchar_t ** _wenviron = nullptr;
+
+_LCRT_DEFINE_IAT_SYMBOL(_environ);
+_LCRT_DEFINE_IAT_SYMBOL(_wenviron);
+#else
+EXTERN_C __declspec(dllimport) extern char **    _environ;
+EXTERN_C __declspec(dllimport) extern wchar_t ** _wenviron;
+#endif
+
+
+#pragma pack(push,_CRT_PACKING)
+//结构体来自于 VC 2013 internal.h，逆向了下msvcrt.dll确实只有一个成员。
+typedef struct
+{
+	int newmode;
+} _startupinfo;
+
+#pragma pack(pop)
+
+
+extern "C" __declspec(dllimport) int __cdecl __getmainargs(
+	_Out_ int * _Argc,
+	_Outptr_result_buffer_(*_Argc) char *** _Argv,
+	_Outptr_result_maybenull_ char *** _Env,
+	_In_ int _DoWildCard,
+	_In_ _startupinfo * _StartInfo
+);
+
+extern "C" __declspec(dllimport) int __cdecl __wgetmainargs(
+	_Out_ int * _Argc,
+	_Outptr_result_buffer_(*_Argc) wchar_t *** _Argv,
+	_Outptr_result_maybenull_ wchar_t *** _Env,
+	_In_ int _DoWildCard,
+	_In_ _startupinfo * _StartInfo
+);
+
+
+extern "C" int __CRTDECL _get_startup_new_mode();
+
+EXTERN_C errno_t __cdecl _configure_narrow_argv_downlevel(
+	_In_ _crt_argv_mode mode
+	)
+{
+	int _Argc;
+	char ** _Argv;
+#if !defined _Static_Environ
+	char **    _environ;
+#endif
+	_startupinfo _StartInfon = { _get_startup_new_mode() };
+
+	//不支持_crt_argv_no_arguments
+	return __getmainargs(&_Argc, &_Argv, &_environ, _get_startup_argv_mode() != _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_configure_narrow_argv_downlevel);
+
+EXTERN_C errno_t __cdecl _configure_wide_argv_downlevel(
+	_In_ _crt_argv_mode mode
+	)
+{
+	int _Argc;
+	wchar_t ** _Argv;
+#if !defined _Static_Environ
+	wchar_t ** _wenviron;
+#endif
+
+	_startupinfo _StartInfon = { _get_startup_new_mode() };
+
+	//不支持_crt_argv_no_arguments
+	return __wgetmainargs(&_Argc, &_Argv, &_wenviron, _get_startup_argv_mode() != _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_configure_wide_argv_downlevel);

@@ -549,9 +549,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\string\wcstok_s.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
-      <Filter>ucrt\amd64</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\internal\initialization.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
@@ -563,6 +560,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\inoutput_downlevel.cpp">
       <Filter>ltl\objs</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
+      <Filter>ucrt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

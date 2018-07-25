@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.5.2)
 
+#VC-LTL核心版本号，由于4.X并不兼容3.X。此值可以用于兼容性判断。
+set(LTL_CoreVersion 4)
 
 if(NOT SupportWinXP)
 	set(SupportWinXP "false")
@@ -24,18 +26,22 @@ if(${SupportLTL} STREQUAL "true")
 
 	include(CheckSymbolExists)
 
+	check_symbol_exists("_M_IX86" "" _M_IX86)
 	check_symbol_exists("_M_AMD64" "" _M_AMD64)
+	check_symbol_exists("_M_ARM" "" _M_ARM)
+	check_symbol_exists("_M_ARM64" "" _M_ARM64)
 
 	if(_M_AMD64)
 		set(PlatformShortName "x64")
+	else(_M_IX86)
+		set(PlatformShortName "x86")
+	else(_M_ARM)
+		set(PlatformShortName "arm")
+	else(_M_ARM64)
+		set(PlatformShortName "arm64")
 	else()
-		check_symbol_exists("_M_IX86" "" _M_IX86)
-		if(_M_IX86)
-			set(PlatformShortName "x86")
-		else()
-			message("VC-LTL not load, Unknown Platform!!!")
-			set(SupportLTL "false")
-		endif()
+		message("VC-LTL not load, Unknown Platform!!!")
+		set(SupportLTL "false")
 	endif()
 endif()
 
@@ -150,6 +156,13 @@ if(${SupportLTL} STREQUAL "true")
 		set(OsPlatformName "Vista")
 	endif()
 
+	if(${PlatformShortName} STREQUAL "arm")
+		set(OsPlatformName "Vista")
+	endif()
+	if(${PlatformShortName} STREQUAL "arm64")
+		set(OsPlatformName "Vista")
+	endif()
+
 	#设置LTL_Mode
 	if(${DisableAdvancedSupport} STREQUAL "true")
 		set(LTL_Mode "Light")
@@ -179,7 +192,7 @@ if(${SupportLTL} STREQUAL "true")
 	message("")
 
     set(VC_LTL_Include ${VC_LTL_Root}/config/${OsPlatformName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/include;${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion})
-    set(VC_LTL_Library ${VC_LTL_Root}/${PlatformShortName};${VC_LTL_Root}/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
+    set(VC_LTL_Library ${VC_LTL_Root}/lib/${PlatformShortName};${VC_LTL_Root}/lib/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
 
 	#message("INCLUDE " $ENV{INCLUDE})
 	#message("LIB " $ENV{LIB})

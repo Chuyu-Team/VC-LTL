@@ -25,12 +25,20 @@ if /i "%Platform%" == "" goto Start_VC_LTL
 
 if /i "%Platform%" == "x86" goto Start_VC_LTL
 
-if /i "%Platform%" == "x64" ( goto Start_VC_LTL ) else ( echo VC-LTL CMD脚本不支持体系 : %Platform% )
+if /i "%Platform%" == "x64" goto Start_VC_LTL
+
+if /i "%Platform%" == "arm" goto Start_VC_LTL
+
+if /i "%Platform%" == "arm64" goto Start_VC_LTL
+
+echo VC-LTL CMD脚本不支持体系 : %Platform%
 
 goto:eof
 
 
 :Start_VC_LTL
+::VC-LTL核心版本号，由于4.X并不兼容3.X。此值可以用于兼容性判断。
+set LTL_CoreVersion=4
 
 set VC_LTL_Helper_Load=true
 
@@ -63,6 +71,9 @@ echo Platform : %PlatformShortName%
 
 if /i "%SupportWinXP%" == "true" (set OsPlatformName=WinXP) else (set OsPlatformName=Vista)
 
+if /i "%Platform%" == "arm" set OsPlatformName=Vista
+if /i "%Platform%" == "arm64" set OsPlatformName=Vista
+
 if /i "%DisableAdvancedSupport%" == "true" (set LTL_Mode=Light) else (set LTL_Mode=Advanced)
 
 echo Using VC-LTL %OsPlatformName% %LTL_Mode% Mode
@@ -71,7 +82,7 @@ echo Using VC-LTL %OsPlatformName% %LTL_Mode% Mode
 ::修改Include
 set INCLUDE=%VC_LTL_Root%\config\%OsPlatformName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\include;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\atlmfc\include;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%;%INCLUDE%
 
-set LIB=%VC_LTL_Root%\%PlatformShortName%;%VC_LTL_Root%\%PlatformShortName%\%OsPlatformName%\%LTL_Mode%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%\%OsPlatformName%;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%\lib\%PlatformShortName%;%LIB%
+set LIB=%VC_LTL_Root%\lib\%PlatformShortName%;%VC_LTL_Root%\lib\%PlatformShortName%\%OsPlatformName%\%LTL_Mode%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%;%VC_LTL_Root%\VC\%VC-LTLUsedToolsVersion%\lib\%PlatformShortName%\%OsPlatformName%;%VC_LTL_Root%\ucrt\%VC-LTLTargetUniversalCRTVersion%\lib\%PlatformShortName%;%LIB%
 
 goto:eof
 

@@ -74,15 +74,20 @@
   </PropertyGroup>
   
   <PropertyGroup>
+    <!--VC-LTL核心版本号，由于4.X并不兼容3.X。此值可以用于兼容性判断。-->
+    <LTL_CoreVersion>4</LTL_CoreVersion>
     <LTL_Mode Condition=" '$(DisableAdvancedSupport)'=='true' ">Light</LTL_Mode>
     <LTL_Mode Condition=" '$(DisableAdvancedSupport)'!='true' ">Advanced</LTL_Mode>
 
     <SupportLTL Condition="('$(DriverTargetPlatform)'=='Universal') Or ('$(SupportPlatformToolset)' != 'true') Or ('$(UseDebugLibraries)'=='true') Or ('$(UseOfMFC)'!='false')">false</SupportLTL>
-    <SupportLTL Condition="('$(SupportLTL)'=='') And (('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64'))">true</SupportLTL>
-    <!--arm以及arm64仅支持ucrt模式-->
-    <SupportLTL Condition="('$(SupportLTL)'!='false') And (('$(PlatformShortName)'=='arm') Or ('$(PlatformShortName)'=='arm64'))">ucrt</SupportLTL>
+    <SupportLTL Condition="('$(SupportLTL)'=='') And ('$(SupportPlatform)'=='true')">true</SupportLTL>
+    <!--arm以及arm64仅支持ucrt模式
+    <SupportLTL Condition="('$(SupportLTL)'!='false') And (('$(PlatformShortName)'=='arm') Or ('$(PlatformShortName)'=='arm64'))">ucrt</SupportLTL>-->
 
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ('$(SupportPlatformToolsetWinXP)'=='true')">true</SupportWinXP>
+    
+    <!--arm、arm64必定不用支持XP-->
+    <SupportWinXP Condition=" ('$(PlatformShortName)'=='arm') Or ('$(PlatformShortName)'=='arm64')">false</SupportWinXP>
 
     <OsPlatformName Condition=" '$(SupportWinXP)'=='true' ">WinXP</OsPlatformName>
     <OsPlatformName Condition=" '$(SupportWinXP)'!='true' ">Vista</OsPlatformName>
@@ -91,7 +96,7 @@
     <VC-LTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VC-LTLLibDirMod>
     
     <VC_LTL_Include>$(VC_LTL_Root)\config\$(OsPlatformName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\include;$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library>$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VC_LTL_Library>$(VC_LTL_Root)\lib\$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\lib\$(PlatformShortName)\$(OsPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VC-LTLUsedToolsVersion)\lib\$(VC-LTLLibDirMod)$(PlatformShortName)\$(OsPlatformName);$(VC_LTL_Root)\ucrt\$(VC-LTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SupportLTL)'=='true' ">

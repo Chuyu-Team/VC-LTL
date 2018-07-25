@@ -85,14 +85,20 @@ _LTLIMP VOID WINAPI __crtAcquireSRWLockExclusive(
 #define __crtAcquireSRWLockExclusive AcquireSRWLockExclusive
 #endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 //Win7以上版本可用
 _LTLIMP BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 	);
+#else
+#define __crtTryAcquireSRWLockExclusive TryAcquireSRWLockExclusive
+#endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 _LTLIMP VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(
 	LPFILETIME const system_time
 	);
+#endif
 
 #ifdef _ATL_XP_TARGETING
 _LTLIMP VOID WINAPI __crtReleaseSRWLockExclusive(
@@ -113,7 +119,11 @@ _LTLIMP BOOL WINAPI __crtSleepConditionVariableSRW(
 #define __crtSleepConditionVariableSRW SleepConditionVariableSRW
 #endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 _LTLIMP BOOLEAN __cdecl __crt_are_win7_sync_apis_available();
+#else
+#define __crt_are_win7_sync_apis_available() true
+#endif
 
 #ifdef _ATL_XP_TARGETING
 _LTLIMP BOOLEAN __cdecl __crt_are_vista_sync_apis_available();

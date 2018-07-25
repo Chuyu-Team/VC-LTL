@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #if defined(NDEBUG)&&defined(__Build_LTL)
-#define _CRT_BEST_PRACTICES_USAGE
+//#define _CRT_BEST_PRACTICES_USAGE
 
 #include <vcruntime_new.h>
 #include <corecrt_terminate.h>
@@ -434,8 +434,10 @@ extern "C"
 	#undef _daylight
 	__declspec(dllimport) extern int _daylight;
 
+#if !defined _ARM64_ && !defined _ARM_
 	#undef _dstbias
 	__declspec(dllimport) extern long _dstbias;
+#endif
 
 	#undef _timezone
 	__declspec(dllimport) extern long _timezone;
@@ -533,7 +535,7 @@ extern "C"
 
 #endif
 
-#ifdef _M_AMD64
+#if defined _M_AMD64 || defined _M_ARM64
 
 	extern "C" long* __cdecl __timezone_downlevel()
 	{
@@ -825,6 +827,7 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(_get_stream_buffer_pointers_downlevel);
 
+#if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 	//msvrct仅支持_Strftime，我们可以将通过字符串转换，得到_Wcsftime
 	size_t __cdecl _Wcsftime_downlevel(
 		wchar_t*       const buffer,
@@ -892,6 +895,9 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(_Wcsftime_downlevel);
 
+#endif
+
+#if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 	//msvrct仅支持_Getdays，我们可以将通过字符串转换，得到_W_Getdays
 	wchar_t* __cdecl _W_Getdays_downlevel(void)
 	{
@@ -927,6 +933,9 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(_W_Getdays_downlevel);
 
+#endif
+
+#if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 	//msvrct仅支持_Getmonths，我们可以将通过字符串转换，得到_W_Getmonths
 	wchar_t *__cdecl _W_Getmonths_downlevel(void)
 	{
@@ -961,6 +970,8 @@ extern "C"
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(_W_Getmonths_downlevel);
+
+#endif
 
 	/*void* __cdecl _W_Gettnames()
 	{
@@ -2828,7 +2839,7 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(__sys_errlist_downlevel);
 
-#ifdef _M_AMD64
+#if defined _M_AMD64 || defined _M_ARM64 || defined _M_ARM
 
 	extern "C" unsigned char* __cdecl __p__mbctype_downlevel()
 	{
@@ -2842,6 +2853,17 @@ extern "C"
 	}
 
 	_LCRT_DEFINE_IAT_SYMBOL(__p__mbcasemap_downlevel);
+
+	#undef _environ
+	#undef _wenviron
+
+#if defined _ARM64_ || defined _ARM_
+	extern "C" extern char **    _environ;
+	extern "C" extern wchar_t ** _wenviron;
+#else
+	extern "C" __declspec(dllimport) extern char **    _environ;
+	extern "C" __declspec(dllimport) extern wchar_t ** _wenviron;
+#endif
 
 	extern "C" char***    __cdecl __p__environ_downlevel() { return &_environ; }
 	_LCRT_DEFINE_IAT_SYMBOL(__p__environ_downlevel);

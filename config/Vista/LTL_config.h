@@ -6,12 +6,18 @@
 #error "不允许在XP兼容模式包含此头文件。"
 #endif
 
-//默认模式，此模式编译器新特性将使用Vista新API实现，性能更佳
-#define __ltlversionxp
-#define _ACRTXPIMP __declspec(dllimport)
-#define _ACRTXPINLINE __declspec(dllimport)
-//XP以上系统inline以减少导入数量
-#define _ACRTXPIMPINLINE __inline
+#if defined _M_IX86 || defined _M_AMD64
+//NTDDI_VISTA
+#define _CRT_NTDDI_MIN 0x06000000
+#elif defined _M_ARM
+//NTDDI_WIN8
+#define _CRT_NTDDI_MIN 0x06020000
+#elif defined _M_ARM64
+//NTDDI_WIN10_RS3 Windows 10 16299
+#define _CRT_NTDDI_MIN 0x0A000004
+#else
+#error "模式选择错误！Vista模式不支持此体系。"
+#endif
 
 #if defined(__cplusplus) && !defined(_Allow_LTL_Mode)
 #pragma detect_mismatch("_LTL_Mode", "VistaMode")

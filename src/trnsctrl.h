@@ -233,7 +233,7 @@ BOOL _CallSETranslator(EHExceptionRecord*, EHRegistrationNode*, void*, Dispatche
 extern TryBlockMapEntry *_GetRangeOfTrysToCheck(FuncInfo *, int, __ehstate_t, unsigned *, unsigned *);
 extern VOID _DestructExceptionObject(EHExceptionRecord *, BOOLEAN);
 
-#elif defined(_M_AMD64)
+#elif defined(_M_AMD64) || defined(_M_ARM64) || defined(_M_ARM)
 
 #define _CallMemberFunction0(pthis, pmfn)               (*(VOID(*)(PVOID))pmfn)(pthis)
 #define _CallMemberFunction1(pthis, pmfn, pthat)        (*(VOID(*)(PVOID, PVOID))pmfn)(pthis, pthat)

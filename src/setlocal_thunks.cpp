@@ -358,7 +358,7 @@ static void __cdecl __freetlocinfo(
 	_free_crt(ptloci);
 }
 
-#ifndef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN >= NTDDI_VISTA && _CRT_NTDDI_MIN <= NTDDI_WIN7
 
 //WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _get_current_locale_downlevel(void)
@@ -485,7 +485,7 @@ static _locale_t __cdecl common_create_locale(
 	return plocale;
 }
 
-#ifndef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN >= NTDDI_VISTA && _CRT_NTDDI_MIN <= NTDDI_WIN7
 
 //WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _create_locale_downlevel(
@@ -500,7 +500,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_create_locale_downlevel);
 
 #endif
 
-#ifndef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN >= NTDDI_VISTA
 
 //WinXP不支持此接口
 EXTERN_C _locale_t __cdecl _wcreate_locale_downlevel(
@@ -508,14 +508,62 @@ EXTERN_C _locale_t __cdecl _wcreate_locale_downlevel(
 	_In_z_ wchar_t const* _locale
 )
 {
+#if _CRT_NTDDI_MIN <= NTDDI_WIN7
 	return common_create_locale(_category, _locale);
+#else
+	//Windows 8的msvcrt.dll仅存在 _create_locale
+	_locale_t locale = nullptr;
+	char* _Locale_ANSI = nullptr;
+
+	if (_locale)
+	{
+		size_t _PtNumOfCharConverted = 0;
+
+		auto __errno = wcstombs_s(&_PtNumOfCharConverted, nullptr, 0, _locale, _CRT_INT_MAX);
+		if (__errno)
+		{
+			if(__errno == EINVAL || __errno == ERANGE)
+				_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
+
+			return nullptr;
+		}
+
+		if (_PtNumOfCharConverted == 0)
+			return nullptr;
+
+		_Locale_ANSI = (char*)_malloca(_PtNumOfCharConverted);
+
+		if (!_Locale_ANSI)
+			return nullptr;
+
+
+		__errno = wcstombs_s(nullptr, _Locale_ANSI, _PtNumOfCharConverted, _locale, _CRT_SIZE_MAX);
+
+		if (__errno)
+		{
+			if (__errno == EINVAL || __errno == ERANGE)
+				_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
+
+			goto __End;
+		}
+	}
+
+	locale = _create_locale(_category, _Locale_ANSI);
+
+__End:
+
+	if (_Locale_ANSI)
+		_freea(_Locale_ANSI);
+
+	return locale;
+#endif
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_wcreate_locale_downlevel);
 
 #endif
 
-#ifndef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN >= NTDDI_VISTA
 
 //WinXP不支持此接口
 EXTERN_C int __cdecl _configthreadlocale_downlevel(int i)
@@ -574,6 +622,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_configthreadlocale_downlevel);
 
 #endif
 
+#if _CRT_NTDDI_MIN <= NTDDI_WIN7
+
 EXTERN_C void __cdecl _free_locale_downlevel(
 	_In_opt_ _locale_t plocinfo
 )
@@ -627,6 +677,8 @@ EXTERN_C void __cdecl _free_locale_downlevel(
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_free_locale_downlevel);
+
+#endif
 
 EXTERN_C int __cdecl ___mb_cur_max_l_func_downlevel(_locale_t locale)
 {

@@ -6,12 +6,20 @@
 #define _ATL_XP_TARGETING 1
 #endif
 
-//XP模式，此模式很多编译器特性采用事件实现，并将XP不支持的一些函数静态导入
-#define __ltlversionxp "xp"
-#define _ACRTXPIMP extern
-#define _ACRTXPINLINE __inline
-//XP以及以下系统外部导入
-#define _ACRTXPIMPINLINE extern
+#ifdef _DLL
+//VC-LTL默认没有编译XP的动态库，如果需要请自行编译。
+#error "当需要兼容Window XP时必须使用MT！"
+#endif
+
+#if defined _M_IX86
+//NTDDI_WINXP
+#define _CRT_NTDDI_MIN 0x05010000
+#elif defined _M_AMD64
+//NTDDI_WS03
+#define _CRT_NTDDI_MIN 0x05020000
+#else
+#error "模式选择错误！XP模式仅支持x86 以及 AMD64。"
+#endif
 
 #if defined(__cplusplus) && !defined(_Allow_LTL_Mode)
 #pragma detect_mismatch("_LTL_Mode", "XPMode")

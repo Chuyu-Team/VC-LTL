@@ -1,7 +1,7 @@
 @call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 @call "%~dp0..\..\VC-LTL helper for nmake.cmd"
 
-set libfileroot=%~dp0..\..\x64
+set libfileroot=%~dp0..\..\lib\x64
 
 set libfile=%libfileroot%\msvcrt.lib
 
@@ -17,6 +17,7 @@ echo 删除msvcrt.dll导出符号
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" RemoveAllObj "%libfile%"
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" CreateWeaks  /MACHINE:x64 /def:"%~dp0..\msvcrt_forward.def"  /out:"%libfileroot%\objs\msvcrt_forward"
+"D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" CreateWeaks  /MACHINE:x64 /def:"%~dp0..\msvcrt_vista.def"    /out:"%libfileroot%\objs\msvcrt_forward"
 
 ::填充XP不支持的接口
 ::"D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%libfile%" x64 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
@@ -59,6 +60,7 @@ md "%libfileroot%\WinXP\Light\"
 
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%libfile%" x64 "%~dp0..\msvcrt_forward.def" msvcrt.dll msvcrt3.dll
+"D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%libfile%" x64 "%~dp0..\msvcrt_vista.def"   msvcrt.dll msvcrt3.dll
 lib "%libfile%" /remove:msvcrt3.dll
 
 ::添加通用转发器

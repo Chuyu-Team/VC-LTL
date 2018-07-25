@@ -40,6 +40,18 @@
     <Filter Include="源文件\vc\objs\amd64">
       <UniqueIdentifier>{93712192-b54a-4335-b1fd-57ee9aa6aaf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\vc\objs\arm64">
+      <UniqueIdentifier>{e8877b71-dfd8-43a2-9c5c-8f085cffc916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\objs\arm64">
+      <UniqueIdentifier>{eb0143b3-1959-4083-809a-d3bb447e260d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\objs\arm">
+      <UniqueIdentifier>{ac3cd93a-d7ef-499a-adb3-abba6a629a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\objs\arm">
+      <UniqueIdentifier>{361b031f-8ba0-4114-8003-c0755447cd72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vcruntime\delete_array_align.cpp">
@@ -237,6 +249,12 @@
     <ClCompile Include="..\..\i386\chandler4.c">
       <Filter>源文件\vc\objs\x86\WinXP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\arm64\gshandlereh.c">
+      <Filter>源文件\vc\objs\arm64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arm\gshandlereh.c">
+      <Filter>源文件\vc\objs\arm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ltlbuild.rc">
@@ -250,14 +268,16 @@
     <MASM Include="..\..\..\i386\exception.asm">
       <Filter>源文件\ltl\objs\x86</Filter>
     </MASM>
-    <MASM Include="..\..\..\i386\exception2.asm">
-      <Filter>源文件\ltl\objs\x86</Filter>
-    </MASM>
     <MASM Include="..\..\..\amd64\exception.asm">
       <Filter>源文件\ltl\objs\amd64</Filter>
     </MASM>
-    <MASM Include="..\..\..\amd64\exception2.asm">
-      <Filter>源文件\ltl\objs\amd64</Filter>
-    </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\arm64\exception.asm">
+      <Filter>源文件\ltl\objs\arm64</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\arm\exception.asm">
+      <Filter>源文件\ltl\objs\arm</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

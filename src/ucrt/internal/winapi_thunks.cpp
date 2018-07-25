@@ -622,6 +622,7 @@ extern "C" int WINAPI __acrt_GetLocaleInfoEx(
 }
 #endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(LPFILETIME const system_time)
 {
 	if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
@@ -631,6 +632,7 @@ extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(LPFILETIME
 
 	return GetSystemTimeAsFileTime(system_time);
 }
+#endif
 
 #ifdef _ATL_XP_TARGETING
 extern "C" int WINAPI __acrt_GetTimeFormatEx(
@@ -1253,6 +1255,7 @@ EXTERN_C VOID WINAPI __crtAcquireSRWLockExclusive(
 }
 #endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 	_Inout_ PSRWLOCK SRWLock
 )
@@ -1270,7 +1273,7 @@ EXTERN_C BOOLEAN WINAPI __crtTryAcquireSRWLockExclusive(
 		abort();
 	}
 }
-
+#endif
 
 #ifdef _ATL_XP_TARGETING
 EXTERN_C VOID WINAPI __crtReleaseSRWLockExclusive(
@@ -1313,6 +1316,7 @@ EXTERN_C BOOL WINAPI __crtSleepConditionVariableSRW(
 }
 #endif
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN7
 EXTERN_C BOOLEAN __cdecl __crt_are_win7_sync_apis_available()
 {
 
@@ -1320,6 +1324,7 @@ EXTERN_C BOOLEAN __cdecl __crt_are_win7_sync_apis_available()
 	//DYNAMICGETCACHEDFUNCTION(KERNEL32, PFNTRYACQUIRESRWLOCKEXCLUSIVE, TryAcquireSRWLockExclusive, pfTryAcquireSRWLockExclusive);
 	return try_get_TryAcquireSRWLockExclusive() != nullptr;
 }
+#endif
 
 #ifdef _ATL_XP_TARGETING
 EXTERN_C BOOLEAN __cdecl __crt_are_vista_sync_apis_available()

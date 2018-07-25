@@ -101,6 +101,8 @@ extern "C" int* __cdecl __processing_throw_downlevel()
 
 _LCRT_DEFINE_IAT_SYMBOL(__processing_throw_downlevel);
 
+#if _CRT_NTDDI_MIN < NTDDI_WINBLUE
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // __AdjustPointer - Adjust the pointer to the exception object to a pointer to a
@@ -112,7 +114,7 @@ _LCRT_DEFINE_IAT_SYMBOL(__processing_throw_downlevel);
 // Side-effects:
 //     NONE.
 
-extern "C" void *__AdjustPointer(
+extern "C" void *__AdjustPointer_downlevel(
 	void *pThis,                        // Address point of exception object
 	const PMD& pmd                      // Generalized pointer-to-member
 										//   descriptor
@@ -132,4 +134,6 @@ extern "C" void *__AdjustPointer(
 	return pRet;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__AdjustPointer);
+_LCRT_DEFINE_IAT_SYMBOL(__AdjustPointer_downlevel);
+
+#endif

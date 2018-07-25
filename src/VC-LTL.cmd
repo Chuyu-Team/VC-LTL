@@ -3,66 +3,69 @@
 
 
 ::先生成静态库
-devenv "%~dp0VC-LTL.sln" /Build "Static|x86"
-devenv "%~dp0VC-LTL.sln" /Build "Static|x64"
-devenv "%~dp0VC-LTL.sln" /Build "Static_WinXP|x86"
-devenv "%~dp0VC-LTL.sln" /Build "Static_WinXP|x64"
-devenv "%~dp0VC-LTL.sln" /Build "Static_WinXP_Spectre|x86"
-devenv "%~dp0VC-LTL.sln" /Build "Static_WinXP_Spectre|x64"
+call:Build Static "x86 x64 ARM ARM64"
+
+call:Build Static_Spectre "x86 x64 ARM ARM64"
+
+call:Build Static_WinXP "x86 x64"
 
 
 ::生成动态UCRT库
-devenv "%~dp0VC-LTL.sln" /Build "Redist|x86" /project "ucrt\ucrt.vcxproj"
-devenv "%~dp0VC-LTL.sln" /Build "Dynamic|x86" /project "ucrt\ucrt.vcxproj"
-
-devenv "%~dp0VC-LTL.sln" /Build "Redist|x64" /project "ucrt\ucrt.vcxproj"
-devenv "%~dp0VC-LTL.sln" /Build "Dynamic|x64" /project "ucrt\ucrt.vcxproj"
+call:Build Redist "x86 x64 ARM ARM64" "ucrt\ucrt.vcxproj"
+call:Build Dynamic "x86 x64 ARM ARM64" "ucrt\ucrt.vcxproj"
 
 
 
 ::生成 CRT
 
-call:BuildCRT x86 14.0.23918
-call:BuildCRT x64 14.0.23918
+call:BuildCRT 14.0.23918 "x86 x64 ARM"
 
-call:BuildCRT x86 14.0.24210
-call:BuildCRT x64 14.0.24210
+call:BuildCRT 14.0.24210 "x86 x64 ARM"
 
-call:BuildCRT x86 14.0.24225
-call:BuildCRT x64 14.0.24225
+call:BuildCRT 14.0.24225 "x86 x64 ARM"
 
-call:BuildCRT x86 14.0.24231
-call:BuildCRT x64 14.0.24231
+call:BuildCRT 14.0.24231 "x86 x64 ARM"
 
-call:BuildCRT x86 14.10.25017
-call:BuildCRT x64 14.10.25017
+call:BuildCRT 14.10.25017 "x86 x64 ARM ARM64"
 
-call:BuildCRT x86 14.11.25503
-call:BuildCRT x64 14.11.25503
+call:BuildCRT 14.11.25503 "x86 x64 ARM ARM64"
 
-call:BuildCRT x86 14.12.25827
-call:BuildCRT x64 14.12.25827
+call:BuildCRT 14.12.25827 "x86 x64 ARM ARM64"
 
-call:BuildCRT x86 14.13.26128
-call:BuildCRT x64 14.13.26128
+call:BuildCRT 14.13.26128 "x86 x64 ARM ARM64"
 
-call:BuildCRT x86 14.14.26428
-call:BuildCRT x64 14.14.26428
+call:BuildCRT 14.14.26428 "x86 x64 ARM ARM64"
 
 goto:eof
 
 
-::call:BuildCRT x86 14.0.24231
+::BuildCRT 14.0.24231 "x86 x64 ARM ARM64"
 :BuildCRT
 
 ::生成msvcrt.lib
-devenv "%~dp0VC-LTL.sln" /Build "Dynamic|%1" /project "%2\Build\ltlbuild\ltlbuild.vcxproj"
+call:Build Dynamic %2 "%1\Build\ltlbuild\ltlbuild.vcxproj"
+
 ::生成vcruntime.lib
-devenv "%~dp0VC-LTL.sln" /Build "Redist|%1" /project "%2\Build\vcruntime\vcruntime.vcxproj"
+call:Build Redist  %2 "%1\Build\vcruntime\vcruntime.vcxproj"
+
 ::生成msvcprt.lib
-devenv "%~dp0VC-LTL.sln" /Build "Redist|%1" /project "%2\Build\stl\stl.vcxproj"
-devenv "%~dp0VC-LTL.sln" /Build "Dynamic|%1" /project "%2\Build\stl\stl.vcxproj"
+call:Build Redist  %2 "%1\Build\stl\stl.vcxproj"
+call:Build Dynamic %2 "%1\Build\stl\stl.vcxproj"
+
 ::生成concrt.lib
-devenv "%~dp0VC-LTL.sln" /Build "Redist|%1" /project "%2\Build\ConcRT\ConcRT.vcxproj"
+call:Build Redist  %2 "%1\Build\ConcRT\ConcRT.vcxproj"
+
+goto:eof
+
+
+::Build Dynamic "x86 x64 ARM ARM64" ["ucrt\ucrt.vcxproj"]
+:Build
+
+
+if "%3"=="" ( set "__project=" ) else ( set "__project=/project %3" )
+
+for %%i in (%~2)do devenv "%~dp0VC-LTL.sln" /Build "%1|%%i" %__project%
+
+
 
 goto:eof

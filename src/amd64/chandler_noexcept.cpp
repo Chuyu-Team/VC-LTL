@@ -4,7 +4,7 @@
 #include <ehdata.h>
 #include <msvcrt_IAT.h>
 
-#ifdef _M_AMD64
+#if defined _M_AMD64 || defined _M_ARM || defined _M_ARM64
 
 extern "C" EXCEPTION_DISPOSITION __cdecl __C_specific_handler_noexcept(
 	_In_    struct _EXCEPTION_RECORD   *ExceptionRecord,

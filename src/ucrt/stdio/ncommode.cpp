@@ -13,7 +13,7 @@
 extern "C" int _commode = 0;
 
 
-#if defined _M_AMD64
+#if defined _M_AMD64 || defined _M_ARM64 || defined _M_ARM
 
 extern "C" extern int* __imp__commode;
 
