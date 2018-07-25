@@ -22,7 +22,7 @@
 #error This file is not compatible with the current WINAPI_FAMILY
 #endif
 
-#if !defined(USE_ATL_THUNK2) && !defined(_ATL_XP_TARGETING) && (defined(_M_IX86) || defined(_M_AMD64) || defined(_M_ARM) || defined(_M_ARM64))
+#if !defined(USE_ATL_THUNK2) && !defined(_ATL_XP_TARGETING) && (defined(_M_IX86) || defined(_M_AMD64) /*|| defined(_M_ARM) || defined(_M_ARM64)*/)
 #define USE_ATL_THUNK2
 #endif
 
@@ -241,7 +241,7 @@ struct _stdcallthunk {
         return TRUE;
     }
     void* GetCodeAddress() {
-        return (void *)((ULONG_PTR)this | 1);
+        return this;
     }
     void* operator new(size_t)
     {
@@ -334,7 +334,7 @@ struct _stdcallthunk {
         return TRUE;
     }
     void* GetCodeAddress() {
-        return (void *)((ULONG_PTR)this | 1);
+        return this;
     }
     void* operator new(size_t)
     {
@@ -350,7 +350,7 @@ struct _stdcallthunk {
 #endif
 
 
-#if defined(_M_IX86) || defined (_M_AMD64) || defined(_M_ARM)
+#if defined(_M_IX86) || defined (_M_AMD64) || defined(_M_ARM) || defined (_M_ARM64)
 
 #pragma pack(push,8)
 
