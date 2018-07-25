@@ -536,3 +536,5 @@ EXTERN_C errno_t __cdecl _configure_wide_argv_downlevel(
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_configure_wide_argv_downlevel);
+
+extern "C" int _commode = 0;
