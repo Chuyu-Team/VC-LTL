@@ -486,6 +486,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -514,6 +515,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -707,6 +709,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -734,6 +737,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
