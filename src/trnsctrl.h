@@ -163,6 +163,13 @@ extern TryBlockMapEntry *_GetRangeOfTrysToCheck(FuncInfo *, int, __ehstate_t, un
 extern VOID _DestructExceptionObject(EHExceptionRecord *, BOOLEAN);
 #elif defined (_M_IX86)
 
+
+typedef struct FrameInfo {
+	void                    *pExceptionObject;
+	struct FrameInfo        *pNext;
+
+} FRAMEINFO;
+
 //
 // For calling funclets (including the catch)
 //
@@ -234,6 +241,11 @@ extern TryBlockMapEntry *_GetRangeOfTrysToCheck(FuncInfo *, int, __ehstate_t, un
 extern VOID _DestructExceptionObject(EHExceptionRecord *, BOOLEAN);
 
 #elif defined(_M_AMD64) || defined(_M_ARM64) || defined(_M_ARM)
+typedef struct FrameInfo {
+	void             *pExceptionObject;
+	struct FrameInfo *pNext;
+
+} FRAMEINFO;
 
 #define _CallMemberFunction0(pthis, pmfn)               (*(VOID(*)(PVOID))pmfn)(pthis)
 #define _CallMemberFunction1(pthis, pmfn, pthat)        (*(VOID(*)(PVOID, PVOID))pmfn)(pthis, pthat)

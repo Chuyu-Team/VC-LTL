@@ -68,7 +68,7 @@
 
 #ifndef _CRTBLD
 #ifndef _VC_VER_INC
-#include "vcver.h"
+//#include "vcver.h"
 #endif
 #endif /* _CRTBLD */
 
@@ -292,6 +292,7 @@ typedef const struct _s_CatchableType {
 #if _EH_RELATIVE_OFFSETS && !defined(_M_CEE_PURE)
 #define CT_PTD_IB(ct,ib)		((TypeDescriptor *)((ib) + (ct).pType))
 #define CT_COPYFUNC_IB(ct,ib)	((void (* _EH_PTR64)(void* _EH_PTR64))((ib) + (ct).copyFunction))
+#define CT_NAME_IB(ct,ib)		(TD_NAME(*CT_PTD_IB(ct,ib)))
 #else
 #define CT_PTD(ct)			((ct).pType)
 #define CT_COPYFUNC(ct)		((ct).copyFunction)

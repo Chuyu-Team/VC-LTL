@@ -10,6 +10,9 @@
 #include <corecrt_internal.h>
 #include <eh.h>
 #include "ehdata.h"
+#include <trnsctrl.h>
+#include <vcruntime_exception.h>
+#include <vcruntime_typeinfo.h>
 #include <msvcrt_IAT.h>
 
 
@@ -137,3 +140,94 @@ extern "C" void *__AdjustPointer_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(__AdjustPointer_downlevel);
 
 #endif
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// __GetPlatformExceptionInfo - Get Platform Exception extra information from current exception
+//
+// Output:
+//     The address of WINRTEXCEPTIONINFO structure
+//
+// Side-effects:
+//     NONE.
+extern "C" void * __GetPlatformExceptionInfo_downlevel(
+	int *pIsBadAlloc
+) {
+	*pIsBadAlloc = 0;
+	EHExceptionRecord *pExcept = _pCurrentException;
+	if (pExcept != nullptr)
+	{
+		ThrowInfo* pTI = PER_PTHROW(pExcept);
+		if (pTI != nullptr)
+		{
+			if (THROW_ISWINRT((*pTI)))
+			{
+				ULONG_PTR *exceptionInfoPointer = *reinterpret_cast<ULONG_PTR**>(PER_PEXCEPTOBJ(pExcept));
+				exceptionInfoPointer--;
+				return reinterpret_cast<void*>(*exceptionInfoPointer);
+			}
+			else
+			{
+				_EXCEPTION_POINTERS exceptionPointers;
+				exceptionPointers.ExceptionRecord = reinterpret_cast<PEXCEPTION_RECORD>(pExcept);
+				exceptionPointers.ContextRecord = nullptr;
+
+				*pIsBadAlloc = _is_exception_typeof(typeid(std::bad_alloc), &exceptionPointers);
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(__GetPlatformExceptionInfo_downlevel);
+
+#define DASSERT(exp)
+
+//////////////////////////////////////////////////////////////////////////////////
+// _is_exception_typeof - checks if the thrown exception is the type, the caller
+// has passed in.
+//
+extern "C" int __cdecl _is_exception_typeof_downlevel(const type_info & type, struct _EXCEPTION_POINTERS * ep)
+{
+    DASSERT(ep != nullptr);
+
+    EHExceptionRecord *pExcept = (EHExceptionRecord *)ep->ExceptionRecord;
+
+    // Is this our Exception?
+    DASSERT(pExcept != nullptr);
+    DASSERT(PER_IS_MSVC_EH(pExcept));
+
+#if _EH_RELATIVE_TYPEINFO
+    __int32 const *ppCatchable;
+    ptrdiff_t imgBase = (ptrdiff_t)pExcept->params.pThrowImageBase;
+    ppCatchable = THROW_CTLIST_IB(*PER_PTHROW(pExcept), imgBase );
+    int catchables = THROW_COUNT_IB(*PER_PTHROW(pExcept), imgBase );
+#else
+    CatchableType * const *ppCatchable;
+    ppCatchable = THROW_CTLIST(*PER_PTHROW(pExcept));
+    int catchables = THROW_COUNT(*PER_PTHROW(pExcept));
+#endif
+
+    CatchableType *pCatchable;
+
+    // Scan all types that thrown object can be converted to.
+    for (; catchables > 0; catchables--, ppCatchable++)
+    {
+#if _EH_RELATIVE_TYPEINFO
+        pCatchable = (CatchableType *)(imgBase + *ppCatchable);
+        if(strcmp(type.raw_name(), CT_NAME_IB(*pCatchable, imgBase)) == 0)
+#else
+        pCatchable = *ppCatchable;
+        if(strcmp(type.raw_name(), CT_NAME(*pCatchable)) == 0)
+#endif
+        {
+            // Found a Match.
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_is_exception_typeof_downlevel);
