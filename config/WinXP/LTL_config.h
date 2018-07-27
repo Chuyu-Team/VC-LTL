@@ -8,7 +8,7 @@
 
 #ifdef _DLL
 //VC-LTL默认没有编译XP的动态库，如果需要请自行编译。
-#error "当需要兼容Window XP时必须使用MT！"
+_LTL_PushWarning(1006,"Windows XP模式使用无法正常使用 /MD 编译，建议使用 /MT 编译。")
 #endif
 
 #if defined _M_IX86
