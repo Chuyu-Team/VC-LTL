@@ -87,10 +87,10 @@ typedef HSTRING__* __abi_HSTRING;
 
 __declspec(noreturn) void __stdcall __abi_WinRTraiseException(long);
 
-#if !defined(VCWINRT_DLL)
+#if _CRT_NTDDI_MIN >= 0x0A000000 //NTDDI_WIN10
 __declspec(dllimport) long __stdcall __abi_translateCurrentException(bool reserved);
 #else
-__declspec(dllexport) long __stdcall __abi_translateCurrentException(bool reserved);
+/*__declspec(dllexport)*/ long __stdcall __abi_translateCurrentException(bool reserved);
 #endif
 
 inline void __abi_ThrowIfFailed(long __hrArg)
@@ -650,10 +650,10 @@ namespace Platform { namespace Details
 			return __ref;
 		}
 
-#if !defined(VCWINRT_DLL)
+#if _CRT_NTDDI_MIN >= 0x0A000000 //NTDDI_WIN10
 		__declspec(dllimport) virtual long __stdcall __abi_Resolve(::Platform::Guid& __riid, __abi_IInspectable ** __objectReference);
 #else
-		__declspec(dllexport) virtual long __stdcall __abi_Resolve(::Platform::Guid& __riid, __abi_IInspectable ** __objectReference);
+		/*__declspec(dllexport)*/ virtual long __stdcall __abi_Resolve(::Platform::Guid& __riid, __abi_IInspectable ** __objectReference);
 #endif
 
 	private:
@@ -681,12 +681,12 @@ namespace Platform { namespace Details
 
 		ControlBlock(){}
 
-#if !defined(VCWINRT_DLL)
+#if _CRT_NTDDI_MIN >= 0x0A000000 //NTDDI_WIN10
 		__declspec(dllimport) void InitControlBlock(void* __object, bool __bSingleAllocationParam = true, bool __bAlignedAllocationParam = false, bool __bExceptionAllocationParam = false);
 		__declspec(dllimport) void ReleaseTarget();
 #else
-		__declspec(dllexport) void InitControlBlock(void* __object, bool __bSingleAllocationParam = true, bool __bAlignedAllocationParam = false, bool __bExceptionAllocationParam = false);
-		__declspec(dllexport) void ReleaseTarget();
+		/*__declspec(dllexport)*/ void InitControlBlock(void* __object, bool __bSingleAllocationParam = true, bool __bAlignedAllocationParam = false, bool __bExceptionAllocationParam = false);
+		/*__declspec(dllexport)*/ void ReleaseTarget();
 #endif
 
 		friend class __abi_FTMWeakRefData;

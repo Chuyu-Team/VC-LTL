@@ -76,6 +76,7 @@ namespace Platform { namespace Details {
 		__bExceptionAllocation = __bExceptionAllocationParam;
 	}
 
+#if 0
 #pragma warning(push)
 #pragma warning(disable: 4400)
 	VCCORLIB_API __abi_IUnknown* __stdcall GetWeakReference(const volatile Platform::Object^ const other)
@@ -92,7 +93,9 @@ namespace Platform { namespace Details {
 
 		return reinterpret_cast<__abi_IUnknown*>(ref.Detach());
 	}
+#endif
 
+#if 0
 	VCCORLIB_API
 		__declspec(no_refcount)
 		::Platform::Object^ __stdcall ResolveWeakReference(const ::_GUID& guid, __abi_IUnknown** weakRef)
@@ -108,5 +111,6 @@ namespace Platform { namespace Details {
 
 		return strongRef;
 	}
+#endif
 
 } } // namesapce Platform::Details

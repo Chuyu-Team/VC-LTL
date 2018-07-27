@@ -10,6 +10,7 @@
 
 namespace Platform { namespace Details {
 
+#if 0
 	volatile HANDLE __abi_heap = nullptr;
 	volatile long __abi_heap_objectcount = 0;
 	volatile long __abi_heap_object_counter = 0;
@@ -270,6 +271,7 @@ _Benign_race_end_
 	{
 		return HeapAllocateHelper(size, 0, 0);
 	}
+#endif
 
 	class HeapMemoryHelper
 	{
@@ -418,6 +420,7 @@ _Benign_race_end_
 		return __objectMemory.Detach();
 	}
 
+#if 0
 	VCCORLIB_API void Heap::Free(void* p)
 	{
 		HeapFreeHelper(p, false, p);
@@ -559,4 +562,5 @@ _Benign_race_end_
 
 		LeaveCriticalSection(cs);
 	}
+#endif
 } } // Platform::Details

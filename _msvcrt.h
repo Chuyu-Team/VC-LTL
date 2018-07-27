@@ -22,6 +22,11 @@
 _LTL_PushWarning(1004,"从VC-LTL 4.0 开始MD模式将链接到VC-LTL自身的DLL中，如需静态编译（仅依赖msvcrt.dll），请切换到MT。")
 #endif
 
+#ifdef __cplusplus_winrt
+_LTL_PushWarning(1005, "VC-LTL为了简化支持，当使用 /ZW 参数时编译的程序将无法支持 Windows 8。")
+#endif
+
+
 #ifdef _ATL_XP_TARGETING
 //Windows XP的msvcrt有BUG，内部32位带符号整形。因此外部最大只允许0x3FFFFFFF
 #define _CRT_STDIO_SIZE_MAX 0x3FFFFFFF
