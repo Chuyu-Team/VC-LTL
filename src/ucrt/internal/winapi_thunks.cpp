@@ -457,7 +457,7 @@ _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)
 	//return TRUE;
 //}
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" int WINAPI __acrt_CompareStringEx(
     LPCWSTR          const locale_name,
     DWORD            const flags,
@@ -605,7 +605,7 @@ __if_exists(try_get_GetEnabledXStateFeatures)
 	}
 }
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" int WINAPI __acrt_GetLocaleInfoEx(
 	LPCWSTR const locale_name,
 	LCTYPE  const lc_type,
@@ -634,7 +634,7 @@ extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(LPFILETIME
 }
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" int WINAPI __acrt_GetTimeFormatEx(
     LPCWSTR           const locale_name,
     DWORD             const flags,
@@ -703,7 +703,7 @@ __if_exists(try_get_InitializeCriticalSectionEx)
 	}
 }
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" BOOL WINAPI __acrt_IsValidLocaleName(LPCWSTR const locale_name)
 {
 
@@ -716,7 +716,7 @@ extern "C" BOOL WINAPI __acrt_IsValidLocaleName(LPCWSTR const locale_name)
 }
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" int WINAPI __acrt_LCMapStringEx(
     LPCWSTR          const locale_name,
     DWORD            const flags,
@@ -738,7 +738,7 @@ extern "C" int WINAPI __acrt_LCMapStringEx(
 }
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" int WINAPI __acrt_LCIDToLocaleName(
 	LCID   const locale,
 	LPWSTR const name,
@@ -755,7 +755,7 @@ extern "C" int WINAPI __acrt_LCIDToLocaleName(
 }
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" LCID WINAPI __acrt_LocaleNameToLCID(
 	LPCWSTR const name,
 	DWORD   const flags

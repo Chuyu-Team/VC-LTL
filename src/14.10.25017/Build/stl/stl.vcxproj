@@ -789,6 +789,9 @@
     <ClCompile Include="..\..\stl\future.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\stl\instances.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'!='Redist'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\stl\iomanip.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -879,19 +882,10 @@
     <ClCompile Include="..\..\stl\xalloc.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xcosh.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xdateord.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xdint.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xdnorm.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xdscale.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xdtento.c">
@@ -903,19 +897,7 @@
     <ClCompile Include="..\..\stl\xdunscal.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xexp.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfcosh.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xfdint.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfdnorm.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfdscale.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xfdtento.c">
@@ -930,13 +912,7 @@
     <ClCompile Include="..\..\stl\xferaise.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xfexp.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xfprec.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfsinh.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xfvalues.c">
@@ -945,13 +921,7 @@
     <ClCompile Include="..\..\stl\xgetwctype.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlcosh.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xldint.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xldscale.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xldtento.c">
@@ -963,9 +933,6 @@
     <ClCompile Include="..\..\stl\xldunsca.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlexp.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xlgamma.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -975,19 +942,10 @@
     <ClCompile Include="..\..\stl\xlock.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlpoly.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xlprec.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlsinh.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xlvalues.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xmbtowc.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xmtx.c">
@@ -999,9 +957,6 @@
     <ClCompile Include="..\..\stl\xonce.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xpoly.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xprec.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -1009,9 +964,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xrngdev.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xsinh.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xstod.c">
@@ -1044,12 +996,6 @@
     <ClCompile Include="..\..\stl\xstoxflt.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xstrcoll.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xstrxfrm.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xthrow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -1071,9 +1017,6 @@
     <ClCompile Include="..\..\stl\xwcsxfrm.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xwctomb.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xwstod.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -1090,12 +1033,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\xwstoxfl.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\_tolower.c">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\_toupper.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\stl\locale0_implib.cpp">

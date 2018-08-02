@@ -6,9 +6,14 @@ set libfileroot=%~dp0..\..\lib\arm
 set libfile=%libfileroot%\msvcrt.lib
 
 
-lib /def:"%~dp0msvcrt.def" /out:"%libfile%" /MACHINE:%Platform%
+lib /MACHINE:%Platform% /def:"%~dp0msvcrt.def" /out:"%libfile%"
+lib /MACHINE:%Platform% /def:"%~dp0..\msvcp60.def" /out:"%~dp0msvcp60.lib"
+lib /MACHINE:%Platform% /def:"%~dp0..\msvcrt_form_msvcp60.def" /out:"%~dp0msvcrt_form_msvcp60.lib"
 
+lib "%libfile%" "%~dp0msvcrt_form_msvcp60.lib"
+lib "%libfile%" "%~dp0msvcp60.lib"
 
+del "%libfileroot%\objs" /S /Q /F
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" CreateWeaks  /MACHINE:%Platform% /def:"%~dp0..\msvcrt_forward.def"  /out:"%libfileroot%\objs\msvcrt_forward"
 

@@ -6,10 +6,12 @@ _C_LIB_DECL
  #endif /* defined(MRTDLL) */
 
  #if _DLONG == 0
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _LDtest(long double *px)
 	{	/* categorize *px -- 64-bit */
 	return (_Dtest((double *)px));
 	}
+#endif
 
  #elif _DLONG == 1
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _LDtest(long double *px)

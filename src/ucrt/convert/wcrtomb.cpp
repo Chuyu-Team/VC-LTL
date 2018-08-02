@@ -170,7 +170,7 @@ _LCRT_DEFINE_IAT_SYMBOL(wcrtomb_s_downlevel);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" size_t __cdecl wcrtomb_downlevel(
     char*      const destination,
     wchar_t    const wchar,
@@ -201,7 +201,7 @@ _LCRT_DEFINE_IAT_SYMBOL(wcrtomb_downlevel);
 *******************************************************************************/
 
 /* Helper shared by secure and non-secure functions. */
-
+#if 0
 extern "C" static size_t __cdecl internal_wcsrtombs(
     _Pre_maybenull_ _Post_z_    char*                   destination,
     _Inout_ _Deref_prepost_z_   wchar_t const** const   source,
@@ -289,7 +289,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     return nc;
 }
 
-#ifdef _ATL_XP_TARGETING
+
 extern "C" size_t __cdecl wcsrtombs_downlevel(
     char*           const destination,
     wchar_t const** const source,
@@ -302,6 +302,8 @@ extern "C" size_t __cdecl wcsrtombs_downlevel(
 
 _LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_downlevel);
 
+#else
+#define internal_wcsrtombs wcsrtombs
 #endif
 
 /***
@@ -394,7 +396,7 @@ _LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_s_downlevel);
 #endif
 
 // Converts a wide character into a one-byte character
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
 {
     if (wchar == WEOF)
@@ -412,8 +414,6 @@ extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(wctob_downlevel);
-
-#endif
 
 size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, size_t len, mbstate_t* ps)
 {
@@ -510,3 +510,5 @@ size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, 
         return total_count;
     }
 }
+
+#endif

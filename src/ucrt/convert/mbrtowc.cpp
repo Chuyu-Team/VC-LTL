@@ -48,6 +48,7 @@ using namespace __crt_mbstring;
 *
 *******************************************************************************/
 
+#if 0
 //前后都没有使用到_locale_t特性，因此屏蔽处理
 _Success_(return != 0)
 _Post_satisfies_(*pRetValue <= _String_length_(s))
@@ -188,7 +189,6 @@ static errno_t __cdecl _mbrtowc_s_l(
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
 extern "C" wint_t __cdecl btowc_downlevel(
     int c
     )
@@ -227,7 +227,7 @@ _LCRT_DEFINE_IAT_SYMBOL(btowc_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" size_t __cdecl mbrlen_downlevel(
     const char *s,
     size_t n,
@@ -258,7 +258,7 @@ _LCRT_DEFINE_IAT_SYMBOL(mbrlen_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
+#if 0
 extern "C" size_t __cdecl mbrtowc_downlevel(
     wchar_t *dst,
     const char *s,
@@ -300,6 +300,7 @@ _LCRT_DEFINE_IAT_SYMBOL(mbrtowc_downlevel);
 
 /* Helper function shared by the secure and non-secure versions. */
 
+#if 0
 _Success_(return == 0)
 static size_t __cdecl _mbsrtowcs_helper(
     _Out_writes_opt_z_(n)               wchar_t *wcs,
@@ -368,7 +369,6 @@ static size_t __cdecl _mbsrtowcs_helper(
     return nwc;
 }
 
-#ifdef _ATL_XP_TARGETING
 /***
 *errno_t mbsrtowcs_s() - Convert multibyte char string to wide char string.
 *
@@ -405,6 +405,8 @@ extern "C" size_t __cdecl mbsrtowcs_downlevel(
 
 _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_downlevel);
 
+#else
+#define _mbsrtowcs_helper mbsrtowcs
 #endif
 
 /***
@@ -494,6 +496,7 @@ _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_s_downlevel);
 
 #endif
 
+#if 0
 size_t __cdecl __crt_mbstring::__mbrtowc_utf8(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps)
 {
     static_assert(sizeof(wchar_t) == 2, "wchar_t is assumed to be 16 bits");
@@ -615,3 +618,4 @@ size_t __cdecl __crt_mbstring::__mbsrtowcs_utf8(wchar_t* dst, const char** src, 
         return total_count;
     }
 }
+#endif

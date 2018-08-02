@@ -88,11 +88,11 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcscoll (
         else
         {
             //locale_name = ploc->_LocaleName;
-			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
+			_Locale = ploc->_Hand;
         }
 
-		if (/*locale_name == NULL*/_Locale == 0)
-		{
+        if (/*locale_name == NULL*/_Locale==0)
+        {
             int ans;
             ans = _Wmemcmp(_string1, _string2, n1 < n2 ? n1 : n2);
             ret=(ans != 0 || n1 == n2 ? ans : n1 < n2 ? -1 : +1);

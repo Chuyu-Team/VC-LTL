@@ -5,6 +5,7 @@ _C_STD_BEGIN
 _C_LIB_DECL
  #endif /* defined(MRTDLL) */
 
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double *px)
 	{	/* categorize *px */
 	_Dval *ps = (_Dval *)(char *)px;
@@ -18,6 +19,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double *px)
 	else
 		return (0);
 	}
+#endif
 
 unsigned short *_Plsw(double *px)
 	{	/* get pointer to lsw */

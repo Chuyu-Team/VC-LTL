@@ -369,101 +369,11 @@ __forceinline int __cdecl __crtCompareStringA_Current
 #define __crtCompareStringA(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page) __crtCompareStringA_Current(NULL,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2, _Code_page)
 #define __acrt_CompareStringA __crtCompareStringA_Current
 
-__declspec(dllimport) int __cdecl __crtCompareStringW(/*Unknow*/);
 
-typedef int (__cdecl * __crtCompareStringW_WinXP)
-(
-    _In_ LCID     _Locale,
-    _In_ DWORD    _DwCmpFlags,
-    _In_count_(_CchCount1) LPCWSTR  _LpString1,
-    _In_ int      _CchCount1,
-    _In_count_(_CchCount2) LPCWSTR  _LpString2,
-    _In_ int      _CchCount2
-);
-
-typedef int (__cdecl * __crtCompareStringW_Vista)
-(
-	_In_opt_ _locale_t _Plocinfo,
-	_In_ LCID     _Locale,
-	_In_ DWORD    _DwCmpFlags,
-	_In_count_(_CchCount1) LPCWSTR  _LpString1,
-	_In_ int      _CchCount1,
-	_In_count_(_CchCount2) LPCWSTR  _LpString2,
-	_In_ int      _CchCount2
-);
-
-__forceinline int __cdecl __crtCompareStringW_Current
-(
-	_In_ LCID     _Locale,
-	_In_ DWORD    _DwCmpFlags,
-	_In_count_(_CchCount1) LPCWSTR  _LpString1,
-	_In_ int      _CchCount1,
-	_In_count_(_CchCount2) LPCWSTR  _LpString2,
-	_In_ int      _CchCount2
-)
-{
-#ifdef _ATL_XP_TARGETING
-	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
-	{
-		return ((__crtCompareStringW_WinXP)__crtCompareStringW)(_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
-	}
-	else
-#endif
-	{
-		return ((__crtCompareStringW_Vista)__crtCompareStringW)(NULL,_Locale, _DwCmpFlags, _LpString1, _CchCount1, _LpString2, _CchCount2);
-	}
-}
-
-#define __crtCompareStringW __crtCompareStringW_Current
-#define __acrt_CompareStringW __crtCompareStringW_Current
-
-__declspec(dllimport) int __cdecl __crtLCMapStringW(/*Unknow*/);
-
-typedef int (__cdecl * __crtLCMapStringW_WinXP)
-(
-    _In_ LCID _Locale,
-    _In_ DWORD _DWMapFlag,
-    _In_count_(_CchSrc) LPCWSTR _LpSrcStr,
-    _In_ int _CchSrc,
-    _Out_opt_cap_(_CchDest) LPWSTR _LpDestStr,
-    _In_ int _CchDest
-);
-
-typedef int (__cdecl * __crtLCMapStringW_Vista)
-(
-	_In_opt_ _locale_t _Plocinfo,
-	_In_ LCID _Locale,
-	_In_ DWORD _DWMapFlag,
-	_In_count_(_CchSrc) LPCWSTR _LpSrcStr,
-	_In_ int _CchSrc,
-	_Out_opt_cap_(_CchDest) LPWSTR _LpDestStr,
-	_In_ int _CchDest
-);
-
-__forceinline int __cdecl __crtLCMapStringW_Current
-(
-	_In_ LCID _Locale,
-	_In_ DWORD _DWMapFlag,
-	_In_count_(_CchSrc) LPCWSTR _LpSrcStr,
-	_In_ int _CchSrc,
-	_Out_opt_cap_(_CchDest) LPWSTR _LpDestStr,
-	_In_ int _CchDest
-)
-{
-#ifdef _ATL_XP_TARGETING
-	if (__LTL_GetOsMinVersion() < MakeMiniVersion(6, 0))
-	{
-		return ((__crtLCMapStringW_WinXP)__crtLCMapStringW)(_Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
-	}
-	else
-#endif
-	{
-		return ((__crtLCMapStringW_Vista)__crtLCMapStringW)(NULL, _Locale, _DWMapFlag, _LpSrcStr, _CchSrc, _LpDestStr, _CchDest);
-	}
-}
-
-#define __crtLCMapStringW __crtLCMapStringW_Current
-#define __acrt_LCMapStringW __crtLCMapStringW_Current
+#define __crtCompareStringW CompareStringW
+#define __acrt_CompareStringW CompareStringW
+#define __crtLCMapStringW   LCMapStringW
+#define __acrt_LCMapStringW LCMapStringW
 
 __declspec(dllimport) int __cdecl __crtLCMapStringA(/*Unknow*/);
 

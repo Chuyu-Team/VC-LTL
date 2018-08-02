@@ -1,5 +1,16 @@
 
 [Symbols]
+
+;WinXP不存在此函数，从msvcp60.dll导入
+wcsrtombs
+wctob
+wcrtomb
+btowc
+mbrlen
+mbrtowc
+mbsrtowcs
+
+
 ;WinXP不存在_invalid_parameter
 _invalid_parameter=_invalid_parameter_advanced
 

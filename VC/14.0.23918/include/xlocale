@@ -2214,7 +2214,7 @@ protected:
 		if (_Ctype._Delfl)
 			_CSTD free((void *)_Ctype._Table);
 
-		_CSTD free(_Ctype._LocaleName);
+		//_CSTD free(_Ctype._LocaleName);
 		}
 
 	void __CLR_OR_THIS_CALL _Init(const _Locinfo& _Lobj)
@@ -2504,7 +2504,7 @@ protected:
 		else if (_Ctype._Delfl < 0)
 			delete[] _Ctype._Table;
 
-		_CSTD free(_Ctype._LocaleName);
+		//_CSTD free(_Ctype._LocaleName);
 		}
 
 	virtual _Elem __CLR_OR_THIS_CALL do_tolower(_Elem _Ch) const
@@ -2672,7 +2672,7 @@ protected:
 		if (_Ctype._Delfl)
 			_CSTD free((void *)_Ctype._Table);
 
-		_CSTD free(_Ctype._LocaleName);
+		//_CSTD free(_Ctype._LocaleName);
 		}
 
 	void __CLR_OR_THIS_CALL _Init(const _Locinfo& _Lobj)
@@ -2896,7 +2896,7 @@ protected:
 		if (_Ctype._Delfl)
 			_CSTD free((void *)_Ctype._Table);
 
-		_CSTD free(_Ctype._LocaleName);
+		//_CSTD free(_Ctype._LocaleName);
 		}
 
 	void __CLR_OR_THIS_CALL _Init(const _Locinfo& _Lobj)

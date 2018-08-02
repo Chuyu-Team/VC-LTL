@@ -885,12 +885,6 @@
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\wctrans.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\wctype.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\_ctype.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
@@ -933,10 +927,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\locale\GetStringTypeA.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\locale\lcidtoname_downlevel.cpp">
-      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\setmode.cpp">

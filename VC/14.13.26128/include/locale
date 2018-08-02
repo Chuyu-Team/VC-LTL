@@ -71,7 +71,7 @@ public:
 protected:
 	__CLR_OR_THIS_CALL ~collate() _NOEXCEPT
 		{	// destroy the object
-		_CSTD free(_Coll._LocaleName);
+		//_CSTD free(_Coll._LocaleName);
 		}
 
 protected:

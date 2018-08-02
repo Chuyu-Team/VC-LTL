@@ -14,10 +14,9 @@
 #include <limits.h>
 #include <locale.h>
 #include <stdlib.h>
-//#include <awint.h>
+#include <awint.h>
 #include <internal_shared.h>
 #include <xlocinfo.h>   /* for _Collvec, _Wcsxfrm */
-#include <winapi_thunks.h>
 
 /***
 *size_t _Wcsxfrm() - Transform a string using locale information
@@ -76,11 +75,11 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm (
         else
         {
             //locale_name = ploc->_LocaleName;
-			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
+			_Locale = ploc->_Hand;
         }
 
         //if (locale_name == NULL)
-		if(_Locale==0)
+		if (_Locale == 0)
         {
             if (_n2 <= _n1)
             {

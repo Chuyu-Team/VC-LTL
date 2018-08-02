@@ -42,12 +42,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\c32rtomb.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\wctrans.cpp">
-      <Filter>ucrt</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\wctype.cpp">
-      <Filter>ucrt</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\convert\_ctype.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
@@ -106,9 +100,6 @@
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\env\getpath.cpp">
-      <Filter>ucrt\WinXP</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\locale\lcidtoname_downlevel.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\stdlib\lfind_s.cpp">

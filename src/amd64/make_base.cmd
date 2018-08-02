@@ -7,12 +7,18 @@ set libfile=%libfileroot%\msvcrt.lib
 
 copy "%~dp0msvcrt.lib" "%libfile%" /y
 
-lib /def:"%~dp0msvcrt.def" /out:"%~dp0msvcrtdll.lib"
+lib /MACHINE:%Platform% /def:"%~dp0msvcrt.def" /out:"%~dp0msvcrtdll.lib"
+lib /MACHINE:%Platform% /def:"%~dp0..\msvcp60.def" /out:"%~dp0msvcp60.lib"
+lib /MACHINE:%Platform% /def:"%~dp0..\msvcrt_form_msvcp60.def" /out:"%~dp0msvcrt_form_msvcp60.lib"
+lib /MACHINE:%Platform% /def:"%~dp0..\msvcrt_form_msvcp60_WinXP.def" /out:"%~dp0msvcrt_form_msvcp60_WinXP.lib"
 
 lib "%libfile%" "%~dp0msvcrtdll.lib"
-
+lib "%libfile%" "%~dp0msvcrt_form_msvcp60.lib"
+lib "%libfile%" "%~dp0msvcp60.lib"
 
 echo 删除msvcrt.dll导出符号
+
+del "%libfileroot%\objs" /S /Q /F
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" RemoveAllObj "%libfile%"
 
@@ -86,6 +92,7 @@ lib "%tagetlibfile%" "%~dp0ntdlllite.lib"
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_light.def" msvcrt.dll msvcrt2.dll
 lib "%tagetlibfile%" /remove:msvcrt2.dll
+lib "%tagetlibfile%" "%~dp0msvcrt_form_msvcp60_WinXP.lib"
 
 ::生成msvcrt_advanced.lib for vista
 set tagetlibfile=%libfileroot%\Vista\Advanced\msvcrt_Platform.lib
@@ -105,6 +112,7 @@ lib "%tagetlibfile%" "%~dp0ntdlllite.lib"
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_advanced.def" msvcrt.dll msvcrt2.dll
 lib "%tagetlibfile%" /remove:msvcrt2.dll
+lib "%tagetlibfile%" "%~dp0msvcrt_form_msvcp60_WinXP.lib"
 
 
 ::lib "%libfile%" "%~dp0ntdlllite.lib"

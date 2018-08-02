@@ -1,6 +1,7 @@
 /* _FDtest function -- IEEE 754 version */
 #include "xmath.h"
 
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _FDtest(float *px)
 	{	/* categorize *px */
 	_Fval *ps = (_Fval *)(char *)px;
@@ -13,6 +14,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _FDtest(float *px)
 	else
 		return (0);
 	}
+#endif
 
 unsigned short *_FPlsw(float *px)
 	{	/* get pointer to lsw */

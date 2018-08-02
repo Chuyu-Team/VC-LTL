@@ -141,19 +141,10 @@
     <ClCompile Include="..\..\stl\xalloc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xcosh.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xdateord.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xdint.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xdnorm.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xdscale.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xdtento.c">
@@ -165,19 +156,7 @@
     <ClCompile Include="..\..\stl\xdunscal.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xexp.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfcosh.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xfdint.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfdnorm.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfdscale.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xfdtento.c">
@@ -192,13 +171,7 @@
     <ClCompile Include="..\..\stl\xferaise.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xfexp.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xfprec.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xfsinh.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xfvalues.c">
@@ -207,13 +180,7 @@
     <ClCompile Include="..\..\stl\xgetwctype.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlcosh.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xldint.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xldscale.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xldtento.c">
@@ -225,9 +192,6 @@
     <ClCompile Include="..\..\stl\xldunsca.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlexp.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xlgamma.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -237,19 +201,10 @@
     <ClCompile Include="..\..\stl\xlock.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlpoly.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xlprec.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xlsinh.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xlvalues.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xmbtowc.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xmtx.c">
@@ -261,9 +216,6 @@
     <ClCompile Include="..\..\stl\xonce.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xpoly.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xprec.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -271,9 +223,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xrngdev.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xsinh.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\xstod.c">
@@ -306,12 +255,6 @@
     <ClCompile Include="..\..\stl\xstoxflt.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xstrcoll.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\xstrxfrm.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xthrow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -333,9 +276,6 @@
     <ClCompile Include="..\..\stl\xwcsxfrm.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\xwctomb.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\xwstod.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -354,12 +294,6 @@
     <ClCompile Include="..\..\stl\xwstoxfl.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\stl\_tolower.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\stl\_toupper.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\stl\vector_algorithms.cpp">
       <Filter>objs</Filter>
     </ClCompile>
@@ -376,6 +310,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\stl\special_math.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\instances.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

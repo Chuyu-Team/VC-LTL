@@ -12,9 +12,8 @@
 #include <string.h>
 #include <locale.h>
 #include <errno.h>
-//#include <awint.h>
+#include <awint.h>
 #include <xlocinfo.h>   /* for _Collvec, _Wcscoll */
-#include <winapi_thunks.h>
 
 /***
 *static int _Wmemcmp(s1, s2, n) - compare wchar_t s1[n], s2[n]
@@ -89,7 +88,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcscoll (
         else
         {
             //locale_name = ploc->_LocaleName;
-			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
+			_Locale = ploc->_Hand;
         }
 
 		if (/*locale_name == NULL*/_Locale == 0)

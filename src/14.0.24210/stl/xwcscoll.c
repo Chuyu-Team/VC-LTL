@@ -88,7 +88,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcscoll (
         else
         {
             //locale_name = ploc->_LocaleName;
-			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
+			_Locale = ploc->_Hand;
         }
 
         if (/*locale_name == NULL*/_Locale==0)

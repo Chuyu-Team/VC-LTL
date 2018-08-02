@@ -1,8 +1,7 @@
 /* _Towupper -- convert wchar_t to upper case for Microsoft */
 #include <xlocinfo.h>
 #include <wchar.h>
-//#include <awint.h>
-#include <winapi_thunks.h>
+#include <awint.h>
 
 _C_STD_BEGIN
 _CRTIMP2_PURE wchar_t __CLRCALL_PURE_OR_CDECL _Towupper(wchar_t _Ch,
@@ -12,12 +11,12 @@ _CRTIMP2_PURE wchar_t __CLRCALL_PURE_OR_CDECL _Towupper(wchar_t _Ch,
 
 	if (_Ch == WEOF)
 		;
-	else if (_Ctype->_LocaleName == NULL && _Ch < 256)
+	else if (_Ctype->_Hand == 0 && _Ch < 256)
 		{	/* handle ASCII character in C locale */
 		if (L'a' <= _Ch && _Ch <= L'z')
 			_Res = (wchar_t)(_Ch - L'a' + L'A');
 		}
-	else if (__crtLCMapStringW(__acrt_LocaleNameToLCID(_Ctype->_LocaleName,0), LCMAP_UPPERCASE,
+	else if (__crtLCMapStringW(_Ctype->_Hand, LCMAP_UPPERCASE,
 			&_Ch, 1, &_Res, 1) == 0)
 		_Res = _Ch;
 	return (_Res);

@@ -75,11 +75,11 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm (
         else
         {
             //locale_name = ploc->_LocaleName;
-			_Locale = __acrt_LocaleNameToLCID(ploc->_LocaleName, 0);
+			_Locale = ploc->_Hand;
         }
 
         //if (locale_name == NULL)
-		if(_Locale==0)
+		if (_Locale == 0)
         {
             if (_n2 <= _n1)
             {
