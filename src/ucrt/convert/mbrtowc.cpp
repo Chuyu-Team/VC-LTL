@@ -496,7 +496,6 @@ _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_s_downlevel);
 
 #endif
 
-#if 0
 size_t __cdecl __crt_mbstring::__mbrtowc_utf8(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps)
 {
     static_assert(sizeof(wchar_t) == 2, "wchar_t is assumed to be 16 bits");
@@ -618,4 +617,3 @@ size_t __cdecl __crt_mbstring::__mbsrtowcs_utf8(wchar_t* dst, const char** src, 
         return total_count;
     }
 }
-#endif
