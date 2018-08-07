@@ -271,6 +271,9 @@
     <MASM Include="..\..\..\amd64\exception.asm">
       <Filter>源文件\ltl\objs\amd64</Filter>
     </MASM>
+    <MASM Include="..\..\i386\ehprolog.asm">
+      <Filter>源文件\vc\objs\x86</Filter>
+    </MASM>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\arm64\exception.asm">
