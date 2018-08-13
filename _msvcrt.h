@@ -22,17 +22,15 @@
 _LTL_PushWarning(1004,"从VC-LTL 4.0 开始MD模式将链接到VC-LTL自身的DLL中，如需静态编译（仅依赖msvcrt.dll），请切换到MT。")
 #endif
 
-#ifdef __cplusplus_winrt
-_LTL_PushWarning(1005, "VC-LTL为了简化支持，当使用 /ZW 参数时编译的程序将无法支持 Windows 8。")
-#endif
-
-
 #ifdef _ATL_XP_TARGETING
 //Windows XP的msvcrt有BUG，内部32位带符号整形。因此外部最大只允许0x3FFFFFFF
 #define _CRT_STDIO_SIZE_MAX 0x3FFFFFFF
 #else
 #define _CRT_STDIO_SIZE_MAX _CRT_SIZE_MAX
 #endif
+
+//VC-LTL内核版本号，用于处理兼容性问题
+#define _LTL_Core_Version 4
 
 #include <LTL_config.h>
 #include <crtversion.h>
@@ -82,6 +80,10 @@ _LTL_PushWarning(1003, "VC-LTL 2.0 开始ltl超越模式已经弃用，此选项
 #ifdef _NO__LTL_Initialization
 _LTL_PushWarning(1003, "VC-LTL 4.0 开始不在允许禁用VC-LTL初始化，此选项将被忽略。")
 #endif //!_NO__LTL_Initialization
+
+#if defined __cplusplus_winrt && _CRT_NTDDI_MIN <= /*NTDDI_WIN8*/0x06020000
+_LTL_PushWarning(1005, "VC-LTL为了简化支持，当使用 /ZW 参数时编译的程序将无法支持 Windows 8。")
+#endif
 
 _CRT_BEGIN_C_HEADER
 extern unsigned long __cdecl __LTL_GetOsMinVersion();
