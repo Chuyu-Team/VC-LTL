@@ -52,7 +52,7 @@ from the pure C source code.
 |  ConcRT  | 100%                      | 100%       | 100%      | libconcrt.lib, concrt.lib
 |  ATL     | 100%                      | 100%       | 100%      | -
 |  MFC     | No Support                | No Support | 100%      | -
-|  WinRT   | No Support                | No Support | 100%      | -
+|  WinRT   |  -                        | 100%       | 100%      | vccorlib.lib (Windows 8.1 and higher only)
 |  AMP     |  -                        |  -         |  -        | -
 |  OpenMP  |  -                        |  -         |  -        | -
 
@@ -95,7 +95,7 @@ Copy `VC-LTL helper for Visual Studio.props` to your project, then open the Prop
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/AddShared.png)
 
 #### 3.2.2. Configure Project Properties
-* C/C++ - Code Generation -`Runtime Library` adjust to `Multi-threaded DLL (/MT)`
+* C/C++ - Code Generation -`Runtime Library` adjust to `Multi-threaded (/MT)`
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationProject.png)
 

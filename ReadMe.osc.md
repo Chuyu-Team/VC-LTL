@@ -83,7 +83,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
 
 #### 3.2.2. 配置工程属性
-* C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MT)】
+* C/C++ - 代码生成 -【运行库】调整为【多线程 (/MT)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
