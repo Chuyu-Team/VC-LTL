@@ -16,7 +16,6 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 
 * GitHub：[github.com/Chuyu-Team/VC-LTL（英文）](https://github.com/Chuyu-Team/VC-LTL)    
 * 码云：[gitee.com/Chuyu-Team/VC-LTL（中文）](https://gitee.com/Chuyu-Team/VC-LTL)    
-* 网盘：[现成使用VC-LTL编译的库，比如QT等](https://pan.baidu.com/s/1thlI5X8P5YwC-3rbO60hOw#list/path=%2F使用VC-LTL编译的库)    
 * QQ群：[633710173](https://shang.qq.com/wpa/qunwpa?idkey=21d51d8ad1d77b99ea9544b399e080ec347ca6a1bc04267fb59cebf22644a42a)
 
 ### 1.1. 原理
@@ -37,11 +36,12 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 
 |  模块  | XP模式              | Vista模式 | UCRT模式 | 相关文件 
 |  ----  | --------            | --------- | -------- | --------
-|   CRT  | 88.845%             | 91.911%   |   100%   | ltl.lib，msvcrt.lib，msvcrt_Platform.lib，ucrt.lib，vc.lib
-|   STL  | 100.1%（超标准支持）| 100%      |   100%   | ltlcprt.lib，ltlcprtxp.lib
-| ConcRT | 100%                | 100%      |   100%   | libconcrt.lib，libconcrtxp.lib
+|   CRT  | 88.845%             | 91.911%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
+|   STL  | 100.1%（超标准支持）| 100%      |   100%   | libcpmt.lib、msvcprt.lib
+| ConcRT | 100%                | 100%      |   100%   | libconcrt.lib、concrt.lib
 |   ATL  | 100%                | 100%      |   100%   | -
-|   MFC  | 不支持              | 不支持    |    ?     | -
+|   MFC  | 不支持              | 不支持    |   100%   | -
+| WinRT  |   -                 | 100%      |    -     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
 |   AMP  |   -                 |   -       |    -     | -
 | OpenMP |   -                 |   -       |    -     | -
 
@@ -62,9 +62,9 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 | Windows XP、Windows Server 2003                     | √  | √  | -   | -
 | Windows Vista、Windows Server 2008                  | √  | √  | -   | -
 | Windows 7、Windows Server 2008 R2                   | √  | √  | -   | -
-| Windows 8、Windows Server 2012、Windows RT          | √  | √  | √（需要安装[KB2999226](http://support.microsoft.com/kb/2999226)）  | -
-| Windows 8.1、Windows Server 2012 R2、Windows RT 8.1 | √  | √  | √（需要安装[KB2999226](http://support.microsoft.com/kb/2999226)）  | -
-| Windows 10、Windows Server 2016                     | √  | √  | √ | √
+| Windows 8、Windows Server 2012、Windows RT          | √  | √  | √  | -
+| Windows 8.1、Windows Server 2012 R2、Windows RT 8.1 | √  | √  | √  | -
+| Windows 10、Windows Server 2016                     | √  | √  | √  | √
 
 > 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
 
@@ -83,7 +83,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
 
 #### 3.2.2. 配置工程属性
-* C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MD)】
+* C/C++ - 代码生成 -【运行库】调整为【多线程 DLL (/MT)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
@@ -107,7 +107,7 @@ add_subdirectory(src)
 
 #### 3.3.2. 调整配置工程
 
-> 务必确保使用`/MD`编译代码。如需支持XP，请修改`VC-LTL helper for cmake.cmake`启用 `set(SupportWinXP "true")` 即可。
+> 务必确保使用`/MT`编译代码。如需支持XP，请修改`VC-LTL helper for cmake.cmake`启用 `set(SupportWinXP "true")` 即可。
 
 ### 3.4. 在NMake/纯CL中使用VC-LTL
 
@@ -124,7 +124,7 @@ nmake /f Test.mak
 ```
 #### 3.4.2. 配置工程属性
 
-> 务必确保使用`/MD`编译代码。如需支持XP，请修改`VC-LTL helper for nmake.cmd`启用 `set SupportWinXP=true`，并且需要自行调整连接器最低系统支持为`5.01`（WinXP x86）或者`5.02`（WinXP x64）。
+> 务必确保使用`/MT`编译代码。如需支持XP，请修改`VC-LTL helper for nmake.cmd`启用 `set SupportWinXP=true`。
 
 
 ### 3.5. 重新编译（仅Release）
@@ -132,7 +132,7 @@ nmake /f Test.mak
 
 如果正确引用VC-LTL，那么 会在生成时输出：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`。
 
-> 使用VC-LTL编译时必须采用`/MD`编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
+> 使用VC-LTL编译时必须采用`/MT`编译，并且所有依赖的静态库也必须使用VC-LTL重新编译。
 
 ![AppBuildByVC-LTL](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/AppWithLTL.png)
 
@@ -195,26 +195,136 @@ nmake /f Test.mak
 
 ## 更新日志
 
-### 3.1.0.1 - 添加Clang支持（2018-06-18 13:13）
-* 新增[Fea 34](https://github.com/Chuyu-Team/VC-LTL/issues/34)，添加Clang with Microsoft CodeGen、Clang 3.7 with Microsoft CodeGen、Clang-LLVM工具集支持（感谢 hzqst）。
-* 解决Bug，非中文代码页corecrt.h报告 C4828警告（感谢 临渊羡鱼乎）。
-* 解决[Bug 35](https://github.com/Chuyu-Team/VC-LTL/issues/35)，调用vsnprintf时触发警告C4389: “==”: 有符号/无符号不匹配（感谢  zhaooptimus）
-* 解决Bug，减少amd64程序调用_hypotf函数时的二进制体积。
-* 解决Bug，解决VS15.7 special_math无法使用问题
+### 1.0.0.1 2016-05-23 13:42
+* 解决C++异常无法使用问题。
 
 
-### 3.0.0.3 - 儿童节专版（2018-05-31 17:07）
-* 解决[Bug 32](https://github.com/Chuyu-Team/VC-LTL/issues/32)，链接时找不到符号`__p__fmode`（感谢 augustheart）。
-* 更新许可。
+### 1.0.0.2 2016-06-14 12:52
+* 解决C编译不通过问题。
 
 
-### 3.0.0.2 - 添加Vistual Studio 2017 15.7支持（2018-05-18 21:07）
-* 新增Fea，添加VC 14.0.24234以及14.14.26428支持。
-* 新增Fea，添加UCRT 10.0.17134.0支持。
-* 新增Fea，添加Spectre缓解库支持。
-* 解决Bug，找不到gets符号问题（感谢 npc）。
+### 1.0.0.3 2016-11-28 12:54
+* 改进对C工程的兼容性。
 
-> VC-LTL本次从仓库中剔除了lib文件，VC-LTL用户请下载[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)，然后再使用VC-LTL编译代码。
+
+### 1.0.0.4 - 公众第一版（2017-03-06 16:15）
+* 与Dism++彻底分离，方便以后与Dism++共享代码。
+
+
+### 1.0.0.5 - 新增Visual Studio 2017支持（2017-03-16 20:53）
+* 新增VC 2017支持。
+
+
+### 1.0.0.6 - 优化引用方式（2017-03-18 13:46）
+* 优化文件引用。
+
+
+### 1.0.0.7 - 初步添加Windows XP支持（2017-04-22 19:26）
+* 初步添加Windows XP支持。
+* 添加C++异常支持。
+* 添加/GS特性支持。
+* 添加/guard:cf支持。
+* VC140库升级到Vistual Studio 2015 Update3。
+
+
+### 1.0.0.8 - 简化VC-LTL使用（2017-04-25 20:37）
+* 简化库引用方式。
+* 更新14393 ucrt到最新版（2017-01-05版）。
+* 添加15063 ucrt支持。
+
+
+### 1.0.0.9 - 添加C++异常支持（2017-05-26 14:46）
+* 改进Windows XP支持。
+* 优化库结构裁剪ltl库体积。
+* 解决使用自定义异常导致程序编译不通过问题。
+* 调整`*_p`系列函数定义，以免使用`*_p`系列函数时编译不通过。
+* 解决使用浮点除法时导致编译不通过问题。
+
+
+### 1.0.0.10 - 改进对Windows XP的支持（2017-07-28 20:28）
+* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）。
+* 解决[Bug 8](https://github.com/Chuyu-Team/VC-LTL/issues/8)，修复typeid功能无法使用问题（感谢 HwangBae）。
+* 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积。
+* 解决Bug，修复无法使用`__argc`、`__argv`、`__wargv`、`_environ`、`_wenviron`全局变量问题（感谢 亮叔叔）。
+* 解决微软Bug，修复使用ATL库的程序不支持XP RTM问题。
+
+
+### 1.0.0.11 - 解决lib依赖问题（2017-08-23 19:00）
+* 解决Bug，使用_difftime64时Windows XP无法运行。
+* 解决Bug，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）。
+* 更新VC141头文件以及实现，全部同步到最新14.11。
+
+
+### 1.0.0.12 - 解决某些函数无法使用问题（2017-09-15 13:33）
+* 解决Bug，使用strcat_s时在Windows XP中提示找不到指定符号（感谢 stsm85）。
+* 解决Bug，解决SSE2除法导致编译不通过问题（感谢 stsm85）。
+* 解决Bug，解决wcstoll、vsnprintf、rand_s、strtoll无法使用问题（感谢 stsm85）。
+* 代码调整，消除所有VC-LTL编译警告，强迫症患者福音。
+
+> 本次更新后，FastCopy、winpck相关程序直接可以使用VC-LTL编译。
+
+
+### 1.0.0.13 - 新增 Windows 10 16299 UCRT支持（2017-10-11 14:00）
+* 解决Bug，atanh、acosh、asinh无法使用问题（感谢 stsm85）。
+* 新增Windows 10 16299 UCRT支持。
+* 移除Windows 10 14393 UCRT支持。
+
+> 16299已经发布，因此移除老版本14393支持。相关项目请迁徙到15063或者最新16299。
+
+
+### 2.0.0.1 - 新增C++类库支持（2017-10-29 22:23）
+* 新增iostream、stringstream支持。
+* 解决使用_fstat32、_fstat32i64、_fstat64i32、_stat32、_stat32i64、_stat64i32、_wstat32、_wstat32i64、_wstat64i32导致编译不通过问题。
+* 修正`__acrt_iob_func`始终返回输入流问题。
+* 解决 type_info operator != 功能无法使用问题（感谢 sonyps5201314）。
+* 解决_daylight，_dstbias，_timezone，_tzname无法使用问题（感谢 sonyps5201314）。
+* 解决32位 SSE高精度数据函数无法使用问题，比如_libm_sse2_tan_precise，_libm_sse2_sqrt_precise，_libm_sse2_sin_precise（感谢 stsm85）。
+
+
+### 2.0.0.2 - 扩充对C++类库的支持（2017-11-05 14:14）
+* 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持。
+* 为Windows XP添加 _time32、_fseeki64静态实现。
+* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）。
+* 新增C++类，mutex、thread、xtime、xonce支持。
+* 优化编译方式，消除无意义符号，减少ltl库体积。
+
+
+### 2.0.0.3 - 补充大量XP静态实现（2017-11-18 14:18）
+* Vista编译模式，CRT函数覆盖率达到90%以上。
+* XP编译模式，CRT函数覆盖率达到80%以上。
+* 简化注册表引用方式。
+* 添加std::thread支持。
+
+
+### 2.0.0.4 - 全面覆盖STL、ConcRT（2017-12-03 20:40）
+* 全面覆盖STL、ConcRT库，让C++如鱼得水，尽情使用STL。
+* 全新的weak别名转发技术，实现零jmp解决新老CRT命名冲突。
+
+
+### 2.0.0.5 - 增强C++ 17支持（2017-12-10 20:56）
+* 新增C++ 17 align new/delete支持。
+* 解决兼容WinXP时可能出现的ntdll.lib依赖失败以及某些函数转发切换到weak别名技术。
+
+> 本次更新主要添加对Vistual Studio 2017 15.5以及更高版本新增的C++ 17功能支持。
+
+
+### 2.0.0.6 - 2018新春贺岁版（2018-01-17 17:15）
+* 添加Vistual Studio 2017 15.5新增函数支持。
+* 新增Shared.props改进属性表引用灵活性。
+* 新增VC-LTL轻量模式以及高级模式支持（修改Shared.props可以调整模式）。
+* 继续扩充CRT函数支持。
+
+
+### 2.0.0.7 - 重新规范VC-LTL（2018-03-06 17:17）
+* 重新整理VC-LTL，尽可能减少对原版改动。
+* 解决一些Bug（感谢 亮亮、layerfsd、waiting4love）。
+
+
+### 2.0.0.8 - 累计BUG修复以及适配新版本（2018-03-23 14:58）
+* 解决一些潜在找不到符号问题以及链接失败问题（感谢 Too Simple）。
+* 修正__crtLCMapString相关字符串操作兼容性问题（感谢 Too Simple）。
+* 解决_getptd_noexit在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题（感谢 亮亮）。
+* 添加最新Vistual Studio 2017 15.6支持。
 
 
 ### 3.0.0.1 - 改进平台支持（2018-04-26 18:48）
@@ -228,132 +338,36 @@ nmake /f Test.mak
 * 新增Fea，全面支持ARM、ARM64支持。
 
 
-### 2.0.0.8 - 累计BUG修复以及适配新版本（2018-03-23 14:58）
-* 解决一些潜在找不到符号问题以及链接失败问题（感谢 Too Simple）。
-* 修正__crtLCMapString相关字符串操作兼容性问题（感谢 Too Simple）。
-* 解决_getptd_noexit在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题（感谢 亮亮）。
-* 添加最新Vistual Studio 2017 15.6支持。
+### 3.0.0.2 - 添加Vistual Studio 2017 15.7支持（2018-05-18 21:07）
+* 新增Fea，添加VC 14.0.24234以及14.14.26428支持。
+* 新增Fea，添加UCRT 10.0.17134.0支持。
+* 新增Fea，添加Spectre缓解库支持。
+* 解决Bug，找不到gets符号问题（感谢 npc）。
+
+> VC-LTL本次从仓库中剔除了lib文件，VC-LTL用户请下载[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)，然后再使用VC-LTL编译代码。
 
 
-### 2.0.0.7 - 重新规范VC-LTL（2018-03-06 17:17）
-* 重新整理VC-LTL，尽可能减少对原版改动。
-* 解决一些Bug（感谢 亮亮、layerfsd、waiting4love）。
+### 3.0.0.3 - 儿童节专版（2018-05-31 17:07）
+* 解决[Bug 32](https://github.com/Chuyu-Team/VC-LTL/issues/32)，链接时找不到符号`__p__fmode`（感谢 augustheart）。
+* 更新许可。
 
 
-### 2.0.0.6 - 2018新春贺岁版（2018-01-17 17:15）
-* 添加Vistual Studio 2017 15.5新增函数支持。
-* 新增Shared.props改进属性表引用灵活性。
-* 新增VC-LTL轻量模式以及高级模式支持（修改Shared.props可以调整模式）。
-* 继续扩充CRT函数支持。
+### 3.1.0.1 - 添加Clang支持（2018-06-18 13:13）
+* 新增[Fea 34](https://github.com/Chuyu-Team/VC-LTL/issues/34)，添加Clang with Microsoft CodeGen、Clang 3.7 with Microsoft CodeGen、Clang-LLVM工具集支持（感谢 hzqst）。
+* 解决Bug，非中文代码页corecrt.h报告 C4828警告（感谢 临渊羡鱼乎）。
+* 解决[Bug 35](https://github.com/Chuyu-Team/VC-LTL/issues/35)，调用vsnprintf时触发警告C4389: “==”: 有符号/无符号不匹配（感谢  zhaooptimus）
+* 解决Bug，减少amd64程序调用_hypotf函数时的二进制体积。
+* 解决Bug，解决VS15.7 special_math无法使用问题
 
 
-### 2.0.0.5 - 增强C++ 17支持（2017-12-10 20:56）
-* 新增C++ 17 align new/delete支持。
-* 解决兼容WinXP时可能出现的ntdll.lib依赖失败以及某些函数转发切换到weak别名技术。
+### 4.0.0.1 - 添加VC-LTL动态库支持（2018-08-13 12:30）
+> 全新的VC-LTL 4.0，代号——“破晓”已经发布，作为大版本升级有一些事情需要另外注意：
+1. VC-LTL 4.0 开始，如需静态编译（仅依赖msvcrt.dll）请使用`/MT`编译。
+2. VC-LTL 4.0 不兼容VC-LTL 3.X编译的静态库，你需要使用VC-LTL 4.0（破晓）重新编译。
 
-> 本次更新主要添加对Vistual Studio 2017 15.5以及更高版本新增的C++ 17功能支持。
-
-
-### 2.0.0.4 - 全面覆盖STL、ConcRT（2017-12-03 20:40）
-* 全面覆盖STL、ConcRT库，让C++如鱼得水，尽情使用STL。
-* 全新的weak别名转发技术，实现零jmp解决新老CRT命名冲突。
-
-
-### 2.0.0.3 - 补充大量XP静态实现（2017-11-18 14:18）
-* Vista编译模式，CRT函数覆盖率达到90%以上。
-* XP编译模式，CRT函数覆盖率达到80%以上。
-* 简化注册表引用方式。
-* 添加std::thread支持。
-
-
-### 2.0.0.2 - 扩充对C++类库的支持（2017-11-05 14:14）
-* 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持。
-* 为Windows XP添加 _time32、_fseeki64静态实现。
-* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）。
-* 新增C++类，mutex、thread、xtime、xonce支持。
-* 优化编译方式，消除无意义符号，减少ltl库体积。
-
-
-### 2.0.0.1 - 新增C++类库支持（2017-10-29 22:23）
-* 新增iostream、stringstream支持。
-* 解决使用_fstat32、_fstat32i64、_fstat64i32、_stat32、_stat32i64、_stat64i32、_wstat32、_wstat32i64、_wstat64i32导致编译不通过问题。
-* 修正`__acrt_iob_func`始终返回输入流问题。
-* 解决 type_info operator != 功能无法使用问题（感谢 sonyps5201314）。
-* 解决_daylight，_dstbias，_timezone，_tzname无法使用问题（感谢 sonyps5201314）。
-* 解决32位 SSE高精度数据函数无法使用问题，比如_libm_sse2_tan_precise，_libm_sse2_sqrt_precise，_libm_sse2_sin_precise（感谢 stsm85）。
-
-
-### 1.0.0.13 - 新增 Windows 10 16299 UCRT支持（2017-10-11 14:00）
-* 解决Bug，atanh、acosh、asinh无法使用问题（感谢 stsm85）。
-* 新增Windows 10 16299 UCRT支持。
-* 移除Windows 10 14393 UCRT支持。
-
-> 16299已经发布，因此移除老版本14393支持。相关项目请迁徙到15063或者最新16299。
-
-### 1.0.0.12 - 解决某些函数无法使用问题（2017-09-15 13:33）
-* 解决Bug，使用strcat_s时在Windows XP中提示找不到指定符号（感谢 stsm85）。
-* 解决Bug，解决SSE2除法导致编译不通过问题（感谢 stsm85）。
-* 解决Bug，解决wcstoll、vsnprintf、rand_s、strtoll无法使用问题（感谢 stsm85）。
-* 代码调整，消除所有VC-LTL编译警告，强迫症患者福音。
-
-> 本次更新后，FastCopy、winpck相关程序直接可以使用VC-LTL编译。
-
-
-### 1.0.0.11 - 解决lib依赖问题（2017-08-23 19:00）
-* 解决Bug，使用_difftime64时Windows XP无法运行。
-* 解决Bug，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）。
-* 更新VC141头文件以及实现，全部同步到最新14.11。
-
-
-### 1.0.0.10 - 改进对Windows XP的支持（2017-07-28 20:28）
-* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）。
-* 解决[Bug 8](https://github.com/Chuyu-Team/VC-LTL/issues/8)，修复typeid功能无法使用问题（感谢 HwangBae）。
-* 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积。
-* 解决Bug，修复无法使用`__argc`、`__argv`、`__wargv`、`_environ`、`_wenviron`全局变量问题（感谢 亮叔叔）。
-* 解决微软Bug，修复使用ATL库的程序不支持XP RTM问题。
-
-
-### 1.0.0.9 - 添加C++异常支持（2017-05-26 14:46）
-* 改进Windows XP支持。
-* 优化库结构裁剪ltl库体积。
-* 解决使用自定义异常导致程序编译不通过问题。
-* 调整`*_p`系列函数定义，以免使用`*_p`系列函数时编译不通过。
-* 解决使用浮点除法时导致编译不通过问题。
-
-
-### 1.0.0.8 - 简化VC-LTL使用（2017-04-25 20:37）
-* 简化库引用方式。
-* 更新14393 ucrt到最新版（2017-01-05版）。
-* 添加15063 ucrt支持。
-
-
-### 1.0.0.7 - 初步添加Windows XP支持（2017-04-22 19:26）
-* 初步添加Windows XP支持。
-* 添加C++异常支持。
-* 添加/GS特性支持。
-* 添加/guard:cf支持。
-* VC140库升级到Vistual Studio 2015 Update3。
-
-
-### 1.0.0.6 - 优化引用方式（2017-03-18 13:46）
-* 优化文件引用。
-
-
-### 1.0.0.5 - 新增Visual Studio 2017支持（2017-03-16 20:53）
-* 新增VC 2017支持。
-
-
-### 1.0.0.4 - 公众第一版（2017-03-06 16:15）
-* 与Dism++彻底分离，方便以后与Dism++共享代码。
-
-
-### 1.0.0.3 2016-11-28 12:54
-* 改进对C工程的兼容性。
-
-
-### 1.0.0.2 2016-06-14 12:52
-* 解决C编译不通过问题。
-
-
-### 1.0.0.1 2016-05-23 13:42
-* 解决C++异常无法使用问题。
+* 新增Fea，添加VC-LTL动态库支持，使用`/MD`编译即可链接到 ucrtbase_ltl.dll 等DLL。
+* 新增Fea，彻底抛弃DDK，重构CRT库，全面支持指针混淆、`quick_eixt`、`__stdio_common`等功能。
+* 新增Fea，添加ARM、ARM64链接到msvcrt.dll支持。
+* 新增Fea，添加WinRT（CX）支持（仅限于Windows 8.1以及更高版本支持）。
+* 改进体验，XP模式时无需手动指定`所需的最低版本`。
+* 改进体验，充分利用msvcp60.dll缩小程序体积。
