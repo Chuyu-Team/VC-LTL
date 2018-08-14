@@ -39,9 +39,9 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 |   CRT  | 88.845%             | 91.911%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
 |   STL  | 100.1%（超标准支持）| 100%      |   100%   | libcpmt.lib、msvcprt.lib
 | ConcRT | 100%                | 100%      |   100%   | libconcrt.lib、concrt.lib
+| WinRT  |   -                 | 100%      |    -     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
 |   ATL  | 100%                | 100%      |   100%   | -
 |   MFC  | 不支持              | 不支持    |   100%   | -
-| WinRT  |   -                 | 100%      |    -     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
 |   AMP  |   -                 |   -       |    -     | -
 | OpenMP |   -                 |   -       |    -     | -
 

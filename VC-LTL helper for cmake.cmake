@@ -5,7 +5,7 @@
 #
 #  使用方法：
 #    1：在“CMakeLists.txt” 添加 “include("VC-LTL helper for cmake.cmake")”。
-#    2：务必保证工程使用MD编译，并且所有依赖的静态库也均用VC-LTL重新编译。
+#    2：务必保证所有依赖的静态库也均用VC-LTL重新编译。
 #
 #  VC-LTL默认搜索顺序
 #    1：当前CMake根目录，即 ${CMAKE_CURRENT_SOURCE_DIR}

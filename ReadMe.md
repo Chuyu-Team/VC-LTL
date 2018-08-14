@@ -50,9 +50,9 @@ from the pure C source code.
 |  CRT     | 88.845%                   | 91.911%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
 |  STL     | 100.1% (Extended support) | 100%       | 100%      | libcpmt.lib, msvcprt.lib
 |  ConcRT  | 100%                      | 100%       | 100%      | libconcrt.lib, concrt.lib
+|  WinRT   |  -                        | 100%       |  -        | vccorlib.lib (Windows 8.1 and higher only)
 |  ATL     | 100%                      | 100%       | 100%      | -
 |  MFC     | No Support                | No Support | 100%      | -
-|  WinRT   |  -                        | 100%       | 100%      | vccorlib.lib (Windows 8.1 and higher only)
 |  AMP     |  -                        |  -         |  -        | -
 |  OpenMP  |  -                        |  -         |  -        | -
 

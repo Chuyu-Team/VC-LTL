@@ -5,7 +5,7 @@
 ::
 ::  使用方法：
 ::    1：启动 vcvars32.bat/vcvars64.bat 然后执行此脚本，运行完成后将自动修改include以及lib环境变量，方便nmake以及纯cl用户引用VC-LTL。
-::    2：务必保证工程使用MD编译，并且所有依赖的静态库也均用VC-LTL重新编译。
+::    2：务必保证所有依赖的静态库也均用VC-LTL重新编译。
 ::
 ::  VC-LTL默认搜索顺序
 ::	  1：“VC-LTL helper for nmake.cmd”所在根目录，即 %~dp0
