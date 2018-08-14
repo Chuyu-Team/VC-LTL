@@ -1,6 +1,8 @@
 ::自动生成VC-LTL库
 
 
+@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
 
 ::先生成静态库
 call:Build Static "x86 x64 ARM ARM64"
@@ -9,6 +11,7 @@ call:Build Static_Spectre "x86 x64 ARM ARM64"
 
 call:Build Static_WinXP "x86 x64"
 
+call:Build Static_WinXP_Spectre "x86 x64"
 
 ::生成动态UCRT库
 call:Build Redist "x86 x64 ARM ARM64" "ucrt\ucrt.vcxproj"
@@ -35,6 +38,8 @@ call:BuildCRT 14.12.25827 "x86 x64 ARM ARM64"
 call:BuildCRT 14.13.26128 "x86 x64 ARM ARM64"
 
 call:BuildCRT 14.14.26428 "x86 x64 ARM ARM64"
+
+pause
 
 goto:eof
 

@@ -371,7 +371,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, Solve VS15.7 special_math problem can not be used.
 
 
-### 4.0.0.1 - Add VC-LTL dynamic library support (August 13, 2018 12:30）
+### 4.0.0.2 - Add VC-LTL dynamic library support (August 14, 2018 12:30）
 > The new VC-LTL 4.0, code-named "Dawning" has been released. As a major version upgrade, you need to pay attention to the following items:
 1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.
 2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
