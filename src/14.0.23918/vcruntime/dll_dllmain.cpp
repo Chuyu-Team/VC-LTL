@@ -63,9 +63,7 @@ static BOOL __cdecl dllmain_crt_process_attach(HMODULE const instance, LPVOID co
         __scrt_initialize_type_info();
         atexit(__scrt_uninitialize_type_info);
 
-		#ifndef __Build_LTL //msvcrt.dll模式不支持
         __scrt_initialize_default_local_stdio_options();
-		#endif
 
         if (_initterm_e(__xi_a, __xi_z) != 0)
             __leave;
