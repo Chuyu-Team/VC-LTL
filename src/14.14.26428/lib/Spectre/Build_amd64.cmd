@@ -48,7 +48,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\gshandlereh.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\argv_mode.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\commit_mode.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\default_local_stdio_options.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\default_local_stdio_options.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\denormal_control.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\env_mode.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\amd64\file_mode.obj

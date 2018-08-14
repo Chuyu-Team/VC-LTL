@@ -16,7 +16,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_pdblkup_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_stack_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_userapi_.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg_.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg_.obj
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg4_.obj
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_sehprolg4gs_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\_ftol2_.obj
@@ -65,7 +65,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_20200
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\mpxinit.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\argv_mode.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\commit_mode.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\default_local_stdio_options.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\default_local_stdio_options.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\denormal_control.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\env_mode.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_202000272\objr\x86\file_mode.obj

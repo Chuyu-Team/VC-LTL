@@ -248,9 +248,7 @@ static void __cdecl pre_cpp_initialization() throw()
 // PGO is initialized, but defer some initialization steps to after.  See the
 // commentary in post_pgo_initialization for details.
 _CRTALLOC(".CRT$XIAA") static _PIFV pre_c_initializer    = pre_c_initialization;
-#ifndef __Build_LTL
 _CRTALLOC(".CRT$XIAC") static _PIFV post_pgo_initializer = post_pgo_initialization;
-#endif
 _CRTALLOC(".CRT$XCAA") static _PVFV pre_cpp_initializer  = pre_cpp_initialization;
 
 
