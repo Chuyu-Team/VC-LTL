@@ -1,0 +1,32 @@
+// cstdarg standard header
+#pragma once
+#ifndef _CSTDARG_
+#define _CSTDARG_
+#ifndef RC_INVOKED
+
+#include <yvals.h>
+#include <stdarg.h>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+using ::va_list;
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _CSTDARG_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

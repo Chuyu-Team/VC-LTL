@@ -1,0 +1,61 @@
+// cwctype standard header
+#pragma once
+#ifndef _CWCTYPE_
+#define _CWCTYPE_
+#ifndef RC_INVOKED
+
+#include <yvals.h>
+#include <wctype.h>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+	/* remove any (improper) macro overrides */
+#undef iswalnum
+#undef iswalpha
+#undef iswblank
+#undef iswcntrl
+#undef iswctype
+#undef iswdigit
+#undef iswgraph
+#undef iswlower
+#undef iswprint
+#undef iswpunct
+#undef iswspace
+#undef iswupper
+#undef iswxdigit
+#undef towctrans
+#undef towlower
+#undef towupper
+#undef wctrans
+#undef wctype
+
+_STD_BEGIN
+using _CSTD wint_t; using _CSTD wctrans_t; using _CSTD wctype_t;
+
+using _CSTD iswalnum; using _CSTD iswalpha; using _CSTD iswcntrl;
+using _CSTD iswctype; using _CSTD iswdigit; using _CSTD iswgraph;
+using _CSTD iswlower; using _CSTD iswprint; using _CSTD iswpunct;
+using _CSTD iswspace; using _CSTD iswupper; using _CSTD iswxdigit;
+using _CSTD towctrans; using _CSTD towlower; using _CSTD towupper;
+using _CSTD wctrans; using _CSTD wctype;
+
+using _CSTD iswblank;
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _CWCTYPE_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

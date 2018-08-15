@@ -1,0 +1,22 @@
+// coroutine experimental header
+
+/***
+*coroutine
+*
+*       Copyright (c) Microsoft Corporation. All rights reserved.
+*
+*       Purpose: Library support of coroutines
+*       https://wg21.link/p0057
+*
+*       [Public]
+*
+****/
+#pragma once
+#ifndef _EXPERIMENTAL_COROUTINE_
+#define _EXPERIMENTAL_COROUTINE_
+#ifndef RC_INVOKED
+
+#include <experimental/resumable>
+
+#endif /* RC_INVOKED */
+#endif /* _EXPERIMENTAL_COROUTINE_ */

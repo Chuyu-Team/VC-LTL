@@ -1,0 +1,207 @@
+// generator experimental header
+
+/***
+*generator
+*
+*       Copyright (c) Microsoft Corporation. All rights reserved.
+*
+*       Purpose: Library support of coroutines. generator class
+*       https://wg21.link/p0057
+*
+*       [Public]
+*
+****/
+#pragma once
+#ifndef _EXPERIMENTAL_GENERATOR_
+#define _EXPERIMENTAL_GENERATOR_
+#ifndef RC_INVOKED
+
+#ifndef _RESUMABLE_FUNCTIONS_SUPPORTED
+#error <experimental/generator> requires /await compiler option
+#endif /* _RESUMABLE_FUNCTIONS_SUPPORTED */
+
+#include <experimental/resumable>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+
+namespace experimental {
+
+	template <typename _Ty, typename _Alloc = allocator<char>>
+	struct generator
+	{
+		struct promise_type
+		{
+			_Ty const *_CurrentValue;
+
+			promise_type &get_return_object()
+			{
+				return *this;
+			}
+
+			bool initial_suspend()
+			{
+				return (true);
+			}
+
+			bool final_suspend()
+			{
+				return (true);
+			}
+
+			void yield_value(_Ty const &_Value)
+			{
+				_CurrentValue = _STD addressof(_Value);
+			}
+
+			template <typename _Uty>
+			_Uty && await_transform(_Uty &&_Whatever)
+			{
+				static_assert(_Always_false<_Uty>,
+					"co_await is not supported in coroutines of type std::experiemental::generator");
+				return _STD forward<_Uty>(_Whatever);
+			}
+
+			using _Alloc_char = _Rebind_alloc_t<_Alloc, char>;
+			static_assert(is_same_v<char *, typename allocator_traits<_Alloc_char>::pointer>,
+				"generator does not support allocators with fancy pointer types");
+			static_assert(allocator_traits<_Alloc_char>::is_always_equal::value,
+				"generator only supports stateless allocators");
+
+			static void * operator new(size_t _Size)
+			{
+				_Alloc_char _Al;
+				return allocator_traits<_Alloc_char>::allocate(_Al, _Size);
+			}
+
+			static void operator delete(void *_Ptr, size_t _Size) noexcept
+			{
+				_Alloc_char _Al;
+				return allocator_traits<_Alloc_char>::deallocate(_Al, static_cast<char *>(_Ptr), _Size);
+			}
+		};
+
+		struct iterator
+		{
+			using iterator_category = input_iterator_tag;
+			using difference_type = ptrdiff_t;
+			using value_type = _Ty;
+			using reference = _Ty const &;
+			using pointer = _Ty const *;
+
+			coroutine_handle<promise_type> _Coro = nullptr;
+
+			iterator() = default;
+			iterator(nullptr_t) : _Coro(nullptr)
+			{
+			}
+
+			iterator(coroutine_handle<promise_type> _CoroArg) : _Coro(_CoroArg)
+			{
+			}
+
+			iterator &operator++()
+			{
+				_Coro.resume();
+				if (_Coro.done())
+					_Coro = nullptr;
+				return *this;
+			}
+
+			void operator++(int)
+			{
+				// This postincrement operator meets the requirements of the Ranges TS
+				// InputIterator concept, but not those of Standard C++ InputIterator.
+				++*this;
+			}
+
+			_NODISCARD bool operator==(iterator const &_Right) const
+			{
+				return _Coro == _Right._Coro;
+			}
+
+			_NODISCARD bool operator!=(iterator const &_Right) const
+			{
+				return !(*this == _Right);
+			}
+
+			_NODISCARD reference operator*() const
+			{
+				return *_Coro.promise()._CurrentValue;
+			}
+
+			_NODISCARD pointer operator->() const
+			{
+				return _Coro.promise()._CurrentValue;
+			}
+		};
+
+		_NODISCARD iterator begin()
+		{
+			if (_Coro) {
+				_Coro.resume();
+				if (_Coro.done())
+					return {nullptr};
+			}
+
+			return {_Coro};
+		}
+
+		_NODISCARD iterator end()
+		{
+			return {nullptr};
+		}
+
+		explicit generator(promise_type &_Prom)
+			: _Coro(coroutine_handle<promise_type>::from_promise(_Prom))
+		{
+		}
+
+		generator() = default;
+
+		generator(generator const &) = delete;
+
+		generator &operator=(generator const &) = delete;
+
+		generator(generator &&_Right) : _Coro(_Right._Coro)
+		{
+			_Right._Coro = nullptr;
+		}
+
+		generator &operator=(generator &&_Right)
+		{
+			if (this != _STD addressof(_Right)) {
+				_Coro = _Right._Coro;
+				_Right._Coro = nullptr;
+			}
+			return *this;
+		}
+
+		~generator()
+		{
+			if (_Coro) {
+				_Coro.destroy();
+			}
+		}
+
+	private:
+		coroutine_handle<promise_type> _Coro = nullptr;
+	};
+
+} // namespace experimental
+
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _EXPERIMENTAL_GENERATOR_ */

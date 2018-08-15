@@ -1,0 +1,271 @@
+// thread standard header
+#pragma once
+#ifndef _THREAD_
+#define _THREAD_
+#ifndef RC_INVOKED
+
+ #ifdef _M_CEE
+  #error <thread> is not supported when compiling with /clr or /clr:pure.
+ #endif /* _M_CEE */
+
+#include <exception>
+#include <iosfwd>
+#include <functional>
+#include <chrono>
+#include <memory>
+#include <tuple>
+
+#include <thr/xthread>
+#include <thr/xtimec.h>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+class thread
+	{	// class for observing and managing threads
+public:
+	class id;
+
+	typedef void *native_handle_type;
+
+	thread() noexcept
+		{	// construct with no thread
+		_Thr_set_null(_Thr);
+		}
+
+
+	template<class _Fn,
+		class... _Args,
+		class = enable_if_t<!is_same_v<remove_cv_t<remove_reference_t<_Fn>>, thread>>>
+		explicit thread(_Fn&& _Fx, _Args&&... _Ax)
+		{	// construct with _Fx(_Ax...)
+		_Launch(&_Thr,
+			_STD make_unique<tuple<decay_t<_Fn>, decay_t<_Args>...> >(
+				_STD forward<_Fn>(_Fx), _STD forward<_Args>(_Ax)...));
+		}
+
+
+	~thread() noexcept
+		{	// clean up
+		if (joinable())
+			_STD terminate();
+		}
+
+	thread(thread&& _Other) noexcept
+		: _Thr(_Other._Thr)
+		{	// move from _Other
+		_Thr_set_null(_Other._Thr);
+		}
+
+	thread& operator=(thread&& _Other) noexcept
+		{	// move from _Other
+		return (_Move_thread(_Other));
+		}
+
+	thread(const thread&) = delete;
+	thread& operator=(const thread&) = delete;
+
+	void swap(thread& _Other) noexcept
+		{	// swap with _Other
+		_STD swap(_Thr, _Other._Thr);
+		}
+
+	_NODISCARD bool joinable() const noexcept
+		{	// return true if this thread can be joined
+		return (!_Thr_is_null(_Thr));
+		}
+
+	void join();
+
+	void detach()
+		{	// detach thread
+		if (!joinable())
+			_Throw_Cpp_error(_INVALID_ARGUMENT);
+		_Thrd_detachX(_Thr);
+		_Thr_set_null(_Thr);
+		}
+
+	_NODISCARD id get_id() const noexcept;
+
+	_NODISCARD static unsigned int hardware_concurrency() noexcept
+		{	// return number of hardware thread contexts
+		return (_Thrd_hardware_concurrency());
+		}
+
+	_NODISCARD native_handle_type native_handle()
+		{	// return Win32 HANDLE as void *
+		return (_Thr._Hnd);
+		}
+
+private:
+	thread& _Move_thread(thread& _Other)
+		{	// move from _Other
+		if (joinable())
+			_STD terminate();
+		_Thr = _Other._Thr;
+		_Thr_set_null(_Other._Thr);
+		return (*this);
+		}
+
+	_Thrd_t _Thr;
+	};
+
+	namespace this_thread {
+_NODISCARD thread::id get_id() noexcept;
+
+inline void yield() noexcept
+	{	// give up balance of time slice
+	_Thrd_yield();
+	}
+
+inline void sleep_until(const stdext::threads::xtime *_Abs_time)
+	{	// sleep until _Abs_time
+	_Thrd_sleep(_Abs_time);
+	}
+
+template<class _Rep,
+	class _Period> inline
+	void sleep_for(const chrono::duration<_Rep, _Period>& _Rel_time)
+	{	// sleep for duration
+	stdext::threads::xtime _Tgt = _To_xtime(_Rel_time);
+	this_thread::sleep_until(&_Tgt);
+	}
+
+template<class _Clock,
+	class _Duration> inline
+	void sleep_until(
+		const chrono::time_point<_Clock, _Duration>& _Abs_time)
+	{	// sleep until time point
+	this_thread::sleep_for(_Abs_time.time_since_epoch() - _Clock::now().time_since_epoch());
+	}
+	}	// namespace this_thread
+
+class thread::id
+	{	// thread id
+public:
+	id() noexcept
+		: _Id(0)
+		{	// id for no thread
+		}
+
+	template<class _Ch,
+		class _Tr>
+		basic_ostream<_Ch, _Tr>& _To_text(
+			basic_ostream<_Ch, _Tr>& _Str)
+		{	// insert representation into stream
+		return (_Str << _Id);
+		}
+
+private:
+	id(_Thrd_id_t _Other_id)
+		: _Id(_Other_id)
+		{	// construct from unique id
+		}
+
+	_Thrd_id_t _Id;
+
+	friend thread::id thread::get_id() const noexcept;
+	friend thread::id this_thread::get_id() noexcept;
+	friend bool operator==(thread::id _Left, thread::id _Right) noexcept;
+	friend bool operator<(thread::id _Left, thread::id _Right) noexcept;
+	friend hash<thread::id>;
+	};
+
+inline void thread::join()
+	{	// join thread
+	if (!joinable())
+		_Throw_Cpp_error(_INVALID_ARGUMENT);
+	const bool _Is_null = _Thr_is_null(_Thr);	// Avoid Clang -Wparentheses-equality
+	if (_Is_null)
+		_Throw_Cpp_error(_INVALID_ARGUMENT);
+	if (get_id() == _STD this_thread::get_id())
+		_Throw_Cpp_error(_RESOURCE_DEADLOCK_WOULD_OCCUR);
+	if (_Thrd_join(_Thr, nullptr) != _Thrd_success)
+		_Throw_Cpp_error(_NO_SUCH_PROCESS);
+	_Thr_set_null(_Thr);
+	}
+
+_NODISCARD inline thread::id thread::get_id() const noexcept
+	{	// return id for this thread
+	return (_Thr_val(_Thr));
+	}
+
+_NODISCARD inline thread::id this_thread::get_id() noexcept
+	{	// return id for current thread
+	return (_Thrd_id());
+	}
+
+inline void swap(thread& _Left, thread& _Right) noexcept
+	{	// swap _Left with _Right
+	_Left.swap(_Right);
+	}
+
+_NODISCARD inline bool operator==(thread::id _Left, thread::id _Right) noexcept
+	{	// return true if _Left and _Right identify the same thread
+	return (_Left._Id == _Right._Id);
+	}
+
+_NODISCARD inline bool operator!=(thread::id _Left, thread::id _Right) noexcept
+	{	// return true if _Left and _Right do not identify the same thread
+	return (!(_Left == _Right));
+	}
+
+_NODISCARD inline bool operator<(thread::id _Left, thread::id _Right) noexcept
+	{	// return true if _Left precedes _Right
+	return (_Left._Id < _Right._Id);
+	}
+
+_NODISCARD inline bool operator<=(thread::id _Left, thread::id _Right) noexcept
+	{	// return true if _Left precedes or equals _Right
+	return (!(_Right < _Left));
+	}
+
+_NODISCARD inline bool operator>(thread::id _Left, thread::id _Right) noexcept
+	{	// return true if _Left follows _Right
+	return (_Right < _Left);
+	}
+
+_NODISCARD inline bool operator>=(thread::id _Left, thread::id _Right) noexcept
+	{	// return true if _Left follows or equals _Right
+	return (!(_Left < _Right));
+	}
+
+template<class _Ch,
+	class _Tr>
+	basic_ostream<_Ch, _Tr>& operator<<(
+		basic_ostream<_Ch, _Tr>& _Str,
+		thread::id _Id)
+	{	// insert id into stream
+	return (_Id._To_text(_Str));
+	}
+
+	// STRUCT TEMPLATE SPECIALIZATION hash
+template<>
+	struct hash<thread::id>
+	{	// hash functor for thread::id
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef thread::id argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef size_t result_type;
+
+	_NODISCARD size_t operator()(const thread::id _Keyval) const noexcept
+		{	// hash _Keyval to size_t value by pseudorandomizing transform
+		return (_Hash_representation(_Keyval._Id));
+		}
+	};
+_STD_END
+
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _THREAD_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

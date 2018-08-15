@@ -1,0 +1,31 @@
+// ctgmath standard header
+#pragma once
+#ifndef _CTGMATH_
+#define _CTGMATH_
+#ifndef RC_INVOKED
+
+#include <complex>
+#include <cmath>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_CXX17_DEPRECATE_C_HEADER typedef int _Header_ctgmath;
+typedef _Header_ctgmath _Hdr_ctgmath;
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _CTGMATH_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
