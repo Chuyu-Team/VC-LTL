@@ -39,6 +39,11 @@ call:BuildCRT 14.13.26128 "x86 x64 ARM ARM64"
 
 call:BuildCRT 14.14.26428 "x86 x64 ARM ARM64"
 
+call:BuildCRT 14.15.26726 "x86 x64 ARM ARM64"
+
+::Éú³É¶¯Ì¬Spectre¿â
+call:Build Dynamic_Spectre "x86 x64 ARM ARM64"
+
 pause
 
 goto:eof
