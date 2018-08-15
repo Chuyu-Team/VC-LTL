@@ -9,12 +9,14 @@
 #include <vcruntime_internal.h>
 #include <vcruntime_string.h>
 #include <vcruntime_typeinfo.h>
-#include <undname.h>
+//#include <undname.h>
+#include <msvcrt_IAT.h>
 
 
 
 
-
+#if 0
+//直接由msvcrt.dll提供
 extern "C" int __cdecl __std_type_info_compare(
     __std_type_info_data const* const lhs,
     __std_type_info_data const* const rhs
@@ -27,8 +29,9 @@ extern "C" int __cdecl __std_type_info_compare(
 
     return strcmp(lhs->_DecoratedName + 1, rhs->_DecoratedName + 1);
 }
+#endif
 
-extern "C" size_t __cdecl __std_type_info_hash(
+extern "C" size_t __cdecl __std_type_info_hash_downlevel(
     __std_type_info_data const* const data
     )
 {
@@ -61,6 +64,10 @@ extern "C" size_t __cdecl __std_type_info_hash(
     return value;
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(__std_type_info_hash_downlevel);
+
+#if 0
+//直接由msvcrt.dll提供
 extern "C" char const* __cdecl __std_type_info_name(
     __std_type_info_data* const data,
     __type_info_node*     const root_node
@@ -131,9 +138,11 @@ extern "C" char const* __cdecl __std_type_info_name(
     return node_string;
 }
 
+#endif
+
 // This function is called during module unload to clean up all of the undecorated
 // name strings that were allocated by calls to name().
-extern "C" void __cdecl __std_type_info_destroy_list(
+extern "C" void __cdecl __std_type_info_destroy_list_downlevel(
     __type_info_node* const root_node
     )
 {
@@ -145,3 +154,5 @@ extern "C" void __cdecl __std_type_info_destroy_list(
         current_node = next_node;
     }
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(__std_type_info_destroy_list_downlevel);

@@ -279,19 +279,8 @@ public:
 		_In_z_ LPCWSTR pwszFmt,
 		_In_ va_list args)
 	{
-#if _MSC_VER < 1900
 		int cchNeeded = _vscwprintf(pwszFmt, args);
-#else
-		// Explicitly request the legacy wide format specifiers mode from the CRT,
-		// for compatibility with previous versions.  While the CRT supports two
-		// modes, the ATL and MFC functions that accept format strings only support
-		// legacy mode format strings.
-		int cchNeeded = __stdio_common_vswprintf(
-			_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS |
-			_CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR |
-			_CRT_INTERNAL_PRINTF_LEGACY_WIDE_SPECIFIERS,
-			NULL, 0, pwszFmt, NULL, args);
-#endif
+
 		if (cchNeeded < 0)
 		{
 			return;
@@ -305,19 +294,7 @@ public:
 
 		wszBuf[0] = '\0';
 
-#if _MSC_VER < 1900
 		if (_vsnwprintf_s(wszBuf, cchNeeded + 1, cchNeeded, pwszFmt, args) == -1)
-#else
-		// Explicitly request the legacy wide format specifiers mode from the CRT,
-		// for compatibility with previous versions.  While the CRT supports two
-		// modes, the ATL and MFC functions that accept format strings only support
-		// legacy mode format strings.
-		int const vsnwprintf_result = __stdio_common_vsnwprintf_s(
-			_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS |
-			_CRT_INTERNAL_PRINTF_LEGACY_WIDE_SPECIFIERS,
-			wszBuf, cchNeeded + 1, cchNeeded, pwszFmt, NULL, args);
-		if (vsnwprintf_result < 0)
-#endif
 		{
 			return;
 		}

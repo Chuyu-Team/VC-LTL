@@ -39,7 +39,7 @@
         #ifdef _DLL
             #define _CRTIMP __declspec(dllimport)
         #else
-            #define _CRTIMP
+            #define _CRTIMP __declspec(dllimport)
         #endif
     #endif
 #endif
@@ -294,5 +294,9 @@ extern uintptr_t __security_cookie;
 #endif
 
 _CRT_END_C_HEADER
+
+#ifndef RC_INVOKED
+#include "..\..\..\_msvcrt.h"
+#endif
 
 #endif // _VCRUNTIME_H
