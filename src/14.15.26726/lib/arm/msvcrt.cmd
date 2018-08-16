@@ -1,4 +1,4 @@
-set libfile=%~dp0..\..\..\..\..\VC\14.15.26726\lib\Spectre\arm\vc.lib
+set libfile=%~dp0..\..\..\..\VC\14.15.26726\lib\arm\vc.lib
 
 copy "%~dp0msvcrt.lib" "%libfile%" /y
 
