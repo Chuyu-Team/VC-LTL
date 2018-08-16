@@ -2025,7 +2025,7 @@ extern "C" int __CRTDECL _vsprintf_l_downlevel(
 {
 	#pragma warning(push)
 	#pragma warning(disable: 4996) // Deprecation
-	return _vsnprintf_l(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _Locale, _ArgList);
+	return _vsnprintf_l(_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
 	#pragma warning(pop)
 }
 
