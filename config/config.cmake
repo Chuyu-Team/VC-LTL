@@ -50,7 +50,7 @@ if(${SupportLTL} STREQUAL "true")
 	#获取VC版本号
 	if(NOT VC-LTLUsedToolsVersion)
 		if(${MSVC_VERSION} EQUAL 1900)
-			set(__DefaultVCToolsVersion "14.0.23918")
+			set(__DefaultVCToolsVersion "14.0.24231")
 
 			#VC 2015只能自己读取注册表解决
 
@@ -104,7 +104,7 @@ if(${SupportLTL} STREQUAL "true")
 
 		elseif(${MSVC_VERSION} LESS 1920)
 			#VC2017
-			set(__DefaultVCToolsVersion "14.10.25017")
+			set(__DefaultVCToolsVersion "14.15.26726")
 
 			if(DEFINED ENV{VCToolsVersion})
 				set(VC-LTLUsedToolsVersion $ENV{VCToolsVersion})

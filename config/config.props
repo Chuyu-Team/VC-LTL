@@ -30,17 +30,17 @@
     <VC-LTLUsedToolsVersion Condition=" ('$(VC-LTLUsedToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A}@DisplayVersion)'!='') "            >14.0.24210</VC-LTLUsedToolsVersion>
 
 
-    <!--如果找不到，那么指定为当前支持的最低版本 2015 Update2-->
+    <!--如果找不到，那么指定为当前支持的最高版本-->
     <VC-LTLFoundToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">false</VC-LTLFoundToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">14.0.23918</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">14.0.24231</VC-LTLUsedToolsVersion>
   </PropertyGroup>
   
   <PropertyGroup Condition=" ('$(VCToolsVersion)'!='') And ('$(VC-LTLUsedToolsVersion)'=='') ">
     <VC-LTLUsedToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VC-LTLUsedToolsVersion>
 
-    <!--如果目标不存在，这指向为当前VC-LTL支持的最低版本-->
+    <!--如果找不到，那么指定为当前支持的最高版本-->
     <VC-LTLFoundToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">false</VC-LTLFoundToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.10.25017</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.15.26726</VC-LTLUsedToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="('$(VC-LTLTargetUniversalCRTVersion)'=='')">
@@ -175,5 +175,7 @@
     <Warning Code="LTL3001" Text="VC-LTL不支持 UCRT $(TargetUniversalCRTVersion)，目前已临时切换到 UCRT $(VC-LTLTargetUniversalCRTVersion) 来维持基础功能。这可能是你的SDK版本过低，建议切换到最新SDK然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundTargetUniversalCRTVersion)'=='false')" />
     <Warning Code="LTL3002" Text="VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
     <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(VC-LTLLibDirMod)'!='$(VCLibDirMod)')"/>
+
+    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!Exists('$(VC_LTL_Root)\lib'))"/>
   </Target>
 </Project>
