@@ -34,29 +34,25 @@
 
 
 if(NOT VC_LTL_Root)
-	find_file(FOUND_FILE _msvcrt.h ${CMAKE_CURRENT_SOURCE_DIR}/VC-LTL)
-	if(NOT ${FOUND_FILE} STREQUAL "FOUND_FILE-NOTFOUND")
+	if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/VC-LTL/_msvcrt.h)
 		set(VC_LTL_Root ${CMAKE_CURRENT_SOURCE_DIR}/VC-LTL)
 	endif()
 endif()
 
 if(NOT VC_LTL_Root)
-    find_file(FOUND_FILE _msvcrt.h ${PROJECT_SOURCE_DIR}/VC-LTL)
-    if(NOT ${FOUND_FILE} STREQUAL "FOUND_FILE-NOTFOUND")
+	if(EXISTS ${PROJECT_SOURCE_DIR}/VC-LTL/_msvcrt.h)
         set(VC_LTL_Root ${PROJECT_SOURCE_DIR}/VC-LTL)
     endif()
 endif()
 
 if(NOT VC_LTL_Root)
-    find_file(FOUND_FILE _msvcrt.h ${CMAKE_CURRENT_SOURCE_DIR}/../VC-LTL)
-    if(NOT ${FOUND_FILE} STREQUAL "FOUND_FILE-NOTFOUND")
+	if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../VC-LTL/_msvcrt.h)
         set(VC_LTL_Root ${CMAKE_CURRENT_SOURCE_DIR}/../VC-LTL)
     endif()
 endif()
 
 if(NOT VC_LTL_Root)
-    find_file(FOUND_FILE _msvcrt.h ${PROJECT_SOURCE_DIR}/../VC-LTL)
-    if(NOT ${FOUND_FILE} STREQUAL "FOUND_FILE-NOTFOUND")
+	if(EXISTS ${PROJECT_SOURCE_DIR}/../VC-LTL/_msvcrt.h)
         set(VC_LTL_Root ${PROJECT_SOURCE_DIR}/../VC-LTL)
     endif()
 endif()
