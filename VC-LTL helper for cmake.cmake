@@ -4,15 +4,16 @@
 #  VC-LTL自动化加载配置，建议你将此文件单独复制到你的工程再使用，该文件能自动识别当前环境是否存在VC-LTL，并且自动应用。
 #
 #  使用方法：
-#    1：在“CMakeLists.txt” 添加 “include("VC-LTL helper for cmake.cmake")”。
-#    2：务必保证所有依赖的静态库也均用VC-LTL重新编译。
+#    1. 在“CMakeLists.txt” 添加 “include("VC-LTL helper for cmake.cmake")”。
+#    2. 务必保证所有依赖的静态库也均用VC-LTL重新编译。
 #
 #  VC-LTL默认搜索顺序
-#    1：当前CMake根目录，即 ${CMAKE_CURRENT_SOURCE_DIR}
-#    2：当前项目根目录，即 ${PROJECT_SOURCE_DIR}
-#    4：当前CMake父目录，即 ${CMAKE_CURRENT_SOURCE_DIR}/..
-#    5：当前项目根目录，即 ${PROJECT_SOURCE_DIR}/..
-#    6：注册表HKEY_CURRENT_USER\Code\VC-LTL@Root
+#    1. “VC-LTL helper for cmake.cmake”所在根目录，即 ${CMAKE_CURRENT_LIST_DIR}
+#    2. 当前CMake根目录，即 ${CMAKE_CURRENT_SOURCE_DIR}/VC-LTL
+#    3. 当前项目根目录，即 ${PROJECT_SOURCE_DIR}/VC-LTL
+#    4. 当前CMake父目录，即 ${CMAKE_CURRENT_SOURCE_DIR}/../VC-LTL
+#    5. 当前项目根目录，即 ${PROJECT_SOURCE_DIR}/../VC-LTL
+#    6. 注册表HKEY_CURRENT_USER\Code\VC-LTL@Root
 #
 #  把VC-LTL放在其中一个位置即可，VC-LTL就能被自动引用。
 # 
@@ -32,6 +33,11 @@
 
 ####################################################################################################################################################
 
+if(NOT VC_LTL_Root)
+	if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/_msvcrt.h)
+		set(VC_LTL_Root ${CMAKE_CURRENT_LIST_DIR})
+	endif()
+endif()
 
 if(NOT VC_LTL_Root)
 	if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/VC-LTL/_msvcrt.h)
