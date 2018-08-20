@@ -192,7 +192,7 @@ if(${SupportLTL} STREQUAL "true")
 	message("")
 
     set(VC_LTL_Include ${VC_LTL_Root}/config/${OsPlatformName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/include;${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion})
-    set(VC_LTL_Library ${VC_LTL_Root}/lib/${PlatformShortName};${VC_LTL_Root}/lib/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
+    set(VC_LTL_Library ${VC_LTL_Root}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/lib/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
 
 	#message("INCLUDE " $ENV{INCLUDE})
 	#message("LIB " $ENV{LIB})
