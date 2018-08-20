@@ -137,7 +137,7 @@ if(${SupportLTL} STREQUAL "true")
 	#获取UCRT版本，如果当前环境变量UCRTVersion说对应的版本VC-LTL支持，那么使用该版本，否则使用10.0.10240.0
    if(NOT VC-LTLTargetUniversalCRTVersion)
 	   if(DEFINED ENV{UCRTVersion})
-			if(NOT EXISTS ${VC_LTL_Root}/ucrt/$ENV{UCRTVersion})
+			if(EXISTS ${VC_LTL_Root}/ucrt/$ENV{UCRTVersion})
 				set(VC-LTLTargetUniversalCRTVersion $ENV{UCRTVersion})
 			endif()
 		endif()
