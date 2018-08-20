@@ -176,6 +176,6 @@
     <Warning Code="LTL3002" Text="VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
     <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(VC-LTLLibDirMod)'!='$(VCLibDirMod)')"/>
 
-    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!Exists('$(VC_LTL_Root)\lib'))"/>
+    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!Exists('$(VC_LTL_Root)\lib\$(PlatformShortName)'))"/>
   </Target>
 </Project>

@@ -37,6 +37,9 @@ goto:eof
 
 
 :Start_VC_LTL
+
+if not exist "%VC_LTL_Root%\lib\%Platform%" echo VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。&&goto:eof
+
 ::VC-LTL核心版本号，由于4.X并不兼容3.X。此值可以用于兼容性判断。
 set LTL_CoreVersion=4
 
