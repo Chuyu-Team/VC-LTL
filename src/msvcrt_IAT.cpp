@@ -424,3 +424,20 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(lldiv);
 //_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_msize_downlevel);
 //_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_offset_recalloc_downlevel);
 //_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_aligned_recalloc_downlevel);
+
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_except1);
+
+#ifdef _M_IX86
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_tan_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_sqrt_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_sin_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_pow_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_log_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_log10_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_exp_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_cos_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_atan_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_asin_precise);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_libm_sse2_acos_precise);
+
+#endif
