@@ -178,9 +178,9 @@ nmake /f Test.mak
 
 
 ## 5. 已知问题
-* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
+* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。_s 版本不存在此问题。
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
-* 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
+* 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 
 ## 附：已知使用VC-LTL的官方项目
 
@@ -242,7 +242,7 @@ nmake /f Test.mak
 
 
 ### 1.0.0.10 - 改进对Windows XP的支持（2017-07-28 20:28）
-* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）。
+* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入`_except_handler4_common`（感谢 HwangBae）。
 * 解决[Bug 8](https://github.com/Chuyu-Team/VC-LTL/issues/8)，修复typeid功能无法使用问题（感谢 HwangBae）。
 * 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积。
 * 解决Bug，修复无法使用`__argc`、`__argv`、`__wargv`、`_environ`、`_wenviron`全局变量问题（感谢 亮叔叔）。
@@ -250,8 +250,8 @@ nmake /f Test.mak
 
 
 ### 1.0.0.11 - 解决lib依赖问题（2017-08-23 19:00）
-* 解决Bug，使用_difftime64时Windows XP无法运行。
-* 解决Bug，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）。
+* 解决Bug，使用`_difftime64`时Windows XP无法运行。
+* 解决Bug，`_msvcrt.cpp`始终会引入urct_14393.lib问题（感谢 亮叔叔）。
 * 更新VC141头文件以及实现，全部同步到最新14.11。
 
 
@@ -274,17 +274,17 @@ nmake /f Test.mak
 
 ### 2.0.0.1 - 新增C++类库支持（2017-10-29 22:23）
 * 新增iostream、stringstream支持。
-* 解决使用_fstat32、_fstat32i64、_fstat64i32、_stat32、_stat32i64、_stat64i32、_wstat32、_wstat32i64、_wstat64i32导致编译不通过问题。
+* 解决使用`_fstat32`、`_fstat32i64`、`_fstat64i32`、`_stat32`、`_stat32i64`、`_stat64i32`、`_wstat32`、`_wstat32i64`、`_wstat64i32`导致编译不通过问题。
 * 修正`__acrt_iob_func`始终返回输入流问题。
 * 解决 type_info operator != 功能无法使用问题（感谢 sonyps5201314）。
-* 解决_daylight，_dstbias，_timezone，_tzname无法使用问题（感谢 sonyps5201314）。
-* 解决32位 SSE高精度数据函数无法使用问题，比如_libm_sse2_tan_precise，_libm_sse2_sqrt_precise，_libm_sse2_sin_precise（感谢 stsm85）。
+* 解决`_daylight`，`_dstbias`，`_timezone`，`_tzname`无法使用问题（感谢 sonyps5201314）。
+* 解决32位 SSE高精度数据函数无法使用问题，比如`_libm_sse2_tan_precise`，`_libm_sse2_sqrt_precise`，`_libm_sse2_sin_precise`（感谢 stsm85）。
 
 
 ### 2.0.0.2 - 扩充对C++类库的支持（2017-11-05 14:14）
-* 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持。
-* 为Windows XP添加 _time32、_fseeki64静态实现。
-* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）。
+* 新增 `_configthreadlocale`、`_get_current_locale`、`_create_locale`、`_free_locale`接口支持。
+* 为Windows XP添加 `_time32`、`_fseeki64`静态实现。
+* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 `_getpid`、`_sys_nerr`、`_sys_errlist`无法使用问题（感谢 HwangBae）。
 * 新增C++类，mutex、thread、xtime、xonce支持。
 * 优化编译方式，消除无意义符号，减少ltl库体积。
 
@@ -322,13 +322,13 @@ nmake /f Test.mak
 
 ### 2.0.0.8 - 累计BUG修复以及适配新版本（2018-03-23 14:58）
 * 解决一些潜在找不到符号问题以及链接失败问题（感谢 Too Simple）。
-* 修正__crtLCMapString相关字符串操作兼容性问题（感谢 Too Simple）。
-* 解决_getptd_noexit在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题（感谢 亮亮）。
+* 修正`__crtLCMapString`相关字符串操作兼容性问题（感谢 Too Simple）。
+* 解决`_getptd_noexit`在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题（感谢 亮亮）。
 * 添加最新Vistual Studio 2017 15.6支持。
 
 
 ### 3.0.0.1 - 改进平台支持（2018-04-26 18:48）
-* 解决[Bug 27](https://github.com/Chuyu-Team/VC-LTL/issues/27)，非中文环境调用_set_abort_behavior输出警告问题（感谢 myfreeer）。
+* 解决[Bug 27](https://github.com/Chuyu-Team/VC-LTL/issues/27)，非中文环境调用`_set_abort_behavior`输出警告问题（感谢 myfreeer）。
 * 解决[Bug 21](https://github.com/Chuyu-Team/VC-LTL/issues/21)，特定情况nothrow符号冲突问题（感谢 waiting4love）。
 * 解决Bug，解决x64系统无法使用`__p__*`系列函数问题（感谢 昌平）。
 * 改进体验，当RC中意外引入_msvcrt.h时 自动跳过处理，避免RC报错（感谢 风清凉）。
@@ -355,19 +355,29 @@ nmake /f Test.mak
 ### 3.1.0.1 - 添加Clang支持（2018-06-18 13:13）
 * 新增[Fea 34](https://github.com/Chuyu-Team/VC-LTL/issues/34)，添加Clang with Microsoft CodeGen、Clang 3.7 with Microsoft CodeGen、Clang-LLVM工具集支持（感谢 hzqst）。
 * 解决Bug，非中文代码页corecrt.h报告 C4828警告（感谢 临渊羡鱼乎）。
-* 解决[Bug 35](https://github.com/Chuyu-Team/VC-LTL/issues/35)，调用vsnprintf时触发警告C4389: “==”: 有符号/无符号不匹配（感谢  zhaooptimus）
+* 解决[Bug 35](https://github.com/Chuyu-Team/VC-LTL/issues/35)，调用vsnprintf时触发警告C4389: “==”: 有符号/无符号不匹配（感谢 zhaooptimus）
 * 解决Bug，减少amd64程序调用_hypotf函数时的二进制体积。
 * 解决Bug，解决VS15.7 special_math无法使用问题
 
 
 ### 4.0.0.2 - 添加VC-LTL动态库支持（2018-08-14 12:30）
-> 全新的VC-LTL 4.0，代号——“破晓”已经发布，作为大版本升级有一些事情需要另外注意：
-1. VC-LTL 4.0 开始，如需静态编译（仅依赖msvcrt.dll）请使用`/MT`编译。
-2. VC-LTL 4.0 不兼容VC-LTL 3.X编译的静态库，你需要使用VC-LTL 4.0（破晓）重新编译。
+> 全新的VC-LTL 4.0，代号——“破晓”，作为大版本升级某些行为已经更改：
+    1. VC-LTL 4.0 开始，如需静态编译（仅依赖msvcrt.dll）请使用`/MT`编译。
+    2. VC-LTL 4.0 不兼容VC-LTL 3.X编译的静态库，你需要使用VC-LTL 4.0（破晓）重新编译。
 
 * 新增Fea，添加VC-LTL动态库支持，使用`/MD`编译即可链接到 ucrtbase_ltl.dll 等DLL。
-* 新增Fea，彻底抛弃DDK，重构CRT库，全面支持指针混淆、`quick_eixt`、`__stdio_common`等功能。
+* 新增Fea，彻底抛弃DDK，重构CRT库，全面支持指针混淆、`quick_exit`、`__stdio_common`等功能。
 * 新增Fea，添加ARM、ARM64链接到msvcrt.dll支持。
 * 新增Fea，添加WinRT（CX）支持（仅限于Windows 8.1以及更高版本支持）。
 * 改进体验，XP模式时无需手动指定`所需的最低版本`。
 * 改进体验，充分利用msvcp60.dll缩小程序体积。
+
+
+### 4.0.0.7 Preview - 添加Vistual Studio 2017 15.8支持（2018-08-20 13:00）
+* 解决Bug，修正4.0.0.3中14.15.26726 ARM脚本错误问题（感谢 毛利）。
+* 解决Bug，解决CMake脚本语法错误（感谢 MaMy丶）。
+* 解决Bug，解决CMake脚本文件路径判断方式不正确问题。
+* 解决Bug，解决CMkae、NMake脚本lib路径错误问题（感谢 Too Simple、MaMy丶）。
+* 解决Bug，修正4.0.0.6中CMake脚本 UCRT条件判断多写了个NOT。
+* 新增Fea，添加Vistual Studio 2017 15.8支持。
+* 新增Fea，添加lib文件检测，如果不存在则报错。

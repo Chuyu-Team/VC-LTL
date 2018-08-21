@@ -189,9 +189,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ## 5. Known Issues
-* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 _CRT_STDIO_SIZE_MAX 宏。_s 版本不存在此问题。
+* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。_s 版本不存在此问题。
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
-* 由于msvcrt本身限制，setlocale/_create_locale相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
+* 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 
 ## Excursus - Known project using VC-LTL
 
@@ -253,7 +253,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ### 1.0.0.10 - 改进对Windows XP的支持 (July 28, 2017 20:28)
-* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入_except_handler4_common（感谢 HwangBae）。
+* 解决[Bug 9](https://github.com/Chuyu-Team/VC-LTL/issues/9)，某些时候编译器引用异常导致XP模式时意外引入`_except_handler4_common`（感谢 HwangBae）。
 * 解决[Bug 8](https://github.com/Chuyu-Team/VC-LTL/issues/8)，修复typeid功能无法使用问题（感谢 HwangBae）。
 * 调整异常实现代码，尽可能复用msvcrt.dll代码减少代码体积。
 * 解决Bug，修复无法使用`__argc`、`__argv`、`__wargv`、`_environ`、`_wenviron`全局变量问题（感谢 亮叔叔）。
@@ -261,8 +261,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ### 1.0.0.11 - 解决lib依赖问题 (August 23, 2017 19:00)
-* 解决Bug，使用_difftime64时Windows XP无法运行。
-* 解决Bug，_msvcrt.cpp始终会引入urct_14393.lib问题（感谢 亮叔叔）。
+* 解决Bug，使用`_difftime64`时Windows XP无法运行。
+* 解决Bug，`_msvcrt.cpp`始终会引入urct_14393.lib问题（感谢 亮叔叔）。
 * 更新VC141头文件以及实现，全部同步到最新14.11。
 
 
@@ -285,17 +285,17 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 ### 2.0.0.1 - 新增C++类库支持 (October 29, 2017 22:23)
 * 新增iostream、stringstream支持
-* 解决使用_fstat32、_fstat32i64、_fstat64i32、_stat32、_stat32i64、_stat64i32、_wstat32、_wstat32i64、_wstat64i32导致编译不通过问题。
+* 解决使用`_fstat32`、`_fstat32i64`、`_fstat64i32`、`_stat32`、`_stat32i64`、`_stat64i32`、`_wstat32`、`_wstat32i64`、`_wstat64i32`导致编译不通过问题。
 * 修正`__acrt_iob_func`始终返回输入流问题。
 * 解决 type_info operator != 功能无法使用问题（感谢 sonyps5201314）。
 * 解决_daylight，_dstbias，_timezone，_tzname无法使用问题（感谢 sonyps5201314）。
-* 解决32位 SSE高精度数据函数无法使用问题，比如_libm_sse2_tan_precise，_libm_sse2_sqrt_precise，_libm_sse2_sin_precise（感谢 stsm85）。
+* 解决32位 SSE高精度数据函数无法使用问题，比如`_libm_sse2_tan_precise`，`_libm_sse2_sqrt_precise`，`_libm_sse2_sin_precise`（感谢 stsm85）。
 
 
 ### 2.0.0.2 - 扩充对C++类库的支持 (November 5, 2017 14:14)
-* 新增 _configthreadlocale、_get_current_locale、_create_locale、_free_locale接口支持。
-* 为Windows XP添加 _time32、_fseeki64静态实现。
-* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 _getpid、_sys_nerr、_sys_errlist无法使用问题（感谢 HwangBae）。
+* 新增 `_configthreadlocale`、`_get_current_locale`、`_create_locale`、`_free_locale`接口支持。
+* 为Windows XP添加 `_time32`、`_fseeki64`静态实现。
+* 解决[Bug 14](https://github.com/Chuyu-Team/VC-LTL/issues/14)，新增 `_getpid`、`_sys_nerr`、`_sys_errlist`无法使用问题（感谢 HwangBae）。
 * 新增C++类，mutex、thread、xtime、xonce支持。
 * 优化编译方式，消除无意义符号，减少ltl库体积。
 
@@ -333,8 +333,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 ### 2.0.0.8 - 累计BUG修复以及适配新版本 (March 23, 2018 14:58)
 * 解决一些潜在找不到符号问题以及链接失败问题（感谢 Too Simple）。
-* 修正__crtLCMapString相关字符串操作兼容性问题（感谢 Too Simple）。
-* 解决_getptd_noexit在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题（感谢 亮亮）。
+* 修正`__crtLCMapString`相关字符串操作兼容性问题（感谢 Too Simple）。
+* 解决`_getptd_noexit`在获取msvcrt.dl的DllMain中创建的 ptd结构时会返回失败问题（感谢 亮亮）。
 * 添加最新Vistual Studio 2017 15.6支持。
 
 
@@ -373,12 +373,22 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 ### 4.0.0.2 - Add VC-LTL dynamic library support (August 14, 2018 12:30）
 > The new VC-LTL 4.0, code-named "Dawning" has been released. As a major version upgrade, you need to pay attention to the following items:
-1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.
-2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
+    1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.
+    2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
 
 * Add Fea, add VC-LTL dynamic library support, use `/MD` link to DLL such as `ucrtbase_ltl.dll`.
-* Add Fea, discard DDK, refactor CRT library, add support pointer confusion, `quick_eixt`, `__stdio_common`, etc.
+* Add Fea, discard DDK, refactor CRT library, add support pointer confusion, `quick_exit`, `__stdio_common`, etc.
 * Add Fea, support ARM, ARM64 link to msvcrt.dll.
 * Add Fea, add WinRT (CX) support (Windows 8.1 and higher).
 * Improve, there is no need to specify `Minimum required version` in XP mode.
 * Improve, use msvcp60.dll to reduce the program size.
+
+
+### 4.0.0.7 Preview - Add Vistual Studio 2017 15.8 Support (August 20, 2018 13:00）
+* 解决Bug，修正4.0.0.3中14.15.26726 ARM脚本错误问题（感谢 毛利）。
+* 解决Bug，解决CMake脚本语法错误（感谢 MaMy丶）。
+* 解决Bug，解决CMake脚本文件路径判断方式不正确问题。
+* 解决Bug，解决CMkae、NMake脚本lib路径错误问题（感谢 Too Simple、MaMy丶）。
+* 解决Bug，修正4.0.0.6中CMake脚本 UCRT条件判断多写了个NOT。
+* 新增Fea，添加Vistual Studio 2017 15.8支持。
+* 新增Fea，添加lib文件检测，如果不存在则报错。
