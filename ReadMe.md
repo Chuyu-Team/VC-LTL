@@ -372,9 +372,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ### 4.0.0.2 - Add VC-LTL dynamic library support (August 14, 2018 12:30）
-> The new VC-LTL 4.0, code-named "Dawning" has been released. As a major version upgrade, you need to pay attention to the following items:    
-    1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.    
-    2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
+> The new VC-LTL 4.0, code-named "Dawning" has been released. As a major version upgrade, you need to pay attention to the following items:
+> 1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.
+> 2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
 
 * Add Fea, add VC-LTL dynamic library support, use `/MD` link to DLL such as `ucrtbase_ltl.dll`.
 * Add Fea, discard DDK, refactor CRT library, add support pointer confusion, `quick_exit`, `__stdio_common`, etc.
@@ -384,11 +384,12 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, use msvcp60.dll to reduce the program size.
 
 
-### 4.0.0.7 Preview - Add Vistual Studio 2017 15.8 Support (August 20, 2018 13:00）
+### 4.0.0.8 Preview - Add Vistual Studio 2017 15.8 Support (August 20, 2018 13:00）
 * 解决Bug，修正4.0.0.3中14.15.26726 ARM脚本错误问题（感谢 毛利）。
 * 解决Bug，解决CMake脚本语法错误（感谢 MaMy丶）。
 * 解决Bug，解决CMake脚本文件路径判断方式不正确问题。
 * 解决Bug，解决CMkae、NMake脚本lib路径错误问题（感谢 Too Simple、MaMy丶）。
 * 解决Bug，修正4.0.0.6中CMake脚本 UCRT条件判断多写了个NOT。
+* 解决Bug，修正MD模式报告找不到`_libm_sse2_tan_precise`相关符号问题（感谢 13732650）。
 * 新增Fea，添加Vistual Studio 2017 15.8支持。
 * 新增Fea，添加lib文件检测，如果不存在则报错。

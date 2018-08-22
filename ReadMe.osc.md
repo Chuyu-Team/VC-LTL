@@ -361,9 +361,9 @@ nmake /f Test.mak
 
 
 ### 4.0.0.2 - 添加VC-LTL动态库支持（2018-08-14 12:30）
-> 全新的VC-LTL 4.0，代号——“破晓”，作为大版本升级某些行为已经更改：    
-    1. VC-LTL 4.0 开始，如需静态编译（仅依赖msvcrt.dll）请使用`/MT`编译。    
-    2. VC-LTL 4.0 不兼容VC-LTL 3.X编译的静态库，你需要使用VC-LTL 4.0（破晓）重新编译。
+> 全新的VC-LTL 4.0，代号——“破晓”，作为大版本升级某些行为已经更改：
+> 1. VC-LTL 4.0 开始，如需静态编译（仅依赖msvcrt.dll）请使用`/MT`编译。
+> 2. VC-LTL 4.0 不兼容VC-LTL 3.X编译的静态库，你需要使用VC-LTL 4.0（破晓）重新编译。
 
 * 新增Fea，添加VC-LTL动态库支持，使用`/MD`编译即可链接到 ucrtbase_ltl.dll 等DLL。
 * 新增Fea，彻底抛弃DDK，重构CRT库，全面支持指针混淆、`quick_exit`、`__stdio_common`等功能。
@@ -373,11 +373,12 @@ nmake /f Test.mak
 * 改进体验，充分利用msvcp60.dll缩小程序体积。
 
 
-### 4.0.0.7 Preview - 添加Vistual Studio 2017 15.8支持（2018-08-20 13:00）
+### 4.0.0.8 Preview - 添加Vistual Studio 2017 15.8支持（2018-08-21 18:00）
 * 解决Bug，修正4.0.0.3中14.15.26726 ARM脚本错误问题（感谢 毛利）。
 * 解决Bug，解决CMake脚本语法错误（感谢 MaMy丶）。
 * 解决Bug，解决CMake脚本文件路径判断方式不正确问题。
 * 解决Bug，解决CMkae、NMake脚本lib路径错误问题（感谢 Too Simple、MaMy丶）。
 * 解决Bug，修正4.0.0.6中CMake脚本 UCRT条件判断多写了个NOT。
+* 解决Bug，修正MD模式报告找不到`_libm_sse2_tan_precise`相关符号问题（感谢 13732650）。
 * 新增Fea，添加Vistual Studio 2017 15.8支持。
 * 新增Fea，添加lib文件检测，如果不存在则报错。
