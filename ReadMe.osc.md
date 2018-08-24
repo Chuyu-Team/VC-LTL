@@ -373,12 +373,13 @@ nmake /f Test.mak
 * 改进体验，充分利用msvcp60.dll缩小程序体积。
 
 
-### 4.0.0.8 Preview - 添加Vistual Studio 2017 15.8支持（2018-08-21 18:00）
+### 4.0.0.9 Preview - 添加Vistual Studio 2017 15.8支持（2018-08-24 19:00）
 * 解决Bug，修正4.0.0.3中14.15.26726 ARM脚本错误问题（感谢 毛利）。
 * 解决Bug，解决CMake脚本语法错误（感谢 MaMy丶）。
 * 解决Bug，解决CMake脚本文件路径判断方式不正确问题。
 * 解决Bug，解决CMkae、NMake脚本lib路径错误问题（感谢 Too Simple、MaMy丶）。
 * 解决Bug，修正4.0.0.6中CMake脚本 UCRT条件判断多写了个NOT。
 * 解决Bug，修正MD模式报告找不到`_libm_sse2_tan_precise`相关符号问题（感谢 13732650）。
+* 解决Bug，由于微软类库自身设计缺陷，必须关闭sdl，阻止类成员0初始化，避免特定场合STL崩溃问题（感谢 漆黑の牙）。
 * 新增Fea，添加Vistual Studio 2017 15.8支持。
 * 新增Fea，添加lib文件检测，如果不存在则报错。

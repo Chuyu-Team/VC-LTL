@@ -379,7 +379,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -404,7 +403,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_ARM_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -428,7 +426,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -453,7 +450,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_ARM_=1;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN8;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -477,7 +473,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -507,7 +502,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_ARM_=1;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN8;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -536,7 +530,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>CRTDLL2;_CRTIMP3=_CRTIMP2;_CRTIMP4=_CRTIMP2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_X86_=1;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -559,7 +552,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>CRTDLL2;_CRTIMP3=_CRTIMP2;_CRTIMP4=_CRTIMP2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_ARM_=1;WIN32;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN8;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -581,7 +573,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -605,7 +596,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_STL_CONCRT_SUPPORT=1;_ARM64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -629,7 +619,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -653,7 +642,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_ARM64_=1;_WIN64=1;_NO__LTL_Initialization;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -677,7 +665,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -705,7 +692,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_ARM64_=1;_WIN64=1;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -733,7 +719,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>CRTDLL2;_CRTIMP3=_CRTIMP2;_CRTIMP4=_CRTIMP2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_AMD64_=1;_WIN64=1;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_VISTA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -755,7 +740,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>CRTDLL2;_CRTIMP3=_CRTIMP2;_CRTIMP4=_CRTIMP2;_CRTBLD;_DISABLE_DEPRECATE_LTL_MESSAGE;_ARM64_=1;_WIN64=1;NDEBUG;_LIB;_MULTI_THREAD;_STL_WIN32_WINNT=_WIN32_WINNT_WIN10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
