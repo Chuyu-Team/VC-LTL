@@ -491,7 +491,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl_$(VC-LTLUsedToolsVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM'">
@@ -519,7 +519,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl_$(VC-LTLUsedToolsVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
@@ -542,6 +542,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)$(TargetName)_$(VC-LTLUsedToolsVersion).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|ARM'">
@@ -563,6 +564,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)$(TargetName)_$(VC-LTLUsedToolsVersion).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
@@ -681,7 +683,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl_$(VC-LTLUsedToolsVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM64'">
@@ -708,7 +710,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\msvcp140_ltl_$(VC-LTLUsedToolsVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
@@ -730,6 +732,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)$(TargetName)_$(VC-LTLUsedToolsVersion).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|ARM64'">
@@ -751,6 +754,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)$(TargetName)_$(VC-LTLUsedToolsVersion).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
