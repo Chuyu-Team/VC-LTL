@@ -71,11 +71,14 @@ goto:eof
 ::Build Dynamic "x86 x64 ARM ARM64" ["ucrt\ucrt.vcxproj"]
 :Build
 
+for %%i in (%~2)do call:BuildWithErrorCheck "%1|%%i" %3
 
-if "%3"=="" ( set "__project=" ) else ( set "__project=/project %3" )
+goto:eof
 
-for %%i in (%~2)do devenv "%~dp0VC-LTL.sln" /Build "%1|%%i" %__project%
+:BuildWithErrorCheck :: Dynamic|x86   ["ucrt\ucrt.vcxproj"]
 
+if "%2"=="" ( devenv "%~dp0VC-LTL.sln" /Build %1 ) else ( devenv "%~dp0VC-LTL.sln" /Build %1 /project %2 )
 
+if %ERRORLEVEL% NEQ 0 echo %1 %2 编译遇到问题，请查错后继续。&&pause
 
 goto:eof
