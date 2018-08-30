@@ -374,10 +374,6 @@ nmake /f Test.mak
 
 
 ### 4.0.0.10 - 添加Vistual Studio 2017 15.8支持（2018-08-26 17:20）
-> 全新的VC-LTL 4.0，代号——“破晓”，作为大版本升级某些行为已经更改：
-> 1. VC-LTL 4.0 开始，如需静态编译（仅依赖msvcrt.dll）请使用`/MT`编译。
-> 2. VC-LTL 4.0 不兼容VC-LTL 3.X编译的静态库，你需要使用VC-LTL 4.0（破晓）重新编译。
-
 * 解决Bug，解决CMake脚本语法错误（感谢 MaMy丶）。
 * 解决Bug，解决CMake脚本文件路径判断方式不正确问题。
 * 解决Bug，解决CMkae、NMake脚本lib路径错误问题（感谢 Too Simple、MaMy丶）。
@@ -385,3 +381,7 @@ nmake /f Test.mak
 * 解决Bug，由于微软类库自身设计缺陷，必须关闭sdl，阻止类成员0初始化，避免特定场合STL崩溃问题（感谢 漆黑の牙）。
 * 新增Fea，添加Vistual Studio 2017 15.8支持。
 * 新增Fea，添加lib文件检测，如果不存在则报错。
+
+
+### 4.0.0.11 Preview - 累计问题修复（2018-08-30 15:20）
+* 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。

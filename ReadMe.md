@@ -385,10 +385,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ### 4.0.0.10 - Add Vistual Studio 2017 15.8 Support (August 26, 2018 17:20）
-> The new VC-LTL 4.0, code-named "Dawning" has been released. As a major version upgrade, you need to pay attention to the following items:
-> 1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.
-> 2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
-
 * Fix Bug, Solve "VC-LTL helper for cmake.cmake" syntax error (Thanks to MaMy丶).
 * Fix Bug, Solve the wrong way to determine the path of the CMake script (Thanks to Simple, MaMy丶).
 * Fix Bug, Solve the CMkae and NMake script lib path error problem.
@@ -396,3 +392,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, Remove `/sdl` and avoid using STL crash (Thanks to 漆黑の牙).
 * Add Fea, Add Vistual Studio 2017 15.8 Support.
 * Add Fea, Add a lib file check, and report an error if it does not exist.
+
+
+### 4.0.0.11 Preview - 累计问题修复 (August 30, 2018 15:20）
+* 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。
