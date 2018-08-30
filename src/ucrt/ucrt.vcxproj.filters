@@ -555,6 +555,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
+    <ClCompile Include="convert\strtod.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ucrt.rc" />

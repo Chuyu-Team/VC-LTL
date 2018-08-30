@@ -464,6 +464,9 @@ _wmakepath_s=_wmakepath_s_downlevel
 _wsplitpath_s=_wsplitpath_s_downlevel
 
 
+;strtod.cpp
+_strtod_l=_strtod_l_downlevel
+
 ;inoutput_downlevel.cpp
 _vfwprintf_l=_vfwprintf_l_downlevel
 _vfwprintf_s_l=_vfwprintf_s_l_downlevel

@@ -78,39 +78,6 @@ extern "C"
 
 	_LCRT_DEFINE_IAT_SYMBOL(__acrt_iob_func_downlevel);
 
-	/*unsigned long long __cdecl wcstoull(
-		_In_z_                   wchar_t const* _String,
-		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr,
-		_In_                     int            _Radix
-	)
-	{
-		return _wcstoui64(_String, _EndPtr, _Radix);
-	}*/
-
-	//系统自带有double，用此将其转换为float
-	float __cdecl strtof_downlevel(
-		_In_z_                   char const* _String,
-		_Out_opt_ _Deref_post_z_ char**      _EndPtr
-	)
-	{
-#pragma warning(suppress : 4244)
-		return strtod(_String, _EndPtr);
-	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(strtof_downlevel);
-
-	float __cdecl wcstof_downlevel(
-		_In_z_                   wchar_t const* _String,
-		_Out_opt_ _Deref_post_z_ wchar_t**      _EndPtr
-	)
-	{
-#pragma warning(suppress : 4244)
-		return wcstod(_String, _EndPtr);
-	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(wcstof_downlevel);
-
-
 	//int __scrt_debugger_hook_flag = 0;
 
 	//void __cdecl _CRT_DEBUGGER_HOOK(int const reserved)
@@ -1333,20 +1300,6 @@ extern "C"
 	//	}   ioinfo;
 	//
 	//	__declspec(dllimport) ioinfo* __pioinfo[];
-
-	
-	
-
-	float __cdecl _strtof_l_downlevel(
-		_In_z_                   char const* _String,
-		_Out_opt_ _Deref_post_z_ char**      _EndPtr,
-		_In_opt_                 _locale_t   _Locale
-	)
-	{
-		return _strtod_l(_String, _EndPtr, _Locale);
-	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_strtof_l_downlevel);
 
 	extern "C++" __forceinline double __cdecl _tatof(char const* const string)
 	{

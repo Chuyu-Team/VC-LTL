@@ -47,7 +47,7 @@ from the pure C source code.
 
 |  Module  | XP Mode                   | Vista Mode | UCRT Mode | Files 
 |  ------  | -----------               | ---------- | --------- | --------
-|  CRT     | 88.845%                   | 91.911%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
+|  CRT     | 91.389%                   | 94.390%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
 |  STL     | 100.1% (Extended support) | 100%       | 100%      | libcpmt.lib, msvcprt.lib
 |  ConcRT  | 100%                      | 100%       | 100%      | libconcrt.lib, concrt.lib
 |  WinRT   |  -                        | 100%       |  -        | vccorlib.lib (Windows 8.1 and higher only)
@@ -394,5 +394,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, Add a lib file check, and report an error if it does not exist.
 
 
-### 4.0.0.11 Preview - 累计问题修复 (August 30, 2018 15:20）
+### 4.0.0.12 Preview - 累计问题修复 (August 30, 2018 18:20）
 * 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。
+* 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`以及`_strtod_l`(xp)。

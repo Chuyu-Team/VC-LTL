@@ -13,6 +13,7 @@
 //
 #include <corecrt_internal_strtox.h>
 #include <stdlib.h>
+#include <msvcrt_IAT.h>
 
 
 
@@ -30,11 +31,11 @@ static FloatingType __cdecl common_strtod_l(
 
     _VALIDATE_RETURN(string != nullptr, EINVAL, 0.0);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     FloatingType result{};
     SLD_STATUS const status = __crt_strtox::parse_floating_point(
-        locale_update.GetLocaleT(),
+        locale/*locale_update.GetLocaleT()*/,
         __crt_strtox::make_c_string_character_source(string, end_ptr),
         &result);
 
@@ -51,7 +52,7 @@ static FloatingType __cdecl common_strtod_l(
 // Narrow Strings => Floating Point
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-extern "C" float __cdecl strtof(
+extern "C" float __cdecl strtof_downlevel(
     char const* const string,
     char**      const end_ptr
     )
@@ -59,7 +60,9 @@ extern "C" float __cdecl strtof(
     return common_strtod_l<float>(string, end_ptr, nullptr);
 }
 
-extern "C" float __cdecl _strtof_l(
+_LCRT_DEFINE_IAT_SYMBOL(strtof_downlevel);
+
+extern "C" float __cdecl _strtof_l_downlevel(
     char const* const string,
     char**      const end_ptr,
     _locale_t   const locale
@@ -68,6 +71,9 @@ extern "C" float __cdecl _strtof_l(
     return common_strtod_l<float>(string, end_ptr, locale);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_strtof_l_downlevel);
+
+#if 0
 extern "C" double __cdecl strtod(
     char const* const string,
     char**      const end_ptr
@@ -75,8 +81,10 @@ extern "C" double __cdecl strtod(
 {
     return common_strtod_l<double>(string, end_ptr, nullptr);
 }
+#endif
 
-extern "C" double __cdecl _strtod_l(
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+extern "C" double __cdecl _strtod_l_downlevel(
     char const* const string,
     char**      const end_ptr,
     _locale_t   const locale
@@ -85,6 +93,10 @@ extern "C" double __cdecl _strtod_l(
     return common_strtod_l<double>(string, end_ptr, locale);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_strtod_l_downlevel);
+#endif
+
+#if 0
 extern "C" long double __cdecl strtold(
     char const* const string,
     char**      const end_ptr
@@ -92,8 +104,9 @@ extern "C" long double __cdecl strtold(
 {
     return common_strtod_l<double>(string, end_ptr, nullptr);
 }
+#endif
 
-
+#if 0
 extern "C" long double __cdecl _strtold_l(
     char const* const string,
     char**      const end_ptr,
@@ -102,7 +115,7 @@ extern "C" long double __cdecl _strtold_l(
 {
     return common_strtod_l<double>(string, end_ptr, locale);
 }
-
+#endif
 
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -110,7 +123,7 @@ extern "C" long double __cdecl _strtold_l(
 // Wide Strings => Floating Point
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-extern "C" float __cdecl wcstof(
+extern "C" float __cdecl wcstof_downlevel(
     wchar_t const* const string,
     wchar_t**      const end_ptr
     )
@@ -118,7 +131,9 @@ extern "C" float __cdecl wcstof(
     return common_strtod_l<float>(string, end_ptr, nullptr);
 }
 
-extern "C" float __cdecl _wcstof_l(
+_LCRT_DEFINE_IAT_SYMBOL(wcstof_downlevel);
+
+extern "C" float __cdecl _wcstof_l_downlevel(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
     _locale_t      const locale
@@ -127,6 +142,9 @@ extern "C" float __cdecl _wcstof_l(
     return common_strtod_l<float>(string, end_ptr, locale);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_wcstof_l_downlevel);
+
+#if 0
 extern "C" double __cdecl wcstod(
     wchar_t const* const string,
     wchar_t**      const end_ptr
@@ -134,8 +152,9 @@ extern "C" double __cdecl wcstod(
 {
     return common_strtod_l<double>(string, end_ptr, nullptr);
 }
+#endif
 
-extern "C" double __cdecl _wcstod_l(
+extern "C" double __cdecl _wcstod_l_downlevel(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
     _locale_t      const locale
@@ -144,6 +163,9 @@ extern "C" double __cdecl _wcstod_l(
     return common_strtod_l<double>(string, end_ptr, locale);
 }
 
+_LCRT_DEFINE_IAT_SYMBOL(_wcstod_l_downlevel);
+
+#if 0
 extern "C" long double __cdecl wcstold(
     wchar_t const* const string,
     wchar_t**      const end_ptr
@@ -151,9 +173,10 @@ extern "C" long double __cdecl wcstold(
 {
     return common_strtod_l<double>(string, end_ptr, nullptr);
 }
+#endif
 
 
-extern "C" long double __cdecl _wcstold_l(
+extern "C" long double __cdecl _wcstold_l_downlevel(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
     _locale_t      const locale
@@ -161,3 +184,5 @@ extern "C" long double __cdecl _wcstold_l(
 {
     return common_strtod_l<double>(string, end_ptr, locale);
 }
+
+_LCRT_DEFINE_IAT_SYMBOL(_wcstold_l_downlevel);
