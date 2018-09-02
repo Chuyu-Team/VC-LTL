@@ -34,16 +34,16 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 ## 2. VC-LTL兼容性
 此表展示了VC-LTL，C/C++库函数覆盖率，通过覆盖情况，可以大致了解VC-LTL的完善程度。
 
-|  模块  | XP模式              | Vista模式 | UCRT模式 | 相关文件 
-|  ----  | --------            | --------- | -------- | --------
-|   CRT  | 91.389%             | 94.390%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
-|   STL  | 100.1%（超标准支持）| 100%      |   100%   | libcpmt.lib、msvcprt.lib
-| ConcRT | 100%                | 100%      |   100%   | libconcrt.lib、concrt.lib
-| WinRT  |   -                 | 100%      |    -     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
-|   ATL  | 100%                | 100%      |   100%   | -
-|   MFC  | 不支持              | 不支持    |   100%   | -
-|   AMP  |   -                 |   -       |    -     | -
-| OpenMP |   -                 |   -       |    -     | -
+|  模块  | XP模式  | Vista模式 | UCRT模式 | 相关文件 
+| :----: | :-----: | :-------: | :------: | --------
+|   CRT  | 91.455% | 94.521%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
+|   STL  | 100%    | 100%      |   100%   | libcpmt.lib、msvcprt.lib
+| ConcRT | 100%    | 100%      |   100%   | libconcrt.lib、concrt.lib
+| WinRT  |   X     | 100%      |    X     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
+|   ATL  | 100%    | 100%      |   100%   | -
+|   MFC  |   X     |   X       |   100%   | -
+|   AMP  |   X     |   X       |    X     | -
+| OpenMP | 100%    | 100%      |   100%   | Visual Studio自身提供，需要带上`vcomp140.dll`
 
 ### 2.1. 支持的IDE
 * Visual Studio 2015（包含Clang with Microsoft CodeGen、Clang 3.7 with Microsoft CodeGen、Clang-LLVM）
@@ -64,7 +64,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 | Windows 7、Windows Server 2008 R2                   | √  | √  | -   | -
 | Windows 8、Windows Server 2012、Windows RT          | √  | √  | √  | -
 | Windows 8.1、Windows Server 2012 R2、Windows RT 8.1 | √  | √  | √  | -
-| Windows 10、Windows Server 2016                     | √  | √  | √  | √
+| Windows 10、Windows Server 2016、Windows Server 2019| √  | √  | √  | √
 
 > 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
 
@@ -383,6 +383,6 @@ nmake /f Test.mak
 * 新增Fea，添加lib文件检测，如果不存在则报错。
 
 
-### 4.0.0.12 Preview - 累计问题修复（2018-08-30 18:20）
+### 4.0.0.13 Preview - 累计问题修复（2018-09-02 17:10）
 * 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。
-* 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`以及`_strtod_l`(xp)。
+* 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp)以及`_strftime_l`(Vista)。
