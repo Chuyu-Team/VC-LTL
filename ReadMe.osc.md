@@ -383,6 +383,7 @@ nmake /f Test.mak
 * 新增Fea，添加lib文件检测，如果不存在则报错。
 
 
-### 4.0.0.13 Preview - 累计问题修复（2018-09-02 17:10）
+### 4.0.0.14 Preview - 累计问题修复（2018-09-07 10:00）
 * 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。
+* 解决[Bug 41](https://github.com/Chuyu-Team/VC-LTL/issues/41)，当禁用内部函数时无法使用`_byteswap_ulong`、`_byteswap_uint64`、`_byteswap_ushort`（感谢 wangwenx190）。
 * 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp)以及`_strftime_l`(Vista)。

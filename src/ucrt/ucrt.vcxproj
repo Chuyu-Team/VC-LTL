@@ -487,6 +487,7 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
+      <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -516,6 +517,7 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
+      <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -710,6 +712,7 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
+      <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -738,6 +741,7 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreSpecificDefaultLibraries>libucrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
+      <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -1454,11 +1458,17 @@
     <ClCompile Include="convert\strtod.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="stdlib\byteswap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ucrt.rc">
       <ExcludedFromBuild Condition="'$(Configuration)'!='Redist'">true</ExcludedFromBuild>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ucrt.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -558,8 +558,14 @@
     <ClCompile Include="convert\strtod.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
+    <ClCompile Include="stdlib\byteswap.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ucrt.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ucrt.def" />
   </ItemGroup>
 </Project>

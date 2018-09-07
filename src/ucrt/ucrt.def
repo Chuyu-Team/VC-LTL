@@ -1,0 +1,8 @@
+LIBRARY
+
+EXPORTS
+
+;byteswap.cpp
+_byteswap_ulong
+_byteswap_uint64
+_byteswap_ushort
