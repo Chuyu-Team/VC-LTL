@@ -193,6 +193,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 
+
 ## Excursus - Known project using VC-LTL
 
 |  Project                                                     | Note
@@ -203,6 +204,13 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 | [librech551](https://github.com/rgwan/librech551)            | 开源跨平台的CH55x ISP软件。使用VC-LTL移除运行时依赖。
 | [Dism++](https://www.chuyu.me/)                              | Dism GUI版。初雨团队自身项目，使用VC-LTL有效减少程序体积，减少安装包大小。
 | [360安全卫士](https://www.360.cn/)                           | 奇虎360推出的上网安全软件。360EvtMgr.exe、360leakfixer.exe、360Util.dll、leakrepair.dll等文件使用VC-LTL编译，在VC-LTL的支持下：升级新编译器，减少文件尺寸，完美兼容WinXP，一箭三雕。
+
+
+## Excursus - Third Party Licenses
+* [Visual Studio 2015、2017](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/Licenses)
+* [Windows 10 SDK](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/ucrt/Licenses)
+* [boost](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/boost_1_66_0/LICENSE_1_0.txt)
+
 
 ## Changes
 
