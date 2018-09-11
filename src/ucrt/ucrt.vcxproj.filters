@@ -561,6 +561,15 @@
     <ClCompile Include="stdlib\byteswap.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
+    <ClCompile Include="stdlib\rotl.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="stdlib\rotr.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="stdlib\abs.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ucrt.rc" />

@@ -22,7 +22,7 @@
 #endif
 
 
-
+#if 0
 extern "C" unsigned long __cdecl _lrotr(unsigned long value, int shift)
 {
     shift &= 0x1f;
@@ -36,6 +36,7 @@ extern "C" unsigned __cdecl _rotr(unsigned value, int shift)
     value = (value << (0x20 - shift)) | (value >> shift);
     return value;
 }
+#endif
 
 extern "C" unsigned __int64 __cdecl _rotr64(unsigned __int64 value, int shift)
 {

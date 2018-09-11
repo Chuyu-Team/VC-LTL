@@ -11,6 +11,11 @@ mbrtowc
 mbsrtowcs
 
 
+;这几个内部函数XP不存在，需要静态实现
+_rotr64
+_rotl64
+_abs64
+
 ;WinXP不存在_invalid_parameter
 _invalid_parameter=_invalid_parameter_advanced
 

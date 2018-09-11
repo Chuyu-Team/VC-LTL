@@ -12,11 +12,12 @@
 #pragma function(abs, _abs64)
 
 
-
+#if 0
 extern "C" int __cdecl abs(int const number)
 {
     return number >= 0 ? number : -number;
 }
+#endif
 
 extern "C" __int64 __cdecl _abs64(__int64 const number)
 {

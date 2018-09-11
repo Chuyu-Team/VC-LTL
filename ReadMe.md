@@ -402,7 +402,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, Add a lib file check, and report an error if it does not exist.
 
 
-### 4.0.0.14 Preview - Cumulative Fixes (Sep 07, 2018 10:00）
+### 4.0.0.15 Preview - Cumulative Fixes (Sep 11, 2018 18:30）
 * 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。
 * 解决[Bug 41](https://github.com/Chuyu-Team/VC-LTL/issues/41)，当禁用内部函数时无法使用`_byteswap_ulong`、`_byteswap_uint64`、`_byteswap_ushort`（感谢 wangwenx190）。
+* 解决Bug，当禁用内部函数时，Windows XP提示找不到`_abs64`、`_rotl64`以及`_rotr64`函数的入口点。
 * 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp)以及`_strftime_l`(Vista)。

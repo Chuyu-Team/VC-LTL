@@ -1458,7 +1458,19 @@
     <ClCompile Include="convert\strtod.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="stdlib\abs.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="stdlib\byteswap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="stdlib\rotl.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="stdlib\rotr.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
