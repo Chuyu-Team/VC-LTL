@@ -32,8 +32,8 @@ _CRT_BEGIN_C_HEADER
     _ACRTIMP const wctype_t*       __cdecl __pwctype_func(void);
 
     #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        _ACRTIMP extern const unsigned short* _pctype;
-        _ACRTIMP extern const wctype_t*       _pwctype;
+        __declspec(dllimport) extern const unsigned short* _pctype;
+        __declspec(dllimport) extern const wctype_t*       _pwctype;
     #else
         #define _pctype  (__pctype_func())
         #define _pwctype (__pwctype_func())

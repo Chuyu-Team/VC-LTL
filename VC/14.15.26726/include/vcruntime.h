@@ -39,7 +39,7 @@
         #ifdef _DLL
             #define _CRTIMP __declspec(dllimport)
         #else
-            #define _CRTIMP __declspec(dllimport)
+            #define _CRTIMP
         #endif
     #endif
 #endif

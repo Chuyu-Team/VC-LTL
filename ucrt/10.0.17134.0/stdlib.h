@@ -241,10 +241,10 @@ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) _ACRTIMP wchar_t** __cdecl __p__wp
 _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP int*      __cdecl __p__fmode  (void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_pgmptr ) _ACRTIMP extern char*    _pgmptr;
-    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) _ACRTIMP extern wchar_t* _wpgmptr;
+    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_pgmptr ) __declspec(dllimport) extern char*    _pgmptr;
+    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) __declspec(dllimport) extern wchar_t* _wpgmptr;
     #ifndef _CORECRT_BUILD
-        _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP extern int      _fmode;
+        _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) __declspec(dllimport) extern int      _fmode;
     #endif
 #else
     #define _pgmptr  (*__p__pgmptr ())
@@ -838,7 +838,7 @@ _ACRTIMP char* __cdecl _gcvt(
     #endif
 
     #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        _ACRTIMP extern int __mb_cur_max;
+        __declspec(dllimport) extern int __mb_cur_max;
     #else
         #define __mb_cur_max (___mb_cur_max_func())
     #endif
@@ -1154,9 +1154,9 @@ _ACRTIMP char***    __cdecl __p___argv (void);
 _ACRTIMP wchar_t*** __cdecl __p___wargv(void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    _ACRTIMP extern int       __argc;
-    _ACRTIMP extern char**    __argv;
-    _ACRTIMP extern wchar_t** __wargv;
+    __declspec(dllimport) extern int       __argc;
+    __declspec(dllimport) extern char**    __argv;
+    __declspec(dllimport) extern wchar_t** __wargv;
 #else
     #define __argc  (*__p___argc())  // Pointer to number of command line arguments
     #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
@@ -1171,8 +1171,8 @@ _DCRTIMP wchar_t*** __cdecl __p__wenviron(void);
 #endif
 
 #ifndef _CRT_V12_LEGACY_FUNCTIONALITY
-    _ACRTIMP extern char **    _environ;
-	_ACRTIMP extern wchar_t ** _wenviron;
+    __declspec(dllimport) extern char **    _environ;
+	__declspec(dllimport) extern wchar_t ** _wenviron;
 #else
     #define _environ  (*__p__environ())  // Pointer to narrow environment table
     #define _wenviron (*__p__wenviron()) // Pointer to wide environment table

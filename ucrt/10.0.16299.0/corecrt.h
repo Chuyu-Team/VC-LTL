@@ -24,7 +24,7 @@ _CRT_BEGIN_C_HEADER
     #elif !defined _CORECRT_BUILD && defined _DLL
         #define _ACRTIMP __declspec(dllimport)
     #else
-        #define _ACRTIMP __declspec(dllimport)
+        #define _ACRTIMP
     #endif
 #endif
 
@@ -37,10 +37,10 @@ _CRT_BEGIN_C_HEADER
 #ifndef _DCRTIMP
     #if defined _CRTIMP && !defined _VCRT_DEFINED_CRTIMP
         #define _DCRTIMP _CRTIMP
-    #elif /*!defined _CORECRT_BUILD &&*/ defined _DLL
+    #elif !defined _CORECRT_BUILD && defined _DLL
         #define _DCRTIMP __declspec(dllimport)
     #else
-        #define _DCRTIMP __declspec(dllimport)
+        #define _DCRTIMP
     #endif
 #endif
 
