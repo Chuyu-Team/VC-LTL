@@ -7,7 +7,6 @@
 //
 #include <corecrt_internal.h>
 #include <search.h>
-#include <msvcrt_IAT.h>
 
 #ifdef _M_CEE
     #define __fileDECL __clrcall
@@ -40,7 +39,7 @@
 extern "C"
 #endif
 #ifdef __USE_CONTEXT
-void* __fileDECL _lfind_s_downlevel(
+void* __fileDECL _lfind_s(
     void const*   const key,
     void const*   const base,
     unsigned int* const num,
@@ -78,8 +77,4 @@ void* __fileDECL _lfind(
     return nullptr;
 }
 
-#ifdef __USE_CONTEXT
-_LCRT_DEFINE_IAT_SYMBOL(_lfind_s_downlevel);
-#else
-#endif
 #undef __COMPARE

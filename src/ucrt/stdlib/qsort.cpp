@@ -7,7 +7,7 @@
 //
 #include <corecrt_internal.h>
 #include <search.h>
-#include <msvcrt_IAT.h>
+
 
 /* Temporarily define optimization macros (to be removed by the build team: RsmqblCompiler alias) */
 #if !defined(BEGIN_PRAGMA_OPTIMIZE_DISABLE)
@@ -153,7 +153,7 @@ extern "C"
 #endif
 _CRT_SECURITYSAFECRITICAL_ATTRIBUTE
 #ifdef __USE_CONTEXT
-void __fileDECL qsort_s_downlevel(
+void __fileDECL qsort_s(
     void*  const base,
     size_t const num,
     size_t const width,
@@ -389,10 +389,6 @@ recurse:
         return;
     }
 }
-
-#ifdef __USE_CONTEXT
-_LCRT_DEFINE_IAT_SYMBOL(qsort_s_downlevel);
-#endif
 
 #undef __COMPARE
 #undef __SHORTSORT

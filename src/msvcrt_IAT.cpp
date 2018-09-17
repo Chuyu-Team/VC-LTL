@@ -1,3 +1,7 @@
+#ifndef _LTL_Using_Dynamic_Lib
+#define __Build_OBJ
+#endif
+
 #include "msvcrt_IAT.h"
 
 
@@ -356,66 +360,14 @@ _LCRT_DEFINE_IAT_SYMBOL_EXTERN(truncl);
 _LCRT_DEFINE_IAT_SYMBOL_EXTERN(lldiv);
 
 
-#ifdef _ATL_XP_TARGETING
-//msvcrt.lib
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(qsort_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_i64toa_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_i64tow_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_itoa_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_itow_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ltoa_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ltow_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_makepath_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbccpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbscat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbscpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsnbcat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsnbcpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsnbset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsncat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsncpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsnset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbsset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_mbstok_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(memcpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(memmove_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(scanf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_snprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_snscanf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_snwprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_snwscanf_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_splitpath_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(sprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(sscanf_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(strcat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(strcpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(strncat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(strncpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(strnlen_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_strnset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_strset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(strtok_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(swprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(swscanf_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ui64toa_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ui64tow_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ultoa_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_ultow_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_vsnprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_vsnwprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(vsprintf_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(vswprintf_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcscat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcscpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcsncat_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcsncpy_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcsnlen_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wcsnset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wcsset_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wcstok_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wmakepath_s_downlevel);
-	//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(wscanf_s_downlevel);
-//_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_wsplitpath_s_downlevel);
+#if _CRT_NTDDI_MIN < /*NTDDI_WIN6*/0x06000000
+
+#ifndef _DLL
+//VC-LTL-4.0.0.15以前版本会强制添加__declspec(dllimport)修饰，所以，为了兼容历史代码，给以下函数添加 IAT 符号。
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_lfind_s);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(_lsearch_s);
+_LCRT_DEFINE_IAT_SYMBOL_EXTERN(qsort_s);
+#endif
 
 #endif
 

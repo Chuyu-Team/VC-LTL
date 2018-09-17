@@ -85,9 +85,13 @@ _LTL_PushWarning(1003, "VC-LTL 4.0 开始不在允许禁用VC-LTL初始化，此
 _LTL_PushWarning(1005, "VC-LTL为了简化支持，当使用 /ZW 参数时编译的程序将无法支持 Windows 8。")
 #endif
 
-_CRT_BEGIN_C_HEADER
+#ifdef  __cplusplus
+extern "C" {
+#endif
 extern unsigned long __cdecl __LTL_GetOsMinVersion();
 extern unsigned long long __cdecl __LTL_GetOsVersion();
-_CRT_END_C_HEADER
+#ifdef  __cplusplus
+} //extern "C"
+#endif
 
 #endif //!RC_INVOKED

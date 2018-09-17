@@ -172,8 +172,8 @@ _iswctype_l=iswctype
 ;ismbstr.cpp
 _ismbstrail_l=_ismbstrail_l_downlevel
 
-_lfind_s=_lfind_s_downlevel
-_lsearch_s=_lsearch_s_downlevel
+_lfind_s
+_lsearch_s
 
 _mbccpy_l=_mbccpy_l_downlevel
 
@@ -423,7 +423,7 @@ _time64=_time64_downlevel
 
 
 ;msvcrt.lib
-qsort_s=qsort_s_downlevel
+qsort_s
 _i64toa_s=_i64toa_s_downlevel
 _i64tow_s=_i64tow_s_downlevel
 _itoa_s=_itoa_s_downlevel

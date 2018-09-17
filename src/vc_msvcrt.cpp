@@ -538,3 +538,34 @@ EXTERN_C errno_t __cdecl _configure_wide_argv_downlevel(
 _LCRT_DEFINE_IAT_SYMBOL(_configure_wide_argv_downlevel);
 
 extern "C" int _commode = 0;
+
+
+EXTERN_C char**    __cdecl _get_initial_narrow_environment(void)
+{
+	return _environ;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_initial_narrow_environment);
+
+
+EXTERN_C wchar_t** __cdecl _get_initial_wide_environment(void)
+{
+	return _wenviron;
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_initial_wide_environment);
+
+
+typedef int (__cdecl * _crt_atexit_fun)(
+	void(__cdecl* _Function)(void)
+	);
+
+//将atexit imp版转发到 _crt_atexit
+extern "C" extern const _crt_atexit_fun _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(atexit);
+
+extern "C" int __cdecl _crt_atexit(
+	void(__cdecl* _Function)(void)
+	)
+{
+	return _LCRT_DEFINE_IAT_SYMBOL_MAKE_NAME(atexit)(_Function);
+}

@@ -231,3 +231,63 @@ extern "C" int __cdecl _is_exception_typeof_downlevel(const type_info & type, st
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_is_exception_typeof_downlevel);
+
+
+// Pre-V4 managed exception code
+#define MANAGED_EXCEPTION_CODE  0XE0434F4D
+
+// V4 and later managed exception code
+#define MANAGED_EXCEPTION_CODE_V4  0XE0434352
+
+#define EHTRACE_ENTER
+#define EHTRACE_EXIT
+
+extern "C" _VCRTIMP int __cdecl __FrameUnwindFilter(
+	EXCEPTION_POINTERS *pExPtrs
+) {
+	EHTRACE_ENTER;
+
+	EHExceptionRecord *pExcept = (EHExceptionRecord *)pExPtrs->ExceptionRecord;
+
+	switch (PER_CODE(pExcept)) {
+	case EH_EXCEPTION_NUMBER:
+		__ProcessingThrow = 0;
+		terminate();
+
+#ifdef ALLOW_UNWIND_ABORT
+	case EH_ABORT_FRAME_UNWIND_PART:
+		EHTRACE_EXIT;
+		return EXCEPTION_EXECUTE_HANDLER;
+#endif
+
+	case MANAGED_EXCEPTION_CODE:
+	case MANAGED_EXCEPTION_CODE_V4:
+		/*
+		 See VSW#544593 for more details. __ProcessingThrow is used to implement
+		 std::uncaught_exception(). The interaction between C++, SEH and managed
+		 exception wrt __ProcessingThrow is unspec'ed. From code inspection, it
+		 looks like that __ProcessingThrow works ok with all C++ exceptions.
+
+		 In this case, when we encounter a managed exception thrown from a destructor
+		 during unwind, we choose to decrement the count. This means that the previous
+		 C++ exception which incremented the count won't be considered any longer.
+		 In fact, the managed exception will be thrown, and the native C++ one will
+		 not have any possibility to be catched any longer.
+
+		 We should revisit std::uncaught_exception() and SEH/managed exception in the
+		 next version.
+		 */
+		EHTRACE_EXIT;
+		if (__ProcessingThrow > 0)
+		{
+			--__ProcessingThrow;
+		}
+		return EXCEPTION_CONTINUE_SEARCH;
+
+	default:
+		EHTRACE_EXIT;
+		return EXCEPTION_CONTINUE_SEARCH;
+	}
+}
+
+_LCRT_DEFINE_IAT_SYMBOL(__FrameUnwindFilter);

@@ -55,6 +55,9 @@ goto:eof
 ::生成msvcrt.lib
 call:Build Dynamic %2 "%1\Build\ltlbuild\ltlbuild.vcxproj"
 
+::生成msvcmrt.lib
+call:Build Dynamic %2 "%1\Build\ltlbuild_CLR\ltlbuild_CLR.vcxproj"
+
 ::生成vcruntime.lib
 call:Build Redist  %2 "%1\Build\vcruntime\vcruntime.vcxproj"
 
