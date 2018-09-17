@@ -20,13 +20,13 @@ extern "C" {
 // user code is executed.  There are cases where any or all of the pointers may
 // be null during execution.  Do not assume that they are non-null.
 
-_ACRTIMP extern int       __argc;   // The number of arguments in __argv or __wargv
-_ACRTIMP extern  char**    __argv;  // The arguments as narrow strings
-_ACRTIMP extern  wchar_t** __wargv; // The arguments as wide strings
-_ACRTIMP extern  char*     _pgmptr; // The name of the program as a narrow string
-_ACRTIMP extern  wchar_t*  _wpgmptr;// The name of the program as a wide string
-_ACRTIMP extern  char*     _acmdln; // The raw command line as a narrow string
-_ACRTIMP extern  wchar_t*  _wcmdln; // The raw command line as a wide string
+__declspec(dllimport) extern int       __argc;   // The number of arguments in __argv or __wargv
+__declspec(dllimport) extern  char**    __argv;  // The arguments as narrow strings
+__declspec(dllimport) extern  wchar_t** __wargv; // The arguments as wide strings
+__declspec(dllimport) extern  char*     _pgmptr; // The name of the program as a narrow string
+__declspec(dllimport) extern  wchar_t*  _wpgmptr;// The name of the program as a wide string
+__declspec(dllimport) extern  char*     _acmdln; // The raw command line as a narrow string
+__declspec(dllimport) extern  wchar_t*  _wcmdln; // The raw command line as a wide string
 
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 

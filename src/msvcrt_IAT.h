@@ -34,7 +34,9 @@
 #endif
 
 
-#if !defined _LTL_Using_Dynamic_Lib || defined __Build_OBJ
+#if defined _LTL_Using_Dynamic_Lib || defined __Build_OBJ
+
+#if defined __Build_OBJ
 
 #define __IAT_EXPORT(f) ;
 #else
@@ -53,3 +55,8 @@
 #define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)                                                       \
     __IAT_EXTERN_C void __cdecl f();                                                            \
     _LCRT_DEFINE_IAT_SYMBOL(f)
+
+#else //!(defined _LTL_Using_Dynamic_Lib || defined __Build_OBJ)
+#define _LCRT_DEFINE_IAT_SYMBOL(f)
+#define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)
+#endif

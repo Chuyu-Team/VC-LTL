@@ -12,7 +12,7 @@
 
 // Clients of the static CRT can choose to access _fmode directly as a global variable; they do so as if it was declared as an int.
 // Because state separation is disabled in the static CRT, the dual_state_global<int> has the same representation as an int, so this is okay, if a bit messy.
-EXTERN_C _ACRTIMP extern int _fmode;  // This is automatically initialized to zero by the compiler
+EXTERN_C __declspec(dllimport) extern int _fmode;  // This is automatically initialized to zero by the compiler
 
 #if !defined _AMD64_ && !defined _ARM64_ && !defined _ARM_
 #error "仅需要在x64中编译"

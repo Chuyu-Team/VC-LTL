@@ -288,7 +288,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
@@ -309,7 +309,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -329,7 +329,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
@@ -350,7 +350,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0602;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0602;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -370,7 +370,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0601;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0601;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
@@ -392,7 +392,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0602;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0602;_DISABLE_DEPRECATE_LTL_MESSAGE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -413,7 +413,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -433,7 +433,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0A00;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0A00;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -453,7 +453,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0601;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -473,7 +473,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0A00;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_WIN32_WINNT=0x0A00;_NO__LTL_Initialization;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -493,7 +493,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0601;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0601;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -514,7 +514,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0A00;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_NO_DEFAULT_CONCRT_LIB;CONCRTDLL;_CRTBLD;_WIN32_WINNT=0x0A00;_DISABLE_DEPRECATE_LTL_MESSAGE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>

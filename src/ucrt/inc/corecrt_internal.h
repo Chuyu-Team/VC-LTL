@@ -99,9 +99,9 @@ extern "C++"
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #ifdef __cplusplus
-    _ACRTIMP extern int           _fmode;
-    _ACRTIMP extern unsigned char _mbctype[];
-    _ACRTIMP extern unsigned char _mbcasemap[];
+    __declspec(dllimport) extern int           _fmode;
+    __declspec(dllimport) extern unsigned char _mbctype[];
+    __declspec(dllimport) extern unsigned char _mbcasemap[];
 #endif
 
 
