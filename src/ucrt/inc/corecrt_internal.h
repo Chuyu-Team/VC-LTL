@@ -1027,15 +1027,15 @@ typedef struct _ptd_msvcrt
 			void *      _curcontext;    /* current exception context */
 			int         _ProcessingThrow; /* for uncaught_exception */
 			void *              _curexcspec;    /* for handling exceptions thrown from std::unexpected */
-	#if defined (_M_IA64) || defined (_M_AMD64)
+	#if defined (_M_IA64) || defined (_M_AMD64) || defined (_M_ARM64) || defined (_M_ARM)
 			void *      _pExitContext;
 			void *      _pUnwindContext;
 			void *      _pFrameInfoChain;
-			unsigned __int64    _ImageBase;
+			uintptr_t   _ImageBase;
 	#if defined (_M_IA64)
 			unsigned __int64    _TargetGp;
 	#endif  /* defined (_M_IA64) */
-			unsigned __int64    _ThrowImageBase;
+			uintptr_t   _ThrowImageBase;
 			void *      _pForeignException;
 	#elif defined (_M_IX86)
 			void *      _pFrameInfoChain;

@@ -310,7 +310,7 @@ static BOOLEAN Is_bad_exception_allowed(ESTypeList *pExceptionSpec);
 //         handle unwinds.
 //     From TranslatorGuardHandler: Called to handle the translation of a
 //         non-C++ EH exception.  Context considered is that of parent.
-
+#if 0
 extern "C" EXCEPTION_DISPOSITION __cdecl __InternalCxxFrameHandler(
     EHExceptionRecord  *pExcept,        // Information for this exception
     EHRegistrationNode *pRN,            // Dynamic information for this frame
@@ -747,8 +747,8 @@ static void FindHandler(
         // Catch block detection uses CatchDepth on X86, or _ExecutionInCatch on other platforms. On
         // these platforms CatchDepth is always 0 - we don't maintain a stack of entered try/catch
         // states.
-        if( !gotMatch && FUNC_MAGICNUM(*pFuncInfo) >= EH_MAGIC_HAS_ES &&
-            (FUNC_PESTYPES(pFuncInfo) != nullptr || (((FUNC_FLAGS(*pFuncInfo) & FI_EHNOEXCEPT_FLAG) != 0) &&
+        if( !gotMatch && FUNC_MAGICNUM(*pFuncInfo) >= EH_MAGIC_HAS_ES && 
+            (FUNC_PESTYPES(pFuncInfo) != nullptr || (((FUNC_FLAGS(*pFuncInfo) & FI_EHNOEXCEPT_FLAG) != 0) && 
 #if _M_IX86
                 CatchDepth == 0
 #else
@@ -935,6 +935,7 @@ static void FindHandlerForForeignException(
     // If we got here, that means we didn't have anything to do with the
     // exception.  Continue search.
 }
+#endif
 
 PGETWINRT_OOM_EXCEPTION g_OutOfMemoryExceptionCallback = nullptr;
 
@@ -1060,6 +1061,7 @@ extern "C" _VCRTIMP int __cdecl __FrameUnwindFilter(
 //      phase (targetState = -1), and to do partial unwinding when the current
 //      frame has an appropriate catch.
 
+#if 0
 extern "C" void __FrameUnwindToState (
     EHRegistrationNode *pRN,            // Registration node for subject
                                         //   function
@@ -1530,6 +1532,7 @@ static int ExFilterRethrow(
 }
 
 #endif /* } } */
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1768,6 +1771,7 @@ extern "C" _VCRTIMP void __BuildCatchObject(
 //       object as a result of a new exception, we give up.  If the destruction
 //       throws otherwise, we let it be.
 
+#if 0
 extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
     EHExceptionRecord *pExcept,         // The original exception record
     BOOLEAN fThrowNotAllowed            // TRUE if destructor not allowed to
@@ -1817,6 +1821,7 @@ extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
 
     EHTRACE_EXIT;
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1829,6 +1834,7 @@ extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
 // Side-effects:
 //     NONE.
 
+#if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 extern "C" _VCRTIMP void *__AdjustPointer(
     void *pThis,                        // Address point of exception object
     const PMD& pmd                      // Generalized pointer-to-member
@@ -1848,6 +1854,7 @@ extern "C" _VCRTIMP void *__AdjustPointer(
 
     return pRet;
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1905,14 +1912,28 @@ extern "C" _VCRTIMP void * __GetPlatformExceptionInfo(
 
 extern "C" int __cdecl __uncaught_exceptions()
 {
-    __vcrt_ptd* const ptd = __vcrt_getptd_noinit();
-    return ptd ? ptd->_ProcessingThrow : 0;
+    auto* const ptd = __acrt_getptd();
+	if (ptd == nullptr)
+		return 0;
+
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return ptd->XP_msvcrt._ProcessingThrow;
+	}
+	else
+#endif
+	{
+		return ptd->VistaOrLater_msvcrt._ProcessingThrow;
+	}
 }
 
+#if 0
 extern "C" bool __cdecl __uncaught_exception()
 {
     return __uncaught_exceptions() != 0;
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -1924,17 +1945,47 @@ extern "C" bool __cdecl __uncaught_exception()
 
 extern "C" void** __cdecl __current_exception()
 {
-    return &__vcrt_getptd()->_curexception;
+	auto ptd = __acrt_getptd();
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return &ptd->XP_msvcrt._curexception;
+	}
+	else
+#endif
+	{
+		return &ptd->VistaOrLater_msvcrt._curexception;
+	}
 }
 
 extern "C" void** __cdecl __current_exception_context()
 {
-    return &__vcrt_getptd()->_curcontext;
+	auto ptd = __acrt_getptd();
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return &ptd->XP_msvcrt._curcontext;
+	}
+	else
+#endif
+	{
+		return &ptd->VistaOrLater_msvcrt._curcontext;
+	}
 }
 
 extern "C" int* __cdecl __processing_throw()
 {
-    return &__vcrt_getptd()->_ProcessingThrow;
+	auto ptd = __acrt_getptd();
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return &ptd->XP_msvcrt._ProcessingThrow;
+	}
+	else
+#endif
+	{
+		return &ptd->VistaOrLater_msvcrt._ProcessingThrow;
+	}
 }
 
 
@@ -2324,6 +2375,7 @@ BOOLEAN IsInExceptionSpec(
 //
 // Simple, isn't it?
 //
+#if 0
 void CallUnexpected( ESTypeList* pESTypeList )
 {
     DASSERT( _pCurrentFuncInfo == nullptr );
@@ -2340,6 +2392,7 @@ void CallUnexpected( ESTypeList* pESTypeList )
     }
     terminate();
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 // Is_bad_exception_allowed - checks if std::bad_exception belongs to the list
@@ -2411,8 +2464,10 @@ extern "C" _VCRTIMP int __cdecl _is_exception_typeof(const type_info & type, str
 // though, we may no longer cross a noexcept function boundary when searching for
 // a handler. In this case the inlined code contains an EH state that will invoke
 // this function should an exception occur.
+#if 0
 extern "C" __declspec(noreturn) void __cdecl __std_terminate()
 {
     terminate();
 }
+#endif
 

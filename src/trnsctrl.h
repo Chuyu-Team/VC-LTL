@@ -30,12 +30,15 @@
 #error ERROR: Use of C runtime library internal header file.
 #endif  /* _CRTBLD */
 
-extern "C" void** __cdecl __current_exception();
-extern "C" int* __cdecl __processing_throw();
+extern "C" _VCRTIMP void** __cdecl __current_exception();
+extern "C" _VCRTIMP int* __cdecl __processing_throw();
+extern "C" _VCRTIMP void** __cdecl __current_exception_context();
 
 #define _pCurrentException (*(EHExceptionRecord**)__current_exception())
 
 #define __ProcessingThrow (*__processing_throw())
+
+#define _pCurrentExContext (*(CONTEXT**)__current_exception_context())
 
 #if _M_MRX000 >= 4000
 
@@ -250,6 +253,8 @@ typedef struct FrameInfo {
 #define _CallMemberFunction0(pthis, pmfn)               (*(VOID(*)(PVOID))pmfn)(pthis)
 #define _CallMemberFunction1(pthis, pmfn, pthat)        (*(VOID(*)(PVOID, PVOID))pmfn)(pthis, pthat)
 #define _CallMemberFunction2(pthis, pmfn, pthat, val2) (*(VOID(*)(PVOID, PVOID, int))pmfn)(pthis, pthat, val2)
+
+#define OffsetToAddress(off, FP)  (void*)(((char*)FP) + off)
 
 #elif defined (_M_MPPC) || defined (_M_PPC)
 typedef struct FrameInfo {

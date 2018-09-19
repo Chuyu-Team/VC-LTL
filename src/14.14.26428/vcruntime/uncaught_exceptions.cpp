@@ -6,6 +6,7 @@
 ****/
 
 #include <vcruntime_internal.h>
+#include <corecrt_internal.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,6 +20,18 @@
 
 extern "C" int __cdecl __uncaught_exceptions()
 {
-    __vcrt_ptd* const ptd = __vcrt_getptd_noinit();
-    return ptd ? ptd->_ProcessingThrow : 0;
+	auto* const ptd = __acrt_getptd();
+	if (ptd == nullptr)
+		return 0;
+
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return ptd->XP_msvcrt._ProcessingThrow;
+	}
+	else
+#endif
+	{
+		return ptd->VistaOrLater_msvcrt._ProcessingThrow;
+	}
 }

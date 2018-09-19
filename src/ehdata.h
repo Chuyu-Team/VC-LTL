@@ -80,13 +80,29 @@
 # endif
 #endif
 
-#if (defined(_M_IA64) || defined(_M_AMD64) || defined(_M_ARM_NT) || defined(_M_ARM64))
-#define _EH_RELATIVE_OFFSETS 1
+#if defined(_M_CEE_PURE) || defined(BUILDING_C1XX_FORCEINCLUDE)
+#define _EH_RELATIVE_TYPEINFO 0
+#define _EH_RELATIVE_FUNCINFO 0
+#define _RTTI_RELATIVE_TYPEINFO 0
+#elif defined(_CHPE_X86_ARM64_EH_)
+#define _EH_RELATIVE_TYPEINFO 0
+#define _EH_RELATIVE_FUNCINFO 1
+#define _RTTI_RELATIVE_TYPEINFO 0
+#elif defined(_M_ARM)
+#define _EH_RELATIVE_TYPEINFO 1
+#define _EH_RELATIVE_FUNCINFO 1
+#define _RTTI_RELATIVE_TYPEINFO 0
+#elif defined(_M_AMD64) || defined(_M_ARM64)
+#define _EH_RELATIVE_TYPEINFO 1
+#define _EH_RELATIVE_FUNCINFO 1
+#define _RTTI_RELATIVE_TYPEINFO 1
 #else
-#define _EH_RELATIVE_OFFSETS 0
+#define _EH_RELATIVE_TYPEINFO 0
+#define _EH_RELATIVE_FUNCINFO 0
+#define _RTTI_RELATIVE_TYPEINFO 0
 #endif
 
-#define _EH_RELATIVE_TYPEINFO _EH_RELATIVE_OFFSETS
+#define _EH_RELATIVE_OFFSETS _EH_RELATIVE_TYPEINFO
 
 #if defined(_WIN64)
 #define _EH_PTR64 __ptr64

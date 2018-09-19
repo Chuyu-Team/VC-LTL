@@ -16,9 +16,6 @@
     <Filter Include="源文件\vc">
       <UniqueIdentifier>{8c1bb663-d9c1-45e1-b556-287f00f87ce7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\vc\objs">
-      <UniqueIdentifier>{cc2e47e8-0c60-4f20-b3e1-1cab7ef77930}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\ltl">
       <UniqueIdentifier>{dcb5545f-77e6-40a3-b5a1-095ecc58eeaf}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,12 @@
     </Filter>
     <Filter Include="源文件\ltl\amd64">
       <UniqueIdentifier>{a0cee9a9-1e56-4ff7-ae9b-e1edd592e15e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\Others">
+      <UniqueIdentifier>{cc2e47e8-0c60-4f20-b3e1-1cab7ef77930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\x86">
+      <UniqueIdentifier>{3948b2d9-84a7-4ead-817d-17b559cc9f31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,10 +75,24 @@
     <ClCompile Include="..\..\..\amd64\chandler_noexcept.cpp">
       <Filter>源文件\ltl\amd64</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\amd64\trnsctrl.cpp">
+      <Filter>源文件\vc\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\i386\trnsctrl.cpp">
+      <Filter>源文件\vc\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\frame.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="vcruntime.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vcruntime.def">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

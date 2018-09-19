@@ -40,6 +40,7 @@
 //
 #if defined(_M_IX86) && !defined(_CHPE_X86_ARM64_EH_)
 
+#if 0
 void RENAME_EH_EXTERN(__FrameHandler3)::FrameUnwindToEmptyState(
     EHRegistrationNode *pRN,
     DispatcherContext  *pDC,
@@ -48,6 +49,7 @@ void RENAME_EH_EXTERN(__FrameHandler3)::FrameUnwindToEmptyState(
 {
     FrameUnwindToState(pRN, pDC, pFuncInfo, EH_EMPTY_STATE);
 }
+#endif
 
 #define __GetAddress(a, b)      (a)
 #define REAL_FP(a, b)           (a)
@@ -214,6 +216,7 @@ inline ESTypeList* RENAME_EH_EXTERN(__FrameHandler3)::getESTypes(FuncInfo* pFunc
 //     From TranslatorGuardHandler: Called to handle the translation of a
 //         non-C++ EH exception.  Context considered is that of parent.
 
+#if 0
 template <class T>
 EXCEPTION_DISPOSITION __InternalCxxFrameHandler(
     EHExceptionRecord  *pExcept,        // Information for this exception
@@ -913,6 +916,7 @@ static void FindHandlerForForeignException(
     // If we got here, that means we didn't have anything to do with the
     // exception.  Continue search.
 }
+#endif
 
 template <class T>
 int TypeMatchHelper(
@@ -1005,6 +1009,7 @@ int RENAME_EH_EXTERN(__FrameHandler4)::TypeMatch(
 //      phase (targetState = -1), and to do partial unwinding when the current
 //      frame has an appropriate catch.
 
+#if 0
 #if _EH_RELATIVE_FUNCINFO
 void RENAME_EH_EXTERN(__FrameHandler4)::FrameUnwindToState(
     EHRegistrationNode *pRN,            // Registration node for subject
@@ -1735,6 +1740,7 @@ static int ExFilterRethrow(
 }
 
 #endif /* } } */
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2124,6 +2130,7 @@ static BOOLEAN IsInExceptionSpec(
 //
 // Simple, isn't it?
 //
+#if 0
 static void CallUnexpected( ESTypeList* pESTypeList )
 {
     DASSERT( _pCurrentFuncInfo == nullptr );
@@ -2140,6 +2147,7 @@ static void CallUnexpected( ESTypeList* pESTypeList )
     }
     terminate();
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 // Is_bad_exception_allowed - checks if std::bad_exception belongs to the list

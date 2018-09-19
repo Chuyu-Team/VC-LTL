@@ -213,6 +213,7 @@ static BOOLEAN Is_bad_exception_allowed(ESTypeList *pExceptionSpec);
 //     From TranslatorGuardHandler: Called to handle the translation of a
 //         non-C++ EH exception.  Context considered is that of parent.
 
+#if 0
 extern "C" EXCEPTION_DISPOSITION __cdecl RENAME_EH_EXTERN(__InternalCxxFrameHandler)(
     EHExceptionRecord  *pExcept,        // Information for this exception
     EHRegistrationNode *pRN,            // Dynamic information for this frame
@@ -850,6 +851,7 @@ static void FindHandlerForForeignException(
     // If we got here, that means we didn't have anything to do with the
     // exception.  Continue search.
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -914,6 +916,7 @@ extern "C" _VCRTIMP int __cdecl RENAME_EH_EXTERN(__TypeMatch)(
 //      phase (targetState = -1), and to do partial unwinding when the current
 //      frame has an appropriate catch.
 
+#if 0
 extern "C" void RENAME_EH_EXTERN(__FrameUnwindToState) (
     EHRegistrationNode *pRN,            // Registration node for subject
                                         //   function
@@ -1388,6 +1391,7 @@ static int ExFilterRethrow(
 }
 
 #endif /* } } */
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1695,6 +1699,7 @@ static BOOLEAN IsInExceptionSpec(
 //
 // Simple, isn't it?
 //
+#if 0
 static void CallUnexpected( ESTypeList* pESTypeList )
 {
     DASSERT( _pCurrentFuncInfo == nullptr );
@@ -1711,6 +1716,7 @@ static void CallUnexpected( ESTypeList* pESTypeList )
     }
     terminate();
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 // Is_bad_exception_allowed - checks if std::bad_exception belongs to the list

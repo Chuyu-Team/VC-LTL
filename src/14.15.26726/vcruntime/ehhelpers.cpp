@@ -40,6 +40,7 @@ extern "C" void (__cdecl * const _pDestructExceptionObject)(EHExceptionRecord *,
 // Side-effects:
 //     NONE.
 
+#if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 extern "C" _VCRTIMP void *__AdjustPointer(
     void *pThis,                        // Address point of exception object
     const PMD& pmd                      // Generalized pointer-to-member
@@ -60,6 +61,7 @@ extern "C" _VCRTIMP void *__AdjustPointer(
 
     return pRet;
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -110,17 +112,47 @@ extern "C" _VCRTIMP void * __GetPlatformExceptionInfo(
 
 extern "C" void** __cdecl __current_exception()
 {
-    return &__vcrt_getptd()->_curexception;
+	auto ptd = __acrt_getptd();
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return &ptd->XP_msvcrt._curexception;
+	}
+	else
+#endif
+	{
+		return &ptd->VistaOrLater_msvcrt._curexception;
+	}
 }
 
 extern "C" void** __cdecl __current_exception_context()
 {
-    return &__vcrt_getptd()->_curcontext;
+	auto ptd = __acrt_getptd();
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return &ptd->XP_msvcrt._curcontext;
+	}
+	else
+#endif
+	{
+		return &ptd->VistaOrLater_msvcrt._curcontext;
+	}
 }
 
 extern "C" int* __cdecl __processing_throw()
 {
-    return &__vcrt_getptd()->_ProcessingThrow;
+	auto ptd = __acrt_getptd();
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+	{
+		return &ptd->XP_msvcrt._ProcessingThrow;
+	}
+	else
+#endif
+	{
+		return &ptd->VistaOrLater_msvcrt._ProcessingThrow;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,10 +225,12 @@ extern "C" _VCRTIMP void __cdecl _SetWinRTOutOfMemoryExceptionCallback(PGETWINRT
 // though, we may no longer cross a noexcept function boundary when searching for
 // a handler. In this case the inlined code contains an EH state that will invoke
 // this function should an exception occur.
+#if 0
 extern "C" __declspec(noreturn) void __cdecl __std_terminate()
 {
     terminate();
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -213,6 +247,7 @@ extern "C" __declspec(noreturn) void __cdecl __std_terminate()
 //       object as a result of a new exception, we give up.  If the destruction
 //       throws otherwise, we let it be.
 
+#if 0
 extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
     EHExceptionRecord *pExcept,         // The original exception record
     BOOLEAN fThrowNotAllowed            // TRUE if destructor not allowed to
@@ -261,6 +296,7 @@ extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
 
     EHTRACE_EXIT;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -271,6 +307,8 @@ extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
 // Returns:
 //      TRUE if exception object not found and should be destroyed.
 //
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+//Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
     PVOID pExceptionObject
 ) {
@@ -283,6 +321,7 @@ extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
     }
     return TRUE;
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 // _is_exception_typeof - checks if the thrown exception is the type, the caller

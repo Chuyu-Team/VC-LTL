@@ -21,9 +21,10 @@
 #define RENAME_EH_EXTERN_HYBRID(x) x
 #endif
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #if _EH_RELATIVE_FUNCINFO
 
-#define _ImageBase        (__vcrt_getptd()->_ImageBase)
+#define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
 
 extern "C" uintptr_t __cdecl _GetImageBase()
 {
@@ -39,7 +40,7 @@ extern "C" void __cdecl _SetImageBase(uintptr_t ImageBaseToRestore)
 
 #if _EH_RELATIVE_TYPEINFO
 
-#define _ThrowImageBase   (__vcrt_getptd()->_ThrowImageBase)
+#define _ThrowImageBase   (__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase)
 
 extern "C" uintptr_t __cdecl _GetThrowImageBase()
 {
@@ -52,8 +53,10 @@ extern "C" void __cdecl _SetThrowImageBase(uintptr_t NewThrowImageBase)
 }
 
 #endif
+#endif //_CRT_NTDDI_MIN >= NTDDI_WIN6
 
 #if defined(_M_X64) || defined(_M_ARM_NT) || defined(_M_ARM64) || defined(_CHPE_X86_ARM64_EH_)
+#if 0
 uintptr_t __FuncToImageRelOffset(
     DispatcherContext   *pDC,
     unsigned int        funcRelOffset
@@ -529,7 +532,9 @@ RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 
     return TryBlockMap::IteratorPair(iterStart, iterEnd);
 }
+#endif
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
     FRAMEINFO * pFrameInfo,
     PVOID       pExceptionObject
@@ -539,6 +544,7 @@ extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
     pFrameInfoChain              = pFrameInfo;
     return pFrameInfo;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -547,6 +553,7 @@ extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
 //  but the code will look for a nested frame and pop all frames, just in
 //  case.
 //
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" void __cdecl RENAME_EH_EXTERN(_FindAndUnlinkFrame)(
     FRAMEINFO * pFrameInfo
 ) {
@@ -565,7 +572,9 @@ extern "C" void __cdecl RENAME_EH_EXTERN(_FindAndUnlinkFrame)(
     // Should never be reached.
     DASSERT(0);
 }
+#endif
 
+#if 0
 void RENAME_EH_EXTERN(__FrameHandler4)::UnwindNestedFrames(
     EHRegistrationNode  *pFrame,            // Unwind up to (but not including) this frame
     EHExceptionRecord   *pExcept,           // The exception that initiated this unwind
@@ -742,5 +751,6 @@ void RENAME_EH_EXTERN(__FrameHandler3)::UnwindNestedFrames(
                 UnwindContext,
                 (PUNWIND_HISTORY_TABLE)pDC->HistoryTable);
 }
+#endif
 
 #endif // defined(_M_X64) || defined(_M_ARM_NT) || defined(_M_ARM64) || defined(_CHPE_X86_ARM64_EH_)

@@ -6,11 +6,15 @@
 
 #if defined(_M_X64) || defined(_M_ARM_NT) || defined(_M_ARM64) || defined(_CHPE_X86_ARM64_EH_)
 
-#define _pForeignExcept   (*((EHExceptionRecord **)&(__vcrt_getptd()->_pForeignException)))
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define _pForeignExcept   (*((EHExceptionRecord **)&(__acrt_getptd()->VistaOrLater_msvcrt._pForeignException)))
+#endif
 
 #endif
 
-#define pFrameInfoChain   (*((FRAMEINFO **)    &(__vcrt_getptd()->_pFrameInfoChain)))
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define pFrameInfoChain   (*((FRAMEINFO **)    &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain)))
+#endif
 
 // Pre-V4 managed exception code
 #define MANAGED_EXCEPTION_CODE  0XE0434F4D
