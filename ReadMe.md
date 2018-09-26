@@ -35,7 +35,7 @@ is too complex to support.
 if compiled from the C++ source code, and about 50% if compiled 
 from the pure C source code.
 
-### 1.2. 亮点
+### 1.2. Highlight
 * 晚起的鸟儿也有虫虫吃，优雅的引用方式，仅添加一个属性表就能享受极致的体积体验。
 * 无缝使用最新C/C++库以及最新编译器，尽情的使用最新规范。神马异常流防护（guard:cf）、静态对象线程安全初始化（threadSafeInit）……统统放马过来吧！！
 * 拥有比微软原版更好的兼容性，即使想兼容Windows XP RTM也可以安心的对新编译器说“Yes”。
@@ -402,10 +402,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, Add a lib file check, and report an error if it does not exist.
 
 
-### 4.0.0.17 Preview -Add C++/CLI Support (Sep 18, 2018 20:00）
-* 解决[Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40)，XP x64模式中使用RTTI时链接失败问题（感谢 killvxk）。
-* 解决[Bug 41](https://github.com/Chuyu-Team/VC-LTL/issues/41)，当禁用内部函数时无法使用`_byteswap_ulong`、`_byteswap_uint64`、`_byteswap_ushort`（感谢 wangwenx190）。
-* 解决Bug，当禁用内部函数时，Windows XP提示找不到`_abs64`、`_rotl64`以及`_rotr64`函数的入口点。
-* 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp)以及`_strftime_l`(Vista)。
-* 新增Fea，添加C++/CLI支持。
-* 新增Fea，添加`__CxxDetectRethrow`、`__CxxExceptionFilter`、`__CxxQueryExceptionSize`、`__CxxRegisterExceptionObject`、`__CxxUnregisterExceptionObject`（感谢 naturalj0）。
+### 4.0.0.17 - Add C++/CLI Support (Sep 26, 2018 10:00）
+* Fix [Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40), solved link failed when using RTTI in XP x64 mode (Thanks to killvxk).
+* Fix [Bug 41](https://github.com/Chuyu-Team/VC-LTL/issues/41), solved `_byteswap_ulong`, `_byteswap_uint64` and `_byteswap_ushort` were not found when the internal function was disabled (Thanks to wangwenx190).
+* Fix Bug, solved Windows XP cannot find entry points for `_abs64`, `_rotl64` and `_rotr64` functions when internal functions was disabled.
+* Add Fea, add `wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp) and `_strftime_l`(Vista).
+* Add Fea, add C++/CLI Support (Thanks to naturalj0).
