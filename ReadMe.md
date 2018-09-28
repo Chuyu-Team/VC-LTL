@@ -47,7 +47,7 @@ from the pure C source code.
 
 |  Module  | XP Mode | Vista Mode | UCRT Mode | Files 
 | :------: | :-----: | :--------: | :-------: | --------
-|  CRT     | 91.455% | 94.521%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
+|  CRT     | 91.455% | 94.521%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcmrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
 |  STL     | 100%    | 100%       | 100%      | libcpmt.lib, msvcprt.lib
 |  ConcRT  | 100%    | 100%       | 100%      | libconcrt.lib, concrt.lib
 |  WinRT   |  X      | 100%       |  X        | vccorlib.lib (Windows 8.1 and higher only)
@@ -408,3 +408,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, solved Windows XP cannot find entry points for `_abs64`, `_rotl64` and `_rotr64` functions when internal functions was disabled.
 * Add Fea, add `wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp) and `_strftime_l`(Vista).
 * Add Fea, add C++/CLI Support (Thanks to naturalj0).
+
+
+### 4.0.0.18 Preview - 累计问题修复 (Sep 28, 2018 17:50）
+* 新增Fea，添加`delete[](void *, std::nothrow_t const &)`（感谢 Too Simple）。

@@ -36,7 +36,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 
 |  模块  | XP模式  | Vista模式 | UCRT模式 | 相关文件 
 | :----: | :-----: | :-------: | :------: | --------
-|   CRT  | 91.455% | 94.521%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
+|   CRT  | 91.455% | 94.521%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcmrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
 |   STL  | 100%    | 100%      |   100%   | libcpmt.lib、msvcprt.lib
 | ConcRT | 100%    | 100%      |   100%   | libconcrt.lib、concrt.lib
 | WinRT  |   X     | 100%      |    X     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
@@ -396,4 +396,8 @@ nmake /f Test.mak
 * 解决[Bug 41](https://github.com/Chuyu-Team/VC-LTL/issues/41)，当禁用内部函数时无法使用`_byteswap_ulong`、`_byteswap_uint64`、`_byteswap_ushort`（感谢 wangwenx190）。
 * 解决Bug，当禁用内部函数时，Windows XP提示找不到`_abs64`、`_rotl64`以及`_rotr64`函数的入口点。
 * 新增Fea，添加`wcstold`、`_wcstof_l`、`_wcstod_l`、`_wcstold_l`、`_strtod_l`(xp)以及`_strftime_l`(Vista)。
-* 新增Fea，添加C++/CLI支持（感谢 naturalj0）
+* 新增Fea，添加C++/CLI支持（感谢 naturalj0）。
+
+
+### 4.0.0.18 Preview - 累计问题修复（2018-09-28 17:50）
+* 新增Fea，添加`delete[](void *, std::nothrow_t const &)`（感谢 Too Simple）。
