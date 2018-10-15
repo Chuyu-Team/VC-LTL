@@ -6,6 +6,12 @@
 // Defines the file sharing modes for the sopen() family of functions.  These
 // declarations are split out to support the Windows build.
 //
+
+#ifndef _UCRT_LTL_Include
+#define _UCRT_LTL_Include 17763
+#endif //!_UCRT_LTL_Include
+
+#ifndef __LTL_Check_UCRT
 #pragma once
 
 
@@ -23,4 +29,5 @@
     #define SH_DENYWR _SH_DENYWR
     #define SH_DENYRD _SH_DENYRD
     #define SH_DENYNO _SH_DENYNO
+#endif
 #endif

@@ -410,5 +410,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add C++/CLI Support (Thanks to naturalj0).
 
 
-### 4.0.0.18 Preview - 累计问题修复 (Sep 28, 2018 17:50）
+### 4.0.0.19 Preview - 累计问题修复 (Oct 15, 2018 18:00）
 * 新增Fea，添加`delete[](void *, std::nothrow_t const &)`（感谢 Too Simple）。
+* 新增Fea，添加Windows 10 17763 UCRT支持（感谢 毛利）。
