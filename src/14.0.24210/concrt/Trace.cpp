@@ -175,7 +175,7 @@ namespace details
 
     ULONG Etw::RegisterGuids(WMIDPREQUEST controlCallBack, LPCGUID providerGuid, ULONG guidCount, PTRACE_GUID_REGISTRATION eventGuidRegistration, PTRACEHANDLE providerHandle)
     {
-        if (m_pfnRegisterTraceGuidsW != EncodePointer(NULL))
+        if (m_pfnRegisterTraceGuidsW != Security::EncodePointer(NULL))
         {
             FnRegisterTraceGuidsW* pfnRegisterTraceGuidsW = (FnRegisterTraceGuidsW*) Security::DecodePointer(m_pfnRegisterTraceGuidsW);
             return pfnRegisterTraceGuidsW(controlCallBack, NULL, providerGuid, guidCount, eventGuidRegistration, NULL, NULL, providerHandle);
@@ -186,7 +186,7 @@ namespace details
 
     ULONG Etw::UnregisterGuids(TRACEHANDLE handle)
     {
-        if (m_pfnUnregisterTraceGuids != EncodePointer(NULL))
+        if (m_pfnUnregisterTraceGuids != Security::EncodePointer(NULL))
         {
             FnUnregisterTraceGuids* pfnUnregisterTraceGuids = (FnUnregisterTraceGuids*) Security::DecodePointer(m_pfnUnregisterTraceGuids);
             return pfnUnregisterTraceGuids(handle);
@@ -197,7 +197,7 @@ namespace details
 
     ULONG Etw::Trace(TRACEHANDLE handle, PEVENT_TRACE_HEADER eventHeader)
     {
-        if (m_pfnTraceEvent != EncodePointer(NULL))
+        if (m_pfnTraceEvent != Security::EncodePointer(NULL))
         {
             FnTraceEvent* pfnTraceEvent = (FnTraceEvent*) Security::DecodePointer(m_pfnTraceEvent);
             return pfnTraceEvent(handle, eventHeader);
@@ -208,7 +208,7 @@ namespace details
 
     TRACEHANDLE Etw::GetLoggerHandle(PVOID buffer)
     {
-        if (m_pfnGetTraceLoggerHandle != EncodePointer(NULL))
+        if (m_pfnGetTraceLoggerHandle != Security::EncodePointer(NULL))
         {
             FnGetTraceLoggerHandle* pfnGetTraceLoggerHandle = (FnGetTraceLoggerHandle*) Security::DecodePointer(m_pfnGetTraceLoggerHandle);
             return pfnGetTraceLoggerHandle(buffer);
@@ -220,7 +220,7 @@ namespace details
 
     UCHAR Etw::GetEnableLevel(TRACEHANDLE handle)
     {
-        if (m_pfnGetTraceEnableLevel != EncodePointer(NULL))
+        if (m_pfnGetTraceEnableLevel != Security::EncodePointer(NULL))
         {
             FnGetTraceEnableLevel* pfnGetTraceEnableLevel = (FnGetTraceEnableLevel*) Security::DecodePointer(m_pfnGetTraceEnableLevel);
             return pfnGetTraceEnableLevel(handle);
@@ -232,7 +232,7 @@ namespace details
 
     ULONG Etw::GetEnableFlags(TRACEHANDLE handle)
     {
-        if (m_pfnGetTraceEnableFlags != EncodePointer(NULL))
+        if (m_pfnGetTraceEnableFlags != Security::EncodePointer(NULL))
         {
             FnGetTraceEnableFlags* pfnGetTraceEnableFlags = (FnGetTraceEnableFlags*) Security::DecodePointer(m_pfnGetTraceEnableFlags);
             return pfnGetTraceEnableFlags(handle);
