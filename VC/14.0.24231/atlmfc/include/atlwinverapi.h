@@ -41,6 +41,29 @@
 #define _ATL_NTDDI_MIN NTDDI_WIN8
 #endif
 
+#ifdef _ATL_XP_TARGETING
+	//WinXP SP2 才支持 EncodePointer 以及 DecodePointer
+EXTERN_C PVOID __fastcall __CRT_DecodePointer(PVOID Ptr);
+
+EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
+
+#ifndef EncodePointerDownlevel
+	#define EncodePointerDownlevel __CRT_DecodePointer
+#endif
+
+#ifndef DecodePointerDownlevel
+	#define DecodePointerDownlevel __CRT_EncodePointer
+#endif
+#else
+#ifndef EncodePointerDownlevel
+	#define EncodePointerDownlevel ::EncodePointer
+#endif
+
+#ifndef DecodePointerDownlevel
+	#define DecodePointerDownlevel ::DecodePointer
+#endif
+#endif
+
 // Use this macro for loading a local cached function from a DLL that is known to be loaded (e.g. KERNEL32)
 #define IFDYNAMICGETCACHEDFUNCTION(libraryname, functionname, functionpointer) \
 	static volatile auto functionpointer##_cache = reinterpret_cast<decltype(::functionname)*>(NULL); \
@@ -51,12 +74,12 @@
 		if (hLibrary != NULL) \
 		{ \
 			functionpointer = reinterpret_cast<decltype(::functionname)*>(::GetProcAddress(hLibrary, #functionname)); \
-			functionpointer##_cache = reinterpret_cast<decltype(::functionname)*>(::EncodePointer((PVOID)functionpointer)); \
+			functionpointer##_cache = reinterpret_cast<decltype(::functionname)*>(EncodePointerDownlevel((PVOID)functionpointer)); \
 		} \
 	} \
 	else \
 	{ \
-		functionpointer = reinterpret_cast<decltype(::functionname)*>(::DecodePointer((PVOID)functionpointer)); \
+		functionpointer = reinterpret_cast<decltype(::functionname)*>(DecodePointerDownlevel((PVOID)functionpointer)); \
 	} \
 	if (functionpointer != reinterpret_cast<decltype(::functionname)*>(NULL))
 
@@ -69,12 +92,12 @@
 		if (hLibrary != NULL) \
 		{ \
 			functionpointer = reinterpret_cast<functiontypedef>(::GetProcAddress(hLibrary, functionname)); \
-			functionpointer##_cache = reinterpret_cast<functiontypedef>(::EncodePointer((PVOID)functionpointer)); \
+			functionpointer##_cache = reinterpret_cast<functiontypedef>(EncodePointerDownlevel((PVOID)functionpointer)); \
 		} \
 	} \
 	else \
 	{ \
-		functionpointer = reinterpret_cast<functiontypedef>(::DecodePointer((PVOID)functionpointer)); \
+		functionpointer = reinterpret_cast<functiontypedef>(DecodePointerDownlevel((PVOID)functionpointer)); \
 	} \
 	if (functionpointer != reinterpret_cast<functiontypedef>(NULL))
 

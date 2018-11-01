@@ -152,19 +152,7 @@ typedef _Return_type_success_(return==ERROR_SUCCESS) LONG LSTATUS;
 
 namespace ATL
 {
-#ifdef _ATL_XP_TARGETING
-	//WinXP SP2 才支持 EncodePointer 以及 DecodePointer
-	EXTERN_C PVOID __fastcall __CRT_DecodePointer(PVOID Ptr);
 
-	EXTERN_C PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
-
-#define EncodePointerDownlevel __CRT_DecodePointer
-#define DecodePointerDownlevel __CRT_EncodePointer
-
-#else
-#define EncodePointerDownlevel ::EncodePointer
-#define DecodePointerDownlevel ::DecodePointer
-#endif
 struct _ATL_CATMAP_ENTRY
 {
    int iType;

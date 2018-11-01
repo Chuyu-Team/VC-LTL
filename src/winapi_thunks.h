@@ -210,8 +210,8 @@ PVOID __fastcall __CRT_DecodePointer(
 
 PVOID __fastcall __CRT_EncodePointer(PVOID const Ptr);
 
-#define DecodePointerDownlevel(p) __CRT_DecodePointer
-#define EncodePointerDownlevel(p) __CRT_EncodePointer
+#define DecodePointerDownlevel __CRT_DecodePointer
+#define EncodePointerDownlevel __CRT_EncodePointer
 #else
 #define DecodePointerDownlevel DecodePointer
 #define EncodePointerDownlevel EncodePointer
