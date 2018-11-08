@@ -410,8 +410,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add C++/CLI Support (Thanks to naturalj0).
 
 
-### 4.0.0.20 Preview - 累计问题修复 (Nov 1, 2018 16:00）
+### 4.0.0.21 Preview - 累计问题修复 (Nov 8, 2018 17:00）
 * 解决Bug，修复Windows XP模式`_Atexit`函数依赖`EncodePointer`问题（感谢 亮亮）。
 * 解决Bug，修复微软原版details::Etw中错误的使用`EncodePointer`问题。
+* 解决Bug，修复`_initialize_onexit_table_downlevel`一处内存泄漏问题（感谢 g-qa-ck组）。
 * 新增Fea，添加`delete[](void *, std::nothrow_t const &)`（感谢 Too Simple）。
 * 新增Fea，添加Windows 10 17763 UCRT支持（感谢 毛利）。

@@ -21,13 +21,6 @@ extern "C" int __cdecl _initialize_onexit_table_downlevel(_onexit_table_t* const
 		return 0;
 	}
 
-
-	auto pinitial_table = (_PVFV*)malloc(32 * sizeof(_PVFV));
-
-	//ÄÚ´æÉêÇëÊ§°Ü£¿
-	if (!pinitial_table)
-		return -1;
-
 	_PVFV* const encoded_nullptr = __crt_fast_encode_pointer(nullptr);
 
 	table->_first = encoded_nullptr;
