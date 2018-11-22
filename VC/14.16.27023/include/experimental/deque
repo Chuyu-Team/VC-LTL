@@ -1,0 +1,54 @@
+// deque experimental header
+#pragma once
+#ifndef _EXPERIMENTAL_DEQUE_
+#define _EXPERIMENTAL_DEQUE_
+#ifndef RC_INVOKED
+
+#include <deque>
+#include <experimental/xutility>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+namespace experimental {
+	inline namespace fundamentals_v2 {
+
+	// FUNCTION TEMPLATE erase_if
+template<class _Ty,
+	class _Alloc,
+	class _Pr> inline
+	void erase_if(deque<_Ty, _Alloc>& _Cont, _Pr _Pred)
+	{	// erase each element satisfying _Pred
+	_Erase_remove_if(_Cont, _Pass_fn(_Pred));
+	}
+
+	// FUNCTION TEMPLATE erase
+template<class _Ty,
+	class _Alloc,
+	class _Uty> inline
+	void erase(deque<_Ty, _Alloc>& _Cont, const _Uty& _Val)
+	{	// erase each element matching _Val
+	_Erase_remove(_Cont, _Val);
+	}
+
+	}	// inline namespace fundamentals_v2
+}	// namespace experimental
+_STD_END
+
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+
+#endif /* RC_INVOKED */
+#endif /* _EXPERIMENTAL_DEQUE_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

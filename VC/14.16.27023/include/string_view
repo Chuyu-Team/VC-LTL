@@ -1,0 +1,65 @@
+// string_view standard header
+// Copyright (c) Microsoft Corporation. All rights reserved.
+#pragma once
+#ifndef _STRING_VIEW_
+#define _STRING_VIEW_
+#ifndef RC_INVOKED
+#include <yvals.h>
+
+#if _HAS_CXX17
+#include <xstring>
+#include <xstring_insert.h>
+
+#pragma pack(push,_CRT_PACKING)
+#pragma warning(push,_STL_WARNING_LEVEL)
+#pragma warning(disable: _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+template<class _Elem,
+	class _Traits> inline
+	basic_ostream<_Elem, _Traits>& operator<<(basic_ostream<_Elem, _Traits>& _Ostr,
+		const basic_string_view<_Elem, _Traits> _Str)
+	{	// insert _Str into _Ostr
+	return (_Insert_string(_Ostr, _Str.data(), _Str.size()));
+	}
+
+
+	// basic_string_view LITERALS
+inline namespace literals {
+inline namespace string_view_literals {
+_NODISCARD constexpr string_view operator "" sv(const char *_Str, size_t _Len) noexcept
+	{	// construct string_view from [_Str, _Str + _Len)
+	return (string_view(_Str, _Len));
+	}
+
+_NODISCARD constexpr wstring_view operator "" sv(const wchar_t *_Str, size_t _Len) noexcept
+	{	// construct wstring_view from [_Str, _Str + _Len)
+	return (wstring_view(_Str, _Len));
+	}
+
+_NODISCARD constexpr u16string_view operator "" sv(const char16_t *_Str, size_t _Len) noexcept
+	{	// construct u16string_view from [_Str, _Str + _Len)
+	return (u16string_view(_Str, _Len));
+	}
+
+_NODISCARD constexpr u32string_view operator "" sv(const char32_t *_Str, size_t _Len) noexcept
+	{	// construct u32string_view from [_Str, _Str + _Len)
+	return (u32string_view(_Str, _Len));
+	}
+}	// inline namespace string_view_literals
+}	// inline namespace literals
+
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+#else /* ^^^ _HAS_CXX17 / !_HAS_CXX17 vvv */
+ #pragma message("string_view is only available with C++17 or later.")
+#endif /* _HAS_CXX17 */
+#endif /* RC_INVOKED */
+#endif /* _STRING_VIEW_ */

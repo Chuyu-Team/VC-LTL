@@ -1,0 +1,1616 @@
+// forward_list standard header
+#pragma once
+#ifndef _FORWARD_LIST_
+#define _FORWARD_LIST_
+#ifndef RC_INVOKED
+#include <xmemory>
+#include <stdexcept>
+
+#if _HAS_CXX17
+ #include <xpolymorphic_allocator.h>
+#endif /* _HAS_CXX17 */
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+		// CLASS TEMPLATE _Flist_unchecked_const_iterator
+struct _Default_sentinel
+	{	// empty struct to serve as the end of a range
+	};
+
+template<class _Mylist,
+	class _Base = _Iterator_base0>
+	class _Flist_unchecked_const_iterator
+		: public _Base
+	{	// unchecked iterator for nonmutable list
+public:
+	using iterator_category = forward_iterator_tag;
+
+	using _Nodeptr = typename _Mylist::_Nodeptr;
+	using value_type = typename _Mylist::value_type;
+	using difference_type = typename _Mylist::difference_type;
+	using pointer = typename _Mylist::const_pointer;
+	using reference = const value_type&;
+
+	_Flist_unchecked_const_iterator()
+		: _Ptr()
+		{	// construct with null node pointer
+		}
+
+	_Flist_unchecked_const_iterator(_Nodeptr _Pnode, const _Mylist *_Plist)
+		: _Ptr(_Pnode)
+		{	// construct with node pointer _Pnode
+		this->_Adopt(_Plist);
+		}
+
+	_NODISCARD reference operator*() const
+		{	// return designated value
+		return (_Ptr->_Myval);
+		}
+
+	_NODISCARD pointer operator->() const
+		{	// return pointer to class object
+		return (pointer_traits<pointer>::pointer_to(**this));
+		}
+
+	_Flist_unchecked_const_iterator& operator++()
+		{	// preincrement
+		_Ptr = _Ptr->_Next;
+		return (*this);
+		}
+
+	_Flist_unchecked_const_iterator operator++(int)
+		{	// postincrement
+		_Flist_unchecked_const_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+
+	_NODISCARD bool operator==(const _Flist_unchecked_const_iterator& _Right) const
+		{	// test for iterator equality
+		return (_Ptr == _Right._Ptr);
+		}
+
+	_NODISCARD bool operator!=(_Default_sentinel) const
+		{
+		return (_Ptr != nullptr);
+		}
+
+	_NODISCARD bool operator!=(const _Flist_unchecked_const_iterator& _Right) const
+		{	// test for iterator inequality
+		return (!(*this == _Right));
+		}
+
+	_Nodeptr _Ptr;	// pointer to node
+	};
+
+	// CLASS TEMPLATE _Flist_unchecked_iterator
+template<class _Mylist>
+	class _Flist_unchecked_iterator
+		: public _Flist_unchecked_const_iterator<_Mylist>
+	{	// unchecked iterator for mutable list
+public:
+	using _Mybase = _Flist_unchecked_const_iterator<_Mylist>;
+	using iterator_category = forward_iterator_tag;
+
+	using _Nodeptr = typename _Mylist::_Nodeptr;
+	using value_type = typename _Mylist::value_type;
+	using difference_type = typename _Mylist::difference_type;
+	using pointer = typename _Mylist::pointer;
+	using reference = value_type&;
+
+	_Flist_unchecked_iterator()
+		{	// construct with null node
+		}
+
+	_Flist_unchecked_iterator(_Nodeptr _Pnode, const _Mylist *_Plist)
+		: _Mybase(_Pnode, _Plist)
+		{	// construct with node pointer _Pnode
+		}
+
+	_NODISCARD reference operator*() const
+		{	// return designated value
+		return ((reference)**(_Mybase *)this);
+		}
+
+	_NODISCARD pointer operator->() const
+		{	// return pointer to class object
+		return (pointer_traits<pointer>::pointer_to(**this));
+		}
+
+	_Flist_unchecked_iterator& operator++()
+		{	// preincrement
+		++(*(_Mybase *)this);
+		return (*this);
+		}
+
+	_Flist_unchecked_iterator operator++(int)
+		{	// postincrement
+		_Flist_unchecked_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+	};
+
+	// CLASS TEMPLATE _Flist_const_iterator
+template<class _Mylist>
+	class _Flist_const_iterator
+		: public _Flist_unchecked_const_iterator<_Mylist, _Iterator_base>
+	{	// iterator for nonmutable list
+public:
+	using _Mybase = _Flist_unchecked_const_iterator<_Mylist, _Iterator_base>;
+	using iterator_category = forward_iterator_tag;
+
+	using _Nodeptr = typename _Mylist::_Nodeptr;
+	using value_type = typename _Mylist::value_type;
+	using difference_type = typename _Mylist::difference_type;
+	using pointer = typename _Mylist::const_pointer;
+	using reference = const value_type&;
+
+	_Flist_const_iterator()
+		: _Mybase()
+		{	// construct with null node pointer
+		}
+
+	_Flist_const_iterator(_Nodeptr _Pnode, const _Mylist *_Plist)
+		: _Mybase(_Pnode, _Plist)
+		{	// construct with node pointer _Pnode
+		}
+
+	_NODISCARD reference operator*() const
+		{	// return designated value
+ #if _ITERATOR_DEBUG_LEVEL != 0
+		const auto _Mycont = static_cast<const _Mylist *>(this->_Getcont());
+		_STL_ASSERT(_Mycont, "cannot dereference value-initialized forward_list iterator");
+		_STL_VERIFY(this->_Ptr != _Mycont->_Before_head(), "cannot dereference before_begin");
+ #endif /* _ITERATOR_DEBUG_LEVEL */
+
+		return (this->_Ptr->_Myval);
+		}
+
+	_Flist_const_iterator& operator++()
+		{	// preincrement
+ #if _ITERATOR_DEBUG_LEVEL != 0
+		_STL_VERIFY(this->_Getcont(), "forward_list iterator not incrementable");
+ #endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+
+		this->_Ptr = this->_Ptr->_Next;
+		return (*this);
+		}
+
+	_Flist_const_iterator operator++(int)
+		{	// postincrement
+		_Flist_const_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+
+	_NODISCARD bool operator==(const _Flist_const_iterator& _Right) const
+		{	// test for iterator equality
+ #if _ITERATOR_DEBUG_LEVEL != 0
+		_STL_VERIFY(this->_Getcont() == _Right._Getcont(), "forward_list iterators incompatible");
+ #endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+
+		return (this->_Ptr == _Right._Ptr);
+		}
+
+	_NODISCARD bool operator!=(const _Flist_const_iterator& _Right) const
+		{	// test for iterator inequality
+		return (!(*this == _Right));
+		}
+
+ #if _ITERATOR_DEBUG_LEVEL != 0
+	friend void _Verify_range(const _Flist_const_iterator& _First, const _Flist_const_iterator& _Last)
+		{
+		_STL_VERIFY(_First._Getcont() == _Last._Getcont(),
+			"forward_list iterators in range are from different containers");
+		}
+ #endif /* _ITERATOR_DEBUG_LEVEL != 0 */
+
+	_NODISCARD _Flist_unchecked_const_iterator<_Mylist> _Unwrapped() const
+		{
+		return (_Flist_unchecked_const_iterator<_Mylist>(this->_Ptr, static_cast<const _Mylist *>(this->_Getcont())));
+		}
+
+	void _Seek_to(const _Flist_unchecked_const_iterator<_Mylist> _It)
+		{
+		this->_Ptr = _It._Ptr;
+		}
+	};
+
+	// CLASS TEMPLATE _Flist_iterator
+template<class _Mylist>
+	class _Flist_iterator
+		: public _Flist_const_iterator<_Mylist>
+	{	// iterator for mutable list
+public:
+	using _Mybase = _Flist_const_iterator<_Mylist>;
+	using iterator_category = forward_iterator_tag;
+
+	using _Nodeptr = typename _Mylist::_Nodeptr;
+	using value_type = typename _Mylist::value_type;
+	using difference_type = typename _Mylist::difference_type;
+	using pointer = typename _Mylist::pointer;
+	using reference = value_type&;
+
+	_Flist_iterator()
+		{	// construct with null node
+		}
+
+	_Flist_iterator(_Nodeptr _Pnode, const _Mylist *_Plist)
+		: _Mybase(_Pnode, _Plist)
+		{	// construct with node pointer _Pnode
+		}
+
+	_NODISCARD reference operator*() const
+		{	// return designated value
+		return ((reference)**(_Mybase *)this);
+		}
+
+	_NODISCARD pointer operator->() const
+		{	// return pointer to class object
+		return (pointer_traits<pointer>::pointer_to(**this));
+		}
+
+	_Flist_iterator& operator++()
+		{	// preincrement
+		++(*(_Mybase *)this);
+		return (*this);
+		}
+
+	_Flist_iterator operator++(int)
+		{	// postincrement
+		_Flist_iterator _Tmp = *this;
+		++*this;
+		return (_Tmp);
+		}
+
+	_NODISCARD _Flist_unchecked_iterator<_Mylist> _Unwrapped() const
+		{
+		return (_Flist_unchecked_iterator<_Mylist>(this->_Ptr, static_cast<const _Mylist *>(this->_Getcont())));
+		}
+	};
+
+
+		// forward_list TYPE WRAPPERS
+template<class _Value_type,
+	class _Size_type,
+	class _Difference_type,
+	class _Pointer,
+	class _Const_pointer,
+	class _Reference,
+	class _Const_reference,
+	class _Nodeptr_type>
+	struct _Flist_iter_types
+	{	// wraps types needed by iterators
+	using value_type = _Value_type;
+	using size_type = _Size_type;
+	using difference_type = _Difference_type;
+	using pointer = _Pointer;
+	using const_pointer = _Const_pointer;
+	using _Nodeptr = _Nodeptr_type;
+	};
+
+template<class _Value_type,
+	class _Voidptr>
+	struct _Flist_node
+		{	// forward_list node
+		_Rebind_pointer_t<_Voidptr, _Flist_node> _Next;	// successor node
+		_Value_type _Myval;	// the stored value
+
+		_Flist_node& operator=(const _Flist_node&) = delete;
+		};
+
+template<class _Ty>
+	struct _Flist_simple_types
+		: public _Simple_types<_Ty>
+	{	// wraps types needed by iterators
+	using _Node = _Flist_node<_Ty, void *>;
+	using _Nodeptr = _Node *;
+	};
+
+template<class _Ty,
+	class _Alloc>
+	struct _Flist_base_types
+	{	// types needed for a container base
+	using _Alty = _Rebind_alloc_t<_Alloc, _Ty>;
+	using _Alty_traits = allocator_traits<_Alty>;
+	using _Node = _Flist_node<_Ty, typename allocator_traits<_Alloc>::void_pointer>;
+	using _Alnode = _Rebind_alloc_t<_Alloc, _Node>;
+	using _Alnode_traits = allocator_traits<_Alnode>;
+	using _Nodeptr = typename _Alnode_traits::pointer;
+
+	using _Val_types = conditional_t<_Is_simple_alloc_v<_Alnode>,
+		_Flist_simple_types<_Ty>,
+		_Flist_iter_types<_Ty,
+			typename _Alty_traits::size_type,
+			typename _Alty_traits::difference_type,
+			typename _Alty_traits::pointer,
+			typename _Alty_traits::const_pointer,
+			_Ty&,
+			const _Ty&,
+			_Nodeptr>>;
+	};
+
+		// CLASS TEMPLATE _Flist_val
+template<class _Val_types>
+	class _Flist_val
+		: public _Container_base
+	{	// base class for forward_list to hold data
+public:
+	using _Nodeptr = typename _Val_types::_Nodeptr;
+	using _Node = typename pointer_traits<_Nodeptr>::element_type;
+
+	using value_type = typename _Val_types::value_type;
+	using size_type = typename _Val_types::size_type;
+	using difference_type = typename _Val_types::difference_type;
+	using pointer = typename _Val_types::pointer;
+	using const_pointer = typename _Val_types::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+
+	_Flist_val()
+		: _Myhead()
+		{	// initialize data
+		}
+
+	_Nodeptr _Before_head() const noexcept
+		{	// return pointer to the "before begin" pseudo node
+		return (pointer_traits<_Nodeptr>::pointer_to(
+			reinterpret_cast<_Node&>(const_cast<_Nodeptr&>(_Myhead))));
+		}
+
+	_Nodeptr _Myhead;	// pointer to head node
+	};
+
+		// CLASS TEMPLATE _Flist_alloc
+template<class _Alloc_types>
+	class _Flist_alloc
+	{	// base class for forward_list to hold allocator
+public:
+	using _Alnode = typename _Alloc_types::_Alnode;
+	using _Alnode_traits = typename _Alloc_types::_Alnode_traits;
+	using _Alproxy = _Rebind_alloc_t<_Alnode, _Container_proxy>;
+	using _Alproxy_traits = allocator_traits<_Alproxy>;
+	using _Node = typename _Alloc_types::_Node;
+	using _Nodeptr = typename _Alloc_types::_Nodeptr;
+	using _Val_types = typename _Alloc_types::_Val_types;
+
+	using value_type = typename _Val_types::value_type;
+	using size_type = typename _Val_types::size_type;
+	using difference_type = typename _Val_types::difference_type;
+	using pointer = typename _Val_types::pointer;
+	using const_pointer = typename _Val_types::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+
+	using iterator = _Flist_iterator<_Flist_val<_Val_types>>;
+	using const_iterator = _Flist_const_iterator<_Flist_val<_Val_types>>;
+	using _Unchecked_iterator = _Flist_unchecked_iterator<_Flist_val<_Val_types>>;
+	using _Unchecked_const_iterator = _Flist_unchecked_const_iterator<_Flist_val<_Val_types>>;
+
+ #if _ITERATOR_DEBUG_LEVEL == 0
+	_Flist_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
+		}
+
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same_v<remove_cv_t<remove_reference_t<_Any_alloc>>, _Flist_alloc>>>
+		_Flist_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
+		{	// construct allocator from _Al
+		}
+
+	~_Flist_alloc() noexcept
+		{	// destroy head node
+		}
+
+	void _Copy_alloc(const _Alnode& _Al)
+		{	// replace old allocator
+		_Pocca(_Getal(), _Al);
+		}
+
+	void _Move_alloc(_Alnode& _Al)
+		{	// replace old allocator
+		_Pocma(_Getal(), _Al);
+		}
+
+ #else /* _ITERATOR_DEBUG_LEVEL == 0 */
+	_Flist_alloc()
+		: _Mypair(_Zero_then_variadic_args_t())
+		{	// default construct allocator
+		_Alloc_proxy();
+		}
+
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same_v<remove_cv_t<remove_reference_t<_Any_alloc>>, _Flist_alloc>>>
+		_Flist_alloc(_Any_alloc&& _Al)
+		: _Mypair(_One_then_variadic_args_t(),
+			_STD forward<_Any_alloc>(_Al))
+		{	// construct allocator from _Al
+		_Alloc_proxy();
+		}
+
+	~_Flist_alloc() noexcept
+		{	// destroy proxy
+		_Free_proxy();
+		}
+
+	void _Copy_alloc(const _Alnode& _Al)
+		{	// replace old allocator
+		const bool _Reload = _Alnode_traits::propagate_on_container_copy_assignment::value
+			&& _Getal() != _Al;
+
+		if (_Reload)
+			{
+			_Free_proxy();
+			}
+
+		_Pocca(_Getal(), _Al);
+
+		if (_Reload)
+			{
+			_Alloc_proxy();
+			}
+		}
+
+	void _Move_alloc(_Alnode& _Al)
+		{	// replace old allocator
+		const bool _Reload = _Alnode_traits::propagate_on_container_move_assignment::value
+			&& _Getal() != _Al;
+
+		if (_Reload)
+			{
+			_Free_proxy();
+			}
+
+		_Pocma(_Getal(), _Al);
+
+		if (_Reload)
+			{
+			_Alloc_proxy();
+			}
+		}
+
+	void _Alloc_proxy()
+		{	// construct proxy
+		_Alproxy _Proxy_allocator(_Getal());
+		_Myproxy() = _Unfancy(_Proxy_allocator.allocate(1));
+		_Alproxy_traits::construct(_Proxy_allocator, _Myproxy(), _Container_proxy());
+		_Myproxy()->_Mycont = _STD addressof(_Get_data());
+		}
+
+	void _Free_proxy()
+		{	// destroy proxy
+		_Alproxy _Proxy_allocator(_Getal());
+		_Orphan_all();
+		_Alproxy_traits::destroy(_Proxy_allocator, _Myproxy());
+		_Deallocate_plain(_Proxy_allocator, _Myproxy());
+		_Myproxy() = nullptr;
+		}
+
+	_Iterator_base12 **_Getpfirst() const
+		{	// get address of iterator chain
+		return (_Get_data()._Getpfirst());
+		}
+
+	_Container_proxy * & _Myproxy() noexcept
+		{	// return reference to _Myproxy
+		return (_Get_data()._Myproxy);
+		}
+
+	_Container_proxy * const & _Myproxy() const noexcept
+		{	// return const reference to _Myproxy
+		return (_Get_data()._Myproxy);
+		}
+ #endif /* _ITERATOR_DEBUG_LEVEL == 0 */
+
+	void _Orphan_all()
+		{	// orphan all iterators
+		_Get_data()._Orphan_all();
+		}
+
+	void _Swap_all(_Flist_alloc& _Right)
+		{	// swap all iterators
+		_Get_data()._Swap_all(_Right._Get_data());
+		}
+
+	_Alnode& _Getal() noexcept
+		{	// return reference to allocator
+		return (_Mypair._Get_first());
+		}
+
+	const _Alnode& _Getal() const noexcept
+		{	// return const reference to allocator
+		return (_Mypair._Get_first());
+		}
+
+	_Flist_val<_Val_types>& _Get_data() noexcept
+		{	// return reference to _Flist_val
+		return (_Mypair._Get_second());
+		}
+
+	const _Flist_val<_Val_types>& _Get_data() const noexcept
+		{	// return const reference to _Flist_val
+		return (_Mypair._Get_second());
+		}
+
+	_Nodeptr& _Myhead() noexcept
+		{	// return reference to _Myhead
+		return (_Get_data()._Myhead);
+		}
+
+	const _Nodeptr& _Myhead() const noexcept
+		{	// return const reference to _Myhead
+		return (_Get_data()._Myhead);
+		}
+
+	_Nodeptr _Before_head() const noexcept
+		{	// return pointer to the "before begin" pseudo node
+		return (_Get_data()._Before_head());
+		}
+
+private:
+	_Compressed_pair<_Alnode, _Flist_val<_Val_types>> _Mypair;
+	};
+
+		// CLASS TEMPLATE _Flist_buy
+template<class _Ty,
+	class _Alloc>
+	class _Flist_buy
+		: public _Flist_alloc<_Flist_base_types<_Ty, _Alloc>>
+	{	// base class for forward_list to hold buynode/freenode functions
+public:
+	using _Mybase = _Flist_alloc<_Flist_base_types<_Ty, _Alloc>>;
+	using _Alnode = typename _Mybase::_Alnode;
+	using _Alnode_traits = typename _Mybase::_Alnode_traits;
+	using _Nodeptr = typename _Mybase::_Nodeptr;
+
+	_Flist_buy()
+		: _Mybase()
+		{	// default construct
+		}
+
+	template<class _Any_alloc,
+		class = enable_if_t<!is_same_v<remove_cv_t<remove_reference_t<_Any_alloc>>, _Flist_buy>>>
+		_Flist_buy(_Any_alloc&& _Al)
+		: _Mybase(_STD forward<_Any_alloc>(_Al))
+		{	// construct from allocator
+		}
+
+	_Nodeptr _Buynode0(_Nodeptr _Next)
+		{	// allocate a node and set links
+		_Alnode& _Al = this->_Getal();
+
+		_Nodeptr _Pnode = _Al.allocate(1);
+		_TRY_BEGIN
+		_Alnode_traits::construct(_Al, _STD addressof(_Pnode->_Next), _Next);
+		_CATCH_ALL
+		_Al.deallocate(_Pnode, 1);
+		_RERAISE;
+		_CATCH_END
+
+		return (_Pnode);
+		}
+
+	template<class... _Valty>
+		_Nodeptr _Buynode(_Nodeptr _Next, _Valty&&... _Val)
+		{	// allocate a node and set links and value
+		_Alnode& _Al = this->_Getal();
+
+		_Nodeptr _Pnode = this->_Buynode0(_Next);
+		_TRY_BEGIN
+		_Alnode_traits::construct(_Al, _STD addressof(_Pnode->_Myval),
+			_STD forward<_Valty>(_Val)...);
+		_CATCH_ALL
+		_Al.deallocate(_Pnode, 1);
+		_RERAISE;
+		_CATCH_END
+
+		return (_Pnode);
+		}
+
+
+	void _Freenode(_Nodeptr _Pnode)
+		{	// give node back
+		_Alnode& _Al = this->_Getal();
+		_Alnode_traits::destroy(_Al, _STD addressof(_Pnode->_Next));
+		_Alnode_traits::destroy(_Al, _STD addressof(_Pnode->_Myval));
+		_Al.deallocate(_Pnode, 1);
+		}
+	};
+
+		// CLASS TEMPLATE forward_list
+template<class _Ty,
+	class _Alloc = allocator<_Ty>>
+	class forward_list
+		: public _Flist_buy<_Ty, _Alloc>
+	{	// singly linked list
+public:
+	static_assert(!_ENFORCE_MATCHING_ALLOCATORS || is_same_v<_Ty, typename _Alloc::value_type>,
+		_MISMATCHED_ALLOCATOR_MESSAGE("forward_list<T, Allocator>", "T"));
+
+	using _Mybase = _Flist_buy<_Ty, _Alloc>;
+	using _Node = typename _Mybase::_Node;
+	using _Nodeptr = typename _Mybase::_Nodeptr;
+	using _Alnode = typename _Mybase::_Alnode;
+	using _Alnode_traits = typename _Mybase::_Alnode_traits;
+
+	using value_type = typename _Mybase::value_type;
+	using allocator_type = _Alloc;
+	using size_type = typename _Mybase::size_type;
+	using difference_type = typename _Mybase::difference_type;
+	using pointer = typename _Mybase::pointer;
+	using const_pointer = typename _Mybase::const_pointer;
+	using reference = value_type&;
+	using const_reference = const value_type&;
+
+	using iterator = typename _Mybase::iterator;
+	using const_iterator = typename _Mybase::const_iterator;
+	using _Unchecked_iterator = typename _Mybase::_Unchecked_iterator;
+	using _Unchecked_const_iterator = typename _Mybase::_Unchecked_const_iterator;
+
+	forward_list() _NOEXCEPT_COND(is_nothrow_default_constructible_v<_Alnode>) // strengthened
+		: _Mybase()
+		{	// construct empty list
+		}
+
+	explicit forward_list(_CRT_GUARDOVERFLOW size_type _Count, const _Alloc& _Al = _Alloc())
+		: _Mybase(_Al)
+		{	// construct list from _Count * _Ty(), optional allocator
+		resize(_Count);
+		}
+
+	forward_list(_CRT_GUARDOVERFLOW size_type _Count, const _Ty& _Val)
+		: _Mybase()
+		{	// construct list from _Count * _Val
+		_Construct_n(_Count, _Val);
+		}
+
+	forward_list(_CRT_GUARDOVERFLOW size_type _Count, const _Ty& _Val, const _Alloc& _Al)
+		: _Mybase(_Al)
+		{	// construct list from _Count * _Val, allocator
+		_Construct_n(_Count, _Val);
+		}
+
+	explicit forward_list(const _Alloc& _Al) noexcept // strengthened
+		: _Mybase(_Al)
+		{	// construct empty list, allocator
+		}
+
+	forward_list(const forward_list& _Right)
+		: _Mybase(_Alnode_traits::select_on_container_copy_construction(_Right._Getal()))
+		{	// construct list by copying _Right
+		_TRY_BEGIN
+		insert_after(before_begin(), _Right.begin(), _Right.end());
+		_CATCH_ALL
+		_Tidy();
+		_RERAISE;
+		_CATCH_END
+		}
+
+	forward_list(const forward_list& _Right, const _Alloc& _Al)
+		: _Mybase(_Al)
+		{	// construct list by copying _Right, allocator
+		_TRY_BEGIN
+		insert_after(before_begin(), _Right.begin(), _Right.end());
+		_CATCH_ALL
+		_Tidy();
+		_RERAISE;
+		_CATCH_END
+		}
+
+	template<class _Iter,
+		class = enable_if_t<_Is_iterator_v<_Iter>>>
+		forward_list(_Iter _First, _Iter _Last)
+		: _Mybase()
+		{	// construct list from [_First, _Last,
+		_Construct(_First, _Last);
+		}
+
+	template<class _Iter,
+		class = enable_if_t<_Is_iterator_v<_Iter>>>
+		forward_list(_Iter _First, _Iter _Last, const _Alloc& _Al)
+		: _Mybase(_Al)
+		{	// construct list, allocator from [_First, _Last)
+		_Construct(_First, _Last);
+		}
+
+	template<class _Iter>
+		void _Construct(_Iter _First, _Iter _Last)
+		{	// construct list from [_First, _Last), input iterators
+		_TRY_BEGIN
+		insert_after(before_begin(), _First, _Last);
+		_CATCH_ALL
+		_Tidy();
+		_RERAISE;
+		_CATCH_END
+		}
+
+	void _Construct_n(size_type _Count,
+		const _Ty& _Val)
+		{	// construct from _Count * _Val
+		_TRY_BEGIN
+		_Insert_n_after(before_begin(), _Count, _Val);
+		_CATCH_ALL
+		_Tidy();
+		_RERAISE;
+		_CATCH_END
+		}
+
+	forward_list(forward_list&& _Right) noexcept // strengthened
+		: _Mybase(_STD move(_Right._Getal()))
+		{	// construct list by moving _Right
+		_Assign_rv(_STD move(_Right), true_type());
+		}
+
+	forward_list(forward_list&& _Right, const _Alloc& _Al)
+		_NOEXCEPT_COND(_Alnode_traits::is_always_equal::value) // strengthened
+		: _Mybase(_Al)
+		{	// construct list by moving _Right, allocator
+		_Assign_rv(_STD move(_Right), typename _Alnode_traits::is_always_equal());
+		}
+
+	forward_list& operator=(forward_list&& _Right)
+		_NOEXCEPT_COND(_Always_equal_after_move<_Alnode>) // partially strengthened
+		{	// assign by moving _Right
+		if (this != _STD addressof(_Right))
+			{	// different, assign it
+			clear();
+			this->_Move_alloc(_Right._Getal());
+			_Assign_rv(_STD move(_Right), bool_constant<_Always_equal_after_move<_Alnode>>{});
+			}
+		return (*this);
+		}
+
+	void _Assign_rv(forward_list&& _Right, true_type) noexcept
+		{	// swap with empty *this, same allocator
+		this->_Swap_all(_Right);
+		_Swap_adl(this->_Myhead(), _Right._Myhead());
+		}
+
+	void _Assign_rv(forward_list&& _Right, false_type)
+		{	// move from _Right, possibly moving its contents
+		if (this->_Getal() == _Right._Getal())
+			_Assign_rv(_STD move(_Right), true_type());
+		else
+			_Construct(_STD make_move_iterator(_Right.begin()),
+				_STD make_move_iterator(_Right.end()));
+		}
+
+	void push_front(_Ty&& _Val)
+		{	// insert element at beginning
+		_Insert_after(before_begin(), _STD move(_Val));
+		}
+
+	iterator insert_after(const_iterator _Where, _Ty&& _Val)
+		{	// insert _Val at _Where
+		return (emplace_after(_Where, _STD move(_Val)));
+		}
+
+	template<class... _Valty>
+		decltype(auto) emplace_front(_Valty&&... _Val)
+		{	// insert element at beginning
+		_Insert_after(before_begin(), _STD forward<_Valty>(_Val)...);
+
+#if _HAS_CXX17
+		return (front());
+#endif /* _HAS_CXX17 */
+		}
+
+	template<class... _Valty>
+		iterator emplace_after(const_iterator _Where, _Valty&&... _Val)
+		{	// insert element at _Where
+		_Insert_after(_Where, _STD forward<_Valty>(_Val)...);
+		return (_Make_iter(++_Where));
+		}
+
+	template<class... _Valty>
+		void _Insert_after(const_iterator _Where, _Valty&&... _Val)
+		{	// insert element after _Where
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		_STL_VERIFY(_Where._Getcont() == _STD addressof(this->_Get_data()),
+			"forward_list insert_after iterator outside range");
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+		_Nodeptr _Pnode = _Where._Ptr;
+		_Nodeptr _Newnode = this->_Buynode(_Pnode->_Next, _STD forward<_Valty>(_Val)...);
+		_Pnode->_Next = _Newnode;
+		}
+
+
+	forward_list(initializer_list<_Ty> _Ilist,
+		const _Alloc& _Al = allocator_type())
+		: _Mybase(_Al)
+		{	// construct from initializer_list
+		insert_after(before_begin(), _Ilist.begin(), _Ilist.end());
+		}
+
+	forward_list& operator=(initializer_list<_Ty> _Ilist)
+		{	// assign initializer_list
+		assign(_Ilist.begin(), _Ilist.end());
+		return (*this);
+		}
+
+	void assign(initializer_list<_Ty> _Ilist)
+		{	// assign initializer_list
+		assign(_Ilist.begin(), _Ilist.end());
+		}
+
+	iterator insert_after(const_iterator _Where,
+		initializer_list<_Ty> _Ilist)
+		{	// insert initializer_list
+		return (insert_after(_Where, _Ilist.begin(), _Ilist.end()));
+		}
+
+	~forward_list() noexcept
+		{	// destroy the object
+		_Tidy();
+		}
+
+	forward_list& operator=(const forward_list& _Right)
+		{	// assign _Right
+		if (this != _STD addressof(_Right))
+			{	// different, assign it
+#pragma warning(push)
+#pragma warning(disable: 4127)	// conditional expression is constant
+			if (_Alnode_traits::propagate_on_container_copy_assignment::value
+				&& this->_Getal() != _Right._Getal())
+				{	// change allocator before copying
+				clear();
+				}
+#pragma warning(pop)
+
+			this->_Copy_alloc(_Right._Getal());
+
+			assign(_Right.begin(), _Right.end());
+			}
+		return (*this);
+		}
+
+	_NODISCARD iterator before_begin() noexcept
+		{	// return iterator before beginning of mutable sequence
+		return (iterator(this->_Before_head(), _STD addressof(this->_Get_data())));
+		}
+
+	_NODISCARD const_iterator before_begin() const noexcept
+		{	// return iterator before beginning of nonmutable sequence
+		return (const_iterator(this->_Before_head(), _STD addressof(this->_Get_data())));
+		}
+
+	_NODISCARD const_iterator cbefore_begin() const noexcept
+		{	// return iterator before beginning of nonmutable sequence
+		return (before_begin());
+		}
+
+	_NODISCARD iterator begin() noexcept
+		{	// return iterator for beginning of mutable sequence
+		return (iterator(this->_Myhead(), _STD addressof(this->_Get_data())));
+		}
+
+	_NODISCARD const_iterator begin() const noexcept
+		{	// return iterator for beginning of nonmutable sequence
+		return (const_iterator(this->_Myhead(), _STD addressof(this->_Get_data())));
+		}
+
+	_NODISCARD iterator end() noexcept
+		{	// return iterator for end of mutable sequence
+		return (iterator(nullptr, _STD addressof(this->_Get_data())));
+		}
+
+	_NODISCARD const_iterator end() const noexcept
+		{	// return iterator for end of nonmutable sequence
+		return (const_iterator(nullptr, _STD addressof(this->_Get_data())));
+		}
+
+	_Unchecked_iterator _Unchecked_begin() noexcept
+		{	// return unchecked iterator for beginning of mutable sequence
+		return (_Unchecked_iterator(this->_Myhead(), nullptr));
+		}
+
+	_Unchecked_const_iterator _Unchecked_begin() const noexcept
+		{	// return unchecked iterator for beginning of nonmutable sequence
+		return (_Unchecked_const_iterator(this->_Myhead(), nullptr));
+		}
+
+	_Default_sentinel _Unchecked_end() const noexcept
+		{	// return sentinel for end of sequence
+		return {};
+		}
+
+	iterator _Make_iter(const_iterator _Where) const
+		{	// make iterator from const_iterator
+		return (iterator(_Where._Ptr, _STD addressof(this->_Get_data())));
+		}
+
+	_NODISCARD const_iterator cbegin() const noexcept
+		{	// return iterator for beginning of nonmutable sequence
+		return (begin());
+		}
+
+	_NODISCARD const_iterator cend() const noexcept
+		{	// return iterator for end of nonmutable sequence
+		return (end());
+		}
+
+	void resize(_CRT_GUARDOVERFLOW size_type _Newsize)
+		{	// determine new length, padding with _Ty() elements as needed
+		size_type _Cursize = _Size();
+		if (_Cursize < _Newsize)
+			{	// pad to make larger
+			const_iterator _Next = _Before_end();
+			_TRY_BEGIN
+			for (; _Cursize < _Newsize; ++_Cursize)
+				_Insert_after(_Next);
+			_CATCH_ALL
+			erase_after(_Next, end());
+			_RERAISE;
+			_CATCH_END
+			}
+		else if (_Newsize < _Cursize)
+			{	// erase all but _Newsize elements
+			iterator _Next = before_begin();
+			for (; 0 < _Newsize; --_Newsize)
+				++_Next;
+			erase_after(_Next, end());
+			}
+		}
+
+	void resize(_CRT_GUARDOVERFLOW size_type _Newsize, const _Ty& _Val)
+		{	// determine new length, padding with _Val elements as needed
+		size_type _Cursize = _Size();
+		if (_Cursize < _Newsize)
+			_Insert_n_after(_Before_end(), _Newsize - _Cursize, _Val);
+		else if (_Newsize < _Cursize)
+			{	// erase all but _Newsize elements
+			iterator _Next = before_begin();
+			for (; 0 < _Newsize; --_Newsize)
+				++_Next;
+			erase_after(_Next, end());
+			}
+		}
+
+	_NODISCARD size_type max_size() const noexcept
+		{	// return maximum possible length of sequence
+		return (_Alnode_traits::max_size(this->_Getal()));
+		}
+
+	_NODISCARD bool empty() const noexcept
+		{	// test if sequence is empty
+		return (this->_Myhead() == nullptr);
+		}
+
+	_NODISCARD allocator_type get_allocator() const noexcept
+		{	// return allocator object for values
+		return (static_cast<allocator_type>(this->_Getal()));
+		}
+
+	_NODISCARD reference front()
+		{	// return first element of mutable sequence
+		return (*begin());
+		}
+
+	_NODISCARD const_reference front() const
+		{	// return first element of nonmutable sequence
+		return (*begin());
+		}
+
+	void push_front(const _Ty& _Val)
+		{	// insert element at beginning
+		_Insert_after(before_begin(), _Val);
+		}
+
+	void pop_front()
+		{	// erase element at beginning
+		erase_after(before_begin());
+		}
+
+	template<class _Iter,
+		class = enable_if_t<_Is_iterator_v<_Iter>>>
+		void assign(_Iter _First, _Iter _Last)
+		{	// assign [_First, _Last), input iterators
+		clear();
+		insert_after(before_begin(), _First, _Last);
+		}
+
+	void assign(_CRT_GUARDOVERFLOW size_type _Count, const _Ty& _Val)
+		{	// assign _Count * _Val
+		clear();
+		_Insert_n_after(before_begin(), _Count, _Val);
+		}
+
+	iterator insert_after(const_iterator _Where, const _Ty& _Val)
+		{	// insert _Val at _Where
+		_Insert_after(_Where, _Val);
+		return (_Make_iter(++_Where));
+		}
+
+	iterator insert_after(const_iterator _Where,
+		_CRT_GUARDOVERFLOW size_type _Count, const _Ty& _Val)
+		{	// insert _Count * _Val at _Where
+		return (_Insert_n_after(_Where, _Count, _Val));
+		}
+
+	template<class _Iter,
+		class = enable_if_t<_Is_iterator_v<_Iter>>>
+		iterator insert_after(const_iterator _Where,
+			_Iter _First, _Iter _Last)
+		{	// insert [_First, _Last) at _Where
+		return (_Insert_range(_Where, _First, _Last, _Iter_cat_t<_Iter>()));
+		}
+
+	template<class _Iter>
+		iterator _Insert_range(const_iterator _Where,
+			_Iter _First, _Iter _Last, input_iterator_tag)
+		{	// insert [_First, _Last) after _Where, input iterators
+		size_type _Num = 0;
+		const_iterator _After = _Where;
+
+		_TRY_BEGIN
+		for (; _First != _Last; ++_After, (void)++_First, ++_Num)
+			_Insert_after(_After, *_First);
+		_CATCH_ALL
+		for (; 0 < _Num; --_Num)
+			erase_after(_Where);
+		_RERAISE;
+		_CATCH_END
+		return (_Make_iter(_After));
+		}
+
+	template<class _Iter>
+		iterator _Insert_range(const_iterator _Where,
+			_Iter _First, _Iter _Last, forward_iterator_tag)
+		{	// insert [_First, _Last) after _Where, forward iterators
+		_Adl_verify_range(_First, _Last);
+		auto _UFirst = _Get_unwrapped(_First);
+		const auto _ULast = _Get_unwrapped(_Last);
+		auto _UNext = _UFirst;
+		const_iterator _After = _Where;
+
+		_TRY_BEGIN
+		for (; _UFirst != _ULast; ++_After, (void)++_UFirst)
+			{
+			_Insert_after(_After, *_UFirst);
+			}
+
+		_CATCH_ALL
+		for (; _UNext != _UFirst; ++_UNext)
+			{
+			erase_after(_Where);
+			}
+
+		_RERAISE;
+		_CATCH_END
+		return (_Make_iter(_After));
+		}
+
+	iterator erase_after(const_iterator _Where)
+		{	// erase element after _Where
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		_STL_VERIFY(_Where._Getcont() == _STD addressof(this->_Get_data())
+			&& _Where != end(), "forward_list erase_after iterator outside range");
+		_Nodeptr _Pnodeb = _Where._Ptr;
+		_Orphan_ptr(_Pnodeb->_Next);
+
+ #else /* _ITERATOR_DEBUG_LEVEL == 2 */
+		_Nodeptr _Pnodeb = _Where._Ptr;
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+		if (++_Where == end())
+			{
+ #if _ITERATOR_DEBUG_LEVEL == 2
+			_STL_REPORT_ERROR("forward_list erase_after iterator outside range");
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+			}
+		else
+			{	// node exists, erase it
+			_Nodeptr _Pnode = _Where._Ptr;	// subject node
+			++_Where;	// point past subject node
+
+			_Pnodeb->_Next = _Pnode->_Next;	// link past it
+
+			this->_Freenode(_Pnode);
+			}
+
+		return (_Make_iter(_Where));
+		}
+
+	iterator erase_after(const_iterator _First,
+		const_iterator _Last)
+		{	// erase (_First, _Last)
+		if (_First == before_begin() && _Last == end())
+			{	// erase all and return fresh iterator
+			clear();
+			return (end());
+			}
+		else
+			{	// erase subrange
+			if (_First == end() || _First == _Last)
+				{
+ #if _ITERATOR_DEBUG_LEVEL == 2
+				_STL_REPORT_ERROR("forward_list invalid erase_after range");
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+				}
+			else
+				{	// range not awful, try it
+				const_iterator _After = _First;
+				++_After;
+				_Adl_verify_range(_After, _Last);
+				while (_After != _Last)
+					_After = erase_after(_First);
+				}
+			return (_Make_iter(_Last));
+			}
+		}
+
+	void clear() noexcept
+		{	// erase all
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		this->_Orphan_ptr(nullptr);
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+		_Nodeptr _Pnext;
+		_Nodeptr _Pnode = this->_Myhead();
+		this->_Myhead() = nullptr;
+
+		for (; _Pnode != nullptr; _Pnode = _Pnext)
+			{	// delete an element
+			_Pnext = _Pnode->_Next;
+
+			this->_Freenode(_Pnode);
+			}
+		}
+
+	void swap(forward_list& _Right) noexcept // strengthened
+		{	// exchange contents with _Right
+		if (this != _STD addressof(_Right))
+			{	// (maybe) swap allocators, swap control information
+			_Pocs(this->_Getal(), _Right._Getal());
+			this->_Swap_all(_Right);
+			_Swap_adl(this->_Myhead(), _Right._Myhead());
+			}
+		}
+
+	void splice_after(const_iterator _Where, forward_list& _Right)
+		{	// splice all of _Right after _Where
+		if (this != _STD addressof(_Right) && !_Right.empty())
+			{	// worth splicing, do it
+			_Splice_after(_Where, _Right,
+				_Right.before_begin(), _Right.end());
+			}
+		}
+
+	void splice_after(const_iterator _Where, forward_list&& _Right)
+		{	// splice all of _Right at _Where
+		splice_after(_Where, _Right);
+		}
+
+	void splice_after(const_iterator _Where, forward_list& _Right,
+		const_iterator _First)
+		{	// splice _Right (_First, _First + 2) after _Where
+		const_iterator _After = _First;
+		if (_First == _Right.end() || ++_After == _Right.end())
+			{
+ #if _ITERATOR_DEBUG_LEVEL == 2
+			_STL_REPORT_ERROR("forward_list splice_after iterator outside range");
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+			}
+		else
+			{	// element exists, try splice
+			if (this != _STD addressof(_Right)
+				|| (_Where != _First && _Where != _After))
+				_Splice_after(_Where, _Right, _First, ++_After);
+			}
+		}
+
+	void splice_after(const_iterator _Where, forward_list&& _Right,
+		const_iterator _First)
+		{	// splice _Right [_First, _First + 1) at _Where
+		splice_after(_Where, _Right, _First);
+		}
+
+	void splice_after(const_iterator _Where,
+		forward_list& _Right, const_iterator _First, const_iterator _Last)
+		{	// splice _Right [_First, _Last) at _Where
+		const_iterator _After = _First;
+		if (_First == _Right.end())
+			{
+ #if _ITERATOR_DEBUG_LEVEL == 2
+			_STL_REPORT_ERROR("forward_list splice_after iterator outside range");
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+			}
+		else if (++_After != _Last && (this != _STD addressof(_Right) || _Where != _First))
+			_Splice_after(_Where, _Right, _First, _Last);
+		}
+
+	void splice_after(const_iterator _Where,
+		forward_list&& _Right, const_iterator _First, const_iterator _Last)
+		{	// splice _Right [_First, _Last) at _Where
+		splice_after(_Where, _Right, _First, _Last);
+		}
+
+	void remove(const _Ty& _Val)
+		{	// erase each element matching _Val
+		iterator _Firstb = before_begin();
+		iterator _Val_it = end();
+
+		for (iterator _First = begin(); _First != end(); )
+			if (*_First == _Val)
+				if (_STD addressof(*_First) == _STD addressof(_Val))
+					{	// store iterator to _Val and advance iterators
+					_Val_it = _Firstb;
+					++_Firstb;
+					++_First;
+					}
+				else
+					_First = erase_after(_Firstb);
+			else
+				{	// advance iterators
+				++_Firstb;
+				++_First;
+				}
+
+		if (_Val_it != end())
+			erase_after(_Val_it);
+		}
+
+	template<class _Pr1>
+		void remove_if(_Pr1 _Pred)
+		{	// erase each element satisfying _Pr1
+		_Remove_if(_Pred);
+		}
+
+	template<class _Pr1>
+		void _Remove_if(_Pr1& _Pred)
+		{	// erase each element satisfying _Pr1
+		iterator _Firstb = before_begin();
+
+		for (iterator _First = begin(); _First != end(); )
+			if (_Pred(*_First))
+				_First = erase_after(_Firstb);
+			else
+				{	// advance iterators
+				++_Firstb;
+				++_First;
+				}
+		}
+
+	void unique()
+		{	// erase each element matching previous
+		unique(equal_to<>());
+		}
+
+	template<class _Pr2>
+		void unique(_Pr2 _Pred)
+		{	// erase each element satisfying _Pred with previous
+		iterator _First = begin();
+		if (_First != end())
+			{	// worth doing
+			iterator _After = _First;
+			for (++_After; _After != end(); )
+				if (_Pred(*_First, *_After))
+					_After = erase_after(_First);
+				else
+					_First = _After++;
+			}
+		}
+
+	void merge(forward_list& _Right)
+		{	// merge in elements from _Right, both ordered by operator<
+		_Merge1(_Right, less<>());
+		}
+
+	void merge(forward_list&& _Right)
+		{	// merge in elements from _Right, both ordered by operator<
+		_Merge1(_Right, less<>());
+		}
+
+	template<class _Pr2>
+		void merge(forward_list& _Right, _Pr2 _Pred)
+		{	// merge in elements from _Right, both ordered by _Pred
+		_Merge1(_Right, _Pred);
+		}
+
+	template<class _Pr2>
+		void merge(forward_list&& _Right, _Pr2 _Pred)
+		{	// merge in elements from _Right, both ordered by _Pred
+		_Merge1(_Right, _Pred);
+		}
+
+	template<class _Pr2>
+		void _Merge1(forward_list& _Right, _Pr2&& _Pred)
+		{	// merge in elements from _Right, both ordered by _Pred
+		if (this != _STD addressof(_Right))
+			{	// safe to merge, do it
+			_DEBUG_ORDER_UNWRAPPED(_Unchecked_begin(), _Unchecked_end(), _Pred);
+			_DEBUG_ORDER_UNWRAPPED(_Right._Unchecked_begin(), _Right._Unchecked_end(), _Pred);
+			iterator _First1 = before_begin();
+			iterator _After1 = begin();
+			iterator _Last1 = end();
+			iterator _First2 = _Right.before_begin();
+			iterator _After2 = _Right.begin();
+			iterator _Last2 = _Right.end();
+
+			for (; _After1 != _Last1 && _After2 != _Last2; ++_First1)
+				{
+				if (_Pred(*_After2, *_After1))
+					{	// splice in an element from _Right
+					_Splice_after(_First1, _Right, _First2, ++_After2);
+					}
+				else
+					{
+					++_After1;
+					}
+				}
+
+			if (_After2 != _Last2)
+				{
+				_Splice_after(_First1, _Right, _First2, _Last2);	// splice remainder of _Right
+				}
+			}
+		}
+
+	void sort()
+		{	// order sequence, using operator<
+		sort(less<>());
+		}
+
+	template<class _Pr2>
+		void sort(_Pr2 _Pred)
+		{	// order sequence, using _Pred
+		_Sort(before_begin(), end(), _Pred, _STD distance(begin(), end()));
+		}
+
+	template<class _Pr2>
+		void _Sort(iterator _Before_first, iterator _Last, _Pr2& _Pred, difference_type _Size)
+		{	// order (_Before_first, _Last), using _Pred
+			// _Size must be number of elements in range
+		if (_Size < 2)
+			return;	// nothing to do
+
+		iterator _Mid = _STD next(_Before_first, 1 + _Size / 2);
+		_Sort(_Before_first, _Mid, _Pred, _Size / 2);
+		iterator _First = _Next_iter(_Before_first);
+
+		iterator _Before_mid = _STD next(_Before_first, _Size / 2);
+		_Sort(_Before_mid, _Last, _Pred, _Size - _Size / 2);
+		_Mid = _Next_iter(_Before_mid);
+
+		for (;;)
+			{	// [_First, _Mid) and [_Mid, _Last) are sorted and non-empty
+			if (_DEBUG_LT_PRED(_Pred, *_Mid, *_First))
+				{	// consume _Mid
+				splice_after(_Before_first, *this, _Before_mid);
+				++_Before_first;
+				_Mid = _Next_iter(_Before_mid);
+				if (_Mid == _Last)
+					return;	// exhausted [_Mid, _Last); done
+				}
+			else
+				{	// consume _First
+				++_Before_first;
+				++_First;
+				if (_First == _Mid)
+					return;	// exhausted [_First, _Mid); done
+				}
+			}
+		}
+
+	void reverse() noexcept
+		{	// reverse sequence
+		if (!empty())
+			{	// worth doing, move to back in reverse order
+			const_iterator _First = _Before_end();
+			while (begin() != _First)
+				{
+				_Splice_same_after(_First, *this, before_begin(), ++begin());
+				}
+			}
+		}
+
+private:
+	size_type _Size() const
+		{	// get size by counting
+		size_type _Ans = 0;
+		for (const_iterator _Next = begin(); _Next != end(); ++_Next)
+			++_Ans;
+		return (_Ans);
+		}
+
+	const_iterator _Before_end() const
+		{	// get iterator just before end
+		const_iterator _Next = before_begin();
+		for (const_iterator _Nextp = _Next; ++_Nextp != end(); )
+			_Next = _Nextp;
+		return (_Next);
+		}
+
+	void _Splice_after(const_iterator _Where,
+		forward_list& _Right, const_iterator _First, const_iterator _Last)
+		{	// splice _Right (_First, _Last) just after _Where
+ #if _ITERATOR_DEBUG_LEVEL == 2
+		_STL_VERIFY(_Where._Getcont() == _STD addressof(this->_Get_data()) && _Where != end(),
+			"forward_list splice_after iterator outside range");
+		_STL_VERIFY(this->_Getal() == _Right._Getal(), "forward_list containers incompatible for splice_after");
+
+		if (this != _STD addressof(_Right))
+			{	// transfer ownership of (_First, _Last)
+			const_iterator _Next = _First;
+			for (++_Next; _Next != _Last; )
+				{	// transfer ownership
+				const_iterator _Iter = _Next++;
+				_Right._Orphan_ptr(_Iter._Ptr);
+				_Iter._Adopt(_STD addressof(this->_Get_data()));
+				}
+			}
+
+ #else /* _ITERATOR_DEBUG_LEVEL == 2 */
+		if (this->_Getal() != _Right._Getal())
+			_STD terminate();
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+		_Splice_same_after(_Where, _Right, _First, _Last);
+		}
+
+	void _Splice_same_after(const_iterator _Where,
+		forward_list& _Right, const_iterator _First, const_iterator _Last)
+		{	// splice _Right (_First, _Last) just after _Where
+		const_iterator _Next = _First;
+		const_iterator _After = _Next;
+		for (++_After; _After != _Last; ++_Next, (void)++_After)
+			{
+			if (_After == _Right.end())
+				{	// find last element, and check for bad range
+ #if _ITERATOR_DEBUG_LEVEL == 2
+				_STL_REPORT_ERROR("forward_list splice_after invalid range");
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+
+				return;
+				}
+			}
+
+		_Next._Ptr->_Next = _Where._Ptr->_Next;	// link last to new home
+		_Where._Ptr->_Next = _First._Ptr->_Next;	// link first to new home
+		_First._Ptr->_Next = _Last._Ptr;	// drop range from old home
+		}
+
+	void _Tidy()
+		{	// free all storage
+		clear();
+		}
+
+	iterator _Insert_n_after(const_iterator _Where,
+		size_type _Count, const _Ty& _Val)
+		{	// insert _Count * _Val after _Where
+		size_type _Countsave = _Count;
+
+		_TRY_BEGIN
+		for (; 0 < _Count; --_Count, (void)++_Where)
+			_Insert_after(_Where, _Val);
+		_CATCH_ALL
+		for (; _Count < _Countsave; ++_Count)
+			erase_after(_Where);
+		_RERAISE;
+		_CATCH_END
+		return (_Make_iter(_Where));
+		}
+
+ #if _ITERATOR_DEBUG_LEVEL == 2
+	void _Orphan_ptr(_Nodeptr _Ptr)
+		{	// orphan iterators with specified node pointers
+		_Lockit _Lock(_LOCK_DEBUG);
+		const_iterator **_Pnext = (const_iterator **)this->_Getpfirst();
+		if (_Pnext != nullptr)
+			{
+			while (*_Pnext != nullptr)
+				{
+				if ((*_Pnext)->_Ptr == this->_Before_head()
+					|| (_Ptr != nullptr && (*_Pnext)->_Ptr != _Ptr))
+					{
+					_Pnext = (const_iterator **)(*_Pnext)->_Getpnext();
+					}
+				else
+					{	// orphan the iterator
+					(*_Pnext)->_Clrcont();
+					*_Pnext = *(const_iterator **)(*_Pnext)->_Getpnext();
+					}
+				}
+			}
+		}
+ #endif /* _ITERATOR_DEBUG_LEVEL == 2 */
+	};
+
+#if _HAS_CXX17
+template<class _Iter,
+	class _Alloc = allocator<_Iter_value_t<_Iter>>,
+	enable_if_t<conjunction_v<
+		_Is_iterator<_Iter>,
+		_Is_allocator<_Alloc>
+	>, int> = 0>
+	forward_list(_Iter, _Iter, _Alloc = _Alloc())
+		-> forward_list<_Iter_value_t<_Iter>, _Alloc>;
+#endif /* _HAS_CXX17 */
+
+template<class _Ty,
+	class _Alloc> inline
+	void swap(forward_list<_Ty, _Alloc>& _Left,
+		forward_list<_Ty, _Alloc>& _Right) noexcept // strengthened
+	{	// swap _Left and _Right lists
+	_Left.swap(_Right);
+	}
+
+template<class _Ty,
+	class _Alloc>
+	_NODISCARD inline bool operator==(const forward_list<_Ty, _Alloc>& _Left,
+		const forward_list<_Ty, _Alloc>& _Right)
+	{	// test for list equality
+	return (_STD equal(_Left.begin(), _Left.end(),
+		_Right.begin(), _Right.end()));
+	}
+
+template<class _Ty,
+	class _Alloc>
+	_NODISCARD inline bool operator!=(const forward_list<_Ty, _Alloc>& _Left,
+		const forward_list<_Ty, _Alloc>& _Right)
+	{	// test for list inequality
+	return (!(_Left == _Right));
+	}
+
+template<class _Ty,
+	class _Alloc>
+	_NODISCARD inline bool operator<(const forward_list<_Ty, _Alloc>& _Left,
+		const forward_list<_Ty, _Alloc>& _Right)
+	{	// test if _Left < _Right for lists
+	return (_STD lexicographical_compare(_Left.begin(), _Left.end(),
+		_Right.begin(), _Right.end()));
+	}
+
+template<class _Ty,
+	class _Alloc>
+	_NODISCARD inline bool operator>(const forward_list<_Ty, _Alloc>& _Left,
+		const forward_list<_Ty, _Alloc>& _Right)
+	{	// test if _Left > _Right for lists
+	return (_Right < _Left);
+	}
+
+template<class _Ty,
+	class _Alloc>
+	_NODISCARD inline bool operator<=(const forward_list<_Ty, _Alloc>& _Left,
+		const forward_list<_Ty, _Alloc>& _Right)
+	{	// test if _Left <= _Right for lists
+	return (!(_Right < _Left));
+	}
+
+template<class _Ty,
+	class _Alloc>
+	_NODISCARD inline bool operator>=(const forward_list<_Ty, _Alloc>& _Left,
+		const forward_list<_Ty, _Alloc>& _Right)
+	{	// test if _Left >= _Right for lists
+	return (!(_Left < _Right));
+	}
+
+#if _HAS_CXX17
+namespace pmr {
+template<class _Ty>
+	using forward_list = _STD forward_list<_Ty, polymorphic_allocator<_Ty>>;
+} // namespace pmr
+#endif /* _HAS_CXX17 */
+_STD_END
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _FORWARD_LIST_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

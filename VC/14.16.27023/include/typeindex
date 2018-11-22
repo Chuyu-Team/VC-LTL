@@ -1,0 +1,92 @@
+// typeindex standard header
+#pragma once
+#ifndef _TYPEINDEX_
+#define _TYPEINDEX_
+#ifndef RC_INVOKED
+#include <typeinfo>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,_STL_WARNING_LEVEL)
+ #pragma warning(disable: _STL_DISABLED_WARNINGS)
+ _STL_DISABLE_CLANG_WARNINGS
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+class type_index
+	{	// wraps a typeinfo for indexing
+public:
+	type_index(const type_info& _Tinfo) noexcept
+		: _Tptr(&_Tinfo)
+		{	// construct from type_info
+		}
+
+	_NODISCARD size_t hash_code() const noexcept
+		{	// return hash value
+		return (_Tptr->hash_code());
+		}
+
+	_NODISCARD const char *name() const noexcept
+		{	// return name
+		return (_Tptr->name());
+		}
+
+	_NODISCARD bool operator==(const type_index& _Right) const noexcept
+		{	// test if *this == _Right
+		return (*_Tptr == *_Right._Tptr);
+		}
+
+	_NODISCARD bool operator!=(const type_index& _Right) const noexcept
+		{	// test if *this != _Right
+		return (!(*this == _Right));
+		}
+
+	_NODISCARD bool operator<(const type_index& _Right) const noexcept
+		{	// test if *this < _Right
+		return (_Tptr->before(*_Right._Tptr));
+		}
+
+	_NODISCARD bool operator>=(const type_index& _Right) const noexcept
+		{	// test if *this >= _Right
+		return (!(*this < _Right));
+		}
+
+	_NODISCARD bool operator>(const type_index& _Right) const noexcept
+		{	// test if *this > _Right
+		return (_Right < *this);
+		}
+
+	_NODISCARD bool operator<=(const type_index& _Right) const noexcept
+		{	// test if *this <= _Right
+		return (!(_Right < *this));
+		}
+
+private:
+	const type_info *_Tptr;
+	};
+
+	// STRUCT TEMPLATE SPECIALIZATION hash
+template<>
+	struct hash<type_index>
+	{	// hash functor for type_index
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef type_index argument_type;
+	_CXX17_DEPRECATE_ADAPTOR_TYPEDEFS typedef size_t result_type;
+
+	_NODISCARD size_t operator()(const type_index& _Keyval) const noexcept
+		{	// hash _Keyval to size_t value by pseudorandomizing transform
+		return (_Keyval.hash_code());
+		}
+	};
+_STD_END
+
+ #pragma pop_macro("new")
+ _STL_RESTORE_CLANG_WARNINGS
+ #pragma warning(pop)
+ #pragma pack(pop)
+#endif /* RC_INVOKED */
+#endif /* _TYPEINDEX_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
