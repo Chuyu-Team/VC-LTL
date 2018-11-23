@@ -26,3 +26,7 @@
 #if !defined(_VC_CRT_RBUILD_VERSION)
 #define _VC_CRT_RBUILD_VERSION 1
 #endif
+
+#ifndef _VC_LTL_Include
+#define _VC_LTL_Include
+#endif

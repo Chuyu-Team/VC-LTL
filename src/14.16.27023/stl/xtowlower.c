@@ -8,14 +8,14 @@ _CRTIMP2_PURE wchar_t __CLRCALL_PURE_OR_CDECL _Towlower(wchar_t _Ch, const _Ctyp
 	wchar_t _Res = _Ch;
 	if (_Ch != WEOF)
 		{
-		if (_Ctype->_LocaleName == NULL && _Ch < 256)
+		if (_Ctype->_Hand == 0 && _Ch < 256)
 			{	/* handle ASCII character in C locale */
 			if (L'A' <= _Ch && _Ch <= L'Z')
 				{
 				_Res = (wchar_t)(_Ch - L'A' + L'a');
 				}
 			}
-		else if (__crtLCMapStringW(_Ctype->_LocaleName, LCMAP_LOWERCASE, &_Ch, 1, &_Res, 1) == 0)
+		else if (__crtLCMapStringW(_Ctype->_Hand, LCMAP_LOWERCASE, &_Ch, 1, &_Res, 1) == 0)
 			{
 			_Res = _Ch;
 			}

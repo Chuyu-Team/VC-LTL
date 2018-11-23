@@ -7,21 +7,31 @@
 //
 #include <eh.h>
 #include <vcruntime_internal.h>
+#include <corecrt_internal.h>
+#include <winapi_thunks.h>
+#include <msvcrt_IAT.h>
 
-
-
-static unexpected_handler __cdecl get_unexpected_or_default(
-    __vcrt_ptd const* const ptd
+static __forceinline unexpected_handler __cdecl get_unexpected_or_default(
+    __acrt_ptd const* const ptd
     ) noexcept
 {
-    return ptd->_unexpected ? ptd->_unexpected : &terminate;
+#ifdef _ATL_XP_TARGETING
+	if (__LTL_GetOsMinVersion() < 0x00060000)
+		return ptd->XP_msvcrt._unexpected ? (unexpected_handler)ptd->XP_msvcrt._unexpected : &terminate;
+	else
+#endif
+		return ptd->VistaOrLater_msvcrt._unexpected ? (unexpected_handler)ptd->VistaOrLater_msvcrt._unexpected : &terminate;
 }
 
-extern "C" unexpected_handler __cdecl _get_unexpected() noexcept
+extern "C" unexpected_handler __cdecl _get_unexpected_downlevel() noexcept
 {
-    return get_unexpected_or_default(__vcrt_getptd());
+    return get_unexpected_or_default(__acrt_getptd());
 }
 
+
+_LCRT_DEFINE_IAT_SYMBOL(_get_unexpected_downlevel);
+
+#if 0 //由 set_unexpected.asm 转发
 extern "C" unexpected_handler __cdecl set_unexpected(
     unexpected_handler const new_handler
     ) noexcept
@@ -34,7 +44,9 @@ extern "C" unexpected_handler __cdecl set_unexpected(
 
     return old_handler;
 }
+#endif
 
+#if 0 //由 unexpected.asm 转发
 extern "C" void __cdecl unexpected() noexcept(false)
 {
     unexpected_handler const handler = __vcrt_getptd()->_unexpected;
@@ -45,3 +57,4 @@ extern "C" void __cdecl unexpected() noexcept(false)
 
     terminate();
 }
+#endif

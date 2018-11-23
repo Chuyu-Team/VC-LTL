@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <trnsctrl.h>
 #include <xcall_once.h>
+#include "..\..\winapi_thunks.h"
 
 // Pre-V4 managed exception code
 #define MANAGED_EXCEPTION_CODE  0XE0434F4D
@@ -282,6 +283,7 @@ EHExceptionRecord * __ExceptionPtr::_PopulateExceptionRecord(EHExceptionRecord& 
     PER_PEXCEPTOBJ(pExcept) = const_cast<void*>(pExceptObj);
 
     ThrowInfo* pTI = pThrowInfo;
+#if 0 //VC-LTL不可能运行在WinRT程序中
     if (pTI && (THROW_ISWINRT( (*pTI) ) ) )
     {
         ULONG_PTR *exceptionInfoPointer = *reinterpret_cast<ULONG_PTR**>(const_cast<void*>(pExceptObj));
@@ -292,6 +294,7 @@ EHExceptionRecord * __ExceptionPtr::_PopulateExceptionRecord(EHExceptionRecord& 
         WINRTEXCEPTIONINFO* wei = reinterpret_cast<WINRTEXCEPTIONINFO*>(*exceptionInfoPointer);
         pTI = wei->throwInfo;
     }
+#endif
 
     PER_PTHROW(pExcept) = pTI;
 
@@ -408,7 +411,7 @@ __ExceptionPtr::__ExceptionPtr(_In_ const EHExceptionRecord * pExcept, bool norm
             terminate();
         }
         // we want to encode the ThrowInfo pointer for security reasons
-        PER_PTHROW(&this->m_EHRecord) = (ThrowInfo*) EncodePointer((void*)pThrow);
+        PER_PTHROW(&this->m_EHRecord) = (ThrowInfo*) EncodePointerDownlevel((void*)pThrow);
 
         // we finally got the type info we want
 #if _EH_RELATIVE_TYPEINFO
@@ -462,7 +465,7 @@ __ExceptionPtr::~__ExceptionPtr()
     {
         // this is a C++ exception
         // we need to delete the actual exception object
-        ThrowInfo* pThrow= (ThrowInfo*) DecodePointer((void*)PER_PTHROW(pExcept));
+        ThrowInfo* pThrow= (ThrowInfo*) DecodePointerDownlevel((void*)PER_PTHROW(pExcept));
         if ( pThrow == NULL )
         {
             // No ThrowInfo exists.  If this were a C++ exception, something must have corrupted it.
@@ -535,7 +538,7 @@ __ExceptionPtr::~__ExceptionPtr()
         // the exception object is on the stack and will call
         // the appropriate dtor (if there's one), but won't
         // delete the memory.
-        ThrowInfo* pThrow= (ThrowInfo*) DecodePointer((void*)PER_PTHROW(pExcept));
+        ThrowInfo* pThrow= (ThrowInfo*) DecodePointerDownlevel((void*)PER_PTHROW(pExcept));
         if (    PER_PEXCEPTOBJ(pExcept) == NULL ||
                 pThrow == NULL ||
                 pThrow->pCatchableTypeArray == NULL ||

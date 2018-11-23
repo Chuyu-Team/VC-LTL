@@ -1,6 +1,7 @@
 /* _Dtest function -- IEEE 754 version */
 #include "xmath.h"
 
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double *px)
 	{	/* categorize *px */
 	_Dval *ps = (_Dval *)(char *)px;
@@ -14,6 +15,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double *px)
 	else
 		return (0);
 	}
+#endif
 
 unsigned short *_Plsw(double *px)
 	{	/* get pointer to lsw */

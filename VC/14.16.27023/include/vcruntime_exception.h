@@ -21,7 +21,7 @@ _CRT_BEGIN_C_HEADER
 struct __std_exception_data
 {
     char const* _What;
-    bool        _DoFree;
+	int        _DoFree;
 };
 
 _VCRTIMP void __cdecl __std_exception_copy(
@@ -45,51 +45,23 @@ class exception
 {
 public:
 
-    exception() noexcept
-        : _Data()
-    {
-    }
+    exception() noexcept;
 
-    explicit exception(char const* const _Message) noexcept
-        : _Data()
-    {
-        __std_exception_data _InitData = { _Message, true };
-        __std_exception_copy(&_InitData, &_Data);
-    }
+    explicit exception(char const* const _Message) noexcept;
 
     exception(char const* const _Message, int) noexcept
-        : _Data()
+        :_Data{ _Message,0 }
     {
-        _Data._What = _Message;
+
     }
 
-    exception(exception const& _Other) noexcept
-        : _Data()
-    {
-        __std_exception_copy(&_Other._Data, &_Data);
-    }
+    exception(exception const& _Other) noexcept;
 
-    exception& operator=(exception const& _Other) noexcept
-    {
-        if (this == &_Other)
-        {
-            return *this;
-        }
+    exception& operator=(exception const& _Other) noexcept;
 
-        __std_exception_destroy(&_Data);
-        __std_exception_copy(&_Other._Data, &_Data);
-        return *this;
-    }
+    virtual ~exception() noexcept;
 
-    virtual ~exception() noexcept
-    {
-        __std_exception_destroy(&_Data);
-    }
-
-    virtual char const* what() const
-    {
-        return _Data._What ? _Data._What : "Unknown exception";
-    }
+    virtual char const* what() const;
 
 private:
 
