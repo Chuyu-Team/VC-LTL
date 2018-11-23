@@ -109,7 +109,7 @@ if(${SupportLTL} STREQUAL "true")
 
 		elseif(${MSVC_VERSION} LESS 1920)
 			#VC2017
-			set(__DefaultVCToolsVersion "14.15.26726")
+			set(__DefaultVCToolsVersion "14.16.27023")
 
 			if(DEFINED ENV{VCToolsVersion})
 				set(VC-LTLUsedToolsVersion $ENV{VCToolsVersion})

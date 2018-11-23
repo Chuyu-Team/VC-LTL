@@ -17,7 +17,7 @@ if "%INCLUDE%" == "" echo 找不到环境变量INCLUDE，请在vcvars32.bat/vcvars64.bat执
 if "%LIB%" == "" echo 找不到环境变量LIB，请在vcvars32.bat/vcvars64.bat执行后调用此脚本&&goto:eof
 
 if "%VisualStudioVersion%" == "14.0" set __DefaultVCToolsVersion=14.0.24231
-if "%VisualStudioVersion%" == "15.0" set __DefaultVCToolsVersion=14.15.26726
+if "%VisualStudioVersion%" == "15.0" set __DefaultVCToolsVersion=14.16.27023
 
 if "%__DefaultVCToolsVersion%" == "" echo VC-LTL仅支持VS 2015以及2017&&goto:eof
 

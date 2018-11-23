@@ -40,7 +40,7 @@
 
     <!--如果找不到，那么指定为当前支持的最高版本-->
     <VC-LTLFoundToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'=='' ">false</VC-LTLFoundToolsVersion>
-    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.15.26726</VC-LTLUsedToolsVersion>
+    <VC-LTLUsedToolsVersion Condition=" '$(VC-LTLUsedToolsVersion)'==''">14.16.27023</VC-LTLUsedToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="('$(VC-LTLTargetUniversalCRTVersion)'=='')">
