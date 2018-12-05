@@ -399,10 +399,11 @@ nmake /f Test.mak
 * 新增Fea，添加C++/CLI支持（感谢 naturalj0）。
 
 
-### 4.0.0.22 Preview - 累计问题修复（2018-11-23 13:00）
+### 4.0.0.23 Preview - 累计问题修复（2018-12-05 15:00）
 * 解决Bug，修复Windows XP模式`_Atexit`函数依赖`EncodePointer`问题（感谢 亮亮）。
 * 解决Bug，修复微软原版details::Etw中错误的使用`EncodePointer`问题。
 * 解决Bug，修复`_initialize_onexit_table_downlevel`一处内存泄漏问题（感谢 g-qa-ck组）。
+* 解决Bug，修正Windows XP找不到函数`operator new(size_t,int,char const *,int)`、`operator new[](size_t,int,char const *,int)`入口点（感谢 希望）。
 * 新增Fea，添加`delete[](void *, std::nothrow_t const &)`（感谢 Too Simple）。
 * 新增Fea，添加Windows 10 17763 UCRT支持（感谢 毛利）。
 * 新增Fea，添加VS 2017 14.16.27023工具集支持。
