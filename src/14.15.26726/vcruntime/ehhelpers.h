@@ -14,6 +14,9 @@
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define pFrameInfoChain   (*((FRAMEINFO **)    &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain)))
+#else
+#define pFrameInfoChain   (*((FRAMEINFO **)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__acrt_getptd()->XP_msvcrt._pFrameInfoChain) : \
+          &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain))))
 #endif
 
 // Pre-V4 managed exception code

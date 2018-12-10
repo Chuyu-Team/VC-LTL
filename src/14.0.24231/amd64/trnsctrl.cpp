@@ -19,6 +19,9 @@
 #define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
 #define _ThrowImageBase   (__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase)
 #define _pForeignExcept   (*((EHExceptionRecord **)&(__vcrt_getptd()->_pForeignException)))
+#else
+#define pFrameInfoChain   (*((FRAMEINFO **)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__acrt_getptd()->XP_msvcrt._pFrameInfoChain) : \
+          &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain))))
 #endif
 
 #if 0
@@ -376,7 +379,6 @@ TryBlockMapEntry* __cdecl _GetRangeOfTrysToCheck(
 }
 #endif
 
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" FRAMEINFO * __cdecl _CreateFrameInfo(
     FRAMEINFO * pFrameInfo,
     PVOID       pExceptionObject
@@ -386,7 +388,6 @@ extern "C" FRAMEINFO * __cdecl _CreateFrameInfo(
     pFrameInfoChain              = pFrameInfo;
     return pFrameInfo;
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -397,7 +398,6 @@ extern "C" FRAMEINFO * __cdecl _CreateFrameInfo(
 // Returns:
 //      TRUE if exception object not found and should be destroyed.
 //
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
     PVOID pExceptionObject
 ) {
@@ -410,7 +410,6 @@ extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
     }
     return TRUE;
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -419,7 +418,6 @@ extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
 //  but the code will look for a nested frame and pop all frames, just in
 //  case.
 //
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" void __cdecl _FindAndUnlinkFrame(
     FRAMEINFO * pFrameInfo
 ) {
@@ -438,7 +436,6 @@ extern "C" void __cdecl _FindAndUnlinkFrame(
     // Should never be reached.
     DASSERT(0);
 }
-#endif
 
 #if 0
 extern "C" void __cdecl _UnwindNestedFrames(

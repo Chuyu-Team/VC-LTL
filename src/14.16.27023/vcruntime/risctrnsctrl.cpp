@@ -534,7 +534,6 @@ RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 }
 #endif
 
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
     FRAMEINFO * pFrameInfo,
     PVOID       pExceptionObject
@@ -544,7 +543,6 @@ extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
     pFrameInfoChain              = pFrameInfo;
     return pFrameInfo;
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -553,7 +551,6 @@ extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
 //  but the code will look for a nested frame and pop all frames, just in
 //  case.
 //
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6 //Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" void __cdecl RENAME_EH_EXTERN(_FindAndUnlinkFrame)(
     FRAMEINFO * pFrameInfo
 ) {
@@ -572,7 +569,6 @@ extern "C" void __cdecl RENAME_EH_EXTERN(_FindAndUnlinkFrame)(
     // Should never be reached.
     DASSERT(0);
 }
-#endif
 
 #if 0
 void RENAME_EH_EXTERN(__FrameHandler4)::UnwindNestedFrames(

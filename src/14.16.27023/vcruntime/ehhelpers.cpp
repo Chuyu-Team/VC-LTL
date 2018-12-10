@@ -307,8 +307,6 @@ extern "C" _VCRTIMP void __cdecl __DestructExceptionObject(
 // Returns:
 //      TRUE if exception object not found and should be destroyed.
 //
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6
-//Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
     PVOID pExceptionObject
 ) {
@@ -321,7 +319,6 @@ extern "C" BOOL __cdecl _IsExceptionObjectToBeDestroyed(
     }
     return TRUE;
 }
-#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 // _is_exception_typeof - checks if the thrown exception is the type, the caller

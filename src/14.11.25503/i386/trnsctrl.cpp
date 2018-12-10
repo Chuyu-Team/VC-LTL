@@ -44,6 +44,9 @@
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define pFrameInfoChain   (*((FRAMEINFO **)    &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain)))
+#else
+#define pFrameInfoChain   (*((FRAMEINFO **)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__acrt_getptd()->XP_msvcrt._pFrameInfoChain) : \
+          &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain))))
 #endif
 
 #if 0
@@ -792,8 +795,6 @@ TryBlockMapEntry* _GetRangeOfTrysToCheck(
 // Returns:
 //      Pointer to the frame info (the first input argument).
 //
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6
-//Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" _VCRTIMP FRAMEINFO * __cdecl _CreateFrameInfo(
     FRAMEINFO * pFrameInfo,
     PVOID       pExceptionObject
@@ -803,7 +804,6 @@ extern "C" _VCRTIMP FRAMEINFO * __cdecl _CreateFrameInfo(
     pFrameInfoChain              = pFrameInfo;
     return pFrameInfo;
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -811,8 +811,6 @@ extern "C" _VCRTIMP FRAMEINFO * __cdecl _CreateFrameInfo(
 //  inserted by _CreateFrameInfo.  This should be the first frame in the list
 //  (Ideally), but fibers deviate from ideal situation.
 //
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6
-//Windows XP以及以前版本不支持 pFrameInfoChain
 extern "C" _VCRTIMP void __cdecl _FindAndUnlinkFrame(
     FRAMEINFO * pFrameInfo
 ) {
@@ -834,4 +832,3 @@ extern "C" _VCRTIMP void __cdecl _FindAndUnlinkFrame(
     // Should never be reached.
     DASSERT(0);
 }
-#endif

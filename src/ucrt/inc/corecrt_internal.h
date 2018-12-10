@@ -964,8 +964,20 @@ typedef struct _ptd_msvcrt
 
 			//0x80
 			int         _ProcessingThrow; /* for uncaught_exception */
-
-#if defined (_M_MRX000)
+#if defined(_M_IX86)
+			//0x84
+			void *      _pFrameInfoChain;
+#elif defined(_M_AMD64)
+			void *      _curexcspec;    /* for handling exceptions thrown from std::unexpected */
+			void *      _pExitContext;
+			void *      _pUnwindContext;
+			//0x110
+			void *      _pFrameInfoChain;
+			void *      _reserved1;     /* nothing */
+			void *      _reserved2;     /* nothing */
+			void *      _reserved3;     /* nothing */
+			//0x130
+#elif defined (_M_MRX000)
 			void *      _pFrameInfoChain;
 			void *      _pUnwindContext;
 			void *      _pExitContext;
