@@ -466,9 +466,6 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
-    <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'">
     <ClCompile>
@@ -496,9 +493,6 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
-    <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <ClCompile>
@@ -669,9 +663,6 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
-    <Lib>
-      <AdditionalDependencies>$(SolutionDir)i386\objs.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|Win32'">
     <ClCompile>
@@ -700,6 +691,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)i386\objs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|ARM'">
     <ClCompile>
