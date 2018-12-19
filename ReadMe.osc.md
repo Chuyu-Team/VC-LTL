@@ -2,6 +2,9 @@
 
 - [English](ReadMe.md)
 
+![Logo](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/Logo.png)<br/>
+我愿化成一座做石桥，经受五百年的风吹，五百年的日晒，五百年的雨打，只求她从桥上走过！
+
 ## 1. 关于VC-LTL
 
 VC-LTL是一个基于微软VC修改的开源运行时，有效减少应用程序体积并摆脱微软运行时DLL，比如msvcr120.dll、api-ms-win-crt-time-l1-1-0.dll等依赖。
@@ -399,7 +402,7 @@ nmake /f Test.mak
 * 新增Fea，添加C++/CLI支持（感谢 naturalj0）。
 
 
-### 4.0.0.25 Preview - 累计问题修复（2018-12-14 18:00）
+### 4.0.0.26 - 累计问题修复（2018-12-19 18:00）
 * 解决Bug，修复Windows XP模式`_Atexit`函数依赖`EncodePointer`问题（感谢 亮亮）。
 * 解决Bug，修复微软原版details::Etw中错误的使用`EncodePointer`问题。
 * 解决Bug，修复`_initialize_onexit_table_downlevel`一处内存泄漏问题（感谢 g-qa-ck组）。

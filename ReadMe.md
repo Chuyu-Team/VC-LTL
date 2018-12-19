@@ -2,6 +2,9 @@
 
 - [简体中文](ReadMe.osc.md)
 
+![Logo](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/Logo.png)<br/>
+I would like to turn into a stone bridge, go through 500 years of wind, 500 years of Sun, rain for 500 years, but she walked off a bridge!
+
 ## 1. About VC-LTL
 VC-LTL is an open source CRT library based on the MS VCRT that reduce program binary size and say goodbye to Microsoft runtime DLLs, such as msvcr120.dll, api-ms-win-crt-time-l1-1-0.dll and other dependencies.
 
@@ -410,13 +413,13 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add C++/CLI Support (Thanks to naturalj0).
 
 
-### 4.0.0.25 Preview - 累计问题修复 (Dec 14, 2018 18:00）
-* 解决Bug，修复Windows XP模式`_Atexit`函数依赖`EncodePointer`问题（感谢 亮亮）。
-* 解决Bug，修复微软原版details::Etw中错误的使用`EncodePointer`问题。
-* 解决Bug，修复`_initialize_onexit_table_downlevel`一处内存泄漏问题（感谢 g-qa-ck组）。
-* 解决Bug，修复Windows XP找不到函数`operator new(size_t,int,char const *,int)`、`operator new[](size_t,int,char const *,int)`入口点（感谢 希望）。
-* 新增Fea，添加`delete[](void *, std::nothrow_t const &)`（感谢 Too Simple）。
-* 解决Bug，修复Spectre + WinXP 32下缺失exsup4符号问题（感谢 Too Simple）。
-* 新增Fea，添加Windows 10 17763 UCRT支持（感谢 毛利）。
-* 新增Fea，添加VS 2017 14.16.27023工具集支持。
-* 新增Fea，为Windows XP添加`_IsExceptionObjectToBeDestroyed、_CreateFrameInfo、_FindAndUnlinkFrame`（感谢 夏思畅）。
+### 4.0.0.26 - 累计问题修复 (Dec 19, 2018 18:00）
+* Fix Bug, solved Windows XP mode `_Atexit` function depends on `EncodePointer` problem（感谢 亮亮）。
+* Fix MSBug, solved the wrong use of `EncodePointer` in Microsoft's original details::Etw.
+* Fix Bug, solved a memory leak in `_initialize_onexit_table_downlevel` (Thanks to g-qa-ck).
+* Fix Bug, solved Windows XP can't find function `operator new(size_t,int,char const *,int) and operator new[](size_t,int,char const *,int)` entry point (Thanks to 希望).
+* Fix Bug, solved missing exsup4 symbol problem under Spectre with WinXP 32 (Thanks to Too Simple).
+* Add Fea, add `delete[](void *, std::nothrow_t const &)` (Thanks to Too Simple).
+* Add Fea, add UCRT 10.17763 (Thanks to 毛利).
+* Add Fea, Add Vistual Studio 2017 15.9 Support.
+* Add Fea, Add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
