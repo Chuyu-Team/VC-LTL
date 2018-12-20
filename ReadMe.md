@@ -413,7 +413,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add C++/CLI Support (Thanks to naturalj0).
 
 
-### 4.0.0.26 - 累计问题修复 (Dec 19, 2018 18:00）
+### 4.0.0.26 - Cumulative bug fixes (Dec 19, 2018 18:00）
 * Fix Bug, solved Windows XP mode `_Atexit` function depends on `EncodePointer` problem（感谢 亮亮）。
 * Fix MSBug, solved the wrong use of `EncodePointer` in Microsoft's original details::Etw.
 * Fix Bug, solved a memory leak in `_initialize_onexit_table_downlevel` (Thanks to g-qa-ck).
