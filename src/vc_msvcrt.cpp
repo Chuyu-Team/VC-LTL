@@ -514,7 +514,7 @@ EXTERN_C errno_t __cdecl _configure_narrow_argv_downlevel(
 	_startupinfo _StartInfon = { _get_startup_new_mode() };
 
 	//不支持_crt_argv_no_arguments
-	return __getmainargs(&_Argc, &_Argv, &_environ, _get_startup_argv_mode() != _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
+	return __getmainargs(&_Argc, &_Argv, &_environ, _get_startup_argv_mode() == _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_configure_narrow_argv_downlevel);
@@ -532,7 +532,7 @@ EXTERN_C errno_t __cdecl _configure_wide_argv_downlevel(
 	_startupinfo _StartInfon = { _get_startup_new_mode() };
 
 	//不支持_crt_argv_no_arguments
-	return __wgetmainargs(&_Argc, &_Argv, &_wenviron, _get_startup_argv_mode() != _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
+	return __wgetmainargs(&_Argc, &_Argv, &_wenviron, _get_startup_argv_mode() == _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
 }
 
 _LCRT_DEFINE_IAT_SYMBOL(_configure_wide_argv_downlevel);

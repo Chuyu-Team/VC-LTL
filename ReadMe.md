@@ -414,7 +414,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ### 4.0.0.26 - Cumulative bug fixes (Dec 19, 2018 18:00）
-* Fix Bug, solved Windows XP mode `_Atexit` function depends on `EncodePointer` problem（感谢 亮亮）。
+* Fix Bug, solved Windows XP mode `_Atexit` function depends on `EncodePointer` problem（Thanks to 亮亮）。
 * Fix MSBug, solved the wrong use of `EncodePointer` in Microsoft's original details::Etw.
 * Fix Bug, solved a memory leak in `_initialize_onexit_table_downlevel` (Thanks to g-qa-ck).
 * Fix Bug, solved Windows XP can't find function `operator new(size_t,int,char const *,int) and operator new[](size_t,int,char const *,int)` entry point (Thanks to 希望).
@@ -423,3 +423,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add UCRT 10.17763 (Thanks to 毛利).
 * Add Fea, Add Vistual Studio 2017 15.9 Support.
 * Add Fea, Add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
+
+### 4.0.0.27 - Cumulative bug fixes（Jan 23, 2019 10:30）
+* Fix [Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45), the parameter is expanded by default(Thanks to xspeed1989).

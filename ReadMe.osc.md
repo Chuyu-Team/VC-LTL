@@ -412,3 +412,6 @@ nmake /f Test.mak
 * 新增Fea，添加Windows 10 17763 UCRT支持（感谢 毛利）。
 * 新增Fea，添加VS 2017 14.16.27023工具集支持。
 * 新增Fea，为Windows XP添加`_IsExceptionObjectToBeDestroyed、_CreateFrameInfo、_FindAndUnlinkFrame`（感谢 夏思畅）。
+
+### 4.0.0.27 - 累计问题修复（2019-01-23 10:30）
+* 解决[Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45)，main函数argv参数默认被展开问题（感谢 xspeed1989 ）。
