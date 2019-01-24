@@ -413,5 +413,6 @@ nmake /f Test.mak
 * 新增Fea，添加VS 2017 14.16.27023工具集支持。
 * 新增Fea，为Windows XP添加`_IsExceptionObjectToBeDestroyed、_CreateFrameInfo、_FindAndUnlinkFrame`（感谢 夏思畅）。
 
-### 4.0.0.27 - 累计问题修复（2019-01-23 10:30）
+### 4.0.0.27 - 累计问题修复（2019-01-24 10:30）
 * 解决[Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45)，main函数argv参数默认被展开问题（感谢 xspeed1989 ）。
+* 解决Bug，VS 14.14.26428以及更高平台缺少`pplerror.cpp`问题（感谢 xspeed1989 ）。

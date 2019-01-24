@@ -425,4 +425,5 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, Add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
 
 ### 4.0.0.27 - Cumulative bug fixes（Jan 23, 2019 10:30）
-* Fix [Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45), the parameter is expanded by default(Thanks to xspeed1989).
+* Fix [Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45), the parameter is expanded by default (Thanks to xspeed1989).
+* Fix Bug, VS 14.14.26428 or higher missed `pplerror.cpp` problem (Thanks to xspeed1989).

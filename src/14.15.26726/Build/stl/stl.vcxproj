@@ -1417,6 +1417,10 @@
       <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)objs\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\stl\pplerror.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic_Spectre'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\stl\ppltasks.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic_Spectre'">true</ExcludedFromBuild>
