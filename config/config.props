@@ -56,10 +56,12 @@
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v140_xp')">true</SupportPlatformToolsetWinXP>
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v141_xp')">true</SupportPlatformToolsetWinXP>
     <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014_xp')">true</SupportPlatformToolsetWinXP>
+    <SupportPlatformToolsetWinXP Condition="('$(SupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM_v141_xp')">true</SupportPlatformToolsetWinXP>
 
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014')">true</SupportPlatformToolsetNormal>
+    <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v141')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_c2')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_3_7')">true</SupportPlatformToolsetNormal>
     <SupportPlatformToolsetNormal Condition="('$(SupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141_clang_c2')">true</SupportPlatformToolsetNormal>
