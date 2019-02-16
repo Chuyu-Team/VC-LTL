@@ -50,7 +50,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 
 ### 2.1. 支持的IDE
 * Visual Studio 2015（包含Clang with Microsoft CodeGen、Clang 3.7 with Microsoft CodeGen、Clang-LLVM）
-* Visual Studio 2017（包含Clang with Microsoft CodeGen）
+* Visual Studio 2017（包含Clang with Microsoft CodeGen、Clang-LLVM）
 
 ### 2.2. 支持的编译工具
 |    编译工具    | 支持文件
@@ -58,6 +58,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 | Visual Studio  | [VC-LTL helper for Visual Studio.props](#32-在visual-studio中使用vc-ltl)
 | CMake          | [VC-LTL helper for cmake.cmake](#33-在cmake中使用vc-ltl)
 | NMake、CL      | [VC-LTL helper for nmake.cmd](#34-在nmake纯cl中使用vc-ltl)
+| QMake          | VC-LTL helper for qmake.pri
 
 ### 2.3. 支持的操作系统
 |   操作系统                                          | x86 | x64 | arm | arm64 
@@ -413,6 +414,8 @@ nmake /f Test.mak
 * 新增Fea，添加VS 2017 14.16.27023工具集支持。
 * 新增Fea，为Windows XP添加`_IsExceptionObjectToBeDestroyed、_CreateFrameInfo、_FindAndUnlinkFrame`（感谢 夏思畅）。
 
-### 4.0.0.27 - 累计问题修复（2019-01-24 10:30）
+### 4.0.0.28 - 累计问题修复（2019-02-16 14:50）
 * 解决[Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45)，main函数argv参数默认被展开问题（感谢 xspeed1989 ）。
 * 解决Bug，VS 14.14.26428以及更高平台缺少`pplerror.cpp`问题（感谢 xspeed1989 ）。
+* 新增Fea，改进Visual Studio 2017中对Clang-LLVM的支持（感谢 神话）。
+* 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。

@@ -61,7 +61,7 @@ from the pure C source code.
 
 ### 2.1. Supported Visual Studio Versions
 * Visual Studio 2015 (Support Clang with Microsoft CodeGen, Clang 3.7 with Microsoft CodeGen, Clang-LLVM)
-* Visual Studio 2017 (Support Clang with Microsoft CodeGen)
+* Visual Studio 2017 (Support Clang with Microsoft CodeGen, Clang-LLVM)
 
 ### 2.2. Supported Build Tools
 |   Build Tool   | Helper      
@@ -69,6 +69,7 @@ from the pure C source code.
 | Visual Studio  | [VC-LTL helper for Visual Studio.props](#32-using-vc-ltl-in-visual-studio)
 | CMake          | [VC-LTL helper for cmake.cmake](#33-using-vc-ltl-in-cmake)
 | NMake, CL      | [VC-LTL helper for nmake.cmd](#34-using-vc-ltl-in-nmakecl)
+| QMake          | VC-LTL helper for qmake.pri
 
 ### 2.3. Supported Windows Versions
 |         OS                                          | x86 | x64 | arm | arm64 
@@ -421,9 +422,11 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, solved missing exsup4 symbol problem under Spectre with WinXP 32 (Thanks to Too Simple).
 * Add Fea, add `delete[](void *, std::nothrow_t const &)` (Thanks to Too Simple).
 * Add Fea, add UCRT 10.17763 (Thanks to 毛利).
-* Add Fea, Add Vistual Studio 2017 15.9 Support.
-* Add Fea, Add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
+* Add Fea, add Vistual Studio 2017 15.9 Support.
+* Add Fea, add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
 
-### 4.0.0.27 - Cumulative bug fixes（Jan 23, 2019 10:30）
+### 4.0.0.28 - Cumulative bug fixes（Feb 16, 2019 14:50）
 * Fix [Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45), the parameter is expanded by default (Thanks to xspeed1989).
 * Fix Bug, VS 14.14.26428 or higher missed `pplerror.cpp` problem (Thanks to xspeed1989).
+* Add Fea, improved support for Clang-LLVM in Visual Studio 2017 (Thanks to luciouskami).
+* Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
