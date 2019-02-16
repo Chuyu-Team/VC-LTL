@@ -53,66 +53,66 @@ endif()
 
 if(${SupportLTL} STREQUAL "true")
 	#获取VC版本号
-	if(NOT VC-LTLUsedToolsVersion)
+	if(NOT VCLTLToolsVersion)
 		if(${MSVC_VERSION} EQUAL 1900)
-			set(__DefaultVCToolsVersion "14.0.24231")
+			set(DefaultVCLTLToolsVersion "14.0.24231")
 
 			#VC 2015只能自己读取注册表解决
 
 			#计算机已经安装Visual Studio 2015 Update3 v14.0.24234（Visual Studio 2017 15.7中的2015平台工具集），与14.0.24231完全一致
-			if(NOT VC-LTLUsedToolsVersion)
+			if(NOT VCLTLToolsVersion)
 				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{BDE574B5-6CFE-32B2-9854-C827567E9D6F};DisplayVersion]" NAME)
 				if (${LTLDisplayVersionTmp} STREQUAL "registry")
 					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{BDE574B5-6CFE-32B2-9854-C827567E9D6F};DisplayVersion]" NAME)
 				endif()
 
 				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
-					set(VC-LTLUsedToolsVersion "14.0.24231")
+					set(VCLTLToolsVersion "14.0.24231")
 				endif()
 			endif()
 
 			#计算机已经安装Visual Studio 2015 Update3 v14.0.24231（Visual Studio 2017 15.6中的2015平台工具集）
-			if(NOT VC-LTLUsedToolsVersion)
+			if(NOT VCLTLToolsVersion)
 				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B0791F3A-6A88-3650-AECF-8AFBE227EC53};DisplayVersion]" NAME)
 				if (${LTLDisplayVersionTmp} STREQUAL "registry")
 					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{B0791F3A-6A88-3650-AECF-8AFBE227EC53};DisplayVersion]" NAME)
 				endif()
 
 				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
-					set(VC-LTLUsedToolsVersion "14.0.24231")
+					set(VCLTLToolsVersion "14.0.24231")
 				endif()
 			endif()
 
 			#计算机已经安装Visual Studio 2015 Update3 v14.0.24225（Visual Studio 2017 15.5中的2015平台工具集）
-			if(NOT VC-LTLUsedToolsVersion)
+			if(NOT VCLTLToolsVersion)
 				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09};DisplayVersion]" NAME)
 				if (${LTLDisplayVersionTmp} STREQUAL "registry")
 					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B1849F2-3D49-325F-B997-4AD0BF5B8A09};DisplayVersion]" NAME)
 				endif()
 
 				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
-					set(VC-LTLUsedToolsVersion "14.0.24225")
+					set(VCLTLToolsVersion "14.0.24225")
 				endif()
 			endif()
 
 			#计算机已经安装Visual Studio 2015 Update3 v14.0.24210（正统Visual Studio 2015）
-			if(NOT VC-LTLUsedToolsVersion)
+			if(NOT VCLTLToolsVersion)
 				GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A};DisplayVersion]" NAME)
 				if (${LTLDisplayVersionTmp} STREQUAL "registry")
 					GET_FILENAME_COMPONENT(LTLDisplayVersionTmp "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{729FD64C-2AE0-3E25-83A8-A93520DCDE7A};DisplayVersion]" NAME)
 				endif()
 
 				if (NOT ${LTLDisplayVersionTmp} STREQUAL "registry")
-					set(VC-LTLUsedToolsVersion "14.0.24210")
+					set(VCLTLToolsVersion "14.0.24210")
 				endif()
 			endif()
 
 		elseif(${MSVC_VERSION} LESS 1920)
 			#VC2017
-			set(__DefaultVCToolsVersion "14.16.27023")
+			set(DefaultVCLTLToolsVersion "14.16.27023")
 
 			if(DEFINED ENV{VCToolsVersion})
-				set(VC-LTLUsedToolsVersion $ENV{VCToolsVersion})
+				set(VCLTLToolsVersion $ENV{VCToolsVersion})
 			endif()
 
 		else()
@@ -121,10 +121,10 @@ if(${SupportLTL} STREQUAL "true")
 		endif()
 
 		if(${SupportLTL} STREQUAL "true")
-			if(NOT VC-LTLUsedToolsVersion)
-				set(VC-LTLUsedToolsVersion ${__DefaultVCToolsVersion})
-			elseif(NOT EXISTS ${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion})
-				set(VC-LTLUsedToolsVersion ${__DefaultVCToolsVersion})
+			if(NOT VCLTLToolsVersion)
+				set(VCLTLToolsVersion ${DefaultVCLTLToolsVersion})
+			elseif(NOT EXISTS ${VC_LTL_Root}/VC/${VCLTLToolsVersion})
+				set(VCLTLToolsVersion ${DefaultVCLTLToolsVersion})
 			endif()
 		endif()
 
@@ -135,32 +135,32 @@ endif()
 if(${SupportLTL} STREQUAL "true")
 
 	#获取UCRT版本，如果当前环境变量UCRTVersion说对应的版本VC-LTL支持，那么使用该版本，否则使用10.0.10240.0
-   if(NOT VC-LTLTargetUniversalCRTVersion)
+   if(NOT VCLTLTargetUniversalCRTVersion)
 	   if(DEFINED ENV{UCRTVersion})
 			if(EXISTS ${VC_LTL_Root}/ucrt/$ENV{UCRTVersion})
-				set(VC-LTLTargetUniversalCRTVersion $ENV{UCRTVersion})
+				set(VCLTLTargetUniversalCRTVersion $ENV{UCRTVersion})
 			endif()
 		endif()
 
-		if(NOT VC-LTLTargetUniversalCRTVersion)
+		if(NOT VCLTLTargetUniversalCRTVersion)
 			#设置默认UCRT版本号
-			set(VC-LTLTargetUniversalCRTVersion "10.0.10240.0")
+			set(VCLTLTargetUniversalCRTVersion "10.0.10240.0")
 		endif()
 	endif()
 
 
-	#设置OsPlatformName
+	#设置VCLTLPlatformName
 	if(${SupportWinXP} STREQUAL "true")
-		set(OsPlatformName "WinXP")
+		set(VCLTLPlatformName "WinXP")
 	else()
-		set(OsPlatformName "Vista")
+		set(VCLTLPlatformName "Vista")
 	endif()
 
 	if(${PlatformShortName} STREQUAL "arm")
-		set(OsPlatformName "Vista")
+		set(VCLTLPlatformName "Vista")
 	endif()
 	if(${PlatformShortName} STREQUAL "arm64")
-		set(OsPlatformName "Vista")
+		set(VCLTLPlatformName "Vista")
 	endif()
 
 	#设置LTL_Mode
@@ -185,14 +185,14 @@ if(${SupportLTL} STREQUAL "true")
 
 	#打印VC-LTL基本信息
 	message(" VC-LTL Path          :" ${VC_LTL_Root})
-	message(" VC-LTL Tools Version :" ${VC-LTLUsedToolsVersion})
-	message(" VC-LTL UCRT Version  :" ${VC-LTLTargetUniversalCRTVersion})
+	message(" VC-LTL Tools Version :" ${VCLTLToolsVersion})
+	message(" VC-LTL UCRT Version  :" ${VCLTLTargetUniversalCRTVersion})
 	message(" Platform             :" ${PlatformShortName})
-	message(" Using VC-LTL " ${OsPlatformName} " " ${LTL_Mode} " Mode")
+	message(" Using VC-LTL " ${VCLTLPlatformName} " " ${LTL_Mode} " Mode")
 	message("")
 
-    set(VC_LTL_Include ${VC_LTL_Root}/config/${OsPlatformName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/include;${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion})
-    set(VC_LTL_Library ${VC_LTL_Root}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/lib/${PlatformShortName}/${OsPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VC-LTLUsedToolsVersion}/lib/${PlatformShortName}/${OsPlatformName};${VC_LTL_Root}/ucrt/${VC-LTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
+    set(VC_LTL_Include ${VC_LTL_Root}/config/${VCLTLPlatformName};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/include;${VC_LTL_Root}/VC/${VCLTLToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VCLTLTargetUniversalCRTVersion})
+    set(VC_LTL_Library ${VC_LTL_Root}/lib/${PlatformShortName}/${VCLTLPlatformName};${VC_LTL_Root}/lib/${PlatformShortName}/${VCLTLPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/lib/${PlatformShortName}/${VCLTLPlatformName};${VC_LTL_Root}/ucrt/${VCLTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
 
 	#message("INCLUDE " $ENV{INCLUDE})
 	#message("LIB " $ENV{LIB})
