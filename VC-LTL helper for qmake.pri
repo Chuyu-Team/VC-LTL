@@ -59,6 +59,12 @@ Release {
 # 读取注册表 HKCU\Code\VC-LTL@Root
 } else:greaterThan(QT_VERSION, 5.12.0) {
     VC_LTL_Root = $$read_registry(HKCU, Code\\VC-LTL\\Root)
+# QT版本过低，读注册表只能采用reg query
+} else {
+    VC_LTL_Root = $$system(reg query HKCU\\Code\\VC-LTL /v Root, blob)
+	VC_LTL_Root ~= s/.*(\\w:.*)/\\1
+	VC_LTL_Root = $$replace(VC_LTL_Root, \r, "")
+    VC_LTL_Root = $$replace(VC_LTL_Root, \n, "")
 }
 
 !isEmpty(VC_LTL_Root): include($$VC_LTL_Root/config/config.pri)

@@ -419,3 +419,6 @@ nmake /f Test.mak
 * 解决Bug，VS 14.14.26428以及更高平台缺少`pplerror.cpp`问题（感谢 xspeed1989 ）。
 * 新增Fea，改进Visual Studio 2017中对Clang-LLVM的支持（感谢 神话）。
 * 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。
+
+### 4.0.0.29 - 改进支持（2019-03-07 17:12）
+* 新增Fea，`VC-LTL helper for qmake.pri`脚本添加老版本QMake兼容（感谢 大胸滴）。

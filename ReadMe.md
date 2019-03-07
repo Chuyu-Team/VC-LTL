@@ -383,7 +383,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, Solve VS15.7 special_math problem can not be used.
 
 
-### 4.0.0.2 - Add VC-LTL dynamic library support (Aug 14, 2018 12:30）
+### 4.0.0.2 - Add VC-LTL dynamic library support (Aug 14, 2018 12:30)
 > The new VC-LTL 4.0, code-named "Dawning" has been released. As a major version upgrade, you need to pay attention to the following items:
 > 1. Beginning with VC-LTL 4.0, if you need static compilation (dependent msvcrt.dll only), please use `/MT`.
 > 2. VC-LTL 4.0 is not compatible with VC-LTL 3.X compiled static libraries, you need to recompile with VC-LTL 4.0 (Dawning).
@@ -396,7 +396,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, use msvcp60.dll to reduce the program size.
 
 
-### 4.0.0.10 - Add Vistual Studio 2017 15.8 Support (Aug 26, 2018 17:20）
+### 4.0.0.10 - Add Vistual Studio 2017 15.8 Support (Aug 26, 2018 17:20)
 * Fix Bug, Solve "VC-LTL helper for cmake.cmake" syntax error (Thanks to MaMy丶).
 * Fix Bug, Solve the wrong way to determine the path of the CMake script (Thanks to Simple, MaMy丶).
 * Fix Bug, Solve the CMkae and NMake script lib path error problem.
@@ -406,7 +406,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, Add a lib file check, and report an error if it does not exist.
 
 
-### 4.0.0.17 - Add C++/CLI Support (Sep 26, 2018 10:00）
+### 4.0.0.17 - Add C++/CLI Support (Sep 26, 2018 10:00)
 * Fix [Bug 40](https://github.com/Chuyu-Team/VC-LTL/issues/40), solved link failed when using RTTI in XP x64 mode (Thanks to killvxk).
 * Fix [Bug 41](https://github.com/Chuyu-Team/VC-LTL/issues/41), solved `_byteswap_ulong`, `_byteswap_uint64` and `_byteswap_ushort` were not found when the internal function was disabled (Thanks to wangwenx190).
 * Fix Bug, solved Windows XP cannot find entry points for `_abs64`, `_rotl64` and `_rotr64` functions when internal functions was disabled.
@@ -414,8 +414,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add C++/CLI Support (Thanks to naturalj0).
 
 
-### 4.0.0.26 - Cumulative bug fixes (Dec 19, 2018 18:00）
-* Fix Bug, solved Windows XP mode `_Atexit` function depends on `EncodePointer` problem（Thanks to 亮亮）。
+### 4.0.0.26 - Cumulative bug fixes (Dec 19, 2018 18:00)
+* Fix Bug, solved Windows XP mode `_Atexit` function depends on `EncodePointer` problem (Thanks to 亮亮).
 * Fix MSBug, solved the wrong use of `EncodePointer` in Microsoft's original details::Etw.
 * Fix Bug, solved a memory leak in `_initialize_onexit_table_downlevel` (Thanks to g-qa-ck).
 * Fix Bug, solved Windows XP can't find function `operator new(size_t,int,char const *,int) and operator new[](size_t,int,char const *,int)` entry point (Thanks to 希望).
@@ -425,8 +425,13 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add Vistual Studio 2017 15.9 Support.
 * Add Fea, add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
 
-### 4.0.0.28 - Cumulative bug fixes（Feb 16, 2019 14:50）
+
+### 4.0.0.28 - Cumulative bug fixes (Feb 16, 2019 14:50)
 * Fix [Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45), the parameter is expanded by default (Thanks to xspeed1989).
 * Fix Bug, VS 14.14.26428 or higher missed `pplerror.cpp` problem (Thanks to xspeed1989).
 * Add Fea, improved support for Clang-LLVM in Visual Studio 2017 (Thanks to luciouskami).
 * Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
+
+
+### 4.0.0.29 - Improved Support (Mar 7, 2019 17:12)
+* Add Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).

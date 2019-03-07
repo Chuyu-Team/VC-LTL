@@ -41,13 +41,12 @@ equals(DefaultVCLTLToolsVersion, 14.0) {
 VCLTLToolsVersion = $$(VCToolsVersion)
 
 isEmpty(VCLTLToolsVersion) {
-    greaterThan(QT_VERSION, 5.12.0) {
-        for (i, VC_TOOLS_VERSION_LIST) {
-            p = $$split(i, :)
-            r = $$read_registry(HKLM, SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{$$last(p)}\\DisplayVersion)
-            !isEmpty(r) {
-                VCLTLToolsVersion = $$first(p)
-            }
+    for (i, VC_TOOLS_VERSION_LIST) {
+        p = $$split(i, :)
+        
+        system(reg query HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{$$last(p)} /v DisplayVersion) {
+            VCLTLToolsVersion = $$first(p)
+			break()
         }
     }
 }
