@@ -433,5 +433,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
 
 
-### 4.0.0.29 - Improved Support (Mar 7, 2019 17:12)
+### 4.0.0.30 - Improved Support (Mar 20, 2019 17:30)
 * Add Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
+* Add Fea, the CMake script adds vcpkg support (Thanks to BigBrother).

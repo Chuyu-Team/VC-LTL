@@ -420,5 +420,6 @@ nmake /f Test.mak
 * 新增Fea，改进Visual Studio 2017中对Clang-LLVM的支持（感谢 神话）。
 * 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。
 
-### 4.0.0.29 - 改进支持（2019-03-07 17:12）
+### 4.0.0.30 - 改进支持（2019-03-20 17:30）
 * 新增Fea，`VC-LTL helper for qmake.pri`脚本添加老版本QMake兼容（感谢 大胸滴）。
+* 新增Fea，CMake脚本添加vcpkg兼容（感谢 大胸滴）。
