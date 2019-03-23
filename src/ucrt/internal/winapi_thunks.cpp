@@ -13,6 +13,10 @@
 #include "..\..\src\winapi_thunks.h"
 #include <internal_shared.h>
 
+#ifdef _ATL_XP_TARGETING
+	//XP、2003额外需要，不然调用硬链接时会链接失败
+	#pragma comment(linker, "/defaultlib:advapi32.lib")
+#endif
 
 // Define this locally because including ntstatus.h conflicts with headers above
 #define STATUS_NOT_FOUND                 ((LONG)0xC0000225L)
