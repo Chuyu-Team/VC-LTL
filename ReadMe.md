@@ -53,7 +53,7 @@ from the pure C source code.
 |  CRT     | 91.455% | 94.521%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcmrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
 |  STL     | 100%    | 100%       | 100%      | libcpmt.lib, msvcprt.lib
 |  ConcRT  | 100%    | 100%       | 100%      | libconcrt.lib, concrt.lib
-|  WinRT   |  X      | 100%       |  X        | vccorlib.lib (Windows 8.1 and higher only)
+|  WinRT   |  X      | 100%       |  X        | vccorlib.lib (Windows 8.1 or later)
 |  ATL     | 100%    | 100%       | 100%      | -
 |  MFC     |  X      |  X         | 100%      | -
 |  AMP     |  -      |  -         |  -        | -
