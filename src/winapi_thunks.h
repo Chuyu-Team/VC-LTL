@@ -314,6 +314,18 @@ _LTLIMP PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
 #define __crtCreateThreadpoolTimer CreateThreadpoolTimer
 #endif
 
+#ifndef _CRTBLD
+#if _CRT_NTDDI_MIN < 0x05020000
+EXTERN_C BOOL
+WINAPI
+__ltlGetLogicalProcessorInformation(
+	_Out_writes_bytes_to_opt_(*ReturnedLength, *ReturnedLength) PSYSTEM_LOGICAL_PROCESSOR_INFORMATION Buffer,
+	_Inout_ PDWORD ReturnedLength
+    );
+#define GetLogicalProcessorInformation __ltlGetLogicalProcessorInformation
+#endif
+#endif
+
 __declspec(dllimport) int __cdecl __crtCompareStringA(/*Unknow*/);
 
 typedef int (__cdecl * __crtCompareStringA_WinXP)

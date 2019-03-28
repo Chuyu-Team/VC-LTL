@@ -433,7 +433,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
 
 
-### 4.0.0.30 - Improved Support (Mar 23, 2019 18:50)
+### 4.0.1.0 - Improved Support (Mar 28, 2019 16:50)
 * Fix Bug, Windows XP mode does not reference `advapi32.lib`, which may cause symbols such as `ImpersonateSelf` to be unresolvable (Thanks to 昌平517).
+* Fix Bug, `std::thread` depends on `GetLogicalProcessorInformation` causing XP RTM report not to find entry point (Thanks to 小古).
 * Add Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
 * Add Fea, the CMake script adds vcpkg support (Thanks to BigBrother).

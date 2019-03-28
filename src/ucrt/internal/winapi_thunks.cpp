@@ -161,7 +161,8 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY_Vista(WaitForThreadpoolTimerCallbacks,       ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(CreateThreadpoolWait,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(CloseThreadpoolTimer,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
-    _NO_APPLY_Vista(CreateThreadpoolTimer,                 ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
+    _NO_APPLY_Vista(CreateThreadpoolTimer,                 ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_2003(GetLogicalProcessorInformation,         ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
 
 namespace
 {
@@ -1615,6 +1616,26 @@ EXTERN_C PTP_TIMER WINAPI __crtCreateThreadpoolTimer(
 	}
 }
 
+#endif
+
+#if _CRT_NTDDI_MIN < 0x05020000
+EXTERN_C BOOL
+WINAPI
+__ltlGetLogicalProcessorInformation(
+	PSYSTEM_LOGICAL_PROCESSOR_INFORMATION Buffer,
+	PDWORD ReturnedLength
+    )
+{
+	if (auto pGetLogicalProcessorInformation = try_get_GetLogicalProcessorInformation())
+	{
+		return pGetLogicalProcessorInformation(Buffer, ReturnedLength);
+	}
+	else
+	{
+		SetLastError(ERROR_INVALID_FUNCTION);
+		return FALSE;
+	}
+}
 #endif
 
 namespace
