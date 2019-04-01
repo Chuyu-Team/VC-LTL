@@ -162,7 +162,8 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY_Vista(CreateThreadpoolWait,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(CloseThreadpoolTimer,                  ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_Vista(CreateThreadpoolTimer,                 ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
-    _NO_APPLY_2003(GetLogicalProcessorInformation,         ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
+    _NO_APPLY_2003(GetLogicalProcessorInformation,         ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
+    _NO_APPLY_2003(GetNumaHighestNodeNumber,               ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
 
 namespace
 {
@@ -1634,6 +1635,27 @@ __ltlGetLogicalProcessorInformation(
 	{
 		SetLastError(ERROR_INVALID_FUNCTION);
 		return FALSE;
+	}
+}
+#endif
+
+#if _CRT_NTDDI_MIN < 0x05020000
+EXTERN_C BOOL
+WINAPI
+__ltlGetNumaHighestNodeNumber(
+    _Out_ PULONG HighestNodeNumber
+    )
+{
+	if (auto pGetNumaHighestNodeNumber = try_get_GetNumaHighestNodeNumber())
+	{
+		return pGetNumaHighestNodeNumber(HighestNodeNumber);
+	}
+	else
+	{
+		//不支持时始终假定只有一个NUMA节点
+		*HighestNodeNumber = 0;
+
+		return TRUE;
 	}
 }
 #endif

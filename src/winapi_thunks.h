@@ -323,6 +323,14 @@ __ltlGetLogicalProcessorInformation(
 	_Inout_ PDWORD ReturnedLength
     );
 #define GetLogicalProcessorInformation __ltlGetLogicalProcessorInformation
+
+EXTERN_C BOOL
+WINAPI
+__ltlGetNumaHighestNodeNumber(
+    _Out_ PULONG HighestNodeNumber
+    );
+#define GetNumaHighestNodeNumber __ltlGetNumaHighestNodeNumber
+
 #endif
 #endif
 
