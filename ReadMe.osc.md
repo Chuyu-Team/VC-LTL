@@ -420,8 +420,9 @@ nmake /f Test.mak
 * 新增Fea，改进Visual Studio 2017中对Clang-LLVM的支持（感谢 神话）。
 * 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。
 
-### 4.0.1.0 - 改进支持（2019-03-28 16:50）
+### 4.0.1.1 - 改进支持（2019-04-01 11:00）
 * 解决Bug，Windows XP模式没有引用`advapi32.lib`，可能导致`ImpersonateSelf`等符号无法解析（感谢 昌平517）。
 * 解决Bug，微软原版std::thread依赖GetLogicalProcessorInformation导致XP RTM无法运行（感谢 小古）。
+* 解决Bug，为XP模式添加_mbsinc，解决此函数越界问题（感谢 亮亮）。
 * 新增Fea，`VC-LTL helper for qmake.pri`脚本添加老版本QMake兼容（感谢 大胸滴）。
 * 新增Fea，CMake脚本添加vcpkg兼容（感谢 大胸滴）。

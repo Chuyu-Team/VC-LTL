@@ -11,6 +11,9 @@ mbrtowc
 mbsrtowcs
 
 
+;Windows XP这个函数没有\0检查，会导致字符串越界
+_mbsinc
+
 ;这几个内部函数XP不存在，需要静态实现
 _rotr64
 _rotl64

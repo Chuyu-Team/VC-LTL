@@ -60,7 +60,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsinc_l_downlevel);
 
 #endif
 
-#if 0
+#if _CRT_NTDDI_MIN <= NTDDI_WS03
+//WinXP还有2003这个函数有Bug，会导致越界访问，因此我们提供一份新的
 extern "C" unsigned char * (__cdecl _mbsinc)(
         const unsigned char *current
         )
