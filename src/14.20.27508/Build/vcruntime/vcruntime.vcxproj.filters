@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\vc">
+      <UniqueIdentifier>{8c1bb663-d9c1-45e1-b556-287f00f87ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl">
+      <UniqueIdentifier>{dcb5545f-77e6-40a3-b5a1-095ecc58eeaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\objs">
+      <UniqueIdentifier>{0372228d-b4b3-43e6-afe3-0cf326b8323a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\objs\x86">
+      <UniqueIdentifier>{5fa2c38a-86b2-4848-ab1e-ab04d5b2e53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\WinXP">
+      <UniqueIdentifier>{701896c0-0079-4333-b210-05959b6cd994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\WinXP\x86">
+      <UniqueIdentifier>{a3b856d7-4c37-43e7-aa2f-41d3c442e8bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\x86">
+      <UniqueIdentifier>{7b30014f-12e3-446e-a6e4-79869428a88c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ltl\amd64">
+      <UniqueIdentifier>{a0cee9a9-1e56-4ff7-ae9b-e1edd592e15e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\x86">
+      <UniqueIdentifier>{daada2e0-d5b3-492e-a29f-3b6f10c36fbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\vc\Others">
+      <UniqueIdentifier>{c85e98a2-a9e0-4777-a041-7a9411fab477}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\vcruntime\unexpected.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\purevirt.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\frame_thunks.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt_IAT.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vc_msvcrt_winxp.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\std_type_info.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\jbcxrval.c">
+      <Filter>源文件\vc\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\exsup4_downlevel.cpp">
+      <Filter>源文件\ltl\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\chandler3_noexcept.cpp">
+      <Filter>源文件\ltl\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\amd64\chandler_noexcept.cpp">
+      <Filter>源文件\ltl\amd64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\mgdframe.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\frame.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\ehhelpers.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\uncaught_exceptions.cpp">
+      <Filter>源文件\vc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\i386\trnsctrl.cpp">
+      <Filter>源文件\vc\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\risctrnsctrl.cpp">
+      <Filter>源文件\vc\Others</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="vcruntime.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vcruntime.def">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+</Project>

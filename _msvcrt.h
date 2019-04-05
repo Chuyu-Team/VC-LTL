@@ -57,22 +57,6 @@ _LTL_PushWarning(1004,"从VC-LTL 4.0 开始MD模式将链接到VC-LTL自身的DL
 #endif
 
 
-
-#if _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION==0
-//Vistual Studio 2015
-#if _VC_CRT_BUILD_VERSION < 24210
-_LTL_PushWarning(1000, "此工具集已经停止维护，强烈建议你请升级到最新Vistual Studio 2015 Update3 KB3165756或者更高版本然后继续！")
-#endif
-#elif _VC_CRT_MAJOR_VERSION ==14 && _VC_CRT_MINOR_VERSION >= 10 && _VC_CRT_MINOR_VERSION < 20
-//Vistual Studio 2017
-#if _VC_CRT_MINOR_VERSION < 12
-_LTL_PushWarning(1000, "此工具集已经停止维护，强烈建议你请升级到最新Vistual Studio 2017 15.5或者更高版本然后继续！")
-#endif
-
-#else
-#error "暂不支持此版本的CRT库"
-#endif
-
 #ifdef __NO_LTL_LIB
 _LTL_PushWarning(1003, "VC-LTL 2.0 开始ltl超越模式已经弃用，此选项将被忽略。")
 #endif

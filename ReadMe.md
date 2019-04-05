@@ -62,6 +62,7 @@ from the pure C source code.
 ### 2.1. Supported Visual Studio Versions
 * Visual Studio 2015 (Support Clang with Microsoft CodeGen, Clang 3.7 with Microsoft CodeGen, Clang-LLVM)
 * Visual Studio 2017 (Support Clang with Microsoft CodeGen, Clang-LLVM)
+* Visual Studio 2019
 
 ### 2.2. Supported Build Tools
 |   Build Tool   | Helper      
@@ -433,10 +434,11 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
 
 
-### 4.0.1.2 - Improved Support (Apr 1, 2019 17:00)
+### 4.0.1.3 - Improved Support (Apr 5, 2019 15:00)
 * Fix Bug, Windows XP mode does not reference `advapi32.lib`, which may cause symbols such as `ImpersonateSelf` to be unresolvable (Thanks to 昌平517).
 * Fix Bug, `std::thread` depends on `GetLogicalProcessorInformation` causing XP RTM report not to find entry point (Thanks to 小古).
 * Fix Bug, Add `_mbsinc` in XP mode because the old version of msvcrt.dll has an out-of-bounds access the bug (Thanks to 亮亮).
 * Fix Bug, `std::mutex` depends on `GetNumaHighestNodeNumber` causing XP RTM report not to find entry point.
-* Add Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
-* Add Fea, the CMake script adds vcpkg support (Thanks to BigBrother).
+* New Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
+* New Fea, the CMake script adds vcpkg support (Thanks to BigBrother).
+* New Fea, add Vistual Studio 2019 Support.

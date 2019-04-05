@@ -1,8 +1,11 @@
+@echo off
+
 ::自动生成VC-LTL库
 
 
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+::@call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
 
+set Path=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE;%Path%
 
 ::先生成静态库
 call:Build Static "x86 x64 ARM ARM64"
@@ -42,6 +45,8 @@ call:BuildCRT 14.14.26428 "x86 x64 ARM ARM64"
 call:BuildCRT 14.15.26726 "x86 x64 ARM ARM64"
 
 call:BuildCRT 14.16.27023 "x86 x64 ARM ARM64"
+
+call:BuildCRT 14.20.27508 "x86 x64 ARM ARM64"
 
 ::生成动态Spectre库
 call:Build Dynamic_Spectre "x86 x64 ARM ARM64"

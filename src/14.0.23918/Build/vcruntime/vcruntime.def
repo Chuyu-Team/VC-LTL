@@ -7,6 +7,7 @@ __CxxDetectRethrow
 __CxxRegisterExceptionObject
 __CxxExceptionFilter
 
+__std_type_info_destroy_list
 
 ;¿˙ ∑ABIºÊ»›
 __current_exception_downlevel=__current_exception
@@ -16,3 +17,6 @@ __AdjustPointer_downlevel=__AdjustPointer
 __GetPlatformExceptionInfo_downlevel=__GetPlatformExceptionInfo
 _is_exception_typeof_downlevel=_is_exception_typeof
 __uncaught_exceptions_downlevel=__uncaught_exceptions
+_get_unexpected_downlevel=_get_unexpected
+__std_type_info_hash_downlevel=__std_type_info_hash
+__std_type_info_destroy_list_downlevel=__std_type_info_destroy_list

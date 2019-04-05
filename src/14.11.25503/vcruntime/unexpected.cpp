@@ -23,13 +23,10 @@ static __forceinline unexpected_handler __cdecl get_unexpected_or_default(
 		return ptd->VistaOrLater_msvcrt._unexpected ? (unexpected_handler)ptd->VistaOrLater_msvcrt._unexpected : &terminate;
 }
 
-extern "C" unexpected_handler __cdecl _get_unexpected_downlevel()
+extern "C" unexpected_handler __cdecl _get_unexpected()
 {
     return get_unexpected_or_default(__acrt_getptd());
 }
-
-
-_LCRT_DEFINE_IAT_SYMBOL(_get_unexpected_downlevel);
 
 //ÓÉ set_unexpected.asm ×ª·¢
 //extern "C" unexpected_handler __cdecl set_unexpected(

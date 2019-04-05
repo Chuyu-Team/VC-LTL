@@ -9,7 +9,6 @@
 #include <vcruntime_internal.h>
 #include <corecrt_internal.h>
 #include <winapi_thunks.h>
-#include <msvcrt_IAT.h>
 
 static __forceinline unexpected_handler __cdecl get_unexpected_or_default(
     __acrt_ptd const* const ptd
@@ -23,13 +22,10 @@ static __forceinline unexpected_handler __cdecl get_unexpected_or_default(
 		return ptd->VistaOrLater_msvcrt._unexpected ? (unexpected_handler)ptd->VistaOrLater_msvcrt._unexpected : &terminate;
 }
 
-extern "C" unexpected_handler __cdecl _get_unexpected_downlevel() noexcept
+extern "C" unexpected_handler __cdecl _get_unexpected() noexcept
 {
     return get_unexpected_or_default(__acrt_getptd());
 }
-
-
-_LCRT_DEFINE_IAT_SYMBOL(_get_unexpected_downlevel);
 
 #if 0 //ÓÉ set_unexpected.asm ×ª·¢
 extern "C" unexpected_handler __cdecl set_unexpected(

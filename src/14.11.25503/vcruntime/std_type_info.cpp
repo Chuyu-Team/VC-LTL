@@ -10,7 +10,6 @@
 #include <vcruntime_string.h>
 #include <vcruntime_typeinfo.h>
 //#include <undname.h>
-#include <msvcrt_IAT.h>
 
 
 
@@ -31,7 +30,7 @@ extern "C" int __cdecl __std_type_info_compare(
 }
 #endif
 
-extern "C" size_t __cdecl __std_type_info_hash_downlevel(
+extern "C" size_t __cdecl __std_type_info_hash(
     __std_type_info_data const* const data
     )
 {
@@ -63,8 +62,6 @@ extern "C" size_t __cdecl __std_type_info_hash_downlevel(
 
     return value;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__std_type_info_hash_downlevel);
 
 #if 0
 //直接由msvcrt.dll提供
@@ -142,7 +139,7 @@ extern "C" char const* __cdecl __std_type_info_name(
 
 // This function is called during module unload to clean up all of the undecorated
 // name strings that were allocated by calls to name().
-extern "C" void __cdecl __std_type_info_destroy_list_downlevel(
+extern "C" void __cdecl __std_type_info_destroy_list(
     __type_info_node* const root_node
     )
 {
@@ -154,5 +151,3 @@ extern "C" void __cdecl __std_type_info_destroy_list_downlevel(
         current_node = next_node;
     }
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__std_type_info_destroy_list_downlevel);

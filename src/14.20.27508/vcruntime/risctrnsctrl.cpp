@@ -21,9 +21,10 @@
 #define RENAME_EH_EXTERN_HYBRID(x) x
 #endif
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #if _EH_RELATIVE_FUNCINFO
 
-#define _ImageBase        (RENAME_BASE_PTD(__vcrt_getptd)()->_ImageBase)
+#define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
 
 extern "C" uintptr_t __cdecl _GetImageBase()
 {
@@ -39,7 +40,7 @@ extern "C" void __cdecl _SetImageBase(uintptr_t ImageBaseToRestore)
 
 #if _EH_RELATIVE_TYPEINFO
 
-#define _ThrowImageBase   (RENAME_BASE_PTD(__vcrt_getptd)()->_ThrowImageBase)
+#define _ThrowImageBase   (__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase)
 
 extern "C" uintptr_t __cdecl _GetThrowImageBase()
 {
@@ -52,11 +53,13 @@ extern "C" void __cdecl _SetThrowImageBase(uintptr_t NewThrowImageBase)
 }
 
 #endif
+#endif //_CRT_NTDDI_MIN >= NTDDI_WIN6
 
 #if _EH_RELATIVE_FUNCINFO
 //
 // Returns the establisher frame pointers. For catch handlers it is the parent's frame pointer.
 //
+#if 0
 EHRegistrationNode * RENAME_EH_EXTERN(__FrameHandler4)::GetEstablisherFrame
 (
     EHRegistrationNode  *pRN,
@@ -523,6 +526,7 @@ RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 
     return TryBlockMap::IteratorPair(iterStart, iterEnd);
 }
+#endif
 
 extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
     FRAMEINFO * pFrameInfo,
@@ -560,6 +564,7 @@ extern "C" void __cdecl RENAME_EH_EXTERN(_FindAndUnlinkFrame)(
     DASSERT(0);
 }
 
+#if 0
 void RENAME_EH_EXTERN(__FrameHandler4)::UnwindNestedFrames(
     EHRegistrationNode  *pFrame,            // Unwind up to (but not including) this frame
     EHExceptionRecord   *pExcept,           // The exception that initiated this unwind
@@ -735,5 +740,6 @@ void RENAME_EH_EXTERN(__FrameHandler3)::UnwindNestedFrames(
                 UnwindContext,
                 (PUNWIND_HISTORY_TABLE)pDC->HistoryTable);
 }
+#endif
 
 #endif // _EH_RELATIVE_FUNCINFO

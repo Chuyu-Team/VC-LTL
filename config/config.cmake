@@ -144,6 +144,8 @@ if(${SupportLTL} STREQUAL "true")
 				set(VCLTLVisualStudioVersionTmp "14.0")
 			elseif(${MSVC_VERSION} LESS 1920)
 				set(VCLTLVisualStudioVersionTmp "15.0")
+            elseif(${MSVC_VERSION} LESS 1930)
+				set(VCLTLVisualStudioVersionTmp "16.0")
 			else()
 				set(VCLTLVisualStudioVersionTmp "")
 				message(WARNING "VC-LTL not load, Unknown MSVC_VERSION = " ${MSVC_VERSION})
@@ -210,6 +212,13 @@ if(${SupportLTL} STREQUAL "true")
 		elseif(${VCLTLVisualStudioVersionTmp} STREQUAL "15.0")
 			#VC2017
 			set(DefaultVCLTLToolsVersion "14.16.27023")
+
+			if(DEFINED ENV{VCToolsVersion})
+				set(VCLTLToolsVersion $ENV{VCToolsVersion})
+			endif()
+		elseif(${VCLTLVisualStudioVersionTmp} STREQUAL "16.0")
+			#VC2017
+			set(DefaultVCLTLToolsVersion "14.20.27508")
 
 			if(DEFINED ENV{VCToolsVersion})
 				set(VCLTLToolsVersion $ENV{VCToolsVersion})

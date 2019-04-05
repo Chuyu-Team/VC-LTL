@@ -11,13 +11,13 @@
 
 
 
-extern "C" extern _purecall_handler __pPurecall;
+extern "C" static _purecall_handler __pPurecall = nullptr;
 
 
 
-extern "C" int __cdecl _purecall()
+extern "C" int __cdecl _purecall_advanced()
 {
-    _purecall_handler const purecall_handler = _get_purecall_handler();
+    _purecall_handler const purecall_handler = __crt_interlocked_read_pointer(&__pPurecall);
     if (purecall_handler != nullptr)
     {
         purecall_handler();
@@ -29,17 +29,17 @@ extern "C" int __cdecl _purecall()
     abort();
 }
 
-extern "C" _purecall_handler __cdecl _set_purecall_handler(
+extern "C" _purecall_handler __cdecl _set_purecall_handler_advanced(
     _purecall_handler const new_handler
     )
 {
-    return __crt_fast_decode_pointer(
+    return /*__crt_fast_decode_pointer*/(
         __crt_interlocked_exchange_pointer(
             &__pPurecall,
             __crt_fast_encode_pointer(new_handler)));
 }
 
-extern "C" _purecall_handler __cdecl _get_purecall_handler()
+extern "C" _purecall_handler __cdecl _get_purecall_handler_advanced()
 {
-    return __crt_fast_decode_pointer(__crt_interlocked_read_pointer(&__pPurecall));
+    return /*__crt_fast_decode_pointer*/(__crt_interlocked_read_pointer(&__pPurecall));
 }

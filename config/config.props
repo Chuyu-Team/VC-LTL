@@ -41,7 +41,8 @@
     <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">14.0.24231</VCLTLToolsVersion>
   </PropertyGroup>
   
-  <PropertyGroup Condition=" ('$(VCToolsVersion)'!='') And ('$(VCLTLToolsVersion)'=='') ">
+  <!--VS2017-->
+  <PropertyGroup Condition=" ($([System.Text.RegularExpressions.Regex]::IsMatch('$(VCToolsVersion)', '14.1?.*'))) And ('$(VCLTLToolsVersion)'=='') ">
     <VCLTLToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VCLTLToolsVersion>
 
     <!--如果找不到，那么指定为当前支持的最高版本-->
@@ -49,6 +50,15 @@
     <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.16.27023</VCLTLToolsVersion>
   </PropertyGroup>
 
+  <!--VS2019-->
+  <PropertyGroup Condition=" ($([System.Text.RegularExpressions.Regex]::IsMatch('$(VCToolsVersion)', '14.2?.*'))) And ('$(VCLTLToolsVersion)'=='') ">
+    <VCLTLToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VCLTLToolsVersion>
+
+    <!--如果找不到，那么指定为当前支持的最高版本-->
+    <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">false</VCLTLFoundToolsVersion>
+    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.20.27508</VCLTLToolsVersion>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="('$(VCLTLTargetUniversalCRTVersion)'=='')">
     <VCLTLTargetUniversalCRTVersion Condition="Exists('$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)')">$(TargetUniversalCRTVersion)</VCLTLTargetUniversalCRTVersion>
     
@@ -71,6 +81,8 @@
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_c2')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_3_7')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141_clang_c2')">true</VCLTLSupportPlatformToolsetNormal>
+
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v142')">true</VCLTLSupportPlatformToolsetNormal>
 
     <VCLTLSupportPlatformToolset Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='true') Or ('$(VCLTLSupportPlatformToolsetNormal)'=='true')">true</VCLTLSupportPlatformToolset>
 
@@ -189,6 +201,6 @@
     <Warning Code="LTL3002" Text="VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
     <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(VCLTLLibDirMod)'!='$(VCLibDirMod)')"/>
 
-    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!Exists('$(VC_LTL_Root)\lib\$(PlatformShortName)'))"/>
+    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!Exists('$(VC_LTL_Root)\lib\$(PlatformShortName)')) And (!Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')) And (!Exists('$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)'))"/>
   </Target>
 </Project>
