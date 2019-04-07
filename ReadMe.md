@@ -212,7 +212,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ## Excursus - Third Party Licenses
-* [Visual Studio 2015、2017](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/Licenses)
+* [Visual Studio](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/Licenses)
 * [Windows 10 SDK](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/ucrt/Licenses)
 * [boost](https://github.com/Chuyu-Team/VC-LTL/tree/master/src/boost_1_66_0/LICENSE_1_0.txt)
 

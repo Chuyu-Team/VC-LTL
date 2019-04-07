@@ -201,7 +201,7 @@ nmake /f Test.mak
 
 
 ## 附：第三方依赖项许可
-* [Visual Studio 2015、2017](https://gitee.com/Chuyu-Team/VC-LTL/tree/master/src/Licenses)
+* [Visual Studio](https://gitee.com/Chuyu-Team/VC-LTL/tree/master/src/Licenses)
 * [Windows 10 SDK](https://gitee.com/Chuyu-Team/VC-LTL/tree/master/src/ucrt/Licenses)
 * [boost](https://gitee.com/Chuyu-Team/VC-LTL/tree/master/src/boost_1_66_0/LICENSE_1_0.txt)
 
