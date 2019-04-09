@@ -483,6 +483,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -493,6 +494,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <ClCompile>
@@ -537,6 +541,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -545,6 +550,8 @@
       <IgnoreSpecificDefaultLibraries>vcruntime.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\vcruntime.lib</ImportLibrary>
       <ModuleDefinitionFile>vcruntime.def</ModuleDefinitionFile>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/EXPORT:__CxxFrameHandler4 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -595,6 +602,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -605,6 +613,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <ClCompile>
@@ -663,6 +674,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|Win32'">
     <ClCompile>
@@ -721,6 +735,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <ClCompile>
@@ -738,6 +755,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -747,6 +765,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM64'">
     <ClCompile>
@@ -764,6 +785,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -773,6 +795,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
     <ClCompile>
@@ -788,6 +813,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -796,6 +822,8 @@
       <IgnoreSpecificDefaultLibraries>vcruntime.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\vcruntime.lib</ImportLibrary>
       <ModuleDefinitionFile>vcruntime.def</ModuleDefinitionFile>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/EXPORT:__CxxFrameHandler4 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -815,6 +843,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -823,6 +852,8 @@
       <IgnoreSpecificDefaultLibraries>vcruntime.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\$(PlatformShortName)\Vista\vcruntime.lib</ImportLibrary>
       <ModuleDefinitionFile>vcruntime.def</ModuleDefinitionFile>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/EXPORT:__CxxFrameHandler4 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -844,6 +875,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -853,6 +885,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_Spectre|ARM64'">
     <ClCompile>
@@ -870,6 +905,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ForcedIncludeFiles>suppress.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/d2FH4 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -879,6 +915,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <ClCompile>
@@ -905,6 +944,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM64'">
     <ClCompile>
@@ -931,6 +973,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|x64'">
     <ClCompile>
@@ -957,6 +1002,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|ARM64'">
     <ClCompile>
@@ -983,6 +1031,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)$(VC-LTLUsedToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)\libvcruntime-ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\amd64\chandler_noexcept.cpp">
@@ -999,6 +1050,9 @@
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\vcruntime\ehhelpers.cpp" />
+    <ClCompile Include="..\..\vcruntime\ehstate.cpp">
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\vcruntime\frame.cpp" />
     <ClCompile Include="..\..\vcruntime\jbcxrval.c" />
     <ClCompile Include="..\..\vcruntime\mgdframe.cpp" />

@@ -101,13 +101,11 @@ EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler
 {
 	auto pFuncInfo = (_s_FuncInfo*)(pDC->ImageBase + *(DWORD*)pDC->HandlerData);
 
-	if (pFuncInfo->magicNumber != EH_MAGIC_NUMBER1)
+	if (pExcept->ExceptionCode == EH_EXCEPTION_NUMBER && pFuncInfo->magicNumber <= EH_MAGIC_NUMBER3 && pFuncInfo->magicNumber > EH_MAGIC_NUMBER1)
 	{
 
-		while (InterlockedExchangeAdd(&ProtectFlag, 1) != 0)
+		while (InterlockedExchange(&ProtectFlag, 1) == 1)
 		{
-			InterlockedDecrement(&ProtectFlag);
-
 			Sleep(10);
 		}
 
@@ -121,7 +119,7 @@ EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler
 			VirtualProtect(pFuncInfo, 4, OldProtect, &OldProtect);
 		}
 
-		InterlockedDecrement(&ProtectFlag);
+		InterlockedExchange(&ProtectFlag, 0);
 	}
 
 	return __CxxFrameHandler(pExcept, RN, pContext, pDC);
@@ -132,3 +130,5 @@ EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler
 #endif
 
 _LCRT_DEFINE_IAT_SYMBOL(__CxxFrameHandler3_downlevel);
+
+thread_local void* _pForeignExceptionWinXP = nullptr;

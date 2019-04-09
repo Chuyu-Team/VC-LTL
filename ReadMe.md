@@ -197,6 +197,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。_s 版本不存在此问题。
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
+* 由于FH4异常（`/d2FH4` VS2019新增功能）实现过程中使用了TLS，因此在兼容“Windows XP(2003) x64”时请务必确保不要在DllMain中使用FH4 catch，否则将导致dll直接加载失败。
 
 
 ## Excursus - Known project using VC-LTL
@@ -434,7 +435,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
 
 
-### 4.0.1.3 - Improved Support (Apr 5, 2019 15:00)
+### 4.0.1.4 - Improved Support (Apr 8, 2019 20:00)
 * Fix Bug, Windows XP mode does not reference `advapi32.lib`, which may cause symbols such as `ImpersonateSelf` to be unresolvable (Thanks to 昌平517).
 * Fix Bug, `std::thread` depends on `GetLogicalProcessorInformation` causing XP RTM report not to find entry point (Thanks to 小古).
 * Fix Bug, Add `_mbsinc` in XP mode because the old version of msvcrt.dll has an out-of-bounds access the bug (Thanks to 亮亮).
@@ -442,3 +443,4 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
 * New Fea, the CMake script adds vcpkg support (Thanks to BigBrother).
 * New Fea, add Vistual Studio 2019 Support.
+* New Fea，add Visual Studio 2019 FH4 Exception Handling support (Thanks to 毛利)

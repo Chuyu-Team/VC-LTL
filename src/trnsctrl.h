@@ -254,6 +254,9 @@ typedef struct FrameInfo {
 #define _CallMemberFunction1(pthis, pmfn, pthat)        (*(VOID(*)(PVOID, PVOID))pmfn)(pthis, pthat)
 #define _CallMemberFunction2(pthis, pmfn, pthat, val2) (*(VOID(*)(PVOID, PVOID, int))pmfn)(pthis, pthat, val2)
 
+#define UNWINDSTATE(base, offset) *((int*)((char*)base + offset))
+#define UNWINDTRYBLOCK(base, offset) *((int*)((char*)base + offset + sizeof(int)))
+#define UNWINDHELP(base, offset) *((__int64*)((char*)base + offset))
 #define OffsetToAddress(off, FP)  (void*)(((char*)FP) + off)
 
 #elif defined (_M_MPPC) || defined (_M_PPC)

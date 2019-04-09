@@ -186,7 +186,7 @@ nmake /f Test.mak
 * 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。_s 版本不存在此问题。
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
 * 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
-
+* 由于FH4异常（`/d2FH4` VS2019新增功能）实现过程中使用了TLS，因此在兼容“Windows XP(2003) x64”时请务必确保不要在DllMain中使用FH4 catch，否则将导致dll直接加载失败。
 
 ## 附：已知使用VC-LTL的官方项目
 
@@ -421,7 +421,7 @@ nmake /f Test.mak
 * 新增Fea，改进Visual Studio 2017中对Clang-LLVM的支持（感谢 神话）。
 * 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。
 
-### 4.0.1.3 - 改进支持（2019-04-05 15:00）
+### 4.0.1.4 - 改进支持（2019-04-08 20:00）
 * 解决Bug，Windows XP模式没有引用`advapi32.lib`，可能导致`ImpersonateSelf`等符号无法解析（感谢 昌平517）。
 * 解决Bug，微软原版std::thread依赖GetLogicalProcessorInformation导致XP RTM无法运行（感谢 小古）。
 * 解决Bug，为XP模式添加_mbsinc，解决此函数越界问题（感谢 亮亮）。
@@ -429,3 +429,4 @@ nmake /f Test.mak
 * 新增Fea，`VC-LTL helper for qmake.pri`脚本添加老版本QMake兼容（感谢 大胸滴）。
 * 新增Fea，CMake脚本添加vcpkg兼容（感谢 大胸滴）。
 * 新增Fea，初步添加Visual Studio 2019支持。
+* 新增Fea，新增Visual Studio 2019 FH4异常支持（感谢 毛利）

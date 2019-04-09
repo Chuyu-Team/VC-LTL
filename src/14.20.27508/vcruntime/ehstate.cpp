@@ -93,6 +93,7 @@ __ehstate_t RENAME_EH_EXTERN(__FrameHandler4)::StateFromIp(
     return prevState;
 }
 
+#if 0
 __ehstate_t RENAME_EH_EXTERN(__FrameHandler3)::StateFromIp(
     FuncInfo            *pFuncInfo,
     DispatcherContext   *pDC,
@@ -138,6 +139,7 @@ __ehstate_t RENAME_EH_EXTERN(__FrameHandler3)::StateFromControlPc(
 
     return StateFromIp(pFuncInfo, pDC, Ip);
 }
+#endif
 
 __ehstate_t RENAME_EH_EXTERN(__FrameHandler4)::StateFromControlPc(
     FuncInfo           *pFuncInfo,
@@ -149,6 +151,7 @@ __ehstate_t RENAME_EH_EXTERN(__FrameHandler4)::StateFromControlPc(
     return StateFromIp(pFuncInfo, pDC, Ip);
 }
 
+#if 0
 void RENAME_EH_EXTERN(__FrameHandler3)::SetUnwindTryBlock(
     EHRegistrationNode  *pRN,
     DispatcherContext   *pDC,
@@ -196,7 +199,10 @@ void RENAME_EH_EXTERN(__FrameHandler3)::SetState(
 {
     UNWINDSTATE(*pRN, FUNC_DISPUNWINDHELP(*pFuncInfo)) = newState;
 }
+#endif
+
 #else
+#if 0
 __ehstate_t RENAME_EH_EXTERN(__FrameHandler3)::GetCurrentState(
     EHRegistrationNode  *pRN,
     DispatcherContext*  /*pDC*/,
@@ -222,4 +228,5 @@ void RENAME_EH_EXTERN(__FrameHandler3)::SetState(
 {
     pRN->state = newState;
 }
+#endif
 #endif

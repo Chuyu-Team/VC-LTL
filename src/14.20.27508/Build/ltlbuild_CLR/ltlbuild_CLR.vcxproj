@@ -262,7 +262,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
-      <AdditionalOptions>/clr:nostdlib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/clr:nostdlib /d2FH4 %(AdditionalOptions)</AdditionalOptions>
       <OmitDefaultLibName>true</OmitDefaultLibName>
     </ClCompile>
     <Link>
@@ -295,7 +295,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
-      <AdditionalOptions>/clr:nostdlib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/clr:nostdlib /d2FH4 %(AdditionalOptions)</AdditionalOptions>
       <OmitDefaultLibName>true</OmitDefaultLibName>
     </ClCompile>
     <Link>
@@ -328,7 +328,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
-      <AdditionalOptions>/clr:nostdlib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/clr:nostdlib /d2FH4 %(AdditionalOptions)</AdditionalOptions>
       <OmitDefaultLibName>true</OmitDefaultLibName>
     </ClCompile>
     <Link>
@@ -363,7 +363,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
-      <AdditionalOptions>/clr:nostdlib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/clr:nostdlib /d2FH4 %(AdditionalOptions)</AdditionalOptions>
       <OmitDefaultLibName>true</OmitDefaultLibName>
     </ClCompile>
     <Link>
