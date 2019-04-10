@@ -37,8 +37,6 @@ _CRT_END_C_HEADER
 
 
 
-namespace std {
-
 #pragma warning(push)
 #pragma warning(disable: 4577) // 'noexcept' used with no exception handling mode specified
 class exception
@@ -47,9 +45,9 @@ public:
 
     exception() noexcept;
 
-    explicit exception(char const* const _Message) noexcept;
+    explicit exception(char const* const& _Message) noexcept;
 
-    exception(char const* const _Message, int) noexcept
+    exception(char const* const& _Message, int) noexcept
         :_Data{ _Message,0 }
     {
 
@@ -67,6 +65,10 @@ private:
 
     __std_exception_data _Data;
 };
+
+namespace std {
+
+using ::exception;
 
 class bad_exception
     : public exception

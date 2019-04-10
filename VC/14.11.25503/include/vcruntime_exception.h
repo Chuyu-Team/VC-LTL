@@ -37,17 +37,15 @@ _CRT_END_C_HEADER
 
 
 
-namespace std {
-
 class exception
 {
 public:
 
     exception() throw();
 
-    explicit exception(char const* const _Message) throw();
+    explicit exception(char const* const& _Message) throw();
 
-    exception(char const* const _Message, int) throw()
+    exception(char const* const& _Message, int) throw()
 		:_Data{ _Message,0 }
 	{
 
@@ -65,6 +63,10 @@ private:
 
     __std_exception_data _Data;
 };
+
+namespace std {
+
+using ::exception;
 
 class bad_exception
     : public exception
