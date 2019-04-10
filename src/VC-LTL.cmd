@@ -2,8 +2,8 @@
 
 ::自动生成VC-LTL库
 
-
-::@call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+::使用64位编译工具，提升性能
+set PreferredToolArchitecture=x64
 
 set Path=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE;%Path%
 
