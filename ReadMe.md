@@ -435,7 +435,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Add Fea, add `VC-LTL helper for qmake.pri` to provide support for QMake (Thanks to GPBeta).
 
 
-### 4.0.1.4 - Improved Support (Apr 8, 2019 20:00)
+### 4.0.1.5 - Improved Support (Apr 17, 2019 18:00)
 * Fix Bug, Windows XP mode does not reference `advapi32.lib`, which may cause symbols such as `ImpersonateSelf` to be unresolvable (Thanks to 昌平517).
 * Fix Bug, `std::thread` depends on `GetLogicalProcessorInformation` causing XP RTM report not to find entry point (Thanks to 小古).
 * Fix Bug, Add `_mbsinc` in XP mode because the old version of msvcrt.dll has an out-of-bounds access the bug (Thanks to 亮亮).
@@ -444,3 +444,4 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, the CMake script adds vcpkg support (Thanks to BigBrother).
 * New Fea, add Vistual Studio 2019 Support.
 * New Fea，add Visual Studio 2019 FH4 Exception Handling support (Thanks to 毛利)
+* Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.

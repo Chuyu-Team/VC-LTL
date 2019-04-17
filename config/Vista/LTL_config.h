@@ -3,7 +3,7 @@
 //Vista mode
 
 #if defined _ATL_XP_TARGETING || defined _USING_V110_SDK71_
-#error "不允许在XP兼容模式包含此头文件。"
+_LTL_PushWarning(1006, "在Vista模式中启用XP兼容将导致程序体积变大，推荐移除 _ATL_XP_TARGETING 以及 _USING_V110_SDK71_宏。")
 #endif
 
 #if defined _M_IX86 || defined _M_AMD64
