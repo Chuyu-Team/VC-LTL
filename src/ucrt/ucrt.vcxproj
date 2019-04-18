@@ -806,6 +806,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\inoutput_downlevel.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_IAT.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_winxp.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
