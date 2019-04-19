@@ -24,7 +24,19 @@ _CRT_BEGIN_C_HEADER
     #define _FILE_DEFINED
     typedef struct _iobuf
     {
-        void* _Placeholder;
+        union
+		{
+			void* _Placeholder;
+			char* _ptr;
+		};
+
+		int   _cnt;
+		char *_base;
+		long   _flags;
+		long   _file;
+		int   _charbuf;
+		int   _bufsiz;
+		char *_tmpfname;
     } FILE;
 #endif
 
@@ -1828,7 +1840,7 @@ _ACRTIMP_ALT FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                 va_list _ArgList;
                 __crt_va_start(_ArgList, _Format);
                 #pragma warning(suppress: 28719)
-                _Result = vswprintf(_Buffer, _CRT_INT_MAX, _Format, _ArgList);
+                _Result = vswprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
                 __crt_va_end(_ArgList);
                 return _Result;
             }
@@ -1841,7 +1853,7 @@ _ACRTIMP_ALT FILE* __cdecl __acrt_iob_func(unsigned _Ix);
                 ) throw()
             {
                 #pragma warning(suppress: 28719)
-                return vswprintf(_Buffer, _CRT_INT_MAX, _Format, _ArgList);
+                return vswprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
             }
 
             extern "C++" _SWPRINTFS_DEPRECATED _CRT_INSECURE_DEPRECATE(_swprintf_s_l)

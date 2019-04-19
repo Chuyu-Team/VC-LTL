@@ -383,35 +383,23 @@ struct __finddata64_t
 
 
 
-    #ifdef __cplusplus
+	#if defined __cplusplus && !defined __Build_LTL
 
         // These function do not validate pmode; use _sopen_s instead.
         extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
-        inline int __CRTDECL _open(
+        _ACRTIMP int __CRTDECL _open(
             _In_z_ char const* const _FileName,
             _In_   int         const _OFlag,
             _In_   int         const _PMode = 0
-            )
-        {
-            int _FileHandle;
-            // Last parameter passed as 0 because we don't want to validate pmode from _open
-            errno_t const _Result = _sopen_dispatch(_FileName, _OFlag, _SH_DENYNO, _PMode, &_FileHandle, 0);
-            return _Result ? -1 : _FileHandle;
-        }
+            );
 
         extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_sopen_s)
-        inline int __CRTDECL _sopen(
+        _ACRTIMP int __CRTDECL _sopen(
             _In_z_ char const* const _FileName,
             _In_   int         const _OFlag,
             _In_   int         const _ShFlag,
             _In_   int         const _PMode = 0
-            )
-        {
-            int _FileHandle;
-            // Last parameter passed as 0 because we don't want to validate pmode from _sopen
-            errno_t const _Result = _sopen_dispatch(_FileName, _OFlag, _ShFlag, _PMode, &_FileHandle, 0);
-            return _Result ? -1 : _FileHandle;
-        }
+            );
 
     #else
 
