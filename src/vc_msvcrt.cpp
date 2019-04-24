@@ -502,7 +502,7 @@ extern "C" __declspec(dllimport) int __cdecl __wgetmainargs(
 
 extern "C" int __CRTDECL _get_startup_new_mode();
 
-EXTERN_C errno_t __cdecl _configure_narrow_argv_downlevel(
+EXTERN_C errno_t __cdecl _configure_narrow_argv(
 	_In_ _crt_argv_mode mode
 	)
 {
@@ -517,9 +517,9 @@ EXTERN_C errno_t __cdecl _configure_narrow_argv_downlevel(
 	return __getmainargs(&_Argc, &_Argv, &_environ, _get_startup_argv_mode() == _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_configure_narrow_argv_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_configure_narrow_argv);
 
-EXTERN_C errno_t __cdecl _configure_wide_argv_downlevel(
+EXTERN_C errno_t __cdecl _configure_wide_argv(
 	_In_ _crt_argv_mode mode
 	)
 {
@@ -535,7 +535,7 @@ EXTERN_C errno_t __cdecl _configure_wide_argv_downlevel(
 	return __wgetmainargs(&_Argc, &_Argv, &_wenviron, _get_startup_argv_mode() == _crt_argv_mode::_crt_argv_unexpanded_arguments ? 0 : 1, &_StartInfon);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_configure_wide_argv_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_configure_wide_argv);
 
 extern "C" int _commode = 0;
 

@@ -54,9 +54,15 @@ static int __cdecl locking_nolock(int const fh, int const locking_mode, long con
         }
 
         if (succeeded)
+        {
             break;
+        }
 
-        Sleep(1000);
+        // Doesnt sleep on the last try
+        if (i != retry_count - 1)
+        {
+            Sleep(1000);
+        }
     }
 
     // If an OS error occurred (e.g., if the file was already locked), return

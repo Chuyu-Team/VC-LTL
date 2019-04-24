@@ -14,8 +14,6 @@
 #include <limits.h>
 #include <stdio.h>
 #include <uchar.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
@@ -49,7 +47,6 @@ using namespace __crt_mbstring;
 *******************************************************************************/
 
 #if 0
-//前后都没有使用到_locale_t特性，因此屏蔽处理
 _Success_(return != 0)
 _Post_satisfies_(*pRetValue <= _String_length_(s))
 static errno_t __cdecl _mbrtowc_s_l(
@@ -57,8 +54,8 @@ static errno_t __cdecl _mbrtowc_s_l(
     _Pre_maybenull_ _Out_writes_opt_z_(1)   wchar_t *       dst,
     _In_opt_z_                              const char *    s,
     _In_                                    size_t          n,
-    _Inout_                                 mbstate_t *     pmbst/*,
-    _In_opt_                                _locale_t       plocinfo*/
+    _Inout_                                 mbstate_t *     pmbst,
+    _In_opt_                                _locale_t       plocinfo
     ) throw()
 {
     _ASSERTE(pmbst != nullptr);
@@ -79,20 +76,19 @@ static errno_t __cdecl _mbrtowc_s_l(
         return 0;
     }
 
-    //_LocaleUpdate _loc_update(plocinfo);
-	const auto _locale_lc_codepage = ___lc_codepage_func();
+    _LocaleUpdate _loc_update(plocinfo);
 
-    if (/*_loc_update.GetLocaleT()->locinfo->_public.*/_locale_lc_codepage == CP_UTF8)
+    if (_loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage == CP_UTF8)
     {
         const size_t retval = __mbrtowc_utf8(dst, s, n, pmbst);
         _ASSIGN_IF_NOT_NULL(pRetValue, static_cast<int>(retval));
         return errno;
     }
 
-    const int locale_mb_cur_max = ___mb_cur_max_func();
+    const int locale_mb_cur_max = _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max;
     _ASSERTE(locale_mb_cur_max == 1 || locale_mb_cur_max == 2);
 
-    if (___lc_handle_func()[LC_CTYPE] == 0)
+    if (_loc_update.GetLocaleT()->locinfo->locale_name[LC_CTYPE] == nullptr)
     {
         _ASSIGN_IF_NOT_NULL(dst, (wchar_t) (unsigned char) *s);
         _ASSIGN_IF_NOT_NULL(pRetValue, 1);
@@ -105,7 +101,7 @@ static errno_t __cdecl _mbrtowc_s_l(
         ((char *) pmbst)[1] = *s;
         if (locale_mb_cur_max <= 1 ||
             (__acrt_MultiByteToWideChar(
-            _locale_lc_codepage,
+            _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             (char *) pmbst,
             2,
@@ -123,7 +119,7 @@ static errno_t __cdecl _mbrtowc_s_l(
         _ASSIGN_IF_NOT_NULL(pRetValue, locale_mb_cur_max);
         return 0;
     }
-    else if (isleadbyte((unsigned char) *s))
+    else if (_isleadbyte_l((unsigned char) *s, _loc_update.GetLocaleT()))
     {
         /* multi-byte char */
         if (n < (size_t) locale_mb_cur_max)
@@ -134,7 +130,7 @@ static errno_t __cdecl _mbrtowc_s_l(
             return 0;
         }
         else if (locale_mb_cur_max <= 1 ||
-            (__acrt_MultiByteToWideChar(_locale_lc_codepage,
+            (__acrt_MultiByteToWideChar(_loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             static_cast<int>(__min(strlen(s), INT_MAX)),
@@ -157,7 +153,7 @@ static errno_t __cdecl _mbrtowc_s_l(
     else {
         /* single byte char */
         if (__acrt_MultiByteToWideChar(
-            _locale_lc_codepage,
+            _loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             s,
             1,
@@ -189,7 +185,7 @@ static errno_t __cdecl _mbrtowc_s_l(
 *
 *******************************************************************************/
 
-extern "C" wint_t __cdecl btowc_downlevel(
+extern "C" wint_t __cdecl btowc(
     int c
     )
 {
@@ -205,14 +201,11 @@ extern "C" wint_t __cdecl btowc_downlevel(
         wchar_t wc = 0;
         int retValue = -1;
 
-        _mbrtowc_s_l(&retValue, &wc, &ch, 1, &mbst/*, nullptr*/);
+        _mbrtowc_s_l(&retValue, &wc, &ch, 1, &mbst, nullptr);
         return (retValue < 0 ? WEOF : wc);
     }
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(btowc_downlevel);
-
-#endif
 
 /***
 *size_t mbrlen(s, n, pst) - determine next multibyte code, restartably
@@ -227,8 +220,7 @@ _LCRT_DEFINE_IAT_SYMBOL(btowc_downlevel);
 *
 *******************************************************************************/
 
-#if 0
-extern "C" size_t __cdecl mbrlen_downlevel(
+extern "C" size_t __cdecl mbrlen(
     const char *s,
     size_t n,
     mbstate_t *pst
@@ -237,13 +229,10 @@ extern "C" size_t __cdecl mbrlen_downlevel(
     static mbstate_t mbst = {};
     int retValue = -1;
 
-    _mbrtowc_s_l(&retValue, nullptr, s, n, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
+    _mbrtowc_s_l(&retValue, nullptr, s, n, (pst != nullptr ? pst : &mbst), nullptr);
     return retValue;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(mbrlen_downlevel);
-
-#endif
 
 /***
 *size_t mbrtowc(pwc, s, n, pst) - translate multibyte to wchar_t, restartably
@@ -258,8 +247,7 @@ _LCRT_DEFINE_IAT_SYMBOL(mbrlen_downlevel);
 *
 *******************************************************************************/
 
-#if 0
-extern "C" size_t __cdecl mbrtowc_downlevel(
+extern "C" size_t __cdecl mbrtowc(
     wchar_t *dst,
     const char *s,
     size_t n,
@@ -271,18 +259,15 @@ extern "C" size_t __cdecl mbrtowc_downlevel(
 
     if (s != nullptr)
     {
-        _mbrtowc_s_l(&retValue, dst, s, n, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
+        _mbrtowc_s_l(&retValue, dst, s, n, (pst != nullptr ? pst : &mbst), nullptr);
     }
     else
     {
-        _mbrtowc_s_l(&retValue, nullptr, "", 1, (pst != nullptr ? pst : &mbst)/*, nullptr*/);
+        _mbrtowc_s_l(&retValue, nullptr, "", 1, (pst != nullptr ? pst : &mbst), nullptr);
     }
     return retValue;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(mbrtowc_downlevel);
-
-#endif
 
 /***
 *size_t mbsrtowcs(wcs, ps, n, pst) - translate multibyte string to wide,
@@ -300,7 +285,6 @@ _LCRT_DEFINE_IAT_SYMBOL(mbrtowc_downlevel);
 
 /* Helper function shared by the secure and non-secure versions. */
 
-#if 0
 _Success_(return == 0)
 static size_t __cdecl _mbsrtowcs_helper(
     _Out_writes_opt_z_(n)               wchar_t *wcs,
@@ -316,7 +300,7 @@ static size_t __cdecl _mbsrtowcs_helper(
     const char *s = *ps;
     int i = 0;
     size_t nwc = 0;
-    //_LocaleUpdate _loc_update(nullptr);
+    _LocaleUpdate _loc_update(nullptr);
 
     // Use the static cached state if necessary
     if (pst == nullptr)
@@ -324,7 +308,7 @@ static size_t __cdecl _mbsrtowcs_helper(
         pst = &mbst;
     }
 
-    if (___lc_codepage_func() == CP_UTF8)
+    if (_loc_update.GetLocaleT()->locinfo->_public._locale_lc_codepage == CP_UTF8)
     {
         return __mbsrtowcs_utf8(wcs, ps, n, pst);
     }
@@ -335,7 +319,7 @@ static size_t __cdecl _mbsrtowcs_helper(
         {
             /* translate but don't store */
             wchar_t wc;
-            _mbrtowc_s_l(&i, &wc, s, INT_MAX, pst/*, _loc_update.GetLocaleT()*/);
+            _mbrtowc_s_l(&i, &wc, s, INT_MAX, pst, _loc_update.GetLocaleT());
             if (i < 0)
             {
                 return (size_t) - 1;
@@ -350,7 +334,7 @@ static size_t __cdecl _mbsrtowcs_helper(
     for (; 0 < n; ++nwc, s += i, ++wcs, --n)
     {
         /* translate and store */
-        _mbrtowc_s_l(&i, wcs, s, INT_MAX, pst/*, _loc_update.GetLocaleT()*/);
+        _mbrtowc_s_l(&i, wcs, s, INT_MAX, pst, _loc_update.GetLocaleT());
         if (i < 0)
         {
             /* encountered invalid sequence */
@@ -391,7 +375,7 @@ static size_t __cdecl _mbsrtowcs_helper(
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-extern "C" size_t __cdecl mbsrtowcs_downlevel(
+extern "C" size_t __cdecl mbsrtowcs(
     wchar_t *wcs,
     const char **ps,
     size_t n,
@@ -402,9 +386,6 @@ extern "C" size_t __cdecl mbsrtowcs_downlevel(
 
     return _mbsrtowcs_helper(wcs, ps, n, pst);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_downlevel);
-
 #else
 #define _mbsrtowcs_helper mbsrtowcs
 #endif
@@ -435,8 +416,8 @@ _LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl mbsrtowcs_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl mbsrtowcs_s(
     size_t *pRetValue,
     wchar_t *dst,
     size_t sizeInWords,
@@ -491,9 +472,6 @@ extern "C" errno_t __cdecl mbsrtowcs_s_downlevel(
 
     return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(mbsrtowcs_s_downlevel);
-
 #endif
 
 size_t __cdecl __crt_mbstring::__mbrtowc_utf8(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps)

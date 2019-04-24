@@ -10,7 +10,7 @@
 
 DWORD __cdecl __acrt_GetModuleFileNameA(
     HMODULE const hModule,
-    LPSTR const   lpFilename,
+    char * const  lpFilename,
     DWORD const   nSize
     )
 {
@@ -28,13 +28,13 @@ DWORD __cdecl __acrt_GetModuleFileNameA(
         return 0;
     }
 
-    _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
-        size_t const amount_converted =  mbstowcs(
-            wide_buffer,
-            lpFilename,
-            nSize
-            );
-    _END_SECURE_CRT_DEPRECATION_DISABLE
+    __crt_no_alloc_win32_buffer<char> filename_buffer(lpFilename, static_cast<size_t>(nSize));
 
-    return static_cast<DWORD>(amount_converted);
+    errno_t const cvt = __acrt_wcs_to_mbs_cp(
+        wide_buffer,
+        filename_buffer,
+        __acrt_get_utf8_acp_compatibility_codepage()
+        );
+
+    return static_cast<DWORD>(filename_buffer.size());
 }

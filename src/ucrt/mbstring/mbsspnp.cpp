@@ -12,7 +12,7 @@
     #error This file should only be compiled with _MBCS defined
 #endif
 
-#ifdef _ATL_XP_TARGETING
 #define _RETURN_PTR
+#if _CRT_NTDDI_MIN < 0x06000000
 #include "mbsspn.cpp"
 #endif

@@ -29,7 +29,7 @@ struct LocaleNameIndex
 // Data in this table has been obtained from National Language Support (NLS) API Reference at
 // http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
 // The table is sorted to improve search performance.
-static const LcidToLocaleName LcidToLocaleNameTable[] = 
+static const LcidToLocaleName LcidToLocaleNameTable[] =
 {
     { 0x0001, L"ar"         },
     { 0x0002, L"bg"         },
@@ -499,31 +499,6 @@ static const LocaleNameIndex LocaleNameToIndexTable[] =
 
 } // unnamed namespace
 
-
-// Implements wcsncpmp for ASCII chars only.
-// NOTE: We can't use wcsncmp in this context because we may end up trying to modify
-// locale data structs or even calling the same function in NLS code.
-static int __wcsnicmp_ascii(const wchar_t* string1, const wchar_t* string2, size_t count) throw()
-{
-    wchar_t f,l;
-    int result = 0;
-
-    if(count)
-    {
-        /* validation section */
-        do {
-            f = __ascii_towlower(*string1);
-            l = __ascii_towlower(*string2);
-            string1++;
-            string2++;
-        } while ( (--count) && f && (f == l) );
-
-        result = (int)(f-l);
-    }
-
-    return result;
-}
-
 // Maps input locale name to the index on LcidToLocaleNameTable
 static int GetTableIndexFromLocaleName(const wchar_t* localeName) throw()
 {
@@ -534,7 +509,7 @@ static int GetTableIndexFromLocaleName(const wchar_t* localeName) throw()
     while (bottom <= top)
     {
         int middle = (bottom + top) / 2;
-        int testIndex = __wcsnicmp_ascii(localeName, localeNamesIndex[middle].name, LOCALE_NAME_MAX_LENGTH);
+        int testIndex = __ascii_wcsnicmp(localeName, localeNamesIndex[middle].name, LOCALE_NAME_MAX_LENGTH);
 
         if (testIndex == 0)
             return localeNamesIndex[middle].index;

@@ -7,7 +7,7 @@
 // console.
 //
 #include <corecrt_internal_stdio_output.h>
-#include <msvcrt_IAT.h>
+
 
 
 using namespace __crt_stdio_output;
@@ -39,7 +39,7 @@ static int __cdecl common_vcprintf(
     return processor.process();
 }
 
-extern "C" int __cdecl __conio_common_vcprintf_downlevel(
+extern "C" int __cdecl __conio_common_vcprintf(
     unsigned __int64 const options,
     char const*      const format,
     _locale_t        const locale,
@@ -49,9 +49,7 @@ extern "C" int __cdecl __conio_common_vcprintf_downlevel(
     return common_vcprintf<standard_base>(options, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__conio_common_vcprintf_downlevel);
-
-extern "C" int __cdecl __conio_common_vcprintf_s_downlevel(
+extern "C" int __cdecl __conio_common_vcprintf_s(
     unsigned __int64 const options,
     char const*      const format,
     _locale_t        const locale,
@@ -61,9 +59,7 @@ extern "C" int __cdecl __conio_common_vcprintf_s_downlevel(
     return common_vcprintf<format_validation_base>(options, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__conio_common_vcprintf_s_downlevel);
-
-extern "C" int __cdecl __conio_common_vcprintf_p_downlevel(
+extern "C" int __cdecl __conio_common_vcprintf_p(
     unsigned __int64 const options,
     char const*      const format,
     _locale_t        const locale,
@@ -73,9 +69,7 @@ extern "C" int __cdecl __conio_common_vcprintf_p_downlevel(
     return common_vcprintf<positional_parameter_base>(options, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__conio_common_vcprintf_p_downlevel);
-
-extern "C" int __cdecl __conio_common_vcwprintf_downlevel(
+extern "C" int __cdecl __conio_common_vcwprintf(
     unsigned __int64 const options,
     wchar_t const*   const format,
     _locale_t        const locale,
@@ -85,9 +79,7 @@ extern "C" int __cdecl __conio_common_vcwprintf_downlevel(
     return common_vcprintf<standard_base>(options, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__conio_common_vcwprintf_downlevel);
-
-extern "C" int __cdecl __conio_common_vcwprintf_s_downlevel(
+extern "C" int __cdecl __conio_common_vcwprintf_s(
     unsigned __int64 const options,
     wchar_t const*   const format,
     _locale_t        const locale,
@@ -97,9 +89,7 @@ extern "C" int __cdecl __conio_common_vcwprintf_s_downlevel(
     return common_vcprintf<format_validation_base>(options, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__conio_common_vcwprintf_s_downlevel);
-
-extern "C" int __cdecl __conio_common_vcwprintf_p_downlevel(
+extern "C" int __cdecl __conio_common_vcwprintf_p(
     unsigned __int64 const options,
     wchar_t const*   const format,
     _locale_t        const locale,
@@ -108,5 +98,3 @@ extern "C" int __cdecl __conio_common_vcwprintf_p_downlevel(
 {
     return common_vcprintf<positional_parameter_base>(options, format, locale, arglist);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__conio_common_vcwprintf_p_downlevel);

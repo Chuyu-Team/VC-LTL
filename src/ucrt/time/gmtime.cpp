@@ -80,8 +80,6 @@ static int __cdecl compute_year(__time64_t& caltim, bool& is_leap_year) throw()
     return tmptim;
 }
 
-
-
 // Converts a time_t value into a tm structure in UTC.  Stores the tm structure
 // into the '*ptm' buffer. Returns zero on success; returns an error code on
 // failure
@@ -96,7 +94,10 @@ static errno_t __cdecl common_gmtime_s(tm* const ptm, TimeType const* const timp
     _VALIDATE_RETURN_ERRCODE(timp != nullptr, EINVAL);
     TimeType caltim = *timp;
 
-    _VALIDATE_RETURN_ERRCODE_NOEXC(caltim >= _MIN_LOCAL_TIME,                           EINVAL)
+    _VALIDATE_RETURN_ERRCODE_NOEXC(caltim >= _MIN_LOCAL_TIME, EINVAL)
+
+    // Upper bound check only necessary for _gmtime64_s (it's > LONG_MAX).
+    // For _gmtime32_s, any positive number is within range (<= LONG_MAX).
     _VALIDATE_RETURN_ERRCODE_NOEXC(caltim <= time_traits::max_time_t + _MAX_LOCAL_TIME, EINVAL)
 
     // tmptim now holds the value for tm_year. caltim now holds the

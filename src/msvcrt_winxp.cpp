@@ -21,7 +21,7 @@
 #include <conio.h>
 
 
-EXTERN_C errno_t __cdecl _controlfp_s_downlevel(
+EXTERN_C errno_t __cdecl _controlfp_s(
 	_Out_opt_ unsigned int* _CurrentState,
 	_In_      unsigned int  _NewValue,
 	_In_      unsigned int  _Mask
@@ -47,8 +47,6 @@ EXTERN_C errno_t __cdecl _controlfp_s_downlevel(
 		return 0;
 	}
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_controlfp_s_downlevel);
 
 
 //EXTERN_C errno_t __cdecl _mbslwr_s_downlevel(
@@ -82,7 +80,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_controlfp_s_downlevel);
 //}
 
 
-EXTERN_C errno_t __cdecl _gcvt_s_downlevel(
+EXTERN_C errno_t __cdecl _gcvt_s(
 	_Out_writes_z_(_BufferCount) char*  _Buffer,
 	_In_                         size_t _BufferCount,
 	_In_                         double _Value,
@@ -102,10 +100,8 @@ EXTERN_C errno_t __cdecl _gcvt_s_downlevel(
 	return strcpy_s(_Buffer, _BufferCount, buffer);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_gcvt_s_downlevel);
 
-
-EXTERN_C errno_t __cdecl _ecvt_s_downlevel(
+EXTERN_C errno_t __cdecl _ecvt_s(
 	_Out_writes_z_(_BufferCount) char* _Buffer,
 	_In_  size_t                       _BufferCount,
 	_In_  double                       _Value,
@@ -124,8 +120,6 @@ EXTERN_C errno_t __cdecl _ecvt_s_downlevel(
 		_BufferCount,
 		_ecvt(_Value, _DigitCount, _PtDec, _PtSign));
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ecvt_s_downlevel);
 
 
 //EXTERN_C errno_t __cdecl _strlwr_s_downlevel(
@@ -177,27 +171,23 @@ _LCRT_DEFINE_IAT_SYMBOL(_ecvt_s_downlevel);
 #ifdef _X86_
 EXTERN_C __declspec(dllimport) extern unsigned int __lc_collate_cp;
 
-EXTERN_C unsigned int __cdecl ___lc_collate_cp_func_downlevel(void)
+EXTERN_C unsigned int __cdecl ___lc_collate_cp_func(void)
 {
 	return __lc_collate_cp;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(___lc_collate_cp_func_downlevel);
 #endif
 
 
 #ifdef _X86_
-
-EXTERN_C const wctype_t* __cdecl __pwctype_func_downlevel(void)
+EXTERN_C const wctype_t* __cdecl __pwctype_func(void)
 {
 	return _pwctype;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__pwctype_func_downlevel);
 #endif
 
 
-EXTERN_C errno_t __cdecl _mktemp_s_downlevel(
+EXTERN_C errno_t __cdecl _mktemp_s(
 	_Inout_updates_z_(_Size) char*  _TemplateName,
 	_In_                     size_t _Size
 	)
@@ -212,10 +202,8 @@ EXTERN_C errno_t __cdecl _mktemp_s_downlevel(
 	return _mktemp(_TemplateName) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_mktemp_s_downlevel);
 
-
-EXTERN_C errno_t __cdecl _wmktemp_s_downlevel(
+EXTERN_C errno_t __cdecl _wmktemp_s(
 	_Inout_updates_z_(_SizeInWords) wchar_t* _TemplateName,
 	_In_                            size_t   _SizeInWords
 	)
@@ -230,9 +218,7 @@ EXTERN_C errno_t __cdecl _wmktemp_s_downlevel(
 	return _wmktemp(_TemplateName) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wmktemp_s_downlevel);
-
-EXTERN_C errno_t __cdecl _searchenv_s_downlevel(
+EXTERN_C errno_t __cdecl _searchenv_s(
 	_In_z_                       char const* _Filename,
 	_In_z_                       char const* _VarName,
 	_Out_writes_z_(_BufferCount) char*       _Buffer,
@@ -264,9 +250,7 @@ EXTERN_C errno_t __cdecl _searchenv_s_downlevel(
 	}
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_searchenv_s_downlevel);
-
-EXTERN_C errno_t __cdecl _wsearchenv_s_downlevel(
+EXTERN_C errno_t __cdecl _wsearchenv_s(
 	_In_z_                       wchar_t const* _Filename,
 	_In_z_                       wchar_t const* _VarName,
 	_Out_writes_z_(_BufferCount) wchar_t*       _Buffer,
@@ -298,9 +282,7 @@ EXTERN_C errno_t __cdecl _wsearchenv_s_downlevel(
 	}
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wsearchenv_s_downlevel);
-
-EXTERN_C errno_t __cdecl _fcvt_s_downlevel(
+EXTERN_C errno_t __cdecl _fcvt_s(
 	_Out_writes_z_(_BufferCount) char*  _Buffer,
 	_In_                         size_t _BufferCount,
 	_In_                         double _Value,
@@ -325,9 +307,7 @@ EXTERN_C errno_t __cdecl _fcvt_s_downlevel(
 	return strcpy_s(_Buffer, _BufferCount, szValue);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fcvt_s_downlevel);
-
-EXTERN_C errno_t __cdecl _strdate_s_downlevel(
+EXTERN_C errno_t __cdecl _strdate_s(
 	_Out_writes_(_SizeInBytes) _Post_readable_size_(9) char*  _Buffer,
 	_In_  _In_range_(>= , 9)                            size_t _SizeInBytes
 	)
@@ -342,9 +322,7 @@ EXTERN_C errno_t __cdecl _strdate_s_downlevel(
 	return _strtime(_Buffer) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_strdate_s_downlevel);
-
-EXTERN_C errno_t __cdecl _wstrdate_s_downlevel(
+EXTERN_C errno_t __cdecl _wstrdate_s(
 	_Out_writes_z_(_SizeInWords) _When_(_SizeInWords >= 9, _Post_readable_size_(9)) wchar_t* _Buffer,
 	_In_                                                                           size_t   _SizeInWords
 	)
@@ -358,14 +336,12 @@ EXTERN_C errno_t __cdecl _wstrdate_s_downlevel(
 	return _wstrtime(_Buffer) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wstrdate_s_downlevel);
-
 
 #ifdef _X86_
 EXTERN_C extern int __isa_available;
 #endif
 
-EXTERN_C void __cdecl _set_controlfp_downlevel(
+EXTERN_C void __cdecl _set_controlfp(
 	_In_ unsigned int _NewValue,
 	_In_ unsigned int _Mask
 	)
@@ -396,9 +372,7 @@ EXTERN_C void __cdecl _set_controlfp_downlevel(
 	_controlfp(_NewValue, _Mask &0xFFF7FFFF);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_set_controlfp_downlevel);
-
-EXTERN_C errno_t __cdecl _strtime_s_downlevel(
+EXTERN_C errno_t __cdecl _strtime_s(
 	_Out_writes_(_SizeInBytes) _When_(_SizeInBytes >= 9, _Post_readable_size_(9)) char*  _Buffer,
 	_In_                                                                         size_t _SizeInBytes
 	)
@@ -410,9 +384,7 @@ EXTERN_C errno_t __cdecl _strtime_s_downlevel(
 	return _strtime(_Buffer) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_strtime_s_downlevel);
-
-EXTERN_C errno_t __cdecl _wstrtime_s_downlevel(
+EXTERN_C errno_t __cdecl _wstrtime_s(
 	_Out_writes_z_(_SizeInWords) _When_(_SizeInWords >= 9, _Post_readable_size_(9)) wchar_t* _Buffer,
 	_In_                                                                           size_t   _SizeInWords
 	)
@@ -424,9 +396,7 @@ EXTERN_C errno_t __cdecl _wstrtime_s_downlevel(
 	return _wstrtime(_Buffer) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wstrtime_s_downlevel);
-
-EXTERN_C errno_t __cdecl tmpfile_s_downlevel(
+EXTERN_C errno_t __cdecl tmpfile_s(
 	_Out_opt_ _Deref_post_valid_ FILE** _Stream
 	)
 {
@@ -435,12 +405,10 @@ EXTERN_C errno_t __cdecl tmpfile_s_downlevel(
 	return (*_Stream = tmpfile()) ? 0 : errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(tmpfile_s_downlevel);
-
 
 EXTERN_C __declspec(dllimport) char* __cdecl _cgets(_Inout_z_ char* const string);
 
-EXTERN_C errno_t __cdecl _cgets_s_downlevel(
+EXTERN_C errno_t __cdecl _cgets_s(
 	_Out_writes_z_(_BufferCount) char*   _Buffer,
 	_In_                         size_t  _BufferCount,
 	_Out_                        size_t* _SizeRead
@@ -470,12 +438,10 @@ EXTERN_C errno_t __cdecl _cgets_s_downlevel(
 	return 0;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_cgets_s_downlevel);
-
 
 EXTERN_C __declspec(dllimport) wchar_t* __cdecl _cgetws(_Inout_z_ wchar_t* const string);
 
-EXTERN_C errno_t __cdecl _cgetws_s_downlevel(
+EXTERN_C errno_t __cdecl _cgetws_s(
 	_Out_writes_to_(_BufferCount, *_SizeRead) wchar_t* _Buffer,
 	_In_                                      size_t   _BufferCount,
 	_Out_                                     size_t*  _SizeRead
@@ -514,17 +480,13 @@ EXTERN_C errno_t __cdecl _cgetws_s_downlevel(
 	return error;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_cgetws_s_downlevel);
-
 //XP中 _chsize_s 的 size参数不允许大于 INT_MAX
-EXTERN_C errno_t __cdecl _chsize_s_downlevel(int const fh, __int64 const size)
+EXTERN_C errno_t __cdecl _chsize_s(int const fh, __int64 const size)
 {
 	_VALIDATE_CLEAR_OSSERR_RETURN_ERRCODE((size >= 0 && size<=INT_MAX), EINVAL);
 
 	return _chsize(fh, (long)size) ? errno : 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_chsize_s_downlevel);
 
 
 EXTERN_C __declspec(dllimport) int __cdecl _XcptFilter(
@@ -532,7 +494,7 @@ EXTERN_C __declspec(dllimport) int __cdecl _XcptFilter(
 	PEXCEPTION_POINTERS const pxcptinfoptrs
 	);
 
-EXTERN_C int __cdecl __CppXcptFilter_downlevel(
+EXTERN_C int __cdecl __CppXcptFilter(
 	unsigned long       const xcptnum,
 	PEXCEPTION_POINTERS const pxcptinfoptrs
 	)
@@ -543,9 +505,7 @@ EXTERN_C int __cdecl __CppXcptFilter_downlevel(
 	return _XcptFilter(xcptnum, pxcptinfoptrs);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__CppXcptFilter_downlevel);
-
-extern "C" int __cdecl _initterm_e_downlevel(_PIFV* const first, _PIFV* const last)
+extern "C" int __cdecl _initterm_e(_PIFV* const first, _PIFV* const last)
 {
 	for (_PIFV* it = first; it != last; ++it)
 	{
@@ -559,8 +519,6 @@ extern "C" int __cdecl _initterm_e_downlevel(_PIFV* const first, _PIFV* const la
 
 	return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_initterm_e_downlevel);
 
 
 static __forceinline size_t __cdecl strlen_t(
@@ -619,7 +577,7 @@ static errno_t __cdecl common_xtox(
 	return 0;
 }
 
-extern "C" errno_t __cdecl _i64toa_s_downlevel(
+extern "C" errno_t __cdecl _i64toa_s(
 	_In_                         __int64 _Value,
 	_Out_writes_z_(_BufferCount) char*   _Buffer,
 	_In_                         size_t  _BufferCount,
@@ -629,9 +587,7 @@ extern "C" errno_t __cdecl _i64toa_s_downlevel(
 	return common_xtox(_i64toa,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_i64toa_s_downlevel);
-
-extern "C" errno_t __cdecl _i64tow_s_downlevel(
+extern "C" errno_t __cdecl _i64tow_s(
 	_In_                         __int64  _Value,
 	_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 	_In_                         size_t   _BufferCount,
@@ -641,10 +597,8 @@ extern "C" errno_t __cdecl _i64tow_s_downlevel(
 	return common_xtox(_i64tow,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_i64tow_s_downlevel);
 
-
-extern "C" errno_t __cdecl _itoa_s_downlevel(
+extern "C" errno_t __cdecl _itoa_s(
 	_In_                         int    _Value,
 	_Out_writes_z_(_BufferCount) char*  _Buffer,
 	_In_                         size_t _BufferCount,
@@ -654,10 +608,8 @@ extern "C" errno_t __cdecl _itoa_s_downlevel(
 	return common_xtox(_itoa,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_itoa_s_downlevel);
 
-
-extern "C" errno_t __cdecl _itow_s_downlevel(
+extern "C" errno_t __cdecl _itow_s(
 	_In_                         int      _Value,
 	_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 	_In_                         size_t   _BufferCount,
@@ -667,10 +619,8 @@ extern "C" errno_t __cdecl _itow_s_downlevel(
 	return common_xtox(_itow,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_itow_s_downlevel);
 
-
-extern "C" errno_t __cdecl _ltoa_s_downlevel(
+extern "C" errno_t __cdecl _ltoa_s(
 	_In_                         long   _Value,
 	_Out_writes_z_(_BufferCount) char*  _Buffer,
 	_In_                         size_t _BufferCount,
@@ -680,10 +630,8 @@ extern "C" errno_t __cdecl _ltoa_s_downlevel(
 	return common_xtox(_ltoa,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ltoa_s_downlevel);
 
-
-extern "C" errno_t __cdecl _ltow_s_downlevel(
+extern "C" errno_t __cdecl _ltow_s(
 	_In_                         long     _Value,
 	_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 	_In_                         size_t   _BufferCount,
@@ -693,9 +641,8 @@ extern "C" errno_t __cdecl _ltow_s_downlevel(
 	return common_xtox(_ltow,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ltow_s_downlevel);
 
-extern "C" errno_t __cdecl _ui64toa_s_downlevel(
+extern "C" errno_t __cdecl _ui64toa_s(
 	_In_                         unsigned __int64 _Value,
 	_Out_writes_z_(_BufferCount) char*            _Buffer,
 	_In_                         size_t           _BufferCount,
@@ -705,10 +652,8 @@ extern "C" errno_t __cdecl _ui64toa_s_downlevel(
 	return common_xtox(_ui64toa,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ui64toa_s_downlevel);
 
-
-extern "C" errno_t __cdecl _ui64tow_s_downlevel(
+extern "C" errno_t __cdecl _ui64tow_s(
 	_In_                         unsigned __int64 _Value,
 	_Out_writes_z_(_BufferCount) wchar_t*         _Buffer,
 	_In_                         size_t           _BufferCount,
@@ -718,9 +663,8 @@ extern "C" errno_t __cdecl _ui64tow_s_downlevel(
 	return common_xtox(_ui64tow,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ui64tow_s_downlevel);
 
-extern "C" errno_t __cdecl _ultoa_s_downlevel(
+extern "C" errno_t __cdecl _ultoa_s(
 	_In_                         unsigned long _Value,
 	_Out_writes_z_(_BufferCount) char*         _Buffer,
 	_In_                         size_t        _BufferCount,
@@ -730,10 +674,8 @@ extern "C" errno_t __cdecl _ultoa_s_downlevel(
 	return common_xtox(_ultoa,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ultoa_s_downlevel);
 
-
-extern "C" errno_t __cdecl _ultow_s_downlevel(
+extern "C" errno_t __cdecl _ultow_s(
 	_In_                         unsigned long _Value,
 	_Out_writes_z_(_BufferCount) wchar_t*      _Buffer,
 	_In_                         size_t        _BufferCount,
@@ -743,9 +685,8 @@ extern "C" errno_t __cdecl _ultow_s_downlevel(
 	return common_xtox(_ultow,_Value, _Buffer, _BufferCount, _Radix);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ultow_s_downlevel);
 
-extern "C" errno_t __cdecl _splitpath_s_downlevel(
+extern "C" errno_t __cdecl _splitpath_s(
 	_In_z_                             char const* _FullPath,
 	_Out_writes_opt_z_(_DriveCount)    char*       _Drive,
 	_In_                               size_t      _DriveCount,
@@ -877,9 +818,8 @@ _Error:
 	return __errno;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_splitpath_s_downlevel);
 
-extern "C" errno_t __cdecl _wsplitpath_s_downlevel(
+extern "C" errno_t __cdecl _wsplitpath_s(
 	_In_z_                             wchar_t const* _FullPath,
 	_Out_writes_opt_z_(_DriveCount)    wchar_t*       _Drive,
 	_In_                               size_t         _DriveCount,
@@ -1010,6 +950,3 @@ _Error:
 
 	return __errno;
 }
-
-
-_LCRT_DEFINE_IAT_SYMBOL(_wsplitpath_s_downlevel);

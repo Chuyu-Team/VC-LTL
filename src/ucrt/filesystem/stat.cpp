@@ -21,7 +21,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <msvcrt_IAT.h>
 
 
 
@@ -299,8 +298,8 @@ static TimeType __cdecl convert_filetime_to_time_t(
     {
         return fallback_time;
     }
-
-    /*SYSTEMTIME system_time;
+#if 0
+    SYSTEMTIME system_time;
     SYSTEMTIME local_time;
     if (!FileTimeToSystemTime(&file_time, &system_time) ||
         !SystemTimeToTzSpecificLocalTime(nullptr, &system_time, &local_time))
@@ -321,8 +320,8 @@ static TimeType __cdecl convert_filetime_to_time_t(
         local_time.wHour,
         local_time.wMinute,
         local_time.wSecond,
-        -1);*/
-
+        -1);
+#else
 	//修改转换函数，加速FTILETIME 到 time64转换
 	__time64_t const filetime_scale{ 10 * 1000 * 1000 }; // 100ns units
 
@@ -339,6 +338,7 @@ static TimeType __cdecl convert_filetime_to_time_t(
 	{
 		return static_cast<TimeType>(seconds);
 	}
+#endif
 }
 
 template <typename StatStruct>
@@ -369,7 +369,6 @@ static bool __cdecl common_stat_handle_file_not_opened(
     result.st_rdev = static_cast<_dev_t>(drive_number - 1);
     result.st_dev  = static_cast<_dev_t>(drive_number - 1); // A=0, B=1, etc.
 
-	//这个时间很奇怪难道不应该是1970年？
     result.st_mtime = /*time_traits::loctotime(1980, 1, 1, 0, 0, 0, -1)*/0;
     result.st_atime = result.st_mtime;
     result.st_ctime = result.st_mtime;
@@ -538,59 +537,44 @@ extern "C" int __cdecl _stat32_advanced(char const* const path, struct _stat32* 
     return common_stat(path, result);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_stat32_advanced);
-
 extern "C" int __cdecl _stat32i64_advanced(char const* const path, struct _stat32i64* const result)
 {
     return common_stat(path, result);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_stat32i64_advanced);
 
 extern "C" int __cdecl _stat64_advanced(char const* const path, struct _stat64* const result)
 {
     return common_stat(path, result);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_stat64_advanced);
-
 extern "C" int __cdecl _stat64i32_advanced(char const* const path, struct _stat64i32* const result)
 {
     return common_stat(path, result);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_stat64i32_advanced);
 
 extern "C" int __cdecl _wstat32_advanced(wchar_t const* const path, struct _stat32* const result)
 {
     return common_stat(path, result);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wstat32_advanced);
-
 extern "C" int __cdecl _wstat32i64_advanced(wchar_t const* const path, struct _stat32i64* const result)
 {
     return common_stat(path, result);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wstat32i64_advanced);
 
 extern "C" int __cdecl _wstat64_advanced(wchar_t const* const path, struct _stat64* const result)
 {
     return common_stat(path, result);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wstat64_advanced);
-
 extern "C" int __cdecl _wstat64i32_advanced(wchar_t const* const path, struct _stat64i32* const result)
 {
     return common_stat(path, result);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wstat64i32_advanced);
 
-
-/*template <typename StatStruct>
+#if 0
+template <typename StatStruct>
 static int __cdecl common_fstat(int const fh, StatStruct* const result) throw()
 {
     _VALIDATE_CLEAR_OSSERR_RETURN(result != nullptr, EINVAL, -1);
@@ -637,4 +621,5 @@ extern "C" int __cdecl _fstat64(int const fh, struct _stat64* const result)
 extern "C" int __cdecl _fstat64i32(int const fh, struct _stat64i32* const result)
 {
     return common_fstat(fh, result);
-}*/
+}
+#endif

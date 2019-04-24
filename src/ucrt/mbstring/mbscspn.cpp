@@ -16,7 +16,6 @@
 #include <locale.h>
 #include <stddef.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 /***
 *ifndef _RETURN_PTR
@@ -52,17 +51,17 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 #ifndef _RETURN_PTR
 
-extern "C" size_t __cdecl _mbscspn_l_downlevel(
+extern "C" size_t __cdecl _mbscspn_l(
         const unsigned char *string,
         const unsigned char *charset,
         _locale_t plocinfo
         )
 #else  /* _RETURN_PTR */
 
-extern "C" const unsigned char * __cdecl _mbspbrk_l_downlevel(
+extern "C" const unsigned char * __cdecl _mbspbrk_l(
         const unsigned char *string,
         const unsigned char  *charset,
         _locale_t plocinfo
@@ -129,11 +128,6 @@ extern "C" const unsigned char * __cdecl _mbspbrk_l_downlevel(
 #endif  /* _RETURN_PTR */
 
 }
-
-#ifndef _RETURN_PTR
-_LCRT_DEFINE_IAT_SYMBOL(_mbscspn_l_downlevel);
-#else
-_LCRT_DEFINE_IAT_SYMBOL(_mbspbrk_l_downlevel);
 #endif
 
 #if 0
@@ -159,5 +153,3 @@ extern "C" const unsigned char * (__cdecl _mbspbrk)(
 #endif  /* _RETURN_PTR */
 }
 #endif
-
-#endif //_ATL_XP_TARGETING

@@ -244,8 +244,15 @@ static intptr_t __cdecl execute_command(
         // Return the termination code and exit code.  Note that we return
         // the full exit code.
         DWORD exit_code;
-        GetExitCodeProcess(process_info.hProcess, &exit_code);
-        return static_cast<int>(exit_code);
+        if (0 != GetExitCodeProcess(process_info.hProcess, &exit_code))
+        {
+            return static_cast<int>(exit_code);
+        }
+        else
+        {
+            __acrt_errno_map_os_error(GetLastError());
+            return -1;
+        }
     }
     else if (mode == _P_DETACH)
     {

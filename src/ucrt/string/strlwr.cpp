@@ -14,8 +14,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -44,8 +43,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" char * __cdecl _strlwr_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" char * __cdecl _strlwr_l (
         char * string,
         _locale_t plocinfo
         )
@@ -53,8 +52,6 @@ extern "C" char * __cdecl _strlwr_l_downlevel(
     _strlwr_s_l(string, (size_t)(-1), plocinfo);
     return string;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_strlwr_l_downlevel);
 #endif
 
 #if 0
@@ -193,8 +190,8 @@ errno_t __cdecl _strlwr_s_l_stat (
     }
 }
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _strlwr_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl _strlwr_s_l (
         char * string,
         size_t sizeInBytes,
         _locale_t plocinfo
@@ -208,11 +205,7 @@ extern "C" errno_t __cdecl _strlwr_s_l_downlevel(
     return _strlwr_s_l_stat(string, sizeInBytes, plocinfo);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_strlwr_s_l_downlevel);
-#endif
-
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _strlwr_s_downlevel(
+extern "C" errno_t __cdecl _strlwr_s(
         char * string,
         size_t sizeInBytes
         )
@@ -224,6 +217,4 @@ extern "C" errno_t __cdecl _strlwr_s_downlevel(
 
 	return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_strlwr_s_downlevel);
 #endif

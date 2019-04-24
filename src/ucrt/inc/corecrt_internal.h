@@ -10,7 +10,9 @@
 #include <corecrt.h>
 #include <corecrt_startup.h>
 #include <corecrt_terminate.h>
+#include <corecrt_wctype.h>
 #include <crtdbg.h>
+#include <ctype.h>
 #include <errno.h>
 #include <excpt.h>
 #include <internal_shared.h>
@@ -64,14 +66,15 @@ _CRT_BEGIN_C_HEADER
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // This macro can be used to annotate a buffer when it has the option that
-// SIZE_MAX may be passed as it's size in order to invoke unsafe behavior.
+// _CRT_UNBOUNDED_BUFFER_SIZE may be passed as its size in order to invoke unsafe behavior.
 // void example(
 //    _Maybe_unsafe_(_Out_writes_z_, buffer_count) char * const buffer,
 //    _In_                                         size_t const buffer_size
 // )
-#define _Maybe_unsafe_(buffer_annotation, expr)                                                 \
-        _When_((expr < static_cast<size_t>(-1)), buffer_annotation(expr))                       \
-        _When_((expr >= static_cast<size_t>(-1)), buffer_annotation(_Inexpressible_("unsafe")))
+#define _CRT_UNBOUNDED_BUFFER_SIZE (static_cast<size_t>(-1))
+#define _Maybe_unsafe_(buffer_annotation, expr)                                                    \
+        _When_((expr < _CRT_UNBOUNDED_BUFFER_SIZE), buffer_annotation(expr))                       \
+        _When_((expr >= _CRT_UNBOUNDED_BUFFER_SIZE), buffer_annotation(_Inexpressible_("unsafe")))
 
 
 
@@ -250,24 +253,11 @@ DWORD __cdecl __acrt_GetTempPathA(
     _Out_writes_to_(nBufferLength, return + 1) PSTR lpBuffer
     );
 
-HANDLE __cdecl __acrt_FindFirstFileExA(
-    _In_       LPCSTR             lpFileName,
-    _In_       FINDEX_INFO_LEVELS fInfoLevelId,
-    _Out_      LPVOID             lpFindFileData,
-    _In_       FINDEX_SEARCH_OPS  fSearchOp,
-    _Reserved_ LPVOID             lpSearchFilter,
-    _In_       DWORD              dwAdditionalFlags
-    );
-
-BOOL __cdecl __acrt_FindNextFileA(
-    _In_  HANDLE             hFindFile,
-    _Out_ WIN32_FIND_DATAA * lpFindFileData
-    );
-
 DWORD __cdecl __acrt_GetModuleFileNameA(
-    _In_opt_ HMODULE hModule,
-    _Out_    LPSTR  lpFilename,
-    _In_     DWORD   nSize
+    _In_opt_                HMODULE hModule,
+    _When_(return < nSize, _Out_writes_to_(nSize, return + 1))
+    _When_(return == nSize, _Out_writes_all_(nSize) _Null_terminated_) char * lpFilename,
+    _In_range_(1, MAX_PATH) DWORD   nSize
     );
 
 HMODULE __cdecl __acrt_LoadLibraryExA(
@@ -470,19 +460,19 @@ typedef struct _setloc_struct_msvcrt
 {
     // Static data for qualified locale code
     char const*    pchLanguage;
-	char const*    pchCountry;
+    char const*    pchCountry;
     int            iLocState;
     int            iPrimaryLen;
     BOOL           bAbbrevLanguage;
     BOOL           bAbbrevCountry;
-	LCID           lcidLanguage;
-	LCID           lcidCountry;
-	/* expand_locale static variables */
-	LC_ID          _cacheid; //等效_cacheLocaleName
+    LCID           lcidLanguage;
+    LCID           lcidCountry;
+    /* expand_locale static variables */
+    LC_ID          _cacheid; //等效_cacheLocaleName
 
     UINT           _cachecp;
-	char           _cachein [MAX_LC_LEN];
-	char           _cacheout[MAX_LC_LEN];
+    char           _cachein [MAX_LC_LEN];
+    char           _cacheout[MAX_LC_LEN];
 
     // Static data for LC_CTYPE
     __crt_ctype_compatibility_data _Loc_c[5];
@@ -509,7 +499,7 @@ typedef struct _multibyte_data_msvcrt
     //wchar_t const* mblocalename;
 } _multibyte_data_msvcrt, _multibyte_data,__crt_multibyte_data;
 
-/*定义转移至corecrt.h
+#if 0 //定义转移至corecrt.h
 typedef struct __crt_locale_refcount
 {
     char*    locale;
@@ -536,7 +526,8 @@ typedef struct __crt_locale_data
     unsigned char const*      pcumap;
     __crt_lc_time_data const* lc_time_curr;
     wchar_t*                  locale_name[6];
-} __crt_locale_data;*/
+} __crt_locale_data;
+#endif
 
 // Unusual: < 0 => string length
 //           else scan up to specified size or string length, whichever comes first
@@ -546,7 +537,8 @@ typedef struct __crt_locale_data
                                   _When_((size) < _String_length_(_Curr_), _In_reads_(size))
 
 // Wrappers for locale-related Windows API functionality
-/*int __cdecl __acrt_CompareStringA(
+#if 0
+int __cdecl __acrt_CompareStringA(
     _In_opt_               _locale_t _Plocinfo,
     _In_                   LPCWSTR   _LocaleName,
     _In_                   DWORD     _DwCmpFlags,
@@ -564,7 +556,8 @@ int __cdecl __acrt_CompareStringW(
     _In_                   int      _CchCount1,
     _In_CRT_NLS_string_(_CchCount2) PCWCH _LpString2,
     _In_                   int      _CchCount2
-    );*/
+    );
+#endif
 
 int __cdecl __acrt_GetLocaleInfoA(
     _In_opt_ _locale_t _Locale,
@@ -593,7 +586,8 @@ BOOL __cdecl __acrt_GetStringTypeW(
     _Out_               LPWORD      _LpCharType
 );
 
-/*_Success_(return != 0)
+#if 0
+_Success_(return != 0)
 int __cdecl __acrt_LCMapStringA(
     _In_opt_                   _locale_t _Plocinfo,
     _In_                       LPCWSTR   _LocaleName,
@@ -624,10 +618,9 @@ int __cdecl __acrt_MultiByteToWideChar(
     _In_                           int     _CbMultiByte,
     _Out_writes_opt_(_CchWideChar) LPWSTR  _LpWideCharStr,
     _In_                           int     _CchWideChar
-    );*/
-#define __acrt_MultiByteToWideChar MultiByteToWideChar
+    );
 
-/*_Success_(return != 0)
+_Success_(return != 0)
 int __cdecl __acrt_WideCharToMultiByte(
     _In_                           UINT    _CodePage,
     _In_                           DWORD   _DWFlags,
@@ -637,30 +630,45 @@ int __cdecl __acrt_WideCharToMultiByte(
     _In_                           int     _CbMultiByte,
     _In_opt_                       LPCSTR  _LpDefaultChar,
     _Out_opt_                      LPBOOL  _LpUsedDefaultChar
-    );*/
+    );
+#else
+#define __acrt_MultiByteToWideChar MultiByteToWideChar
 #define __acrt_WideCharToMultiByte WideCharToMultiByte
+#endif
 
 // Case-insensitive ASCII comparisons
 _Check_return_
 int __cdecl __ascii_memicmp(
-    _In_reads_bytes_opt_(size) void const* buffer1,
-    _In_reads_bytes_opt_(size) void const* buffer2,
-    _In_                       size_t      size
+    _In_reads_bytes_(count) void const * lhs,
+    _In_reads_bytes_(count) void const * rhs,
+    _In_                    size_t       count
     );
 
 _Check_return_
 int __cdecl __ascii_stricmp(
-    _In_z_ char const* string1,
-    _In_z_ char const* string2
+    _In_z_ char const * lhs,
+    _In_z_ char const * rhs
     );
 
 _Check_return_
 int __cdecl __ascii_strnicmp(
-    _In_reads_or_z_(max_count) char const* string1,
-    _In_reads_or_z_(max_count) char const* string2,
-    _In_                       size_t      max_count
+    _In_reads_or_z_(count) char const * lhs,
+    _In_reads_or_z_(count) char const * rhs,
+    _In_                   size_t       count
     );
 
+_Check_return_
+int __cdecl __ascii_wcsicmp(
+    _In_z_ const wchar_t * lhs,
+    _In_z_ const wchar_t * rhs
+    );
+
+_Check_return_
+int __cdecl __ascii_wcsnicmp(
+    _In_reads_or_z_(count) const wchar_t * lhs,
+    _In_reads_or_z_(count) const wchar_t * rhs,
+    _In_                  size_t          count
+    );
 
 
 // Locale reference counting
@@ -745,7 +753,8 @@ BOOL __cdecl __acrt_get_qualified_locale_downlevel(
 
 // Global variable that is nonzero if the locale has been changed on any thread.
 // Do not touch this global variable; call __acrt_locale_changed instead.
-/*extern long __acrt_locale_changed_data;
+#if 0
+extern long __acrt_locale_changed_data;
 
 #ifdef __cplusplus
 
@@ -777,7 +786,8 @@ extern __crt_lc_time_data const __lc_time_c;
 // The initial and current locale states:
 extern __crt_multibyte_data  __acrt_initial_multibyte_data;
 extern __crt_locale_data     __acrt_initial_locale_data;
-extern __crt_locale_pointers __acrt_initial_locale_pointers;*/
+extern __crt_locale_pointers __acrt_initial_locale_pointers;
+#endif
 
 #ifdef __cplusplus
 
@@ -819,8 +829,7 @@ __inline int __CRTDECL __acrt_isleadbyte_l_noupdate(
     _In_ _locale_t const locale
     )
 {
-	unsigned short const* _locale_pctype = locale ? locale->locinfo->_locale_pctype : __pctype_func();
-    return _locale_pctype[(unsigned char)c] & _LEADBYTE;
+    return __acrt_locale_get_ctype_array_value(locale ? locale->locinfo->_locale_pctype : __pctype_func(), c, _LEADBYTE);
 }
 
 
@@ -1416,7 +1425,7 @@ extern "C++"
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #define __acrt_AreFileApisANSI AreFileApisANSI
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_CompareStringEx(
     _In_opt_                       LPCWSTR          locale_name,
     _In_                           DWORD            flags,
@@ -1432,7 +1441,7 @@ int WINAPI __acrt_CompareStringEx(
 #define __acrt_CompareStringEx CompareStringEx
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 BOOL WINAPI __acrt_EnumSystemLocalesEx(
     _In_     LOCALE_ENUMPROCEX enum_proc,
     _In_     DWORD             flags,
@@ -1443,7 +1452,7 @@ BOOL WINAPI __acrt_EnumSystemLocalesEx(
 #define __acrt_EnumSystemLocalesEx EnumSystemLocalesEx
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 DWORD WINAPI __acrt_FlsAlloc(
     _In_opt_ PFLS_CALLBACK_FUNCTION lpCallback
     );
@@ -1451,7 +1460,7 @@ DWORD WINAPI __acrt_FlsAlloc(
 #define __acrt_FlsAlloc FlsAlloc
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 BOOL WINAPI __acrt_FlsFree(
     _In_ DWORD dwFlsIndex
     );
@@ -1459,7 +1468,7 @@ BOOL WINAPI __acrt_FlsFree(
 #define __acrt_FlsFree FlsFree
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 PVOID WINAPI __acrt_FlsGetValue(
     _In_ DWORD dwFlsIndex
     );
@@ -1467,7 +1476,7 @@ PVOID WINAPI __acrt_FlsGetValue(
 #define __acrt_FlsGetValue FlsGetValue
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 BOOL WINAPI __acrt_FlsSetValue(
     _In_     DWORD dwFlsIndex,
     _In_opt_ PVOID lpFlsData
@@ -1476,7 +1485,7 @@ BOOL WINAPI __acrt_FlsSetValue(
 #define __acrt_FlsSetValue FlsGetValue
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_GetDateFormatEx(
     _In_opt_                       LPCWSTR           locale_name,
     _In_                           DWORD             flags,
@@ -1492,7 +1501,7 @@ int WINAPI __acrt_GetDateFormatEx(
 
 DWORD64 WINAPI __acrt_GetEnabledXStateFeatures(void);
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_GetLocaleInfoEx(
     _In_opt_                       LPCWSTR locale_name,
     _In_                           LCTYPE  lc_type,
@@ -1511,7 +1520,7 @@ VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime(
 #define __acrt_GetSystemTimePreciseAsFileTime GetSystemTimePreciseAsFileTime
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_GetTimeFormatEx(
     _In_opt_                         LPCWSTR           locale_name,
     _In_                             DWORD             flags,
@@ -1524,7 +1533,7 @@ int WINAPI __acrt_GetTimeFormatEx(
 #define __acrt_GetTimeFormatEx GetTimeFormatEx
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_GetUserDefaultLocaleName(
     _Out_writes_(locale_name_count) LPWSTR  locale_name,
     _In_                            int     locale_name_count
@@ -1539,13 +1548,13 @@ BOOL WINAPI __acrt_GetXStateFeaturesMask(
     _Out_ PDWORD64 feature_mask
     );
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 #define __acrt_InitializeCriticalSectionEx(critical_section,spin_count,flags) InitializeCriticalSectionAndSpinCount(critical_section,spin_count)
 #else
 #define __acrt_InitializeCriticalSectionEx InitializeCriticalSectionEx
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 BOOL WINAPI __acrt_IsValidLocaleName(
     _In_ LPCWSTR locale_name
     );
@@ -1553,7 +1562,7 @@ BOOL WINAPI __acrt_IsValidLocaleName(
 #define __acrt_IsValidLocaleName IsValidLocaleName
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_LCMapStringEx(
     _In_opt_                            LPCWSTR          locale_name,
     _In_                                DWORD            flags,
@@ -1569,7 +1578,7 @@ int WINAPI __acrt_LCMapStringEx(
 #define __acrt_LCMapStringEx LCMapStringEx
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 int WINAPI __acrt_LCIDToLocaleName(
     _In_                         LCID   locale,
     _Out_writes_opt_(name_count) LPWSTR name,
@@ -1580,7 +1589,7 @@ int WINAPI __acrt_LCIDToLocaleName(
 #define __acrt_LCIDToLocaleName LCIDToLocaleName
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 DWORD WINAPI __acrt_LocaleNameToLCID(
     _In_ LPCWSTR name,
     _In_ DWORD   flags
@@ -1596,9 +1605,19 @@ PVOID WINAPI __acrt_LocateXStateFeature(
     _Out_opt_ PDWORD   length
     );
 
-#define __acrt_MessageBoxA MessageBoxA
+int WINAPI __acrt_MessageBoxA(
+    _In_opt_ HWND   hwnd,
+    _In_opt_ LPCSTR text,
+    _In_opt_ LPCSTR caption,
+    _In_     UINT   type
+    );
 
-#define __acrt_MessageBoxW MessageBoxW
+int WINAPI __acrt_MessageBoxW(
+    _In_opt_ HWND    hwnd,
+    _In_opt_ LPCWSTR text,
+    _In_opt_ LPCWSTR caption,
+    _In_     UINT    type
+    );
 
 #define __acrt_OutputDebugStringA OutputDebugStringA
 
@@ -1623,8 +1642,7 @@ LONG WINAPI __acrt_AppPolicyGetThreadInitializationTypeInternal(_Out_ AppPolicyT
 LONG WINAPI __acrt_AppPolicyGetShowDeveloperDiagnosticInternal(_Out_ AppPolicyShowDeveloperDiagnostic* policy);
 LONG WINAPI __acrt_AppPolicyGetWindowingModelInternal(_Out_ AppPolicyWindowingModel* policy);
 
-
-#if defined _ATL_XP_TARGETING && defined _X86_
+#if _CRT_NTDDI_MIN < NTDDI_WS03SP1
 BOOL WINAPI __acrt_SetThreadStackGuarantee(
     _Inout_ PULONG stack_size_in_bytes
     );
@@ -1632,8 +1650,9 @@ BOOL WINAPI __acrt_SetThreadStackGuarantee(
 #define __acrt_SetThreadStackGuarantee SetThreadStackGuarantee
 #endif
 
+
 bool __cdecl __acrt_can_show_message_box(void);
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 bool __cdecl __acrt_can_use_vista_locale_apis(void);
 #else
 #define __acrt_can_use_vista_locale_apis() true
@@ -1644,13 +1663,11 @@ HWND __cdecl __acrt_get_parent_window(void);
 bool __cdecl __acrt_is_interactive(void);
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 LCID __cdecl __acrt_DownlevelLocaleNameToLCID(
     _In_opt_ LPCWSTR localeName
     );
-#endif
 
-#ifdef _ATL_XP_TARGETING
 _Success_(return != 0)
 int __cdecl __acrt_DownlevelLCIDToLocaleName(
     _In_      LCID   lcid,
@@ -1740,6 +1757,119 @@ int __cdecl __dcrt_set_variable_in_wide_environment_nolock(
     _In_                int      is_top_level_call
     );
 
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//
+// Internal fast locale functions with no extra checks
+//
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// Only use these when the input char is validated to be an unsigned char and not EOF.
+// Ensure locale has already been updated.
+_Check_return_ __forceinline unsigned char __cdecl _toupper_fast_internal(
+    _In_ unsigned char const c,
+    _In_ _locale_t const     locale
+    )
+{
+	if (!locale)
+		return toupper(c);
+    return locale->locinfo->pcumap[c];
+}
+
+_Check_return_ __forceinline unsigned char __cdecl _tolower_fast_internal(
+    _In_ unsigned char const c,
+    _In_ _locale_t const     locale
+    )
+{
+	if (!locale)
+		return tolower(c);
+    return locale->locinfo->pclmap[c];
+}
+
+__declspec(dllimport) extern const unsigned short _wctype[];
+
+_Check_return_ __forceinline wint_t _towupper_fast_internal(
+    _In_ unsigned char const c,
+    _In_ _locale_t const     locale
+    )
+{
+    // Check for iswlower required because upper map assumes using narrow ctype categories.
+    // towupper uses a locale-sensitive transformation, but only if the wide character
+    // is considered lowercase in UTF-16.
+    // _wctype starts at EOF. Add one to map to characters.
+    if (_wctype[c + 1] & _LOWER)
+    {
+        return _toupper_fast_internal(c, locale);
+    }
+    return c;
+}
+
+_Check_return_ inline wint_t _towupper_internal(
+    _In_ unsigned short const c,
+    _In_ _locale_t const      locale
+    )
+{
+    if (c < 256)
+    {
+        return _towupper_fast_internal((unsigned char) c, locale);
+    }
+
+    return _towupper_l(c, locale);
+}
+
+_Check_return_ __forceinline wint_t _towlower_fast_internal(
+    _In_ unsigned char const c,
+    _In_ _locale_t const     locale
+    )
+{
+    // Check for iswupper required because lower map assumes using narrow ctype categories.
+    // towlower uses a locale-sensitive transformation, but only if the wide character
+    // is considered uppercase in UTF-16.
+    // _wctype starts at EOF. Add one to map to characters.
+    if (_wctype[c + 1] & _UPPER)
+    {
+        return _tolower_fast_internal(c, locale);
+    }
+
+    return c;
+}
+
+_Check_return_ inline wint_t _towlower_internal(
+    _In_ unsigned short const c,
+    _In_ _locale_t const      locale
+    )
+{
+    if (c < 256)
+    {
+        return _towlower_fast_internal((unsigned char) c, locale);
+    }
+
+    return _towlower_l(c, locale);
+}
+
+_Check_return_ __forceinline unsigned short __cdecl _ctype_fast_check_internal(
+    _In_ unsigned char const c,
+    _In_ int const           _Mask,
+    _In_ _locale_t const     locale
+    )
+{
+	unsigned short const* _locale_pctype = locale ? locale->locinfo->_locale_pctype : __pctype_func();
+    return _locale_pctype[c] & _Mask;
+}
+
+_Check_return_ __forceinline unsigned short __cdecl _isdigit_fast_internal(
+    _In_ unsigned char const c,
+    _In_ _locale_t const     locale
+    )
+{
+    return _ctype_fast_check_internal(c, _DIGIT, locale);
+}
+
+_Check_return_ __forceinline unsigned short __cdecl _isleadbyte_fast_internal(
+    _In_ unsigned char const c,
+    _In_ _locale_t const     locale
+    )
+{
+    return _ctype_fast_check_internal(c, _LEADBYTE, locale);
+}
 
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1748,7 +1878,7 @@ int __cdecl __dcrt_set_variable_in_wide_environment_nolock(
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // Invoke Watson if _ExpressionError is not 0; otherwise simply return
-// _EspressionError.
+// _ExpressionError.
 _CRT_SECURITYCRITICAL_ATTRIBUTE
 __forceinline void _invoke_watson_if_error(
     _In_       errno_t        expression_error,
@@ -1957,14 +2087,6 @@ __forceinline errno_t _invoke_watson_if_oneof(
         return _FunctionName##_l(_Arg1, _Arg2, _Arg3, NULL);                                  \
     }
 
-#define _REDIRECT_TO_L_VERSION_3_downlevel(_ReturnType, _FunctionName, _Type1, _Type2, _Type3)\
-    _REDIRECT_TO_L_VERSION_FUNC_PROLOGUE                                                      \
-    _ReturnType __cdecl _FunctionName##_downlevel(_Type1 _Arg1, _Type2 _Arg2, _Type3 _Arg3)   \
-    {                                                                                         \
-        return _FunctionName##_l(_Arg1, _Arg2, _Arg3, NULL);                        \
-    }
-
-
 #define _REDIRECT_TO_L_VERSION_4(_ReturnType, _FunctionName, _Type1, _Type2, _Type3, _Type4)  \
     _REDIRECT_TO_L_VERSION_FUNC_PROLOGUE                                                      \
     _ReturnType __cdecl _FunctionName(_Type1 _Arg1, _Type2 _Arg2, _Type3 _Arg3, _Type4 _Arg4) \
@@ -1972,12 +2094,6 @@ __forceinline errno_t _invoke_watson_if_oneof(
         return _FunctionName##_l(_Arg1, _Arg2, _Arg3, _Arg4, NULL);                           \
     }
 
-#define _REDIRECT_TO_L_VERSION_4_downlevel(_ReturnType, _FunctionName, _Type1, _Type2, _Type3, _Type4)    \
-    _REDIRECT_TO_L_VERSION_FUNC_PROLOGUE                                                                  \
-    _ReturnType __cdecl _FunctionName##_downlevel(_Type1 _Arg1, _Type2 _Arg2, _Type3 _Arg3, _Type4 _Arg4) \
-    {                                                                                                     \
-        return _FunctionName##_l(_Arg1, _Arg2, _Arg3, _Arg4, NULL);                                       \
-    }
 
 
 #ifdef __cplusplus
@@ -1998,7 +2114,8 @@ extern "C++"
         _Inout_ __crt_multibyte_data** const data
         );
 
-    /*class _LocaleUpdate
+#if 0
+    class _LocaleUpdate
     {
     public:
 
@@ -2048,8 +2165,8 @@ extern "C++"
         __crt_locale_pointers _locale_pointers;
         bool                  _updated;
 
-    };*/
-
+    };
+#endif
 
 
     //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+

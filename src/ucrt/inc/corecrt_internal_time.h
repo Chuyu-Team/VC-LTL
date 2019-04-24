@@ -33,8 +33,8 @@
 #define _BASE_YEAR     70                // The epoch year (1970)
 #define _BASE_DOW      4                 // The day of week of 01-Jan-70 (Thursday)
 
-// Maximum local time adjustment (GMT + 13 Hours, DST -0 Hours)
-#define _MAX_LOCAL_TIME (13 * 60 * 60)
+// Maximum local time adjustment (GMT + 14 Hours, DST -0 Hours)
+#define _MAX_LOCAL_TIME (14 * 60 * 60)
 
 // Minimum local time adjustment (GMT - 11 Hours, DST - 1 Hours)
 #define _MIN_LOCAL_TIME (-12 * 60 * 60)
@@ -92,7 +92,9 @@ struct __crt_time_time_t_traits<__time64_t> : __crt_integer_traits<__time64_t>
 
     enum : long long
     {
-        // Number of seconds from 00:00:00, 01/01/1970 UTC to 23:59:59, 01/18/3001 UTC
+        // Number of seconds from 00:00:00, 01/01/1970 UTC to 07:59:59, 01/19/3001 UTC
+        // Note that the end of the epoch was intended to be 23:59:59, 01/18/3001 UTC,
+        // but this was mistakenly computed from a PST value (thus the 8 hour delta).
         max_time_t = 0x793582affLL,
     };
 

@@ -45,11 +45,11 @@ static void __cdecl shift_bytes(
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _Success_(return == 0)
 static errno_t __cdecl fp_format_nan_or_infinity(
-    _In_                                __acrt_fp_class const classification,
-    _In_range_(0,1)                     bool            const is_negative,
-    _Out_writes_z_(result_buffer_count) char*                 result_buffer,
-    _In_                                size_t                result_buffer_count,
-    _In_range_(0,1)                     bool            const use_capitals
+    _In_                                                __acrt_fp_class const classification,
+    _In_range_(0,1)                                     bool            const is_negative,
+    _Maybe_unsafe_(_Out_writes_z_, result_buffer_count) char*                 result_buffer,
+    _In_range_(1,SIZE_MAX)                              size_t                result_buffer_count,
+    _In_range_(0,1)                                     bool            const use_capitals
     ) throw()
 {
     using floating_traits = __acrt_floating_type_traits<double>;
@@ -67,10 +67,13 @@ static errno_t __cdecl fp_format_nan_or_infinity(
     {
         *result_buffer++ = '-';
         *result_buffer   = '\0';
-        --result_buffer_count;
+        if (result_buffer_count != _CRT_UNBOUNDED_BUFFER_SIZE)
+        {
+            --result_buffer_count;
+        }
     }
 
-    char const* const strings[][4] =
+    static char const* const strings[][4] =
     {
         { "INF",       "INF", "inf",       "inf" }, // Infinity
         { "NAN",       "NAN", "nan",       "nan" }, // Quiet NAN
@@ -154,7 +157,7 @@ static errno_t fp_format_e_internal(
     p = p + precision + (g_fmt ? 0 : 1);
     _ERRCHECK(strcpy_s(
         p,
-        result_buffer_count == static_cast<size_t>(-1)
+        result_buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE
             ? result_buffer_count
             : result_buffer_count - (p - result_buffer), "e+000"));
     char* exponentpos = p + 2;
@@ -239,7 +242,7 @@ static errno_t __cdecl fp_format_e(
 
     errno_t const e = __acrt_fp_strflt_to_string(
         result_buffer + (strflt.sign == '-') + (precision > 0),
-        (result_buffer_count == static_cast<size_t>(-1)
+        (result_buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE
             ? result_buffer_count
             : result_buffer_count - (strflt.sign == '-') - (precision > 0)),
         precision + 1,
@@ -589,7 +592,7 @@ static errno_t __cdecl fp_format_f(
 
     errno_t const e = __acrt_fp_strflt_to_string(
         result_buffer + (strflt.sign == '-'),
-        (result_buffer_count == static_cast<size_t>(-1) ? result_buffer_count : result_buffer_count - (strflt.sign == '-')),
+        (result_buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE ? result_buffer_count : result_buffer_count - (strflt.sign == '-')),
         precision + strflt.decpt,
         &strflt);
 
@@ -636,7 +639,7 @@ static errno_t __cdecl fp_format_g(
     int g_magnitude = strflt.decpt - 1;
     char* p = result_buffer + minus_sign_length;
 
-    size_t const buffer_count_for_fptostr = result_buffer_count == static_cast<size_t>(-1)
+    size_t const buffer_count_for_fptostr = result_buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE
         ? result_buffer_count
         : result_buffer_count - minus_sign_length;
 

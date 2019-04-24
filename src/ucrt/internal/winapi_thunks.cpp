@@ -7,10 +7,14 @@
 // directly because they are not available on all supported operating systems.
 //
 
+//#include <nt.h>
+//#include <ntrtl.h>
+//#include <nturtl.h>
+//#include <ntsecapi.h>
 #include <corecrt_internal.h>
 #include <appmodel.h>
 #include <roapi.h>
-#include "..\..\src\winapi_thunks.h"
+#include <winapi_thunks.h>
 #include <internal_shared.h>
 
 #ifdef _ATL_XP_TARGETING
@@ -77,9 +81,10 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
 #else
 #define _NO_APPLY_Vista(a,b)
 #endif
+#endif
 
 
-#define _ACRT_APPLY_TO_LATE_BOUND_MODULES(_APPLY)                                                        \
+#define _ACRT_APPLY_TO_LATE_BOUND_MODULES                                                                \
     _APPLY(api_ms_win_core_datetime_l1_1_1,              "api-ms-win-core-datetime-l1-1-1"             ) \
     _APPLY(api_ms_win_core_fibers_l1_1_1,                "api-ms-win-core-fibers-l1-1-1"               ) \
     _APPLY(api_ms_win_core_file_l1_2_2,                  "api-ms-win-core-file-l1-2-2"                 ) \
@@ -103,7 +108,7 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
 
 
 
-#define _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)                                                                                                     \
+#define _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS                                                                                                             \
     _NO_APPLY(AreFileApisANSI,                             ({ /* api_ms_win_core_file_l1_2_2, */            kernel32                                   })) \
     _NO_APPLY(CompareStringEx,                             ({ api_ms_win_core_string_l1_1_0,                kernel32                                   })) \
     _NO_APPLY(EnumSystemLocalesEx,                         ({ api_ms_win_core_localization_l1_2_1,          kernel32                                   })) \
@@ -165,13 +170,14 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _NO_APPLY_2003(GetLogicalProcessorInformation,         ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   })) \
     _NO_APPLY_2003(GetNumaHighestNodeNumber,               ({ /*api_ms_win_core_synch_l1_2_0,*/             kernel32                                   }))
 
+
 namespace
 {
     // Generate enumerators for each of the modules:
     enum module_id : unsigned
     {
         #define _APPLY(_SYMBOL, _NAME) _SYMBOL,
-        _ACRT_APPLY_TO_LATE_BOUND_MODULES(_APPLY)
+        _ACRT_APPLY_TO_LATE_BOUND_MODULES
         #undef _APPLY
 
         module_id_count
@@ -182,7 +188,7 @@ namespace
     static wchar_t const* const module_names[module_id_count] =
     {
         #define _APPLY(_SYMBOL, _NAME) _CRT_WIDE(_NAME),
-        _ACRT_APPLY_TO_LATE_BOUND_MODULES(_APPLY)
+        _ACRT_APPLY_TO_LATE_BOUND_MODULES
         #undef _APPLY
     };
 
@@ -190,7 +196,7 @@ namespace
     enum function_id : unsigned
     {
         #define _APPLY(_FUNCTION, _MODULES) _CRT_CONCATENATE(_FUNCTION, _id),
-        _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)
+        _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS
         #undef _APPLY
 
         function_id_count
@@ -199,7 +205,7 @@ namespace
     // Generate a typedef for each function of the form function_pft.
     #define _APPLY(_FUNCTION, _MODULES) \
         using _CRT_CONCATENATE(_FUNCTION, _pft) = decltype(_FUNCTION)*;
-    _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)
+    _ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS
     #undef _APPLY
 }
 
@@ -445,25 +451,23 @@ static void* __cdecl try_get_function(
             candidate_modules,                                                                        \
             candidate_modules + _countof(candidate_modules)));                                        \
     }
-_ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS(_APPLY)
+_ACRT_APPLY_TO_LATE_BOUND_FUNCTIONS
 #undef _APPLY
 
-#endif
-
-//extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
-//{
-	//return AreFileApisANSI();
-	//if (auto const are_file_apis_ansi = try_get_AreFileApisANSI())
-	//{
-	//	return are_file_apis_ansi();
-	//}
-
-	//// If we were unable to get the AreFileApisANSI function, we can safely
-	//// assume that the file APIs are, in fact, ANSI:
-	//return TRUE;
-//}
 
 #if 0
+extern "C" BOOL WINAPI __acrt_AreFileApisANSI()
+{
+    if (auto const are_file_apis_ansi = try_get_AreFileApisANSI())
+    {
+        return are_file_apis_ansi();
+    }
+
+    // If we were unable to get the AreFileApisANSI function, we can safely
+    // assume that the file APIs are, in fact, ANSI:
+    return TRUE;
+}
+
 extern "C" int WINAPI __acrt_CompareStringEx(
     LPCWSTR          const locale_name,
     DWORD            const flags,
@@ -476,13 +480,12 @@ extern "C" int WINAPI __acrt_CompareStringEx(
     LPARAM           const param
     )
 {
+    if (auto const compare_string_ex = try_get_CompareStringEx())
+    {
+        return compare_string_ex(locale_name, flags, string1, string1_count, string2, string2_count, version, reserved, param);
+    }
 
-	/*if (auto const compare_string_ex = try_get_CompareStringEx())
-	{
-		return compare_string_ex(locale_name, flags, string1, string1_count, string2, string2_count, version, reserved, param);
-	}*/
-
-	return CompareStringW(__acrt_LocaleNameToLCID(locale_name, 0), flags, string1, string1_count, string2, string2_count);
+    return CompareStringW(__acrt_LocaleNameToLCID(locale_name, 0), flags, string1, string1_count, string2, string2_count);
 }
 #endif
 
@@ -613,30 +616,30 @@ __if_exists(try_get_GetEnabledXStateFeatures)
 
 #if 0
 extern "C" int WINAPI __acrt_GetLocaleInfoEx(
-	LPCWSTR const locale_name,
-	LCTYPE  const lc_type,
-	LPWSTR  const data,
-	int     const data_count
-)
+    LPCWSTR const locale_name,
+    LCTYPE  const lc_type,
+    LPWSTR  const data,
+    int     const data_count
+    )
 {
-	/*if (auto const get_locale_info_ex = try_get_GetLocaleInfoEx())
-	{
-		return get_locale_info_ex(locale_name, lc_type, data, data_count);
-	}*/
+    if (auto const get_locale_info_ex = try_get_GetLocaleInfoEx())
+    {
+        return get_locale_info_ex(locale_name, lc_type, data, data_count);
+    }
 
-	return GetLocaleInfoW(__acrt_LocaleNameToLCID(locale_name, 0), lc_type, data, data_count);
+    return GetLocaleInfoW(__acrt_LocaleNameToLCID(locale_name, 0), lc_type, data, data_count);
 }
 #endif
 
 #if _CRT_NTDDI_MIN < NTDDI_WIN7
 extern "C" VOID WINAPI __acrt_GetSystemTimePreciseAsFileTime_advanced(LPFILETIME const system_time)
 {
-	if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
-	{
-		return get_system_time_precise_as_file_time(system_time);
-	}
+    if (auto const get_system_time_precise_as_file_time = try_get_GetSystemTimePreciseAsFileTime())
+    {
+        return get_system_time_precise_as_file_time(system_time);
+    }
 
-	return GetSystemTimeAsFileTime(system_time);
+    return GetSystemTimeAsFileTime(system_time);
 }
 #endif
 
@@ -650,11 +653,10 @@ extern "C" int WINAPI __acrt_GetTimeFormatEx(
     int               const buffer_count
     )
 {
-
-   /* if (auto const get_time_format_ex = try_get_GetTimeFormatEx())
+    if (auto const get_time_format_ex = try_get_GetTimeFormatEx())
     {
         return get_time_format_ex(locale_name, flags, time, format, buffer, buffer_count);
-    }*/
+    }
 
     return GetTimeFormatW(__acrt_LocaleNameToLCID(locale_name, 0), flags, time, format, buffer, buffer_count);
 }
@@ -712,11 +714,10 @@ __if_exists(try_get_InitializeCriticalSectionEx)
 #if 0
 extern "C" BOOL WINAPI __acrt_IsValidLocaleName(LPCWSTR const locale_name)
 {
-
-   /* if (auto const is_valid_locale_name = try_get_IsValidLocaleName())
+    if (auto const is_valid_locale_name = try_get_IsValidLocaleName())
     {
         return is_valid_locale_name(locale_name);
-    }*/
+    }
 
     return IsValidLocale(__acrt_LocaleNameToLCID(locale_name, 0), LCID_INSTALLED);
 }
@@ -735,44 +736,44 @@ extern "C" int WINAPI __acrt_LCMapStringEx(
     LPARAM           const sort_handle
     )
 {
-    //if (auto const lc_map_string_ex = try_get_LCMapStringEx())
-    //{
-    //    return lc_map_string_ex(locale_name, flags, source, source_count, destination, destination_count, version, reserved, sort_handle);
-    //}
-//#pragma warning(disable:__WARNING_PRECONDITION_NULLTERMINATION_VIOLATION) // 26035 LCMapStringW annotation is presently incorrect 11/26/2014 Jaykrell
+    if (auto const lc_map_string_ex = try_get_LCMapStringEx())
+    {
+        return lc_map_string_ex(locale_name, flags, source, source_count, destination, destination_count, version, reserved, sort_handle);
+    }
+#pragma warning(disable:__WARNING_PRECONDITION_NULLTERMINATION_VIOLATION) // 26035 LCMapStringW annotation is presently incorrect 11/26/2014 Jaykrell
     return LCMapStringW(__acrt_LocaleNameToLCID(locale_name, 0), flags, source, source_count, destination, destination_count);
 }
 #endif
 
 #if 0
 extern "C" int WINAPI __acrt_LCIDToLocaleName(
-	LCID   const locale,
-	LPWSTR const name,
-	int    const name_count,
-	DWORD  const flags
-)
+    LCID   const locale,
+    LPWSTR const name,
+    int    const name_count,
+    DWORD  const flags
+    )
 {
-	if (auto const lcid_to_locale_name = try_get_LCIDToLocaleName())
-	{
-		return lcid_to_locale_name(locale, name, name_count, flags);
-	}
+    if (auto const lcid_to_locale_name = try_get_LCIDToLocaleName())
+    {
+        return lcid_to_locale_name(locale, name, name_count, flags);
+    }
 
-	return __acrt_DownlevelLCIDToLocaleName(locale, name, name_count);
+    return __acrt_DownlevelLCIDToLocaleName(locale, name, name_count);
 }
 #endif
 
 #if 0
 extern "C" LCID WINAPI __acrt_LocaleNameToLCID(
-	LPCWSTR const name,
-	DWORD   const flags
-)
+    LPCWSTR const name,
+    DWORD   const flags
+    )
 {
-	if (auto const locale_name_to_lcid = try_get_LocaleNameToLCID())
-	{
-		return locale_name_to_lcid(name, flags);
-	}
+    if (auto const locale_name_to_lcid = try_get_LocaleNameToLCID())
+    {
+        return locale_name_to_lcid(name, flags);
+    }
 
-	return __acrt_DownlevelLocaleNameToLCID(name);
+    return __acrt_DownlevelLocaleNameToLCID(name);
 }
 #endif
 
@@ -873,7 +874,7 @@ __if_exists(try_get_RoUninitialize)
 
 __if_exists(try_get_AppPolicyGetProcessTerminationMethod)
 {
-	extern "C" LONG WINAPI __acrt_AppPolicyGetProcessTerminationMethodInternal(_Out_ AppPolicyProcessTerminationMethod* policy)
+	LONG WINAPI __acrt_AppPolicyGetProcessTerminationMethodInternal(_Out_ AppPolicyProcessTerminationMethod * policy)
 	{
 		if (auto const app_policy_get_process_terminaton_method_claims = try_get_AppPolicyGetProcessTerminationMethod())
 		{
@@ -886,7 +887,7 @@ __if_exists(try_get_AppPolicyGetProcessTerminationMethod)
 
 __if_exists(try_get_AppPolicyGetThreadInitializationType)
 {
-	extern "C" LONG WINAPI __acrt_AppPolicyGetThreadInitializationTypeInternal(_Out_ AppPolicyThreadInitializationType* policy)
+	LONG WINAPI __acrt_AppPolicyGetThreadInitializationTypeInternal(_Out_ AppPolicyThreadInitializationType * policy)
 	{
 		if (auto const app_policy_get_thread_initialization_type_claims = try_get_AppPolicyGetThreadInitializationType())
 		{
@@ -899,7 +900,7 @@ __if_exists(try_get_AppPolicyGetThreadInitializationType)
 
 __if_exists(try_get_AppPolicyGetShowDeveloperDiagnostic)
 {
-	extern "C" LONG WINAPI __acrt_AppPolicyGetShowDeveloperDiagnosticInternal(_Out_ AppPolicyShowDeveloperDiagnostic* policy)
+	LONG WINAPI __acrt_AppPolicyGetShowDeveloperDiagnosticInternal(_Out_ AppPolicyShowDeveloperDiagnostic * policy)
 	{
 		if (auto const app_policy_get_show_developer_diagnostic_claims = try_get_AppPolicyGetShowDeveloperDiagnostic())
 		{
@@ -912,7 +913,7 @@ __if_exists(try_get_AppPolicyGetShowDeveloperDiagnostic)
 
 __if_exists(try_get_AppPolicyGetWindowingModel)
 {
-	extern "C" LONG WINAPI __acrt_AppPolicyGetWindowingModelInternal(_Out_ AppPolicyWindowingModel* policy)
+	LONG WINAPI __acrt_AppPolicyGetWindowingModelInternal(_Out_ AppPolicyWindowingModel * policy)
 	{
 		if (auto const app_policy_get_windowing_model_claims = try_get_AppPolicyGetWindowingModel())
 		{
@@ -936,24 +937,24 @@ __if_exists(try_get_SetThreadStackGuarantee)
 	}
 }
 
+#if 0
+extern "C" bool __cdecl __acrt_can_show_message_box()
+{
+    bool can_show_message_box = false;
+    if (__acrt_get_windowing_model_policy() == windowing_model_policy_hwnd
+        && try_get_MessageBoxA() != nullptr
+        && try_get_MessageBoxW() != nullptr)
+    {
+        can_show_message_box = true;
+    }
+    return can_show_message_box;
+}
 
-
-//extern "C" bool __cdecl __acrt_can_show_message_box()
-//{
-//    bool can_show_message_box = false;
-//    if (__acrt_get_windowing_model_policy() == windowing_model_policy_hwnd
-//        && try_get_MessageBoxA() != nullptr
-//        && try_get_MessageBoxW() != nullptr)
-//    {
-//        can_show_message_box = true;
-//    }
-//    return can_show_message_box;
-//}
-
-//extern "C" bool __cdecl __acrt_can_use_vista_locale_apis()
-//{
-//    return try_get_CompareStringEx() != nullptr;
-//}
+extern "C" bool __cdecl __acrt_can_use_vista_locale_apis()
+{
+    return try_get_CompareStringEx() != nullptr;
+}
+#endif
 
 // This function simply attempts to get each of the locale-related APIs.  This
 // allows a caller to "pre-load" the modules in which these APIs are hosted.  We
@@ -1087,6 +1088,7 @@ __if_exists(try_get_GetProcessWindowStation)
 		return true;
 	}
 }
+
 
 
 #ifdef _ATL_XP_TARGETING
@@ -1435,8 +1437,7 @@ __if_exists(try_get_CreateThreadpoolWork)
 }
 
 
-#if defined _ATL_XP_TARGETING && defined _X86_
-
+#if _CRT_NTDDI_MIN < NTDDI_WS03
 EXTERN_C DWORD WINAPI __crtGetCurrentProcessorNumber(void)
 {
 	if (auto pGetCurrentProcessorNumber = try_get_GetCurrentProcessorNumber())
@@ -1449,10 +1450,9 @@ EXTERN_C DWORD WINAPI __crtGetCurrentProcessorNumber(void)
 		return 0;
 	}
 }
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 EXTERN_C VOID WINAPI __crtFlushProcessWriteBuffers(void)
 {
 	if (auto pFlushProcessWriteBuffers = try_get_FlushProcessWriteBuffers())
@@ -1470,7 +1470,7 @@ EXTERN_C VOID WINAPI __crtFlushProcessWriteBuffers(void)
 }
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 EXTERN_C ULONGLONG WINAPI __crtGetTickCount64(VOID)
 {
 	if (auto pGetTickCount64 = try_get_GetTickCount64())
@@ -1484,7 +1484,7 @@ EXTERN_C ULONGLONG WINAPI __crtGetTickCount64(VOID)
 }
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
 EXTERN_C VOID WINAPI __crtSetThreadpoolTimer(
 	_Inout_ PTP_TIMER pti,
 	_In_opt_ PFILETIME pftDueTime,

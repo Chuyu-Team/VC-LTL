@@ -19,23 +19,18 @@ extern "C" int __cdecl fputws(wchar_t const* const string, FILE* const stream)
     _VALIDATE_RETURN(string != nullptr, EINVAL, EOF);
     _VALIDATE_RETURN(stream != nullptr, EINVAL, EOF);
 
-    int return_value = EOF;
-
-    _lock_file(stream);
-    __try
+    return __acrt_lock_stream_and_call(stream, [&]() -> int
     {
+        __acrt_stdio_temporary_buffering_guard const buffering(stream);
+
         for (wchar_t const* it = string; *it != L'\0'; ++it)
         {
             if (_fputwc_nolock(*it, stream) == WEOF)
-                __leave;
+            {
+                return EOF;
+            }
         }
 
-        return_value = 0;
-    }
-    __finally
-    {
-        _unlock_file(stream);
-    }
-
-    return return_value;
+        return 0;
+    });
 }

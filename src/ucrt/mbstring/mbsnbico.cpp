@@ -13,8 +13,7 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 
 /***
@@ -40,8 +39,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbsnbicoll_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _mbsnbicoll_l(
         const unsigned char *s1,
         const unsigned char *s2,
         size_t n,
@@ -78,16 +77,15 @@ extern "C" int __cdecl _mbsnbicoll_l_downlevel(
         return ret - 2;
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsnbicoll_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _mbsnbicoll(
+#if 0
+extern "C" int __cdecl _mbsnbicoll(
         const unsigned char *s1,
         const unsigned char *s2,
         size_t n
         )
 {
     return _mbsnbicoll_l(s1, s2, n, nullptr);
-}*/
+}
+#endif

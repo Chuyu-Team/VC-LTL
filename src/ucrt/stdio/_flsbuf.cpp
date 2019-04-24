@@ -7,7 +7,46 @@
 //
 #include <corecrt_internal_stdio.h>
 
+static bool __cdecl stream_is_at_end_of_file_nolock(
+    __crt_stdio_stream const stream
+    ) throw()
+{
+    if (stream.has_any_of(_IOEOF)) {
+        return true;
+    }
 
+    // If there is any data in the buffer, then we are not at the end of the file.
+    if (stream.has_big_buffer() && (stream->_ptr == stream->_base)) {
+        return false;
+    }
+
+    HANDLE const os_handle = reinterpret_cast<HANDLE>(_get_osfhandle(stream.lowio_handle()));
+
+    // If we fail at querying for the file size, proceed as though we cannot
+    // gather that information. For example, this will fail with pipes.
+    if (os_handle == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+
+    // Both SetFilePointerEx and GetFileSizeEx are valid ways to determine the
+    // length of a file. We can use that equivalence to check for end-of-file.
+
+    // This is a racy condition to check - a write or read from another process
+    // could interfere with the size reported from GetFileSizeEx.
+    // In that case, the write function looking to switch from read to write mode
+    // will fail in the usual manner when the write was not possible.
+    LARGE_INTEGER current_position;
+    if (!SetFilePointerEx(os_handle, {}, &current_position, FILE_CURRENT)) {
+        return false;
+    }
+
+    LARGE_INTEGER eof_position;
+    if (!GetFileSizeEx(os_handle, &eof_position)) {
+        return false;
+    }
+
+    return current_position.QuadPart == eof_position.QuadPart;
+}
 
 template <typename Character>
 static bool __cdecl write_buffer_nolock(
@@ -57,8 +96,6 @@ static bool __cdecl write_buffer_nolock(
     }
 }
 
-
-
 // Flushes the buffer of the given stream and writes the character.  If the stream
 // does not have a buffer, one is obtained for it.  The character 'c' is written
 // into the buffer after the buffer is flushed.  This function is only intended
@@ -102,8 +139,10 @@ static int __cdecl common_flush_and_write_nolock(
 
     if (stream.has_any_of(_IOREAD))
     {
-        stream->_cnt = 0;
-        if (stream.has_any_of(_IOEOF))
+        bool const switch_to_write_mode = stream_is_at_end_of_file_nolock(stream);
+        stream->_cnt = 0; // in either case, flush buffer
+
+        if (switch_to_write_mode)
         {
             stream->_ptr = stream->_base;
             stream.unset_flags(_IOREAD);
@@ -125,7 +164,7 @@ static int __cdecl common_flush_and_write_nolock(
     {
         // Do not get a buffer if the stream is stdout or stderr and the stream
         // is not a TTY.  If one of these streams is a TTY, we do not set up a
-        // single character buffer; this is so tha tlater temporary buffering
+        // single character buffer; this is so that later temporary buffering
         // will not be thwarted by the _IONBF flag being set.  (See _stbuf() and
         // _ftbuf() for more information on stdout and stderr buffering.)
         if ((stream.public_stream() != stdout && stream.public_stream() != stderr) || !_isatty(fh))

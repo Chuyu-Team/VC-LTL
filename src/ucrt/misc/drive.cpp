@@ -63,7 +63,7 @@ extern "C" int __cdecl _chdrive(int const drive_number)
         _VALIDATE_RETURN(("Invalid Drive Index", 0), EACCES, -1);
     }
 
-#pragma warning(suppress:__WARNING_UNUSED_SCALAR_ASSIGNMENT) // 28931 unused assignment of variable drive_letter
+#pragma warning(suppress:__WARNING_UNUSED_ASSIGNMENT) // 28931 unused assignment of variable drive_letter
     wchar_t const drive_letter   = static_cast<wchar_t>(L'A' + drive_number - 1);
     wchar_t const drive_string[] = { drive_letter, L':', L'\0' };
 

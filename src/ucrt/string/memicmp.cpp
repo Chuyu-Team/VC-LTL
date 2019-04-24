@@ -1,5 +1,5 @@
 /***
-*memicmp.c - compare memory, ignore case
+*memicmp.cpp - compare memory, ignore case
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
@@ -12,25 +12,24 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 /***
-*int _memicmp(first, last, count) - compare two blocks of memory, ignore case
+*int _memicmp(lhs, rhs, count) - compare two blocks of memory, ignore case
 *
 *Purpose:
-*       Compares count bytes of the two blocks of memory stored at first
-*       and last.  The characters are converted to lowercase before
+*       Compares count bytes of the two blocks of memory stored at lhs
+*       and rhs.  The characters are converted to lowercase before
 *       comparing (not permanently), so case is ignored in the search.
 *
 *Entry:
-*       char *first, *last - memory buffers to compare
+*       char *lhs, *rhs - memory buffers to compare
 *       size_t count - maximum length to compare
 *
 *Exit:
-*       Returns < 0 if first < last
-*       Returns 0 if first == last
-*       Returns > 0 if first > last
-*       Returns _NLSCMPERROR is something went wrong
+*       Returns < 0 if lhs < rhs
+*       Returns 0 if lhs == rhs
+*       Returns > 0 if lhs > rhs
+*       Returns _NLSCMPERROR if something went wrong
 *
 *Uses:
 *
@@ -39,95 +38,90 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _memicmp_l_downlevel (
-        const void * first,
-        const void * last,
-        size_t count,
-        _locale_t plocinfo
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _memicmp_l (
+        void const * const lhs,
+        void const * const rhs,
+        size_t       const count,
+        _locale_t    const plocinfo
         )
 {
 	if (!plocinfo)
-		return _memicmp(first, last, count);
-
-    int f = 0, l = 0;
-    const char *dst = (const char *)first, *src = (const char *)last;
-    //_LocaleUpdate _loc_update(plocinfo);
+		return _memicmp(lhs, rhs, count);
 
     /* validation section */
-    _VALIDATE_RETURN(first != nullptr || count == 0, EINVAL, _NLSCMPERROR);
-    _VALIDATE_RETURN(last != nullptr || count == 0, EINVAL, _NLSCMPERROR);
+    _VALIDATE_RETURN(lhs != nullptr || count == 0, EINVAL, _NLSCMPERROR);
+    _VALIDATE_RETURN(rhs != nullptr || count == 0, EINVAL, _NLSCMPERROR);
 
-    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
+    if (count == 0)
     {
-        return __ascii_memicmp(first, last, count);
+        return 0;
     }
-    else
+
+    unsigned char const * lhs_ptr = static_cast<unsigned char const *>(lhs);
+    unsigned char const * rhs_ptr = static_cast<unsigned char const *>(rhs);
+
+    //_LocaleUpdate _loc_update(plocinfo);
+
+    int result;
+    size_t remaining = count;
+    do
     {
-        while (count-- && f==l)
-        {
-            f = _tolower_l( (unsigned char)(*(dst++)), plocinfo );
-            l = _tolower_l( (unsigned char)(*(src++)), plocinfo );
-        }
+        result = _tolower_fast_internal(*lhs_ptr++, plocinfo)
+            - _tolower_fast_internal(*rhs_ptr++, plocinfo);
     }
-    return ( f - l );
+    while (result == 0 && --remaining != 0);
+
+    return result;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_memicmp_l_downlevel);
-
 #endif
+
 
 #if !defined(_M_IX86) || defined(_M_HYBRID_X86_ARM64)
 
 extern "C" int __cdecl __ascii_memicmp (
-        const void * first,
-        const void * last,
-        size_t count
+        void const * const lhs,
+        void const * const rhs,
+        size_t       const count
         )
 {
-    int f = 0;
-    int l = 0;
-
-#pragma warning(push)
-#pragma warning(disable:__WARNING_DEREF_NULL_PTR)
-// 6011 Dereferencing NULL pointer; validation is weak here, but let's leave it asis
-// In particular, the pointers are annotated as opt, but they can only be null if count == 0.
-    while ( count-- )
+    if (count == 0)
     {
-        if ( (*(unsigned char *)first == *(unsigned char *)last) ||
-             ((f = __ascii_tolower( *(unsigned char *)first )) ==
-              (l = __ascii_tolower( *(unsigned char *)last ))) )
-        {
-                first = (char *)first + 1;
-                last = (char *)last + 1;
-        }
-        else
-            break;
+        return 0;
     }
-#pragma warning(pop)
-    return ( f - l );
+
+    unsigned char const * lhs_ptr = static_cast<unsigned char const *>(lhs);
+    unsigned char const * rhs_ptr = static_cast<unsigned char const *>(rhs);
+
+    int result;
+    size_t remaining = count;
+    do
+    {
+        result = __ascii_tolower(*lhs_ptr++) - __ascii_tolower(*rhs_ptr++);
+    }
+    while (result == 0 && --remaining != 0);
+
+    return result;
 }
 
 #endif  /* !_M_IX86 || _M_HYBRID_X86_ARM64 */
 
 #if 0
 extern "C" int __cdecl _memicmp (
-        const void * first,
-        const void * last,
-        size_t count
+        void const * const lhs,
+        void const * const rhs,
+        size_t       const count
         )
 {
     if (!__acrt_locale_changed())
     {
         /* validation section */
-        _VALIDATE_RETURN(first != nullptr || count == 0, EINVAL, _NLSCMPERROR);
-        _VALIDATE_RETURN(last != nullptr || count == 0, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(lhs != nullptr || count == 0, EINVAL, _NLSCMPERROR);
+        _VALIDATE_RETURN(rhs != nullptr || count == 0, EINVAL, _NLSCMPERROR);
 
-        return __ascii_memicmp(first, last, count);
+        return __ascii_memicmp(lhs, rhs, count);
     }
-    else
-    {
-        return _memicmp_l(first, last, count, nullptr);
-    }
+
+    return _memicmp_l(lhs, rhs, count, nullptr);
 }
 #endif

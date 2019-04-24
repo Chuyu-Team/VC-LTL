@@ -336,7 +336,7 @@ static void* __cdecl heap_alloc_dbg_internal(
             __leave;
         }
 
-#pragma warning(suppress:__WARNING_UNUSED_SCALAR_ASSIGNMENT) // 28931
+#pragma warning(suppress:__WARNING_UNUSED_ASSIGNMENT) // 28931
         bool const ignore_block{_BLOCK_TYPE(block_use) != _CRT_BLOCK && !(_crtDbgFlag & _CRTDBG_ALLOC_MEM_DF)};
 
         // Diagnostic memory allocation from this point on...
@@ -781,7 +781,7 @@ extern "C" __declspec(noinline) void* __cdecl _recalloc_dbg(
 {
     _VALIDATE_RETURN_NOEXC(count == 0 || (_HEAP_MAXREQ / count) >= element_size, ENOMEM, nullptr);
 
-    size_t const old_allocation_size{block ? _msize(block) : 0};
+    size_t const old_allocation_size{block ? _msize_dbg(block, block_use) : 0};
     size_t const new_allocation_size{element_size * count     };
 
     void* const new_block{_realloc_dbg(block, new_allocation_size, block_use, file_name, line_number)};
@@ -1874,7 +1874,7 @@ extern "C" void* __cdecl _aligned_offset_realloc_dbg(
     _VALIDATE_RETURN(IS_2_POW_N(alignment),        EINVAL, nullptr);
     _VALIDATE_RETURN(offset == 0 || offset < size, EINVAL, nullptr);
 
-    mov_sz = _msize(s_header_from_block->_head) - ((uintptr_t)block - (uintptr_t)s_header_from_block->_head);
+    mov_sz = _msize_dbg(s_header_from_block->_head, _NORMAL_BLOCK) - ((uintptr_t)block - (uintptr_t)s_header_from_block->_head);
 
     alignment = (alignment > sizeof(uintptr_t) ? alignment : sizeof(uintptr_t)) -1;
 
@@ -1918,7 +1918,7 @@ extern "C" size_t __cdecl _aligned_msize_dbg(
 
     _AlignMemBlockHdr* header_from_block = nullptr; // points to the beginning of the allocated block
     header_from_block = (_AlignMemBlockHdr*)((uintptr_t)block & ~(sizeof(uintptr_t) - 1)) - 1;
-    total_size = _msize(header_from_block->_head);
+    total_size = _msize_dbg(header_from_block->_head, _NORMAL_BLOCK);
     header_size = (uintptr_t)block - (uintptr_t)header_from_block->_head;
     gap = (0 - offset) & (sizeof(uintptr_t) - 1);
     // The alignment cannot be smaller than the sizeof(uintptr_t)
@@ -1940,7 +1940,7 @@ extern "C" void* __cdecl _aligned_offset_recalloc_dbg(
 {
     _VALIDATE_RETURN_NOEXC(count == 0 || _HEAP_MAXREQ / count >= element_size, ENOMEM, nullptr);
 
-    size_t const old_allocation_size{block ? _aligned_msize(block, alignment, offset) : 0};
+    size_t const old_allocation_size{block ? _aligned_msize_dbg(block, alignment, offset) : 0};
     size_t const new_allocation_size{element_size * count};
 
     void* const new_block{_aligned_offset_realloc_dbg(block, new_allocation_size, alignment, offset, file_name, line_number)};

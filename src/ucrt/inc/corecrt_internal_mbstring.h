@@ -56,26 +56,27 @@ _CRT_BEGIN_C_HEADER
 #define _MBKIGOUEXCEPT  0x817f  // Exception
 
 // Macros used in the implementation of the classification functions.
-#define _ismbbalnum_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
+// These accesses of _locale_pctype are internal and guarded by bounds checks when used.
+#define _ismbbalnum_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[_c] & \
                                 (_ALPHA|_DIGIT)) || \
-                                (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MS))
-#define _ismbbalpha_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
+                                (((pt)->mbcinfo->mbctype+1)[_c] & _MS))
+#define _ismbbalpha_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[_c] & \
                             (_ALPHA)) || \
-                            (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MS))
-#define _ismbbgraph_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
+                            (((pt)->mbcinfo->mbctype+1)[_c] & _MS))
+#define _ismbbgraph_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[_c] & \
                             (_PUNCT|_ALPHA|_DIGIT)) || \
-                            (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & (_MS|_MP)))
-#define _ismbbprint_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & \
+                            (((pt)->mbcinfo->mbctype+1)[_c] & (_MS|_MP)))
+#define _ismbbprint_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[_c] & \
                             (_BLANK|_PUNCT|_ALPHA|_DIGIT)) || \
-                            (((pt)->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & (_MS|_MP)))
-#define _ismbbpunct_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & _PUNCT) || \
-                                (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MP))
-#define _ismbbblank_l(_c, pt)  (((_c) == '\t') ? _BLANK : (((pt)->locinfo->_locale_pctype)[(unsigned char)(_c)] & _BLANK) || \
-                               (((pt)->mbcinfo->mbctype+1)[(unsigned char)(_c)] & _MP))
+                            (((pt)->mbcinfo->mbctype + 1)[_c] & (_MS|_MP)))
+#define _ismbbpunct_l(_c, pt)  ((((pt)->locinfo->_locale_pctype)[_c] & _PUNCT) || \
+                                (((pt)->mbcinfo->mbctype+1)[_c] & _MP))
+#define _ismbbblank_l(_c, pt)  (((_c) == '\t') ? _BLANK : (((pt)->locinfo->_locale_pctype)[_c] & _BLANK) || \
+                               (((pt)->mbcinfo->mbctype+1)[_c] & _MP))
 // Note that these are intended for double byte character sets (DBCS) and so UTF-8 doesn't consider either to be true for any bytes
 // (for UTF-8 we never set _M1 or _M2 in this array)
-#define _ismbblead_l(_c, p)   ((p->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & _M1)
-#define _ismbbtrail_l(_c, p)  ((p->mbcinfo->mbctype + 1)[(unsigned char)(_c)] & _M2)
+#define _ismbblead_l(_c, p)   ((p->mbcinfo->mbctype + 1)[_c] & _M1)
+#define _ismbbtrail_l(_c, p)  ((p->mbcinfo->mbctype + 1)[_c] & _M2)
 
 
 
@@ -106,8 +107,7 @@ extern "C" inline int __cdecl __dcrt_multibyte_check_type(
 			return FALSE;
 	}
 
-	#pragma warning(suppress : 4838)
-    char const bytes[] = { (c >> 8) & 0xff, c & 0xff };
+    char const bytes[] = { static_cast<char>((c >> 8) & 0xff), static_cast<char>(c & 0xff) };
 
     // The 'c' "character" could be two one-byte multibyte characters, so we
     // need room in the type array to handle this.  If 'c' is two one-byte

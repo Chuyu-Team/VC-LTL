@@ -14,7 +14,6 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 /***
 * _mbsnicmp - Compare n characters of strings, ignoring case (MBCS)
@@ -39,8 +38,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbsnicmp_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _mbsnicmp_l(
         const unsigned char *s1,
         const unsigned char *s2,
         size_t n,
@@ -109,16 +108,15 @@ extern "C" int __cdecl _mbsnicmp_l_downlevel(
 
         return(0);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsnicmp_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _mbsnicmp)(
+#if 0
+extern "C" int (__cdecl _mbsnicmp)(
         const unsigned char *s1,
         const unsigned char *s2,
         size_t n
         )
 {
     return _mbsnicmp_l(s1, s2, n, nullptr);
-}*/
+}
+#endif

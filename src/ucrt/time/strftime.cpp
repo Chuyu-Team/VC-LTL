@@ -164,9 +164,7 @@ extern "C" size_t __cdecl _Strftime_l (
         return 0;
     }
 
-    // The WideCharToMultiByte result includes the null terminator; the strftime
-    // function result does not:
-    return copy_back.size() - 1;
+    return copy_back.size();
 }
 
 extern "C" size_t __cdecl _Strftime(

@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <wchar.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
@@ -42,8 +41,8 @@ using namespace __crt_mbstring;
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbtowc_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _mbtowc_l(
     wchar_t  *pwc,
     const char *s,
     size_t n,
@@ -132,17 +131,15 @@ extern "C" int __cdecl _mbtowc_l_downlevel(
     }
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbtowc_l_downlevel);
-
 #endif
 
-
-/*extern "C" int __cdecl mbtowc(
+#if 0
+extern "C" int __cdecl mbtowc(
     wchar_t  *pwc,
     const char *s,
     size_t n
     )
 {
     return _mbtowc_l(pwc, s, n, nullptr);
-}*/
+}
+#endif

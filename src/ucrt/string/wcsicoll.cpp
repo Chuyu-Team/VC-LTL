@@ -12,8 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018 Prefast can't see that we are checking for terminal nul.
 
@@ -41,35 +40,25 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcsicoll_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _wcsicoll_l (
         const wchar_t *_string1,
         const wchar_t *_string2,
         _locale_t plocinfo
         )
 {
     int ret;
-    wchar_t f, l;
     //_LocaleUpdate _loc_update(plocinfo);
 
     /* validation section */
     _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR );
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR );
 
-	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+	const auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
 
-    if (_lc_collate==0)
+    if ( _lc_collate == 0 )
     {
-        do
-        {
-            f = __ascii_towlower(*_string1);
-            l = __ascii_towlower(*_string2);
-            _string1++;
-            _string2++;
-        }
-        while ( (f) && (f == l) );
-
-        return (int)(f - l);
+        return __ascii_wcsicmp(_string1, _string2);
     }
 
     if ( 0 == (ret = __acrt_CompareStringW(
@@ -86,9 +75,6 @@ extern "C" int __cdecl _wcsicoll_l_downlevel (
 
     return (ret - 2);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcsicoll_l_downlevel);
-
 #endif
 
 #if 0
@@ -99,22 +85,11 @@ extern "C" int __cdecl _wcsicoll (
 {
     if (!__acrt_locale_changed())
     {
-        wchar_t f,l;
-
         /* validation section */
         _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR );
         _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR );
 
-        do
-        {
-            f = __ascii_towlower(*_string1);
-            l = __ascii_towlower(*_string2);
-            _string1++;
-            _string2++;
-        }
-        while ( (f) && (f == l) );
-
-        return (int)(f - l);
+        return __ascii_wcsicmp(_string1, _string2);
     }
     else
     {

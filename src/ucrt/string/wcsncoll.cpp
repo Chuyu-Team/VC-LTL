@@ -12,8 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 /***
 *int _wcsncoll() - Collate wide-character locale strings
@@ -40,8 +39,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcsncoll_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _wcsncoll_l (
         const wchar_t *_string1,
         const wchar_t *_string2,
         size_t count,
@@ -62,9 +61,9 @@ extern "C" int __cdecl _wcsncoll_l_downlevel (
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(count <= INT_MAX, EINVAL, _NLSCMPERROR);
 
-	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+	const auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
 
-    if (_lc_collate==0)
+    if ( _lc_collate == 0 )
     {
         return wcsncmp(_string1, _string2, count);
     }
@@ -84,9 +83,6 @@ extern "C" int __cdecl _wcsncoll_l_downlevel (
     return (ret - 2);
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcsncoll_l_downlevel);
-
 #endif
 
 #if 0

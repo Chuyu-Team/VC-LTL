@@ -14,8 +14,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -39,8 +38,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" wchar_t * __cdecl _wcslwr_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" wchar_t * __cdecl _wcslwr_l (
         wchar_t * wsrc,
         _locale_t plocinfo
         )
@@ -48,8 +47,6 @@ extern "C" wchar_t * __cdecl _wcslwr_l_downlevel(
     _wcslwr_s_l(wsrc, (size_t)(-1), plocinfo);
     return wsrc;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcslwr_l_downlevel);
 #endif
 
 #if 0
@@ -179,8 +176,8 @@ static errno_t __cdecl _wcslwr_s_l_stat (
     }
 }
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _wcslwr_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl _wcslwr_s_l (
         wchar_t * wsrc,
         size_t sizeInWords,
         _locale_t plocinfo
@@ -193,12 +190,10 @@ extern "C" errno_t __cdecl _wcslwr_s_l_downlevel(
 
     return _wcslwr_s_l_stat(wsrc, sizeInWords, plocinfo);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcslwr_s_l_downlevel);
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _wcslwr_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl _wcslwr_s (
         wchar_t * wsrc,
         size_t sizeInWords
         )
@@ -210,6 +205,4 @@ extern "C" errno_t __cdecl _wcslwr_s_downlevel(
 
 	return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcslwr_s_downlevel);
 #endif

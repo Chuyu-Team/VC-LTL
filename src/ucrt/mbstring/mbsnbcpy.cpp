@@ -14,7 +14,6 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -40,9 +39,9 @@
 *
 *******************************************************************************/
 
+#if _CRT_NTDDI_MIN < 0x06000000
 #pragma warning(suppress:6101) // Returning uninitialized memory '*dst'.  A successful path through the function does not set the named _Out_ parameter.
-#ifdef _ATL_XP_TARGETING
-EXTERN_C unsigned char * __cdecl _mbsnbcpy_l_downlevel(
+unsigned char * __cdecl _mbsnbcpy_l(
         unsigned char *dst,
         const unsigned char *src,
         size_t cnt,
@@ -95,12 +94,10 @@ EXTERN_C unsigned char * __cdecl _mbsnbcpy_l_downlevel(
 #pragma warning(suppress:__WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION) // 26036
         return start;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsnbcpy_l_downlevel);
-
 #endif
 
-/*unsigned char * (__cdecl _mbsnbcpy)(
+#if 0
+unsigned char * (__cdecl _mbsnbcpy)(
         unsigned char *dst,
         const unsigned char *src,
         size_t cnt
@@ -109,4 +106,5 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnbcpy_l_downlevel);
     _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
     return _mbsnbcpy_l(dst, src, cnt, nullptr);
     _END_SECURE_CRT_DEPRECATION_DISABLE
-}*/
+}
+#endif

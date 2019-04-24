@@ -16,8 +16,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -41,8 +40,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-EXTERN_C errno_t __cdecl _mbslwr_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+errno_t __cdecl _mbslwr_s_l(
         unsigned char *string,
         size_t sizeInBytes,
         _locale_t plocinfo
@@ -117,12 +116,10 @@ EXTERN_C errno_t __cdecl _mbslwr_s_l_downlevel(
 
         return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbslwr_s_l_downlevel);
 #endif
 
-#ifdef _ATL_XP_TARGETING
-EXTERN_C errno_t (__cdecl _mbslwr_s_downlevel)(
+#if _CRT_NTDDI_MIN < 0x06000000
+errno_t (__cdecl _mbslwr_s)(
         unsigned char *string,
         size_t sizeInBytes
         )
@@ -137,25 +134,23 @@ EXTERN_C errno_t (__cdecl _mbslwr_s_downlevel)(
 
 	return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbslwr_s_downlevel);
 #endif
 
-#ifdef _ATL_XP_TARGETING
-EXTERN_C unsigned char * (__cdecl _mbslwr_l_downlevel)(
+#if _CRT_NTDDI_MIN < 0x06000000
+unsigned char * (__cdecl _mbslwr_l)(
         unsigned char *string,
         _locale_t plocinfo
         )
 {
     return (_mbslwr_s_l(string, (string == nullptr ? 0 : (size_t)-1), plocinfo) == 0 ? string : nullptr);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbslwr_l_downlevel);
 #endif
 
-/*unsigned char * (__cdecl _mbslwr)(
+#if 0
+unsigned char * (__cdecl _mbslwr)(
         unsigned char *string
         )
 {
     return (_mbslwr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
-}*/
+}
+#endif

@@ -8,17 +8,14 @@
 #include <uchar.h>
 #include <corecrt_internal_mbstring.h>
 #include <stdint.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
-extern "C" size_t __cdecl mbrtoc32_downlevel(char32_t* pc32, const char* s, size_t n, mbstate_t* ps)
+extern "C" size_t __cdecl mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps)
 {
     // TODO: Bug 13307590 says this is always assuming UTF-8.
     return __mbrtoc32_utf8(pc32, s, n, ps);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(mbrtoc32_downlevel);
 
 size_t __cdecl __crt_mbstring::__mbrtoc32_utf8(char32_t* pc32, const char* s, size_t n, mbstate_t* ps)
 {

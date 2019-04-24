@@ -10,7 +10,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 /***
 * _mbccpy - Copy one character to another (MBCS)
@@ -30,8 +29,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" void __cdecl _mbccpy_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" void __cdecl _mbccpy_l(
         unsigned char *dst,
         const unsigned char *src,
         _locale_t plocinfo
@@ -40,15 +39,14 @@ extern "C" void __cdecl _mbccpy_l_downlevel(
     /* _mbccpy_s_l sets errno */
     _mbccpy_s_l(dst, 2, nullptr, src, plocinfo);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbccpy_l_downlevel);
-
 #endif
 
-/*extern "C" void (__cdecl _mbccpy)(
+#if 0
+extern "C" void (__cdecl _mbccpy)(
         unsigned char *dst,
         const unsigned char *src
         )
 {
     _mbccpy_s_l(dst, 2, nullptr, src, nullptr);
-}*/
+}
+#endif

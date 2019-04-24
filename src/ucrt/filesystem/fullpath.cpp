@@ -58,23 +58,6 @@
 *
 *******************************************************************************/
 
-template <typename Character, typename DynamicResizingPolicy>
-_Success_(return)
-static bool __cdecl common_fullpath_impl(
-    Character const * const                               path,
-    __crt_win32_buffer<Character, DynamicResizingPolicy>& buffer
-    ) throw()
-{
-    errno_t const err = __acrt_get_full_path_name_cp(path, buffer, __acrt_get_utf8_acp_compatibility_codepage());
-
-    if (err != 0) {
-        // errno already set
-        return false;
-    }
-
-    return true;
-}
-
 template <typename Character>
 _Success_(return != 0)
 static Character* __cdecl common_fullpath(
@@ -103,7 +86,7 @@ static Character* __cdecl common_fullpath(
     if (user_buffer != nullptr) {
         // Using user buffer. Fail if not enough space.
         __crt_no_alloc_win32_buffer<Character> buffer(user_buffer, max_count);
-        if (common_fullpath_impl(path, buffer)) {
+        if (!traits::get_full_path_name(path, buffer)) {
             return user_buffer;
         } else {
             return nullptr;
@@ -113,7 +96,7 @@ static Character* __cdecl common_fullpath(
         __crt_public_win32_buffer<Character> buffer(
             __crt_win32_buffer_debug_info(block_use, file_name, line_number)
             );
-        common_fullpath_impl(path, buffer);
+        traits::get_full_path_name(path, buffer);
         return buffer.detach();
     }
 }

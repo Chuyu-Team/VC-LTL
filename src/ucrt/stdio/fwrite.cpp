@@ -8,8 +8,6 @@
 //
 #include <corecrt_internal_stdio.h>
 
-
-
 // Writes data from the provided buffer to the specified stream.  The function
 // writes 'count' elements of 'size' size to the stream, and returns when
 // either all of the elements have been written or no more data can be written
@@ -82,6 +80,12 @@ extern "C" size_t __cdecl _fwrite_nolock(
             {
                 _ASSERTE(("Inconsistent Stream Count. Flush between consecutive read and write", stream->_cnt >= 0));
                 stream.set_flags(_IOERROR);
+                return (total_bytes - remaining_bytes) / element_size;
+            }
+
+            if (stream.has_any_of(_IOREAD))
+            {
+                _ASSERTE(("Flush between consecutive read and write.", !stream.has_any_of(_IOREAD)));
                 return (total_bytes - remaining_bytes) / element_size;
             }
 

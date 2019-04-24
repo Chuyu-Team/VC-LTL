@@ -1,5 +1,5 @@
 /***
-*towlower.c - convert wide character to lower case
+*towlower.cpp - convert wide character to lower case
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
@@ -10,8 +10,7 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 /***
 *wint_t _towlower_l(c, ptloci) - convert wide character to lower case
@@ -27,8 +26,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" wint_t __cdecl _towlower_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" wint_t __cdecl _towlower_l (
         wint_t c,
         _locale_t plocinfo
         )
@@ -36,24 +35,26 @@ extern "C" wint_t __cdecl _towlower_l_downlevel (
     wint_t widechar;
 
     if (c == WEOF)
+    {
         return c;
+    }
 
 	if (!plocinfo)
 		return towlower(c);
 
     //_LocaleUpdate _loc_update(plocinfo);
 
-    if (plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
-        return __ascii_towlower(c);
-
     /* if checking case of c does not require API call, do it */
     if ( c < 256 )
     {
-        if ( !iswupper(c) ) {
-            return c;
-        } else {
-            return plocinfo->locinfo->pclmap[c];
-        }
+        return _towlower_fast_internal(static_cast<unsigned char>(c), plocinfo);
+    }
+
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
+    {
+        /* If the locale is C, then the only characters that would be transformed are <256
+           and have been processed already. */
+        return c;
     }
 
     /* convert wide char to lowercase */
@@ -71,9 +72,6 @@ extern "C" wint_t __cdecl _towlower_l_downlevel (
     return widechar;
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_towlower_l_downlevel);
-
 #endif
 
 /***
@@ -93,10 +91,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_towlower_l_downlevel);
 *
 *******************************************************************************/
 
-/*extern "C" wint_t __cdecl towlower (
+#if 0
+extern "C" wint_t __cdecl towlower (
         wint_t c
         )
 {
 
     return _towlower_l(c, nullptr);
-}*/
+}
+#endif

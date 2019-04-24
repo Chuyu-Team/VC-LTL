@@ -1,6 +1,7 @@
 
 //总是参数 obj 而不导出
 #define __Build_OBJ
+#define _INC_SWPRINTF_INL_
 
 #include <corecrt_wstdio.h>
 #include <stdio.h>
@@ -13,9 +14,9 @@
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vfwprintf_l_downlevel(
+extern "C" int __CRTDECL _vfwprintf_l(
 	_Inout_                                 FILE*          const _Stream,
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -25,14 +26,14 @@ extern "C" int __CRTDECL _vfwprintf_l_downlevel(
 	return __stdio_common_vfwprintf(_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS, _Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vfwprintf_s_l_downlevel(
+extern "C" int __CRTDECL _vfwprintf_s_l(
 	_Inout_                                 FILE*          const _Stream,
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -42,14 +43,14 @@ extern "C" int __CRTDECL _vfwprintf_s_l_downlevel(
 	return __stdio_common_vfwprintf_s(_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS, _Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL vfwprintf_s_downlevel(
+extern "C" int __CRTDECL vfwprintf_s(
 	_Inout_                       FILE*          const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
@@ -58,12 +59,12 @@ extern "C" int __CRTDECL vfwprintf_s_downlevel(
 	return _vfwprintf_s_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vfwprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vfwprintf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vfwprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vfwprintf_p_l(
 	_Inout_                                 FILE*          const _Stream,
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -73,13 +74,13 @@ extern "C" int __CRTDECL _vfwprintf_p_l_downlevel(
 	return __stdio_common_vfwprintf_p(_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS, _Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vfwprintf_p_downlevel(
+extern "C" int __CRTDECL _vfwprintf_p(
 	_Inout_                       FILE*          const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
@@ -88,13 +89,13 @@ extern "C" int __CRTDECL _vfwprintf_p_downlevel(
 	return _vfwprintf_p_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfwprintf_p);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vwprintf_l_downlevel(
+extern "C" int __CRTDECL _vwprintf_l(
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	va_list              _ArgList
@@ -103,14 +104,14 @@ extern "C" int __CRTDECL _vwprintf_l_downlevel(
 	return _vfwprintf_l(stdout, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vwprintf_s_l_downlevel(
+extern "C" int __CRTDECL _vwprintf_s_l(
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	va_list              _ArgList
@@ -119,14 +120,14 @@ extern "C" int __CRTDECL _vwprintf_s_l_downlevel(
 	return _vfwprintf_s_l(stdout, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL vwprintf_s_downelvel(
+extern "C" int __CRTDECL vwprintf_s(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
 )
@@ -134,14 +135,14 @@ extern "C" int __CRTDECL vwprintf_s_downelvel(
 	return _vfwprintf_s_l(stdout, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vwprintf_s_downelvel);
+_LCRT_DEFINE_IAT_SYMBOL(vwprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vwprintf_p_l_downlevel(
+extern "C" int __CRTDECL _vwprintf_p_l(
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	va_list              _ArgList
@@ -150,13 +151,13 @@ extern "C" int __CRTDECL _vwprintf_p_l_downlevel(
 	return _vfwprintf_p_l(stdout, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vwprintf_p_downlevel(
+extern "C" int __CRTDECL _vwprintf_p(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
 )
@@ -164,13 +165,13 @@ extern "C" int __CRTDECL _vwprintf_p_downlevel(
 	return _vfwprintf_p_l(stdout, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vwprintf_p);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _fwprintf_l_downlevel(
+extern "C" int __CRTDECL _fwprintf_l(
 	_Inout_                                 FILE*          const _Stream,
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -184,13 +185,13 @@ extern "C" int __CRTDECL _fwprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _fwprintf_s_l_downlevel(
+extern "C" int __CRTDECL _fwprintf_s_l(
 	_Inout_                                 FILE*          const _Stream,
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -204,14 +205,14 @@ extern "C" int __CRTDECL _fwprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL fwprintf_s_downlevel(
+extern "C" int __CRTDECL fwprintf_s(
 	_Inout_                       FILE*          const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	...)
@@ -224,13 +225,13 @@ extern "C" int __CRTDECL fwprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(fwprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(fwprintf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _fwprintf_p_l_downlevel(
+extern "C" int __CRTDECL _fwprintf_p_l(
 	_Inout_                                 FILE*          const _Stream,
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -244,13 +245,13 @@ extern "C" int __CRTDECL _fwprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _fwprintf_p_downlevel(
+extern "C" int __CRTDECL _fwprintf_p(
 	_Inout_                       FILE*          const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	...)
@@ -263,14 +264,14 @@ extern "C" int __CRTDECL _fwprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fwprintf_p);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _wprintf_l_downlevel(
+extern "C" int __CRTDECL _wprintf_l(
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	...)
@@ -283,14 +284,14 @@ extern "C" int __CRTDECL _wprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_wprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _wprintf_s_l_downlevel(
+extern "C" int __CRTDECL _wprintf_s_l(
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	...)
@@ -303,14 +304,14 @@ extern "C" int __CRTDECL _wprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_wprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL wprintf_s_downlevel(
+extern "C" int __CRTDECL wprintf_s(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	...)
 {
@@ -322,13 +323,13 @@ extern "C" int __CRTDECL wprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(wprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(wprintf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _wprintf_p_l_downlevel(
+extern "C" int __CRTDECL _wprintf_p_l(
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	...)
@@ -341,14 +342,14 @@ extern "C" int __CRTDECL _wprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_wprintf_p_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _wprintf_p_downlevel(
+extern "C" int __CRTDECL _wprintf_p(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	...)
 {
@@ -360,7 +361,7 @@ extern "C" int __CRTDECL _wprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_wprintf_p);
 
 #endif
 
@@ -372,9 +373,9 @@ _LCRT_DEFINE_IAT_SYMBOL(_wprintf_p_downlevel);
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vfwscanf_l_downlevel(
+extern "C" int __CRTDECL _vfwscanf_l(
 	_Inout_ FILE*                                const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	_In_opt_                      _locale_t      const _Locale,
@@ -386,14 +387,14 @@ extern "C" int __CRTDECL _vfwscanf_l_downlevel(
 		_Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfwscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfwscanf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL vfwscanf_downlevel(
+extern "C" int __CRTDECL vfwscanf(
 	_Inout_ FILE*                                const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
@@ -402,14 +403,14 @@ extern "C" int __CRTDECL vfwscanf_downlevel(
 	return _vfwscanf_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vfwscanf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vfwscanf);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL _vfwscanf_s_l_downlevel(
+extern "C" int __CRTDECL _vfwscanf_s_l(
 	_Inout_                       FILE*          const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	_In_opt_                      _locale_t      const _Locale,
@@ -421,13 +422,13 @@ extern "C" int __CRTDECL _vfwscanf_s_l_downlevel(
 		_Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfwscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfwscanf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL vfwscanf_s_downlevel(
+extern "C" int __CRTDECL vfwscanf_s(
 	_Inout_                       FILE*          const _Stream,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
@@ -439,8 +440,8 @@ extern "C" int __CRTDECL vfwscanf_s_downlevel(
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vwscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vwscanf_l(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	_In_opt_                      _locale_t      const _Locale,
 	va_list              _ArgList
@@ -449,12 +450,12 @@ extern "C" int __CRTDECL _vwscanf_l_downlevel(
 	return _vfwscanf_l(stdin, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vwscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vwscanf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL vwscanf_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL vwscanf(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
 )
@@ -462,14 +463,14 @@ extern "C" int __CRTDECL vwscanf_downlevel(
 	return _vfwscanf_l(stdin, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vwscanf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vwscanf);
 
 #endif
 
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vwscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vwscanf_s_l(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	_In_opt_                      _locale_t      const _Locale,
 	va_list              _ArgList
@@ -478,13 +479,13 @@ extern "C" int __CRTDECL _vwscanf_s_l_downlevel(
 	return _vfwscanf_s_l(stdin, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vwscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vwscanf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 _Check_return_opt_
-extern "C" int __CRTDECL vwscanf_s_downlevel(
+extern "C" int __CRTDECL vwscanf_s(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
 )
@@ -492,12 +493,12 @@ extern "C" int __CRTDECL vwscanf_s_downlevel(
 	return _vfwscanf_s_l(stdin, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vwscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vwscanf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fwscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fwscanf_l(
 	_Inout_                                FILE*          const _Stream,
 	_In_z_ _Scanf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                               _locale_t      const _Locale,
@@ -511,12 +512,12 @@ extern "C" int __CRTDECL _fwscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fwscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fwscanf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fwscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fwscanf_s_l(
 	_Inout_                                  FILE*          const _Stream,
 	_In_z_ _Scanf_s_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                 _locale_t      const _Locale,
@@ -530,13 +531,13 @@ extern "C" int __CRTDECL _fwscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fwscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fwscanf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL fwscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL fwscanf_s(
 	_Inout_                        FILE*          const _Stream,
 	_In_z_ _Scanf_s_format_string_ wchar_t const* const _Format,
 	...)
@@ -549,13 +550,13 @@ extern "C" int __CRTDECL fwscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(fwscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(fwscanf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _wscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _wscanf_l(
 	_In_z_ _Scanf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                               _locale_t      const _Locale,
 	...)
@@ -568,14 +569,14 @@ extern "C" int __CRTDECL _wscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_wscanf_l);
 
 #endif
 
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _wscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _wscanf_s_l(
 	_In_z_ _Scanf_s_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                 _locale_t      const _Locale,
 	...)
@@ -588,13 +589,13 @@ extern "C" int __CRTDECL _wscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_wscanf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL wscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL wscanf_s(
 	_In_z_ _Scanf_s_format_string_ wchar_t const* const _Format,
 	...)
 {
@@ -606,7 +607,7 @@ extern "C" int __CRTDECL wscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(wscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(wscanf_s);
 
 #endif
 
@@ -617,8 +618,8 @@ _LCRT_DEFINE_IAT_SYMBOL(wscanf_s_downlevel);
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnwprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnwprintf_l(
 	_Out_writes_opt_(_BufferCount) _Post_maybez_ wchar_t*       const _Buffer,
 	_In_                                         size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)      wchar_t const* const _Format,
@@ -633,12 +634,12 @@ extern "C" int __CRTDECL _vsnwprintf_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnwprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnwprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnwprintf_s_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_                                              size_t         const _MaxCount,
@@ -654,12 +655,12 @@ extern "C" int __CRTDECL _vsnwprintf_s_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnwprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnwprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnwprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnwprintf_s(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_                                              size_t         const _MaxCount,
@@ -670,13 +671,13 @@ extern "C" int __CRTDECL _vsnwprintf_s_downlevel(
 	return _vsnwprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnwprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnwprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vswprintf_c_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vswprintf_c_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)           wchar_t const* const _Format,
@@ -691,12 +692,12 @@ extern "C" int __CRTDECL _vswprintf_c_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_c_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_c_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vswprintf_c_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vswprintf_c(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
@@ -708,13 +709,13 @@ extern "C" int __CRTDECL _vswprintf_c_downlevel(
 	return _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_c_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_c);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vswprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vswprintf_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)           wchar_t const* const _Format,
@@ -729,12 +730,12 @@ extern "C" int __CRTDECL _vswprintf_l_downlevel(
 #pragma warning(pop)
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_l);
 
 #endif
 
 
-extern "C" int __CRTDECL __vswprintf_l_downlevel(
+extern "C" int __CRTDECL __vswprintf_l(
 	_Pre_notnull_ _Always_(_Post_z_)        wchar_t*       const _Buffer,
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -744,12 +745,12 @@ extern "C" int __CRTDECL __vswprintf_l_downlevel(
 	return _vswprintf_l(_Buffer, -1, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__vswprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(__vswprintf_l);
 
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vswprintf_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vswprintf(
 	_Pre_notnull_ _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_z_ _Printf_format_string_    wchar_t const* const _Format,
 	va_list              _ArgList
@@ -760,12 +761,12 @@ extern "C" int __CRTDECL _vswprintf_downlevel(
 	return _vsnwprintf(_Buffer, _CRT_STDIO_SIZE_MAX, _Format, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf);
 
 #endif
 
 
-extern "C" int __CRTDECL vswprintf_downlevel(
+extern "C" int __CRTDECL vswprintf(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount, //msvcrt.dll中没有这个参数
 	_In_z_ _Printf_format_string_params_(1)           wchar_t const* const _Format,
@@ -775,11 +776,11 @@ extern "C" int __CRTDECL vswprintf_downlevel(
 	return _vswprintf_c(_Buffer, _BufferCount, _Format, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vswprintf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vswprintf);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vswprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vswprintf_s_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)       wchar_t const* const _Format,
@@ -794,13 +795,13 @@ extern "C" int __CRTDECL _vswprintf_s_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL vswprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL vswprintf_s(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
@@ -810,13 +811,13 @@ extern "C" int __CRTDECL vswprintf_s_downlevel(
 	return _vswprintf_s_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vswprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vswprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vswprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vswprintf_p_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)       wchar_t const* const _Format,
@@ -831,12 +832,12 @@ extern "C" int __CRTDECL _vswprintf_p_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_p_l);
 
 #endif
 
 
-extern "C" int __CRTDECL _vswprintf_p_downlevel(
+extern "C" int __CRTDECL _vswprintf_p(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
@@ -846,11 +847,11 @@ extern "C" int __CRTDECL _vswprintf_p_downlevel(
 	return _vswprintf_p_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswprintf_p);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vscwprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vscwprintf_l(
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	va_list              _ArgList
@@ -863,12 +864,12 @@ extern "C" int __CRTDECL _vscwprintf_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscwprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vscwprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vscwprintf_p_l(
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	va_list              _ArgList
@@ -881,11 +882,11 @@ extern "C" int __CRTDECL _vscwprintf_p_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscwprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscwprintf_p_l);
 
 #endif
 
-extern "C" int __CRTDECL _vscwprintf_p_downlevel(
+extern "C" int __CRTDECL _vscwprintf_p(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
 )
@@ -893,9 +894,9 @@ extern "C" int __CRTDECL _vscwprintf_p_downlevel(
 	return _vscwprintf_p_l(_Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscwprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscwprintf_p);
 
-extern "C" int __CRTDECL __swprintf_l_downlevel(
+extern "C" int __CRTDECL __swprintf_l(
 	_Pre_notnull_ _Always_(_Post_z_)        wchar_t*       const _Buffer,
 	_In_z_ _Printf_format_string_params_(2) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
@@ -909,10 +910,10 @@ extern "C" int __CRTDECL __swprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__swprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(__swprintf_l);
 
 
-extern "C" int __CRTDECL _swprintf_l_downlevel(
+extern "C" int __CRTDECL _swprintf_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)           wchar_t const* const _Format,
@@ -927,11 +928,11 @@ extern "C" int __CRTDECL _swprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf_l);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swprintf_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swprintf(
 	_Pre_notnull_ _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_z_ _Printf_format_string_    wchar_t const* const _Format,
 	...)
@@ -945,17 +946,17 @@ extern "C" int __CRTDECL _swprintf_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf);
 
 #endif
 
-extern "C" int __CRTDECL swprintf_downlevel(
+extern "C" int __CRTDECL swprintf(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount, //msvcrt.dll 没有此参数
 	_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
 	...)
 {
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 	int _Result;
 	va_list _ArgList;
 	__crt_va_start(_ArgList, _Format);
@@ -973,11 +974,11 @@ extern "C" int __CRTDECL swprintf_downlevel(
 #endif
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(swprintf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(swprintf);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swprintf_s_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)       wchar_t const* const _Format,
@@ -992,12 +993,12 @@ extern "C" int __CRTDECL _swprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL swprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL swprintf_s(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
@@ -1011,13 +1012,13 @@ extern "C" int __CRTDECL swprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(swprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(swprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swprintf_p_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)       wchar_t const* const _Format,
@@ -1032,13 +1033,13 @@ extern "C" int __CRTDECL _swprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf_p_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swprintf_p_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swprintf_p(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                          size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_                 wchar_t const* const _Format,
@@ -1052,12 +1053,12 @@ extern "C" int __CRTDECL _swprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf_p);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swprintf_c_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swprintf_c_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)           wchar_t const* const _Format,
@@ -1072,12 +1073,12 @@ extern "C" int __CRTDECL _swprintf_c_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_c_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf_c_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swprintf_c_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swprintf_c(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
@@ -1091,14 +1092,14 @@ extern "C" int __CRTDECL _swprintf_c_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swprintf_c_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swprintf_c);
 
 #endif
 
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snwprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snwprintf_l(
 	_Out_writes_opt_(_BufferCount) _Post_maybez_ wchar_t*       const _Buffer,
 	_In_                                         size_t         const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)      wchar_t const* const _Format,
@@ -1118,13 +1119,13 @@ extern "C" int __CRTDECL _snwprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snwprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snwprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snwprintf_s_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_                                              size_t         const _MaxCount,
@@ -1140,12 +1141,12 @@ extern "C" int __CRTDECL _snwprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snwprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snwprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snwprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snwprintf_s(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 	_In_                                              size_t         const _BufferCount,
 	_In_                                              size_t         const _MaxCount,
@@ -1160,13 +1161,13 @@ extern "C" int __CRTDECL _snwprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snwprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snwprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _scwprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _scwprintf_l(
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	...)
@@ -1179,13 +1180,13 @@ extern "C" int __CRTDECL _scwprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scwprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scwprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _scwprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _scwprintf_p_l(
 	_In_z_ _Printf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                _locale_t      const _Locale,
 	...)
@@ -1198,12 +1199,12 @@ extern "C" int __CRTDECL _scwprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scwprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scwprintf_p_l);
 
 #endif
 
 
-extern "C" int __CRTDECL _scwprintf_p_downlevel(
+extern "C" int __CRTDECL _scwprintf_p(
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	...)
 {
@@ -1215,11 +1216,11 @@ extern "C" int __CRTDECL _scwprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scwprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scwprintf_p);
 
 
 
-extern "C" int __CRTDECL _vswscanf_l_downlevel(
+extern "C" int __CRTDECL _vswscanf_l(
 	_In_z_                        wchar_t const* const _Buffer,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	_In_opt_                      _locale_t      const _Locale,
@@ -1231,10 +1232,10 @@ extern "C" int __CRTDECL _vswscanf_l_downlevel(
 		_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswscanf_l);
 
 
-extern "C" int __CRTDECL vswscanf_downlevel(
+extern "C" int __CRTDECL vswscanf(
 	_In_z_                        wchar_t const* _Buffer,
 	_In_z_ _Printf_format_string_ wchar_t const* _Format,
 	va_list        _ArgList
@@ -1243,9 +1244,9 @@ extern "C" int __CRTDECL vswscanf_downlevel(
 	return _vswscanf_l(_Buffer, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vswscanf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vswscanf);
 
-extern "C" int __CRTDECL _vswscanf_s_l_downlevel(
+extern "C" int __CRTDECL _vswscanf_s_l(
 	_In_z_                        wchar_t const* const _Buffer,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	_In_opt_                      _locale_t      const _Locale,
@@ -1257,9 +1258,9 @@ extern "C" int __CRTDECL _vswscanf_s_l_downlevel(
 		_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vswscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vswscanf_s_l);
 
-extern "C" int __CRTDECL vswscanf_s_downlevel(
+extern "C" int __CRTDECL vswscanf_s(
 	_In_z_                        wchar_t const* const _Buffer,
 	_In_z_ _Printf_format_string_ wchar_t const* const _Format,
 	va_list              _ArgList
@@ -1268,9 +1269,9 @@ extern "C" int __CRTDECL vswscanf_s_downlevel(
 	return _vswscanf_s_l(_Buffer, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vswscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vswscanf_s);
 
-extern "C" int __CRTDECL _vsnwscanf_l_downlevel(
+extern "C" int __CRTDECL _vsnwscanf_l(
 	_In_reads_(_BufferCount) _Pre_z_       wchar_t const* const _Buffer,
 	_In_                                   size_t         const _BufferCount,
 	_In_z_ _Scanf_format_string_params_(2) wchar_t const* const _Format,
@@ -1283,9 +1284,9 @@ extern "C" int __CRTDECL _vsnwscanf_l_downlevel(
 		_Buffer, _BufferCount, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnwscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnwscanf_l);
 
-extern "C" int __CRTDECL _vsnwscanf_s_l_downlevel(
+extern "C" int __CRTDECL _vsnwscanf_s_l(
 	_In_reads_(_BufferCount) _Pre_z_         wchar_t const* const _Buffer,
 	_In_                                     size_t         const _BufferCount,
 	_In_z_ _Scanf_s_format_string_params_(2) wchar_t const* const _Format,
@@ -1298,10 +1299,10 @@ extern "C" int __CRTDECL _vsnwscanf_s_l_downlevel(
 		_Buffer, _BufferCount, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnwscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnwscanf_s_l);
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swscanf_l(
 	_In_z_                                 wchar_t const* const _Buffer,
 	_In_z_ _Scanf_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                               _locale_t            _Locale,
@@ -1315,13 +1316,13 @@ extern "C" int __CRTDECL _swscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swscanf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _swscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _swscanf_s_l(
 	_In_z_                                   wchar_t const* const _Buffer,
 	_In_z_ _Scanf_s_format_string_params_(0) wchar_t const* const _Format,
 	_In_opt_                                 _locale_t      const _Locale,
@@ -1335,12 +1336,12 @@ extern "C" int __CRTDECL _swscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_swscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_swscanf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL swscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL swscanf_s(
 	_In_z_                         wchar_t const* const _Buffer,
 	_In_z_ _Scanf_s_format_string_ wchar_t const* const _Format,
 	...)
@@ -1353,12 +1354,12 @@ extern "C" int __CRTDECL swscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(swscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(swscanf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snwscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snwscanf_l(
 	_In_reads_(_BufferCount) _Pre_z_       wchar_t const* const _Buffer,
 	_In_                                   size_t         const _BufferCount,
 	_In_z_ _Scanf_format_string_params_(0) wchar_t const* const _Format,
@@ -1378,12 +1379,12 @@ extern "C" int __CRTDECL _snwscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snwscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snwscanf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snwscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snwscanf_s_l(
 	_In_reads_(_BufferCount) _Pre_z_         wchar_t const* const _Buffer,
 	_In_                                     size_t         const _BufferCount,
 	_In_z_ _Scanf_s_format_string_params_(0) wchar_t const* const _Format,
@@ -1398,13 +1399,13 @@ extern "C" int __CRTDECL _snwscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snwscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snwscanf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snwscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snwscanf_s(
 	_In_reads_(_BufferCount) _Pre_z_  wchar_t const* const _Buffer,
 	_In_                              size_t         const _BufferCount,
 	_In_z_ _Scanf_s_format_string_    wchar_t const* const _Format,
@@ -1418,7 +1419,7 @@ extern "C" int __CRTDECL _snwscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snwscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snwscanf_s);
 
 #endif
 
@@ -1426,8 +1427,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_snwscanf_s_downlevel);
 
 //stdio.h
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vfprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vfprintf_l(
 	_Inout_  FILE*       const _Stream,
 	_In_z_   char const* const _Format,
 	_In_opt_ _locale_t   const _Locale,
@@ -1437,12 +1438,12 @@ extern "C" int __CRTDECL _vfprintf_l_downlevel(
 	return __stdio_common_vfprintf(_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS, _Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vfprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vfprintf_s_l(
 	_Inout_  FILE*       const _Stream,
 	_In_z_   char const* const _Format,
 	_In_opt_ _locale_t   const _Locale,
@@ -1452,12 +1453,12 @@ extern "C" int __CRTDECL _vfprintf_s_l_downlevel(
 	return __stdio_common_vfprintf_s(_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS, _Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL vfprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL vfprintf_s(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
@@ -1466,13 +1467,13 @@ extern "C" int __CRTDECL vfprintf_s_downlevel(
 	return _vfprintf_s_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vfprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vfprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vfprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vfprintf_p_l(
 	_Inout_  FILE*       const _Stream,
 	_In_z_   char const* const _Format,
 	_In_opt_ _locale_t   const _Locale,
@@ -1482,12 +1483,12 @@ extern "C" int __CRTDECL _vfprintf_p_l_downlevel(
 	return __stdio_common_vfprintf_p(_CRT_INTERNAL_LOCAL_PRINTF_OPTIONS, _Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vfprintf_p_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vfprintf_p(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
@@ -1496,12 +1497,12 @@ extern "C" int __CRTDECL _vfprintf_p_downlevel(
 	return _vfprintf_p_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfprintf_p);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vprintf_l(
 	_In_z_ _Printf_format_string_params_(2) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	va_list           _ArgList
@@ -1510,12 +1511,12 @@ extern "C" int __CRTDECL _vprintf_l_downlevel(
 	return _vfprintf_l(stdout, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vprintf_s_l(
 	_In_z_ _Printf_format_string_params_(2) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	va_list           _ArgList
@@ -1524,13 +1525,13 @@ extern "C" int __CRTDECL _vprintf_s_l_downlevel(
 	return _vfprintf_s_l(stdout, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL vprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL vprintf_s(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
 )
@@ -1538,12 +1539,12 @@ extern "C" int __CRTDECL vprintf_s_downlevel(
 	return _vfprintf_s_l(stdout, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vprintf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vprintf_p_l(
 	_In_z_ _Printf_format_string_params_(2) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	va_list           _ArgList
@@ -1552,12 +1553,12 @@ extern "C" int __CRTDECL _vprintf_p_l_downlevel(
 	return _vfprintf_p_l(stdout, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vprintf_p_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vprintf_p(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
 )
@@ -1565,12 +1566,12 @@ extern "C" int __CRTDECL _vprintf_p_downlevel(
 	return _vfprintf_p_l(stdout, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vprintf_p);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fprintf_l(
 	_Inout_                                 FILE*       const _Stream,
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
@@ -1584,13 +1585,13 @@ extern "C" int __CRTDECL _fprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fprintf_s_l(
 	_Inout_                                 FILE*       const _Stream,
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
@@ -1604,12 +1605,12 @@ extern "C" int __CRTDECL _fprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL fprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL fprintf_s(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	...)
@@ -1622,12 +1623,12 @@ extern "C" int __CRTDECL fprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(fprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(fprintf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fprintf_p_l(
 	_Inout_                                 FILE*       const _Stream,
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
@@ -1641,12 +1642,12 @@ extern "C" int __CRTDECL _fprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fprintf_p_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fprintf_p(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	...)
@@ -1659,13 +1660,13 @@ extern "C" int __CRTDECL _fprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fprintf_p);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _printf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _printf_l(
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	...)
@@ -1678,13 +1679,13 @@ extern "C" int __CRTDECL _printf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_printf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_printf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _printf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _printf_s_l(
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	...)
@@ -1697,12 +1698,12 @@ extern "C" int __CRTDECL _printf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_printf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_printf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL printf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL printf_s(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	...)
 {
@@ -1714,13 +1715,13 @@ extern "C" int __CRTDECL printf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(printf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(printf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _printf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _printf_p_l(
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	...)
@@ -1733,12 +1734,12 @@ extern "C" int __CRTDECL _printf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_printf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_printf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _printf_p_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _printf_p(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	...)
 {
@@ -1750,12 +1751,12 @@ extern "C" int __CRTDECL _printf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_printf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_printf_p);
 
 #endif
 
 
-extern "C" int __CRTDECL _vfscanf_l_downlevel(
+extern "C" int __CRTDECL _vfscanf_l(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	_In_opt_                      _locale_t   const _Locale,
@@ -1767,10 +1768,10 @@ extern "C" int __CRTDECL _vfscanf_l_downlevel(
 		_Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfscanf_l);
 
 
-extern "C" int __CRTDECL vfscanf_downlevel(
+extern "C" int __CRTDECL vfscanf(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
@@ -1779,9 +1780,9 @@ extern "C" int __CRTDECL vfscanf_downlevel(
 	return _vfscanf_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vfscanf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vfscanf);
 
-extern "C" int __CRTDECL _vfscanf_s_l_downlevel(
+extern "C" int __CRTDECL _vfscanf_s_l(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	_In_opt_                      _locale_t   const _Locale,
@@ -1793,10 +1794,10 @@ extern "C" int __CRTDECL _vfscanf_s_l_downlevel(
 		_Stream, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vfscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vfscanf_s_l);
 
 
-extern "C" int __CRTDECL vfscanf_s_downlevel(
+extern "C" int __CRTDECL vfscanf_s(
 	_Inout_                       FILE*       const _Stream,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
@@ -1805,10 +1806,10 @@ extern "C" int __CRTDECL vfscanf_s_downlevel(
 	return _vfscanf_s_l(_Stream, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vfscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vfscanf_s);
 
 
-extern "C" int __CRTDECL _vscanf_l_downlevel(
+extern "C" int __CRTDECL _vscanf_l(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	_In_opt_                      _locale_t   const _Locale,
 	va_list           _ArgList
@@ -1817,9 +1818,9 @@ extern "C" int __CRTDECL _vscanf_l_downlevel(
 	return _vfscanf_l(stdin, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscanf_l);
 
-extern "C" int __CRTDECL vscanf_downlevel(
+extern "C" int __CRTDECL vscanf(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
 )
@@ -1827,10 +1828,10 @@ extern "C" int __CRTDECL vscanf_downlevel(
 	return _vfscanf_l(stdin, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vscanf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vscanf);
 
 
-extern "C" int __CRTDECL _vscanf_s_l_downlevel(
+extern "C" int __CRTDECL _vscanf_s_l(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	_In_opt_                      _locale_t   const _Locale,
 	va_list           _ArgList
@@ -1839,9 +1840,9 @@ extern "C" int __CRTDECL _vscanf_s_l_downlevel(
 	return _vfscanf_s_l(stdin, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscanf_s_l);
 
-extern "C" int __CRTDECL vscanf_s_downlevel(
+extern "C" int __CRTDECL vscanf_s(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
 )
@@ -1849,10 +1850,10 @@ extern "C" int __CRTDECL vscanf_s_downlevel(
 	return _vfscanf_s_l(stdin, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vscanf_s);
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fscanf_l(
 	_Inout_                                FILE*       const _Stream,
 	_In_z_ _Scanf_format_string_params_(0) char const* const _Format,
 	_In_opt_                               _locale_t   const _Locale,
@@ -1866,12 +1867,12 @@ extern "C" int __CRTDECL _fscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fscanf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _fscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _fscanf_s_l(
 	_Inout_                                  FILE*       const _Stream,
 	_In_z_ _Scanf_s_format_string_params_(0) char const* const _Format,
 	_In_opt_                                 _locale_t   const _Locale,
@@ -1885,13 +1886,13 @@ extern "C" int __CRTDECL _fscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_fscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_fscanf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL fscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL fscanf_s(
 	_Inout_                        FILE*       const _Stream,
 	_In_z_ _Scanf_s_format_string_ char const* const _Format,
 	...)
@@ -1904,12 +1905,12 @@ extern "C" int __CRTDECL fscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(fscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(fscanf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _scanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _scanf_l(
 	_In_z_ _Scanf_format_string_params_(0) char const* const _Format,
 	_In_opt_                               _locale_t   const _Locale,
 	...)
@@ -1922,12 +1923,12 @@ extern "C" int __CRTDECL _scanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scanf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _scanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _scanf_s_l(
 	_In_z_ _Scanf_s_format_string_params_(0) char const* const _Format,
 	_In_opt_                                 _locale_t   const _Locale,
 	...)
@@ -1940,12 +1941,12 @@ extern "C" int __CRTDECL _scanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scanf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL scanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL scanf_s(
 	_In_z_ _Scanf_s_format_string_ char const* const _Format,
 	...)
 {
@@ -1957,12 +1958,12 @@ extern "C" int __CRTDECL scanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(scanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(scanf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnprintf_l(
 	_Out_writes_opt_(_BufferCount) _Post_maybez_ char*       const _Buffer,
 	_In_                                         size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)      char const* const _Format,
@@ -1977,13 +1978,13 @@ extern "C" int __CRTDECL _vsnprintf_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_l);
 
 #endif
 
 
 //msvcrt.dll 没有_CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR特性
-extern "C" int __CRTDECL vsnprintf_downlevel(
+extern "C" int __CRTDECL vsnprintf(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                              size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_                     char const* const _Format,
@@ -2012,11 +2013,11 @@ extern "C" int __CRTDECL vsnprintf_downlevel(
 	return Count;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vsnprintf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vsnprintf);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsprintf_l(
 	_Pre_notnull_ _Always_(_Post_z_) char*       const _Buffer,
 	_In_z_                           char const* const _Format,
 	_In_opt_                         _locale_t   const _Locale,
@@ -2029,13 +2030,13 @@ extern "C" int __CRTDECL _vsprintf_l_downlevel(
 	#pragma warning(pop)
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsprintf_s_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)       char const* const _Format,
@@ -2050,12 +2051,12 @@ extern "C" int __CRTDECL _vsprintf_s_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL vsprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL vsprintf_s(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_                 char const* const _Format,
@@ -2065,13 +2066,13 @@ extern "C" int __CRTDECL vsprintf_s_downlevel(
 	return _vsprintf_s_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vsprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vsprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsprintf_p_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2)       char const* const _Format,
@@ -2086,12 +2087,12 @@ extern "C" int __CRTDECL _vsprintf_p_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_p_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsprintf_p_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsprintf_p(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_                 char const* const _Format,
@@ -2101,13 +2102,13 @@ extern "C" int __CRTDECL _vsprintf_p_downlevel(
 	return _vsprintf_p_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsprintf_p);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnprintf_s_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                              size_t      const _BufferCount,
 	_In_                                              size_t      const _MaxCount,
@@ -2123,12 +2124,12 @@ extern "C" int __CRTDECL _vsnprintf_s_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnprintf_s(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                              size_t      const _BufferCount,
 	_In_                                              size_t      const _MaxCount,
@@ -2139,7 +2140,7 @@ extern "C" int __CRTDECL _vsnprintf_s_downlevel(
 	return _vsnprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_s);
 
 #endif
 
@@ -2147,8 +2148,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_s_downlevel);
 
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vscprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vscprintf_l(
 	_In_z_ _Printf_format_string_params_(2) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	va_list           _ArgList
@@ -2161,12 +2162,12 @@ extern "C" int __CRTDECL _vscprintf_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vscprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vscprintf_p_l(
 	_In_z_ _Printf_format_string_params_(2) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	va_list           _ArgList
@@ -2179,12 +2180,12 @@ extern "C" int __CRTDECL _vscprintf_p_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscprintf_p_l);
 
 #endif
 
 
-extern "C" int __CRTDECL _vscprintf_p_downlevel(
+extern "C" int __CRTDECL _vscprintf_p(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
 )
@@ -2192,10 +2193,10 @@ extern "C" int __CRTDECL _vscprintf_p_downlevel(
 	return _vscprintf_p_l(_Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vscprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vscprintf_p);
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnprintf_c_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnprintf_c_l(
 	_Out_writes_opt_(_BufferCount)          char*       const _Buffer,
 	_In_                                    size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(2) char const* const _Format,
@@ -2210,13 +2211,13 @@ extern "C" int __CRTDECL _vsnprintf_c_l_downlevel(
 	return _Result < 0 ? -1 : _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_c_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_c_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _vsnprintf_c_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _vsnprintf_c(
 	_Out_writes_opt_(_BufferCount) char*       const _Buffer,
 	_In_                           size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_  char const* const _Format,
@@ -2226,12 +2227,12 @@ extern "C" int __CRTDECL _vsnprintf_c_downlevel(
 	return _vsnprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_c_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsnprintf_c);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _sprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _sprintf_l(
 	_Pre_notnull_ _Always_(_Post_z_)        char*       const _Buffer,
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
@@ -2250,12 +2251,12 @@ extern "C" int __CRTDECL _sprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_sprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_sprintf_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _sprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _sprintf_s_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)       char const* const _Format,
@@ -2270,12 +2271,12 @@ extern "C" int __CRTDECL _sprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_sprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_sprintf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL sprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL sprintf_s(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_                 char const* const _Format,
@@ -2289,13 +2290,13 @@ extern "C" int __CRTDECL sprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(sprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(sprintf_s);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _sprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _sprintf_p_l(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)       char const* const _Format,
@@ -2310,11 +2311,11 @@ extern "C" int __CRTDECL _sprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_sprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_sprintf_p_l);
 
 #endif
 
-extern "C" int __CRTDECL _sprintf_p_downlevel(
+extern "C" int __CRTDECL _sprintf_p(
 	_Out_writes_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                          size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_                 char const* const _Format,
@@ -2328,11 +2329,11 @@ extern "C" int __CRTDECL _sprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_sprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_sprintf_p);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snprintf_l(
 	_Out_writes_opt_(_BufferCount) _Post_maybez_ char*       const _Buffer,
 	_In_                                         size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0)      char const* const _Format,
@@ -2352,11 +2353,11 @@ extern "C" int __CRTDECL _snprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snprintf_l);
 
 #endif
 
-extern "C" int __CRTDECL snprintf_downlevel(
+extern "C" int __CRTDECL snprintf(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                              size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_                     char const* const _Format,
@@ -2371,12 +2372,12 @@ extern "C" int __CRTDECL snprintf_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(snprintf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(snprintf);
 
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snprintf_c_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snprintf_c_l(
 	_Out_writes_opt_(_BufferCount)          char*       const _Buffer,
 	_In_                                    size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
@@ -2391,13 +2392,13 @@ extern "C" int __CRTDECL _snprintf_c_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snprintf_c_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snprintf_c_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snprintf_c_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snprintf_c(
 	_Out_writes_opt_(_BufferCount) char*       const _Buffer,
 	_In_                           size_t      const _BufferCount,
 	_In_z_ _Printf_format_string_  char const* const _Format,
@@ -2411,12 +2412,12 @@ extern "C" int __CRTDECL _snprintf_c_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snprintf_c_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snprintf_c);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snprintf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snprintf_s_l(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                              size_t      const _BufferCount,
 	_In_                                              size_t      const _MaxCount,
@@ -2432,13 +2433,13 @@ extern "C" int __CRTDECL _snprintf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snprintf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snprintf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snprintf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snprintf_s(
 	_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 	_In_                                              size_t      const _BufferCount,
 	_In_                                              size_t      const _MaxCount,
@@ -2453,12 +2454,12 @@ extern "C" int __CRTDECL _snprintf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snprintf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snprintf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _scprintf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _scprintf_l(
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	...)
@@ -2471,13 +2472,13 @@ extern "C" int __CRTDECL _scprintf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scprintf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scprintf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _scprintf_p_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _scprintf_p_l(
 	_In_z_ _Printf_format_string_params_(0) char const* const _Format,
 	_In_opt_                                _locale_t   const _Locale,
 	...)
@@ -2490,11 +2491,11 @@ extern "C" int __CRTDECL _scprintf_p_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scprintf_p_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scprintf_p_l);
 
 #endif
 
-extern "C" int __CRTDECL _scprintf_p_downlevel(
+extern "C" int __CRTDECL _scprintf_p(
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	...)
 {
@@ -2506,10 +2507,10 @@ extern "C" int __CRTDECL _scprintf_p_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_scprintf_p_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_scprintf_p);
 
 
-extern "C" int __CRTDECL _vsscanf_l_downlevel(
+extern "C" int __CRTDECL _vsscanf_l(
 	_In_z_                        char const* const _Buffer,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	_In_opt_                      _locale_t   const _Locale,
@@ -2521,9 +2522,9 @@ extern "C" int __CRTDECL _vsscanf_l_downlevel(
 		_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsscanf_l);
 
-extern "C" int __CRTDECL vsscanf_downlevel(
+extern "C" int __CRTDECL vsscanf(
 	_In_z_                        char const* const _Buffer,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
@@ -2532,10 +2533,10 @@ extern "C" int __CRTDECL vsscanf_downlevel(
 	return _vsscanf_l(_Buffer, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vsscanf_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vsscanf);
 
 
-extern "C" int __CRTDECL _vsscanf_s_l_downlevel(
+extern "C" int __CRTDECL _vsscanf_s_l(
 	_In_z_                        char const* const _Buffer,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	_In_opt_                      _locale_t   const _Locale,
@@ -2547,10 +2548,10 @@ extern "C" int __CRTDECL _vsscanf_s_l_downlevel(
 		_Buffer, (size_t)-1, _Format, _Locale, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_vsscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_vsscanf_s_l);
 
 
-extern "C" int __CRTDECL vsscanf_s_downlevel(
+extern "C" int __CRTDECL vsscanf_s(
 	_In_z_                        char const* const _Buffer,
 	_In_z_ _Printf_format_string_ char const* const _Format,
 	va_list           _ArgList
@@ -2559,11 +2560,11 @@ extern "C" int __CRTDECL vsscanf_s_downlevel(
 	return _vsscanf_s_l(_Buffer, _Format, NULL, _ArgList);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(vsscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(vsscanf_s);
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _sscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _sscanf_l(
 	_In_z_                                 char const* const _Buffer,
 	_In_z_ _Scanf_format_string_params_(0) char const* const _Format,
 	_In_opt_                               _locale_t   const _Locale,
@@ -2577,13 +2578,13 @@ extern "C" int __CRTDECL _sscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_sscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_sscanf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _sscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _sscanf_s_l(
 	_In_z_                                   char const* const _Buffer,
 	_In_z_ _Scanf_s_format_string_params_(0) char const* const _Format,
 	_In_opt_                                 _locale_t   const _Locale,
@@ -2597,12 +2598,12 @@ extern "C" int __CRTDECL _sscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_sscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_sscanf_s_l);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL sscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL sscanf_s(
 	_In_z_                         char const* const _Buffer,
 	_In_z_ _Scanf_s_format_string_ char const* const _Format,
 	...)
@@ -2620,12 +2621,12 @@ extern "C" int __CRTDECL sscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(sscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(sscanf_s);
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snscanf_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snscanf_l(
 	_In_reads_bytes_(_BufferCount) _Pre_z_ char const* const _Buffer,
 	_In_                                   size_t      const _BufferCount,
 	_In_z_ _Scanf_format_string_params_(0) char const* const _Format,
@@ -2644,13 +2645,13 @@ extern "C" int __CRTDECL _snscanf_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snscanf_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snscanf_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snscanf_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snscanf_s_l(
 	_In_reads_bytes_(_BufferCount) _Pre_z_   char const* const _Buffer,
 	_In_                                     size_t      const _BufferCount,
 	_In_z_ _Scanf_s_format_string_params_(0) char const* const _Format,
@@ -2669,13 +2670,13 @@ extern "C" int __CRTDECL _snscanf_s_l_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snscanf_s_l_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snscanf_s_l);
 
 #endif
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __CRTDECL _snscanf_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __CRTDECL _snscanf_s(
 	_In_reads_bytes_(_BufferCount) _Pre_z_ char const* const _Buffer,
 	_In_                                   size_t      const _BufferCount,
 	_In_z_ _Scanf_s_format_string_         char const* const _Format,
@@ -2693,7 +2694,7 @@ extern "C" int __CRTDECL _snscanf_s_downlevel(
 	return _Result;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_snscanf_s_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(_snscanf_s);
 
 #endif
 

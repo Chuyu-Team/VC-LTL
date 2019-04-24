@@ -98,7 +98,7 @@ static errno_t __cdecl common_xtox(
     while (first_digit < p);
 
     return 0;
-#pragma warning(pop)    
+#pragma warning(pop)
 }
 
 template <typename UnsignedInteger, typename Character>
@@ -168,7 +168,7 @@ extern "C" char* __cdecl _itoa(
     )
 {
     bool const is_negative = radix == 10 && value < 0;
-    common_xtox(static_cast<unsigned long>(value), buffer, SIZE_MAX, radix, is_negative);
+    common_xtox(static_cast<unsigned long>(value), buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, is_negative);
     return buffer;
 }
 
@@ -179,7 +179,7 @@ extern "C" char* __cdecl _ltoa(
     )
 {
     bool const is_negative = radix == 10 && value < 0;
-    common_xtox(static_cast<unsigned long>(value), buffer, SIZE_MAX, radix, is_negative);
+    common_xtox(static_cast<unsigned long>(value), buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, is_negative);
     return buffer;
 }
 
@@ -189,7 +189,7 @@ extern "C" char* __cdecl _ultoa(
     int           const radix
     )
 {
-    common_xtox(value, buffer, SIZE_MAX, radix, false);
+    common_xtox(value, buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, false);
     return buffer;
 }
 
@@ -230,7 +230,7 @@ extern "C" char* __cdecl _i64toa(
     )
 {
     bool const is_negative = radix == 10 && value < 0;
-    common_xtox(static_cast<unsigned __int64>(value), buffer, SIZE_MAX, radix, is_negative);
+    common_xtox(static_cast<unsigned __int64>(value), buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, is_negative);
     return buffer;
 }
 
@@ -240,7 +240,7 @@ extern "C" char* __cdecl _ui64toa(
     int              const radix
     )
 {
-    common_xtox(value, buffer, SIZE_MAX, radix, false);
+    common_xtox(value, buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, false);
     return buffer;
 }
 
@@ -292,7 +292,7 @@ extern "C" wchar_t* __cdecl _itow(
     )
 {
     bool const is_negative = radix == 10 && value < 0;
-    common_xtox(static_cast<unsigned long>(value), buffer, SIZE_MAX, radix, is_negative);
+    common_xtox(static_cast<unsigned long>(value), buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, is_negative);
     return buffer;
 }
 
@@ -303,7 +303,7 @@ extern "C" wchar_t* __cdecl _ltow(
     )
 {
     bool const is_negative = radix == 10 && value < 0;
-    common_xtox(static_cast<unsigned long>(value), buffer, SIZE_MAX, radix, is_negative);
+    common_xtox(static_cast<unsigned long>(value), buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, is_negative);
     return buffer;
 }
 
@@ -313,7 +313,7 @@ extern "C" wchar_t* __cdecl _ultow(
     int           const radix
     )
 {
-    common_xtox(value, buffer, SIZE_MAX, radix, false);
+    common_xtox(value, buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, false);
     return buffer;
 }
 
@@ -354,7 +354,7 @@ extern "C" wchar_t* __cdecl _i64tow(
     )
 {
     bool const is_negative = radix == 10 && value < 0;
-    common_xtox(static_cast<unsigned __int64>(value), buffer, SIZE_MAX, radix, is_negative);
+    common_xtox(static_cast<unsigned __int64>(value), buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, is_negative);
     return buffer;
 }
 
@@ -364,6 +364,6 @@ extern "C" wchar_t* __cdecl _ui64tow(
     int              const radix
     )
 {
-    common_xtox(value, buffer, SIZE_MAX, radix, false);
+    common_xtox(value, buffer, _CRT_UNBOUNDED_BUFFER_SIZE, radix, false);
     return buffer;
 }

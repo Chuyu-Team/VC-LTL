@@ -361,7 +361,7 @@ static void __cdecl __freetlocinfo(
 #if _CRT_NTDDI_MIN >= NTDDI_VISTA && _CRT_NTDDI_MIN <= NTDDI_WIN7
 
 //WinXP不支持此接口
-EXTERN_C _locale_t __cdecl _get_current_locale_downlevel(void)
+EXTERN_C _locale_t __cdecl _get_current_locale(void)
 {
 	auto retval = (__crt_locale_pointers*)calloc(sizeof(__crt_locale_pointers), 1);
 	if (!retval)
@@ -401,7 +401,7 @@ EXTERN_C _locale_t __cdecl _get_current_locale_downlevel(void)
 	return retval;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_get_current_locale_downlevel);
+_LTL_DLL_EXPORT_DOWNLEVEL(_get_current_locale);
 
 #endif
 
@@ -488,7 +488,7 @@ static _locale_t __cdecl common_create_locale(
 #if _CRT_NTDDI_MIN >= NTDDI_VISTA && _CRT_NTDDI_MIN <= NTDDI_WIN7
 
 //WinXP不支持此接口
-EXTERN_C _locale_t __cdecl _create_locale_downlevel(
+EXTERN_C _locale_t __cdecl _create_locale(
 	_In_   int         _Category,
 	_In_z_ char const* _Locale
 )
@@ -496,14 +496,14 @@ EXTERN_C _locale_t __cdecl _create_locale_downlevel(
 	return common_create_locale(_Category, _Locale);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_create_locale_downlevel);
+_LTL_DLL_EXPORT_DOWNLEVEL(_create_locale);
 
 #endif
 
 #if _CRT_NTDDI_MIN >= NTDDI_VISTA
 
 //WinXP不支持此接口
-EXTERN_C _locale_t __cdecl _wcreate_locale_downlevel(
+EXTERN_C _locale_t __cdecl _wcreate_locale(
 	_In_   int            _category,
 	_In_z_ wchar_t const* _locale
 )
@@ -559,14 +559,12 @@ __End:
 #endif
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_wcreate_locale_downlevel);
-
 #endif
 
 #if _CRT_NTDDI_MIN >= NTDDI_VISTA
 
 //WinXP不支持此接口
-EXTERN_C int __cdecl _configthreadlocale_downlevel(int i)
+EXTERN_C int __cdecl _configthreadlocale(int i)
 {
 	/*
 	* ownlocale flag struct:
@@ -618,13 +616,11 @@ EXTERN_C int __cdecl _configthreadlocale_downlevel(int i)
 
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_configthreadlocale_downlevel);
-
 #endif
 
 #if _CRT_NTDDI_MIN <= NTDDI_WIN7
 
-EXTERN_C void __cdecl _free_locale_downlevel(
+EXTERN_C void __cdecl _free_locale(
 	_In_opt_ _locale_t plocinfo
 )
 {
@@ -676,16 +672,14 @@ EXTERN_C void __cdecl _free_locale_downlevel(
 	}
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_free_locale_downlevel);
+_LTL_DLL_EXPORT_DOWNLEVEL(_free_locale);
 
 #endif
 
-EXTERN_C int __cdecl ___mb_cur_max_l_func_downlevel(_locale_t locale)
+EXTERN_C int __cdecl ___mb_cur_max_l_func(_locale_t locale)
 {
 	return locale == nullptr
 		? ___mb_cur_max_func()
 		: locale->locinfo->_locale_mb_cur_max;
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(___mb_cur_max_l_func_downlevel);

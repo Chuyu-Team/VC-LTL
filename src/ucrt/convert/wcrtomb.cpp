@@ -15,8 +15,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 using namespace __crt_mbstring;
 
@@ -46,15 +45,6 @@ using namespace __crt_mbstring;
 *
 *******************************************************************************/
 
-class wcrtomb_locale_t_hepler
-{
-public:
-	const int _locale_mb_cur_max = ___mb_cur_max_func();
-	const LCID __lc_ctype = ___lc_handle_func()[LC_CTYPE];
-	const unsigned int _locale_lc_codepage = ___lc_codepage_func();
-};
-
-
 _Success_(return == 0)
 static errno_t __cdecl _wcrtomb_s_l(
                                             int*        const   return_value,
@@ -62,7 +52,7 @@ static errno_t __cdecl _wcrtomb_s_l(
                                             size_t      const   destination_count,
                                             wchar_t     const   wchar,
                                             mbstate_t*  const   state,
-                                            wcrtomb_locale_t_hepler  const &  locale
+                                            _locale_t   const   locale
     )
 {
     _ASSERTE(destination != nullptr && destination_count > 0);
@@ -77,7 +67,30 @@ static errno_t __cdecl _wcrtomb_s_l(
     if (state)
         state->_Wchar = 0;
 
-    if (!locale.__lc_ctype)
+	const auto _locale_lc_codepage = ___lc_codepage_func();
+
+    if (_locale_lc_codepage == CP_UTF8)
+    {
+        // Unlike c16rtomb. wctomb/wcrtomb have no ability to process a partial code point.
+        // So, we could call c16rtomb and check for a lone surrogate or other error, or for simplicity
+        // We can instead just call c32rtomb and check for any error. I choose the latter.
+        static mbstate_t local_state{};
+        int result = static_cast<int>(__crt_mbstring::__c32rtomb_utf8(destination, static_cast<char32_t>(wchar), (state != nullptr ? state : &local_state)));
+        if (return_value != nullptr)
+        {
+            *return_value = result;
+        }
+        if (result <= 4)
+        {
+            return 0;
+        }
+        else
+        {
+            return errno;
+        }
+    }
+
+    if (!___lc_handle_func()[LC_CTYPE])
     {
         if (wchar > 255) // Validate high byte
         {
@@ -96,7 +109,7 @@ static errno_t __cdecl _wcrtomb_s_l(
 
     BOOL default_used{};
     int const size = __acrt_WideCharToMultiByte(
-        locale._locale_lc_codepage,
+        _locale_lc_codepage,
         0,
         &wchar,
         1,
@@ -132,8 +145,8 @@ static errno_t __cdecl _wcrtomb_s_l(
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wcrtomb_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl wcrtomb_s(
     size_t*    const return_value,
     char*      const destination,
     size_t     const destination_count,
@@ -146,18 +159,16 @@ extern "C" errno_t __cdecl wcrtomb_s_downlevel(
     // the fact that the destination will receive a character and not a string.
     _VALIDATE_RETURN_ERRCODE((destination == nullptr && destination_count == 0) || (destination != nullptr), EINVAL);
 
-	wcrtomb_locale_t_hepler _locale_t_hepler;
-
     errno_t e = 0;
     int     int_return_value = -1;
     if (destination == nullptr)
     {
         char buf[MB_LEN_MAX];
-        e = _wcrtomb_s_l(&int_return_value, buf, MB_LEN_MAX, wchar, state, _locale_t_hepler);
+        e = _wcrtomb_s_l(&int_return_value, buf, MB_LEN_MAX, wchar, state, nullptr);
     }
     else
     {
-        e = _wcrtomb_s_l(&int_return_value, destination, destination_count, wchar, state, _locale_t_hepler);
+        e = _wcrtomb_s_l(&int_return_value, destination, destination_count, wchar, state, nullptr);
     }
 
     if (return_value != nullptr)
@@ -165,13 +176,10 @@ extern "C" errno_t __cdecl wcrtomb_s_downlevel(
 
     return e;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wcrtomb_s_downlevel);
-
 #endif
 
 #if 0
-extern "C" size_t __cdecl wcrtomb_downlevel(
+extern "C" size_t __cdecl wcrtomb(
     char*      const destination,
     wchar_t    const wchar,
     mbstate_t* const state
@@ -181,9 +189,6 @@ extern "C" size_t __cdecl wcrtomb_downlevel(
     wcrtomb_s(&return_value, destination, (destination == nullptr ? 0 : MB_LEN_MAX), wchar, state);
     return return_value;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wcrtomb_downlevel);
-
 #endif
 
 /***
@@ -201,6 +206,7 @@ _LCRT_DEFINE_IAT_SYMBOL(wcrtomb_downlevel);
 *******************************************************************************/
 
 /* Helper shared by secure and non-secure functions. */
+
 #if 0
 extern "C" static size_t __cdecl internal_wcsrtombs(
     _Pre_maybenull_ _Post_z_    char*                   destination,
@@ -212,10 +218,9 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     /* validation section */
     _VALIDATE_RETURN(source != nullptr, EINVAL, (size_t)-1);
 
-    //_LocaleUpdate locale_update(nullptr);
-	wcrtomb_locale_t_hepler _locale_t_hepler;
+    _LocaleUpdate locale_update(nullptr);
 
-    if (_locale_t_hepler._locale_lc_codepage == CP_UTF8)
+    if (locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage == CP_UTF8)
     {
         return __wcsrtombs_utf8(destination, source, n, state);
     }
@@ -230,7 +235,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
         for (; ; nc += i, ++wcs)
         {
             /* translate but don't store */
-            _wcrtomb_s_l(&i, buf, MB_LEN_MAX, *wcs, state, _locale_t_hepler);
+            _wcrtomb_s_l(&i, buf, MB_LEN_MAX, *wcs, state, locale_update.GetLocaleT());
             if (i <= 0)
             {
                 return static_cast<size_t>(-1);
@@ -247,7 +252,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
         /* translate and store */
         char *t = nullptr;
 
-        if (n < (size_t)_locale_t_hepler._locale_mb_cur_max)
+        if (n < (size_t)locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max)
         {
             t = buf;
         }
@@ -256,7 +261,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
             t = destination;
         }
 
-        _wcrtomb_s_l(&i, t, MB_LEN_MAX, *wcs, state, _locale_t_hepler);
+        _wcrtomb_s_l(&i, t, MB_LEN_MAX, *wcs, state, locale_update.GetLocaleT());
         if (i <= 0)
         {
             /* encountered invalid sequence */
@@ -289,8 +294,7 @@ extern "C" static size_t __cdecl internal_wcsrtombs(
     return nc;
 }
 
-
-extern "C" size_t __cdecl wcsrtombs_downlevel(
+extern "C" size_t __cdecl wcsrtombs(
     char*           const destination,
     wchar_t const** const source,
     size_t          const n,
@@ -299,13 +303,9 @@ extern "C" size_t __cdecl wcsrtombs_downlevel(
 {
     return internal_wcsrtombs(destination, source, n, state);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_downlevel);
-
 #else
 #define internal_wcsrtombs wcsrtombs
 #endif
-
 /***
 *errno_t wcstombs_s() - Convert wide char string to multibyte char string.
 *
@@ -332,8 +332,8 @@ _LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wcsrtombs_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl wcsrtombs_s(
     size_t*         const return_value,
     char*           const destination,
     size_t          const destination_count,
@@ -390,14 +390,12 @@ extern "C" errno_t __cdecl wcsrtombs_s_downlevel(
 
     return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wcsrtombs_s_downlevel);
-
 #endif
+
 
 // Converts a wide character into a one-byte character
 #if 0
-extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
+extern "C" int __cdecl wctob(wint_t const wchar)
 {
     if (wchar == WEOF)
         return EOF;
@@ -406,14 +404,12 @@ extern "C" int __cdecl wctob_downlevel(wint_t const wchar)
     char local_buffer[MB_LEN_MAX];
 
     mbstate_t state{};
-    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, &state, wcrtomb_locale_t_hepler());
+    errno_t const e = _wcrtomb_s_l(&return_value, local_buffer, MB_LEN_MAX, wchar, &state, nullptr);
     if (e == 0 && return_value == 1)
         return local_buffer[0];
 
     return EOF;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wctob_downlevel);
 
 size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, size_t len, mbstate_t* ps)
 {
@@ -510,5 +506,4 @@ size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, 
         return total_count;
     }
 }
-
 #endif

@@ -6,8 +6,6 @@
 // Critical sections used for synchronization in the CoreCRT.
 //
 #include <corecrt_internal.h>
-#include "..\..\src\winapi_thunks.h"
-#include <msvcrt_IAT.h>
 
 
 #if 0
@@ -62,17 +60,13 @@ extern "C" void __cdecl __acrt_unlock(_In_ __acrt_lock_id _Lock)
 }
 #endif
 
-extern "C" void __cdecl _lock_locales_downlevel()
+extern "C" void __cdecl _lock_locales()
 {
 	//__acrt_eagerly_load_locale_apis();
-	__acrt_lock(__acrt_locale_lock);
+    __acrt_lock(__acrt_locale_lock);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_lock_locales_downlevel);
-
-extern "C" void __cdecl _unlock_locales_downlevel()
+extern "C" void __cdecl _unlock_locales()
 {
-	__acrt_unlock(__acrt_locale_lock);
+    __acrt_unlock(__acrt_locale_lock);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_unlock_locales_downlevel);

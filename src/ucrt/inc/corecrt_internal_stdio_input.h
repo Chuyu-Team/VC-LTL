@@ -958,12 +958,13 @@ private:
         }
 
         unsigned_char_type const* const first{_format_it};
+        unsigned_char_type const* last_range_end = nullptr;
         for (; *_format_it != ']' && *_format_it != '\0'; ++_format_it)
         {
-            // If the current character is not a hyphen, or if it's the first or
-            // last character in the scanset, treat it as a literal character and
-            // just add it to the table:
-            if (*_format_it != '-' || _format_it == first || _format_it[1] == ']')
+            // If the current character is not a hyphen, if its the end of a range,
+            // or if it's the first or last character in the scanset, treat it as a
+            // literal character and just add it to the table:
+            if (*_format_it != '-' || _format_it - 1 == last_range_end || _format_it == first || _format_it[1] == ']')
             {
                 _scanset.set(*_format_it);
             }
@@ -974,6 +975,7 @@ private:
             {
                 unsigned_char_type lower_bound{_format_it[-1]};
                 unsigned_char_type upper_bound{_format_it[ 1]};
+                last_range_end = _format_it + 1;
 
                 // We support ranges in both directions ([a-z] and [z-a]).  We
                 // can handle both simultaneously by transforming [z-a] into [a-z]:
@@ -1250,7 +1252,7 @@ private:
 
         size_t const buffer_count{buffer != nullptr && secure_buffers()
             ? va_arg(_valist, unsigned)
-            : static_cast<size_t>(-1)
+            : _CRT_UNBOUNDED_BUFFER_SIZE
         };
 
         if (buffer_count == 0)
@@ -1275,7 +1277,7 @@ private:
         BufferCharacter _UNALIGNED* buffer_pointer  {buffer      };
         size_t                      buffer_remaining{buffer_count};
 
-        if (mode != conversion_mode::character && buffer_remaining != static_cast<size_t>(-1))
+        if (mode != conversion_mode::character && buffer_remaining != _CRT_UNBOUNDED_BUFFER_SIZE)
         {
             --buffer_remaining; // Leave room for terminator when scanning strings
         }
@@ -1365,7 +1367,7 @@ private:
         wchar_t const c
         ) throw()
     {
-        if (buffer_count == static_cast<size_t>(-1))
+        if (buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE)
         {
             int narrow_count{0};
             if (_ERRCHECK_EINVAL_ERANGE(wctomb_s(&narrow_count, buffer_pointer, MB_LEN_MAX, c)) == 0)
@@ -1445,7 +1447,7 @@ private:
         UNREFERENCED_PARAMETER(buffer);
         UNREFERENCED_PARAMETER(buffer_remaining);
 
-        if (buffer_count == static_cast<size_t>(-1))
+        if (buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE)
             return;
 
         _FILL_STRING(buffer, buffer_count, buffer_count - buffer_remaining);
@@ -1459,7 +1461,7 @@ private:
     {
         UNREFERENCED_PARAMETER(buffer);
 
-        if (buffer_count == static_cast<size_t>(-1))
+        if (buffer_count == _CRT_UNBOUNDED_BUFFER_SIZE)
             return;
 
         _RESET_STRING(buffer, buffer_count);

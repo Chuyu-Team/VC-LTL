@@ -1,5 +1,5 @@
 /***
-*wsetloca.c - Contains the wsetlocale function
+*wsetlocale.cpp - Contains the wsetlocale function
 *
 *       Copyright (c) Microsoft Corporation.  All rights reserved.
 *
@@ -32,14 +32,14 @@ long __acrt_locale_changed_data = FALSE;
 
 /* helper function prototypes */
 _Success_(return != 0)
-wchar_t * _expandlocale (
-        _In_z_ const wchar_t*                           expr,
-        _Out_writes_z_(sizeInChars) wchar_t*            output,
-        size_t                                          sizeInChars,
-        _Out_writes_z_(localeNameSizeInChars) wchar_t*  localeNameOutput,
-        size_t                                          localeNameSizeInChars,
-        UINT*                                           cp
-        );
+static wchar_t * _expandlocale(
+    _In_z_                                wchar_t const * expr,
+    _Out_writes_z_(sizeInChars)           wchar_t *       output,
+    _In_                                  size_t          sizeInChars,
+    _Out_writes_z_(localeNameSizeInChars) wchar_t *       localeNameOutput,
+    _In_                                  size_t          localeNameSizeInChars,
+    _Out_                                 UINT&           cp
+    );
 
 void _wcscats(_Inout_updates_z_(_Param_(2)) wchar_t *, size_t, int, ...);
 void __lc_lctowcs(_Inout_updates_z_(_Param_(2)) wchar_t *, size_t, const __crt_locale_strings *);
@@ -585,9 +585,10 @@ static wchar_t * __cdecl _wsetlocale_nolock(
 
             } else { /* simple LC_ALL locale string */
 
+                UINT code_page;
                 wchar_t localeNameTemp[LOCALE_NAME_MAX_LENGTH];
                 /* confirm locale is supported, get expanded locale */
-                retval = _expandlocale(_wlocale, lctemp, _countof(lctemp), localeNameTemp, _countof(localeNameTemp), nullptr);
+                retval = _expandlocale(_wlocale, lctemp, _countof(lctemp), localeNameTemp, _countof(localeNameTemp), code_page);
                 if (retval != 0)
                 {
                     for (i=LC_MIN; i<=LC_MAX; i++)
@@ -651,7 +652,7 @@ static wchar_t * __cdecl _wsetlocale_set_cat (
     int _LOC_CCACHE = _countof(ptd->_setloc_data._Loc_c);
     __crt_ctype_compatibility_data buf1, buf2;
 
-    if (!_expandlocale(wlocale, lctemp, _countof(lctemp), localeNameString, _countof(localeNameString), &cptemp))
+    if (!_expandlocale(wlocale, lctemp, _countof(lctemp), localeNameString, _countof(localeNameString), cptemp))
         return nullptr;
 
     // if this category's locale hadn't changed
@@ -850,129 +851,453 @@ static wchar_t * __cdecl _wsetlocale_get_all ( __crt_locale_data* ploci)
     }
 } /* _wsetlocale_get_all */
 
+// --- BCP-47 tag parsing for _expandlocale() ---
+//
+// Provides parse_bcp47() which parses a given locale expression and updates a __crt_locale_strings structure accordingly.
+// Unsupported:
+// * Extension and private tags
+// * 4-8 character language subtags
+// * Grandfathered tags
+// * Lone code page specifiers (POSIX extension for BCP-47)
 
-wchar_t * _expandlocale (
-        const wchar_t* const expr,
-        wchar_t*       const output,
-        size_t         const sizeInChars,
-        wchar_t*       const localeNameOutput,
-        size_t         const localeNameSizeInChars,
-        UINT*          const cp
-        )
+enum class _bcp47_section_delimiter
 {
-    if (!expr)
-        return nullptr; /* error if no input */
+    normal,
+    end_of_string,
+    code_page
+};
 
-    __crt_qualified_locale_data* const _psetloc_data    = &__acrt_getptd()->_setloc_data;
-    UINT *                       const pcachecp         = &_psetloc_data->_cachecp;
-    wchar_t *                    const cachein          = _psetloc_data->_cachein;
-    size_t                       const cacheinLen       = _countof(_psetloc_data->_cachein);
-    wchar_t *                    const cacheout         = _psetloc_data->_cacheout;
-    size_t                       const cacheoutLen      = _countof(_psetloc_data->_cacheout);
-    size_t                             charactersInExpression = 0;
-    int                                iCodePage = 0;
+struct _bcp47_section
+{
+    wchar_t const *          ptr;
+    size_t                   length;
+    _bcp47_section_delimiter delimiter;
+};
 
-    // Store the last successfully obtained locale name
-    _ERRCHECK(wcsncpy_s(localeNameOutput, localeNameSizeInChars, _psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName)));
-
-    // if "C" locale
-    if (((*expr==L'C') && (!expr[1])))
+static _bcp47_section_delimiter categorize_delimiter(wchar_t const wc)
+{
+    switch (wc)
     {
+        case '-':
+        case '_':
+            return _bcp47_section_delimiter::normal;
+        case '.':
+            return _bcp47_section_delimiter::code_page;
+        case '\0':
+        default:
+            return _bcp47_section_delimiter::end_of_string;
+    }
+}
 
-        _ERRCHECK(wcscpy_s(output, sizeInChars, L"C"));
-        if (cp)
+static bool string_is_alpha(wchar_t const * const str, size_t const len)
+{
+    for (size_t i = 0; i < len; ++i)
+    {
+        if (!__ascii_isalpha(str[i]))
         {
-            *cp = CP_ACP; /* return to ANSI code page */
+            return false;
         }
-        return output; /* "C" */
+    }
+    return true;
+}
+
+static bool string_is_digit(wchar_t const * const str, size_t const len)
+{
+    for (size_t i = 0; i < len; ++i)
+    {
+        if (!__ascii_isdigit(str[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool parse_bcp47_language(__crt_locale_strings * const names, _bcp47_section const& section)
+{
+    if (section.delimiter != _bcp47_section_delimiter::normal)
+    {
+        return false;
     }
 
-    /* first, make sure we didn't just do this one */
-    charactersInExpression = wcslen(expr);
-    if (charactersInExpression >= MAX_LC_LEN ||       /* we would never have cached this */
-        (wcscmp(cacheout,expr) && wcscmp(cachein,expr)))
+    if (section.length < 2 || section.length > 3)
     {
-        /* do some real work */
+        return false; // Failure, only 2-3 letter language codes permitted.
+    }
+
+    if (!string_is_alpha(section.ptr, section.length))
+    {
+        return false;
+    }
+
+    _ERRCHECK(wcsncpy_s(names->szLanguage, _countof(names->szLanguage), section.ptr, section.length));
+    _ERRCHECK(wcsncpy_s(names->szLocaleName, _countof(names->szLocaleName), section.ptr, section.length));
+    return true;
+}
+
+static bool parse_bcp47_script(__crt_locale_strings * const names, _bcp47_section const& section)
+{
+    if (section.delimiter != _bcp47_section_delimiter::normal)
+    {
+        return false;
+    }
+
+    if (section.length != 4) {
+        return false; // Failure, only 4 letter script codes permitted.
+    }
+
+    if (!string_is_alpha(section.ptr, section.length))
+    {
+        return false;
+    }
+
+    _ERRCHECK(wcsncat_s(names->szLocaleName, _countof(names->szLocaleName), L"-", 1));
+    _ERRCHECK(wcsncat_s(names->szLocaleName, _countof(names->szLocaleName), section.ptr, section.length));
+    return true;
+}
+
+static bool parse_bcp47_region(__crt_locale_strings * const names, _bcp47_section const& section)
+{
+    if (section.delimiter != _bcp47_section_delimiter::normal)
+    {
+        return false;
+    }
+
+    if (   !(section.length == 2 && string_is_alpha(section.ptr, section.length))  // if not 2 letters
+        && !(section.length == 3 && string_is_digit(section.ptr, section.length))) // and not 3 digits
+    {
+        return false;
+    }
+
+    _ERRCHECK(wcsncpy_s(names->szCountry, _countof(names->szCountry), section.ptr, section.length));
+    _ERRCHECK(wcsncat_s(names->szLocaleName, _countof(names->szLocaleName), L"-", 1));
+    _ERRCHECK(wcsncat_s(names->szLocaleName, _countof(names->szLocaleName), section.ptr, section.length));
+    return true;
+}
+
+static bool parse_bcp47_code_page(__crt_locale_strings * const names, _bcp47_section const& section)
+{
+    if (section.delimiter != _bcp47_section_delimiter::code_page)
+    {
+        return false;
+    }
+
+    _ERRCHECK(wcsncpy_s(names->szCodePage, _countof(names->szCodePage), section.ptr, section.length));
+    return true; // Success
+}
+
+static bool parse_bcp47(__crt_locale_strings * const names, const wchar_t * const expr)
+{
+    wchar_t const * p = expr;
+    wchar_t const * const delimiters = L"-_.";
+
+    memset(names, 0, sizeof(__crt_locale_strings));
+
+    size_t const max_sections = 4;
+    _bcp47_section sections[max_sections];
+    size_t num_sections = 0;
+
+    for (auto last_delimiter = _bcp47_section_delimiter::normal;
+         last_delimiter != _bcp47_section_delimiter::end_of_string;
+         last_delimiter = categorize_delimiter(*p++)
+        )
+    {
+        if (num_sections >= max_sections)
+        {
+            // Didn't reach end of string before running out of sections to parse.
+            return false;
+        }
+
+        size_t const section_length = (last_delimiter != _bcp47_section_delimiter::code_page)
+            ? wcscspn(p, delimiters) : wcslen(p);
+
+        sections[num_sections].ptr = p;
+        sections[num_sections].length = section_length;
+        sections[num_sections].delimiter = last_delimiter;
+
+        p += section_length;
+        ++num_sections;
+    }
+
+    switch (num_sections)
+    {
+        case 1:
+            // en
+            return parse_bcp47_language(names, sections[0]);
+        case 2:
+            // en-US
+            // zh-Hans
+            // en.utf-8
+            // .utf-8
+            return parse_bcp47_language(names, sections[0])
+                   && (   parse_bcp47_script(names, sections[1])
+                       || parse_bcp47_region(names, sections[1])
+                       || parse_bcp47_code_page(names, sections[1])
+                      );
+        case 3:
+            // en-US.utf-8
+            // zh-Hans-HK
+            return parse_bcp47_language(names, sections[0])
+                   && (    parse_bcp47_script(names, sections[1]) && (parse_bcp47_region(names, sections[2]) || parse_bcp47_code_page(names, sections[2]))
+                       || (parse_bcp47_region(names, sections[1]) &&  parse_bcp47_code_page(names, sections[2]))
+                      );
+        case 4:
+            // zh-Hans-HK.utf-8
+            return parse_bcp47_language(names, sections[0])
+                && parse_bcp47_script(names, sections[1])
+                && parse_bcp47_region(names, sections[2])
+                && parse_bcp47_code_page(names, sections[3]);
+        default:
+            return false;
+    }
+}
+
+// Utility functions/structs for _expandlocale().
+
+static int get_default_code_page(wchar_t const * const valid_windows_locale_name)
+{
+    int code_page{};
+
+    int const size_written = __acrt_GetLocaleInfoEx(
+        valid_windows_locale_name,
+        LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
+        reinterpret_cast<LPWSTR>(&code_page),
+        sizeof(int) / sizeof(wchar_t)
+        );
+
+    if (size_written == 0 || code_page == 0)
+    {   // Default to UTF-8 if could not find or no default code page.
+        return CP_UTF8;
+    }
+
+    return code_page;
+}
+
+class _expandlocale_locale_name_cache
+{
+    // Scope guard to keep invariants in _expandlocale for the localeNameOutput and _cacheLocaleName variables.
+    // The cacheLocaleName/localeNameOutput is the only cache where work is done progressively in the cache value,
+    // (inside __acrt_get_qualified_locale and __acrt_get_qualified_locale_downlevel)
+    // so we must save/restore at function start and invalidate the cache once we have stuff to commit to both.
+public:
+    _expandlocale_locale_name_cache(
+        wchar_t *                     const localeNameOutput,
+        size_t                        const localeNameSizeInChars,
+        __crt_qualified_locale_data * const psetloc_data
+    ) : _localeNameOutput(localeNameOutput),
+        _localeNameSizeInChars(localeNameSizeInChars),
+        _psetloc_data(psetloc_data),
+        _committed(false)
+    {
+        _ERRCHECK(wcsncpy_s(localeNameOutput, localeNameSizeInChars, psetloc_data->_cacheLocaleName, _countof(psetloc_data->_cacheLocaleName)));
+    }
+
+    ~_expandlocale_locale_name_cache()
+    {
+        if (!_committed)
+        {
+            _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), _localeNameOutput, _localeNameSizeInChars));
+        }
+    }
+
+    _expandlocale_locale_name_cache(_expandlocale_locale_name_cache const&) = delete;
+    _expandlocale_locale_name_cache& operator=(_expandlocale_locale_name_cache const&) = delete;
+
+    void commit_locale_name(wchar_t const * const new_locale_name, size_t const new_locale_name_length)
+    {
+        _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), new_locale_name, new_locale_name_length));
+        commit_locale_name_cache_already_updated(new_locale_name, new_locale_name_length);
+    }
+
+    void commit_locale_name_cache_already_updated(wchar_t const * const new_locale_name, size_t const new_locale_name_length)
+    {
+        _ERRCHECK(wcsncpy_s(_localeNameOutput, _localeNameSizeInChars, new_locale_name, new_locale_name_length));
+        _committed = true;
+    }
+
+private:
+    wchar_t *                     _localeNameOutput;
+    size_t                        _localeNameSizeInChars;
+    __crt_qualified_locale_data * _psetloc_data;
+    bool                          _committed;
+};
+
+wchar_t * _expandlocale(
+    wchar_t const * const expr,
+    wchar_t *       const output,
+    size_t          const sizeInChars,
+    wchar_t *       const localeNameOutput,
+    size_t          const localeNameSizeInChars,
+    UINT&                 output_code_page
+    )
+{
+    // Returns: locale name to return to user (lifetime bound to PTD variable _cacheout)
+    // Out Parameters:
+    //  * output: locale name to return to user (lifetime bound to supplied buffer)
+    //  * localeNameOutput: normalized locale name to be used internally (lifetime bound to supplied buffer)
+    //  * output_code_page: code page used
+    //
+    // Effects:
+    //  Parses an input locale string and returns the string that will replicate the effects just taken (output), the string to be used
+    //  for Win32 calls (localeNameOutput), and the code page.
+    //  Note that there are three modes here:
+    //  * Legacy and Windows Locale Names:
+    //      The output locale string and internally used locale string become normalized for Win32 APIs.
+    //      Neither necessarily match the user input locale.
+    //      Uses ACP as default if Windows does not know the code page.
+    //  * Permissive Windows locale names:
+    //      Ask Windows whether full given user string is a known locale name.
+    //      In that case, the output locale string, internally used locale string, and user input locale all match.
+    //      Uses UTF-8 as default if Windows does not know the code page.
+    //  * BCP-47 Locale Names:
+    //      Windows doesn't recognize BCP-47 + code page specifiers, but we must support them for proper UTF-8 support.
+    //      The output locale name must include the code page, but internally we modify the format so Windows understands it.
+    //      Uses UTF-8 as default if Windows does not know the code page.
+    //
+    //  Also populates _psetloc_data structure from the PTD:
+    //  Caching Internals:
+    //    * _cachein: Caches last successful 'expr'.
+    //    * _cacheout: Caches last successful 'output' (which is also the return value).
+    //    * _cachecp: Caches last successful 'output_code_page'.
+    //    * _cacheLocaleName: Caches last successful 'localeNameOutput'.
+    //  Legacy Internals (used by __acrt_get_qualified_locale and __acrt_get_qualified_locale_downlevel only):
+    //    * pchLanguage: Pointer to start of language name, ex: "English"
+    //    * pchCountry: Pointer to start of country/region name, ex: "United States"
+    //    * iLocState: Used to record the match degree for locales checked (i.e. language and region match vs just language match)
+    //    * bAbbrevLanguage: Whether language name is a three-letter short-form, ex: "ENU"
+    //    * bAbbrevCountry: Whether country/region name is a three letter short-form, ex: "USA"
+    //    * iPrimaryLen: Length of pchLanguage portion of locale string
+    //  Also in _psetloc_data, but not used in _expandlocale: _Loc_c
+
+    if (!expr)
+    {
+        return nullptr; // error if no input
+    }
+
+    // C locale
+    // Callers know that LocaleNameOutput has not been updated and check for "C" locale before using it.
+    if (expr[0] == L'C' && expr[1] == L'\0')
+    {
+        _ERRCHECK(wcscpy_s(output, sizeInChars, L"C"));
+        output_code_page = CP_ACP;
+        return output;
+    }
+
+    __crt_qualified_locale_data * const _psetloc_data    = &__acrt_getptd()->_setloc_data;
+    UINT *                        const pcachecp         = &_psetloc_data->_cachecp;
+    wchar_t *                     const cachein          = _psetloc_data->_cachein;
+    size_t                        const cacheinLen       = _countof(_psetloc_data->_cachein);
+    wchar_t *                     const cacheout         = _psetloc_data->_cacheout;
+    size_t                        const cacheoutLen      = _countof(_psetloc_data->_cacheout);
+    size_t                              charactersInExpression = 0;
+    int                                 iCodePage = 0;
+
+    // This guard owns access to localeNameOutput. It expresses the invariants that localeNameOutput and _cacheLocaleName have.
+    _expandlocale_locale_name_cache locale_name_guard(localeNameOutput, localeNameSizeInChars, _psetloc_data);
+
+    // First, make sure we didn't just do this one
+    charactersInExpression = wcslen(expr);
+    if (charactersInExpression >= MAX_LC_LEN ||       // we would never have cached this
+        (wcscmp(cacheout, expr) && wcscmp(cachein, expr)))
+    {
         __crt_locale_strings names;
         BOOL getqloc_results = FALSE;
-
-        /* begin: cache atomic section */
-        // isDownlevel should always be false as we support Vista+ now
         BOOL const isDownlevel = !__acrt_can_use_vista_locale_apis();
+
+        // Check if can parse as Legacy/Windows locale name
         if (__lc_wcstolc(&names, expr) == 0)
         {
             if (isDownlevel)
+            {
                 getqloc_results = __acrt_get_qualified_locale_downlevel(&names, pcachecp, &names);
+            }
             else
+            {
                 getqloc_results = __acrt_get_qualified_locale(&names, pcachecp, &names);
+            }
         }
 
+        // If successfully parsed as Legacy/Windows name
         if (getqloc_results)
         {
+            // Legacy/Windows name resolution returns applies normalization to both returned and internally used locale names.
             __lc_lctowcs(cacheout, cacheoutLen, &names);
-            if (localeNameOutput)
-                _ERRCHECK(wcsncpy_s(localeNameOutput, localeNameSizeInChars, names.szLocaleName, wcslen(names.szLocaleName) + 1));
+
+            // __acrt_get_qualified_locale and __acrt_get_qualified_locale_downlevel update _cacheLocaleName - if successful commit locale changes
+            locale_name_guard.commit_locale_name_cache_already_updated(names.szLocaleName, wcslen(names.szLocaleName) + 1);
         }
-        else if (names.szLanguage[0] && __acrt_IsValidLocaleName(names.szLanguage))
+        else if (__acrt_IsValidLocaleName(expr))
         {
+            // Windows recognizes the locale expression - only work is to grab the code page to be used.
+            iCodePage = get_default_code_page(expr);
+
+            // Commit code page
+            *pcachecp = static_cast<WORD>(iCodePage);
+
+            // Commit locale name that we will return to the user (same as input locale string).
+            _ERRCHECK(wcsncpy_s(cacheout, cacheoutLen, expr, charactersInExpression + 1));
+
+            // Commit locale name for internal use (same as input locale string).
+            locale_name_guard.commit_locale_name(expr, charactersInExpression + 1);
+        }
+        else if (parse_bcp47(&names, expr) && __acrt_IsValidLocaleName(names.szLocaleName))
+        {
+            // Parsed as Windows-recognized BCP-47 tag
+            wchar_t const * const normalized_locale_name = names.szLocaleName;
+
             if (names.szCodePage[0])
             {
-                // Allow .utf8/.utf-8 for BCP-47 tags.  (Other codepages not allowed)
-                if (_wcsicmp(names.szCodePage, L"utf8") == 0 ||
-                    _wcsicmp(names.szCodePage, L"utf-8") == 0)
+                wchar_t const * const cp = names.szCodePage;
+
+                // Allow .utf8/.utf-8 for BCP-47 tags.
+                if (   __ascii_towlower(cp[0]) == L'u'
+                    && __ascii_towlower(cp[1]) == L't'
+                    && __ascii_towlower(cp[2]) == L'f'
+                    &&     (cp[3] == L'8' && cp[4] == L'\0')
+                        || (cp[3] == L'-' && cp[4] == L'8' && cp[5] == L'\0'))
                 {
-                    // Use UTF-8
                     iCodePage = CP_UTF8;
                 }
                 else
                 {
                     // Other codepage tokens (fr-FR.1252, etc.) aren't supported for BCP-47 tags (eg: Use Unicode!)
-                    // restore locale name to cache
-                    _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), localeNameOutput, wcslen(localeNameOutput) + 1));
-                    return nullptr;  /* input unrecognized as supported locale name */
+                    return nullptr;
                 }
             }
-            // Get default ANSI code page - fall back to UTF-8 if fail or Unicode-Only
-            // (failure shouldn't be possible because IsValidLocaleName worked)
-            else if (__acrt_GetLocaleInfoEx(expr, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
-                                            (LPWSTR)&iCodePage, sizeof(iCodePage) / sizeof(wchar_t)) == 0
-                     || iCodePage == 0) // for Unicode-only locales
+            else
             {
-                iCodePage = CP_UTF8;
+                iCodePage = get_default_code_page(normalized_locale_name);
             }
 
-            // Copy code page
-            *pcachecp = (WORD) iCodePage;
+            // Commit code page
+            *pcachecp = static_cast<WORD>(iCodePage);
 
-            /* Copy the locale name to the output */
+            // Commit locale name that we will return to the user (same as input locale string).
             _ERRCHECK(wcsncpy_s(cacheout, cacheoutLen, expr, charactersInExpression + 1));
 
-            // Also store to locale name output string
-            _ERRCHECK(wcsncpy_s(localeNameOutput, localeNameSizeInChars, expr, charactersInExpression + 1));
-
-            // Finally, make sure the locale name is cached for subsequent use
-            _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), names.szLanguage, charactersInExpression + 1));
+            // Commit normalized name for internal use.
+            locale_name_guard.commit_locale_name(normalized_locale_name, wcslen(normalized_locale_name) + 1);
         }
         else
         {
-            // restore locale name to cache
-            _ERRCHECK(wcsncpy_s(_psetloc_data->_cacheLocaleName, _countof(_psetloc_data->_cacheLocaleName), localeNameOutput, wcslen(localeNameOutput) + 1));
-            return nullptr;  /* input unrecognized as locale name */
+            return nullptr;  // input unrecognized as locale name
         }
 
+        // Operation succeeded - commit input cache.
         if (*expr && charactersInExpression < MAX_LC_LEN)
+        {
             _ERRCHECK(wcsncpy_s(cachein, cacheinLen, expr, charactersInExpression + 1));
+        }
         else
+        {
             *cachein = L'\x0';
-
-        /* end: cache atomic section */
+        }
     }
 
-    if (cp)
-        memcpy(cp, pcachecp, sizeof(*pcachecp));   /* possibly return cp */
+    output_code_page = *pcachecp; // Update code page
 
     _ERRCHECK(wcscpy_s(output, sizeInChars, cacheout));
-    return cacheout; /* return fully expanded locale string or locale name */
+    return cacheout; // Return locale name to be given back to user, with lifetime bound in PTD
 }
 
 /* helpers */
@@ -1014,10 +1339,10 @@ int __lc_wcstolc ( __crt_locale_strings *names, const wchar_t *wlocale)
         return 0;
     }
 
-    // Looks like Language_Country.Codepage
+    // Looks like Language_Country/Region.Codepage
     for (i=0; ; i++)
     {
-        // _ language/country separator, . is before codepage, either , or \0 are end of string.
+        // _ language country/region separator, . is before codepage, either , or \0 are end of string.
         len = wcscspn(wlocale, L"_.,");
         if (len == 0)
             return -1;  /* syntax error, can't start with a separator */
@@ -1029,15 +1354,8 @@ int __lc_wcstolc ( __crt_locale_strings *names, const wchar_t *wlocale)
             _ERRCHECK(wcsncpy_s(names->szLanguage, _countof(names->szLanguage), wlocale, len));
             if (wch == L'.')
             {
-                // '.' is a delimiter before codepage, so codepage is expected next (skip country)
+                // '.' is a delimiter before codepage, so codepage is expected next (skip country/region)
                 i++;
-
-                // We only allow .utf8 for mixed codepages, no number codepages allowed.
-                if (wlocale[len + 1] != 'u' && wlocale[len + 1] != 'U')
-                {
-                    // .other codepage not allowed
-                    return -1;
-                }
             }
         }
 
@@ -1064,7 +1382,7 @@ int __lc_wcstolc ( __crt_locale_strings *names, const wchar_t *wlocale)
     }
     return 0;
 }
-// Append locale name pieces together in the form of "Language_country.CodePage"
+// Append locale name pieces together in the form of "Language_country/region.CodePage"
 // Note that the preferred form is the BCP-47 tag, but we don't want to change legacy names
 void __lc_lctowcs ( wchar_t *locale, size_t numberOfElements, const __crt_locale_strings *names)
 {

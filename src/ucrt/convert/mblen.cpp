@@ -7,7 +7,6 @@
 // contained in a multibyte character.
 //
 #include <corecrt_internal_mbstring.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
@@ -16,8 +15,8 @@ using namespace __crt_mbstring;
 // character encodings.  If the next max_count bytes of the string are not a valid
 // multibyte character, -1 is returned.  Otherwise, the number of bytes that
 // compose the next multibyte character are returned.
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mblen_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _mblen_l(
     char const* const string,
     size_t      const max_count,
     _locale_t   const locale
@@ -94,13 +93,11 @@ extern "C" int __cdecl _mblen_l_downlevel(
         return sizeof(char);
     }
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mblen_l_downlevel);
-
 #endif
 
 
-/*extern "C" int __cdecl mblen(
+#if 0
+extern "C" int __cdecl mblen(
     char const* const string,
     size_t      const max_count
     )
@@ -113,4 +110,5 @@ _LCRT_DEFINE_IAT_SYMBOL(_mblen_l_downlevel);
     {
         return _mblen_l(string, max_count, nullptr);
     }
-}*/
+}
+#endif

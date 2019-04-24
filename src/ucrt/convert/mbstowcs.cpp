@@ -13,8 +13,7 @@
 #include <locale.h>
 #include <errno.h>
 #include <stdlib.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 using namespace __crt_mbstring;
 
@@ -67,7 +66,6 @@ static size_t __cdecl _mbstowcs_l_helper(
 
 
     //_LocaleUpdate _loc_update(plocinfo);
-    /* if destination string exists, fill it in */
 	LCID _lc_ctype;
 	unsigned int _locale_lc_codepage;
 
@@ -191,8 +189,8 @@ static size_t __cdecl _mbstowcs_l_helper(
 
 }
 
-#ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstowcs_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" size_t __cdecl _mbstowcs_l(
     wchar_t  *pwcs,
     const char *s,
     size_t n,
@@ -203,12 +201,10 @@ extern "C" size_t __cdecl _mbstowcs_l_downlevel(
 
     return _mbstowcs_l_helper(pwcs, s, n, plocinfo);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbstowcs_l_downlevel);
-
 #endif
 
-/*extern "C" size_t __cdecl mbstowcs(
+#if 0
+extern "C" size_t __cdecl mbstowcs(
     wchar_t  *pwcs,
     const char *s,
     size_t n
@@ -224,7 +220,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbstowcs_l_downlevel);
             return _mbstowcs_l(pwcs, s, n, nullptr);
         }
         _END_SECURE_CRT_DEPRECATION_DISABLE
-}*/
+}
+#endif
 
 /***
 *errno_t mbstowcs_s() - Convert multibyte char string to wide char string.
@@ -251,8 +248,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbstowcs_l_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _mbstowcs_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl _mbstowcs_s_l(
     size_t *pConvertedChars,
     wchar_t  *pwcs,
     size_t sizeInWords,
@@ -324,13 +321,10 @@ extern "C" errno_t __cdecl _mbstowcs_s_l_downlevel(
 
     return retvalue;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbstowcs_s_l_downlevel);
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl mbstowcs_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl mbstowcs_s(
     size_t *pConvertedChars,
     wchar_t  *pwcs,
     size_t sizeInWords,
@@ -386,7 +380,4 @@ extern "C" errno_t __cdecl mbstowcs_s_downlevel(
 
 	return retvalue;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(mbstowcs_s_downlevel);
-
 #endif

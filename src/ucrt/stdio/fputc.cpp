@@ -18,7 +18,9 @@ extern "C" int __cdecl _fputc_nolock(int const c, FILE* const public_stream)
     // If there is no room for the character in the buffer, flush the buffer and
     // write the character:
     if (stream->_cnt < 0)
+        {
         return __acrt_stdio_flush_and_write_narrow_nolock(c, stream.public_stream());
+        }
 
     // Otherwise, there is sufficient room, so we can write directly to the buffer:
     char const char_value = static_cast<char>(c);

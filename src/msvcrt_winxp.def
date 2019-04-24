@@ -23,376 +23,376 @@ _abs64
 _invalid_parameter=_invalid_parameter_advanced
 
 ;msvcrt_winxp.cpp
-__CxxFrameHandler3=__CxxFrameHandler3_downlevel
-_controlfp_s=_controlfp_s_downlevel
-_gcvt_s=_gcvt_s_downlevel
-_ecvt_s=_ecvt_s_downlevel
-_mktemp_s=_mktemp_s_downlevel
-_wmktemp_s=_wmktemp_s_downlevel
-_searchenv_s=_searchenv_s_downlevel
-_wsearchenv_s=_wsearchenv_s_downlevel
-_chsize_s=_chsize_s_downlevel
-__CppXcptFilter=__CppXcptFilter_downlevel
-_initterm_e=_initterm_e_downlevel
+__CxxFrameHandler3
+_controlfp_s
+_gcvt_s
+_ecvt_s
+_mktemp_s
+_wmktemp_s
+_searchenv_s
+_wsearchenv_s
+_chsize_s
+__CppXcptFilter
+_initterm_e
 
 ;_msvcrt.cpp
-_difftime32=_difftime32_downlevel
-_difftime64=_difftime64_downlevel
-_localtime32=_localtime32_downlevel
-_localtime32_s=_localtime32_s_downlevel
-_localtime64_s=_localtime64_s_downlevel
-_fseeki64=_fseeki64_downlevel
-rand_s=rand_s_downlevel
-_waccess_s=_waccess_s_downlevel
-_access_s=_access_s_downlevel
-_wasctime_s=_wasctime_s_downlevel
-asctime_s=asctime_s_downlevel
-_ctime32=_ctime32_downlevel
-_wctime32=_wctime32_downlevel
-_ctime32_s=_ctime32_s_downlevel
-_ctime64_s=_ctime64_s_downlevel
-_wctime32_s=_wctime32_s_downlevel
-_wctime64_s=_wctime64_s_downlevel
-_gmtime32=_gmtime32_downlevel
-_gmtime32_s=_gmtime32_s_downlevel
-_gmtime64_s=_gmtime64_s_downlevel
-_mkgmtime64=_mkgmtime64_downlevel
-_mkgmtime32=_mkgmtime32_downlevel
-_mktime32=_mktime32_downlevel
-getenv_s=getenv_s_downlevel
-_wgetenv_s=_wgetenv_s_downlevel
-fopen_s=fopen_s_downlevel
-_wfopen_s=_wfopen_s_downlevel
-freopen_s=freopen_s_downlevel
-_wfreopen_s=_wfreopen_s_downlevel
-_ftime32_s=_ftime32_s_downlevel
-_ftime64_s=_ftime64_s_downlevel
-_ftime32=_ftime32_downlevel
-_futime32=_futime32_downlevel
-_utime32=_utime32_downlevel
-_wutime32=_wutime32_downlevel
-clearerr_s=clearerr_s_downlevel
-_putenv_s=_putenv_s_downlevel
-_wputenv_s=_wputenv_s_downlevel
-tmpnam_s=tmpnam_s_downlevel
-_wtmpnam_s=_wtmpnam_s_downlevel
-_sopen_s=_sopen_s_downlevel
-_wsopen_s=_wsopen_s_downlevel
-_umask_s=_umask_s_downlevel
-_strerror_s=_strerror_s_downlevel
-__wcserror_s=__wcserror_s_downlevel
-_wassert=_wassert_downlevel
-_fcvt_s=_fcvt_s_downlevel
-_strdate_s=_strdate_s_downlevel
-_wstrdate_s=_wstrdate_s_downlevel
-_set_controlfp=_set_controlfp_downlevel
-_strtime_s=_strtime_s_downlevel
-_wstrtime_s=_wstrtime_s_downlevel
-tmpfile_s=tmpfile_s_downlevel
-_cgets_s=_cgets_s_downlevel
-_cgetws_s=_cgetws_s_downlevel
+_difftime32
+_difftime64
+_localtime32=localtime
+_localtime32_s
+_localtime64_s
+_fseeki64
+rand_s
+_waccess_s
+_access_s
+_wasctime_s
+asctime_s
+_ctime32=ctime
+_wctime32=_wctime
+_ctime32_s
+_ctime64_s
+_wctime32_s
+_wctime64_s
+_gmtime32=gmtime
+_gmtime32_s
+_gmtime64_s
+_mkgmtime64
+_mkgmtime32
+_mktime32=mktime
+getenv_s
+_wgetenv_s
+fopen_s
+_wfopen_s
+freopen_s
+_wfreopen_s
+_ftime32_s
+_ftime64_s
+_ftime32=_ftime
+_futime32=_futime
+_utime32=_utime
+_wutime32=_wutime
+clearerr_s
+_putenv_s
+_wputenv_s
+tmpnam_s
+_wtmpnam_s
+_sopen_s
+_wsopen_s
+_umask_s
+_strerror_s
+__wcserror_s
+_wassert
+_fcvt_s
+_strdate_s
+_wstrdate_s
+_set_controlfp
+_strtime_s
+_wstrtime_s
+tmpfile_s
+_cgets_s
+_cgetws_s
 
 
 
 ;mbslwr.cpp
-_mbslwr_s_l=_mbslwr_s_l_downlevel
-_mbslwr_s=_mbslwr_s_downlevel
-_mbslwr_l=_mbslwr_l_downlevel
+_mbslwr_s_l
+_mbslwr_s
+_mbslwr_l
 
 ;mbsupr.cpp
-_mbsupr_s_l=_mbsupr_s_l_downlevel
-_mbsupr_s=_mbsupr_s_downlevel
-_mbsupr_l=_mbsupr_l_downlevel
+_mbsupr_s_l
+_mbsupr_s
+_mbsupr_l
 
 ;errno.cpp
-_set_errno=_set_errno_downlevel
-_get_errno=_get_errno_downlevel
-_set_doserrno=_set_doserrno_downlevel
-_get_doserrno=_get_doserrno_downlevel
+_set_errno
+_get_errno
+_set_doserrno
+_get_doserrno
 
 ;strlwr.cpp
-_strlwr_l=_strlwr_l_downlevel
-_strlwr_s_l=_strlwr_s_l_downlevel
-_strlwr_s=_strlwr_s_downlevel
+_strlwr_l
+_strlwr_s_l
+_strlwr_s
 
 ;strupr.cpp
-_strupr_l=_strupr_l_downlevel
-_strupr_s_l=_strupr_s_l_downlevel
-_strupr_s=_strupr_s_downlevel
+_strupr_l
+_strupr_s_l
+_strupr_s
 
 ;wcslwr.cpp
-_wcslwr_l=_wcslwr_l_downlevel
-_wcslwr_s_l=_wcslwr_s_l_downlevel
-_wcslwr_s=_wcslwr_s_downlevel
+_wcslwr_l
+_wcslwr_s_l
+_wcslwr_s
 
 ;wcsupr.cpp
-_wcsupr_l=_wcsupr_l_downlevel
-_wcsupr_s_l=_wcsupr_s_l_downlevel
-_wcsupr_s=_wcsupr_s_downlevel
+_wcsupr_l
+_wcsupr_s_l
+_wcsupr_s
 
 ;_mbslen.cpp
-_mbstrlen_l=_mbstrlen_l_downlevel
-_mbstrnlen_l=_mbstrnlen_l_downlevel
-_mbstrnlen=_mbstrnlen_downlevel
+_mbstrlen_l
+_mbstrnlen_l
+_mbstrnlen
 
 ;argv_data.cpp
-_get_wpgmptr=_get_wpgmptr_downlevel
-_get_pgmptr=_get_pgmptr_downlevel
+_get_wpgmptr
+_get_pgmptr
 
 ;bsearch.cpp
-bsearch_s=bsearch_s_downlevel
+bsearch_s
 
 ;isctype.cpp
-_isctype_l=_isctype_l_downlevel
+_isctype_l
 
 ;ismbalnm.cpp
-_ismbcalnum_l=_ismbcalnum_l_downlevel
+_ismbcalnum_l
 
-_ismbcalpha_l=_ismbcalpha_l_downlevel
+_ismbcalpha_l
 
-_ismbcdigit_l=_ismbcdigit_l_downlevel
+_ismbcdigit_l
 
-_ismbcgraph_l=_ismbcgraph_l_downlevel
+_ismbcgraph_l
 
 ;ismbknj.cpp
-_ismbchira_l=_ismbchira_l_downlevel
-_ismbckata_l=_ismbckata_l_downlevel
-_ismbcsymbol_l=_ismbcsymbol_l_downlevel
+_ismbchira_l
+_ismbckata_l
+_ismbcsymbol_l
 
-_ismbclegal_l=_ismbclegal_l_downlevel
+_ismbclegal_l
 
-_ismbclower_l=_ismbclower_l_downlevel
+_ismbclower_l
 
-_ismbcprint_l=_ismbcprint_l_downlevel
+_ismbcprint_l
 
-_ismbslead_l=_ismbslead_l_downlevel
+_ismbslead_l
 
-_ismbcspace_l=_ismbcspace_l_downlevel
+_ismbcspace_l
 
 ;iswctype.cpp，由于cd调用约定，直接转发即可。
 _iswctype_l=iswctype
 
 ;ismbstr.cpp
-_ismbstrail_l=_ismbstrail_l_downlevel
+_ismbstrail_l
 
 _lfind_s
 _lsearch_s
 
-_mbccpy_l=_mbccpy_l_downlevel
+_mbccpy_l
 
-_mbccpy_s_l=_mbccpy_s_l_downlevel
+_mbccpy_s_l
 
 ;mbclevel.cpp
-_ismbcl0_l=_ismbcl0_l_downlevel
-_ismbcl1_l=_ismbcl1_l_downlevel
-_ismbcl2_l=_ismbcl2_l_downlevel
+_ismbcl0_l
+_ismbcl1_l
+_ismbcl2_l
 
-_mblen_l=_mblen_l_downlevel
+_mblen_l
 
 ;mbrtowc.cpp
-btowc=btowc_downlevel
-mbrlen=mbrlen_downlevel
-mbrtowc=mbrtowc_downlevel
-mbsrtowcs=mbsrtowcs_downlevel
-mbsrtowcs_s=mbsrtowcs_s_downlevel
+btowc
+mbrlen
+mbrtowc
+mbsrtowcs
+mbsrtowcs_s
 
 
-_mbsbtype_l=_mbsbtype_l_downlevel
+_mbsbtype_l
 
-_mbscat_s_l=_mbscat_s_l_downlevel
+_mbscat_s_l
 
-_mbschr_l=_mbschr_l_downlevel
+_mbschr_l
 
-_mbscmp_l=_mbscmp_l_downlevel
+_mbscmp_l
 
-_mbscoll_l=_mbscoll_l_downlevel
+_mbscoll_l
 
-_mbscpy_s_l=_mbscpy_s_l_downlevel
+_mbscpy_s_l
 
-_mbscspn_l=_mbscspn_l_downlevel
-_mbspbrk_l=_mbspbrk_l_downlevel
+_mbscspn_l
+_mbspbrk_l
 
-_mbsdec_l=_mbsdec_l_downlevel
+_mbsdec_l
 
-_mbsicmp_l=_mbsicmp_l_downlevel
+_mbsicmp_l
 
-_mbsicoll_l=_mbsicoll_l_downlevel
+_mbsicoll_l
 
-_mbsinc_l=_mbsinc_l_downlevel
+_mbsinc_l
 
 ;mbslen_s.cpp
-_mbslen_l=_mbslen_l_downlevel
-_mbsnlen_l=_mbsnlen_l_downlevel
-_mbsnlen=_mbsnlen_downlevel
+_mbslen_l
+_mbsnlen_l
+_mbsnlen
 
-_mbsnbcat_l=_mbsnbcat_l_downlevel
+_mbsnbcat_l
 
-_mbsnbcat_s_l=_mbsnbcat_s_l_downlevel
+_mbsnbcat_s_l
 
-_mbsnbcmp_l=_mbsnbcmp_l_downlevel
+_mbsnbcmp_l
 
-_mbsnbcnt_l=_mbsnbcnt_l_downlevel
+_mbsnbcnt_l
 
-_mbsnbcoll_l=_mbsnbcoll_l_downlevel
+_mbsnbcoll_l
 
-_mbsnbcpy_l=_mbsnbcpy_l_downlevel
+_mbsnbcpy_l
 
-_mbsnbcpy_s_l=_mbsnbcpy_s_l_downlevel
+_mbsnbcpy_s_l
 
-_mbsnbicmp_l=_mbsnbicmp_l_downlevel
+_mbsnbicmp_l
 
-_mbsnbicoll_l=_mbsnbicoll_l_downlevel
+_mbsnbicoll_l
 
-_mbsnbset_l=_mbsnbset_l_downlevel
+_mbsnbset_l
 
-_mbsnbset_s_l=_mbsnbset_s_l_downlevel
+_mbsnbset_s_l
 
-_mbsncat_l=_mbsncat_l_downlevel
+_mbsncat_l
 
-_mbsncat_s_l=_mbsncat_s_l_downlevel
+_mbsncat_s_l
 
-_mbsnccnt_l=_mbsnccnt_l_downlevel
+_mbsnccnt_l
 
-_mbsncmp_l=_mbsncmp_l_downlevel
+_mbsncmp_l
 
-_mbsncoll_l=_mbsncoll_l_downlevel
+_mbsncoll_l
 
-_mbsncpy_l=_mbsncpy_l_downlevel
+_mbsncpy_l
 
-_mbsncpy_s_l=_mbsncpy_s_l_downlevel
+_mbsncpy_s_l
 
-_mbsnextc_l=_mbsnextc_l_downlevel
+_mbsnextc_l
 
-_mbsnicmp_l=_mbsnicmp_l_downlevel
+_mbsnicmp_l
 
-_mbsnicoll_l=_mbsnicoll_l_downlevel
+_mbsnicoll_l
 
-_mbsnset_s_l=_mbsnset_s_l_downlevel
+_mbsnset_s_l
 
-_mbsrchr_l=_mbsrchr_l_downlevel
+_mbsrchr_l
 
-_mbsrev_l=_mbsrev_l_downlevel
+_mbsrev_l
 
-_mbsset_l=_mbsset_l_downlevel
+_mbsset_l
 
-_mbsset_s_l=_mbsset_s_l_downlevel
+_mbsset_s_l
 
-_mbsspn_l=_mbsspn_l_downlevel
+_mbsspn_l
 
-_mbsspnp_l=_mbsspnp_l_downlevel
+_mbsspnp_l
 
-_mbsstr_l=_mbsstr_l_downlevel
+_mbsstr_l
 
-_mbstok_l=_mbstok_l_downlevel
+_mbstok_l
 
-_mbstok_s_l=_mbstok_s_l_downlevel
+_mbstok_s_l
 
 ;mbstowcs.cpp
-_mbstowcs_l=_mbstowcs_l_downlevel
-_mbstowcs_s_l=_mbstowcs_s_l_downlevel
-mbstowcs_s=mbstowcs_s_downlevel
+_mbstowcs_l
+_mbstowcs_s_l
+mbstowcs_s
 
-_mbctohira_l=_mbctohira_l_downlevel
+_mbctohira_l
 
-_mbctokata_l=_mbctokata_l_downlevel
+_mbctokata_l
 
-_mbctolower_l=_mbctolower_l_downlevel
+_mbctolower_l
 
-_mbctoupper_l=_mbctoupper_l_downlevel
+_mbctoupper_l
 
-_mbtowc_l=_mbtowc_l_downlevel
+_mbtowc_l
 
-_memicmp_l=_memicmp_l_downlevel
+_memicmp_l
 
 ;setmode.cpp
-_set_fmode=_set_fmode_downlevel
-_get_fmode=_get_fmode_downlevel
+_set_fmode
+_get_fmode
 
-_strcoll_l=_strcoll_l_downlevel
+_strcoll_l
 
 ;strerror.cpp
-strerror_s=strerror_s_downlevel
-_wcserror_s=_wcserror_s_downlevel
+strerror_s
+_wcserror_s
 
-_stricmp_l=_stricmp_l_downlevel
+_stricmp_l
 
-_stricoll_l=_stricoll_l_downlevel
+_stricoll_l
 
-__strncnt=__strncnt_downlevel
+__strncnt
 
-_strncoll_l=_strncoll_l_downlevel
+_strncoll_l
 
-_strnicmp_l=_strnicmp_l_downlevel
+_strnicmp_l
 
-_strnicoll_l=_strnicoll_l_downlevel
+_strnicoll_l
 
-_strxfrm_l=_strxfrm_l_downlevel
+_strxfrm_l
 
 ;tojisjms.cpp
-_mbcjistojms_l=_mbcjistojms_l_downlevel
-_mbcjmstojis_l=_mbcjmstojis_l_downlevel
+_mbcjistojms_l
+_mbcjmstojis_l
 
 ;tolower_toupper.cpp
-_tolower_l=_tolower_l_downlevel
-_toupper_l=_toupper_l_downlevel
+_tolower_l
+_toupper_l
 
 ;tombbmbc.cpp
-_mbbtombc_l=_mbbtombc_l_downlevel
-_mbctombb_l=_mbctombb_l_downlevel
+_mbbtombc_l
+_mbctombb_l
 
-_towlower_l=_towlower_l_downlevel
+_towlower_l
 
-_towupper_l=_towupper_l_downlevel
+_towupper_l
 
-wcrtomb=wcrtomb_downlevel
+wcrtomb
 
 ;wcrtomb.cpp
-wcsrtombs=wcsrtombs_downlevel
-wcsrtombs_s=wcsrtombs_s_downlevel
-wctob=wctob_downlevel
+wcsrtombs
+wcsrtombs_s
+wctob
 
-_wcscoll_l=_wcscoll_l_downlevel
+_wcscoll_l
 
-_wcsicmp_l=_wcsicmp_l_downlevel
+_wcsicmp_l
 
-_wcsicoll_l=_wcsicoll_l_downlevel
+_wcsicoll_l
 
-__wcsncnt=__wcsncnt_downlevel
+__wcsncnt
 
-_wcsncoll_l=_wcsncoll_l_downlevel
+_wcsncoll_l
 
-_wcsnicmp_l=_wcsnicmp_l_downlevel
+_wcsnicmp_l
 
-_wcsnicoll_l=_wcsnicoll_l_downlevel
+_wcsnicoll_l
 
 ;wcstombs.cpp
-_wcstombs_l=_wcstombs_l_downlevel
-_wcstombs_s_l=_wcstombs_s_l_downlevel
-wcstombs_s=wcstombs_s_downlevel
+_wcstombs_l
+_wcstombs_s_l
+wcstombs_s
 
-_wcsxfrm_l=_wcsxfrm_l_downlevel
+_wcsxfrm_l
 
 ;wctomb.cpp
-_wctomb_s_l=_wctomb_s_l_downlevel
-wctomb_s=wctomb_s_downlevel
-_wctomb_l=_wctomb_l_downlevel
+_wctomb_s_l
+wctomb_s
+_wctomb_l
 
 ;_ctype.cpp
-_isalpha_l=_isalpha_l_downlevel
-_isupper_l=_isupper_l_downlevel
-_islower_l=_islower_l_downlevel
-_isdigit_l=_isdigit_l_downlevel
-_isxdigit_l=_isxdigit_l_downlevel
-_isspace_l=_isspace_l_downlevel
-_isalnum_l=_isalnum_l_downlevel
-_isprint_l=_isprint_l_downlevel
-_isgraph_l=_isgraph_l_downlevel
-_iscntrl_l=_iscntrl_l_downlevel
-_iscsymf_l=_iscsymf_l_downlevel
-_iscsym_l=_iscsym_l_downlevel
+_isalpha_l
+_isupper_l
+_islower_l
+_isdigit_l
+_isxdigit_l
+_isspace_l
+_isalnum_l
+_isprint_l
+_isgraph_l
+_iscntrl_l
+_iscsymf_l
+_iscsym_l
 
 ;_wctype.cpp
-_isleadbyte_l=_isleadbyte_l_downlevel
+_isleadbyte_l
 _iswalpha_l=iswalpha
 _iswupper_l=iswupper
 _iswlower_l=iswlower
@@ -406,195 +406,196 @@ _iswgraph_l=iswgraph
 _iswcntrl_l=iswcntrl
 
 ;ismbbyte.cpp
-_ismbbkalnum_l=_ismbbkalnum_l_downlevel
-_ismbbkprint_l=_ismbbkprint_l_downlevel
-_ismbbkpunct_l=_ismbbkpunct_l_downlevel
-_ismbbalnum_l=_ismbbalnum_l_downlevel
-_ismbbalpha_l=_ismbbalpha_l_downlevel
-_ismbbgraph_l=_ismbbgraph_l_downlevel
-_ismbbprint_l=_ismbbprint_l_downlevel
-_ismbbpunct_l=_ismbbpunct_l_downlevel
-_ismbblead_l=_ismbblead_l_downlevel
-_ismbbtrail_l=_ismbbtrail_l_downlevel
-_ismbbkana_l=_ismbbkana_l_downlevel
+_ismbbkalnum_l
+_ismbbkprint_l
+_ismbbkpunct_l
+_ismbbalnum_l
+_ismbbalpha_l
+_ismbbgraph_l
+_ismbbprint_l
+_ismbbpunct_l
+_ismbblead_l
+_ismbbtrail_l
+_ismbbkana_l
 
 ;ismbpunc.cpp
-_ismbcpunct_l=_ismbcpunct_l_downlevel
+_ismbcpunct_l
 
-_time32=_time32_downlevel
-_time64=_time64_downlevel
+;WinXP只存在time
+_time32=time
+
 
 
 ;msvcrt.lib
 qsort_s
-_i64toa_s=_i64toa_s_downlevel
-_i64tow_s=_i64tow_s_downlevel
-_itoa_s=_itoa_s_downlevel
-_itow_s=_itow_s_downlevel
-_ltoa_s=_ltoa_s_downlevel
-_ltow_s=_ltow_s_downlevel
-_makepath_s=_makepath_s_downlevel
-_mbccpy_s=_mbccpy_s_downlevel
-_mbscat_s=_mbscat_s_downlevel
-_mbscpy_s=_mbscpy_s_downlevel
-_mbsnbcat_s=_mbsnbcat_s_downlevel
-_mbsnbcpy_s=_mbsnbcpy_s_downlevel
-_mbsnbset_s=_mbsnbset_s_downlevel
-_mbsncat_s=_mbsncat_s_downlevel
-_mbsncpy_s=_mbsncpy_s_downlevel
-_mbsnset_s=_mbsnset_s_downlevel
-_mbsset_s=_mbsset_s_downlevel
-_mbstok_s=_mbstok_s_downlevel
-memcpy_s=memcpy_s_downlevel
-memmove_s=memmove_s_downlevel
-_splitpath_s=_splitpath_s_downlevel
-strcat_s=strcat_s_downlevel
-strcpy_s=strcpy_s_downlevel
-strncat_s=strncat_s_downlevel
-strncpy_s=strncpy_s_downlevel
-strnlen=strnlen_downlevel
-_strnset_s=_strnset_s_downlevel
-_strset_s=_strset_s_downlevel
-strtok_s=strtok_s_downlevel
-_ui64toa_s=_ui64toa_s_downlevel
-_ui64tow_s=_ui64tow_s_downlevel
-_ultoa_s=_ultoa_s_downlevel
-_ultow_s=_ultow_s_downlevel
-wcscat_s=wcscat_s_downlevel
-wcscpy_s=wcscpy_s_downlevel
-wcsncat_s=wcsncat_s_downlevel
-wcsncpy_s=wcsncpy_s_downlevel
-wcsnlen=wcsnlen_downlevel
-_wcsnset_s=_wcsnset_s_downlevel
-_wcsset_s=_wcsset_s_downlevel
-wcstok_s=wcstok_s_downlevel
-_wmakepath_s=_wmakepath_s_downlevel
-_wsplitpath_s=_wsplitpath_s_downlevel
+_i64toa_s
+_i64tow_s
+_itoa_s
+_itow_s
+_ltoa_s
+_ltow_s
+_makepath_s
+_mbccpy_s
+_mbscat_s
+_mbscpy_s
+_mbsnbcat_s
+_mbsnbcpy_s
+_mbsnbset_s
+_mbsncat_s
+_mbsncpy_s
+_mbsnset_s
+_mbsset_s
+_mbstok_s
+memcpy_s
+memmove_s
+_splitpath_s
+strcat_s
+strcpy_s
+strncat_s
+strncpy_s
+strnlen
+_strnset_s
+_strset_s
+strtok_s
+_ui64toa_s
+_ui64tow_s
+_ultoa_s
+_ultow_s
+wcscat_s
+wcscpy_s
+wcsncat_s
+wcsncpy_s
+wcsnlen
+_wcsnset_s
+_wcsset_s
+wcstok_s
+_wmakepath_s
+_wsplitpath_s
 
 
 ;strtod.cpp
-_strtod_l=_strtod_l_downlevel
+_strtod_l
 
 ;inoutput_downlevel.cpp
-_vfwprintf_l=_vfwprintf_l_downlevel
-_vfwprintf_s_l=_vfwprintf_s_l_downlevel
-vfwprintf_s=vfwprintf_s_downlevel
-_vfwprintf_p_l=_vfwprintf_p_l_downlevel
-_vfwprintf_p=_vfwprintf_p_downlevel
-_vwprintf_l=_vwprintf_l_downlevel
-_vwprintf_s_l=_vwprintf_s_l_downlevel
-vwprintf_s=vwprintf_s_downelvel
-_vwprintf_p_l=_vwprintf_p_l_downlevel
-_vwprintf_p=_vwprintf_p_downlevel
-_fwprintf_l=_fwprintf_l_downlevel
-_fwprintf_s_l=_fwprintf_s_l_downlevel
-fwprintf_s=fwprintf_s_downlevel
-_fwprintf_p_l=_fwprintf_p_l_downlevel
-_fwprintf_p=_fwprintf_p_downlevel
-_wprintf_l=_wprintf_l_downlevel
-_wprintf_s_l=_wprintf_s_l_downlevel
-wprintf_s=wprintf_s_downlevel
-_wprintf_p_l=_wprintf_p_l_downlevel
-_wprintf_p=_wprintf_p_downlevel
-_vfwscanf_l=_vfwscanf_l_downlevel
-vfwscanf=vfwscanf_downlevel
-_vfwscanf_s_l=_vfwscanf_s_l_downlevel
-vfwscanf_s=vfwscanf_s_downlevel
-_vwscanf_l=_vwscanf_l_downlevel
-vwscanf=vwscanf_downlevel
-_vwscanf_s_l=_vwscanf_s_l_downlevel
-vwscanf_s=vwscanf_s_downlevel
-_fwscanf_l=_fwscanf_l_downlevel
-_fwscanf_s_l=_fwscanf_s_l_downlevel
-fwscanf_s=fwscanf_s_downlevel
-_wscanf_l=_wscanf_l_downlevel
-_wscanf_s_l=_wscanf_s_l_downlevel
-wscanf_s=wscanf_s_downlevel
-_vsnwprintf_l=_vsnwprintf_l_downlevel
-_vsnwprintf_s_l=_vsnwprintf_s_l_downlevel
-_vsnwprintf_s=_vsnwprintf_s_downlevel
-_vswprintf_c_l=_vswprintf_c_l_downlevel
-_vswprintf_c=_vswprintf_c_downlevel
-_vswprintf_l=_vswprintf_l_downlevel
-_vswprintf=_vswprintf_downlevel
-_vswprintf_s_l=_vswprintf_s_l_downlevel
-vswprintf_s=vswprintf_s_downlevel
-_vswprintf_p_l=_vswprintf_p_l_downlevel
-_vscwprintf_l=_vscwprintf_l_downlevel
-_vscwprintf_p_l=_vscwprintf_p_l_downlevel
-_swprintf=_swprintf_downlevel
-_swprintf_s_l=_swprintf_s_l_downlevel
-swprintf_s=swprintf_s_downlevel
-_swprintf_p_l=_swprintf_p_l_downlevel
-_swprintf_p=_swprintf_p_downlevel
-_swprintf_c_l=_swprintf_c_l_downlevel
-_swprintf_c=_swprintf_c_downlevel
-_snwprintf_l=_snwprintf_l_downlevel
-_snwprintf_s_l=_snwprintf_s_l_downlevel
-_snwprintf_s=_snwprintf_s_downlevel
-_scwprintf_l=_scwprintf_l_downlevel
-_scwprintf_p_l=_scwprintf_p_l_downlevel
-_swscanf_l=_swscanf_l_downlevel
-_swscanf_s_l=_swscanf_s_l_downlevel
-swscanf_s=swscanf_s_downlevel
-_snwscanf_l=_snwscanf_l_downlevel
-_snwscanf_s_l=_snwscanf_s_l_downlevel
-_snwscanf_s=_snwscanf_s_downlevel
-_vfprintf_l=_vfprintf_l_downlevel
-_vfprintf_s_l=_vfprintf_s_l_downlevel
-vfprintf_s=vfprintf_s_downlevel
-_vfprintf_p_l=_vfprintf_p_l_downlevel
-_vfprintf_p=_vfprintf_p_downlevel
-_vprintf_l=_vprintf_l_downlevel
-_vprintf_s_l=_vprintf_s_l_downlevel
-vprintf_s=vprintf_s_downlevel
-_vprintf_p_l=_vprintf_p_l_downlevel
-_vprintf_p=_vprintf_p_downlevel
-_fprintf_l=_fprintf_l_downlevel
-_fprintf_s_l=_fprintf_s_l_downlevel
-fprintf_s=fprintf_s_downlevel
-_fprintf_p_l=_fprintf_p_l_downlevel
-_fprintf_p=_fprintf_p_downlevel
-_printf_l=_printf_l_downlevel
-_printf_s_l=_printf_s_l_downlevel
-printf_s=printf_s_downlevel
-_printf_p_l=_printf_p_l_downlevel
-_printf_p=_printf_p_downlevel
-_fscanf_l=_fscanf_l_downlevel
-_fscanf_s_l=_fscanf_s_l_downlevel
-fscanf_s=fscanf_s_downlevel
-_scanf_l=_scanf_l_downlevel
-_scanf_s_l=_scanf_s_l_downlevel
-scanf_s=scanf_s_downlevel
-_vsnprintf_l=_vsnprintf_l_downlevel
-_vsprintf_l=_vsprintf_l_downlevel
-_vsprintf_s_l=_vsprintf_s_l_downlevel
-vsprintf_s=vsprintf_s_downlevel
-_vsprintf_p_l=_vsprintf_p_l_downlevel
-_vsprintf_p=_vsprintf_p_downlevel
-_vsnprintf_s_l=_vsnprintf_s_l_downlevel
-_vsnprintf_s=_vsnprintf_s_downlevel
-_vscprintf_l=_vscprintf_l_downlevel
-_vscprintf_p_l=_vscprintf_p_l_downlevel
-_vsnprintf_c_l=_vsnprintf_c_l_downlevel
-_vsnprintf_c=_vsnprintf_c_downlevel
-_sprintf_l=_sprintf_l_downlevel
-_sprintf_s_l=_sprintf_s_l_downlevel
-sprintf_s=sprintf_s_downlevel
-_sprintf_p_l=_sprintf_p_l_downlevel
-_snprintf_l=_snprintf_l_downlevel
-_snprintf_c_l=_snprintf_c_l_downlevel
-_snprintf_c=_snprintf_c_downlevel
-_snprintf_s_l=_snprintf_s_l_downlevel
-_snprintf_s=_snprintf_s_downlevel
-_scprintf_l=_scprintf_l_downlevel
-_scprintf_p_l=_scprintf_p_l_downlevel
-_sscanf_l=_sscanf_l_downlevel
-_sscanf_s_l=_sscanf_s_l_downlevel
-sscanf_s=sscanf_s_downlevel
-_snscanf_l=_snscanf_l_downlevel
-_snscanf_s_l=_snscanf_s_l_downlevel
-_snscanf_s=_snscanf_s_downlevel
+_vfwprintf_l
+_vfwprintf_s_l
+vfwprintf_s
+_vfwprintf_p_l
+_vfwprintf_p
+_vwprintf_l
+_vwprintf_s_l
+vwprintf_s
+_vwprintf_p_l
+_vwprintf_p
+_fwprintf_l
+_fwprintf_s_l
+fwprintf_s
+_fwprintf_p_l
+_fwprintf_p
+_wprintf_l
+_wprintf_s_l
+wprintf_s
+_wprintf_p_l
+_wprintf_p
+_vfwscanf_l
+vfwscanf
+_vfwscanf_s_l
+vfwscanf_s
+_vwscanf_l
+vwscanf
+_vwscanf_s_l
+vwscanf_s
+_fwscanf_l
+_fwscanf_s_l
+fwscanf_s
+_wscanf_l
+_wscanf_s_l
+wscanf_s
+_vsnwprintf_l
+_vsnwprintf_s_l
+_vsnwprintf_s
+_vswprintf_c_l
+_vswprintf_c
+_vswprintf_l
+_vswprintf
+_vswprintf_s_l
+vswprintf_s
+_vswprintf_p_l
+_vscwprintf_l
+_vscwprintf_p_l
+_swprintf
+_swprintf_s_l
+swprintf_s
+_swprintf_p_l
+_swprintf_p
+_swprintf_c_l
+_swprintf_c
+_snwprintf_l
+_snwprintf_s_l
+_snwprintf_s
+_scwprintf_l
+_scwprintf_p_l
+_swscanf_l
+_swscanf_s_l
+swscanf_s
+_snwscanf_l
+_snwscanf_s_l
+_snwscanf_s
+_vfprintf_l
+_vfprintf_s_l
+vfprintf_s
+_vfprintf_p_l
+_vfprintf_p
+_vprintf_l
+_vprintf_s_l
+vprintf_s
+_vprintf_p_l
+_vprintf_p
+_fprintf_l
+_fprintf_s_l
+fprintf_s
+_fprintf_p_l
+_fprintf_p
+_printf_l
+_printf_s_l
+printf_s
+_printf_p_l
+_printf_p
+_fscanf_l
+_fscanf_s_l
+fscanf_s
+_scanf_l
+_scanf_s_l
+scanf_s
+_vsnprintf_l
+_vsprintf_l
+_vsprintf_s_l
+vsprintf_s
+_vsprintf_p_l
+_vsprintf_p
+_vsnprintf_s_l
+_vsnprintf_s
+_vscprintf_l
+_vscprintf_p_l
+_vsnprintf_c_l
+_vsnprintf_c
+_sprintf_l
+_sprintf_s_l
+sprintf_s
+_sprintf_p_l
+_snprintf_l
+_snprintf_c_l
+_snprintf_c
+_snprintf_s_l
+_snprintf_s
+_scprintf_l
+_scprintf_p_l
+_sscanf_l
+_sscanf_s_l
+sscanf_s
+_snscanf_l
+_snscanf_s_l
+_snscanf_s
 
 
 

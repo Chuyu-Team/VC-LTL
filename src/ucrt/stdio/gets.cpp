@@ -16,8 +16,8 @@
 // [1] Insecure, which is used by the abominable gets() and _getws() functions.
 //     In this mode, the buffer is not bounds-checked; it is just assumed that
 //     the buffer is large enough.  Text is read until a newline is reached or
-//     EOF is reached.  This mode is enabled by passing SIZE_MAX as the buffer
-//     size.
+//     EOF is reached.  This mode is enabled by passing _CRT_UNBOUNDED_BUFFER_SIZE
+//     as the buffer size.
 //
 // [2] Secure, which is used by the gets_s() and _getws_s() functions.  In this
 //     mode, the buffer is bound-checked.  If there is insufficient space in the
@@ -63,7 +63,7 @@ static Character* __cdecl common_gets(
         }
 
         // For the insecure version, we do no buffer size check and no debug fill:
-        if (result_size_in_characters == static_cast<size_t>(-1))
+        if (result_size_in_characters == _CRT_UNBOUNDED_BUFFER_SIZE)
         {
 #pragma warning(push)
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY) // 26015 - knowingly unsafe
@@ -74,7 +74,7 @@ static Character* __cdecl common_gets(
                 c = stdio_traits::getc_nolock(stdin);
             }
             *result_it = '\0';
-#pragma warning(pop)            
+#pragma warning(pop)
         }
         // For the secure version, we track the buffer size.  If we run out of
         // buffer space, we still read in the rest of the current line until we
@@ -139,10 +139,10 @@ extern "C" wchar_t* __cdecl _getws_s(wchar_t* const result, size_t const result_
 // unmodified and nullptr is returned.
 extern "C" char* __cdecl gets(char* const result)
 {
-    return common_gets(result, static_cast<size_t>(-1), true);
+    return common_gets(result, _CRT_UNBOUNDED_BUFFER_SIZE, true);
 }
 
 extern "C" wchar_t* __cdecl _getws(wchar_t* const result)
 {
-    return common_gets(result, static_cast<size_t>(-1), true);
+    return common_gets(result, _CRT_UNBOUNDED_BUFFER_SIZE, true);
 }

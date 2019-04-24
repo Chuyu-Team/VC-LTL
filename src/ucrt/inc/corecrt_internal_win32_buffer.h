@@ -305,33 +305,35 @@ public:
     {   // Suitable for more Win32 calls, where a size is returned
         // if there is not enough space.
 
-        size_t const size_required = win32_function(_string, static_cast<DWORD>(_capacity));
-        if (size_required == 0) {
+        size_t const required_size = win32_function(_string, static_cast<DWORD>(_capacity));
+        if (required_size == 0) {
             __acrt_errno_map_os_error(GetLastError());
             return errno;
         }
 
-        if (size_required <= _capacity) {
+        if (required_size <= _capacity) {
             // Had enough space, data was written, save size and return
-            _size = size_required;
+            _size = required_size;
             return 0;
         }
 
-        errno_t const alloc_err = allocate(size_required);
+        size_t const required_size_plus_null_terminator = required_size + 1;
+
+        errno_t const alloc_err = allocate(required_size_plus_null_terminator);
         if (alloc_err)
         {
             return alloc_err;
         }
 
         // Upon success, return value is number of characters written, minus the null terminator.
-        size_t const size_required2 = win32_function(_string, static_cast<DWORD>(_capacity));
-        if (size_required2 == 0) {
+        size_t const required_size2 = win32_function(_string, static_cast<DWORD>(_capacity));
+        if (required_size2 == 0) {
             __acrt_errno_map_os_error(GetLastError());
             return errno;
         }
 
         // Capacity should be large enough at this point.
-        _size = size_required2;
+        _size = required_size2;
         return 0;
     }
 
@@ -414,6 +416,9 @@ using __crt_no_alloc_win32_buffer = __crt_win32_buffer<Character, __crt_win32_bu
 //
 // These POSIX functions can call __acrt_get_utf8_acp_compatibility_codepage to grab
 // the code page they should use for their conversions.
+//
+// The Win32 ANSI "*A" APIs also use this to preserve their behavior as using the ACP, unless
+// the current locale is set to UTF-8.
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 inline unsigned int __acrt_get_utf8_acp_compatibility_codepage()
 {
@@ -448,11 +453,13 @@ errno_t __acrt_convert_wcs_mbs(
     _locale_t                                 locale
     )
 {
+    // Common code path for conversions using mbstowcs and wcstombs.
     if (null_terminated_input_string == nullptr) {
         win32_buffer.set_to_nullptr();
         return 0;
     }
 
+    // No empty string special case - mbstowcs/wcstombs handles them.
     size_t const required_size = cvt_func(nullptr, null_terminated_input_string, 0, locale);
 
     if (required_size == static_cast<size_t>(-1)) {
@@ -474,7 +481,7 @@ errno_t __acrt_convert_wcs_mbs(
         return errno;
     }
 
-    win32_buffer.size(chars_converted + 1); // +1 for null terminator
+    win32_buffer.size(chars_converted);
     return 0;
 }
 
@@ -486,38 +493,58 @@ errno_t __acrt_convert_wcs_mbs_cp(
     unsigned int const                        code_page
     )
 {
-    size_t const required_size = cvt_func(
+    // Common code path for conversions using MultiByteToWideChar and WideCharToMultiByte with null terminated inputs.
+    if (null_terminated_input_string == nullptr) {
+        win32_buffer.set_to_nullptr();
+        return 0;
+    }
+
+    // Special Case: Empty strings are not valid input to MultiByteToWideChar/WideCharToMultiByte
+    if (null_terminated_input_string[0] == '\0') {
+        if (win32_buffer.capacity() == 0) {
+            errno_t alloc_err = win32_buffer.allocate(1);
+            if (alloc_err != 0) {
+                return alloc_err;
+            }
+        }
+
+        win32_buffer.data()[0] = '\0';
+        win32_buffer.size(0);
+        return 0;
+    }
+
+    size_t const required_size_plus_null_terminator = cvt_func(
         code_page,
         null_terminated_input_string,
         nullptr,
         0
         );
 
-    if (required_size == 0) {
+    if (required_size_plus_null_terminator == 0) {
         __acrt_errno_map_os_error(::GetLastError());
         return errno;
     }
 
-    if (required_size > win32_buffer.capacity()) {
-        errno_t alloc_err = win32_buffer.allocate(required_size);
+    if (required_size_plus_null_terminator > win32_buffer.capacity()) {
+        errno_t alloc_err = win32_buffer.allocate(required_size_plus_null_terminator);
         if (alloc_err != 0) {
             return alloc_err;
         }
     }
 
-    size_t const chars_converted = cvt_func(
+    size_t const chars_converted_plus_null_terminator = cvt_func(
         code_page,
         null_terminated_input_string,
         win32_buffer.data(),
         win32_buffer.capacity()
         );
 
-    if (chars_converted == 0) {
+    if (chars_converted_plus_null_terminator == 0) {
         __acrt_errno_map_os_error(::GetLastError());
         return errno;
     }
 
-    win32_buffer.size(chars_converted);
+    win32_buffer.size(chars_converted_plus_null_terminator - 1); // size does not include the null terminator
     return 0;
 }
 
@@ -551,6 +578,7 @@ errno_t __acrt_wcs_to_mbs_cp(
         char * const          buffer,
         size_t const          buffer_size)
     {
+        // Return value includes null terminator.
         return __acrt_WideCharToMultiByte(
             code_page,
             0,
@@ -569,36 +597,6 @@ errno_t __acrt_wcs_to_mbs_cp(
         wcs_to_mbs,
         code_page
         );
-}
-
-template <size_t N>
-size_t __acrt_wcs_to_mbs_array(
-    wchar_t const * const null_terminated_input_string,
-    char                  (&buffer)[N],
-    _locale_t             locale = nullptr
-    )
-{
-    __crt_no_alloc_win32_buffer<char> win32_buffer(buffer);
-    if (__acrt_wcs_to_mbs(null_terminated_input_string, win32_buffer, locale) != 0) {
-        return 0;
-    }
-
-    return win32_buffer.size();
-}
-
-template <size_t N>
-size_t __acrt_wcs_to_mbs_cp_array(
-    wchar_t const * const null_terminated_input_string,
-    char                  (&buffer)[N],
-    unsigned int const    code_page
-    )
-{
-    __crt_no_alloc_win32_buffer<char> win32_buffer(buffer);
-    if (__acrt_wcs_to_mbs_cp(null_terminated_input_string, win32_buffer, code_page) != 0) {
-        return 0;
-    }
-
-    return win32_buffer.size();
 }
 
 template <typename ResizePolicy>
@@ -631,6 +629,7 @@ errno_t __acrt_mbs_to_wcs_cp(
         wchar_t * const    buffer,
         size_t const       buffer_size)
     {
+        // Return value includes null terminator.
         return __acrt_MultiByteToWideChar(
             code_page,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
@@ -647,6 +646,37 @@ errno_t __acrt_mbs_to_wcs_cp(
         mbs_to_wcs,
         code_page
         );
+}
+
+// Array overloads are useful for __try contexts where objects with unwind semantics cannot be used.
+template <size_t N>
+size_t __acrt_wcs_to_mbs_array(
+    wchar_t const * const null_terminated_input_string,
+    char                  (&buffer)[N],
+    _locale_t             locale = nullptr
+    )
+{
+    __crt_no_alloc_win32_buffer<char> win32_buffer(buffer);
+    if (__acrt_wcs_to_mbs(null_terminated_input_string, win32_buffer, locale) != 0) {
+        return 0;
+    }
+
+    return win32_buffer.size();
+}
+
+template <size_t N>
+size_t __acrt_wcs_to_mbs_cp_array(
+    wchar_t const * const null_terminated_input_string,
+    char                  (&buffer)[N],
+    unsigned int const    code_page
+    )
+{
+    __crt_no_alloc_win32_buffer<char> win32_buffer(buffer);
+    if (__acrt_wcs_to_mbs_cp(null_terminated_input_string, win32_buffer, code_page) != 0) {
+        return 0;
+    }
+
+    return win32_buffer.size();
 }
 
 template <size_t N>
@@ -680,7 +710,7 @@ size_t __acrt_mbs_to_wcs_cp_array(
 }
 
 template <typename ResizePolicy>
-errno_t __acrt_get_current_directory(
+errno_t __acrt_get_current_directory_wide(
      __crt_win32_buffer<wchar_t, ResizePolicy>& win32_buffer
     )
 {
@@ -691,30 +721,30 @@ errno_t __acrt_get_current_directory(
 }
 
 template <typename ResizePolicy>
-errno_t __acrt_get_current_directory(
+errno_t __acrt_get_current_directory_narrow_acp_or_utf8(
     __crt_win32_buffer<char, ResizePolicy>& win32_buffer
     )
 {
     wchar_t default_buffer_space[_MAX_PATH];
     __crt_internal_win32_buffer<wchar_t> wide_buffer(default_buffer_space);
 
-    errno_t const err = __acrt_get_current_directory(wide_buffer);
+    errno_t const err = __acrt_get_current_directory_wide(wide_buffer);
 
     if (err != 0) {
         return err;
     }
 
-    return __acrt_wcs_to_mbs(
+    return __acrt_wcs_to_mbs_cp(
         wide_buffer.data(),
-        win32_buffer
+        win32_buffer,
+        __acrt_get_utf8_acp_compatibility_codepage()
         );
 }
 
 template <typename ResizePolicy>
-errno_t __acrt_get_full_path_name_cp(
+errno_t __acrt_get_full_path_name_wide(
     wchar_t const * const                      lpFileName,
-    __crt_win32_buffer<wchar_t, ResizePolicy>& win32_buffer,
-    unsigned int const                      /* code_page */
+    __crt_win32_buffer<wchar_t, ResizePolicy>& win32_buffer
     )
 {
     return win32_buffer.call_win32_function([lpFileName](wchar_t * buffer, DWORD buffer_length)
@@ -729,10 +759,9 @@ errno_t __acrt_get_full_path_name_cp(
 }
 
 template <typename ResizePolicy>
-errno_t __acrt_get_full_path_name_cp(
+errno_t __acrt_get_full_path_name_narrow_acp_or_utf8(
     char const * const                      lpFileName,
-    __crt_win32_buffer<char, ResizePolicy>& win32_buffer,
-    unsigned int const                      code_page
+    __crt_win32_buffer<char, ResizePolicy>& win32_buffer
     )
 {
     wchar_t default_buffer_space[_MAX_PATH];
@@ -740,6 +769,8 @@ errno_t __acrt_get_full_path_name_cp(
 
     wchar_t default_file_name_space[_MAX_PATH];
     __crt_internal_win32_buffer<wchar_t> wide_file_name(default_file_name_space);
+
+    unsigned int const code_page = __acrt_get_utf8_acp_compatibility_codepage();
 
     errno_t const cvt_err = __acrt_mbs_to_wcs_cp(
         lpFileName,
@@ -752,7 +783,7 @@ errno_t __acrt_get_full_path_name_cp(
         return cvt_err;
     }
 
-    errno_t const err = __acrt_get_full_path_name_cp(wide_file_name.data(), wide_buffer, code_page);
+    errno_t const err = __acrt_get_full_path_name_wide(wide_file_name.data(), wide_buffer);
 
     if (err != 0)
     {

@@ -16,7 +16,6 @@
 #include <locale.h>
 #include <stddef.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -40,8 +39,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" _CONST_RETURN unsigned char * __cdecl _mbsrchr_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" _CONST_RETURN unsigned char * __cdecl _mbsrchr_l(
         const unsigned char *str,
         unsigned int c,
         _locale_t plocinfo
@@ -78,15 +77,14 @@ extern "C" _CONST_RETURN unsigned char * __cdecl _mbsrchr_l_downlevel(
 
         return((_CONST_RETURN unsigned char *)r);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsrchr_l_downlevel);
-
 #endif
 
-/*extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsrchr)(
+#if 0
+extern "C" _CONST_RETURN unsigned char * (__cdecl _mbsrchr)(
         const unsigned char *str,
         unsigned int c
         )
 {
     return _mbsrchr_l(str, c, nullptr);
-}*/
+}
+#endif

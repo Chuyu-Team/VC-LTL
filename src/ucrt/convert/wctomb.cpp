@@ -23,12 +23,12 @@
 #include <errno.h>
 #include <locale.h>
 #include <limits.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <corecrt_internal_mbstring.h>
+#include <winapi_thunks.h>
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wctomb_s_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _wctomb_s_l(
     int*      const return_value,
     char*     const destination,
     size_t    const destination_count,
@@ -54,10 +54,43 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
     _VALIDATE_RETURN_ERRCODE(destination_count <= INT_MAX, EINVAL);
 
     //_LocaleUpdate locale_update(locale);
+	LCID         _locale_ctype;
+	unsigned int _locale_lc_codepage;
+	if (locale)
+	{
+		_locale_ctype = locale->locinfo->lc_handle[LC_CTYPE];
+		_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
+	}
+	else
+	{
+		_locale_ctype = ___lc_handle_func()[LC_CTYPE];
+		_locale_lc_codepage = ___lc_codepage_func();
+	}
+
+    if (_locale_lc_codepage == CP_UTF8)
+    {
+        // Unlike c16rtomb. wctomb/wcrtomb have no ability to process a partial code point.
+        // So, we could call c16rtomb and check for a lone surrogate or other error, or for simplicity
+        // We can instead just call c32rtomb and check for any error. I choose the latter.
+        mbstate_t state{};
+        int result = static_cast<int>(__crt_mbstring::__c32rtomb_utf8(destination, static_cast<char32_t>(wchar), &state));
+        if (return_value != nullptr)
+        {
+            *return_value = result;
+        }
+        if (result <= 4)
+        {
+            return 0;
+        }
+        else
+        {
+            return errno;
+        }
+    }
 
     // Check for C-locale behavior, which merely casts it to char (if in range)
     // for ASCII-ish behavior.
-    if (!(locale ? locale->locinfo->lc_handle : ___lc_handle_func())[LC_CTYPE])
+    if (!_locale_ctype)
     {
         // See if the WCHAR is > ASCII-ish range
         if (wchar > 255)  // Validate high byte
@@ -91,7 +124,7 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
     {
         BOOL default_used{};
         int const size = __acrt_WideCharToMultiByte(
-            locale? locale->locinfo->_locale_lc_codepage:___lc_codepage_func(),
+            _locale_lc_codepage,
             0,
             &wchar,
             1,
@@ -123,13 +156,10 @@ extern "C" int __cdecl _wctomb_s_l_downlevel(
 
     // The last thing was an if/else, so we already returned.
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wctomb_s_l_downlevel);
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wctomb_s_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl wctomb_s (
     int*    const return_value,
     char*   const destination,
     size_t  const destination_count,
@@ -138,13 +168,10 @@ extern "C" errno_t __cdecl wctomb_s_downlevel (
 {
     return _wctomb_s_l(return_value, destination, destination_count, wchar, nullptr);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wctomb_s_downlevel);
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wctomb_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _wctomb_l(
     char*     const destination,
     wchar_t   const wchar,
     _locale_t const locale
@@ -167,16 +194,14 @@ extern "C" int __cdecl _wctomb_l_downlevel(
 
     return return_value;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wctomb_l_downlevel);
-
 #endif
 
 // Disable the OACR error that warns that 'MB_CUR_MAX' doesn't properly constrain buffer 'destination'.
 // wctomb() doesn't take a buffer size, so the function's contract is inherently dangerous.
-/*__pragma(warning(push))
+__pragma(warning(push))
 __pragma(warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY)) // 26015
 
+#if 0
 extern "C" int __cdecl wctomb(
     char*   const destination,
     wchar_t const wchar
@@ -189,5 +214,6 @@ extern "C" int __cdecl wctomb(
 
     return return_value;
 }
+#endif
 
-__pragma(warning(pop))*/
+__pragma(warning(pop))

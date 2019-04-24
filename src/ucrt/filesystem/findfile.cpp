@@ -90,7 +90,7 @@ static bool __cdecl copy_wide_to_narrow_find_data(WideFileData const& wfd, _Out_
         return false;
     }
 
-    _ERRCHECK(strcpy_s(fd.name, name.size(), name.data()));
+    _ERRCHECK(strcpy_s(fd.name, _countof(fd.name), name.data()));
 
     fd.attrib       = wfd.attrib;
     fd.time_create  = wfd.time_create;

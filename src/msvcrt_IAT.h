@@ -60,3 +60,10 @@
 #define _LCRT_DEFINE_IAT_SYMBOL(f)
 #define _LCRT_DEFINE_IAT_SYMBOL_EXTERN(f)
 #endif
+
+#ifdef _LTL_Using_Dynamic_Lib
+//导出downleve接口，用于兼容老版本
+#define _LTL_DLL_EXPORT_DOWNLEVEL(f) __pragma(comment(linker, "/EXPORT:" _LCRT_DECLARE_ALTERNATE_NAME_PREFIX #f "_downlevel=" _LCRT_DECLARE_ALTERNATE_NAME_PREFIX #f));
+#else
+#define _LTL_DLL_EXPORT_DOWNLEVEL(f)
+#endif

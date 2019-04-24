@@ -21,11 +21,10 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbstrail_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbstrail_l(
     unsigned char const*       string,
     unsigned char const*       current,
     _locale_t            const locale
@@ -56,15 +55,14 @@ extern "C" int __cdecl _ismbstrail_l_downlevel(
 
     return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbstrail_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _ismbstrail(
+#if 0
+extern "C" int __cdecl _ismbstrail(
     unsigned char const* const string,
     unsigned char const* const current
     )
 {
     return _ismbstrail_l(string, current, nullptr);
-}*/
+}
+#endif

@@ -14,7 +14,6 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 
 /***
@@ -36,8 +35,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" unsigned char * __cdecl _mbsrev_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" unsigned char * __cdecl _mbsrev_l(
         unsigned char *string,
         _locale_t plocinfo
         )
@@ -104,14 +103,13 @@ extern "C" unsigned char * __cdecl _mbsrev_l_downlevel(
 
         return ( start );
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsrev_l_downlevel);
-
 #endif
 
-/*extern "C" unsigned char * (__cdecl _mbsrev)(
+#if 0
+extern "C" unsigned char * (__cdecl _mbsrev)(
         unsigned char *string
         )
 {
     return _mbsrev_l(string, nullptr);
-}*/
+}
+#endif

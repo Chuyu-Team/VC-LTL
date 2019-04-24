@@ -64,7 +64,7 @@ extern "C" wint_t __cdecl _fputwc_nolock(wchar_t const c, FILE* const public_str
         if (_fputc_nolock(mbc[i], stream.public_stream()) == EOF)
             return WEOF;
     }
-    
+
     return c;
 }
 

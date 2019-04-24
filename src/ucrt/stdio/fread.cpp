@@ -19,7 +19,7 @@
 // Reads data from a stream into the result buffer.  The function reads elements
 // of size 'element_size' until it has read 'element_count' elements, until the
 // buffer is full, or until EOF is reached.
-// 
+//
 // Returns the number of "whole" elements that were read into the buffer.  This
 // may be fewer than the requested number of elements if an error occurs or if
 // EOF is encountered.  In this case, ferror() or feof() should be used to
@@ -42,7 +42,7 @@ extern "C" size_t __cdecl fread_s(
     // we only need to validate that the stream is non-null before we lock it.
     if (stream == nullptr)
     {
-        if (buffer_size != SIZE_MAX)
+        if (buffer_size != _CRT_UNBOUNDED_BUFFER_SIZE)
             memset(buffer, _BUFFER_FILL_PATTERN, buffer_size);
 
         _VALIDATE_RETURN(stream != nullptr, EINVAL, 0);
@@ -81,7 +81,7 @@ extern "C" size_t __cdecl _fread_nolock_s(
     _VALIDATE_RETURN(buffer != nullptr, EINVAL, 0);
     if (!stream.valid() || element_count > (SIZE_MAX / element_size))
     {
-        if (buffer_size != SIZE_MAX)
+        if (buffer_size != _CRT_UNBOUNDED_BUFFER_SIZE)
             memset(buffer, _BUFFER_FILL_PATTERN, buffer_size);
 
         _VALIDATE_RETURN(stream.valid(),                             EINVAL, 0);
@@ -122,7 +122,7 @@ extern "C" size_t __cdecl _fread_nolock_s(
 
             if (bytes_to_read > remaining_buffer)
             {
-                if (buffer_size != SIZE_MAX)
+                if (buffer_size != _CRT_UNBOUNDED_BUFFER_SIZE)
                     memset(buffer, _BUFFER_FILL_PATTERN, buffer_size);
 
                 _VALIDATE_RETURN(("buffer too small", 0), ERANGE, 0)
@@ -161,7 +161,7 @@ extern "C" size_t __cdecl _fread_nolock_s(
 
             if (bytes_to_read > remaining_buffer)
             {
-                if (buffer_size != SIZE_MAX)
+                if (buffer_size != _CRT_UNBOUNDED_BUFFER_SIZE)
                     memset(buffer, _BUFFER_FILL_PATTERN, buffer_size);
 
                 _VALIDATE_RETURN(("buffer too small", 0), ERANGE, 0)
@@ -208,7 +208,7 @@ extern "C" size_t __cdecl _fread_nolock_s(
             // requested number of elements or reached EOF, it is an error:
             if (remaining_buffer == 0)
             {
-                if (buffer_size != SIZE_MAX)
+                if (buffer_size != _CRT_UNBOUNDED_BUFFER_SIZE)
                     memset(buffer, _BUFFER_FILL_PATTERN, buffer_size);
 
                 _VALIDATE_RETURN(("buffer too small", 0), ERANGE, 0)
@@ -236,7 +236,7 @@ extern "C" size_t __cdecl fread(
 {
     // Assume there is enough space in the destination buffer
 #pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY) // 26015 - fread is unsafe
-    return fread_s(buffer, SIZE_MAX, element_size, element_count, stream);
+    return fread_s(buffer, _CRT_UNBOUNDED_BUFFER_SIZE, element_size, element_count, stream);
 }
 
 
@@ -250,5 +250,5 @@ extern "C" size_t __cdecl _fread_nolock(
 {
     // Assume there is enough space in the destination buffer
 #pragma warning(suppress:__WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY) // 26015 - _fread_nolock is unsafe
-    return _fread_nolock_s(buffer, SIZE_MAX, element_size, element_count, stream);
+    return _fread_nolock_s(buffer, _CRT_UNBOUNDED_BUFFER_SIZE, element_size, element_count, stream);
 }

@@ -13,6 +13,6 @@
 #endif
 
 #define _RETURN_PTR
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 #include "mbscspn.cpp"
 #endif

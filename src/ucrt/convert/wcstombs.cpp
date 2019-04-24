@@ -14,8 +14,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 /***
 *size_t __cdecl wcsncnt - count wide characters in a string, up to n.
@@ -122,10 +121,15 @@ static size_t __cdecl _wcstombs_l_helper (
 		_locale_lc_codepage = ___lc_codepage_func();
 	}
 
+    if (_locale_lc_codepage == CP_UTF8)
+    {
+        mbstate_t state{};
+        return __crt_mbstring::__wcsrtombs_utf8(s, &pwcs, n, &state);
+    }
 
     if (s)
     {
-        if (locale==0)
+        if ( locale == 0 )
         {
             /* C locale: easy and fast */
             /* Actually, there are such wchar_t characters which are > 255,
@@ -205,13 +209,13 @@ static size_t __cdecl _wcstombs_l_helper (
                 /* buffer not large enough, must do char by char */
                 while (count < n)
                 {
-                    //int mb_cur_max = _loc_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max;
+                    int mb_cur_max = _locale_mb_cur_max;
                     if ( ((retval = __acrt_WideCharToMultiByte( _locale_lc_codepage,
                                                          0,
                                                          pwcs,
                                                          1,
                                                          buffer,
-                                                         __min(MB_LEN_MAX, _locale_mb_cur_max),
+                                                         __min(MB_LEN_MAX, mb_cur_max),
                                                          nullptr,
                                                          &defused )) == 0)
                          || defused )
@@ -279,8 +283,8 @@ static size_t __cdecl _wcstombs_l_helper (
 
 }
 
-#ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _wcstombs_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" size_t __cdecl _wcstombs_l (
         char * s,
         const wchar_t * pwcs,
         size_t n,
@@ -289,19 +293,18 @@ extern "C" size_t __cdecl _wcstombs_l_downlevel (
 {
     return _wcstombs_l_helper(s, pwcs, n, plocinfo);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcstombs_l_downlevel);
-
 #endif
 
-/*extern "C" size_t __cdecl wcstombs (
+#if 0
+extern "C" size_t __cdecl wcstombs (
         char * s,
         const wchar_t * pwcs,
         size_t n
         )
 {
     return _wcstombs_l_helper(s, pwcs, n, nullptr);
-}*/
+}
+#endif
 
 /***
 *errno_t wcstombs_s() - Convert wide char string to multibyte char string.
@@ -328,8 +331,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_wcstombs_l_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _wcstombs_s_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl _wcstombs_s_l (
         size_t *pConvertedChars,
         char * dst,
         size_t sizeInBytes,
@@ -395,13 +398,10 @@ extern "C" errno_t __cdecl _wcstombs_s_l_downlevel (
 
     return retvalue;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcstombs_s_l_downlevel);
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl wcstombs_s_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl wcstombs_s (
         size_t *pConvertedChars,
         char * dst,
         size_t sizeInBytes,
@@ -411,7 +411,4 @@ extern "C" errno_t __cdecl wcstombs_s_downlevel (
 {
     return _wcstombs_s_l(pConvertedChars, dst, sizeInBytes, src, n, nullptr);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wcstombs_s_downlevel);
-
 #endif

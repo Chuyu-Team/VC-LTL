@@ -13,7 +13,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -49,8 +48,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbsbtype_l_downlevel(unsigned char const* string, size_t length, _locale_t const locale)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _mbsbtype_l(unsigned char const* string, size_t length, _locale_t const locale)
 {
 	if (!locale)
 		return _mbsbtype(string, length);
@@ -80,12 +79,11 @@ extern "C" int __cdecl _mbsbtype_l_downlevel(unsigned char const* string, size_t
 
     return chartype;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsbtype_l_downlevel);
-
 #endif
 
-/*int __cdecl _mbsbtype(unsigned char const* const string, size_t const length)
+#if 0
+int __cdecl _mbsbtype(unsigned char const* const string, size_t const length)
 {
     return _mbsbtype_l(string, length, nullptr);
-}*/
+}
+#endif

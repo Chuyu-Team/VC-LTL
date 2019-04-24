@@ -14,7 +14,6 @@
 #include <corecrt_internal.h>
 #include <corecrt_internal_mbstring.h>
 #include <stddef.h>
-#include <msvcrt_IAT.h>
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED) // 26018
 
@@ -36,8 +35,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" unsigned char * __cdecl _mbsinc_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" unsigned char * __cdecl _mbsinc_l(
         const unsigned char *current,
         _locale_t plocinfo
         )
@@ -55,9 +54,6 @@ extern "C" unsigned char * __cdecl _mbsinc_l_downlevel(
 
         return (unsigned char *)current;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsinc_l_downlevel);
-
 #endif
 
 #if _CRT_NTDDI_MIN <= NTDDI_WS03

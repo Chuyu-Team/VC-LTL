@@ -7,17 +7,14 @@
 #include <corecrt_internal_mbstring.h>
 #include <uchar.h>
 #include <stdint.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
-extern "C" size_t __cdecl c32rtomb_downlevel(char* s, char32_t c32, mbstate_t* ps)
+extern "C" size_t __cdecl c32rtomb(char* s, char32_t c32, mbstate_t* ps)
 {
     // TODO: Bug 13307590 says this is always assuming UTF-8.
     return __c32rtomb_utf8(s, c32, ps);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(c32rtomb_downlevel);
 
 size_t __cdecl __crt_mbstring::__c32rtomb_utf8(char* s, char32_t c32, mbstate_t* ps)
 {

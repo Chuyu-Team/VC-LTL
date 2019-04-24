@@ -8,7 +8,6 @@
 // parsed), and the accessors for the global data.
 //
 #include <corecrt_internal.h>
-#include <msvcrt_IAT.h>
 
 
 
@@ -31,31 +30,17 @@ __declspec(dllimport) extern  wchar_t*  _wcmdln; // The raw command line as a wi
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
 
 #if defined _M_AMD64 || defined _M_ARM64 || defined _M_ARM
-int*       __cdecl __p___argc_downlevel()   { return &__argc;   }
-_LCRT_DEFINE_IAT_SYMBOL(__p___argc_downlevel);
-
-char***    __cdecl __p___argv_downlevel()   { return &__argv;   }
-_LCRT_DEFINE_IAT_SYMBOL(__p___argv_downlevel);
-
-wchar_t*** __cdecl __p___wargv_downlevel()  { return &__wargv;  }
-_LCRT_DEFINE_IAT_SYMBOL(__p___wargv_downlevel);
-
-char**     __cdecl __p__pgmptr_downlevel()  { return &_pgmptr;  }
-_LCRT_DEFINE_IAT_SYMBOL(__p__pgmptr_downlevel);
-
-wchar_t**  __cdecl __p__wpgmptr_downlevel() { return &_wpgmptr; }
-_LCRT_DEFINE_IAT_SYMBOL(__p__wpgmptr_downlevel);
-
-char**     __cdecl __p__acmdln_downlevel()  { return &_acmdln;  }
-_LCRT_DEFINE_IAT_SYMBOL(__p__acmdln_downlevel);
-
-wchar_t**  __cdecl __p__wcmdln_downlevel()  { return &_wcmdln;  }
-_LCRT_DEFINE_IAT_SYMBOL(__p__wcmdln_downlevel);
-
+int*       __cdecl __p___argc()   { return &__argc;   }
+char***    __cdecl __p___argv()   { return &__argv;   }
+wchar_t*** __cdecl __p___wargv()  { return &__wargv;  }
+char**     __cdecl __p__pgmptr()  { return &_pgmptr;  }
+wchar_t**  __cdecl __p__wpgmptr() { return &_wpgmptr; }
+char**     __cdecl __p__acmdln()  { return &_acmdln;  }
+wchar_t**  __cdecl __p__wcmdln()  { return &_wcmdln;  }
 #endif
 
-#if defined _ATL_XP_TARGETING || defined _M_ARM64 || defined _M_ARM
-errno_t __cdecl _get_wpgmptr_downlevel(wchar_t** const result)
+#if _CRT_NTDDI_MIN < 0x06000000 || defined _M_ARM64 || defined _M_ARM
+errno_t __cdecl _get_wpgmptr(wchar_t** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result   != nullptr, EINVAL);
     _VALIDATE_RETURN_ERRCODE(_wpgmptr != nullptr, EINVAL);
@@ -64,21 +49,13 @@ errno_t __cdecl _get_wpgmptr_downlevel(wchar_t** const result)
     return 0;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_get_wpgmptr_downlevel);
-
-#endif
-
-#if defined _ATL_XP_TARGETING || defined _M_ARM64 || defined _M_ARM
-errno_t __cdecl _get_pgmptr_downlevel(char** const result)
+errno_t __cdecl _get_pgmptr(char** const result)
 {
     _VALIDATE_RETURN_ERRCODE(result  != nullptr, EINVAL);
     _VALIDATE_RETURN_ERRCODE(_pgmptr != nullptr, EINVAL);
     *result = _pgmptr;
     return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_get_pgmptr_downlevel);
-
 #endif
 
 _END_SECURE_CRT_DEPRECATION_DISABLE

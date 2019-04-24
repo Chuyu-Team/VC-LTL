@@ -126,7 +126,7 @@ extern "C" char* __cdecl _gcvt(
     char*  const buffer
     )
 {
-    errno_t const e = _gcvt_s(buffer, SIZE_MAX, value, precision);
+    errno_t const e = _gcvt_s(buffer, _CRT_UNBOUNDED_BUFFER_SIZE, value, precision);
     if (e != 0)
         return nullptr;
 

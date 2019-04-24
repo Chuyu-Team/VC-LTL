@@ -13,13 +13,12 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 
 
 // These functions return the error string to be used when we are unable to return
 // the actual error string.
-/*_Ret_z_
+_Ret_z_
 static char* get_failure_string(char) throw()
 {
     return const_cast<char*>("Visual C++ CRT: Not enough memory to complete call to strerror.");
@@ -43,7 +42,7 @@ static char*& get_ptd_buffer(__acrt_ptd* const ptd, char) throw()
 static wchar_t*& get_ptd_buffer(__acrt_ptd* const ptd, wchar_t) throw()
 {
     return ptd->_wcserror_buffer;
-}*/
+}
 
 
 
@@ -75,7 +74,7 @@ static errno_t copy_string_into_buffer(
 // Maps an error number to an error message string.  The error number should be
 // one of the errno values.  The string is valid until the next call (on this
 // thread) to one of the strerror functions.  The CRT owns the string.
-/*template <typename Character>
+template <typename Character>
 _Ret_z_
 static Character* __cdecl common_strerror(int const error_number)
 {
@@ -94,6 +93,7 @@ static Character* __cdecl common_strerror(int const error_number)
     return buffer;
 }
 
+#if 0
 extern "C" char* __cdecl strerror(int const error_number)
 {
     return common_strerror<char>(error_number);
@@ -102,7 +102,8 @@ extern "C" char* __cdecl strerror(int const error_number)
 extern "C" wchar_t* __cdecl _wcserror(int const error_number)
 {
     return common_strerror<wchar_t>(error_number);
-}*/
+}
+#endif
 
 
 
@@ -128,8 +129,8 @@ static errno_t __cdecl common_strerror_s(
     return result == STRUNCATE ? 0 : result;
 }
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl strerror_s_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl strerror_s(
     char*  const buffer,
     size_t const buffer_count,
     int    const error_number
@@ -138,12 +139,7 @@ extern "C" errno_t __cdecl strerror_s_downlevel(
     return common_strerror_s(buffer, buffer_count, error_number);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(strerror_s_downlevel);
-
-#endif
-
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _wcserror_s_downlevel(
+extern "C" errno_t __cdecl _wcserror_s(
     wchar_t* const buffer,
     size_t   const buffer_count,
     int      const error_number
@@ -151,7 +147,4 @@ extern "C" errno_t __cdecl _wcserror_s_downlevel(
 {
     return common_strerror_s(buffer, buffer_count, error_number);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcserror_s_downlevel);
-
 #endif

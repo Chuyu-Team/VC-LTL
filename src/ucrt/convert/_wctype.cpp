@@ -11,24 +11,21 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" extern __inline int (__cdecl _isleadbyte_l_downlevel)(int const c, _locale_t const locale)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" extern __inline int (__cdecl _isleadbyte_l)(int const c, _locale_t const locale)
 {
 	if (!locale)
 		return isleadbyte(c);
 
     //_LocaleUpdate locale_update(locale);
-    return locale->locinfo->_locale_pctype[(unsigned char) (c)] & _LEADBYTE;
+    return __acrt_locale_get_ctype_array_value(locale->locinfo->_locale_pctype, c, _LEADBYTE);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_isleadbyte_l_downlevel);
-
 #endif
 
-/*extern "C" extern __inline int (__cdecl isleadbyte)(int const c)
+#if 0
+extern "C" extern __inline int (__cdecl isleadbyte)(int const c)
 {
     return _isleadbyte_l(c, nullptr);
 }
@@ -101,23 +98,21 @@ extern "C" extern __inline int (__cdecl _iswpunct_l)(wint_t const c, _locale_t)
 extern "C" extern __inline int (__cdecl iswpunct)(wint_t const c)
 {
     return iswpunct(c);
-}*/
+}
+#endif
 
-extern "C" extern __inline int (__cdecl _iswblank_l_downlevel)(wint_t const c, _locale_t)
+extern "C" extern __inline int (__cdecl _iswblank_l)(wint_t const c, _locale_t)
 {
     return iswblank(c);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_iswblank_l_downlevel);
-
-extern "C" extern __inline int (__cdecl iswblank_downlevel)(wint_t const c)
+extern "C" extern __inline int (__cdecl iswblank)(wint_t const c)
 {
     return iswblank(c);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(iswblank_downlevel);
-
-/*extern "C" extern __inline int (__cdecl _iswalnum_l)(wint_t const c, _locale_t)
+#if 0
+extern "C" extern __inline int (__cdecl _iswalnum_l)(wint_t const c, _locale_t)
 {
     return iswalnum(c);
 }
@@ -160,32 +155,25 @@ extern "C" extern __inline int (__cdecl iswcntrl)(wint_t const c)
 extern "C" extern __inline int (__cdecl iswascii)(wint_t const c)
 {
     return iswascii(c);
-}*/
+}
+#endif
 
-extern "C" extern __inline int (__cdecl _iswcsym_l_downlevel)(wint_t const c, _locale_t)
+extern "C" extern __inline int (__cdecl _iswcsym_l)(wint_t const c, _locale_t)
 {
     return __iswcsym(c);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_iswcsym_l_downlevel);
-
-extern "C" extern __inline int (__cdecl __iswcsym_downlevel)(wint_t const c)
+extern "C" extern __inline int (__cdecl __iswcsym)(wint_t const c)
 {
     return __iswcsym(c);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__iswcsym_downlevel);
-
-extern "C" extern __inline int (__cdecl _iswcsymf_l_downlevel)(wint_t const c, _locale_t)
+extern "C" extern __inline int (__cdecl _iswcsymf_l)(wint_t const c, _locale_t)
 {
     return __iswcsymf(c);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_iswcsymf_l_downlevel);
-
-extern "C" extern __inline int (__cdecl __iswcsymf_downlevel)(wint_t const c)
+extern "C" extern __inline int (__cdecl __iswcsymf)(wint_t const c)
 {
     return __iswcsymf(c);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__iswcsymf_downlevel);

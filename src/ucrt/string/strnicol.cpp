@@ -12,8 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 
 /***
@@ -40,8 +39,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _strnicoll_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _strnicoll_l (
         const char *_string1,
         const char *_string2,
         size_t count,
@@ -81,12 +80,10 @@ extern "C" int __cdecl _strnicoll_l_downlevel (
 
     return (ret - 2);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_strnicoll_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _strnicoll (
+#if 0
+extern "C" int __cdecl _strnicoll (
         const char *_string1,
         const char *_string2,
         size_t count
@@ -100,4 +97,5 @@ _LCRT_DEFINE_IAT_SYMBOL(_strnicoll_l_downlevel);
     {
         return _strnicoll_l(_string1, _string2, count, nullptr);
     }
-}*/
+}
+#endif

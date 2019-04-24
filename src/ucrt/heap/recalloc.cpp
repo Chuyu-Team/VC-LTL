@@ -5,11 +5,10 @@
 //
 // Implementation of _recalloc()
 //
-
 #include <corecrt_internal.h>
 #include <malloc.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
+
 
 
 // This function provides the logic for the _recalloc() function.  It is called
@@ -20,7 +19,7 @@
 // _recalloc_base will have identical COMDATs, and the linker will fold
 // them when calling one from the CRT. This is necessary because recalloc
 // needs to support users patching in custom implementations.
-extern "C" __declspec(noinline) void* __cdecl _recalloc_base_downlevel(
+extern "C" __declspec(noinline) void* __cdecl _recalloc_base(
     void*  const block,
     size_t const count,
     size_t const size
@@ -29,7 +28,7 @@ extern "C" __declspec(noinline) void* __cdecl _recalloc_base_downlevel(
     // Ensure that (count * size) does not overflow
     _VALIDATE_RETURN_NOEXC(count == 0 || (_HEAP_MAXREQ / count) >= size, ENOMEM, nullptr);
 
-    size_t const old_block_size = block != nullptr ? _msize(block) : 0;
+    size_t const old_block_size = block != nullptr ? _msize_base(block) : 0;
     size_t const new_block_size = count * size;
 
     void* const new_block = _realloc_base(block, new_block_size);
@@ -44,8 +43,6 @@ extern "C" __declspec(noinline) void* __cdecl _recalloc_base_downlevel(
     return new_block;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_recalloc_base_downlevel);
-
 // Reallocates a block of memory in the heap.
 //
 // This function reallocates the block pointed to by 'block' such that it is
@@ -59,7 +56,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_recalloc_base_downlevel);
 // Both _recalloc_dbg and _recalloc_base must also be marked noinline
 // to prevent identical COMDAT folding from substituting calls to _recalloc
 // with either other function or vice versa.
-extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl _recalloc_downlevel(
+extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl _recalloc(
     void*  const block,
     size_t const count,
     size_t const size
@@ -68,8 +65,6 @@ extern "C" __declspec(noinline) _CRTRESTRICT void* __cdecl _recalloc_downlevel(
     #ifdef _DEBUG
     return _recalloc_dbg(block, count, size, _NORMAL_BLOCK, nullptr, 0);
     #else
-    return _recalloc_base_downlevel(block, count, size);
+    return _recalloc_base(block, count, size);
     #endif
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_recalloc_downlevel);

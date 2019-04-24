@@ -19,11 +19,11 @@ EXTERN_C __declspec(dllimport) extern int _fmode;  // This is automatically init
 #endif
 
 
-extern "C" int* __cdecl __p__fmode_downlevel()
+extern "C" int* __cdecl __p__fmode()
 {
     _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
     return &_fmode;
     _END_SECURE_CRT_DEPRECATION_DISABLE
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__p__fmode_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(__p__fmode);

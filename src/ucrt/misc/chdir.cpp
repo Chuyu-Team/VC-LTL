@@ -86,7 +86,7 @@ static int __cdecl common_chdir(_In_z_ Character const* const path) throw()
     Character buffer_initial_storage[MAX_PATH + 1];
     __crt_internal_win32_buffer<Character> current_directory_buffer(buffer_initial_storage);
 
-    errno_t const err = __acrt_get_current_directory(current_directory_buffer);
+    errno_t const err = traits::get_current_directory(current_directory_buffer);
 
     if (err != 0) {
         // Appropriate error already set

@@ -7,16 +7,18 @@
 //
 #include <corecrt_internal.h>
 #include <corecrt_terminate.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
 
 
 
-static __forceinline terminate_handler __cdecl get_terminate_or_default(
+static terminate_handler __cdecl get_terminate_or_default(
     __acrt_ptd const* const ptd
     ) throw()
 {
-#ifdef _ATL_XP_TARGETING
+#if 0
+    return ptd->_terminate ? ptd->_terminate : &abort;
+#endif
+
+#if _CRT_NTDDI_MIN < 0x06000000
 	if(__LTL_GetOsMinVersion() < 0x00060000)
 		return ptd->XP_msvcrt._terminate ? ptd->XP_msvcrt._terminate : &abort;
 	else
@@ -24,14 +26,13 @@ static __forceinline terminate_handler __cdecl get_terminate_or_default(
 		return ptd->VistaOrLater_msvcrt._terminate ? ptd->VistaOrLater_msvcrt._terminate : &abort;
 }
 
-extern "C" terminate_handler __cdecl _get_terminate_downlevel()
+extern "C" terminate_handler __cdecl _get_terminate()
 {
     return get_terminate_or_default(__acrt_getptd());
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_get_terminate_downlevel);
-
-/*extern "C" terminate_handler __cdecl set_terminate(
+#if 0
+extern "C" terminate_handler __cdecl set_terminate(
     terminate_handler const new_handler
     )
 {
@@ -65,4 +66,5 @@ extern "C" void __cdecl terminate()
     // If the terminate handler returned, faulted, or otherwise failed to end
     // execution, we will do it:
     abort();
-}*/
+}
+#endif

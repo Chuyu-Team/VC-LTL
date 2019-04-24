@@ -13,7 +13,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
 /***
@@ -32,27 +31,26 @@
 *
 ******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbclegal_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbclegal_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
-	if (!plocinfo)
-		return _ismbclegal(c);
         //_LocaleUpdate _loc_update(plocinfo);
+        if (!plocinfo)
+            return _ismbclegal(c);
 
         return( (_ismbblead_l(c >> 8, plocinfo)) &&
                 (_ismbbtrail_l(c & 0x0ff, plocinfo)) );
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbclegal_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbclegal)(
+#if 0
+extern "C" int (__cdecl _ismbclegal)(
         unsigned int c
         )
 {
     return _ismbclegal_l(c, nullptr);
-}*/
+}
+#endif

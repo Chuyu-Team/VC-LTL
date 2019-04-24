@@ -206,7 +206,7 @@ UnsignedInteger __cdecl parse_integer(
     auto const initial_state = source.save_state();
 
     char_type c{source.get()};
-    while (is_space(c, locale/*locale_update.GetLocaleT()*/))
+    while (is_space(c, locale))
         c = source.get();
 
     unsigned flags{is_signed ? FL_SIGNED : 0};
@@ -1455,7 +1455,7 @@ floating_point_parse_result __cdecl parse_floating_point_from_source(
     }
 
     // If a radix point is present, scan the fractional part of the mantissa:
-    char const radix_point{* (locale ? locale->locinfo->lconv : localeconv())->decimal_point};
+    char const radix_point{*(locale ? locale->locinfo->lconv : localeconv())->decimal_point};
     if (c == radix_point)
     {
         c = source.get();

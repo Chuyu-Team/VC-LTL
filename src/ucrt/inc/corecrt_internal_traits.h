@@ -34,7 +34,9 @@ struct __crt_char_traits;
     _APPLY(find_next_file,                     __acrt_FindNextFileA,                             FindNextFileW                                 ) \
     _APPLY(free_environment_strings,           FreeEnvironmentStringsA,                          FreeEnvironmentStringsW                       ) \
     _APPLY(ftprintf,                           fprintf,                                          fwprintf                                      ) \
+    _APPLY(get_current_directory,              __acrt_get_current_directory_narrow_acp_or_utf8,  __acrt_get_current_directory_wide             ) \
     _APPLY(get_environment_from_os,            __dcrt_get_narrow_environment_from_os,            __dcrt_get_wide_environment_from_os           ) \
+    _APPLY(get_full_path_name,                 __acrt_get_full_path_name_narrow_acp_or_utf8,     __acrt_get_full_path_name_wide                ) \
     _APPLY(get_module_file_name,               __acrt_GetModuleFileNameA,                        GetModuleFileNameW                            ) \
     _APPLY(get_or_create_environment_nolock,   __dcrt_get_or_create_narrow_environment_nolock,   __dcrt_get_or_create_wide_environment_nolock  ) \
     _APPLY(get_temp_path,                      __acrt_GetTempPathA,                              GetTempPathW                                  ) \
@@ -213,15 +215,23 @@ struct __crt_integer_traits<long long>
 // To avoid backwards compatibility issues, they will still use the ACP, except when the currently
 // set locale is CP_UTF8.
 // * _access
+// * _chdir
 // * _chmod
+// * _exec*
 // * _findfile*
+// * _fullpath
+// * _loaddll
 // * _mkdir
+// * _popen
 // * _remove
 // * _rename
 // * _rmdir
 // * _sopen
+// * _spawn*
 // * _stat*
 // * _unlink
+// * Wildcard parsing in argv with setargv.obj
+// * Calls to get the current module name for debug pop-up windows and assert messages (via __acrt_GetModuleFileNameA)
 //
 
 inline size_t __crt_compute_required_transform_buffer_count(

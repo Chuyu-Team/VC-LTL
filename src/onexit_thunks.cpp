@@ -6,7 +6,7 @@
 //extern "C" int __cdecl _crt_atexit(_PVFV const function);
 
 
-extern "C" int __cdecl _initialize_onexit_table_downlevel(_onexit_table_t* const table)
+extern "C" int __cdecl _initialize_onexit_table(_onexit_table_t* const table)
 {
 	if (!table)
 	{
@@ -30,8 +30,6 @@ extern "C" int __cdecl _initialize_onexit_table_downlevel(_onexit_table_t* const
 	return 0;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_initialize_onexit_table_downlevel);
-
 extern "C" __declspec(dllimport) _onexit_t __cdecl __dllonexit(
 	_onexit_t func,
 	_PVFV **  pbegin,
@@ -41,7 +39,7 @@ extern "C" __declspec(dllimport) _onexit_t __cdecl __dllonexit(
 // Appends the given 'function' to the given onexit 'table'.  Returns 0 on
 // success; returns -1 on failure.  In general, failures are considered fatal
 // in calling code.
-extern "C" int __cdecl _register_onexit_function_downlevel(_onexit_table_t* const table, _onexit_t const function)
+extern "C" int __cdecl _register_onexit_function(_onexit_table_t* const table, _onexit_t const function)
 {
 	if (!table)
 		return -1;
@@ -77,15 +75,13 @@ extern "C" int __cdecl _register_onexit_function_downlevel(_onexit_table_t* cons
 	});
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_register_onexit_function_downlevel);
-
 
 // This function executes a table of _onexit()/atexit() functions.  The
 // terminators are executed in reverse order, to give the required LIFO
 // execution order.  If the table is uninitialized, this function has no
 // effect.  After executing the terminators, this function resets the table
 // so that it is uninitialized.  Returns 0 on success; -1 on failure.
-extern "C" int __cdecl _execute_onexit_table_downlevel(_onexit_table_t* const table)
+extern "C" int __cdecl _execute_onexit_table(_onexit_table_t* const table)
 {
 	if (!table)
 	{
@@ -123,14 +119,10 @@ extern "C" int __cdecl _execute_onexit_table_downlevel(_onexit_table_t* const ta
 	});
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_execute_onexit_table_downlevel);
-
 extern "C" _onexit_table_t __acrt_at_quick_exit_table{};
 
 
-extern "C" int __cdecl _crt_at_quick_exit_downlevel(_PVFV const function)
+extern "C" int __cdecl _crt_at_quick_exit(_PVFV const function)
 {
 	return _register_onexit_function(&__acrt_at_quick_exit_table, reinterpret_cast<_onexit_t>(function));
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_crt_at_quick_exit_downlevel);

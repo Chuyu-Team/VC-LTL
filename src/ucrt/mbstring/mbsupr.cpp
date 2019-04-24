@@ -15,8 +15,8 @@
 #include <corecrt_internal_securecrt.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
+
 
 #pragma warning(disable:__WARNING_POTENTIAL_BUFFER_OVERFLOW_NULLTERMINATED)
 
@@ -38,8 +38,9 @@
 *       Input parameters are validated. Refer to the validation section of the function.
 *
 *******************************************************************************/
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t __cdecl _mbsupr_s_l_downlevel(
+
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t __cdecl _mbsupr_s_l(
         unsigned char *string,
         size_t sizeInBytes,
         _locale_t plocinfo
@@ -113,12 +114,10 @@ extern "C" errno_t __cdecl _mbsupr_s_l_downlevel(
 
         return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsupr_s_l_downlevel);
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t (__cdecl _mbsupr_s_downlevel)(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" errno_t (__cdecl _mbsupr_s)(
         unsigned char *string,
         size_t sizeInBytes
         )
@@ -134,25 +133,23 @@ extern "C" errno_t (__cdecl _mbsupr_s_downlevel)(
 
 	return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsupr_s_downlevel);
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" unsigned char * (__cdecl _mbsupr_l_downlevel)(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" unsigned char * (__cdecl _mbsupr_l)(
         unsigned char *string,
         _locale_t plocinfo
         )
 {
     return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), plocinfo) == 0 ? string : nullptr);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsupr_l_downlevel);
 #endif
 
-/*extern "C" unsigned char * (__cdecl _mbsupr)(
+#if 0
+extern "C" unsigned char * (__cdecl _mbsupr)(
         unsigned char *string
         )
 {
     return (_mbsupr_s_l(string, (string == nullptr ? 0 : (size_t)-1), nullptr) == 0 ? string : nullptr);
-}*/
+}
+#endif

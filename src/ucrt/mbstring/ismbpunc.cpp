@@ -13,7 +13,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
 /***
@@ -37,8 +36,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcpunct_l_downlevel(unsigned int const c, _locale_t const locale)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbcpunct_l(unsigned int const c, _locale_t const locale)
 {
 	if (!locale)
 		return _ismbcpunct(c);
@@ -51,15 +50,14 @@ extern "C" int __cdecl _ismbcpunct_l_downlevel(unsigned int const c, _locale_t c
 
     return __dcrt_multibyte_check_type(c, locale, _PUNCT, true);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcpunct_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _ismbcpunct(unsigned int const c)
+#if 0
+extern "C" int __cdecl _ismbcpunct(unsigned int const c)
 {
     return _ismbcpunct_l(c, nullptr);
-}*/
+}
+#endif
 
 /***
 * _ismbcblank - Test if character is blank (MBCS)
@@ -82,7 +80,7 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcpunct_l_downlevel);
 *
 *******************************************************************************/
 
-extern "C" int __cdecl _ismbcblank_l_downlevel(unsigned int const c, _locale_t const locale)
+extern "C" int __cdecl _ismbcblank_l(unsigned int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 
@@ -94,12 +92,7 @@ extern "C" int __cdecl _ismbcblank_l_downlevel(unsigned int const c, _locale_t c
     return __dcrt_multibyte_check_type(c, locale, _BLANK, true);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcblank_l_downlevel);
-
-
-extern "C" int __cdecl _ismbcblank_downlevel(unsigned int const c)
+extern "C" int __cdecl _ismbcblank(unsigned int const c)
 {
     return _ismbcblank_l(c, nullptr);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcblank_downlevel);

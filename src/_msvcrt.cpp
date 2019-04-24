@@ -71,12 +71,10 @@ extern "C"
 
 	__declspec(dllimport) extern _iobuf _iob[_IOB_ENTRIES];
 
-	FILE* __cdecl __acrt_iob_func_downlevel(unsigned in)
+	_CRTIMP FILE* __cdecl __acrt_iob_func(unsigned in)
 	{
 		return &_iob[in];
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(__acrt_iob_func_downlevel);
 
 	//int __scrt_debugger_hook_flag = 0;
 
@@ -233,7 +231,7 @@ extern "C"
 		_invoke_watson(nullptr, nullptr, nullptr, 0, 0);
 	}*/
 
-	errno_t __CRTDECL wmemcpy_s_downlevel(
+	_CRTIMP errno_t __CRTDECL wmemcpy_s(
 		_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 		_In_                         rsize_t        _N1,
 		_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -243,9 +241,7 @@ extern "C"
 		return memcpy_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(wmemcpy_s_downlevel);
-
-	errno_t __CRTDECL wmemmove_s_downlevel(
+	_CRTIMP errno_t __CRTDECL wmemmove_s(
 			_Out_writes_to_opt_(_N1, _N) wchar_t*       _S1,
 			_In_                         rsize_t        _N1,
 			_In_reads_opt_(_N)           wchar_t const* _S2,
@@ -254,8 +250,6 @@ extern "C"
 	{
 		return memmove_s(_S1, _N1 * sizeof(wchar_t), _S2, _N * sizeof(wchar_t));
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(wmemmove_s_downlevel);
 
 	//	int __cdecl __stdio_common_vswprintf(
 	//		_In_                                    unsigned __int64 _Options,
@@ -290,7 +284,7 @@ extern "C"
 	// Number of seconds from 00:00:00, 01/01/1970 UTC to 23:59:59, 01/18/2038 UTC
 #define _MAX_TIME32 0x7fffd27fll
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 	extern "C++" template<typename time_t>
 	static __forceinline double __cdecl common_difftime(
 		_In_ time_t _Time1,
@@ -305,7 +299,7 @@ extern "C"
 		return static_cast<double>(_Time1 - _Time2);
 	}
 
-	double __cdecl _difftime32_downlevel(
+	_CRTIMP double __cdecl _difftime32(
 		_In_ __time32_t _Time1,
 		_In_ __time32_t _Time2
 		)
@@ -313,9 +307,7 @@ extern "C"
 		return common_difftime(_Time1, _Time2);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_difftime32_downlevel);
-
-	double __cdecl _difftime64_downlevel(
+	_CRTIMP double __cdecl _difftime64(
 		_In_ __time64_t _Time1,
 		_In_ __time64_t _Time2
 		)
@@ -323,9 +315,8 @@ extern "C"
 		return common_difftime(_Time1, _Time2);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_difftime64_downlevel);
-
-	struct tm* __cdecl _localtime32_downlevel(
+#if 0
+	_CRTIMP struct tm* __cdecl _localtime32(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -341,8 +332,7 @@ extern "C"
 
 		return _localtime64(&_Time64);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_localtime32_downlevel);
+#endif
 
 	extern "C++" static __forceinline struct tm* __cdecl _localtime_t(_In_ __time32_t const* _Time)
 	{
@@ -376,7 +366,7 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _localtime32_s_downlevel(
+	_CRTIMP errno_t __cdecl _localtime32_s(
 		_Out_ struct tm*        _Tm,
 		_In_  __time32_t const* _Time
 		)
@@ -384,17 +374,13 @@ extern "C"
 		return common_localtime_s(_Tm, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_localtime32_s_downlevel);
-
-	errno_t __cdecl _localtime64_s_downlevel(
+	_CRTIMP errno_t __cdecl _localtime64_s(
 		_Out_ struct tm*        _Tm,
 		_In_  __time64_t const* _Time
 		)
 	{
 		return common_localtime_s(_Tm, _Time);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_localtime64_s_downlevel);
 
 #endif
 
@@ -412,7 +398,7 @@ extern "C"
 	#undef _tzname
 	__declspec(dllimport) extern char** _tzname;
 
-	errno_t __cdecl _get_daylight_downlevel(
+	_CRTIMP errno_t __cdecl _get_daylight(
 		_Out_ int* _Daylight
 		)
 	{
@@ -423,9 +409,7 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_get_daylight_downlevel);
-
-	errno_t __cdecl _get_dstbias_downlevel(
+	_CRTIMP errno_t __cdecl _get_dstbias(
 		_Out_ long* _DaylightSavingsBias
 		)
 	{
@@ -435,9 +419,7 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_get_dstbias_downlevel);
-
-	errno_t __cdecl _get_timezone_downlevel(
+	_CRTIMP errno_t __cdecl _get_timezone(
 		_Out_ long* _TimeZone
 		)
 	{
@@ -447,9 +429,7 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_get_timezone_downlevel);
-
-	errno_t __cdecl _get_tzname_downlevel(
+	_CRTIMP errno_t __cdecl _get_tzname(
 		_Out_                        size_t* _ReturnValue,
 		_Out_writes_z_(_SizeInBytes) char*   _Buffer,
 		_In_                         size_t  _SizeInBytes,
@@ -484,41 +464,40 @@ extern "C"
 		return strcpy_s(_Buffer, _SizeInBytes, _TmpName);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_get_tzname_downlevel);
+#if defined _M_AMD64 && _CRT_NTDDI_MIN < 0x06000000
 
-#if defined _M_AMD64 && defined _ATL_XP_TARGETING
-
-	extern "C" int* __cdecl __daylight_downlevel()
+	_CRTIMP extern "C" int* __cdecl __daylight()
 	{
 		return &_daylight;
 	}
-	_LCRT_DEFINE_IAT_SYMBOL(__daylight_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__daylight);
 
-	extern "C" long* __cdecl __dstbias_downlevel()
+
+	_CRTIMP extern "C" long* __cdecl __dstbias()
 	{
 		return &_dstbias;
 	}
-	_LCRT_DEFINE_IAT_SYMBOL(__dstbias_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__dstbias)
 
 #endif
 
 #if defined _M_AMD64 || defined _M_ARM64
 
-	extern "C" long* __cdecl __timezone_downlevel()
+	_CRTIMP extern "C" long* __cdecl __timezone()
 	{
 		return &_timezone;
 	}
-	_LCRT_DEFINE_IAT_SYMBOL(__timezone_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__timezone)
 
-	extern "C" char** __cdecl __tzname_downlevel()
+	_CRTIMP extern "C" char** __cdecl __tzname()
 	{
 		return _tzname;
 	}
-	_LCRT_DEFINE_IAT_SYMBOL(__tzname_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__tzname)
 
 #endif
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 	/*
 	
 	Windows XP的msvcrt没有这个接口，不过我们可以使用其他接口模拟实现该功能。
@@ -532,7 +511,7 @@ extern "C"
 	_Origin 其他情况，返回无效参数
 
 	*/
-	int __cdecl _fseeki64_downlevel(
+	_CRTIMP int __cdecl _fseeki64(
 		_Inout_ FILE*   _Stream,
 		_In_    __int64 _Offset,
 		_In_    int     _Origin
@@ -584,8 +563,6 @@ extern "C"
 		}
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_fseeki64_downlevel);
-
 #endif
 
 	//总是返回ture，因为老版本没有此函数，不过以前的 _matherr内部他会判断是否存在
@@ -629,9 +606,9 @@ extern "C"
 	}*/
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 #include <Ntsecapi.h>
-	errno_t __cdecl rand_s_downlevel(_Out_ unsigned int* _RandomValue)
+	_CRTIMP errno_t __cdecl rand_s(_Out_ unsigned int* _RandomValue)
 	{
 		*_RandomValue = 0;
 
@@ -645,9 +622,6 @@ extern "C"
 			return 0;
 		}
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(rand_s_downlevel);
-
 #endif
 
 //#ifdef _X86_
@@ -742,7 +716,7 @@ extern "C"
 	}
 
 	// Locks a stdio stream.
-	void __cdecl _lock_file_downlevel(FILE* const stream)
+	_CRTIMP void __cdecl _lock_file(FILE* const stream)
 	{
 		if (IsInternalStream(stream))
 			_lock((stream - _iob) + 0x10);
@@ -750,11 +724,8 @@ extern "C"
 			EnterCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_lock_file_downlevel);
-
-
 	// Unlocks a stdio stream.
-	void __cdecl _unlock_file_downlevel(FILE* const stream)
+	_CRTIMP void __cdecl _unlock_file(FILE* const stream)
 	{
 		if (IsInternalStream(stream))
 			_unlock((stream - _iob) + 0x10);
@@ -762,9 +733,7 @@ extern "C"
 			LeaveCriticalSection(&((__crt_stdio_stream_data*)stream)->_lock);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_unlock_file_downlevel);
-
-	errno_t __cdecl _get_stream_buffer_pointers_downlevel(
+	_CRTIMP errno_t __cdecl _get_stream_buffer_pointers(
 		FILE*   const public_stream,
 		char*** const base,
 		char*** const ptr,
@@ -792,11 +761,9 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_get_stream_buffer_pointers_downlevel);
-
 #if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 	//msvrct仅支持_Strftime，我们可以将通过字符串转换，得到_Wcsftime
-	size_t __cdecl _Wcsftime_downlevel(
+	_CRTIMP size_t __cdecl _Wcsftime(
 		wchar_t*       const buffer,
 		size_t         const max_size,
 		wchar_t const* const format,
@@ -860,13 +827,13 @@ extern "C"
 		return Count;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_Wcsftime_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(_Wcsftime);
 
 #endif
 
 #if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 	//msvrct仅支持_Getdays，我们可以将通过字符串转换，得到_W_Getdays
-	wchar_t* __cdecl _W_Getdays_downlevel(void)
+	_CRTIMP wchar_t* __cdecl _W_Getdays(void)
 	{
 		auto szDays = _Getdays();
 		if (!szDays)
@@ -898,13 +865,13 @@ extern "C"
 		}
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_W_Getdays_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(_W_Getdays);
 
 #endif
 
 #if _CRT_NTDDI_MIN < NTDDI_WINBLUE
 	//msvrct仅支持_Getmonths，我们可以将通过字符串转换，得到_W_Getmonths
-	wchar_t *__cdecl _W_Getmonths_downlevel(void)
+	_CRTIMP wchar_t *__cdecl _W_Getmonths(void)
 	{
 		auto szMonths = _Getmonths();
 		if (!szMonths)
@@ -936,7 +903,7 @@ extern "C"
 		}
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_W_Getmonths_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(_W_Getmonths);
 
 #endif
 
@@ -1038,15 +1005,13 @@ extern "C"
 
 
 	//msvcrt不支持_fstat64i32，不过我们可以用_fstat64转换
-	int __cdecl _fstat64i32_downlevel(
+	_CRTIMP int __cdecl _fstat64i32(
 		_In_  int                _FileHandle,
 		_Out_ struct _stat64i32* _Stat
 	)
 	{
 		return common_stat(_FileHandle, _Stat);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_fstat64i32_downlevel);
 
 	//_stat已经改名为_stat32
 //#pragma push_macro("_stat")
@@ -1085,15 +1050,13 @@ extern "C"
 
 
 	//msvcrt不支持_stat64i32，不过我们可以用_stat64转换
-	int __cdecl _stat64i32_light(
+	_CRTIMP int __cdecl _stat64i32_light(
 		_In_z_ char const*        _FileName,
 		_Out_  struct _stat64i32* _Stat
 	)
 	{
 		return common_stat(_FileName, _Stat);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_stat64i32_light);
 
 	//_wstat已经改名为_wstat32，做转发
 //#pragma push_macro("_wstat")
@@ -1130,15 +1093,13 @@ extern "C"
 //#pragma pop_macro("_wstati64")
 
 	//msvcrt不支持_wstat64i32，不过我们可以用_wstat64转换
-	int __cdecl _wstat64i32_light(
+	_CRTIMP int __cdecl _wstat64i32_light(
 		_In_z_ wchar_t const*     _FileName,
 		_Out_  struct _stat64i32* _Stat
 	)
 	{
 		return common_stat(_FileName, _Stat);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_wstat64i32_light);
 
 	//通过ASCII文件名搜索
 	extern "C++" __forceinline intptr_t __cdecl _tfindfirst(
@@ -1185,7 +1146,7 @@ extern "C"
 	}
 
 	//msvcrt不支持_findfirst64i32，不过我们可以用_findfirst64转换
-	intptr_t __cdecl _findfirst64i32_downlevel(
+	_CRTIMP intptr_t __cdecl _findfirst64i32(
 		_In_z_ char const*              _FileName,
 		_Out_  struct _finddata64i32_t* _FindData
 	)
@@ -1193,20 +1154,14 @@ extern "C"
 		return common_findfirst<__finddata64_t>(_FileName, _FindData);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_findfirst64i32_downlevel);
-
-
 	//msvcrt不支持_wfindfirst64i32，不过我们可以用_wfindfirst64转换
-	intptr_t __cdecl _wfindfirst64i32_downlevel(
+	_CRTIMP intptr_t __cdecl _wfindfirst64i32(
 		_In_z_ wchar_t const*            _FileName,
 		_Out_  struct _wfinddata64i32_t* _FindData
 	)
 	{
 		return common_findfirst<_wfinddata64_t>(_FileName, _FindData);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_wfindfirst64i32_downlevel);
-
 
 	extern "C++" __forceinline int __cdecl _tfindnext(
 		_In_  intptr_t                 _FindHandle,
@@ -1250,7 +1205,7 @@ extern "C"
 		return result;
 	}
 
-	int __cdecl _findnext64i32_downlevel(
+	_CRTIMP int __cdecl _findnext64i32(
 		_In_  intptr_t                 _FindHandle,
 		_Out_ struct _finddata64i32_t* _FindData
 	)
@@ -1258,9 +1213,7 @@ extern "C"
 		return common_findnext<__finddata64_t>(_FindHandle, _FindData);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_findnext64i32_downlevel);
-
-	int __cdecl _wfindnext64i32_downlevel(
+	_CRTIMP int __cdecl _wfindnext64i32(
 		_In_  intptr_t                  _FindHandle,
 		_Out_ struct _wfinddata64i32_t* _FindData
 	)
@@ -1268,10 +1221,8 @@ extern "C"
 		return common_findnext<_wfinddata64_t>(_FindHandle, _FindData);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wfindnext64i32_downlevel);
-
 	//msvcrt没有_ftelli64，不过好在有fgetpos
-	__int64 __cdecl _ftelli64_downlevel(
+	_CRTIMP __int64 __cdecl _ftelli64(
 		_Inout_ FILE* _Stream
 	)
 	{
@@ -1286,8 +1237,6 @@ extern "C"
 			return _Position;
 		}
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_ftelli64_downlevel);
 
 	//	typedef struct {
 	//		long osfhnd;    /* underlying OS file HANDLE */ //CreateFile返回的句柄
@@ -1331,14 +1280,12 @@ extern "C"
 
 
 	//msvcrt没有_atoflt，但是我们可以使用atof转换
-	int __cdecl _atoflt_downlevel(_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String)
+	_CRTIMP int __cdecl _atoflt(_Out_ _CRT_FLOAT*  _Result, _In_z_ char const* _String)
 	{
 		_VALIDATE_RETURN(_Result != nullptr, EINVAL, _DOMAIN);
 
 		return common_atof(_Result->f, _String);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_atoflt_downlevel);
 
 #ifdef _DEBUG
 	#define _BUFFER_FILL_PATTERN _SECURECRT_FILL_BUFFER_PATTERN
@@ -1356,7 +1303,7 @@ extern "C"
 	根据文档https://msdn.microsoft.com/zh-cn/library/hh977173.aspx 以及UCRT源代码确定，fread_s失败时文件位置是未知的。
 	因此我们没有必要事先保存文件指针位置，来提供恢复机制。
 	*/
-    size_t __cdecl fread_s_downlevel(
+    _CRTIMP size_t __cdecl fread_s(
         _Out_writes_bytes_to_(_BufferSize, _ElementSize * _ElementCount)   void*  _Buffer,
         _In_range_(>=, _ElementSize * _ElementCount)                       size_t _BufferSize,
         _In_                                                               size_t _ElementSize,
@@ -1418,8 +1365,6 @@ extern "C"
 
 		return num_read / _ElementSize;
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(fread_s_downlevel);
 
 	extern "C++" __forceinline char* __cdecl _tgetenv(
 		_In_z_ char const* _VarName
@@ -1487,7 +1432,7 @@ extern "C"
 		return result;
 	}
 
-	errno_t __cdecl _dupenv_s_downlevel(
+	_CRTIMP errno_t __cdecl _dupenv_s(
 		_Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ char**      _Buffer,
 		_Out_opt_                                                                   size_t*     _BufferCount,
 		_In_z_                                                                      char const* _VarName
@@ -1496,9 +1441,7 @@ extern "C"
 		return common_tdupenv_s(_Buffer, _BufferCount, _VarName);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_dupenv_s_downlevel);
-
-	errno_t __cdecl _wdupenv_s_downlevel(
+	_CRTIMP errno_t __cdecl _wdupenv_s(
 		_Outptr_result_buffer_maybenull_(*_BufferCount) _Outptr_result_maybenull_z_ wchar_t**      _Buffer,
 		_Out_opt_                                                                   size_t*        _BufferCount,
 		_In_z_                                                                      wchar_t const* _VarName
@@ -1506,8 +1449,6 @@ extern "C"
 	{
 		return common_tdupenv_s(_Buffer, _BufferCount, _VarName);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_wdupenv_s_downlevel);
 
 	//不想额外写类，通过参数强制转换，规避下吧
 	extern "C++"
@@ -1575,7 +1516,7 @@ extern "C"
 		return pBuffer;
 	}
 
-	char* __cdecl gets_s_downlevel(
+	_CRTIMP char* __cdecl gets_s(
 		_Out_writes_z_(_Size) char*   _Buffer,
 		_In_                  rsize_t _Size
 		)
@@ -1588,9 +1529,7 @@ extern "C"
 		return result;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(gets_s_downlevel);
-
-	wchar_t* __cdecl _getws_s_downlevel(
+	_CRTIMP wchar_t* __cdecl _getws_s(
 		_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 		_In_                         size_t   _BufferCount
 		)
@@ -1603,10 +1542,8 @@ extern "C"
 		return result;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_getws_s_downlevel);
-
 	//此函数什么都不做，仅供编译通过处理，因此任何调用abort函数必定静默退出。
-	unsigned int __cdecl _set_abort_behavior_downlevel(
+	_CRTIMP unsigned int __cdecl _set_abort_behavior(
 		_In_ unsigned int _Flags,
 		_In_ unsigned int _Mask
 		)
@@ -1614,11 +1551,9 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_set_abort_behavior_downlevel);
+#if _CRT_NTDDI_MIN < 0x06000000
 
-#ifdef _ATL_XP_TARGETING
-
-	errno_t __cdecl _waccess_s_downlevel(
+    _CRTIMP errno_t __cdecl _waccess_s(
 		_In_z_ wchar_t const* _FileName,
 		_In_   int            _AccessMode
 		)
@@ -1626,9 +1561,7 @@ extern "C"
 		return _waccess(_FileName, _AccessMode) == 0 ? 0 : errno;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_waccess_s_downlevel);
-
-	errno_t __cdecl _access_s_downlevel(
+	_CRTIMP errno_t __cdecl _access_s(
         _In_z_ char const* _FileName,
         _In_   int         _AccessMode
         )
@@ -1636,9 +1569,7 @@ extern "C"
 		return _access(_FileName, _AccessMode) == 0 ? 0 : errno;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_access_s_downlevel);
-
-	errno_t __cdecl _wasctime_s_downlevel(
+	_CRTIMP errno_t __cdecl _wasctime_s(
 		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*         _Buffer,
 		_In_range_(>=,26)                                     size_t           _SizeInWords,
 		_In_                                                  struct tm const* _Tm
@@ -1660,9 +1591,7 @@ extern "C"
 		return wcscpy_s(_Buffer, _SizeInWords, szTime);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wasctime_s_downlevel);
-
-	errno_t __cdecl asctime_s_downlevel(
+	_CRTIMP errno_t __cdecl asctime_s(
         _Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*            _Buffer,
         _In_range_(>=,26)                                   size_t           _SizeInBytes,
         _In_                                                struct tm const* _Tm
@@ -1684,9 +1613,8 @@ extern "C"
 		return strcpy_s(_Buffer, _SizeInBytes, szTime);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(asctime_s_downlevel);
-
-	char* __cdecl _ctime32_downlevel(
+#if 0 
+	_CRTIMP char* __cdecl _ctime32(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -1702,10 +1630,10 @@ extern "C"
 
 		return _ctime64(&_Time64);
 	}
+#endif
 
-	_LCRT_DEFINE_IAT_SYMBOL(_ctime32_downlevel);
-
-	wchar_t* __cdecl _wctime32_downlevel(
+#if 0
+	_CRTIMP wchar_t* __cdecl _wctime32(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -1721,8 +1649,7 @@ extern "C"
 
 		return _wctime64(&_Time64);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_wctime32_downlevel);
+#endif
 
 	extern "C++" __forceinline void __cdecl _ctime_t(
 		_In_ __time32_t const* _Time,
@@ -1781,7 +1708,7 @@ extern "C"
 		return _tcscpy_s(_Buffer, _Size, szTime);
 	}
 
-	errno_t __cdecl _ctime32_s_downlevel(
+	_CRTIMP errno_t __cdecl _ctime32_s(
 		_Out_writes_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
 		_In_range_(>= , 26)                                   size_t            _SizeInBytes,
 		_In_                                                __time32_t const* _Time
@@ -1790,9 +1717,7 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_ctime32_s_downlevel);
-
-	errno_t __cdecl _ctime64_s_downlevel(
+	_CRTIMP errno_t __cdecl _ctime64_s(
 		_Out_writes_z_(_SizeInBytes) _Post_readable_size_(26) char*             _Buffer,
 		_In_range_(>= , 26)                                     size_t            _SizeInBytes,
 		_In_                                                  __time64_t const* _Time
@@ -1801,9 +1726,7 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInBytes, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_ctime64_s_downlevel);
-
-	errno_t __cdecl _wctime32_s_downlevel(
+	_CRTIMP errno_t __cdecl _wctime32_s(
 		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
 		_In_  _In_range_(>= , 26)                              size_t            _SizeInWords,
 		_In_                                                  __time32_t const* _Time
@@ -1812,9 +1735,7 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInWords, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wctime32_s_downlevel);
-
-	errno_t __cdecl _wctime64_s_downlevel(
+	_CRTIMP errno_t __cdecl _wctime64_s(
 		_Out_writes_z_(_SizeInWords) _Post_readable_size_(26) wchar_t*          _Buffer,
 		_In_  _In_range_(>= , 26)                              size_t            _SizeInWords,
 		_In_                                                  __time64_t const* _Time
@@ -1823,9 +1744,8 @@ extern "C"
 		return common_ctime_s(_Buffer, _SizeInWords, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wctime64_s_downlevel);
-
-	struct tm* __cdecl _gmtime32_downlevel(
+#if 0
+	_CRTIMP struct tm* __cdecl _gmtime32(
 		_In_ __time32_t const* _Time
 		)
 	{
@@ -1842,8 +1762,7 @@ extern "C"
 
 		return _gmtime64(&_Time64);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_gmtime32_downlevel);
+#endif
 
 	extern "C++" __forceinline struct tm* __cdecl _gmtime_t(
 		_In_  __time32_t const* _Time
@@ -1880,7 +1799,7 @@ extern "C"
 		return 0;
 	}
 
-	errno_t __cdecl _gmtime32_s_downlevel(
+	_CRTIMP errno_t __cdecl _gmtime32_s(
 		_Out_ struct tm*        _Tm,
 		_In_  __time32_t const* _Time
 		)
@@ -1888,9 +1807,7 @@ extern "C"
 		return common_gmtime_t_s(_Tm, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_gmtime32_s_downlevel);
-
-	errno_t __cdecl _gmtime64_s_downlevel(
+	_CRTIMP errno_t __cdecl _gmtime64_s(
 		_Out_ struct tm*        _Tm,
 		_In_  __time64_t const* _Time
 		)
@@ -1898,9 +1815,7 @@ extern "C"
 		return common_gmtime_t_s(_Tm, _Time);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_gmtime64_s_downlevel);
-
-	__time64_t __cdecl _mkgmtime64_downlevel(
+	_CRTIMP __time64_t __cdecl _mkgmtime64(
 		_Inout_ struct tm* _Tm
 		)
 	{
@@ -1931,9 +1846,7 @@ extern "C"
 		return time;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_mkgmtime64_downlevel);
-
-	__time32_t __cdecl _mkgmtime32_downlevel(
+	_CRTIMP __time32_t __cdecl _mkgmtime32(
 		_Inout_ struct tm* _Tm
 		)
 	{
@@ -1954,9 +1867,8 @@ extern "C"
 		return Time;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_mkgmtime32_downlevel);
-
-	__time32_t __cdecl _mktime32_downlevel(
+#if 0
+	_CRTIMP __time32_t __cdecl _mktime32(
 		_Inout_ struct tm* _Tm
 		)
 	{
@@ -1976,8 +1888,7 @@ extern "C"
 
 		return Time;
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_mktime32_downlevel);
+#endif
 
 	extern "C++" template<typename TCHAR>
 	__forceinline errno_t __cdecl common_getenv_s_nolock(
@@ -2033,7 +1944,7 @@ extern "C"
 		return result;
 	}
 
-	errno_t __cdecl getenv_s_downlevel(
+	_CRTIMP errno_t __cdecl getenv_s(
         _Out_                            size_t*     _RequiredCount,
         _Out_writes_opt_z_(_BufferCount) char*       _Buffer,
         _In_                             rsize_t     _BufferCount,
@@ -2043,9 +1954,7 @@ extern "C"
 		return common_getenv_s(_RequiredCount, _Buffer, _BufferCount, _VarName);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(getenv_s_downlevel);
-
-	errno_t __cdecl _wgetenv_s_downlevel(
+	_CRTIMP errno_t __cdecl _wgetenv_s(
 		_Out_                            size_t*        _RequiredCount,
 		_Out_writes_opt_z_(_BufferCount) wchar_t*       _Buffer,
 		_In_                             size_t         _BufferCount,
@@ -2055,9 +1964,7 @@ extern "C"
 		return common_getenv_s(_RequiredCount, _Buffer, _BufferCount, _VarName);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wgetenv_s_downlevel);
-
-	errno_t __cdecl fopen_s_downlevel(
+	_CRTIMP errno_t __cdecl fopen_s(
 		_Outptr_result_maybenull_ FILE**      _Stream,
 		_In_z_                    char const* _FileName,
 		_In_z_                    char const* _Mode
@@ -2068,9 +1975,7 @@ extern "C"
 		return (*_Stream = fopen(_FileName, _Mode)) ? 0 : errno;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(fopen_s_downlevel);
-
-	errno_t __cdecl _wfopen_s_downlevel(
+	_CRTIMP errno_t __cdecl _wfopen_s(
 		_Outptr_result_maybenull_ FILE**         _Stream,
 		_In_z_                    wchar_t const* _FileName,
 		_In_z_                    wchar_t const* _Mode
@@ -2081,9 +1986,7 @@ extern "C"
 		return (*_Stream = _wfopen(_FileName, _Mode)) ? 0 : errno;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wfopen_s_downlevel);
-
-	errno_t __cdecl freopen_s_downlevel(
+	_CRTIMP errno_t __cdecl freopen_s(
 		_Outptr_result_maybenull_ FILE**      _Stream,
 		_In_z_                    char const* _FileName,
 		_In_z_                    char const* _Mode,
@@ -2095,9 +1998,7 @@ extern "C"
 		return (*_Stream = freopen(_FileName, _Mode, _OldStream)) ? 0 : errno;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(freopen_s_downlevel);
-
-	errno_t __cdecl _wfreopen_s_downlevel(
+	_CRTIMP errno_t __cdecl _wfreopen_s(
 		_Outptr_result_maybenull_ FILE**         _Stream,
 		_In_z_                    wchar_t const* _FileName,
 		_In_z_                    wchar_t const* _Mode,
@@ -2109,9 +2010,8 @@ extern "C"
 		return (*_Stream = _wfreopen(_FileName, _Mode, _OldStream)) ? 0 : errno;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wfreopen_s_downlevel);
-
-	void __cdecl _ftime32_downlevel(
+#if 0
+	_CRTIMP void __cdecl _ftime32(
 		_Out_ struct __timeb32* _Time
 		)
 	{
@@ -2123,23 +2023,20 @@ extern "C"
 		_Time->timezone = _Time64.timezone;
 		_Time->dstflag = _Time64.dstflag;
 	}
+#endif
 
-	_LCRT_DEFINE_IAT_SYMBOL(_ftime32_downlevel);
-
-	errno_t __cdecl _ftime32_s_downlevel(
+	_CRTIMP errno_t __cdecl _ftime32_s(
 		_Out_ struct __timeb32* _Time
 		)
 	{
 		_VALIDATE_RETURN_ERRCODE(_Time != nullptr, EINVAL);
 
-		_ftime32_downlevel(_Time);
+		_ftime32(_Time);
 		
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_ftime32_s_downlevel);
-
-	errno_t __cdecl _ftime64_s_downlevel(
+	_CRTIMP errno_t __cdecl _ftime64_s(
 		_Out_ struct __timeb64* _Time
 		)
 	{
@@ -2150,9 +2047,8 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_ftime64_s_downlevel);
-
-	int __cdecl _futime32_downlevel(
+#if 0
+	_CRTIMP int __cdecl _futime32(
 		_In_     int                 _FileHandle,
 		_In_opt_ struct __utimbuf32* _Time
 		)
@@ -2167,10 +2063,10 @@ extern "C"
 
 		return _futime64(_FileHandle, _Time ? &_Time64 : nullptr);
 	}
+#endif
 
-	_LCRT_DEFINE_IAT_SYMBOL(_futime32_downlevel);
-
-	int __cdecl _utime32_downlevel(
+#if 0
+	_CRTIMP int __cdecl _utime32(
 		_In_z_   char const*         _FileName,
 		_In_opt_ struct __utimbuf32* _Time
 		)
@@ -2185,10 +2081,10 @@ extern "C"
 
 		return _utime64(_FileName, _Time ? &_Time64 : nullptr);
 	}
+#endif
 
-	_LCRT_DEFINE_IAT_SYMBOL(_utime32_downlevel);
-
-	int __cdecl _wutime32_downlevel(
+#if 0
+	_CRTIMP int __cdecl _wutime32(
 		_In_z_   wchar_t const*      _FileName,
 		_In_opt_ struct __utimbuf32* _Time
 		)
@@ -2203,10 +2099,9 @@ extern "C"
 
 		return _wutime64(_FileName, _Time ? &_Time64 : nullptr);
 	}
+#endif
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wutime32_downlevel);
-
-	errno_t __cdecl clearerr_s_downlevel(
+	_CRTIMP errno_t __cdecl clearerr_s(
 		_Inout_ FILE* _Stream
 		)
 	{
@@ -2214,8 +2109,6 @@ extern "C"
 		clearerr(_Stream);
 		return errno;
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(clearerr_s_downlevel);
 
 	extern "C++" __forceinline int __cdecl _tputenv(
 		_In_z_ wchar_t const* _EnvString
@@ -2257,7 +2150,7 @@ extern "C"
 		return result;
 	}
 
-	errno_t __cdecl _putenv_s_downlevel(
+	_CRTIMP errno_t __cdecl _putenv_s(
 		_In_z_ char const* _Name,
 		_In_z_ char const* _Value
 		)
@@ -2265,9 +2158,7 @@ extern "C"
 		return common_putenv_s(_Name, _Value);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_putenv_s_downlevel);
-
-	errno_t __cdecl _wputenv_s_downlevel(
+	_CRTIMP errno_t __cdecl _wputenv_s(
 		_In_z_ wchar_t const* _Name,
 		_In_z_ wchar_t const* _Value
 		)
@@ -2275,9 +2166,7 @@ extern "C"
 		return common_putenv_s(_Name, _Value);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wputenv_s_downlevel);
-
-	errno_t __cdecl tmpnam_s_downlevel(
+	_CRTIMP errno_t __cdecl tmpnam_s(
 		_Out_writes_z_(_Size) char*   _Buffer,
 		_In_                  rsize_t _Size
 		)
@@ -2299,9 +2188,7 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(tmpnam_s_downlevel);
-
-	errno_t __cdecl _wtmpnam_s_downlevel(
+	_CRTIMP errno_t __cdecl _wtmpnam_s(
 		_Out_writes_z_(_BufferCount) wchar_t* _Buffer,
 		_In_                         size_t   _BufferCount
 		)
@@ -2323,9 +2210,7 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wtmpnam_s_downlevel);
-
-	errno_t __cdecl _sopen_s_downlevel(
+	_CRTIMP errno_t __cdecl _sopen_s(
 		_Out_  int*        _FileHandle,
 		_In_z_ char const* _FileName,
 		_In_   int         _OpenFlag,
@@ -2345,9 +2230,7 @@ extern "C"
 		return (*_FileHandle = _sopen(_FileName, _OpenFlag, _ShareFlag, _PermissionMode)) == -1 ? errno : 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_sopen_s_downlevel);
-
-	errno_t __cdecl _wsopen_s_downlevel(
+	_CRTIMP errno_t __cdecl _wsopen_s(
 		_Out_  int*           _FileHandle,
 		_In_z_ wchar_t const* _FileName,
 		_In_   int            _OpenFlag,
@@ -2367,10 +2250,8 @@ extern "C"
 		return (*_FileHandle = _wsopen(_FileName, _OpenFlag, _ShareFlag, _PermissionFlag)) == -1 ? errno : 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_wsopen_s_downlevel);
-
 	//行为略微跟原版不同，当参数不合法时，不会返回 _OldMode
-	errno_t __cdecl _umask_s_downlevel(
+	_CRTIMP errno_t __cdecl _umask_s(
 		_In_  int  _NewMode,
 		_Out_ int* _OldMode
 		)
@@ -2383,9 +2264,7 @@ extern "C"
 		return 0;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_umask_s_downlevel);
-
-	errno_t __cdecl _strerror_s_downlevel(
+	_CRTIMP errno_t __cdecl _strerror_s(
 		_Out_writes_z_(_SizeInBytes) char*       _Buffer,
 		_In_                         size_t      _SizeInBytes,
 		_In_opt_z_                   char const* _ErrorMessage
@@ -2404,9 +2283,7 @@ extern "C"
 		return _tcscpy_s(_Buffer, _SizeInBytes, szError);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_strerror_s_downlevel);
-
-	errno_t __cdecl __wcserror_s_downlevel(
+	_CRTIMP errno_t __cdecl __wcserror_s(
 		_Out_writes_opt_z_(_SizeInWords) wchar_t*       _Buffer,
 		_In_                             size_t         _SizeInWords,
 		_In_z_                           wchar_t const* _ErrorMessage
@@ -2425,9 +2302,7 @@ extern "C"
 		return _tcscpy_s(_Buffer, _SizeInWords, szError);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(__wcserror_s_downlevel);
-
-	_ACRTIMP void __cdecl _assert(
+	__declspec(dllimport) void __cdecl _assert(
 		_In_z_ char const* _Message,
 		_In_z_ char const* _File,
 		_In_   unsigned       _Line
@@ -2435,7 +2310,7 @@ extern "C"
 
 
 	//WinXP不支持_wassert，因此我们通过字符串转换再调用_assert实现。
-	void __cdecl _wassert_downlevel(
+	_CRTIMP void __cdecl _wassert(
 		_In_z_ wchar_t const* _Message,
 		_In_z_ wchar_t const* _File,
 		_In_   unsigned       _Line
@@ -2444,9 +2319,6 @@ extern "C"
 		//VC-LTL只针提供Release编译，因此此函数单纯做中断程序处理。
 		_assert(nullptr, nullptr, _Line);
 	}
-
-	_LCRT_DEFINE_IAT_SYMBOL(_wassert_downlevel);
-
 #endif
 	
 #ifdef _M_IX86
@@ -2484,7 +2356,7 @@ extern "C"
 		return result;
 	}
 
-	void __cdecl _statusfp2_downlevel(
+	_CRTIMP void __cdecl _statusfp2(
 		_Out_opt_ unsigned int* _X86Status,
 		_Out_opt_ unsigned int* _SSE2Status
 		)
@@ -2525,8 +2397,7 @@ extern "C"
 			*_SSE2Status = __statusfp_sse2();
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_statusfp2_downlevel);
-
+	_LTL_DLL_EXPORT_DOWNLEVEL(_statusfp2);
 
 	static unsigned short __cdecl _hw_cw(unsigned int  _NewValue)
 	{
@@ -2704,7 +2575,7 @@ extern "C"
 
 	extern void __cdecl __set_fpsr_sse2(unsigned int);
 
-	int __cdecl __control87_2_downlevel(
+	_CRTIMP int __cdecl __control87_2(
 		_In_      unsigned int  _NewValue,
 		_In_      unsigned int  _Mask,
 		_Out_opt_ unsigned int* _X86ControlWord,
@@ -2768,7 +2639,7 @@ extern "C"
 		return 1;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(__control87_2_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__control87_2);
 
 #endif
 
@@ -2778,34 +2649,30 @@ extern "C"
 	extern "C" __declspec(dllimport) extern char const* const _sys_errlist[];
 	extern "C" __declspec(dllimport) extern int const _sys_nerr;
 
-	extern "C" int* __cdecl __sys_nerr_downlevel()
+	_CRTIMP extern "C" int* __cdecl __sys_nerr()
 	{
 		return const_cast<int*>(&_sys_nerr);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(__sys_nerr_downlevel);
-
-	extern "C" char** __cdecl __sys_errlist_downlevel()
+	_CRTIMP extern "C" char** __cdecl __sys_errlist()
 	{
 		return const_cast<char**>(_sys_errlist);
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(__sys_errlist_downlevel);
-
 #if defined _M_AMD64 || defined _M_ARM64 || defined _M_ARM
 
-	extern "C" unsigned char* __cdecl __p__mbctype_downlevel()
+	_CRTIMP extern "C" unsigned char* __cdecl __p__mbctype()
 	{
 		return _mbctype;
 	}
-	_LCRT_DEFINE_IAT_SYMBOL(__p__mbctype_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__p__mbctype);
 
-	extern "C" unsigned char* __cdecl __p__mbcasemap_downlevel()
+	_CRTIMP extern "C" unsigned char* __cdecl __p__mbcasemap()
 	{
 		return _mbcasemap;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(__p__mbcasemap_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(__p__mbcasemap);
 
 	#undef _environ
 	#undef _wenviron
@@ -2818,18 +2685,17 @@ extern "C"
 	extern "C" __declspec(dllimport) extern wchar_t ** _wenviron;
 #endif
 
-	extern "C" char***    __cdecl __p__environ_downlevel() { return &_environ; }
-	_LCRT_DEFINE_IAT_SYMBOL(__p__environ_downlevel);
+	_CRTIMP extern "C" char***    __cdecl __p__environ() { return &_environ; }
+	_LTL_DLL_EXPORT_DOWNLEVEL(__p__environ);
 
-	extern "C" wchar_t*** __cdecl __p__wenviron_downlevel() { return &_wenviron; }
-	_LCRT_DEFINE_IAT_SYMBOL(__p__wenviron_downlevel);
-
+	_CRTIMP extern "C" wchar_t*** __cdecl __p__wenviron() { return &_wenviron; }
+	_LTL_DLL_EXPORT_DOWNLEVEL(__p__wenviron);
 
 #endif
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
 	//Vista以及以上版本才存在_wcsftime_l，因此只在Vista以上模式输出此函数
-	extern "C" size_t __cdecl _strftime_l_downlevel(
+	_CRTIMP extern "C" size_t __cdecl _strftime_l(
 		char*       const string,
 		size_t      const maxsize,
 		char const* const format,
@@ -2914,7 +2780,7 @@ extern "C"
 		return string_used - 1;
 	}
 
-	_LCRT_DEFINE_IAT_SYMBOL(_strftime_l_downlevel);
+	_LTL_DLL_EXPORT_DOWNLEVEL(_strftime_l);
 
 #endif
 }

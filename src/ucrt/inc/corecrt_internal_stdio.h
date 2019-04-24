@@ -124,7 +124,8 @@ struct __crt_stdio_stream_data : public FILE
 };
 
 // Ensure that __crt_stdio_stream_data* and FILE* pointers are freely convertible:
-/*static_assert(
+#if 0
+static_assert(
     offsetof(__crt_stdio_stream_data, _public_file) == 0,
     "FILE member of __crt_stdio_stream_data is not at offset zero."
     );
@@ -132,8 +133,8 @@ struct __crt_stdio_stream_data : public FILE
 static_assert(
     sizeof(FILE) == sizeof(void*),
     "FILE structure has unexpected size."
-    );*/
-
+    );
+#endif
 
 class __crt_stdio_stream
 {
@@ -249,20 +250,22 @@ auto __acrt_lock_stream_and_call(FILE* const stream, Action&& action) throw()
  * the number of stdio-level files which may be open simultaneously. This
  * is normally set to _NSTREAM_ by the stdio initialization code.
  */
-extern "C" _ACRTIMP extern int _nstream;
+extern "C" __declspec(dllimport) extern int _nstream;
 
 /*
  * Pointer to the array of pointers to FILE structures that are used
  * to manage stdio-level files.
  */
-extern "C" _ACRTIMP extern __crt_stdio_stream_data** __piob;
+extern "C" __declspec(dllimport) extern __crt_stdio_stream_data** __piob;
 
 // __acrt_stdio_is_initialized cannot be with the rest of
 // stdio initialization logic since referencing those symbols
 // pulls in the stdio initializers.
-/*inline bool __acrt_stdio_is_initialized() {
+#if 0
+inline bool __acrt_stdio_is_initialized() {
     return __piob != 0;
-}*/
+}
+#endif
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //

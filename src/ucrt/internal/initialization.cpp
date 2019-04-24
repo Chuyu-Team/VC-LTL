@@ -212,8 +212,8 @@ static bool __cdecl report_memory_leaks(bool const /* terminating */)
 
     return true;
 }
-
 #endif
+
 
 // This is the table of initializer/uninitializer pairs that is used to perform
 // AppCRT initialization.  Initializers are run first-to-last during AppCRT
@@ -300,11 +300,13 @@ __crt_bool __cdecl __acrt_uninitialize(__crt_bool const terminating)
     // in debug builds.
     #ifndef _DEBUG
     if (terminating) {
-        //#ifndef _UCRT_ENCLAVE_BUILD
-        //if (__acrt_stdio_is_initialized()) {
-        //    _flushall();
-        //}
-        //#endif
+#if 0
+        #ifndef _UCRT_ENCLAVE_BUILD
+        if (__acrt_stdio_is_initialized()) {
+            _flushall();
+        }
+        #endif
+#endif
         return TRUE;
     }
     #endif

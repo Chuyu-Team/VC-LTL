@@ -14,7 +14,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
 /***
@@ -34,33 +33,31 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcl0_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbcl0_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
+    //_LocaleUpdate _loc_update(plocinfo);
 	if (!plocinfo)
 		return _ismbcl0(c);
-    //_LocaleUpdate _loc_update(plocinfo);
 
     return( (plocinfo->mbcinfo->mbcodepage == _KANJI_CP) &&
             (_ismbblead_l(c >> 8, plocinfo)) &&
             (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c < 0x889f) );
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcl0_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbcl0)(
+#if 0
+extern "C" int (__cdecl _ismbcl0)(
         unsigned int c
         )
 {
     return _ismbcl0_l(c, nullptr);
-}*/
-
+}
+#endif
 
 /***
 *int _ismbcl1(c) - Tests for 1st-level Microsoft Kanji code set.
@@ -78,33 +75,31 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcl0_l_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcl1_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbcl1_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
+    //_LocaleUpdate _loc_update(plocinfo);
 	if (!plocinfo)
 		return _ismbcl1(c);
-    //_LocaleUpdate _loc_update(plocinfo);
 
     return( (plocinfo->mbcinfo->mbcodepage == _KANJI_CP) &&
             (_ismbblead_l(c >> 8, plocinfo)) &&
             (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c >= 0x889f) && (c <= 0x9872) );
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcl1_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbcl1)(
+#if 0
+extern "C" int (__cdecl _ismbcl1)(
     unsigned int c
     )
 {
     return _ismbcl1_l(c, nullptr);
-}*/
-
+}
+#endif
 
 /***
 *int _ismbcl2(c) - Tests for a 2nd-level Microsoft Kanji code character.
@@ -122,28 +117,28 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbcl1_l_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcl2_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbcl2_l(
         unsigned int c,
         _locale_t plocinfo
         )
 {
+    //_LocaleUpdate _loc_update(plocinfo);
 	if (!plocinfo)
 		return _ismbcl2(c);
-    //_LocaleUpdate _loc_update(plocinfo);
 
     return( (plocinfo->mbcinfo->mbcodepage == _KANJI_CP) &&
             (_ismbblead_l(c >> 8, plocinfo)) &&
             (_ismbbtrail_l(c & 0x0ff, plocinfo)) &&
             (c >= 0x989f) && (c <= 0xEAA4) );
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcl2_l_downlevel);
-
 #endif
-/*extern "C" int __cdecl _ismbcl2(
+
+#if 0
+extern "C" int __cdecl _ismbcl2(
         unsigned int c
         )
 {
     return _ismbcl2_l(c, nullptr);
-}*/
+}
+#endif

@@ -14,7 +14,6 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 /***
 * _mbsnbset - Sets first n bytes of string to given character (MBCS)
@@ -54,8 +53,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" unsigned char * __cdecl _mbsnbset_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" unsigned char * __cdecl _mbsnbset_l(
         unsigned char *string,
         unsigned int val,
         size_t count,
@@ -128,12 +127,10 @@ _END_SECURE_CRT_DEPRECATION_DISABLE
 
         return( start );
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsnbset_l_downlevel);
-
 #endif
 
-/*extern "C" unsigned char * (__cdecl _mbsnbset)(
+#if 0
+extern "C" unsigned char * (__cdecl _mbsnbset)(
         unsigned char *string,
         unsigned int val,
         size_t count
@@ -142,4 +139,5 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbsnbset_l_downlevel);
 _BEGIN_SECURE_CRT_DEPRECATION_DISABLE
     return _mbsnbset_l(string, val, count, nullptr);
 _END_SECURE_CRT_DEPRECATION_DISABLE
-}*/
+}
+#endif

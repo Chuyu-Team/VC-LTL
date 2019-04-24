@@ -251,12 +251,14 @@ static int __cdecl translate_ansi_or_utf8_nolock(
     }
 
     // If the file is open in ANSI mode, then no further translation is
-    // required; we can simply return the number of bytes that we read.  It is
-    // expected that in this case, the source and result buffers are the same:
+    // required; we can simply return the number of bytes that we read.
+    // Even though there is no translation, there may still be
+    // characters in the buffer due to CRLF translation (a CR without
+    // a LF would 'unget' the would-be LF).
+    // text_mode_translation_result_size has already been adjusted for
+    // CRLF translation by translate_text_mode_nolock().
     if (_textmode(fh) == __crt_lowio_text_mode::ansi)
     {
-        _ASSERTE(static_cast<void const*>(source_buffer)
-              == static_cast<void const*>(result_buffer));
         return text_mode_translation_result_size;
     }
 

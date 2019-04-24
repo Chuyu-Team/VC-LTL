@@ -65,7 +65,7 @@ static void __cdecl try_cor_exit_process(UINT const return_code) throw()
 }
 
 
-extern "C" void __cdecl quick_exit_downlevel(int const return_code)
+extern "C" void __cdecl quick_exit(int const return_code)
 {
 	// First, check to see if we're loaded in a managed app.  If we are, try to
 	// call CorExitProcess to let the CLR handle the process termination.  If
@@ -95,5 +95,3 @@ extern "C" void __cdecl quick_exit_downlevel(int const return_code)
 		return;
 	});
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(quick_exit_downlevel);

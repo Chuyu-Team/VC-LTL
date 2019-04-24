@@ -14,8 +14,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
 
 /* defined in mbctype.h
 ; Define masks
@@ -73,220 +71,176 @@ static int __cdecl x_ismbbtype_l(_locale_t plocinfo, unsigned int, int, int) thr
 
 /* ismbbk functions */
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbkalnum_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbkalnum_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbkalnum(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,0,_MS);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbkalnum_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbkalnum) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbkalnum) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,0,_MS);
-}*/
+}
+#endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbkprint_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbkprint_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbkprint(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,0,(_MS | _MP));
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbkprint_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbkprint) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbkprint) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,0,(_MS | _MP));
-}*/
+}
+#endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbkpunct_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbkpunct_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbkpunct(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,0,_MP);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbkpunct_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbkpunct) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbkpunct) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,0,_MP);
-}*/
-
+}
+#endif
 
 /* ismbb functions */
-
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbalnum_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbalnum_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (plocinfo)
-		return _ismbbalnum(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,(_ALPHA | _DIGIT), _MS);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbalnum_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbalnum) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbalnum) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,(_ALPHA | _DIGIT), _MS);
-}*/
+}
+#endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbalpha_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbalpha_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbalpha(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,_ALPHA, _MS);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbalpha_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbalpha) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbalpha) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,_ALPHA, _MS);
-}*/
+}
+#endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbgraph_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbgraph_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbgraph(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,(_PUNCT | _ALPHA | _DIGIT),(_MS | _MP));
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbgraph_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbgraph) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbgraph) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,(_PUNCT | _ALPHA | _DIGIT),(_MS | _MP));
-}*/
+}
+#endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbprint_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbprint_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbprint(tst);
-	else
     return x_ismbbtype_l(plocinfo,tst,(_BLANK | _PUNCT | _ALPHA | _DIGIT),(_MS | _MP));
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbprint_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbprint) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbprint) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,(_BLANK | _PUNCT | _ALPHA | _DIGIT),(_MS | _MP));
-}*/
-
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbpunct_l_downlevel) (unsigned int tst, _locale_t plocinfo)
-{
-	if (!plocinfo)
-		return _ismbbpunct(tst);
-	else
-    return x_ismbbtype_l(plocinfo,tst,_PUNCT, _MP);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbpunct_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbpunct) (unsigned int tst)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbpunct_l) (unsigned int tst, _locale_t plocinfo)
+{
+    return x_ismbbtype_l(plocinfo,tst,_PUNCT, _MP);
+}
+#endif
+
+#if 0
+extern "C" int (__cdecl _ismbbpunct) (unsigned int tst)
 {
     return x_ismbbtype_l(nullptr,tst,_PUNCT, _MP);
-}*/
+}
+#endif
 
-extern "C" int (__cdecl _ismbbblank_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+extern "C" int (__cdecl _ismbbblank_l) (unsigned int tst, _locale_t plocinfo)
 {
-	if (!plocinfo)
-		return _ismbbblank(tst);
-	else
     return (tst == '\t') ? _BLANK : x_ismbbtype_l(plocinfo,tst,_BLANK, _MP);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbblank_l_downlevel);
-
-
-extern "C" int (__cdecl _ismbbblank_downlevel) (unsigned int tst)
+extern "C" int (__cdecl _ismbbblank) (unsigned int tst)
 {
-    //return (tst == '\t') ? _BLANK : x_ismbbtype_l(nullptr,tst,_BLANK, _MP);
-    return (((tst) == '\t') ? _BLANK : (__pctype_func())[(unsigned char)(tst)] & _BLANK);
+    return (tst == '\t') ? _BLANK : x_ismbbtype_l(nullptr,tst,_BLANK, _MP);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbblank_downlevel);
 
 
 /* lead and trail */
 // These expect single or double byte codepages and are undefined for UTF-8
 // UTF-8 queries will always return false for lead/trail bytes.
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbblead_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbblead_l) (unsigned int tst, _locale_t plocinfo)
 {
     // Note: Lookup is always FALSE for UTF-8
 	if (!plocinfo)
 		return _ismbblead(tst);
-	else
+
     return x_ismbbtype_l(plocinfo,tst,0,_M1);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbblead_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbblead) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbblead) (unsigned int tst)
 {
     // Note: Lookup is always FALSE for UTF-8
     return x_ismbbtype_l(nullptr, tst, 0, _M1);
-}*/
-
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbtrail_l_downlevel) (unsigned int tst, _locale_t plocinfo)
-{
-	if (!plocinfo)
-		return _ismbbtrail(tst);
-	else
-    return x_ismbbtype_l(plocinfo,tst,0,_M2);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbtrail_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbtrail) (unsigned int tst)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbtrail_l) (unsigned int tst, _locale_t plocinfo)
+{
+    // Note: Lookup is always FALSE for UTF-8
+	if (!plocinfo)
+		return _ismbbtrail(tst);
+
+    return x_ismbbtype_l(plocinfo,tst,0,_M2);
+}
+#endif
+
+#if 0
+extern "C" int (__cdecl _ismbbtrail) (unsigned int tst)
 {
     // Note: Lookup is always FALSE for UTF-8
     return x_ismbbtype_l(nullptr, tst, 0, _M2);
-}*/
+}
+#endif
 
 
 /* 932 specific */
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int (__cdecl _ismbbkana_l_downlevel) (unsigned int tst, _locale_t plocinfo)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int (__cdecl _ismbbkana_l) (unsigned int tst, _locale_t plocinfo)
 {
     //_LocaleUpdate _loc_update(plocinfo);
     if (!plocinfo)
@@ -299,15 +253,14 @@ extern "C" int (__cdecl _ismbbkana_l_downlevel) (unsigned int tst, _locale_t plo
     }
     return FALSE;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbbkana_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbbkana) (unsigned int tst)
+#if 0
+extern "C" int (__cdecl _ismbbkana) (unsigned int tst)
 {
     return _ismbbkana_l(tst, nullptr);
-}*/
+}
+#endif
 
 /***
 * Common code
@@ -320,7 +273,10 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbbkana_l_downlevel);
 static int __cdecl x_ismbbtype_l (_locale_t plocinfo, unsigned int tst, int cmask, int kmask) throw()
 {
     //_LocaleUpdate _loc_update(plocinfo);
-
+	if (!plocinfo)
+	{
+		return _ismbbprint(tst) & (cmask | kmask);
+	}
     /*
      * get input character and make sure < 256
      */

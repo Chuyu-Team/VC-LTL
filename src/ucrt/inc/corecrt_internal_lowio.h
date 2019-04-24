@@ -103,7 +103,8 @@ struct __crt_lowio_handle_data
     uint8_t unicode          : 1; // Was the file opened as unicode?
     uint8_t utf8translations : 1; // Buffer contains translations other than CRLF
     uint8_t dbcsBufferUsed   : 1; // Is the dbcsBuffer in use?
-    char    dbcsBuffer;           // Buffer for the lead byte of DBCS when converting from DBCS to Unicode
+    char    mbBuffer[MB_LEN_MAX]; // Buffer for the lead byte of DBCS when converting from DBCS to Unicode
+                                  // Or for the first up to 3 bytes of a UTF-8 character
 };
 
 // The log-base-2 of the number of elements in each array of lowio file objects
@@ -133,7 +134,8 @@ struct __crt_lowio_handle_data
 #define _tm_unicode(i)       (_pioinfo(i)->unicode)
 #define _startpos(i)         (_pioinfo(i)->startpos)
 #define _utf8translations(i) (_pioinfo(i)->utf8translations)
-#define _dbcsBuffer(i)       (_pioinfo(i)->dbcsBuffer)
+#define _mbBuffer(i)         (_pioinfo(i)->mbBuffer)
+#define _dbcsBuffer(i)       (_pioinfo(i)->mbBuffer[0])
 #define _dbcsBufferUsed(i)   (_pioinfo(i)->dbcsBufferUsed)
 
 /*
@@ -150,18 +152,18 @@ typedef __crt_lowio_handle_data* __crt_lowio_handle_data_array[IOINFO_ARRAYS];
 // Special, static lowio file object used only for more graceful handling
 // of a C file handle value of -1 (results from common errors at the stdio
 // level).
-extern __crt_lowio_handle_data __badioinfo;
+//extern __crt_lowio_handle_data __badioinfo;
 
 // The umask value
-extern int _umaskval;
+//extern int _umaskval;
 
 // Global array of pointers to the arrays of lowio file objects.
-extern __crt_lowio_handle_data_array __pioinfo;
+//extern __crt_lowio_handle_data_array __pioinfo;
 
 // The number of handles for which file objects have been allocated.  This
 // number is such that for any fh in [0, _nhandle), _pioinfo(fh) is well-
 // formed.
-extern int _nhandle;
+//extern int _nhandle;
 
 
 

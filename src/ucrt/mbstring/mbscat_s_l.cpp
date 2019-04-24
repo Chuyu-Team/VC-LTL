@@ -13,15 +13,11 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <corecrt_internal_securecrt.h>
-#include <msvcrt_IAT.h>
 
 
-#ifdef _ATL_XP_TARGETING
-EXTERN_C errno_t __cdecl _mbscat_s_l_downlevel(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
+#if _CRT_NTDDI_MIN < 0x06000000
+errno_t __cdecl _mbscat_s_l(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char *_Src, _LOCALE_ARG_DECL)
 {
-	//if (!_LOCALE_ARG)
-	//	return _mbscat_s(_Dst, _SizeInBytes, _Src);
-
     unsigned char *p;
     size_t available;
     BOOL fFoundInvalidMBC, fIsLeadPrefix;
@@ -124,7 +120,4 @@ EXTERN_C errno_t __cdecl _mbscat_s_l_downlevel(unsigned char *_Dst, size_t _Size
 
     _RETURN_NO_ERROR;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbscat_s_l_downlevel);
-
 #endif

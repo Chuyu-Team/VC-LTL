@@ -7,7 +7,6 @@
 // of these functions.
 //
 #include <corecrt_internal_stdio_input.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_stdio_input;
 
@@ -48,7 +47,7 @@ static int __cdecl common_vfscanf(
     });
 }
 
-extern "C" int __cdecl __stdio_common_vfscanf_downlevel(
+extern "C" int __cdecl __stdio_common_vfscanf(
     unsigned __int64 const options,
     FILE*            const stream,
     char const*      const format,
@@ -59,9 +58,7 @@ extern "C" int __cdecl __stdio_common_vfscanf_downlevel(
     return common_vfscanf(options, stream, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfscanf_downlevel);
-
-extern "C" int __cdecl __stdio_common_vfwscanf_downlevel(
+extern "C" int __cdecl __stdio_common_vfwscanf(
     unsigned __int64 const options,
     FILE*            const stream,
     wchar_t const*   const format,
@@ -71,8 +68,6 @@ extern "C" int __cdecl __stdio_common_vfwscanf_downlevel(
 {
     return common_vfscanf(options, stream, format, locale, arglist);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vfwscanf_downlevel);
 
 #endif /* _UCRT_ENCLAVE_BUILD */
 
@@ -114,7 +109,7 @@ static int __cdecl common_vsscanf(
     return processor.process();
 }
 
-extern "C" int __cdecl __stdio_common_vsscanf_downlevel(
+extern "C" int __cdecl __stdio_common_vsscanf(
     unsigned __int64 const options,
     char const*      const buffer,
     size_t           const buffer_count,
@@ -126,9 +121,7 @@ extern "C" int __cdecl __stdio_common_vsscanf_downlevel(
     return common_vsscanf(options, buffer, buffer_count, format, locale, arglist);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vsscanf_downlevel);
-
-extern "C" int __cdecl __stdio_common_vswscanf_downlevel(
+extern "C" int __cdecl __stdio_common_vswscanf(
     unsigned __int64 const options,
     wchar_t const*   const buffer,
     size_t           const buffer_count,
@@ -139,5 +132,3 @@ extern "C" int __cdecl __stdio_common_vswscanf_downlevel(
 {
     return common_vsscanf(options, buffer, buffer_count, format, locale, arglist);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(__stdio_common_vswscanf_downlevel);

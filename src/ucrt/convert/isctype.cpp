@@ -9,7 +9,6 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
 
@@ -44,9 +43,7 @@ extern "C" int __cdecl _chvalidator_l(_locale_t const locale, int const c, int c
 
     _LocaleUpdate locale_update(locale);
 
-    int const index = (c >= -1 && c <= 255) ? static_cast<unsigned char>(c) : -1;
-
-    return locale_update.GetLocaleT()->locinfo->_public._locale_pctype[index] & mask;
+    return __acrt_locale_get_ctype_array_value(locale_update.GetLocaleT()->locinfo->_public._locale_pctype, c, mask);
 }
 
 #endif // _DEBUG
@@ -62,24 +59,24 @@ extern "C" int __cdecl _chvalidator_l(_locale_t const locale, int const c, int c
 //     H.......|.......|.......|.......L
 //         0       0   leadbyte trailbyte
 //
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _isctype_l_downlevel(int const c, int const mask, _locale_t const locale)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _isctype_l(int const c, int const mask, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 	if (!locale)
 		return _isctype(c, mask);
 
-    // c valid between -1 and 255:
     if (c >= -1 && c <= 255)
     {
-        return locale->locinfo->_locale_pctype[static_cast<unsigned char>(c)] & mask;
+        // Direct access to _locale_pctype is allowed due to bounds check.
+        return locale->locinfo->_locale_pctype[c] & mask;
     }
 
     size_t const buffer_count{3};
 
     int  buffer_length;
     char buffer[buffer_count];
-    if (_isleadbyte_l(c >> 8 & 0xff, locale))
+    if (_isleadbyte_fast_internal(c >> 8 & 0xff, locale))
     {
         buffer[0] = (c >> 8 & 0xff); // Put lead-byte at start of the string
         buffer[1] = static_cast<char>(c);
@@ -110,19 +107,16 @@ extern "C" int __cdecl _isctype_l_downlevel(int const c, int const mask, _locale
 
     return static_cast<int>(character_type[0] & mask);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_isctype_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _isctype(int const c, int const mask)
+#if 0
+extern "C" int __cdecl _isctype(int const c, int const mask)
 {
-    if (!__acrt_locale_changed())
-    {
-        return __acrt_initial_locale_data._public._locale_pctype[static_cast<unsigned char>(c)] & mask;
-    }
-    else
+    if (__acrt_locale_changed())
     {
         return _isctype_l(c, mask, nullptr);
     }
-}*/
+
+    return __acrt_locale_get_ctype_array_value(__acrt_initial_locale_data._public._locale_pctype, c, mask);
+}
+#endif

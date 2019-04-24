@@ -1,5 +1,5 @@
 /***
-*towupper.c - convert wide character to upper case
+*towupper.cpp - convert wide character to upper case
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
@@ -10,8 +10,7 @@
 #include <corecrt_internal.h>
 #include <ctype.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 /***
 *wint_t _towupper_l(c, ptloci) - convert wide character to upper case
@@ -27,8 +26,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" wint_t __cdecl _towupper_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" wint_t __cdecl _towupper_l (
         wint_t c,
         _locale_t plocinfo
         )
@@ -36,23 +35,26 @@ extern "C" wint_t __cdecl _towupper_l_downlevel (
     wint_t widechar;
 
     if (c == WEOF)
+    {
         return c;
+    }
 
 	if (!plocinfo)
 		return towupper(c);
 
     //_LocaleUpdate _loc_update(plocinfo);
 
-    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
-        return __ascii_towupper(c);
-
     /* if checking case of c does not require API call, do it */
-    if ( c < 256 ) {
-        if ( !iswlower(c) ) {
-            return c;
-        } else {
-            return plocinfo->locinfo->pcumap[c];
-        }
+    if ( c < 256 )
+    {
+        return _towupper_fast_internal(static_cast<unsigned char>(c), plocinfo);
+    }
+
+    if ( plocinfo->locinfo->lc_handle[LC_CTYPE] == 0 )
+    {
+        /* If the locale is C, then the only characters that would be transformed are <256
+           and have been processed already. */
+        return c;
     }
 
     /* convert wide char to uppercase */
@@ -70,9 +72,6 @@ extern "C" wint_t __cdecl _towupper_l_downlevel (
     return widechar;
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_towupper_l_downlevel);
-
 #endif
 
 /***
@@ -92,10 +91,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_towupper_l_downlevel);
 *
 *******************************************************************************/
 
-/*extern "C" wint_t __cdecl towupper (
+#if 0
+extern "C" wint_t __cdecl towupper (
         wint_t c
         )
 {
 
     return _towupper_l(c, nullptr);
-}*/
+}
+#endif

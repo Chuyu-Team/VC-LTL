@@ -1,5 +1,5 @@
 /***
-*getcwd.c - get current working directory
+*getcwd.cpp - get current working directory
 *
 *       Copyright (c) Microsoft Corporation. All rights reserved.
 *
@@ -12,7 +12,7 @@
 *
 *******************************************************************************/
 #include <corecrt_internal.h>
-#include <corecrt_internal_win32_buffer.h>
+#include <corecrt_internal_traits.h>
 #include <direct.h>
 #include <errno.h>
 #include <malloc.h>
@@ -34,7 +34,7 @@ static int __cdecl is_valid_drive(unsigned const drive_number) throw()
     if (drive_number == 0)
         return 1;
 
-#pragma warning(suppress:__WARNING_UNUSED_SCALAR_ASSIGNMENT) // 28931
+#pragma warning(suppress:__WARNING_UNUSED_ASSIGNMENT) // 28931
     wchar_t const drive_letter   = static_cast<wchar_t>(L'A' + drive_number - 1);
     wchar_t const drive_string[] = { drive_letter, L':', L'\\', L'\0' };
 
@@ -52,17 +52,14 @@ static int __cdecl is_valid_drive(unsigned const drive_number) throw()
 *
 *Purpose:
 *       _getcwd gets the current working directory for the user,
-*       placing it in the buffer pointed to by pnbuf.  It returns
-*       the length of the string put in the buffer.  If the length
+*       placing it in the buffer pointed to by pnbuf. If the length
 *       of the string exceeds the length of the buffer, maxlen,
-*       then nullptr is returned.  If pnbuf = nullptr, maxlen is ignored.
-*       An entry point "_getdcwd()" is defined with takes the above
+*       then nullptr is returned. If pnbuf = nullptr, a buffer of at
+*       least size maxlen is automatically allocated using
+*       malloc() -- a pointer to which is returned by _getcwd().
+*       An entry point "_getdcwd()" is defined which takes the above
 *       parameters, plus a drive number.  "_getcwd()" is implemented
-*       as a call to "_getcwd()" with the default drive (0).
-*
-*       If pnbuf = nullptr, maxlen is ignored, and a buffer is automatically
-*       allocated using malloc() -- a pointer to which is returned by
-*       _getcwd().
+*       as a call to "_getdcwd()" with the default drive (0).
 *
 *       side effects: no global data is used or affected
 *
@@ -84,12 +81,11 @@ static int __cdecl is_valid_drive(unsigned const drive_number) throw()
 *
 *Purpose:
 *       _getdcwd gets the current working directory for the user,
-*       placing it in the buffer pointed to by pnbuf.  It returns
-*       the length of the string put in the buffer.  If the length
+*       placing it in the buffer pointed to by pnbuf. If the length
 *       of the string exceeds the length of the buffer, maxlen,
-*       then nullptr is returned.  If pnbuf = nullptr, maxlen is ignored,
-*       and a buffer is automatically allocated using malloc() --
-*       a pointer to which is returned by _getdcwd().
+*       then nullptr is returned. If pnbuf = nullptr, a buffer of at
+*       least size maxlen is automatically allocated using
+*       malloc() -- a pointer to which is returned by _getdcwd().
 *
 *       side effects: no global data is used or affected
 *
@@ -108,35 +104,20 @@ static int __cdecl is_valid_drive(unsigned const drive_number) throw()
 *
 *******************************************************************************/
 
-template <typename Character, typename DynamicResizingPolicy>
-_Success_(return)
-static bool __cdecl common_getdcwd_impl(
-    Character const * const                               path,
-    __crt_win32_buffer<Character, DynamicResizingPolicy>& buffer
-    ) throw()
-{
-    errno_t const err = __acrt_get_full_path_name_cp(path, buffer, __acrt_get_utf8_acp_compatibility_codepage());
-
-    if (err != 0) {
-        // Appropriate error already set.
-        return false;
-    }
-
-    return true;
-}
-
 template <typename Character>
 _Success_(return != 0)
 _Ret_z_
 static Character* __cdecl common_getdcwd(
     int                                            drive_number,
-    _Out_writes_opt_z_(max_count) Character* const user_buffer,
+    _Out_writes_opt_z_(max_count) Character*       user_buffer,
     int                                      const max_count,
     int                                      const block_use,
     _In_opt_z_ char const*                   const file_name,
     int                                      const line_number
     ) throw()
 {
+    typedef __crt_char_traits<Character> traits;
+
     _VALIDATE_RETURN(max_count >= 0, EINVAL, nullptr);
 
     if (drive_number != 0)
@@ -169,29 +150,29 @@ static Character* __cdecl common_getdcwd(
         drive_string[1] = '\0';
     }
 
-    if (user_buffer != nullptr)
-    {   // Using user buffer. Fail if not enough space.
-        _VALIDATE_RETURN(max_count > 0, EINVAL, nullptr);
-        user_buffer[0] = '\0';
-
-        __crt_no_alloc_win32_buffer<Character> buffer(user_buffer, max_count);
-        if (common_getdcwd_impl(drive_string, buffer))
-        {
-            return user_buffer;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    else
+    if (user_buffer == nullptr)
     {   // Always new memory suitable for debug mode and releasing to the user.
         __crt_public_win32_buffer<Character> buffer(
             __crt_win32_buffer_debug_info(block_use, file_name, line_number)
-            );
-        common_getdcwd_impl(drive_string, buffer);
-        return buffer.detach();
+        );
+        buffer.allocate(max_count);
+        if (!traits::get_full_path_name(drive_string, buffer))
+        {
+            return buffer.detach();
+        }
+        return nullptr;
     }
+
+    // Using user buffer. Fail if not enough space.
+    _VALIDATE_RETURN(max_count > 0, EINVAL, nullptr);
+    user_buffer[0] = '\0';
+
+    __crt_no_alloc_win32_buffer<Character> buffer(user_buffer, max_count);
+    if (!traits::get_full_path_name(drive_string, buffer))
+    {
+        return user_buffer;
+    }
+    return nullptr;
 };
 
 

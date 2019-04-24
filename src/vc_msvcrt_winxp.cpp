@@ -28,7 +28,7 @@ EXTERN_C __declspec(dllimport) EXCEPTION_DISPOSITION __CxxFrameHandler(
 	DispatcherContext  *pDC
 	);
 
-EXTERN_C __declspec(naked) DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler3_downlevel(
+EXTERN_C __declspec(naked) DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler3(
 	/*
 	EAX=FuncInfo   *pFuncInfo,          // Static information for this frame
 	*/
@@ -92,7 +92,7 @@ EXTERN_C __declspec(dllimport) EXCEPTION_DISPOSITION __CxxFrameHandler(
 
 static volatile long ProtectFlag = 0;
 
-EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler3_downlevel(
+EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler3(
 	EHExceptionRecord  *pExcept,         // Information for this exception
 	EHRegistrationNode RN,               // Dynamic information for this frame
 	CONTEXT            *pContext,        // Context info
@@ -129,6 +129,6 @@ EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler
 #error "暂不支持此体系"
 #endif
 
-_LCRT_DEFINE_IAT_SYMBOL(__CxxFrameHandler3_downlevel);
+_LCRT_DEFINE_IAT_SYMBOL(__CxxFrameHandler3);
 
 thread_local void* _pForeignExceptionWinXP = nullptr;

@@ -9,7 +9,7 @@
     #error __USE_CONTEXT should be undefined
 #endif
 
-#ifdef _ATL_XP_TARGETING
 #define __USE_CONTEXT
+#if _CRT_NTDDI_MIN < 0x06000000
 #include "lfind.cpp"
 #endif

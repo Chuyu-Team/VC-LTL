@@ -13,7 +13,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 
 /***
@@ -32,8 +31,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbchira_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbchira_l(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -42,18 +41,16 @@ extern "C" int __cdecl _ismbchira_l_downlevel(
 
     return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x829f && c <= 0x82f1);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbchira_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _ismbchira(
+#if 0
+extern "C" int __cdecl _ismbchira(
         unsigned int c
         )
 {
     return _ismbchira_l(c, nullptr);
-}*/
-
+}
+#endif
 
 /***
 *int _ismbckata(c) - test character for katakana (Japanese)
@@ -71,8 +68,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbchira_l_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbckata_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbckata_l (
         unsigned int c,
         _locale_t plocinfo
         )
@@ -81,17 +78,16 @@ extern "C" int __cdecl _ismbckata_l_downlevel (
 
     return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x8340 && c <= 0x8396 && c != 0x837f);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbckata_l_downlevel);
-
 #endif
-/*extern "C" int __cdecl _ismbckata(
+
+#if 0
+extern "C" int __cdecl _ismbckata(
         unsigned int c
         )
 {
     return _ismbckata_l(c, nullptr);
-}*/
-
+}
+#endif
 
 /***
 *int _ismbcsymbol(c) - Tests if char is punctuation or symbol of Microsoft Kanji
@@ -111,8 +107,8 @@ _LCRT_DEFINE_IAT_SYMBOL(_ismbckata_l_downlevel);
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcsymbol_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbcsymbol_l(
         unsigned int c,
         _locale_t plocinfo
         )
@@ -121,14 +117,13 @@ extern "C" int __cdecl _ismbcsymbol_l_downlevel(
 
     return((plocinfo ? plocinfo->mbcinfo->mbcodepage : _getmbcp()) == _KANJI_CP && c >= 0x8141 && c <= 0x81ac && c != 0x817f);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcsymbol_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _ismbcsymbol)(
+#if 0
+extern "C" int (__cdecl _ismbcsymbol)(
         unsigned int c
         )
 {
     return _ismbcsymbol_l(c, nullptr);
-}*/
+}
+#endif

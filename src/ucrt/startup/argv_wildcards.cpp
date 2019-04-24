@@ -166,6 +166,47 @@ static errno_t copy_and_add_argument_to_buffer(
 }
 
 
+static wchar_t * get_wide(__crt_internal_win32_buffer<wchar_t> * const dest, char * const source)
+{
+    errno_t const cvt1 = __acrt_mbs_to_wcs_cp(
+        source,
+        *dest,
+        __acrt_get_utf8_acp_compatibility_codepage()
+    );
+
+    if (cvt1 != 0)
+    {
+        return nullptr;
+    }
+
+    return dest->data();
+};
+
+static wchar_t * get_wide(__crt_internal_win32_buffer<wchar_t> *, wchar_t * const source)
+{
+    return source;
+}
+
+static char * get_file_name(__crt_internal_win32_buffer<char> * const dest, wchar_t * const source)
+{
+    errno_t const cvt = __acrt_wcs_to_mbs_cp(
+        source,
+        *dest,
+        __acrt_get_utf8_acp_compatibility_codepage()
+    );
+
+    if (cvt != 0)
+    {
+        return nullptr;
+    }
+
+    return dest->data();
+}
+
+static wchar_t * get_file_name(__crt_internal_win32_buffer<wchar_t> *, wchar_t * const source)
+{
+    return source;
+}
 
 template <typename Character>
 static errno_t expand_argument_wildcards(
@@ -182,54 +223,70 @@ static errno_t expand_argument_wildcards(
     // Find the first slash or colon before the wildcard:
     Character* it = wildcard;
     while (it != argument && !is_directory_separator(*it))
+    {
         it = previous_character(argument, it);
+    }
 
     // If we found a colon that can't form a drive name (e.g. it can't be 'D:'),
     // then just add the argument as-is (we don't know how to expand it):
     if (*it == ':' && it != argument + 1)
+    {
         return copy_and_add_argument_to_buffer(argument, static_cast<Character*>(nullptr), 0, buffer);
+    }
 
     size_t const directory_length = is_directory_separator(*it)
         ? it - argument + 1 // it points to the separator, so add 1 to include it.
         : 0;
 
     // Try to begin the find operation:
-    find_data_type find_data{};
-    __crt_findfile_handle const find_handle(traits::find_first_file_ex(
-        argument,
+    WIN32_FIND_DATAW findFileDataW;
+    __crt_internal_win32_buffer<wchar_t> wide_file_name;
+
+    __crt_findfile_handle const find_handle(::FindFirstFileExW(
+        get_wide(&wide_file_name, argument),
         FindExInfoStandard,
-        &find_data,
+        &findFileDataW,
         FindExSearchNameMatch,
         nullptr,
         0));
 
     // If the find operation failed, there was no match, so just add the argument:
     if (find_handle.get() == INVALID_HANDLE_VALUE)
+    {
         return copy_and_add_argument_to_buffer(argument, static_cast<Character*>(nullptr), 0, buffer);
+    }
 
     size_t const old_argument_count = buffer.size();
 
     do
     {
-        Character* const file_name = find_data.cFileName;
-
+        __crt_internal_win32_buffer<Character> character_buffer;
+        Character* const file_name = get_file_name(&character_buffer, findFileDataW.cFileName);
         // Skip . and ..:
         if (file_name[0] == '.' && file_name[1] == '\0')
+        {
             continue;
+        }
 
         if (file_name[0] == '.' && file_name[1] == '.' && file_name[2] == '\0')
+        {
             continue;
+        }
 
         errno_t const add_status = copy_and_add_argument_to_buffer(file_name, argument, directory_length, buffer);
         if (add_status != 0)
+        {
             return add_status;
+        }
     }
-    while (traits::find_next_file(find_handle.get(), &find_data));
+    while (::FindNextFileW(find_handle.get(), &findFileDataW));
 
     // If we didn't add any arguments to the buffer, then we're done:
     size_t const new_argument_count = buffer.size();
     if (old_argument_count == new_argument_count)
+    {
         return 0;
+    }
 
     // If we did add new arguments, let's helpfully sort them:
     qsort(

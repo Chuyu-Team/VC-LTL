@@ -8,9 +8,8 @@
 //
 #include <corecrt_internal_string_templates.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
-extern "C" errno_t __cdecl _wcsset_s_downlevel(
+extern "C" errno_t __cdecl _wcsset_s(
     wchar_t* const destination,
     size_t   const size_in_elements,
     wchar_t  const value
@@ -18,5 +17,3 @@ extern "C" errno_t __cdecl _wcsset_s_downlevel(
 {
     return common_tcsset_s(destination, size_in_elements, value);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcsset_s_downlevel);

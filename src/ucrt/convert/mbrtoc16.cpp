@@ -8,7 +8,6 @@
 #include <uchar.h>
 #include <corecrt_internal_mbstring.h>
 #include <wchar.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
@@ -40,13 +39,11 @@ namespace
     }
 }
 
-extern "C" size_t __cdecl mbrtoc16_downlevel(char16_t* pc16, const char* s, size_t n, mbstate_t* ps)
+extern "C" size_t __cdecl mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps)
 {
     // TODO: Bug 13307590 says this is always assuming UTF-8.
     return __mbrtoc16_utf8(pc16, s, n, ps);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(mbrtoc16_downlevel);
 
 size_t __cdecl __crt_mbstring::__mbrtoc16_utf8(char16_t* pc16, const char* s, size_t n, mbstate_t* ps)
 {

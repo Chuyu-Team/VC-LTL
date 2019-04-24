@@ -34,7 +34,10 @@ extern "C" __crt_lowio_handle_data* __cdecl __acrt_lowio_create_handle_array()
         it->unicode            = false;
         it->utf8translations   = false;
         it->dbcsBufferUsed     = false;
-        it->dbcsBuffer         = '\0';
+        for (int i = 0; i < sizeof(it->mbBuffer); ++i)
+        {
+            it->mbBuffer[i] = '\0';
+        }
     }
 
     return array.detach();

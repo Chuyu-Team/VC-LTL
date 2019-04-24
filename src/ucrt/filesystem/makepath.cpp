@@ -8,7 +8,7 @@
 #include <corecrt_internal_securecrt.h>
 #include <mbstring.h>
 #include <stdlib.h>
-#include <msvcrt_IAT.h>
+
 
 
 static char const* previous_character(char const* const first, char const* const current) throw()
@@ -63,12 +63,12 @@ static errno_t __cdecl common_makepath_s(
 
     Character*       result_it  = result_buffer;
 
-    // For the non-secure makepath functions, result_count is SIZE_MAX.  In this
-    // case, we do not want to perform arithmetic with the result_count.  Instead,
+    // For the non-secure makepath functions, result_count is _CRT_UNBOUNDED_BUFFER_SIZE.
+    // In this case, we do not want to perform arithmetic with the result_count.  Instead,
     // we set the result_end to nullptr:  result_it will never be a null pointer,
     // and when we need to perform arithmetic with result_end we can check it for
     // null first.
-    Character* const result_end = result_count != SIZE_MAX
+    Character* const result_end = result_count != _CRT_UNBOUNDED_BUFFER_SIZE
         ? result_buffer + result_count
         : nullptr;
 
@@ -149,7 +149,7 @@ static errno_t __cdecl common_makepath_s(
     *result_it++ = '\0';
 
     CRT_WARNING_POP
-        
+
     _FILL_STRING(result_buffer, result_count, result_it - result_buffer);
     return 0;
 }
@@ -164,7 +164,7 @@ extern "C" void __cdecl _makepath(
     char const* const extension
     )
 {
-    _makepath_s(result_buffer, SIZE_MAX, drive, directory, file_name, extension);
+    _makepath_s(result_buffer, _CRT_UNBOUNDED_BUFFER_SIZE, drive, directory, file_name, extension);
 }
 
 extern "C" void __cdecl _wmakepath(
@@ -175,13 +175,13 @@ extern "C" void __cdecl _wmakepath(
     wchar_t const* const extension
     )
 {
-    _wmakepath_s(result_buffer, SIZE_MAX, drive, directory, file_name, extension);
+    _wmakepath_s(result_buffer, _CRT_UNBOUNDED_BUFFER_SIZE, drive, directory, file_name, extension);
 }
-
 #endif
 
 
-extern "C" errno_t __cdecl _makepath_s_downlevel(
+
+extern "C" errno_t __cdecl _makepath_s(
     char*       const result_buffer,
     size_t      const result_count,
     char const* const drive,
@@ -193,9 +193,7 @@ extern "C" errno_t __cdecl _makepath_s_downlevel(
     return common_makepath_s(result_buffer, result_count, drive, directory, file_name, extension);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_makepath_s_downlevel);
-
-extern "C" errno_t __cdecl _wmakepath_s_downlevel(
+extern "C" errno_t __cdecl _wmakepath_s(
     wchar_t*       const result_buffer,
     size_t         const result_count,
     wchar_t const* const drive,
@@ -206,5 +204,3 @@ extern "C" errno_t __cdecl _wmakepath_s_downlevel(
 {
     return common_makepath_s(result_buffer, result_count, drive, directory, file_name, extension);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wmakepath_s_downlevel);

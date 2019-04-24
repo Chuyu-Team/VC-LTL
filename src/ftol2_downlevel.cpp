@@ -4,7 +4,7 @@
 extern "C" extern int __isa_available;
 
 
-extern "C" __declspec(naked) int __cdecl _ftol2_downlevel(double x)
+extern "C" __declspec(naked) int __cdecl _ftol2(double x)
 {
 	__asm
 	{
@@ -56,7 +56,7 @@ extern "C" __declspec(naked) int __cdecl _ftol2_downlevel(double x)
 	}
 }
 
-extern "C" __declspec(naked) int __cdecl _ftol2_pentium4_downlevel(double x)
+extern "C" __declspec(naked) int __cdecl _ftol2_pentium4(double x)
 {
 	__asm
 	{
@@ -71,7 +71,7 @@ extern "C" __declspec(naked) int __cdecl _ftol2_pentium4_downlevel(double x)
 	}
 }
 
-extern "C" __declspec(naked) int __cdecl _ftol2_sse_downlevel(double x)
+extern "C" __declspec(naked) int __cdecl _ftol2_sse(double x)
 {
 	/*if (__isa_available == 0)
 	{
@@ -86,13 +86,13 @@ extern "C" __declspec(naked) int __cdecl _ftol2_sse_downlevel(double x)
 	__asm
 	{
 		cmp __isa_available, 0
-		jz short _ftol2_downlevel
+		jz short _ftol2
 
-		jmp _ftol2_pentium4_downlevel
+		jmp _ftol2_pentium4
 	}
 }
 
-extern "C" __declspec(naked) int __cdecl _ftol2_sse_excpt_downlevel(double x)
+extern "C" __declspec(naked) int __cdecl _ftol2_sse_excpt(double x)
 {
 	/*if (__isa_available)
 	{
@@ -113,15 +113,15 @@ extern "C" __declspec(naked) int __cdecl _ftol2_sse_excpt_downlevel(double x)
 	__asm
 	{
 		cmp     __isa_available, 0
-		jz      _ftol2_downlevel
+		jz      _ftol2
 
 		sub     esp, 4
 		fnstcw[esp]
 		pop     eax
 		and     ax, 7Fh
 		cmp     ax, 7Fh
-		jz      _ftol2_pentium4_downlevel
-		jmp _ftol2_downlevel
+		jz      _ftol2_pentium4
+		jmp _ftol2
 	}
 }
 

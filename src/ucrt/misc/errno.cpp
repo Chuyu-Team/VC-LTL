@@ -7,7 +7,6 @@
 //
 #include <corecrt_internal.h>
 #include <errno.h>
-#include <msvcrt_IAT.h>
 
 
 
@@ -67,6 +66,7 @@ static errentry const errtable[]
     { ERROR_ALREADY_EXISTS,         EEXIST    },  //  183
     { ERROR_FILENAME_EXCED_RANGE,   ENOENT    },  //  206
     { ERROR_NESTING_NOT_ALLOWED,    EAGAIN    },  //  215
+    { ERROR_NO_UNICODE_TRANSLATION, EILSEQ    },  // 1113
     { ERROR_NOT_ENOUGH_QUOTA,       ENOMEM    }   // 1816
 };
 
@@ -119,23 +119,21 @@ extern "C" int __cdecl __acrt_errno_from_os_error(unsigned long const oserrno)
 }
 
 
-#ifdef _ATL_XP_TARGETING
+#if _CRT_NTDDI_MIN < 0x06000000
 // These safely set and get the value of the calling thread's errno
-extern "C" errno_t _set_errno_downlevel(int const value)
+extern "C" errno_t _set_errno(int const value)
 {
-    /*__acrt_ptd* const ptd{__acrt_getptd_noexit()};
+#if 0
+    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
     if (!ptd)
-        return ENOMEM;*/
+        return ENOMEM;
+#endif
 
     errno = value;
     return 0;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_set_errno_downlevel);
-#endif
-
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t _get_errno_downlevel(int* const result)
+extern "C" errno_t _get_errno(int* const result)
 {
     _VALIDATE_RETURN_NOERRNO(result != nullptr, EINVAL);
 
@@ -144,26 +142,22 @@ extern "C" errno_t _get_errno_downlevel(int* const result)
     return 0;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_get_errno_downlevel);
-#endif
 
-#ifdef _ATL_XP_TARGETING
+
 // These safely set and get the value of the calling thread's doserrno
-extern "C" errno_t _set_doserrno_downlevel(unsigned long const value)
+extern "C" errno_t _set_doserrno(unsigned long const value)
 {
-    /*__acrt_ptd* const ptd{__acrt_getptd_noexit()};
+#if 0
+    __acrt_ptd* const ptd{__acrt_getptd_noexit()};
     if (!ptd)
-        return ENOMEM;*/
+        return ENOMEM;
+#endif
 
     _doserrno = value;
     return 0;
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(_set_doserrno_downlevel);
-#endif
-
-#ifdef _ATL_XP_TARGETING
-extern "C" errno_t _get_doserrno_downlevel(unsigned long* const result)
+extern "C" errno_t _get_doserrno(unsigned long* const result)
 {
     _VALIDATE_RETURN_NOERRNO(result != nullptr, EINVAL);
 
@@ -171,14 +165,14 @@ extern "C" errno_t _get_doserrno_downlevel(unsigned long* const result)
     *result = _doserrno;
     return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_get_doserrno_downlevel);
 #endif
+
 
 
 // These return pointers to the calling thread's errno and doserrno values,
 // respectively, and are used to implement errno and _doserrno in the header.
-/*static int           errno_no_memory   {ENOMEM};
+#if 0
+static int           errno_no_memory   {ENOMEM};
 static unsigned long doserrno_no_memory{ERROR_NOT_ENOUGH_MEMORY};
 
 extern "C" int* __cdecl _errno()
@@ -197,4 +191,5 @@ extern "C" unsigned long* __cdecl __doserrno()
         return &doserrno_no_memory;
 
     return &ptd->_tdoserrno;
-}*/
+}
+#endif

@@ -15,7 +15,6 @@
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
 #include <string.h>
-#include <msvcrt_IAT.h>
 
 /***
 * _mbsnlen - Find length of MBCS string
@@ -40,8 +39,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-EXTERN_C size_t __cdecl _mbsnlen_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+size_t __cdecl _mbsnlen_l(
         const unsigned char *s,
         size_t sizeInBytes,
         _locale_t plocinfo
@@ -79,13 +78,10 @@ EXTERN_C size_t __cdecl _mbsnlen_l_downlevel(
 
                 return (size >= sizeInBytes ? sizeInBytes : n);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsnlen_l_downlevel);
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
-EXTERN_C size_t __cdecl _mbsnlen_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+size_t __cdecl _mbsnlen(
         const unsigned char *s,
         size_t maxsize
         )
@@ -118,7 +114,4 @@ EXTERN_C size_t __cdecl _mbsnlen_downlevel(
 
 	return (size >= maxsize ? maxsize : n);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsnlen_downlevel);
-
 #endif

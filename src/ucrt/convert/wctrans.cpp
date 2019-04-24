@@ -9,7 +9,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <wctype.h>
-#include <msvcrt_IAT.h>
 
 #pragma warning(disable:4244)
 
@@ -31,14 +30,12 @@ const tab[] =
 
 
 
-extern "C" wint_t __cdecl towctrans_downlevel(wint_t const c, wctrans_t const value)
+extern "C" wint_t __cdecl towctrans(wint_t const c, wctrans_t const value)
 {
     return value == 1 ? towupper(c) : towlower(c);
 }
 
-_LCRT_DEFINE_IAT_SYMBOL(towctrans_downlevel);
-
-extern "C" wctrans_t __cdecl wctrans_downlevel(char const* const name)
+extern "C" wctrans_t __cdecl wctrans(char const* const name)
 {
     for (unsigned n = 0; tab[n].s != 0; ++n)
     {
@@ -48,8 +45,6 @@ extern "C" wctrans_t __cdecl wctrans_downlevel(char const* const name)
 
     return 0;
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(wctrans_downlevel);
 
 /*
  * Copyright (c) 1992-2007 by P.J. Plauger.  ALL RIGHTS RESERVED.

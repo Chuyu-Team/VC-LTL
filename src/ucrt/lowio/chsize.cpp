@@ -27,27 +27,48 @@ extern "C" errno_t __cdecl _chsize_s(int const fh, __int64 const size)
         }
         else
         {
-            _ASSERTE(("Invalid file descriptor. File possibly closed by a different thread",0));
+            _ASSERTE(("Invalid file descriptor. File possibly closed by a different thread", 0));
             return errno = EBADF;
         }
     });
 }
 
+struct __crt_seek_guard
+{
+
+    __crt_seek_guard(int const fh, __int64 const size)
+        : place(_lseeki64_nolock(fh, 0, SEEK_CUR)),
+        end(_lseeki64_nolock(fh, 0, SEEK_END)),
+        extend(size - end),
+        fhh(fh)
+    {
+    }
+
+    ~__crt_seek_guard()
+    {
+        _lseeki64_nolock(fhh, place, SEEK_SET);
+    }
+
+    __crt_seek_guard(__crt_seek_guard const &) = delete;
+    __crt_seek_guard& operator=(__crt_seek_guard const &) = delete;
+
+    __int64 place;
+    __int64 end;
+    __int64 extend;
+    int fhh;
+};
+
 extern "C" errno_t __cdecl _chsize_nolock(int const fh, __int64 const size)
 {
     // Get current file position and seek to end
-    __int64 const place = _lseeki64_nolock(fh, 0, SEEK_CUR);
-    if (place == -1)
-        return errno;
+    __crt_seek_guard seek_guard(fh, size);
 
-    __int64 const end = _lseeki64_nolock(fh, 0, SEEK_END);
-    if (end == -1)
+    if (seek_guard.place == -1 || seek_guard.end == -1) {
         return errno;
-
-    __int64 extend = size - end;
+    }
 
     // Grow or shrink the file as necessary:
-    if (extend > 0)
+    if (seek_guard.extend > 0)
     {
         // Extend the file by filling the new area with zeroes:
         __crt_unique_heap_ptr<char> const zero_buffer(_calloc_crt_t(char, _INTERNAL_BUFSIZ));
@@ -59,11 +80,11 @@ extern "C" errno_t __cdecl _chsize_nolock(int const fh, __int64 const size)
 
         int const old_mode = _setmode_nolock(fh, _O_BINARY);
 
-        do 
+        do
         {
-            int const bytes_to_write = extend >= static_cast<__int64>(_INTERNAL_BUFSIZ)
+            int const bytes_to_write = seek_guard.extend >= static_cast<__int64>(_INTERNAL_BUFSIZ)
                 ? _INTERNAL_BUFSIZ
-                : static_cast<int>(extend);
+                : static_cast<int>(seek_guard.extend);
 
             int const bytes_written = _write_nolock(fh, zero_buffer.get(), bytes_to_write);
             if (bytes_written == -1)
@@ -75,14 +96,13 @@ extern "C" errno_t __cdecl _chsize_nolock(int const fh, __int64 const size)
                 return errno;
             }
 
-            extend -= bytes_written;
-        }
-        while (extend > 0);
+            seek_guard.extend -= bytes_written;
+        } while (seek_guard.extend > 0);
 
 #pragma warning(suppress:6031) // return value ignored
         _setmode_nolock(fh, old_mode);
     }
-    else if (extend < 0)
+    else if (seek_guard.extend < 0)
     {
         // Shorten the file by truncating it:
         __int64 const new_end = _lseeki64_nolock(fh, size, SEEK_SET);
@@ -98,10 +118,6 @@ extern "C" errno_t __cdecl _chsize_nolock(int const fh, __int64 const size)
             return errno;
         }
     }
-
-    // Seek back to the original position:
-    if (_lseeki64_nolock(fh, place, SEEK_SET) == -1)
-        return errno;
 
     return 0;
 }

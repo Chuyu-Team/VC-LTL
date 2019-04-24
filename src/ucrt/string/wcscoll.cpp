@@ -11,8 +11,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <string.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 
 /***
@@ -38,8 +37,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _wcscoll_l_downlevel (
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _wcscoll_l (
         const wchar_t *_string1,
         const wchar_t *_string2,
         _locale_t plocinfo
@@ -52,9 +51,9 @@ extern "C" int __cdecl _wcscoll_l_downlevel (
     _VALIDATE_RETURN(_string1 != nullptr, EINVAL, _NLSCMPERROR);
     _VALIDATE_RETURN(_string2 != nullptr, EINVAL, _NLSCMPERROR);
 
-	auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
+	const auto _lc_collate = (plocinfo ? plocinfo->locinfo->lc_handle : ___lc_handle_func())[LC_COLLATE];
 
-    if (_lc_collate == 0)
+    if ( _lc_collate == 0 )
         return (wcscmp(_string1, _string2));
 
     if ( 0 == (ret = __acrt_CompareStringW(
@@ -72,9 +71,6 @@ extern "C" int __cdecl _wcscoll_l_downlevel (
     return (ret - 2);
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_wcscoll_l_downlevel);
-
 #endif
 
 #if 0

@@ -6,7 +6,6 @@
 
 #include <uchar.h>
 #include <corecrt_internal_mbstring.h>
-#include <msvcrt_IAT.h>
 
 using namespace __crt_mbstring;
 
@@ -44,13 +43,11 @@ namespace
     }
 }
 
-extern "C" size_t __cdecl c16rtomb_downlevel(char* s, char16_t c16, mbstate_t* ps)
+extern "C" size_t __cdecl c16rtomb(char* s, char16_t c16, mbstate_t* ps)
 {
     // TODO: Bug 13307590 says this is always assuming UTF-8.
     return __c16rtomb_utf8(s, c16, ps);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(c16rtomb_downlevel);
 
 size_t __cdecl __crt_mbstring::__c16rtomb_utf8(char* s, char16_t c16, mbstate_t* ps)
 {

@@ -13,7 +13,6 @@
 
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
 
 /***
 * _ismbcspace - Test is character is whitespace (MBCS)
@@ -36,8 +35,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _ismbcspace_l_downlevel(unsigned int const c, _locale_t const locale)
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _ismbcspace_l(unsigned int const c, _locale_t const locale)
 {
     //_LocaleUpdate locale_update(locale);
 	if (!locale)
@@ -50,12 +49,11 @@ extern "C" int __cdecl _ismbcspace_l_downlevel(unsigned int const c, _locale_t c
 
     return __dcrt_multibyte_check_type(c, locale, _SPACE, true);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_ismbcspace_l_downlevel);
-
 #endif
 
-/*extern "C" int __cdecl _ismbcspace(unsigned int const c)
+#if 0
+extern "C" int __cdecl _ismbcspace(unsigned int const c)
 {
     return _ismbcspace_l(c, nullptr);
-}*/
+}
+#endif

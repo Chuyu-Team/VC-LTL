@@ -12,8 +12,5 @@
 #endif
 
 #include <corecrt_internal_mbstring.h>
-#include <msvcrt_IAT.h>
 
-_REDIRECT_TO_L_VERSION_3_downlevel(errno_t, _mbsset_s, unsigned char*, size_t, unsigned int)
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsset_s_downlevel);
+_REDIRECT_TO_L_VERSION_3(errno_t, _mbsset_s, unsigned char*, size_t, unsigned int)

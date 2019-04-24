@@ -39,7 +39,7 @@
 // statement at the end of thread_start is unreachable.  We cannot suppress the
 // warning locally because it is a backend warning.
 #pragma warning(disable: 4702) // unreachable code
-
+#pragma warning(disable: 4984) // 'if constexpr' is a C++17 language extension
 
 
 namespace
@@ -72,26 +72,7 @@ namespace
         thread_parameter_free_policy>;
 }
 
-
-
-static __forceinline unsigned int invoke_thread_procedure(
-    _beginthread_proc_type const procedure,
-    void*                  const context
-    ) throw()
-{
-    procedure(context);
-    return 0;
-}
-
-static __forceinline unsigned int invoke_thread_procedure(
-    _beginthreadex_proc_type const procedure,
-    void*                    const context
-    ) throw()
-{
-    return procedure(context);
-}
-
-template <typename ThreadProcedure>
+template <typename ThreadProcedure, bool Ex>
 static unsigned long WINAPI thread_start(void* const parameter) throw()
 {
     if (!parameter)
@@ -111,8 +92,15 @@ static unsigned long WINAPI thread_start(void* const parameter) throw()
     __try
     {
         ThreadProcedure const procedure = reinterpret_cast<ThreadProcedure>(context->_procedure);
-
-        _endthreadex(invoke_thread_procedure(procedure, context->_context));
+        if constexpr (Ex)
+        {
+            _endthreadex(procedure(context->_context));
+        }
+        else
+        {
+            procedure(context->_context);
+            _endthreadex(0);
+        }
     }
     __except (_seh_filter_exe(GetExceptionCode(), GetExceptionInformation()))
     {
@@ -174,7 +162,7 @@ extern "C" uintptr_t __cdecl _beginthread(
     HANDLE const thread_handle = CreateThread(
         nullptr,
         stack_size,
-        thread_start<_beginthread_proc_type>,
+        thread_start<_beginthread_proc_type, false>,
         parameter.get(),
         CREATE_SUSPENDED,
         &thread_id);
@@ -221,7 +209,7 @@ extern "C" uintptr_t __cdecl _beginthreadex(
     HANDLE const thread_handle = CreateThread(
         reinterpret_cast<LPSECURITY_ATTRIBUTES>(security_descriptor),
         stack_size,
-        thread_start<_beginthreadex_proc_type>,
+        thread_start<_beginthreadex_proc_type, true>,
         parameter.get(),
         creation_flags,
         &thread_id);

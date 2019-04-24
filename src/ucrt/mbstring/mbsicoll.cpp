@@ -14,8 +14,7 @@
 #include <corecrt_internal.h>
 #include <corecrt_internal_mbstring.h>
 #include <locale.h>
-#include "..\..\winapi_thunks.h"
-#include <msvcrt_IAT.h>
+#include <winapi_thunks.h>
 
 /***
 * _mbsicoll - Collate MBCS strings, ignoring case
@@ -38,8 +37,8 @@
 *
 *******************************************************************************/
 
-#ifdef _ATL_XP_TARGETING
-extern "C" int __cdecl _mbsicoll_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" int __cdecl _mbsicoll_l(
         const unsigned char *s1,
         const unsigned char *s2,
         _locale_t plocinfo
@@ -75,15 +74,14 @@ extern "C" int __cdecl _mbsicoll_l_downlevel(
         return ret - 2;
 
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbsicoll_l_downlevel);
-
 #endif
 
-/*extern "C" int (__cdecl _mbsicoll)(
+#if 0
+extern "C" int (__cdecl _mbsicoll)(
         const unsigned char *s1,
         const unsigned char *s2
         )
 {
     return _mbsicoll_l(s1, s2, nullptr);
-}*/
+}
+#endif

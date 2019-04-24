@@ -13,24 +13,23 @@ BOOL __cdecl __acrt_SetEnvironmentVariableA(
     LPCSTR const lpValue
     )
 {
-    _LocaleUpdate locale_update(nullptr);
-    int const code_page = locale_update.GetLocaleT()->locinfo->_public._locale_lc_codepage;
-
     __crt_internal_win32_buffer<wchar_t> wide_name;
     __crt_internal_win32_buffer<wchar_t> wide_value;
 
-    errno_t const cvt1 = __acrt_mbs_to_wcs(
+    errno_t const cvt1 = __acrt_mbs_to_wcs_cp(
         lpName,
-        wide_name
+        wide_name,
+        __acrt_get_utf8_acp_compatibility_codepage()
         );
 
     if (cvt1 != 0) {
         return FALSE;
     }
 
-    errno_t const cvt2 = __acrt_mbs_to_wcs(
+    errno_t const cvt2 = __acrt_mbs_to_wcs_cp(
         lpValue,
-        wide_value
+        wide_value,
+        __acrt_get_utf8_acp_compatibility_codepage()
         );
 
     if (cvt2 != 0) {

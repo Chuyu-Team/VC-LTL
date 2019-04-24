@@ -17,7 +17,7 @@
 #include <corecrt_internal.h>
 #include <stdlib.h>
 #include <locale.h>
-#include <msvcrt_IAT.h>
+
 
 
 
@@ -30,20 +30,32 @@ static size_t __cdecl common_mbstrlen_l(
     )
 {
     //_LocaleUpdate locale_update(locale);
+	int _locale_mb_cur_max;
+	unsigned int _locale_lc_codepage;
+	if (locale)
+	{
+		_locale_mb_cur_max = locale->locinfo->_locale_mb_cur_max;
+		_locale_lc_codepage = locale->locinfo->_locale_lc_codepage;
+	}
+	else
+	{
+		_locale_mb_cur_max = __mb_cur_max;
+		_locale_lc_codepage = ___lc_codepage_func();
+	}
 
     _ASSERTE(
         locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 1 ||
         locale_update.GetLocaleT()->locinfo->_public._locale_mb_cur_max == 2);
 
     // Handle single byte character sets:
-    if (___mb_cur_max_l_func(locale) == 1)
+    if (_locale_mb_cur_max == 1)
     {
         return strnlen(string, max_size);
     }
 
     // Verify that all of the multibyte characters are valid:
     if (__acrt_MultiByteToWideChar(
-            locale? locale->locinfo->_locale_lc_codepage : ___lc_codepage_func(),
+            _locale_lc_codepage,
             MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
             string,
             static_cast<int>(max_size),
@@ -61,7 +73,7 @@ static size_t __cdecl common_mbstrlen_l(
     size_t size = 0; // Number of bytes read
     for (char const* it = string; size < max_size && *it; ++n, ++it, ++size)
     {
-        if (_isleadbyte_l(static_cast<unsigned char>(*it), locale))
+        if (_isleadbyte_fast_internal(static_cast<unsigned char>(*it), locale))
         {
             ++size;
             if (size >= max_size)
@@ -77,20 +89,18 @@ static size_t __cdecl common_mbstrlen_l(
 }
 
 
-#ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstrlen_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" size_t __cdecl _mbstrlen_l(
     char const* const string,
     _locale_t   const locale
     )
 {
-    return common_mbstrlen_l(string, SIZE_MAX, locale);
+    return common_mbstrlen_l(string, _CRT_UNBOUNDED_BUFFER_SIZE, locale);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbstrlen_l_downlevel);
-
 #endif
 
-/*extern "C" size_t __cdecl _mbstrlen(char const* const string)
+#if 0
+extern "C" size_t __cdecl _mbstrlen(char const* const string)
 {
     if (!__acrt_locale_changed())
     {
@@ -100,12 +110,12 @@ _LCRT_DEFINE_IAT_SYMBOL(_mbstrlen_l_downlevel);
     {
         return _mbstrlen_l(string, nullptr);
     }
-}*/
+}
+#endif
 
 
-
-#ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstrnlen_l_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" size_t __cdecl _mbstrnlen_l(
     char const* const string,
     size_t      const max_size,
     _locale_t   const locale
@@ -116,20 +126,14 @@ extern "C" size_t __cdecl _mbstrnlen_l_downlevel(
 
     return common_mbstrlen_l(string, max_size, locale);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbstrnlen_l_downlevel);
-
 #endif
 
-#ifdef _ATL_XP_TARGETING
-extern "C" size_t __cdecl _mbstrnlen_downlevel(
+#if _CRT_NTDDI_MIN < 0x06000000
+extern "C" size_t __cdecl _mbstrnlen(
     char const* const string,
     size_t      const max_size
     )
 {
     return _mbstrnlen_l(string, max_size, nullptr);
 }
-
-_LCRT_DEFINE_IAT_SYMBOL(_mbstrnlen_downlevel);
-
 #endif
