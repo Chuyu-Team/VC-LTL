@@ -131,12 +131,6 @@ if(${SupportLTL} STREQUAL "true")
 endif()
 
 if(${SupportLTL} STREQUAL "true")
-	if (NOT EXISTS ${VC_LTL_Root}/lib/${PlatformShortName})
-		message(FATAL_ERROR "VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
-	endif()
-endif()
-
-if(${SupportLTL} STREQUAL "true")
 	#获取VC版本号
 	if(NOT VCLTLToolsVersion)
 		if(MSVC_VERSION)
@@ -255,6 +249,15 @@ if(${SupportLTL} STREQUAL "true")
 		endif()
 	endif()
 
+	if (NOT EXISTS ${VC_LTL_Root}/lib/${PlatformShortName})
+		message(FATAL_ERROR "VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
+	endif()
+	if (NOT EXISTS ${VC_LTL_Root}/VC/${VCLTLToolsVersion}/lib)
+		message(FATAL_ERROR "VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
+	endif()
+	if (NOT EXISTS ${VC_LTL_Root}/ucrt/${VCLTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
+		message(FATAL_ERROR "VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
+	endif()
 
 	#设置VCLTLPlatformName
 	if(${SupportWinXP} STREQUAL "true")

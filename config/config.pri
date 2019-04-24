@@ -88,6 +88,19 @@ equals(t, true) {
     LTL_Mode = Advanced
 }
 
+!exists($$VC_LTL_Root/lib/$$PlatformShortName)
+{
+    error("VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
+}
+!exists($$VC_LTL_Root/VC/$$VCLTLToolsVersion/lib)
+{
+    error("VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
+}
+!exists($$VC_LTL_Root/ucrt/$$VCLTLTargetUniversalCRTVersion/lib/$$PlatformShortName)
+{
+    error("VC-LTL can't find lib files, please download the binary files from https://github.com/Chuyu-Team/VC-LTL/releases/latest then continue.")
+}
+
 
 # 打印信息
 VC_LTL_Info = \

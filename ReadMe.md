@@ -444,6 +444,5 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
 * New Fea, the CMake script adds vcpkg support (Thanks to BigBrother).
 * New Fea, add Vistual Studio 2019 Support.
-* New Fea，add Visual Studio 2019 FH4 Exception Handling support (Thanks to 毛利).
 * New Fea, add 10.0.18362.0 UCRT support (Thanks to 毛利).
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.

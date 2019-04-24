@@ -429,7 +429,6 @@ nmake /f Test.mak
 * 解决Bug，ucrtbase_ltl.dll没有导出llabs（感谢 GPBeta）。
 * 新增Fea，`VC-LTL helper for qmake.pri`脚本添加老版本QMake兼容（感谢 大胸滴）。
 * 新增Fea，CMake脚本添加vcpkg兼容（感谢 大胸滴）。
-* 新增Fea，初步添加Visual Studio 2019支持。
-* 新增Fea，新增Visual Studio 2019 FH4异常支持（感谢 毛利）
+* 新增Fea，添加Visual Studio 2019支持。
 * 新增Fea，新增10.0.18362.0 UCRT支持（感谢 毛利）
 * 改进体验，Vista模式将`_ATL_XP_TARGETING`以及`_USING_V110_SDK71_`宏从错误降级到警告。
