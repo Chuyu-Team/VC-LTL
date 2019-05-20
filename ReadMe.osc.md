@@ -415,18 +415,21 @@ nmake /f Test.mak
 * 新增Fea，添加VS 2017 14.16.27023工具集支持。
 * 新增Fea，为Windows XP添加`_IsExceptionObjectToBeDestroyed、_CreateFrameInfo、_FindAndUnlinkFrame`（感谢 夏思畅）。
 
+
 ### 4.0.0.28 - 累计问题修复（2019-02-16 14:50）
 * 解决[Bug 45](https://github.com/Chuyu-Team/VC-LTL/issues/45)，main函数argv参数默认被展开问题（感谢 xspeed1989 ）。
 * 解决Bug，VS 14.14.26428以及更高平台缺少`pplerror.cpp`问题（感谢 xspeed1989 ）。
 * 新增Fea，改进Visual Studio 2017中对Clang-LLVM的支持（感谢 神话）。
 * 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。
 
-### 4.0.1.7 - 改进支持（2019-04-19 18:30）
+
+### 4.0.1.8 - 改进支持（2019-05-20 13:40）
 * 解决Bug，Windows XP模式没有引用`advapi32.lib`，可能导致`ImpersonateSelf`等符号无法解析（感谢 昌平517）。
 * 解决Bug，微软原版std::thread依赖GetLogicalProcessorInformation导致XP RTM无法运行（感谢 小古）。
 * 解决Bug，为XP模式添加_mbsinc，解决此函数越界问题（感谢 亮亮）。
 * 解决Bug，微软原版std::mutex依赖GetNumaHighestNodeNumber导致XP RTM无法运行。
 * 解决Bug，ucrtbase_ltl.dll没有导出llabs（感谢 GPBeta）。
+* 解决Bug，将意外遗漏的`_downlevel`后缀删除（感谢 过客）。
 * 新增Fea，`VC-LTL helper for qmake.pri`脚本添加老版本QMake兼容（感谢 大胸滴）。
 * 新增Fea，CMake脚本添加vcpkg兼容（感谢 大胸滴）。
 * 新增Fea，添加Visual Studio 2019支持。
