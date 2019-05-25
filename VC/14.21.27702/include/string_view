@@ -1,0 +1,15 @@
+// string_view standard header
+// Copyright (c) Microsoft Corporation. All rights reserved.
+#pragma once
+#ifndef _STRING_VIEW_
+#define _STRING_VIEW_
+#ifndef RC_INVOKED
+#include <yvals.h>
+
+#if _HAS_CXX17
+#include <xstring>
+#else // ^^^ _HAS_CXX17 / !_HAS_CXX17 vvv
+#pragma message("string_view is only available with C++17 or later.")
+#endif // _HAS_CXX17
+#endif // RC_INVOKED
+#endif // _STRING_VIEW_

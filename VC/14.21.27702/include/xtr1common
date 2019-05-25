@@ -1,0 +1,308 @@
+// xtr1common internal header (core)
+#pragma once
+#ifndef _XTR1COMMON_
+#define _XTR1COMMON_
+#ifndef RC_INVOKED
+#include <yvals_core.h>
+
+#pragma pack(push, _CRT_PACKING)
+#pragma warning(push, _STL_WARNING_LEVEL)
+#pragma warning(disable : _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+// STRUCT TEMPLATE integral_constant
+template <class _Ty, _Ty _Val>
+struct integral_constant {
+    static constexpr _Ty value = _Val;
+
+    using value_type = _Ty;
+    using type       = integral_constant;
+
+    constexpr operator value_type() const noexcept {
+        return value;
+    }
+
+    _NODISCARD constexpr value_type operator()() const noexcept {
+        return value;
+    }
+};
+
+// ALIAS TEMPLATE bool_constant
+template <bool _Val>
+using bool_constant = integral_constant<bool, _Val>;
+
+using true_type  = bool_constant<true>;
+using false_type = bool_constant<false>;
+
+// STRUCT TEMPLATE enable_if
+template <bool _Test, class _Ty = void>
+struct enable_if {}; // no member "type" when !_Test
+
+template <class _Ty>
+struct enable_if<true, _Ty> { // type is _Ty for _Test
+    using type = _Ty;
+};
+
+template <bool _Test, class _Ty = void>
+using enable_if_t = typename enable_if<_Test, _Ty>::type;
+
+// STRUCT TEMPLATE conditional
+template <bool _Test, class _Ty1, class _Ty2>
+struct conditional { // Choose _Ty1 if _Test is true, and _Ty2 otherwise
+    using type = _Ty1;
+};
+
+template <class _Ty1, class _Ty2>
+struct conditional<false, _Ty1, _Ty2> {
+    using type = _Ty2;
+};
+
+template <bool _Test, class _Ty1, class _Ty2>
+using conditional_t = typename conditional<_Test, _Ty1, _Ty2>::type;
+
+// STRUCT TEMPLATE is_same
+template <class, class>
+_INLINE_VAR constexpr bool is_same_v = false; // determine whether arguments are the same type
+template <class _Ty>
+_INLINE_VAR constexpr bool is_same_v<_Ty, _Ty> = true;
+
+template <class _Ty1, class _Ty2>
+struct is_same : bool_constant<is_same_v<_Ty1, _Ty2>> {};
+
+// STRUCT TEMPLATE remove_const
+template <class _Ty>
+struct remove_const { // remove top-level const qualifier
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_const<const _Ty> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+using remove_const_t = typename remove_const<_Ty>::type;
+
+// STRUCT TEMPLATE remove_volatile
+template <class _Ty>
+struct remove_volatile { // remove top-level volatile qualifier
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_volatile<volatile _Ty> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+using remove_volatile_t = typename remove_volatile<_Ty>::type;
+
+// STRUCT TEMPLATE remove_cv
+template <class _Ty>
+struct remove_cv { // remove top-level const and volatile qualifiers
+    using type = _Ty;
+
+    template <template <class> class _Fn>
+    using _Apply = _Fn<_Ty>; // apply cv-qualifiers from the class template argument to _Fn<_Ty>
+};
+
+template <class _Ty>
+struct remove_cv<const _Ty> {
+    using type = _Ty;
+
+    template <template <class> class _Fn>
+    using _Apply = const _Fn<_Ty>;
+};
+
+template <class _Ty>
+struct remove_cv<volatile _Ty> {
+    using type = _Ty;
+
+    template <template <class> class _Fn>
+    using _Apply = volatile _Fn<_Ty>;
+};
+
+template <class _Ty>
+struct remove_cv<const volatile _Ty> {
+    using type = _Ty;
+
+    template <template <class> class _Fn>
+    using _Apply = const volatile _Fn<_Ty>;
+};
+
+template <class _Ty>
+using remove_cv_t = typename remove_cv<_Ty>::type;
+
+// STRUCT TEMPLATE _Is_integral
+#if defined(__EDG__) || defined(__NVCC__) // TRANSITION, VSO#736632
+template <bool _First_value, class _First, class... _Rest>
+struct _Disjunction { // handle true trait or last trait
+    using type = _First;
+};
+
+template <class _False, class _Next, class... _Rest>
+struct _Disjunction<false, _False, _Next, _Rest...> { // first trait is false, try the next trait
+    using type = typename _Disjunction<_Next::value, _Next, _Rest...>::type;
+};
+
+template <class... _Traits>
+struct disjunction : false_type {}; // If _Traits is empty, false_type
+
+template <class _First, class... _Rest>
+struct disjunction<_First, _Rest...> : _Disjunction<_First::value, _First, _Rest...>::type {
+    // the first true trait in _Traits, or the last trait if none are true
+};
+
+template <class... _Traits>
+_INLINE_VAR constexpr bool disjunction_v = disjunction<_Traits...>::value;
+
+template <class _Ty, class... _Types>
+_INLINE_VAR constexpr bool _Is_any_of_v = // true if and only if some trait in _Types is true
+    disjunction_v<is_same<_Ty, _Types>...>;
+
+template <class _Ty>
+_INLINE_VAR constexpr bool _Is_integral = // determine whether cv-unqualified type _Ty is integral
+    _Is_any_of_v<_Ty, bool, char, signed char, unsigned char, wchar_t, char16_t, char32_t, short, unsigned short, int,
+        unsigned int, long, unsigned long, long long, unsigned long long>;
+#else // ^^^ workaround / no workaround vvv
+template <class>
+_INLINE_VAR constexpr bool _Is_integral = false; // determine whether cv-unqualified type argument is integral
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<bool> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<char> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<signed char> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<unsigned char> = true;
+
+#ifdef _NATIVE_WCHAR_T_DEFINED
+template <>
+_INLINE_VAR constexpr bool _Is_integral<wchar_t> = true;
+#endif // _NATIVE_WCHAR_T_DEFINED
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<char16_t> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<char32_t> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<short> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<unsigned short> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<int> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<unsigned int> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<long> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<unsigned long> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<long long> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_integral<unsigned long long> = true;
+#endif // TRANSITION, VSO#736632
+
+// STRUCT TEMPLATE is_integral
+template <class _Ty>
+_INLINE_VAR constexpr bool is_integral_v = _Is_integral<remove_cv_t<_Ty>>; // determine whether _Ty is integral
+
+template <class _Ty>
+struct is_integral : bool_constant<is_integral_v<_Ty>> {};
+
+// STRUCT TEMPLATE _Is_floating_point
+#if defined(__EDG__) || defined(__NVCC__) // TRANSITION, VSO#736632
+template <class _Ty>
+_INLINE_VAR constexpr bool _Is_floating_point = // determine whether cv-unqualified type _Ty is floating point
+    _Is_any_of_v<_Ty, float, double, long double>;
+#else // ^^^ workaround / no workaround vvv
+template <class>
+_INLINE_VAR constexpr bool _Is_floating_point = // determine whether cv-unqualified type argument is floating point
+    false;
+
+template <>
+_INLINE_VAR constexpr bool _Is_floating_point<float> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_floating_point<double> = true;
+
+template <>
+_INLINE_VAR constexpr bool _Is_floating_point<long double> = true;
+#endif // TRANSITION, VSO#736632
+
+// STRUCT TEMPLATE is_floating_point
+template <class _Ty>
+_INLINE_VAR constexpr bool is_floating_point_v = // determine whether _Ty is floating point
+    _Is_floating_point<remove_cv_t<_Ty>>;
+
+template <class _Ty>
+struct is_floating_point : bool_constant<is_floating_point_v<_Ty>> {};
+
+// STRUCT TEMPLATE is_arithmetic
+template <class _Ty>
+_INLINE_VAR constexpr bool is_arithmetic_v = // determine whether _Ty is an arithmetic type
+    is_integral_v<_Ty> || is_floating_point_v<_Ty>;
+
+template <class _Ty>
+struct is_arithmetic : bool_constant<is_arithmetic_v<_Ty>> {};
+
+// STRUCT TEMPLATE remove_reference
+template <class _Ty>
+struct remove_reference {
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_reference<_Ty&> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_reference<_Ty&&> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+using remove_reference_t = typename remove_reference<_Ty>::type;
+
+template <class _Ty>
+using _Remove_cvref_t = remove_cv_t<remove_reference_t<_Ty>>;
+
+#if _HAS_CXX20
+template <class _Ty>
+using remove_cvref_t = _Remove_cvref_t<_Ty>;
+
+template <class _Ty>
+struct remove_cvref {
+    using type = remove_cvref_t<_Ty>;
+};
+#endif // _HAS_CXX20
+
+_STD_END
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+#endif // RC_INVOKED
+#endif // _XTR1COMMON_
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

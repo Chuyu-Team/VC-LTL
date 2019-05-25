@@ -1,0 +1,1562 @@
+// xhash internal header
+#pragma once
+#ifndef _XHASH_
+#define _XHASH_
+#ifndef RC_INVOKED
+#include <cmath>
+#include <cstring>
+#include <cwchar>
+#include <list>
+#include <vector>
+#include <xbit_ops.h>
+#include <xstring>
+
+#if _HAS_CXX17
+#include <xnode_handle.h>
+#endif // _HAS_CXX17
+
+#pragma pack(push, _CRT_PACKING)
+#pragma warning(push, _STL_WARNING_LEVEL)
+#pragma warning(disable : _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+namespace stdext {
+    using _STD basic_string;
+    using _STD less;
+    using _STD size_t;
+
+    // FUNCTION TEMPLATE hash_value
+    template <class _Kty>
+    inline size_t hash_value(const _Kty& _Keyval) { // hash _Keyval to size_t value one-to-one
+        return (size_t) _Keyval ^ (size_t) 0xdeadbeef;
+    }
+
+    template <class _Elem, class _Traits, class _Alloc>
+    inline size_t hash_value(const basic_string<_Elem, _Traits, _Alloc>& _Str) { // hash string to size_t value
+        return _STD _Hash_array_representation(_Str.c_str(), _Str.size());
+    }
+
+    inline size_t hash_value(_In_z_ const char* _Str) { // hash NTBS to size_t value
+        return _STD _Hash_array_representation(_Str, _CSTD strlen(_Str));
+    }
+
+    inline size_t hash_value(_In_z_ const wchar_t* _Str) { // hash NTWCS to size_t value
+        return _STD _Hash_array_representation(_Str, _CSTD wcslen(_Str));
+    }
+
+    // CLASS TEMPLATE hash_compare
+    template <class _Kty,
+        class _Pr = less<_Kty>>
+    class hash_compare { // traits class for hash containers
+    public:
+        enum { // parameters for hash table
+            bucket_size = 1 // 0 < bucket_size
+        };
+
+        hash_compare(_Pr _Pred = _Pr()) : comp(_Pred) { // construct with _Pred comparator
+        }
+
+        size_t operator()(const _Kty& _Keyval) const { // hash _Keyval to size_t value by pseudorandomizing transform
+            long _Quot   = (long) (hash_value(_Keyval) & LONG_MAX);
+            ldiv_t _Qrem = _CSTD ldiv(_Quot, 127773);
+
+            _Qrem.rem = 16807 * _Qrem.rem - 2836 * _Qrem.quot;
+            if (_Qrem.rem < 0) {
+                _Qrem.rem += LONG_MAX;
+            }
+
+            return (size_t) _Qrem.rem;
+        }
+
+        bool operator()(const _Kty& _Keyval1, const _Kty& _Keyval2) const { // test if _Keyval1 ordered before _Keyval2
+            return comp(_Keyval1, _Keyval2);
+        }
+
+        _Pr comp; // the comparator object
+    };
+} // namespace stdext
+_STD_BEGIN
+using stdext::hash_compare;
+using stdext::hash_value;
+_STD_END
+
+_STD_BEGIN
+// CLASS TEMPLATE _Uhash_compare
+template <class _Kty, class _Hasher, class _Keyeq>
+class _Uhash_compare { // traits class for unordered containers
+public:
+    enum { // parameters for hash table
+        bucket_size = 1 // 0 < bucket_size
+    };
+
+    _Uhash_compare(_Hasher _Hasharg = _Hasher(), _Keyeq _Keyeqarg = _Keyeq())
+        : _Mypair(_One_then_variadic_args_t(), _Hasharg, _One_then_variadic_args_t(), _Keyeqarg,
+              0.0f) { // construct with hasher and equality comparator
+    }
+
+    size_t operator()(const _Kty& _Keyval) const { // hash _Keyval to size_t value
+        return (size_t) _Gethash()(_Keyval);
+    }
+
+    bool operator()(const _Kty& _Keyval1, const _Kty& _Keyval2) const { // test if _Keyval1 NOT equal to _Keyval2
+        return !_Getkeyeq()(_Keyval1, _Keyval2);
+    }
+
+    const _Hasher& _Gethash() const noexcept { // return const reference to hash function
+        return _Mypair._Get_first();
+    }
+
+    const _Keyeq& _Getkeyeq() const noexcept { // return const reference to key equality predicate
+        return _Mypair._Myval2._Get_first();
+    }
+
+    float& _Get_max_bucket_size() noexcept { // return reference to current maximum bucket size
+        return _Mypair._Myval2._Myval2;
+    }
+
+    const float& _Get_max_bucket_size() const noexcept { // return const reference to current maximum bucket size
+        return _Mypair._Myval2._Myval2;
+    }
+
+    void swap(_Uhash_compare& _Rhs)
+        _NOEXCEPT_COND(_Is_nothrow_swappable<_Hasher>::value&& _Is_nothrow_swappable<_Keyeq>::value) {
+        _Swap_adl(_Mypair._Get_first(), _Rhs._Mypair._Get_first());
+        auto& _Lsecond = _Mypair._Myval2;
+        auto& _Rsecond = _Rhs._Mypair._Myval2;
+        _Swap_adl(_Lsecond._Get_first(), _Rsecond._Get_first());
+        _STD swap(_Lsecond._Myval2, _Rsecond._Myval2);
+    }
+
+    _Compressed_pair<_Hasher, _Compressed_pair<_Keyeq, float>> _Mypair;
+};
+
+// CLASS TEMPLATE _Reinterpret_move_iter
+template <class _Iter, class _Val>
+struct _Reinterpret_move_iter {
+    _Iter _Base;
+
+    using iterator_category = input_iterator_tag;
+    using value_type        = typename iterator_traits<_Iter>::value_type;
+    using difference_type   = typename iterator_traits<_Iter>::difference_type;
+    using reference         = _Val&&;
+    // pointer intentionally omitted
+
+    reference operator*() const {
+        return static_cast<reference>(reinterpret_cast<_Val&>(*_Base));
+    }
+
+    _Reinterpret_move_iter& operator++() {
+        ++_Base;
+        return *this;
+    }
+
+    // post ++ intentionally omitted
+
+    // TRANSITION, VSO#568006
+    friend bool operator==(const _Reinterpret_move_iter& _Lhs, const _Reinterpret_move_iter& _Rhs) {
+        return _Lhs._Base == _Rhs._Base;
+    }
+
+    // TRANSITION, VSO#568006
+    friend bool operator!=(const _Reinterpret_move_iter& _Lhs, const _Reinterpret_move_iter& _Rhs) {
+        return _Lhs._Base != _Rhs._Base;
+    }
+};
+
+// STRUCT TEMPLATE _List_head_construct_ptr
+template <class _Alnode>
+struct _List_head_construct_ptr {
+    using value_type = typename _Alnode::value_type;
+    static_assert(_Is_specialization_v<value_type, _List_node>, "_List_head_construct_ptr allocator not rebound");
+    using _Alnode_traits = allocator_traits<_Alnode>;
+    using pointer        = typename _Alnode_traits::pointer;
+    _Alnode& _Al;
+    pointer _Newhead;
+
+    explicit _List_head_construct_ptr(_Alnode& _Al_) : _Al(_Al_), _Newhead(value_type::_Buyheadnode(_Al)) {}
+
+    template <class _Val_types>
+    _List_head_construct_ptr(_Alnode& _Al_, _List_val<_Val_types>& _Mycont)
+        : _Al(_Al_), _Newhead(value_type::_Buyheadnode(_Al)) {
+        _Mycont._Myhead = _Newhead;
+    }
+
+    _List_head_construct_ptr(const _List_head_construct_ptr&) = delete;
+    _List_head_construct_ptr& operator=(const _List_head_construct_ptr&) = delete;
+
+    _NODISCARD pointer _Release() noexcept {
+        return _STD exchange(_Newhead, nullptr);
+    }
+
+    ~_List_head_construct_ptr() {
+        if (_Newhead) {
+            value_type::_Freenode0(_Al, _Newhead);
+        }
+    }
+};
+
+// CLASS TEMPLATE _Hash
+template <class _Traits>
+class _Hash { // hash table -- list with vector of iterators for quick access
+public:
+    using key_type      = typename _Traits::key_type;
+    using key_compare   = typename _Traits::key_compare;
+    using value_compare = typename _Traits::value_compare;
+
+    using _Mylist             = list<typename _Traits::value_type, typename _Traits::allocator_type>;
+    using _Alnode             = typename _Mylist::_Alnode;
+    using _Alnode_traits      = typename _Mylist::_Alnode_traits;
+    using _Nodeptr            = typename _Mylist::_Nodeptr;
+    using _Mutable_value_type = typename _Traits::_Mutable_value_type;
+
+    using value_type      = typename _Mylist::value_type;
+    using allocator_type  = typename _Mylist::allocator_type;
+    using size_type       = typename _Mylist::size_type;
+    using difference_type = typename _Mylist::difference_type;
+    using pointer         = typename _Mylist::pointer;
+    using const_pointer   = typename _Mylist::const_pointer;
+    using reference       = value_type&;
+    using const_reference = const value_type&;
+
+    using iterator =
+        conditional_t<is_same_v<key_type, value_type>, typename _Mylist::const_iterator, typename _Mylist::iterator>;
+    using const_iterator = typename _Mylist::const_iterator;
+
+    using _Unchecked_iterator       = conditional_t<is_same_v<key_type, value_type>,
+        typename _Mylist::_Unchecked_const_iterator, typename _Mylist::_Unchecked_iterator>;
+    using _Unchecked_const_iterator = typename _Mylist::_Unchecked_const_iterator;
+
+    using _Aliter = _Rebind_alloc_t<_Alnode, _Unchecked_iterator>;
+    using _Myvec  = vector<_Unchecked_iterator, _Aliter>;
+
+    using _Pairib = pair<iterator, bool>;
+    using _Pairii = pair<iterator, iterator>;
+    using _Paircc = pair<const_iterator, const_iterator>;
+
+    static constexpr size_type _Bucket_size = key_compare::bucket_size;
+    static constexpr size_type _Min_buckets = 8; // must be a positive power of 2
+    static constexpr bool _Multi            = _Traits::_Multi;
+
+#if !_HAS_IF_CONSTEXPR
+    template <class _Traits>
+    inline friend bool _Hash_equal_elements(
+        const _Hash<_Traits>& _Left, const _Hash<_Traits>& _Right, false_type); // TRANSITION, VSO#568006
+
+    template <class _Traits>
+    inline friend bool _Hash_equal_elements(
+        const _Hash<_Traits>& _Left, const _Hash<_Traits>& _Right, true_type); // TRANSITION, VSO#568006
+#endif // !_HAS_IF_CONSTEXPR
+
+    template <class _Traits>
+    inline friend bool _Hash_equal(const _Hash<_Traits>& _Left, const _Hash<_Traits>& _Right); // TRANSITION, VSO#568006
+
+    _Hash(const key_compare& _Parg, const allocator_type& _Al)
+        : _Traitsobj(_Parg), _List(_Al), _Vec(_Min_buckets * 2, _Unchecked_end(), static_cast<_Aliter>(_Al)),
+          _Mask(_Min_buckets - 1), _Maxidx(_Min_buckets) { // construct empty hash table
+        _Max_bucket_size() = _Bucket_size;
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+    }
+
+    template <class _Any_alloc>
+    _Hash(const _Hash& _Right, const _Any_alloc& _Al)
+        : _Traitsobj(_Right._Traitsobj), _List(static_cast<allocator_type>(_Al)),
+          _Vec(_Right._Vec.size(), _Unchecked_end(), static_cast<_Aliter>(_Al)), _Mask(_Right._Mask),
+          _Maxidx(_Right._Maxidx) { // construct hash table by copying _Right
+        insert(_Right._Unchecked_begin(), _Right._Unchecked_end());
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+        _Right._Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+    }
+
+    _Hash(_Hash&& _Right)
+        : _Traitsobj(_Right._Traitsobj), _List(_Move_allocator_tag{}, _Right._List._Getal()),
+          _Vec(_Move_allocator_tag{}, _Min_buckets * 2, _Unchecked_end(), _Right._Vec._Getal()) {
+        _List._Swap_val(_Right._List);
+        _Vec._Swap_val(_Right._Vec);
+        _Mask   = _STD exchange(_Right._Mask, _Min_buckets - 1);
+        _Maxidx = _STD exchange(_Right._Maxidx, _Min_buckets);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+        _Right._Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+    }
+
+private:
+    void _Move_construct_equal_alloc(_Hash& _Right) {
+        _Vec.assign(_Min_buckets * 2, _Unchecked_end());
+        _List._Swap_val(_Right._List);
+        _Vec._Swap_val(_Right._Vec);
+        _Mask   = _STD exchange(_Right._Mask, _Min_buckets - 1);
+        _Maxidx = _STD exchange(_Right._Maxidx, _Min_buckets);
+    }
+
+public:
+    _Hash(_Hash&& _Right, const allocator_type& _Al)
+        : _Traitsobj(_Right._Traitsobj), _List(_Al),
+          _Vec(static_cast<_Aliter>(_Al)) { // construct hash table by moving _Right, allocator
+        if
+            _CONSTEXPR_IF(_Alnode_traits::is_always_equal::value) {
+                _Move_construct_equal_alloc(_Right);
+            }
+        else if (_List._Getal() == _Right._List._Getal()) {
+            _Move_construct_equal_alloc(_Right);
+        } else {
+            _Maxidx = _Min_buckets;
+            _Unchecked_iterator _Mylast = _List._Unchecked_end();
+            for (auto& _Val : _Right._List) {
+                _List._Insert(_Mylast, reinterpret_cast<_Mutable_value_type&&>(_Val));
+            }
+            _Reinsert_with_invalid_vec();
+            _Right.clear();
+        }
+
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+        _Right._Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+    }
+
+private:
+    void _Swap_val(_Hash& _Right) noexcept { // swap contents with equal allocator _Hash _Right
+        _List._Swap_val(_Right._List);
+        _Vec._Swap_val(_Right._Vec);
+        _STD swap(_Mask, _Right._Mask);
+        _STD swap(_Maxidx, _Right._Maxidx);
+    }
+
+    struct _Min_buckets_construct_ptr {
+        using pointer = typename allocator_traits<_Aliter>::pointer;
+        _Aliter& _Al;
+        pointer _Base;
+        _Min_buckets_construct_ptr(_Aliter& _Al_) : _Al(_Al_), _Base(_Al.allocate(_Min_buckets * 2)) {}
+        _Min_buckets_construct_ptr(const _Min_buckets_construct_ptr&) = delete;
+        _NODISCARD pointer _Release(_Unchecked_iterator _Newend) noexcept {
+            _Uninitialized_fill_n(_Base, _Min_buckets * 2, _Newend, _Al);
+            return _STD exchange(_Base, pointer());
+        }
+        ~_Min_buckets_construct_ptr() {
+            if (_Base) {
+                _Al.deallocate(_Base, _Min_buckets * 2);
+            }
+        }
+    };
+
+    void _Pocma_both(_Hash& _Right) {
+        _Pocma(_List._Getal(), _Right._List._Getal());
+        _Pocma(_Vec._Getal(), _Right._Vec._Getal());
+    }
+
+    struct _Clear_guard {
+        _Hash* _Target;
+
+        explicit _Clear_guard(_Hash* const _Target_) : _Target(_Target_) {}
+
+        _Clear_guard(const _Clear_guard&) = delete;
+        _Clear_guard& operator=(const _Clear_guard&) = delete;
+
+        ~_Clear_guard() {
+            if (_Target) {
+                _Target->clear();
+            }
+        }
+    };
+
+    void _Move_assign(_Hash& _Right, _Equal_allocators) {
+        clear();
+        _Traitsobj = _Right._Traitsobj;
+        _Pocma_both(_Right);
+        _Swap_val(_Right);
+    }
+
+    void _Move_assign(_Hash& _Right, _Propagate_allocators) {
+        if (_Getal() == _Right._Getal()) {
+            _Move_assign(_Right, _Equal_allocators{});
+        } else {
+            // allocate all the parts necessary to maintain _Hash invariants using _Right's allocator
+            auto&& _Alproxy       = _GET_PROXY_ALLOCATOR(_Alnode, _Getal());
+            auto&& _Alproxy_right = _GET_PROXY_ALLOCATOR(_Alnode, _Right._Getal());
+            _Container_proxy_ptr<_Alnode> _List_proxy(_Alproxy_right, _Leave_proxy_unbound{});
+            _Container_proxy_ptr<_Alnode> _Vec_proxy(_Alproxy_right, _Leave_proxy_unbound{});
+            _List_head_construct_ptr<_Alnode> _Newhead(_Right._Getal());
+            _Min_buckets_construct_ptr _Buckets(_Right._Vec._Getal());
+
+            // assign the hash/compare ops; we have no control over whether this throws, and if it does we want to do
+            // nothing
+            _Traitsobj = _Right._Traitsobj;
+
+            // nothrow hereafter
+
+            // release any state we are currently owning, and propagate the allocators
+            _List._Tidy();
+            _Vec._Tidy();
+            _Pocma_both(_Right);
+
+            // assign the empty list to _Right._List (except the allocators), and take _Right's _List data
+            auto& _List_data       = _List._Get_data();
+            auto& _Right_list_data = _Right._List._Get_data();
+            _List_data._Myhead     = _STD exchange(_Right_list_data._Myhead, _Newhead._Release());
+            _List_data._Mysize     = _STD exchange(_Right_list_data._Mysize, size_type{0});
+            _List_proxy._Bind(_Alproxy, _STD addressof(_List_data));
+            _List_data._Swap_proxy_and_iterators(_Right_list_data);
+
+            // assign the _Min_buckets into _Right's _Vec data and take _Right's _Vec data
+            auto& _Vec_data       = _Vec._Mypair._Myval2;
+            auto& _Right_vec_data = _Right._Vec._Mypair._Myval2;
+
+            const auto _Newfirst = _Buckets._Release(_Right._Unchecked_end());
+            const auto _Newlast  = _Newfirst + _Min_buckets * 2;
+
+            _Vec_data._Myfirst = _STD exchange(_Right_vec_data._Myfirst, _Newfirst);
+            _Vec_data._Mylast  = _STD exchange(_Right_vec_data._Mylast, _Newlast);
+            _Vec_data._Myend   = _STD exchange(_Right_vec_data._Myend, _Newlast);
+            _Vec_proxy._Bind(_Alproxy, _STD addressof(_Vec_data));
+            _Vec_data._Swap_proxy_and_iterators(_Right_vec_data);
+
+            // give _Right the default _Mask and _Maxidx values and take its former values
+            _Mask   = _STD exchange(_Right._Mask, _Min_buckets - 1);
+            _Maxidx = _STD exchange(_Right._Maxidx, _Min_buckets);
+        }
+    }
+
+    void _Move_assign(_Hash& _Right, _No_propagate_allocators) {
+        if (_Getal() == _Right._Getal()) {
+            _Move_assign(_Right, _Equal_allocators{});
+            return;
+        }
+
+        _Clear_guard _Guard{this};
+        _Traitsobj     = _Right._Traitsobj;
+        using _Adapter = _Reinterpret_move_iter<typename _Mylist::_Unchecked_iterator, _Mutable_value_type>;
+        _List.template _Assign_cast<_Mutable_value_type&>(
+            _Adapter{_Right._List._Unchecked_begin()}, _Adapter{_Right._List._Unchecked_end()});
+        _Reinsert_with_invalid_vec();
+        _Guard._Target = nullptr;
+    }
+
+public:
+    _Hash& operator=(_Hash&& _Right) { // assign by moving _Right
+        if (this != _STD addressof(_Right)) {
+            _Move_assign(_Right, _Choose_pocma<_Alnode>{});
+
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+            _Stl_internal_check_container_invariants();
+            _Right._Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        }
+
+        return *this;
+    }
+
+    template <class... _Valty>
+    _Pairib emplace(_Valty&&... _Val) { // try to insert value_type(_Val...)
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_Preallocated> _Op{_List._Getal()};
+        const auto _Result = _Insert(_Op._Allocate(_STD forward<_Valty>(_Val)...), _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return {_List._Make_iter(_Result.first), _Result.second};
+    }
+
+    template <class... _Valty>
+    iterator emplace_hint(const_iterator, _Valty&&... _Val) { // try to insert value_type(_Val...), ignore hint
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_Preallocated> _Op{_List._Getal()};
+        const auto _Result = _Insert(_Op._Allocate(_STD forward<_Valty>(_Val)...), _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return _List._Make_iter(_Result.first);
+    }
+
+private:
+    void _Pocca_both(const _Hash& _Right) {
+        _Pocca(_List._Getal(), _Right._List._Getal());
+        _Pocca(_Vec._Getal(), _Right._Vec._Getal());
+    }
+
+    void _Copy_assign(const _Hash& _Right, false_type) {
+        _Clear_guard _Guard{this};
+        _Traitsobj = _Right._Traitsobj;
+        _Pocca_both(_Right);
+        _List.template _Assign_cast<_Mutable_value_type&>(
+            _Right._List._Unchecked_begin(), _Right._List._Unchecked_end());
+        _Reinsert_with_invalid_vec();
+        _Guard._Target = nullptr;
+    }
+
+    void _Copy_assign(const _Hash& _Right, true_type) {
+        if (_Getal() == _Right._Getal()) {
+            _Copy_assign(_Right, false_type{});
+            return;
+        }
+
+        auto&& _Alproxy       = _GET_PROXY_ALLOCATOR(_Alnode, _Getal());
+        auto&& _Alproxy_right = _GET_PROXY_ALLOCATOR(_Alnode, _Right._Getal());
+        _Container_proxy_ptr<_Alnode> _Vec_proxy(_Alproxy_right, _Leave_proxy_unbound{});
+        _List._Reload_sentinel_and_proxy(_Right._List);
+        _Vec._Tidy();
+        _Pocca_both(_Right);
+        _Vec_proxy._Bind(_Alproxy, _STD addressof(_Vec._Mypair._Myval2));
+
+        _Clear_guard _Guard{this};
+        _Traitsobj = _Right._Traitsobj;
+        _List.template _Assign_cast<_Mutable_value_type&>(
+            _Right._List._Unchecked_begin(), _Right._List._Unchecked_end());
+        _Reinsert_with_invalid_vec();
+        _Guard._Target = nullptr;
+    }
+
+public:
+    _Hash& operator=(const _Hash& _Right) { // replace contents from _Right
+        if (this != _STD addressof(_Right)) {
+            _Copy_assign(_Right, _Choose_pocca<_Alnode>{});
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+            _Stl_internal_check_container_invariants();
+            _Right._Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        }
+
+        return *this;
+    }
+
+    _NODISCARD iterator begin() noexcept { // return iterator for beginning of mutable sequence
+        return _List.begin();
+    }
+
+    _NODISCARD const_iterator begin() const noexcept { // return iterator for beginning of nonmutable sequence
+        return _List.begin();
+    }
+
+    _NODISCARD iterator end() noexcept { // return iterator for end of mutable sequence
+        return _List.end();
+    }
+
+    _NODISCARD const_iterator end() const noexcept { // return iterator for end of nonmutable sequence
+        return _List.end();
+    }
+
+    _Unchecked_iterator _Unchecked_begin() { // return iterator for beginning of mutable sequence
+        return _List._Unchecked_begin();
+    }
+
+    _Unchecked_const_iterator _Unchecked_begin() const { // return iterator for beginning of nonmutable sequence
+        return _List._Unchecked_begin();
+    }
+
+    _Unchecked_iterator _Unchecked_end() { // return iterator for end of mutable sequence
+        return _List._Unchecked_end();
+    }
+
+    _Unchecked_const_iterator _Unchecked_end() const { // return iterator for end of nonmutable sequence
+        return _List._Unchecked_end();
+    }
+
+    _NODISCARD const_iterator cbegin() const noexcept { // return iterator for beginning of nonmutable sequence
+        return begin();
+    }
+
+    _NODISCARD const_iterator cend() const noexcept { // return iterator for end of nonmutable sequence
+        return end();
+    }
+
+    _NODISCARD size_type size() const noexcept { // return length of sequence
+        return _List.size();
+    }
+
+    _NODISCARD size_type max_size() const noexcept { // return maximum possible length of sequence
+        return _List.max_size();
+    }
+
+    _NODISCARD bool empty() const noexcept { // return true only if sequence is empty
+        return _List.empty();
+    }
+
+    _NODISCARD allocator_type get_allocator() const noexcept { // return allocator object for values
+        return static_cast<allocator_type>(_List.get_allocator());
+    }
+
+    _NODISCARD key_compare key_comp() const { // return object for comparing keys
+        return _Traitsobj;
+    }
+
+    _NODISCARD value_compare value_comp() const { // return object for comparing values
+        return value_compare(key_comp());
+    }
+
+    using local_iterator       = iterator;
+    using const_local_iterator = const_iterator;
+
+    _NODISCARD size_type bucket_count() const noexcept { // return number of buckets
+        return _Maxidx;
+    }
+
+    _NODISCARD size_type max_bucket_count() const noexcept { // return maximum number of buckets
+        return _Vec.max_size() / 2;
+    }
+
+    // _Hashval is an ABI zombie name
+    _NODISCARD size_type bucket(const key_type& _Keyval) const { // return bucket corresponding to _Key
+        return _Traitsobj(_Keyval) & _Mask;
+    }
+
+    _NODISCARD size_type bucket_size(size_type _Bucket) const { // return size of bucket _Bucket
+        _Unchecked_iterator _Bucket_lo = _Vec[_Bucket << 1];
+        if (_Bucket_lo == _Unchecked_end()) {
+            return 0;
+        }
+
+        return static_cast<size_type>(_STD distance(_Bucket_lo, _Vec[(_Bucket << 1) + 1])) + 1;
+    }
+
+    _NODISCARD local_iterator begin(size_type _Bucket) { // return iterator for bucket _Bucket
+        return _List._Make_iter(_Vec[_Bucket << 1]);
+    }
+
+    _NODISCARD const_local_iterator begin(size_type _Bucket) const { // return iterator for bucket _Bucket
+        return _List._Make_const_iter(_Vec[_Bucket << 1]);
+    }
+
+    _NODISCARD local_iterator end(size_type _Bucket) { // return iterator for bucket following _Bucket
+        _Unchecked_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+        if (_Bucket_hi != _Unchecked_end()) {
+            ++_Bucket_hi;
+        }
+
+        return _List._Make_iter(_Bucket_hi);
+    }
+
+    _NODISCARD const_local_iterator end(size_type _Bucket) const { // return iterator for bucket following _Bucket
+        _Unchecked_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+        if (_Bucket_hi != _Unchecked_end()) {
+            ++_Bucket_hi;
+        }
+
+        return _List._Make_const_iter(_Bucket_hi);
+    }
+
+    _NODISCARD const_local_iterator cbegin(size_type _Bucket) const { // return iterator for bucket _Bucket
+        return _List._Make_const_iter(_Vec[_Bucket << 1]);
+    }
+
+    _NODISCARD const_local_iterator cend(size_type _Bucket) const { // return iterator for bucket following _Bucket
+        _Unchecked_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+        if (_Bucket_hi != _Unchecked_end()) {
+            ++_Bucket_hi;
+        }
+
+        return _List._Make_const_iter(_Bucket_hi);
+    }
+
+    _NODISCARD float load_factor() const noexcept { // return elements per bucket
+        return static_cast<float>(size()) / static_cast<float>(bucket_count());
+    }
+
+    _NODISCARD float max_load_factor() const noexcept { // return maximum elements per bucket
+        return _Max_bucket_size();
+    }
+
+    void max_load_factor(float _Newmax) { // set new load factor
+        _STL_ASSERT(!(_CSTD isnan)(_Newmax) && _Newmax > 0, "invalid hash load factor");
+        _Max_bucket_size() = _Newmax;
+    }
+
+    void rehash(size_type _Buckets) { // rebuild table with at least _Buckets buckets
+        // don't violate a.bucket_count() >= a.size() / a.max_load_factor() invariant:
+        _Buckets = _Max_value(_Min_load_factor_buckets(_List.size()), _Buckets);
+        if (_Buckets <= _Maxidx) { // we already have enough buckets; nothing to do
+            return;
+        }
+
+        _Forced_rehash(_Buckets);
+    }
+
+    void reserve(size_type _Maxcount) { // rebuild table with room for _Maxcount elements
+        rehash(static_cast<size_type>(static_cast<float>(_Maxcount / max_load_factor() + 0.5F)));
+    }
+
+    template <bool _Multi2 = _Multi, enable_if_t<!_Multi2, int> = 0>
+    _Pairib insert(const value_type& _Val) { // try to insert node with value _Val
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_On_demand> _Op{_List._Getal()};
+        const auto _Result = _Insert(_Val, _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return {_List._Make_iter(_Result.first), _Result.second};
+    }
+
+    template <bool _Multi2 = _Multi, enable_if_t<_Multi2, int> = 0>
+    iterator insert(const value_type& _Val) { // try to insert node with value _Val
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_On_demand> _Op{_List._Getal()};
+        const auto _Result = _Insert(_Val, _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return _List._Make_iter(_Result.first);
+    }
+
+    template <bool _Multi2 = _Multi, enable_if_t<!_Multi2, int> = 0>
+    _Pairib insert(value_type&& _Val) { // try to insert node with value _Val, favoring right side
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_On_demand> _Op{_List._Getal()};
+        const auto _Result = _Insert(_STD move(_Val), _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return {_List._Make_iter(_Result.first), _Result.second};
+    }
+
+    template <bool _Multi2 = _Multi, enable_if_t<_Multi2, int> = 0>
+    iterator insert(value_type&& _Val) { // try to insert node with value _Val, favoring right side
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_On_demand> _Op{_List._Getal()};
+        const auto _Result = _Insert(_STD move(_Val), _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return _List._Make_iter(_Result.first);
+    }
+
+    iterator insert(const_iterator, const value_type& _Val) {
+        // try to insert node with value _Val, ignore hint
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_On_demand> _Op{_List._Getal()};
+        const auto _Result = _Insert(_Val, _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return _List._Make_iter(_Result.first);
+    }
+
+    iterator insert(const_iterator, value_type&& _Val) { // try to insert node with value _Val, ignore hint
+        _List_node_emplace_op<_Alnode, _Allocation_strategy::_On_demand> _Op{_List._Getal()};
+        const auto _Result = _Insert(_STD move(_Val), _Op);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return _List._Make_iter(_Result.first);
+    }
+
+    template <class _Iter>
+    void insert(_Iter _First, _Iter _Last) { // insert [_First, _Last) at front, then put in place
+        _Adl_verify_range(_First, _Last);
+        auto _UFirst      = _Get_unwrapped(_First);
+        const auto _ULast = _Get_unwrapped(_Last);
+        for (; _UFirst != _ULast; ++_UFirst) {
+            emplace(*_UFirst);
+        }
+    }
+
+    void insert(initializer_list<value_type> _Ilist) { // insert initializer_list
+        insert(_Ilist.begin(), _Ilist.end());
+    }
+
+private:
+    _Unchecked_iterator _Unchecked_erase(_Unchecked_const_iterator _Plist) {
+        size_type _Bucket = this->bucket(_Traits::_Kfn(*_Plist));
+        _Erase_bucket(_Plist, _Bucket);
+        return _List._Unchecked_erase(_Plist);
+    }
+
+    _Unchecked_const_iterator _Unchecked_erase(_Unchecked_const_iterator _First, _Unchecked_const_iterator _Last) {
+        if (_First == _Unchecked_begin() && _Last == _Unchecked_end()) { // erase all
+            clear();
+            return _Last;
+        }
+
+        // partial erase, one at a time
+        while (_First != _Last) {
+            _Unchecked_erase(_First++);
+        }
+
+        return _Last;
+    }
+
+public:
+    template <class _Iter = iterator, class = enable_if_t<!is_same_v<_Iter, const_iterator>>>
+    iterator erase(iterator _Plist) { // erase element at _Plist
+        return _List._Make_iter(_Unchecked_erase(_Plist._Unwrapped()));
+    }
+
+    iterator erase(const_iterator _Plist) { // erase element at _Plist
+        return _List._Make_iter(_Unchecked_erase(_Plist._Unwrapped()));
+    }
+
+    iterator erase(const_iterator _First, const_iterator _Last) { // erase [_First, _Last)
+        return _List._Make_iter(_Unchecked_erase(_First._Unwrapped(), _Last._Unwrapped()));
+    }
+
+    size_type erase(const key_type& _Keyval) { // erase and count all that match _Keyval
+        if
+            _CONSTEXPR_IF(_Multi) {
+                const auto _Where = _Equal_range(_Keyval);
+                _Unchecked_erase(_Where._First, _Where._Last);
+                return _Where._Distance;
+            }
+        else {
+            const size_type _Bucket    = this->bucket(_Keyval);
+            _Unchecked_iterator _Where = _Vec[_Bucket << 1];
+            if (_Where == _Unchecked_end()) {
+                return 0;
+            }
+
+            for (;;) {
+                const _Unchecked_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+                if (!_Traitsobj(_Traits::_Kfn(*_Where), _Keyval)) {
+                    if
+                        _CONSTEXPR_IF(!_Traits::_Standard) {
+                            if (_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                                return 0;
+                            }
+                        }
+
+                    _Erase_bucket(_Where, _Bucket);
+                    _List._Unchecked_erase(_Where);
+                    return 1;
+                }
+
+                if (_Where == _Bucket_hi) {
+                    return 0;
+                }
+
+                ++_Where;
+            }
+        }
+    }
+
+    void clear() noexcept { // erase all
+        _List.clear();
+        _STD fill(_Vec._Unchecked_begin(), _Vec._Unchecked_end(), _Unchecked_end());
+    }
+
+private:
+    _NODISCARD _Unchecked_const_iterator _Find(const key_type& _Keyval) const {
+        // find iterator to _Keyval if it exists; otherwise, end
+        const size_type _Bucket              = this->bucket(_Keyval);
+        _Unchecked_const_iterator _Where     = _Vec[_Bucket << 1];
+        const _Unchecked_const_iterator _End = _Unchecked_end();
+        if (_Where != _End) {
+            const _Unchecked_const_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+            for (;;) {
+                if (!_Traitsobj(_Traits::_Kfn(*_Where), _Keyval)) {
+                    if
+                        _CONSTEXPR_IF(_Traits::_Standard) {
+                            break;
+                        }
+
+                    if (_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                        _Where = _End;
+                    }
+
+                    break;
+                }
+
+                if (_Where == _Bucket_hi) {
+                    _Where = _End;
+                    break;
+                }
+
+                ++_Where;
+            }
+        }
+
+        return _Where;
+    }
+
+public:
+    _NODISCARD iterator find(const key_type& _Keyval) {
+        return _List._Make_iter(_Find(_Keyval));
+    }
+
+    _NODISCARD const_iterator find(const key_type& _Keyval) const {
+        return _List._Make_const_iter(_Find(_Keyval));
+    }
+
+#if _HAS_CXX20
+    _NODISCARD bool contains(const key_type& _Keyval) const {
+        // check if an element exists that matches _Keyval
+        return _Find(_Keyval) != _Unchecked_end();
+    }
+#endif // _HAS_CXX20
+
+    _NODISCARD size_type count(const key_type& _Keyval) const { // count all elements that match _Keyval
+        if
+            _CONSTEXPR_IF(_Multi) {
+                return _Equal_range(_Keyval)._Distance;
+            }
+        else {
+            return _Find(_Keyval) != _Unchecked_end();
+        }
+    }
+
+    _NODISCARD iterator lower_bound(const key_type& _Keyval) {
+        return _List._Make_iter(_Find(_Keyval));
+    }
+
+    _NODISCARD const_iterator lower_bound(const key_type& _Keyval) const {
+        return _List._Make_const_iter(_Find(_Keyval));
+    }
+
+private:
+    _NODISCARD _Unchecked_const_iterator _Upper_bound(const key_type& _Keyval) const {
+        // find leftmost not greater than _Keyval
+        const size_type _Bucket              = this->bucket(_Keyval);
+        _Unchecked_const_iterator _Where     = _Vec[(_Bucket << 1) + 1];
+        const _Unchecked_const_iterator _End = _Unchecked_end();
+        if (_Where != _End) {
+            const _Unchecked_const_iterator _Bucket_lo = _Vec[(_Bucket << 1)];
+            for (;;) {
+                if (!_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                    if
+                        _CONSTEXPR_IF(!_Traits::_Standard) {
+                            if (_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                                _Where = _End;
+                                break;
+                            }
+                        }
+
+                    ++_Where;
+                    break;
+                }
+
+                if (_Where == _Bucket_lo) {
+                    _Where = _End;
+                    break;
+                }
+
+                --_Where;
+            }
+        }
+
+        return _Where;
+    }
+
+public:
+    _NODISCARD iterator upper_bound(const key_type& _Keyval) {
+        // find leftmost not greater than _Keyval
+        return _List._Make_iter(_Upper_bound(_Keyval));
+    }
+
+    _NODISCARD const_iterator upper_bound(const key_type& _Keyval) const {
+        // find leftmost not greater than _Keyval
+        return _List._Make_const_iter(_Upper_bound(_Keyval));
+    }
+
+private:
+    struct _Equal_range_result {
+        _Unchecked_const_iterator _First;
+        _Unchecked_const_iterator _Last;
+        size_type _Distance;
+    };
+
+    _NODISCARD _Equal_range_result _Equal_range(const key_type& _Keyval) const {
+        // find range equivalent to _Keyval
+        const size_type _Bucket                    = this->bucket(_Keyval);
+        _Unchecked_const_iterator _Where           = _Vec[_Bucket << 1];
+        const _Unchecked_const_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+        const _Unchecked_const_iterator _End       = _Unchecked_end();
+        if (_Where == _End) {
+            return {_End, _End, 0};
+        }
+
+        for (; _Traitsobj(_Traits::_Kfn(*_Where), _Keyval); ++_Where) {
+            if (_Where == _Bucket_hi) {
+                return {_End, _End, 0};
+            }
+        }
+
+        if
+            _CONSTEXPR_IF(!_Traits::_Standard) {
+                if (_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                    return {_End, _End, 0};
+                }
+            }
+
+        const _Unchecked_const_iterator _First = _Where;
+        if
+            _CONSTEXPR_IF(_Multi) {
+                size_type _Distance = 0;
+                for (;;) {
+                    ++_Distance;
+
+                    const bool _At_bucket_end = _Where == _Bucket_hi;
+                    ++_Where;
+                    if (_At_bucket_end) {
+                        break;
+                    }
+
+                    if (_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                        break;
+                    }
+                }
+
+                return {_First, _Where, _Distance};
+            }
+        else {
+            ++_Where; // found the unique element
+            return {_First, _Where, 1};
+        }
+    }
+
+public:
+    _NODISCARD _Pairii equal_range(const key_type& _Keyval) {
+        // find range equivalent to _Keyval
+        const auto _Result = _Equal_range(_Keyval);
+        return {_List._Make_iter(_Result._First), _List._Make_iter(_Result._Last)};
+    }
+
+    _NODISCARD _Paircc equal_range(const key_type& _Keyval) const {
+        // find range equivalent to _Keyval
+        const auto _Result = _Equal_range(_Keyval);
+        return {_List._Make_const_iter(_Result._First), _List._Make_const_iter(_Result._Last)};
+    }
+
+    void swap(_Hash& _Right) _NOEXCEPT_COND(noexcept(_Traitsobj.swap(_Right._Traitsobj))) { // strengthened
+        // exchange contents with _Right
+        if (this != _STD addressof(_Right)) { // different, worth swapping
+            _Traitsobj.swap(_Right._Traitsobj);
+            _Pocs(_List._Getal(), _Right._List._Getal());
+            _Pocs(_Vec._Getal(), _Right._Vec._Getal());
+            _Swap_val(_Right);
+        }
+    }
+
+#if _HAS_CXX17
+public:
+    using node_type = typename _Traits::node_type;
+
+    node_type extract(const const_iterator _Where) { // extract the node denoted by _Where
+#if _ITERATOR_DEBUG_LEVEL != 0
+        const auto _List_data = _STD addressof(_List._Get_data());
+        _STL_VERIFY(_Where._Getcont() == _List_data, "extract mismatched container");
+        _STL_VERIFY(_Where._Ptr != _List_data->_Myhead, "cannot extract end()");
+#endif // _ITERATOR_DEBUG_LEVEL != 0
+
+        return node_type::_Make(_Extract(_Where._Unwrapped()), _List._Getal());
+    }
+
+    node_type extract(const key_type& _Keyval) { // extract the first node whose key matches _Keyval
+        const auto _Ptr = _Extract(_Keyval);
+        if (!_Ptr) {
+            return node_type{};
+        }
+
+        return node_type::_Make(_Ptr, _List._Getal());
+    }
+
+    auto insert(node_type&& _Handle) { // insert the node (if any) held in _Handle
+        const auto _Result = _Insert_node(_STD move(_Handle));
+        if constexpr (_Multi) {
+            return _Result.first;
+        } else {
+            return _Insert_return_type<iterator, node_type>{_Result.first, _Result.second, _STD move(_Handle)};
+        }
+    }
+
+    iterator insert(const_iterator, node_type&& _Handle) { // insert the node (if any) held in _Handle, ignore hint
+        return _Insert_node(_STD move(_Handle)).first;
+    }
+
+    template <class>
+    friend class _Hash;
+
+    template <class _Other_traits>
+    void merge(_Hash<_Other_traits>& _That) { // transfer all nodes from _That into *this
+        static_assert(is_same_v<typename _Mylist::_Nodeptr, typename _Hash<_Other_traits>::_Mylist::_Nodeptr>,
+            "merge() requires an argument with a compatible node type.");
+
+        static_assert(is_same_v<allocator_type, typename _Hash<_Other_traits>::allocator_type>,
+            "merge() requires an argument with the same allocator type.");
+
+        if constexpr (is_same_v<_Hash, _Hash<_Other_traits>>) {
+            if (this == _STD addressof(_That)) {
+                return;
+            }
+        }
+
+#if _ITERATOR_DEBUG_LEVEL == 2
+        if
+            _CONSTEXPR_IF(!_Alnode_traits::is_always_equal::value) {
+                _STL_VERIFY(_List._Getal() == _That._List._Getal(), "allocator incompatible for merge");
+            }
+#endif // _ITERATOR_DEBUG_LEVEL == 2
+
+        _Node_merge_op<_Other_traits> _Wrapper{*this, _That, {}};
+        auto _First      = _That._Unchecked_begin();
+        const auto _Last = _That._Unchecked_end();
+        while (_First != _Last) {
+            _Wrapper._Where = _First;
+            ++_First;
+            _Insert(_Wrapper._Where._Ptr->_Myval, _Wrapper);
+        }
+    }
+
+private:
+    template <class _Other_traits>
+    struct _Node_merge_op {
+        _Hash& _This;
+        _Hash<_Other_traits>& _That;
+        typename _Hash<_Other_traits>::_Unchecked_const_iterator _Where;
+
+        const value_type& _Allocate_if_necessary(const value_type& _Val) const noexcept {
+            return _Val;
+        }
+
+        _Nodeptr _Transfer_before(const _Nodeptr _Rightnode) noexcept {
+            const size_type _Bucket = _That.bucket(_Other_traits::_Kfn(*_Where));
+            _That._Erase_bucket(_Where, _Bucket);
+            _This._List._Splice(
+                _Unchecked_const_iterator(_Rightnode, nullptr), _That._List, _Where, _STD next(_Where), 0);
+            --_That._List._Get_data()._Mysize;
+            return _Where._Ptr;
+        }
+    };
+
+public:
+    template <class _Other_traits>
+    void merge(_Hash<_Other_traits>&& _That) { // transfer all nodes from _That into *this
+        static_assert(is_same_v<typename _Mylist::_Nodeptr, typename _Hash<_Other_traits>::_Mylist::_Nodeptr>,
+            "merge() requires an argument with a compatible node type.");
+
+        static_assert(is_same_v<allocator_type, typename _Hash<_Other_traits>::allocator_type>,
+            "merge() requires an argument with the same allocator type.");
+
+        merge(_That);
+    }
+
+protected:
+    typename _Mylist::_Nodeptr _Extract(const _Unchecked_const_iterator _Where) { // Extract node at _Where
+        const size_type _Bucket = this->bucket(_Traits::_Kfn(*_Where));
+        _Erase_bucket(_Where, _Bucket);
+        return _List._Unlinknode(_Where);
+    }
+
+    typename _Mylist::_Nodeptr _Extract(const key_type& _Keyval) { // Extract node with key equal to _Keyval
+        const size_type _Bucket    = this->bucket(_Keyval);
+        _Unchecked_iterator _Where = _Vec[_Bucket << 1];
+        if (_Where == _Unchecked_end()) {
+            return nullptr;
+        }
+
+        const _Unchecked_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+        for (;;) {
+            if (!_Traitsobj(_Traits::_Kfn(*_Where), _Keyval)) {
+                if
+                    _CONSTEXPR_IF(!_Traits::_Standard) {
+                        if (_Traitsobj(_Keyval, _Traits::_Kfn(*_Where))) {
+                            return nullptr;
+                        }
+                    }
+
+                _Erase_bucket(_Where, _Bucket);
+                return _List._Unlinknode(_Where);
+            }
+
+            if (_Where == _Bucket_hi) {
+                return nullptr;
+            }
+
+            ++_Where;
+        }
+    }
+
+    _Pairib _Insert_node(node_type&& _Handle) { // insert the node (if any) held in _Handle
+        if (_Handle.empty()) {
+            return _Pairib{end(), false};
+        }
+
+#if _ITERATOR_DEBUG_LEVEL == 2
+        _STL_VERIFY(_List.get_allocator() == _Handle._Getal(), "node handle allocator incompatible for insert");
+#endif // _ITERATOR_DEBUG_LEVEL == 2
+
+        const auto _Result = _Insert(_Handle._Getptr()->_Myval, _Handle);
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+        return {_List._Make_iter(_Result.first), _Result.second};
+    }
+#endif // _HAS_CXX17
+
+protected:
+    template <class _Valty, class _Nodety>
+    pair<_Nodeptr, bool> _Insert(_Valty&& _Val, _Nodety& _Pnode) {
+        // try to insert existing node with value _Val
+        auto* _Key      = _STD addressof(_Traits::_Kfn(_Val));
+        size_t _Hashval = _Traitsobj(*_Key);
+        for (;;) { // this loop executes at most twice; the second time only if rehash occurs
+            const size_type _Bucket         = _Hashval & _Mask;
+            _Unchecked_iterator& _Bucket_lo = _Vec[_Bucket << 1];
+            _Unchecked_iterator& _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+            _Unchecked_iterator _Where      = _Bucket_hi;
+            if (_Where == _Unchecked_end()) {
+                const size_type _Oldsize = _List.size();
+                if (_Oldsize == _List.max_size()) {
+                    _Xlength_error("unordered_map/set too long");
+                }
+
+                _Key = _STD addressof(_Traits::_Kfn(_Pnode._Allocate_if_necessary(_STD forward<_Valty>(_Val))));
+
+                const size_type _Newsize = _Oldsize + 1;
+                if (max_load_factor() < static_cast<float>(_Newsize) / static_cast<float>(bucket_count())) {
+                    _Forced_rehash(_Desired_grow_bucket_count(_Newsize));
+                    continue;
+                }
+
+                // no rehash, nothrow hereafter
+                _List._Get_data()._Mysize = _Newsize;
+                const _Nodeptr _Result    = _Pnode._Transfer_before(_Where._Ptr);
+                _Bucket_lo._Ptr           = _Result;
+                _Bucket_hi._Ptr           = _Result;
+                return {_Result, true};
+            } else {
+                for (;;) {
+                    // Search backwards to maintain sorted [_Bucket_lo, _Bucket_hi] when !_Standard
+                    if (!_Traitsobj(*_Key, _Traits::_Kfn(*_Where))) {
+                        if
+                            _CONSTEXPR_IF(_Multi) {
+                                // insert always
+                            }
+                        else if
+                            _CONSTEXPR_IF(_Traits::_Standard) {
+                                // don't insert
+                                return {_Where._Ptr, false};
+                            }
+                        else if (!_Traitsobj(_Traits::_Kfn(*_Where), *_Key)) {
+                            // insert if not equivalent
+                            return {_Where._Ptr, false};
+                        }
+
+                        ++_Where;
+                        break;
+                    }
+
+                    if (_Bucket_lo == _Where) {
+                        break;
+                    }
+
+                    --_Where;
+                }
+
+                const size_type _Oldsize = _List.size();
+                if (_Oldsize == _List.max_size()) {
+                    _Xlength_error("unordered_map/set too long");
+                }
+
+                _Key = _STD addressof(_Traits::_Kfn(_Pnode._Allocate_if_necessary(_STD forward<_Valty>(_Val))));
+
+                const size_type _Newsize = _Oldsize + 1;
+                if (max_load_factor() < static_cast<float>(_Newsize) / static_cast<float>(bucket_count())) {
+                    _Forced_rehash(_Desired_grow_bucket_count(_Newsize));
+                    continue;
+                }
+
+                // no rehash, nothrow hereafter
+                _List._Get_data()._Mysize = _Newsize;
+
+                const _Nodeptr _Result = _Pnode._Transfer_before(_Where._Ptr);
+                if (_Bucket_lo == _Where) {
+                    _Bucket_lo._Ptr = _Result;
+                    return {_Result, true};
+                }
+
+                if (_Bucket_hi._Ptr->_Next == _Result) {
+                    _Bucket_hi._Ptr = _Result;
+                }
+
+                return {_Result, true};
+            }
+        }
+    }
+
+    void _Erase_bucket(_Unchecked_const_iterator _Plist, size_type _Bucket) {
+        // fix iterators before erasing _Plist before _Where
+        _Unchecked_const_iterator& _Bucket_lo = _Vec[_Bucket << 1];
+        _Unchecked_const_iterator& _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+        if (_Bucket_hi == _Plist) {
+            if (_Bucket_lo == _Plist) { // make bucket empty
+                const _Unchecked_const_iterator _End = _Unchecked_end();
+
+                _Bucket_lo = _End;
+                _Bucket_hi = _End;
+            } else {
+                _Bucket_hi = --_Plist; // move end back one element
+            }
+        } else if (_Bucket_lo == _Plist) {
+            _Bucket_lo = ++_Plist; // move beginning up one element
+        }
+    }
+
+    _NODISCARD size_type _Min_load_factor_buckets(const size_type _For_size) const noexcept {
+        // returns the minimum number of buckets necessary for the elements in _List
+        return static_cast<size_type>(_CSTD ceilf(_For_size / max_load_factor()));
+    }
+
+    _NODISCARD size_type _Desired_grow_bucket_count(const size_type _For_size) const noexcept {
+        const size_type _Old_buckets = bucket_count();
+        const size_type _Req_buckets = _Max_value(_Min_buckets, _Min_load_factor_buckets(_For_size));
+        if (_Old_buckets >= _Req_buckets) {
+            // we already have enough buckets so there's no need to change the count
+            return _Old_buckets;
+        }
+
+        if (_Old_buckets < 512 && _Old_buckets * 8 >= _Req_buckets) {
+            // if we are changing the bucket count and have less than 512 buckets, use 8x more buckets
+            return _Old_buckets * 8;
+        }
+
+        // power of 2 invariant means this will result in at least 2*_Old_buckets after round up in _Forced_rehash
+        return _Req_buckets;
+    }
+
+    void _Reinsert_with_invalid_vec() { // insert elements in [begin(), end()), distrusting existing _Vec elements
+        _Forced_rehash(_Desired_grow_bucket_count(_List.size()));
+    }
+
+    void _Forced_rehash(size_type _Buckets) {
+        // Force rehash of elements in _List, distrusting existing bucket assignments in _Vec.
+        // Assumes _Buckets is greater than _Min_buckets, and that changing to that many buckets doesn't violate
+        // load_factor() <= max_load_factor().
+
+        // Don't violate power of 2, fits in half the bucket vector invariant:
+        // (we assume because vector must use single allocations; as a result, its max_size fits in a size_t)
+        const unsigned long _Max_storage_buckets_log2 = _Floor_of_log_2(static_cast<size_t>(_Vec.max_size() >> 1));
+        const auto _Max_storage_buckets               = static_cast<size_type>(1) << _Max_storage_buckets_log2;
+        if (_Buckets > _Max_storage_buckets) {
+            _Xlength_error("invalid hash bucket count");
+        }
+
+        // The above test also means that we won't perform a forbidden full shift when restoring the power of
+        // 2 invariant
+        // this round up to power of 2 in addition to the _Buckets > _Maxidx above means
+        // we'll at least double in size (the next power of 2 above _Maxidx)
+        _Buckets                       = static_cast<size_type>(1) << _Ceiling_of_log_2(static_cast<size_t>(_Buckets));
+        const _Unchecked_iterator _End = _Unchecked_end();
+
+        _STL_INTERNAL_CHECK(_Vec.capacity() <= 2 * _Buckets);
+        _Vec.reserve(2 * _Buckets); // avoid curdling _Vec if exception occurs; this could have better perf
+        _Vec.assign(2 * _Buckets, _End);
+        _Mask   = _Buckets - 1;
+        _Maxidx = _Buckets;
+
+        _Clear_guard _Guard{this};
+
+        _Unchecked_iterator _Inserted = _Unchecked_begin();
+
+        // Remember the next _Inserted value as splices will change _Inserted's position arbitrarily.
+        for (_Unchecked_iterator _Next_inserted = _Inserted; _Inserted != _End; _Inserted = _Next_inserted) {
+            ++_Next_inserted;
+
+            auto& _Inserted_key     = _Traits::_Kfn(*_Inserted);
+            const size_type _Bucket = this->bucket(_Inserted_key);
+
+            // _Bucket_lo and _Bucket_hi are the *inclusive* range of elements in the bucket, or _Unchecked_end() if
+            // the bucket is empty; if !_Standard then [_Bucket_lo, _Bucket_hi] is a sorted range.
+            _Unchecked_iterator& _Bucket_lo = _Vec[_Bucket << 1];
+            _Unchecked_iterator& _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+
+            if (_Bucket_lo == _End) {
+                // The bucket was empty, set it to the inserted element.
+                _Bucket_lo = _Inserted;
+                _Bucket_hi = _Inserted;
+                continue;
+            }
+
+            // Search the bucket for the insertion location and move element if necessary.
+            _Unchecked_const_iterator _Insert_before = _Bucket_hi;
+            if (!_Traitsobj(_Inserted_key, _Traits::_Kfn(*_Insert_before))) {
+                // The inserted element belongs at the end of the bucket; splice it there and set _Bucket_hi to the
+                // new bucket inclusive end.
+                ++_Insert_before;
+                if (_Insert_before != _Inserted) { // avoid splice on element already in position
+                    _List._Unchecked_splice(_Insert_before, _Inserted, _Next_inserted);
+                }
+
+                _Bucket_hi = _Inserted;
+                continue;
+            }
+
+            // The insertion point isn't *_Bucket_hi, so search [_Bucket_lo, _Bucket_hi) for insertion point; we
+            // go backwards to maintain sortedness when !_Standard.
+            for (;;) {
+                if (_Bucket_lo == _Insert_before) {
+                    // There are no equivalent keys in the bucket, so insert it at the beginning.
+                    // Element can't be already in position here because:
+                    // * (for !_Standard) _Inserted_key < *_Insert_before or
+                    // * (for _Standard) _Inserted_key != *_Insert_before
+                    _List._Unchecked_splice(_Insert_before, _Inserted, _Next_inserted);
+                    _Bucket_lo = _Inserted;
+                    break;
+                }
+
+                if (!_Traitsobj(_Inserted_key, _Traits::_Kfn(*--_Insert_before))) {
+                    // Found insertion point, move the element here, bucket bounds are already okay.
+                    ++_Insert_before;
+                    // Element can't be already in position here because all elements we're inserting are after all
+                    // the elements already in buckets, and *_Insert_before isn't the highest element in the bucket.
+                    _List._Unchecked_splice(_Insert_before, _Inserted, _Next_inserted);
+                    break;
+                }
+            }
+        }
+
+        _Guard._Target = nullptr;
+
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+        _Stl_internal_check_container_invariants();
+#endif // _ENABLE_STL_INTERNAL_CHECK
+    }
+
+    float& _Max_bucket_size() noexcept { // return reference to current maximum bucket size
+        return _Traitsobj._Get_max_bucket_size();
+    }
+
+    const float& _Max_bucket_size() const noexcept { // return const reference to current maximum bucket size
+        return _Traitsobj._Get_max_bucket_size();
+    }
+
+    _Alnode& _Getal() noexcept { // return reference to allocator
+        return _List._Getal();
+    }
+
+    const _Alnode& _Getal() const noexcept { // return const reference to allocator
+        return _List._Getal();
+    }
+
+#ifdef _ENABLE_STL_INTERNAL_CHECK
+    void _Stl_internal_check_container_invariants() const noexcept {
+        const size_type _Vecsize = _Vec.size();
+        _STL_INTERNAL_CHECK(_Vecsize == _Vec.capacity());
+        _STL_INTERNAL_CHECK(_Vecsize >= _Min_buckets * 2);
+        _STL_INTERNAL_CHECK(_Maxidx == (_Vecsize >> 1));
+        _STL_INTERNAL_CHECK(_Maxidx - 1 == _Mask);
+        _STL_INTERNAL_CHECK(_Maxidx >= _Min_load_factor_buckets(_List.size()));
+        // asserts that bucket count is a power of 2:
+        _STL_INTERNAL_CHECK((static_cast<size_type>(1) << _Floor_of_log_2(_Vecsize)) == _Vecsize);
+        _STL_INTERNAL_CHECK(load_factor() <= max_load_factor());
+        // In the test that counts number of allocator copies, avoid an extra rebind that would incorrectly count as
+        // a copy; otherwise, allow allocators that support only homogeneous compare.
+#ifdef _USE_HETEROGENEOUS_ALLOCATOR_COMPARE_IN_INTERNAL_CHECK
+        _STL_INTERNAL_CHECK(_List._Getal() == _Vec._Getal());
+#else // _USE_HETEROGENEOUS_ALLOCATOR_COMPARE_IN_INTERNAL_CHECK
+        _STL_INTERNAL_CHECK(static_cast<_Aliter>(_List._Getal()) == _Vec._Getal());
+#endif // _USE_HETEROGENEOUS_ALLOCATOR_COMPARE_IN_INTERNAL_CHECK
+#ifdef _STL_INTERNAL_CHECK_EXHAUSTIVE
+        size_type _Elements = 0;
+        for (size_type _Bucket = 0; _Bucket < _Maxidx; ++_Bucket) {
+            _Unchecked_const_iterator _Where           = _Vec[_Bucket << 1];
+            const _Unchecked_const_iterator _Bucket_hi = _Vec[(_Bucket << 1) + 1];
+            if (_Where != _Bucket_hi) {
+                for (;;) {
+                    ++_Elements;
+                    _STL_INTERNAL_CHECK(this->bucket(_Traits::_Kfn(*_Where)) == _Bucket);
+                    if (_Where == _Bucket_hi) {
+                        break;
+                    }
+
+                    ++_Where;
+                }
+            }
+        }
+
+        _STL_INTERNAL_CHECK(_List.size() == _Elements);
+#endif // _STL_INTERNAL_CHECK_EXHAUSTIVE
+    }
+#endif // _ENABLE_STL_INTERNAL_CHECK
+
+    _Traits _Traitsobj; // traits to customize behavior
+    _Mylist _List; // list of elements, must initialize before _Vec
+    _Myvec _Vec; // vector of list iterators, begin() then end()-1, 2 per bucket
+    size_type _Mask; // the key mask
+    size_type _Maxidx; // current maximum key value, must be a power of 2
+};
+
+#if _HAS_CXX17
+// ALIAS TEMPLATE _Is_hasher FOR CONSTRAINING DEDUCTION GUIDES, N4687 26.2.7 [unord.req]/17.3
+template <class _Hasher>
+using _Is_hasher = negation<disjunction<is_integral<_Hasher>, _Is_allocator<_Hasher>>>;
+#endif // _HAS_CXX17
+
+#if !_HAS_IF_CONSTEXPR
+template <class _Traits>
+inline bool _Hash_equal_elements(const _Hash<_Traits>& _Left, const _Hash<_Traits>& _Right, false_type) {
+    // test for _Hash equality (same size, unique keys)
+    for (const auto& _LVal : _Left) {
+        // look for element with equivalent key
+        const auto _Next2 = _Right._Find(_Traits::_Kfn(_LVal));
+        if (_Next2 == _Right._Unchecked_end() || !(_Traits::_Nonkfn(_LVal) == _Traits::_Nonkfn(*_Next2))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+template <class _Traits>
+inline bool _Hash_equal_elements(const _Hash<_Traits>& _Left, const _Hash<_Traits>& _Right, true_type) {
+    // test for _Hash equality (same size, equivalent keys)
+    const auto _Left_end = _Left._Unchecked_end();
+    for (auto _Next1 = _Left._Unchecked_begin(); _Next1 != _Left_end;) { // look for elements with equivalent keys
+        const auto _Lrange = _Left._Equal_range(_Traits::_Kfn(*_Next1));
+        const auto _Rrange = _Right._Equal_range(_Traits::_Kfn(*_Next1));
+
+        if (_Lrange._Distance != _Rrange._Distance
+            || !_Is_permutation_unchecked(_Lrange._First, _Lrange._Last, _Rrange._First, equal_to<>{})) {
+            return false;
+        }
+
+        _Next1 = _Lrange._Last; // continue just past range
+    }
+
+    return true;
+}
+#endif // !_HAS_IF_CONSTEXPR
+
+template <class _Traits>
+inline bool _Hash_equal(const _Hash<_Traits>& _Left, const _Hash<_Traits>& _Right) {
+    // test for _Hash equality
+    if (_Left.size() != _Right.size()) {
+        return false;
+    }
+
+#if _HAS_IF_CONSTEXPR
+    if constexpr (_Traits::_Multi) {
+        const auto _Left_end = _Left._Unchecked_end();
+        for (auto _Next1 = _Left._Unchecked_begin(); _Next1 != _Left_end;) { // look for elements with equivalent keys
+            const auto _Lrange = _Left._Equal_range(_Traits::_Kfn(*_Next1));
+            const auto _Rrange = _Right._Equal_range(_Traits::_Kfn(*_Next1));
+
+            if (_Lrange._Distance != _Rrange._Distance
+                || !_Is_permutation_unchecked(_Lrange._First, _Lrange._Last, _Rrange._First, equal_to<>{})) {
+                return false;
+            }
+
+            _Next1 = _Lrange._Last; // continue just past range
+        }
+    } else {
+        for (const auto& _LVal : _Left) {
+            // look for element with equivalent key
+            const auto _Next2 = _Right._Find(_Traits::_Kfn(_LVal));
+            if (_Next2 == _Right._Unchecked_end() || !(_Traits::_Nonkfn(_LVal) == _Traits::_Nonkfn(*_Next2))) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+#else // ^^^ _HAS_IF_CONSTEXPR ^^^ / vvv !_HAS_IF_CONSTEXPR vvv
+    return _Hash_equal_elements(_Left, _Right, bool_constant<_Traits::_Multi>{});
+#endif // _HAS_IF_CONSTEXPR
+}
+_STD_END
+
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+#endif // RC_INVOKED
+#endif // _XHASH_
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
