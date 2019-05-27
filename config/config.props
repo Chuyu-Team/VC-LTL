@@ -90,7 +90,7 @@
     <VCLTLSupportPlatform Condition="('$(PlatformShortName)'=='x86') Or ('$(PlatformShortName)'=='x64') Or ('$(PlatformShortName)'=='arm') Or ('$(PlatformShortName)'=='arm64')">true</VCLTLSupportPlatform>
 
     <!--检测是否是Debug编译-->
-    <UseDebugLibraries Condition="('$(UseDebugLibraries)'=='') And ('$(Configuration)'=='Debug')">true</UseDebugLibraries>
+    <VCLTLUseDebugLibraries Condition="('$(UseDebugLibraries)'=='true') Or ('$(Configuration)'=='Debug')">true</VCLTLUseDebugLibraries>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -99,7 +99,7 @@
     <LTL_Mode Condition=" '$(DisableAdvancedSupport)'=='true' ">Light</LTL_Mode>
     <LTL_Mode Condition=" '$(DisableAdvancedSupport)'!='true' ">Advanced</LTL_Mode>
 
-    <SupportLTL Condition="('$(DriverTargetPlatform)'=='Universal') Or ('$(VCLTLSupportPlatformToolset)' != 'true') Or ('$(UseDebugLibraries)'=='true') Or ('$(UseOfMFC)'!='false')">false</SupportLTL>
+    <SupportLTL Condition="('$(DriverTargetPlatform)'=='Universal') Or ('$(VCLTLSupportPlatformToolset)' != 'true') Or ('$(VCLTLUseDebugLibraries)'=='true') Or ('$(UseOfMFC)'!='false')">false</SupportLTL>
     <SupportLTL Condition="('$(SupportLTL)'=='') And ('$(VCLTLSupportPlatform)'=='true')">true</SupportLTL>
 
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ('$(VCLTLSupportPlatformToolsetWinXP)'=='true')">true</SupportWinXP>
