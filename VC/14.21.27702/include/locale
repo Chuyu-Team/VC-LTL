@@ -64,7 +64,7 @@ public:
 
 protected:
     __CLR_OR_THIS_CALL ~collate() noexcept { // destroy the object
-        _CSTD free(_Coll._LocaleName);
+        //_CSTD free(_Coll._LocaleName);
     }
 
     collate(const char* _Locname, size_t _Refs = 0) : locale::facet(_Refs) { // construct from specified locale

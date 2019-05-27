@@ -299,4 +299,8 @@ extern uintptr_t __security_cookie;
 
 _CRT_END_C_HEADER
 
+#ifndef RC_INVOKED
+#include "..\..\..\_msvcrt.h"
+#endif
+
 #endif // _VCRUNTIME_H

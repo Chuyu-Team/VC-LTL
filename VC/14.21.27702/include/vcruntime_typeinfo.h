@@ -74,34 +74,15 @@ public:
         return __std_type_info_hash(&_Data);
     }
 
-    bool operator==(const type_info& _Other) const noexcept
-    {
-        return __std_type_info_compare(&_Data, &_Other._Data) == 0;
-    }
+    bool operator==(const type_info& _Other) const noexcept;
 
-    bool operator!=(const type_info& _Other) const noexcept
-    {
-        return __std_type_info_compare(&_Data, &_Other._Data) != 0;
-    }
+    bool operator!=(const type_info& _Other) const noexcept;
 
-    bool before(const type_info& _Other) const noexcept
-    {
-        return __std_type_info_compare(&_Data, &_Other._Data) < 0;
-    }
+    bool before(const type_info& _Other) const noexcept;
 
-    const char* name() const noexcept
-    {
-        #ifdef _M_CEE_PURE
-        return __std_type_info_name(&_Data, static_cast<__type_info_node*>(__type_info_root_node.ToPointer()));
-        #else
-        return __std_type_info_name(&_Data, &__type_info_root_node);
-        #endif
-    }
+    const char* name() const noexcept;
 
-    const char* raw_name() const noexcept
-    {
-        return _Data._DecoratedName;
-    }
+    const char* raw_name() const noexcept;
 
     virtual ~type_info() noexcept;
 

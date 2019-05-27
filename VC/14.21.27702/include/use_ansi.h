@@ -16,6 +16,10 @@
 #ifndef _USE_ANSI_CPP
 #define _USE_ANSI_CPP
 
+#ifndef RC_INVOKED
+#include "..\..\..\_msvcrt.h"
+#endif
+
 #ifdef _CRTBLD
 #define _CRT_NOPRAGMA_LIBS
 #else
