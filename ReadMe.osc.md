@@ -423,7 +423,7 @@ nmake /f Test.mak
 * 新增Fea，新增`VC-LTL helper for qmake.pri`脚本，改进对QMake的支持（感谢 漆黑の牙）。
 
 
-### 4.0.1.8 - 改进支持（2019-05-20 13:40）
+### 4.0.1.9 - 改进支持（2019-05-27 13:40）
 * 解决Bug，Windows XP模式没有引用`advapi32.lib`，可能导致`ImpersonateSelf`等符号无法解析（感谢 昌平517）。
 * 解决Bug，微软原版std::thread依赖GetLogicalProcessorInformation导致XP RTM无法运行（感谢 小古）。
 * 解决Bug，为XP模式添加_mbsinc，解决此函数越界问题（感谢 亮亮）。
