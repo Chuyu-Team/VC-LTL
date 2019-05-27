@@ -1942,7 +1942,7 @@ protected:
             _CSTD free((void*) _Ctype._Table);
         }
 
-        _CSTD free(_Ctype._LocaleName);
+        //_CSTD free(_Ctype._LocaleName);
     }
 
     void __CLR_OR_THIS_CALL _Init(const _Locinfo& _Lobj) { // initialize from _Lobj
