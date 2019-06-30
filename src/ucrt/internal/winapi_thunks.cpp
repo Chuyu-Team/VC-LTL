@@ -63,6 +63,16 @@ extern "C" WINBASEAPI PVOID WINAPI LocateXStateFeature(
     _Out_opt_ PDWORD   length
     );
 
+
+EXTERN_C
+DECLSPEC_IMPORT
+NTSTATUS
+NTAPI
+RtlWow64EnableFsRedirectionEx(
+	_In_opt_ PVOID Wow64FsEnableRedirection,
+	_Out_    PVOID* OldFsRedirectionLevel
+	);
+
 #ifndef _NONE_
 
 #define _NO_APPLY(a,b)
@@ -210,6 +220,15 @@ namespace
 }
 
 
+#if _CRT_NTDDI_MIN < NTDDI_WIN8
+
+//指示是否支持DLL安全加载
+static bool bSupportSafe;
+#if defined(_X86_) || defined(_M_IX86)
+static decltype(RtlWow64EnableFsRedirectionEx)* pRtlWow64EnableFsRedirectionExCeche;
+#endif //!(defined(_X86_) || defined(_M_IX86))
+
+#endif
 
 // This table stores the module handles that we have obtained via LoadLibrary.
 // If a handle is null, we have not yet attempted to load that module.  If a
@@ -228,7 +247,28 @@ static void* encoded_function_pointers[function_id_count];
 
 extern "C" bool __cdecl __acrt_initialize_winapi_thunks()
 {
+#if _CRT_NTDDI_MIN < NTDDI_WIN8
+	if (auto hKernel32 = GetModuleHandleW(L"kernel32"))
+	{
+		bSupportSafe = GetProcAddress(hKernel32, "AddDllDirectory") != nullptr;
+	}
+
+#if defined(_X86_) || defined(_M_IX86)
+	decltype(RtlWow64EnableFsRedirectionEx)* pRtlWow64EnableFsRedirectionExTmp = nullptr;
+
+	if (auto hNtdll = GetModuleHandleW(L"ntdll"))
+	{
+		pRtlWow64EnableFsRedirectionExTmp = (decltype(RtlWow64EnableFsRedirectionEx)*)GetProcAddress(hNtdll, "RtlWow64EnableFsRedirectionEx");
+	}
+
+	pRtlWow64EnableFsRedirectionExCeche = __crt_fast_encode_pointer(pRtlWow64EnableFsRedirectionExTmp);
+#endif //!(defined(_X86_) || defined(_M_IX86))
+
+#endif
+
     void* const encoded_nullptr = __crt_fast_encode_pointer(nullptr);
+
+
 
     for (void*& p : encoded_function_pointers)
     {
@@ -273,25 +313,69 @@ static __forceinline void* __cdecl invalid_function_sentinel() throw()
 
 static HMODULE __cdecl try_load_library_from_system_directory(wchar_t const* const name) throw()
 {
-    HMODULE const handle = LoadLibraryExW(name, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-    if (handle)
-    {
-        return handle;
-    }
+#if _CRT_NTDDI_MIN >= NTDDI_WIN8
+	return LoadLibraryExW(name, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+#else
+	if (bSupportSafe)
+	{
+		//我们引入 bSupportSafe 变量是因为联想一键影音，会导致老系统 LoadLibraryExW 错误代码 变成 ERROR_ACCESS_DENIED，而不是预期的ERROR_INVALID_PARAMETER。
+		return LoadLibraryExW(name, nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
 
-    // LOAD_LIBRARY_SEARCH_SYSTEM32 is only supported by Windows 7 and above; if
-    // the OS does not support this flag, try again without it.  On these OSes,
-    // all APISets will be forwarders.  To prevent DLL hijacking, do not attempt
-    // to load the APISet forwarders dynamically.  This will cause our caller to
-    // fall back to the real DLL (e.g. kernel32).  All of those are known DLLs.
-    if (GetLastError() == ERROR_INVALID_PARAMETER &&
-        wcsncmp(name, L"api-ms-", 7) != 0 &&
-        wcsncmp(name, L"ext-ms-", 7) != 0)
-    {
-        return LoadLibraryExW(name, nullptr, 0);
-    }
+	//名字不可能为 空。
+	if (name == nullptr || *name == L'\0')
+		return nullptr;
 
-    return nullptr;
+	wchar_t szDllFilePath[512];
+
+	auto cchResult = GetSystemDirectoryW(szDllFilePath, _countof(szDllFilePath));
+
+	if (cchResult == 0 || cchResult >= _countof(szDllFilePath))
+	{
+		//失败或者缓冲区不足则不处理（因为很显然 512 大小都不够？开玩笑……）
+		return nullptr;
+	}
+
+	szDllFilePath[cchResult++] = L'\\';
+	if (cchResult >= _countof(szDllFilePath))
+	{
+		return nullptr;
+	}
+
+	for (auto szName = name; *szName; ++szName)
+	{
+		szDllFilePath[cchResult++] = *szName;
+		if (cchResult >= _countof(szDllFilePath))
+		{
+			return nullptr;
+		}
+	}
+
+	// 将字符串 \0 截断
+	szDllFilePath[cchResult] = L'\0';
+
+
+#if defined(_X86_) || defined(_M_IX86)
+
+	auto pRtlWow64EnableFsRedirectionEx = __crt_fast_decode_pointer(pRtlWow64EnableFsRedirectionExCeche);
+
+	PVOID OldFsRedirectionLevel;
+
+	/*
+	Windows 7 RTM以其以前版本 LoadLibrary内部默认不会关闭重定向。
+	为了防止某些线程在关闭重定向的情况下调用API，依然能正常加载相关dll，因此我们在此处恢复重定向。
+	*/
+	auto Status = pRtlWow64EnableFsRedirectionEx ? pRtlWow64EnableFsRedirectionEx(nullptr, &OldFsRedirectionLevel) : STATUS_INVALID_PARAMETER;
+#endif
+	auto hModule = LoadLibraryExW(szDllFilePath, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+
+#if defined(_X86_) || defined(_M_IX86)
+	//将重定向恢复到以前的状态。
+	if (Status >= 0 && pRtlWow64EnableFsRedirectionEx)
+		pRtlWow64EnableFsRedirectionEx(OldFsRedirectionLevel, &OldFsRedirectionLevel);
+#endif
+	return hModule;
+#endif
 }
 
 

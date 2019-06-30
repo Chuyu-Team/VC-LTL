@@ -86,6 +86,7 @@ from the pure C source code.
 later, even in the environment which installed no hotfixes.
 
 ## 3. How to used?
+We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
 
 ### 3.1. Install VC-LTL
 If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
@@ -448,3 +449,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, add Vistual Studio 2019 Support.
 * New Fea, add 10.0.18362.0 UCRT support (Thanks to 毛利).
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
+
+
+### 4.0.2.1 - Improved Support (June 30, 2019 13:40)
+* Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
+* Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).

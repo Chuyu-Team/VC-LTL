@@ -74,6 +74,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 > 采用VC-LTL编译后的程序能兼容Windows XP RTM以上所有操作系统，无需安装任何SP补丁包。
 
 ## 3. 使用方法
+下面我们将进入主题，我们给大家准备了丰富的[VC-LTL示例](https://github.com/Chuyu-Team/vc-ltl-samples)供大家参考，也欢迎加入我们的QQ群（633710173）。
 
 ### 3.1. 安装VC-LTL
 假如，你将[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
@@ -436,3 +437,8 @@ nmake /f Test.mak
 * 新增Fea，添加Visual Studio 2019支持。
 * 新增Fea，新增10.0.18362.0 UCRT支持（感谢 毛利）
 * 改进体验，Vista模式将`_ATL_XP_TARGETING`以及`_USING_V110_SDK71_`宏从错误降级到警告。
+
+
+### 4.0.2.1 - 改进支持（2019-06-30 13:40）
+* 改进与联想一键影音的兼容性，由于联想一键影音错会乱Hook，导致LoadLibraryExW行为异常。这样将导致VC-LTL等在没有安装KB2533623的系统上无法正常使用问题（微软原版也同样存在此问题）。
+* 改进Windows 7 RTM以及以下系统的兼容性，由于这些老版本系统由于在LoadLibraryExW期间不会恢复重定向，因此当目标线程关闭重定向时可能导致VC-LTL无法正常工作（微软原版也同样存在此问题）。
