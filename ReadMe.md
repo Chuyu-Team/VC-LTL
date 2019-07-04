@@ -451,7 +451,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
 
 
-### 4.0.2.2 - Improved Support (July 1, 2019 16:40)
+### 4.0.2.3 - Improved Support (July 4, 2019 15:00)
 * Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
 * Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).
-* Fix [Bug 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
+* [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
+* New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro support (Thanks to BigBrother).
