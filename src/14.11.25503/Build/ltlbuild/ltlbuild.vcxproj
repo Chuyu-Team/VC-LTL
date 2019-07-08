@@ -611,6 +611,7 @@
     <ClCompile Include="..\..\vcruntime\default_precision.cpp">
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\vcruntime\denormal_control.cpp" />
     <ClCompile Include="..\..\vcruntime\dll_dllmain.cpp" />
     <ClCompile Include="..\..\vcruntime\dll_dllmain_stub.cpp" />
     <ClCompile Include="..\..\vcruntime\dyn_tls_init.c" />

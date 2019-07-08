@@ -243,6 +243,9 @@
     <ClCompile Include="..\..\i386\chandler4.c">
       <Filter>源文件\vc\objs\x86\WinXP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vcruntime\denormal_control.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ltlbuild.rc">

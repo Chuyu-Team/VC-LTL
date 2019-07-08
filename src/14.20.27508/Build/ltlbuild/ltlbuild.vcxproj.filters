@@ -246,6 +246,9 @@
     <ClCompile Include="..\..\vcruntime\x86_exception_filter.cpp">
       <Filter>源文件\vc\objs\x86</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vcruntime\denormal_control.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ltlbuild.rc">

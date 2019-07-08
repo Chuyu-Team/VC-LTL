@@ -166,25 +166,25 @@ static int __cdecl pre_c_initialization() throw()
     if (__scrt_is_user_matherr_present())
         __setusermatherr(_matherr);
 
-	#ifndef __Build_LTL //反正是2个空函数，就不调用了
     _initialize_invalid_parameter_handler();
     _initialize_denormal_control();
-	#endif
 
     #ifdef _M_IX86
     _initialize_default_precision();
     #endif
 
-	#ifndef __Build_LTL
+    #if _CRT_NTDDI_MIN >= NTDDI_VISTA
 	//默认禁用_get_startup_thread_locale_mode调用以支持WinXP，反正默认也是禁用thread locale。
     _configthreadlocale(_get_startup_thread_locale_mode());
+    #endif
 
+    #ifndef __Build_LTL
 	//LTL模式中环境变量由argv_policy::configure_argv()初始化
     if (_should_initialize_environment())
         initialize_environment();
 
     __scrt_initialize_winrt();
-	#endif
+    #endif
     return 0;
 }
 

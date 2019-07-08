@@ -439,8 +439,9 @@ nmake /f Test.mak
 * 改进体验，Vista模式将`_ATL_XP_TARGETING`以及`_USING_V110_SDK71_`宏从错误降级到警告。
 
 
-### 4.0.2.3 - 改进支持（2019-07-04 15:00）
+### 4.0.2.5 - 改进支持（2019-07-08 16:00）
 * 改进体验，改进与联想一键影音的兼容性，由于联想一键影音错会乱Hook，导致LoadLibraryExW行为异常。这样将导致VC-LTL等在没有安装KB2533623的系统上无法正常使用问题（微软原版也同样存在此问题）。
 * 改进体验，改进Windows 7 RTM以及以下系统的兼容性，由于这些老版本系统由于在LoadLibraryExW期间不会恢复重定向，因此当目标线程关闭重定向时可能导致VC-LTL无法正常工作（微软原版也同样存在此问题）。
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
 * 新增Fea，添加 `_CRT_STDIO_ISO_WIDE_SPECIFIERS` 宏支持（感谢 大胸）。
+* 新增Fea，添加`_initialize_invalid_parameter_handler`、`_initialize_denormal_control`、`_get_startup_thread_locale_mode（仅Vista模式）`支持。

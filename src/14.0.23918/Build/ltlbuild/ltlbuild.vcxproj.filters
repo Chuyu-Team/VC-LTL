@@ -216,6 +216,9 @@
     <ClCompile Include="..\..\arm\gshandlereh.c">
       <Filter>源文件\vc\objs\arm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vcruntime\denormal_control.cpp">
+      <Filter>源文件\vc\objs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ltlbuild.rc">
