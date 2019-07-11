@@ -195,9 +195,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 
 
 ## 5. Known Issues
-* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。_s 版本不存在此问题。
-* 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
-* 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
+* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。（4.0.2.5 Advanced模式已经修正此问题）
+* 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。（4.0.2.5 Advanced模式已经修正此问题）
+* 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, "chs");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 * 由于FH4异常（`/d2FH4` VS2019新增功能）实现过程中使用了TLS，因此在兼容“Windows XP(2003) x64”时请务必确保不要在DllMain中使用FH4 catch，否则将导致dll直接加载失败。
 
 
@@ -451,9 +451,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
 
 
-### 4.0.2.5 - Improved Support (July 8, 2019 16:00)
+### 4.0.2.5 - Improved Support (July 11, 2019 15:00)
 * Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
 * Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
-* New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro support (Thanks to BigBrother).
+* New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro and `legacy_stdio_definitions.lib` support (Thanks to BigBrother).
 * New Fea, add `_initialize_invalid_parameter_handler`, `_initialize_denormal_control` and `_get_startup_thread_locale_mode (Vista mode only)` support。

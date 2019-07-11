@@ -549,9 +549,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\report_runtime_error_thunks.cpp">
       <Filter>ltl</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\inoutput_downlevel.cpp">
-      <Filter>ltl\objs</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\lowio\txtmode.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>

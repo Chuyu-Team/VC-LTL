@@ -1,0 +1,5 @@
+
+
+[Symbols]
+vswprintf=_vswprintf_c
+vsnprintf_s=_vsnprintf_s

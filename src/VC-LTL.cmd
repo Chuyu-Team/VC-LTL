@@ -18,7 +18,7 @@ call:Build Static_WinXP_Spectre "x86 x64"
 
 ::Éú³É¶¯Ì¬UCRT¿â
 call:Build Redist "x86 x64 ARM ARM64" "ucrt\ucrt.vcxproj"
-call:Build Dynamic "x86 x64 ARM ARM64" "ucrt\ucrt.vcxproj"
+::call:Build Dynamic "x86 x64 ARM ARM64" "ucrt\ucrt.vcxproj"
 
 
 

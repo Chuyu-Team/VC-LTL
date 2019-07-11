@@ -184,9 +184,9 @@ nmake /f Test.mak
 
 
 ## 5. 已知问题
-* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。_s 版本不存在此问题。
-* 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。_s 版本也存在此问题。
-* 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, ".936");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
+* 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。（4.0.2.5 Advanced模式已经修正此问题）
+* 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。（4.0.2.5 Advanced模式已经修正此问题）
+* 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, "chs");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
 * 由于FH4异常（`/d2FH4` VS2019新增功能）实现过程中使用了TLS，因此在兼容“Windows XP(2003) x64”时请务必确保不要在DllMain中使用FH4 catch，否则将导致dll直接加载失败。
 
 ## 附：已知使用VC-LTL的官方项目
@@ -439,9 +439,9 @@ nmake /f Test.mak
 * 改进体验，Vista模式将`_ATL_XP_TARGETING`以及`_USING_V110_SDK71_`宏从错误降级到警告。
 
 
-### 4.0.2.5 - 改进支持（2019-07-08 16:00）
+### 4.0.2.5 - 改进支持（2019-07-11 15:00）
 * 改进体验，改进与联想一键影音的兼容性，由于联想一键影音错会乱Hook，导致LoadLibraryExW行为异常。这样将导致VC-LTL等在没有安装KB2533623的系统上无法正常使用问题（微软原版也同样存在此问题）。
 * 改进体验，改进Windows 7 RTM以及以下系统的兼容性，由于这些老版本系统由于在LoadLibraryExW期间不会恢复重定向，因此当目标线程关闭重定向时可能导致VC-LTL无法正常工作（微软原版也同样存在此问题）。
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
-* 新增Fea，添加 `_CRT_STDIO_ISO_WIDE_SPECIFIERS` 宏支持（感谢 大胸）。
+* 新增Fea，添加 `_CRT_STDIO_ISO_WIDE_SPECIFIERS` 宏以及 `legacy_stdio_definitions.lib` 支持（感谢 大胸）。
 * 新增Fea，添加`_initialize_invalid_parameter_handler`、`_initialize_denormal_control`、`_get_startup_thread_locale_mode（仅Vista模式）`支持。

@@ -1,0 +1,6 @@
+
+
+[Symbols]
+;此处存在特性损失，当缓冲区长度刚好为实际使用长度时会null终止，不过这个情况没有变的更坏就这样吧……
+_vswprintf_c=_vsnwprintf
+vswprintf=_vsnwprintf

@@ -47,7 +47,7 @@ _LTL_PushWarning(1004,"从VC-LTL 4.0 开始MD模式将链接到VC-LTL自身的DL
 #endif // !_UCRT_LTL_Include
 
 
-#if !defined(_NO_CRT_STDIO_INLINE) && !defined(_CRT_STDIO_ISO_WIDE_SPECIFIERS)
+#if !defined(_NO_CRT_STDIO_INLINE)
 //关闭常用的pintf系列函数的内联操作，充分利用msvcrt现有函数进一步减少体积。
 #define _NO_CRT_STDIO_INLINE 1
 #endif
