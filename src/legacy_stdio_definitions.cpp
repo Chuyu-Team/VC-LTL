@@ -2634,13 +2634,13 @@
 	_VCRT_DEFINE_IAT_SYMBOL(snprintf);
 
 
-	#if _CRT_NTDDI_MIN < NTDDI_WIN6
 	extern "C" int __CRTDECL swprintf(
 		_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t* const _Buffer,
 		_In_                                              size_t         const _BufferCount, //msvcrt.dll 没有此参数
 		_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
 		...)
 	{
+	#if _CRT_NTDDI_MIN < 0x06000000
 		int _Result;
 		va_list _ArgList;
 		__crt_va_start(_ArgList, _Format);
@@ -2648,8 +2648,15 @@
 		_Result = _vsnwprintf(_Buffer, _BufferCount, _Format, _ArgList);
 		__crt_va_end(_ArgList);
 		return _Result;
-	}
+	#else
+		int _Result;
+		va_list _ArgList;
+		__crt_va_start(_ArgList, _Format);
+		_Result = _vswprintf_c_l(_Buffer, _BufferCount, _Format, NULL, _ArgList);
+		__crt_va_end(_ArgList);
+		return _Result;
 	#endif
+	}
 	_VCRT_DEFINE_IAT_SYMBOL(swprintf);
 	
     _Check_return_opt_
