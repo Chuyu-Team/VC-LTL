@@ -410,6 +410,7 @@ extern "C" int __cdecl wctob(wint_t const wchar)
 
     return EOF;
 }
+#endif
 
 size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, size_t len, mbstate_t* ps)
 {
@@ -506,4 +507,3 @@ size_t __cdecl __crt_mbstring::__wcsrtombs_utf8(char* dst, const wchar_t** src, 
         return total_count;
     }
 }
-#endif
