@@ -60,15 +60,18 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm(
     size_t _n2             = _end2 - _string2;
     size_t size            = (size_t) -1;
     unsigned char* bbuffer = NULL;
-    const wchar_t* locale_name;
-
+    //const wchar_t* locale_name;
+    LCID _Locale;
+	
     if (ploc == 0) {
-        locale_name = ___lc_locale_name_func()[LC_COLLATE];
+        //locale_name = ___lc_locale_name_func()[LC_COLLATE];
+        _Locale = ___lc_handle_func()[LC_COLLATE];
     } else {
-        locale_name = ploc->_LocaleName;
+        //locale_name = ploc->_LocaleName;
+        _Locale = ploc->_Hand;
     }
 
-    if (locale_name == NULL) {
+    if (/*locale_name == NULL*/_Locale == 0) {
         if (_n2 <= _n1) {
             memcpy(_string1, _string2, _n2 * sizeof(wchar_t));
         }
@@ -84,10 +87,10 @@ _CRTIMP2_PURE size_t __CLRCALL_PURE_OR_CDECL _Wcsxfrm(
         if (NULL != (bbuffer = (unsigned char*) _malloc_crt(_n1))) {
             if (0
                 == (size = __crtLCMapStringW(
-                        locale_name, LCMAP_SORTKEY, _string2, (int) _n2, (wchar_t*) bbuffer, (int) _n1))) {
+                        _Locale, LCMAP_SORTKEY, _string2, (int) _n2, (wchar_t*) bbuffer, (int) _n1))) {
                 // buffer not big enough, get size required.
 
-                if (0 == (size = __crtLCMapStringW(locale_name, LCMAP_SORTKEY, _string2, (int) _n2, NULL, 0))) {
+                if (0 == (size = __crtLCMapStringW(_Locale, LCMAP_SORTKEY, _string2, (int) _n2, NULL, 0))) {
                     size = INT_MAX; // default error
                 }
             } else {

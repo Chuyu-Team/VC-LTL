@@ -87,6 +87,17 @@ EXTERN_C void* __cdecl _CallSettingFrameEncoded(
 	ULONG               NLG_CODE
     );
 
+EXTERN_C void* __cdecl _CallSettingFrame_LookupContinuationIndex(
+    void*               handler,
+    EHRegistrationNode  *pEstablisher,
+    ULONG               NLG_CODE
+	);
+
+EXTERN_C void* __cdecl _CallSettingFrame_NotifyContinuationAddr(
+    void*               handler,
+    EHRegistrationNode  *pEstablisher
+	);
+
 #elif defined(_M_ARM_NT) || defined(_M_ARM64) || defined(_CHPE_X86_ARM64_EH_)
 EXTERN_C void* __cdecl _CallSettingFrame(
     void*               handler,

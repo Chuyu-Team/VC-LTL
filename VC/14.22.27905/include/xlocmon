@@ -114,11 +114,28 @@ protected:
     }
 
     void _Getvals(wchar_t, const lconv* _Ptr) { // get values
-        _Currencysign = (const _Elem*) _Maklocwcs(_International ? _Ptr->_W_int_curr_symbol : _Ptr->_W_currency_symbol);
-        _Plussign     = (const _Elem*) _Maklocwcs(4 < (unsigned int) _Ptr->p_sign_posn ? L"" : _Ptr->_W_positive_sign);
-        _Minussign    = (const _Elem*) _Maklocwcs(4 < (unsigned int) _Ptr->n_sign_posn ? L"-" : _Ptr->_W_negative_sign);
-        _Decimalpoint = (_Elem) _Ptr->_W_mon_decimal_point[0];
-        _Kseparator   = (_Elem) _Ptr->_W_mon_thousands_sep[0];
+#if _CRT_NTDDI_MIN < 0x06010000
+        //Win7
+        if (__LTL_GetOsMinVersion() < 0x00060001)
+        {
+        _Currencysign = _Maklocstr(
+            _International ? _Ptr->int_curr_symbol : _Ptr->currency_symbol, static_cast<_Elem*>(nullptr), _Cvt);
+        _Plussign = _Maklocstr(
+            4 < (unsigned int) _Ptr->p_sign_posn ? "" : _Ptr->positive_sign, static_cast<_Elem*>(nullptr), _Cvt);
+        _Minussign = _Maklocstr(
+            4 < (unsigned int) _Ptr->n_sign_posn ? "-" : _Ptr->negative_sign, static_cast<_Elem*>(nullptr), _Cvt);
+        _Decimalpoint = _Maklocchr(_Ptr->mon_decimal_point[0], static_cast<_Elem*>(nullptr), _Cvt);
+        _Kseparator   = _Maklocchr(_Ptr->mon_thousands_sep[0], static_cast<_Elem*>(nullptr), _Cvt);
+		}
+        else
+#endif
+        {
+        _Currencysign = (const _Elem*) _Maklocwcs(_International ? _Ptr->lconv_Win7._W_int_curr_symbol : _Ptr->lconv_Win7._W_currency_symbol);
+        _Plussign     = (const _Elem*) _Maklocwcs(4 < (unsigned int) _Ptr->p_sign_posn ? L"" : _Ptr->lconv_Win7._W_positive_sign);
+        _Minussign    = (const _Elem*) _Maklocwcs(4 < (unsigned int) _Ptr->n_sign_posn ? L"-" : _Ptr->lconv_Win7._W_negative_sign);
+        _Decimalpoint = (_Elem) _Ptr->lconv_Win7._W_mon_decimal_point[0];
+        _Kseparator   = (_Elem) _Ptr->lconv_Win7._W_mon_thousands_sep[0];
+        }
     }
 
     void _Init(const _Locinfo& _Lobj, bool _Isdef = false) { // initialize from _Lobj

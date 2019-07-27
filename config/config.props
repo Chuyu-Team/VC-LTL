@@ -56,7 +56,7 @@
 
     <!--如果找不到，那么指定为当前支持的最高版本-->
     <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">false</VCLTLFoundToolsVersion>
-    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.20.27508</VCLTLToolsVersion>
+    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.22.27905</VCLTLToolsVersion>
   </PropertyGroup>
   
   <PropertyGroup Condition="('$(VCLTLTargetUniversalCRTVersion)'=='')">

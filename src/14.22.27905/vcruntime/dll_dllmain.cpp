@@ -10,6 +10,15 @@
 #include <vcruntime_internal.h>
 #include <rtcapi.h>
 
+#if defined _M_IX86
+#define MinSubSystemVersion "5.01"
+#elif defined _M_AMD64
+#define MinSubSystemVersion "5.02"
+#endif
+
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+#pragma comment(linker,"/SUBSYSTEM:WINDOWS," MinSubSystemVersion)
+#endif
 
 
 // The client may define a _pRawDllMain.  This function gets called for attach

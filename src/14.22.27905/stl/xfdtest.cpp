@@ -3,6 +3,7 @@
 
 _EXTERN_C_UNLESS_PURE
 
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _FDtest(float* px) { // categorize *px
     _Fval* ps = (_Fval*) (char*) px;
 
@@ -14,6 +15,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _FDtest(float* px) { // categorize *
         return 0;
     }
 }
+#endif
 
 unsigned short* _FPlsw(float* px) { // get pointer to lsw
     return &((_Fval*) (char*) px)->_Sh[_Fg];

@@ -451,10 +451,11 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
 
 
-### 4.0.2.6 - Improved Support (July 20, 2019 15:00)
+### 4.0.2.7 - Improved Support (July 27, 2019 14:00)
 * Fix Bug, Windows XP mode can't find `__wcsrtombs_utf8` symbol (Thunks To 水边).
+* New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro and `legacy_stdio_definitions.lib` support (Thanks to BigBrother).
+* New Fea, add `_initialize_invalid_parameter_handler`, `_initialize_denormal_control` and `_get_startup_thread_locale_mode (Vista mode only)` support。
+* New Fea, add 14.22.27905 toolset support.
 * Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
 * Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
-* New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro and `legacy_stdio_definitions.lib` support (Thanks to BigBrother).
-* New Fea, add `_initialize_invalid_parameter_handler`, `_initialize_denormal_control` and `_get_startup_thread_locale_mode (Vista mode only)` support。

@@ -3,9 +3,11 @@
 
 _EXTERN_C_UNLESS_PURE
 
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _LDtest(long double* px) { // categorize *px -- 64-bit
     return _Dtest((double*) px);
 }
+#endif
 
 unsigned short* _LPlsw(long double* px) { // get pointer to lsw
     return &((_Lval*) (char*) px)->_Sh[_L3];
