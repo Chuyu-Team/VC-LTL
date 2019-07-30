@@ -36,7 +36,7 @@ static int __cdecl common_vfprintf(
 
     return __acrt_lock_stream_and_call(stream, [&]() -> int
     {
-        //__acrt_stdio_temporary_buffering_guard const buffering(stream);
+        __acrt_stdio_temporary_buffering_guard const buffering(stream);
 
         //_LocaleUpdate locale_update(locale);
         processor_type processor(

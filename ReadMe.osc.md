@@ -439,8 +439,9 @@ nmake /f Test.mak
 * 改进体验，Vista模式将`_ATL_XP_TARGETING`以及`_USING_V110_SDK71_`宏从错误降级到警告。
 
 
-### 4.0.2.7 - 改进支持（2019-07-27 14:00）
+### 4.0.2.8 - 改进支持（2019-07-30 14:00）
 * 解决Bug，Windows XP模式找不到 `__wcsrtombs_utf8` 符号问题（感谢 水边）。
+* 解决[Bug 56](https://github.com/Chuyu-Team/VC-LTL/issues/56)，解决(w)printf、std::(w)cout等无法输出中文问题。
 * 新增Fea，添加 `_CRT_STDIO_ISO_WIDE_SPECIFIERS` 宏以及 `legacy_stdio_definitions.lib` 支持（感谢 大胸）。
 * 新增Fea，添加`_initialize_invalid_parameter_handler`、`_initialize_denormal_control`、`_get_startup_thread_locale_mode（仅Vista模式）`支持。
 * 新增Fea，添加 14.22.27905 工具集支持。

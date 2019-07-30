@@ -567,6 +567,12 @@
     <ClCompile Include="stdlib\abs.cpp">
       <Filter>ucrt\WinXP</Filter>
     </ClCompile>
+    <ClCompile Include="sftbuf_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
+    <ClCompile Include="fputwc_thunks.cpp">
+      <Filter>ltl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ucrt.rc" />

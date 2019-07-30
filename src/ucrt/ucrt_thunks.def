@@ -1,0 +1,7 @@
+LIBRARY msvcrt.dll
+
+EXPORTS
+
+fputwc DATA
+fputc DATA
+fwrite DATA

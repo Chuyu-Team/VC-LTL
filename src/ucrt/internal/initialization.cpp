@@ -19,8 +19,8 @@ extern "C" {
 
 //extern _onexit_table_t __acrt_atexit_table;
 extern _onexit_table_t __acrt_at_quick_exit_table;
-//extern void*           __acrt_stdout_buffer;
-//extern void*           __acrt_stderr_buffer;
+extern void*           __acrt_stdout_buffer;
+extern void*           __acrt_stderr_buffer;
 
 
 #if 0
@@ -180,6 +180,7 @@ static bool __cdecl uninitialize_allocated_memory(bool const /* terminating */)
 
     return true;
 }
+#endif
 
 // C4505: unreferenced local function
 #pragma warning( suppress: 4505 )
@@ -191,15 +192,17 @@ static bool __cdecl uninitialize_allocated_io_buffers(bool const /* terminating 
     _free_crt(__acrt_stderr_buffer);
     __acrt_stderr_buffer = nullptr;
 
+#if 0 //msvcrt.dl会释放他们
     _free_crt(__argv);
     __argv = nullptr;
 
     _free_crt(__wargv);
     __wargv = nullptr;
-
+#endif
     return true;
 }
 
+#if 0
 static bool __cdecl report_memory_leaks(bool const /* terminating */)
 {
     #ifdef _DEBUG
@@ -267,7 +270,7 @@ static __acrt_initializer const __acrt_initializers[] =
     //{ nullptr,                                 report_memory_leaks                      },
     // Enclaves only require initializers for supported features.
 #ifndef _UCRT_ENCLAVE_BUILD
-    //{ nullptr,                                 uninitialize_allocated_io_buffers        },
+    { nullptr,                                 uninitialize_allocated_io_buffers        },
 #endif
     //{ nullptr,                                 uninitialize_allocated_memory            },
     // Enclaves only require initializers for supported features.

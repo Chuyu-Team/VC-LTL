@@ -304,6 +304,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'">
     <ClCompile>
@@ -331,6 +334,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <ClCompile>
@@ -358,6 +364,7 @@
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
       <ImportLibrary>$(SolutionDir)..\lib\$(PlatformShortName)\Vista\ucrt.lib</ImportLibrary>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -389,6 +396,7 @@
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
       <ImportLibrary>$(SolutionDir)..\lib\$(PlatformShortName)\Vista\ucrt.lib</ImportLibrary>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -422,6 +430,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM'">
     <ClCompile>
@@ -449,6 +460,9 @@
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
       <UseSafeExceptionHandlers>true</UseSafeExceptionHandlers>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <ClCompile>
@@ -475,6 +489,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM64'">
     <ClCompile>
@@ -501,6 +518,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
     <ClCompile>
@@ -527,6 +547,7 @@
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
       <ImportLibrary>$(SolutionDir)..\lib\$(PlatformShortName)\Vista\ucrt.lib</ImportLibrary>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -557,6 +578,7 @@
       <AdditionalOptions>/EXPORT:_get_narrow_winmain_command_line /EXPORT:_get_wide_winmain_command_line %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>ucrt.def</ModuleDefinitionFile>
       <ImportLibrary>$(SolutionDir)..\lib\$(PlatformShortName)\Vista\ucrt.lib</ImportLibrary>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
@@ -587,6 +609,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM64'">
     <ClCompile>
@@ -613,6 +638,9 @@
     <MASM>
       <ObjectFileName>$(IntDir)%(FileName).asm.obj</ObjectFileName>
     </MASM>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(PlatformShortName)\ucrt_thunks.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\exit_thunks.cpp" />
@@ -1077,6 +1105,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\time\time.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\_msvcrt.cpp" />
     <ClCompile Include="convert\strtod.cpp" />
+    <ClCompile Include="fputwc_thunks.cpp" />
+    <ClCompile Include="sftbuf_thunks.cpp" />
     <ClCompile Include="stdlib\abs.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
