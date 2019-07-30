@@ -59,6 +59,13 @@ extern "C" wint_t __cdecl _fputwchar(
 	return fputwc(_Character,/*stdout*/&_iob[1]);
 }
 
+extern "C"  wint_t __cdecl putwchar(
+        wchar_t _Character
+        )
+ {
+	return _fputwchar(_Character);
+ }
+
 extern "C" size_t __cdecl fwrite(
     void const* const buffer,
     size_t      const size,
@@ -148,4 +155,11 @@ extern "C" int __cdecl _fputchar(
         )
 {
 	return fputc(_Character, /*stdout*/&_iob[1]);
+}
+
+extern "C" int __cdecl putchar(
+        int _Character
+        )
+{
+	return _fputchar(_Character);
 }
