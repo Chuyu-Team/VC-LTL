@@ -573,6 +573,18 @@
     <ClCompile Include="fputwc_thunks.cpp">
       <Filter>ltl</Filter>
     </ClCompile>
+    <ClCompile Include="convert\atox.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="convert\strtox.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="convert\atof.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="convert\atoldbl.cpp">
+      <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ucrt.rc" />

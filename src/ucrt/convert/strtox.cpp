@@ -59,6 +59,7 @@
 // Narrow Strings => 32-bit Integers
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+#if 0
 extern "C" long __cdecl strtol(
     char const* const string,
     char**      const end_ptr,
@@ -67,6 +68,7 @@ extern "C" long __cdecl strtol(
 {
     return __crt_strtox::parse_integer_from_string<long>(string, end_ptr, base, nullptr);
 }
+#endif
 
 extern "C" long __cdecl _strtol_l(
     char const* const string,
@@ -79,7 +81,7 @@ extern "C" long __cdecl _strtol_l(
 }
 
 
-
+#if 0
 extern "C" unsigned long __cdecl strtoul(
     char const* const string,
     char**      const end_ptr,
@@ -88,6 +90,7 @@ extern "C" unsigned long __cdecl strtoul(
 {
     return __crt_strtox::parse_integer_from_string<unsigned long>(string, end_ptr, base, nullptr);
 }
+#endif
 
 extern "C" unsigned long __cdecl _strtoul_l(
     char const* const string,
@@ -106,6 +109,7 @@ extern "C" unsigned long __cdecl _strtoul_l(
 // Narrow Strings => 64-bit Integers
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+#if 0
 extern "C" __int64 __cdecl _strtoi64(
     char const* const string,
     char**      const end_ptr,
@@ -132,6 +136,7 @@ extern "C" intmax_t __cdecl strtoimax(
 {
     return __crt_strtox::parse_integer_from_string<intmax_t>(string, end_ptr, base, nullptr);
 }
+#endif
 
 
 
@@ -166,7 +171,7 @@ extern "C" intmax_t __cdecl _strtoimax_l(
 }
 
 
-
+#if 0
 extern "C" unsigned __int64 __cdecl _strtoui64(
     char const* const string,
     char**      const end_ptr,
@@ -193,7 +198,7 @@ extern "C" uintmax_t __cdecl strtoumax(
 {
     return __crt_strtox::parse_integer_from_string<uintmax_t>(string, end_ptr, base, nullptr);
 }
-
+#endif
 
 
 extern "C" unsigned __int64 __cdecl _strtoui64_l(
@@ -233,6 +238,7 @@ extern "C" uintmax_t __cdecl _strtoumax_l(
 // Wide Strings => 32-bit Integers
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+#if 0
 extern "C" long __cdecl wcstol(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
@@ -241,6 +247,7 @@ extern "C" long __cdecl wcstol(
 {
     return __crt_strtox::parse_integer_from_string<long>(string, end_ptr, base, nullptr);
 }
+#endif
 
 extern "C" long __cdecl _wcstol_l(
     wchar_t const* const string,
@@ -252,6 +259,7 @@ extern "C" long __cdecl _wcstol_l(
     return __crt_strtox::parse_integer_from_string<long>(string, end_ptr, base, locale);
 }
 
+#if 0
 extern "C" unsigned long __cdecl wcstoul(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
@@ -260,6 +268,7 @@ extern "C" unsigned long __cdecl wcstoul(
 {
     return __crt_strtox::parse_integer_from_string<unsigned long>(string, end_ptr, base, nullptr);
 }
+#endif
 
 extern "C" unsigned long __cdecl _wcstoul_l(
     wchar_t const* const string,
@@ -278,6 +287,7 @@ extern "C" unsigned long __cdecl _wcstoul_l(
 // Wide Strings => 64-bit Integers
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+#if 0
 extern "C" __int64 __cdecl _wcstoi64(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
@@ -304,7 +314,7 @@ extern "C" intmax_t __cdecl wcstoimax(
 {
     return __crt_strtox::parse_integer_from_string<intmax_t>(string, end_ptr, base, nullptr);
 }
-
+#endif
 
 
 extern "C" __int64 __cdecl _wcstoi64_l(
@@ -338,7 +348,7 @@ extern "C" intmax_t __cdecl _wcstoimax_l(
 }
 
 
-
+#if 0
 extern "C" unsigned __int64 __cdecl _wcstoui64(
     wchar_t const* const string,
     wchar_t**      const end_ptr,
@@ -365,6 +375,7 @@ extern "C" uintmax_t __cdecl wcstoumax(
 {
     return __crt_strtox::parse_integer_from_string<uintmax_t>(string, end_ptr, base, nullptr);
 }
+#endif
 
 
 

@@ -23,9 +23,9 @@ static int __cdecl common_atodbl_l(
 {
     _VALIDATE_RETURN(result != nullptr, EINVAL, _DOMAIN);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
     SLD_STATUS const status = __crt_strtox::parse_floating_point(
-        locale_update.GetLocaleT(),
+        locale,
         __crt_strtox::make_c_string_character_source(string, nullptr),
         result);
 
@@ -42,21 +42,24 @@ extern "C" int __cdecl _atoflt_l(_CRT_FLOAT* const result, char const* const str
     return common_atodbl_l(&result->f, string, locale);
 }
 
+#if 0
 extern "C" int __cdecl _atoflt(_CRT_FLOAT* const result, char const* const string)
 {
     return common_atodbl_l(&result->f, string, nullptr);
 }
+#endif
 
 extern "C" int __cdecl _atodbl_l(_CRT_DOUBLE* const result, char* const string, _locale_t const locale)
 {
     return common_atodbl_l(&result->x, string, locale);
 }
 
+#if 0
 extern "C" int __cdecl _atodbl(_CRT_DOUBLE* const result, char* const string)
 {
     return common_atodbl_l(&result->x, string, nullptr);
 }
-
+#endif
 
 
 template <typename Character>
@@ -64,11 +67,11 @@ static double __cdecl common_atof_l(Character const* const string, _locale_t con
 {
     _VALIDATE_RETURN(string != nullptr, EINVAL, 0.0);
 
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     double result{};
     __crt_strtox::parse_floating_point(
-        locale_update.GetLocaleT(),
+        locale,
         __crt_strtox::make_c_string_character_source(string, nullptr),
         &result);
     return result;
@@ -79,17 +82,21 @@ extern "C" double __cdecl _atof_l(char const* const string, _locale_t const loca
     return common_atof_l(string, locale);
 }
 
+#if 0
 extern "C" double __cdecl atof(char const* const string)
 {
     return common_atof_l(string, nullptr);
 }
+#endif
 
 extern "C" double __cdecl _wtof_l(wchar_t const* const string, _locale_t const locale)
 {
     return common_atof_l(string, locale);
 }
 
+#if 0
 extern "C" double __cdecl _wtof(wchar_t const* const string)
 {
     return common_atof_l(string, nullptr);
 }
+#endif

@@ -39,7 +39,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 
 |  模块  | XP模式  | Vista模式 | UCRT模式 | 相关文件 
 | :----: | :-----: | :-------: | :------: | --------
-|   CRT  | 91.455% | 94.521%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcmrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
+|   CRT  | 94.521% | 96.347%   |   100%   | vcruntime.lib、libvcruntime.lib、msvcrt.lib、msvcmrt.lib、msvcrt_Platform.lib、libucrt.lib、ucrt.lib、libucrt_shared.lib、vc.lib
 |   STL  | 100%    | 100%      |   100%   | libcpmt.lib、msvcprt.lib
 | ConcRT | 100%    | 100%      |   100%   | libconcrt.lib、concrt.lib
 | WinRT  |   X     | 100%      |    X     | vccorlib.lib（仅支持Windows 8.1以及更高版本）
@@ -172,15 +172,6 @@ nmake /f Test.mak
 #### 解决方案
 
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
-
-### 4.4. 支持XP时从msvcrt.dll导入大量XP不支持的函数
-#### 问题原因
-
-可能没有开启引用消除
-
-#### 解决方案
-* C/C++ - 语言 - 移除未引用的代码和数据 - 【是(/Zc:inline)】
-* 连接器 - 优化 - 引用 - 【是(/OPT:REF)】
 
 
 ## 5. 已知问题
@@ -445,6 +436,7 @@ nmake /f Test.mak
 * 新增Fea，添加 `_CRT_STDIO_ISO_WIDE_SPECIFIERS` 宏以及 `legacy_stdio_definitions.lib` 支持（感谢 大胸）。
 * 新增Fea，添加`_initialize_invalid_parameter_handler`、`_initialize_denormal_control`、`_get_startup_thread_locale_mode（仅Vista模式）`支持。
 * 新增Fea，添加 14.22.27905 工具集支持。
+* 新增Fea，为Windows XP添加`_atoi_l、_strtol_l、_atoflt_l、_atoldbl_l`等支持。
 * 改进体验，改进与联想一键影音的兼容性，由于联想一键影音错会乱Hook，导致LoadLibraryExW行为异常。这样将导致VC-LTL等在没有安装KB2533623的系统上无法正常使用问题（微软原版也同样存在此问题）。
 * 改进体验，改进Windows 7 RTM以及以下系统的兼容性，由于这些老版本系统由于在LoadLibraryExW期间不会恢复重定向，因此当目标线程关闭重定向时可能导致VC-LTL无法正常工作（微软原版也同样存在此问题）。
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。

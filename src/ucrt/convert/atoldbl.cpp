@@ -814,11 +814,11 @@ static void __cdecl convert_ld12_to_ldouble(
 
 extern "C" int __cdecl _atoldbl_l(_LDOUBLE* const result, char* const string, _locale_t const locale)
 {
-    _LocaleUpdate locale_update(locale);
+    //_LocaleUpdate locale_update(locale);
 
     _LDBL12 intermediate_result{};
     SLD_STATUS const conversion_status = parse_floating_point(
-        locale_update.GetLocaleT(),
+        locale,
         make_c_string_character_source(string, nullptr),
         &intermediate_result);
 
@@ -826,7 +826,9 @@ extern "C" int __cdecl _atoldbl_l(_LDOUBLE* const result, char* const string, _l
     return transform_into_return_value(conversion_status);
 }
 
+#if 0
 extern "C" int __cdecl _atoldbl(_LDOUBLE* const result, char* const string)
 {
     return _atoldbl_l(result, string, nullptr);
 }
+#endif

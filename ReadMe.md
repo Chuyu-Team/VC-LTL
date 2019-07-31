@@ -50,7 +50,7 @@ from the pure C source code.
 
 |  Module  | XP Mode | Vista Mode | UCRT Mode | Files 
 | :------: | :-----: | :--------: | :-------: | --------
-|  CRT     | 91.455% | 94.521%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcmrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
+|  CRT     | 94.521% | 96.347%    | 100%      | vcruntime.lib, libvcruntime.lib, msvcrt.lib, msvcmrt.lib, msvcrt_Platform.lib, libucrt.lib, ucrt.lib, libucrt_shared.lib, vc.lib
 |  STL     | 100%    | 100%       | 100%      | libcpmt.lib, msvcprt.lib
 |  ConcRT  | 100%    | 100%       | 100%      | libconcrt.lib, concrt.lib
 |  WinRT   |  X      | 100%       |  X        | vccorlib.lib (Windows 8.1 or later)
@@ -183,15 +183,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 #### Workaround
 
 使用VC-LTL重新编译对应的静态lib（具体lib名称错误日志会给出）。
-
-### 4.4. 支持XP时从msvcrt.dll导入大量XP不支持的函数
-#### Cause
-
-可能没有开启引用消除
-
-#### Workaround
-* C/C++ - 语言 - 移除未引用的代码和数据 - 【是(/Zc:inline)】
-* 连接器 - 优化 - 引用 - 【是(/OPT:REF)】
 
 
 ## 5. Known Issues
@@ -457,6 +448,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro and `legacy_stdio_definitions.lib` support (Thanks to BigBrother).
 * New Fea, add `_initialize_invalid_parameter_handler`, `_initialize_denormal_control` and `_get_startup_thread_locale_mode (Vista mode only)` support。
 * New Fea, add 14.22.27905 toolset support.
+* New Fea, add `_atoi_l, _strtol_l, _atoflt_l, _atoldbl_l`, etc. to Windows XP mode.
 * Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
 * Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).

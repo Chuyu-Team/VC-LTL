@@ -1104,7 +1104,19 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\time\time.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\_msvcrt.cpp" />
+    <ClCompile Include="convert\atof.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="convert\atoldbl.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="convert\atox.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="convert\strtod.cpp" />
+    <ClCompile Include="convert\strtox.cpp">
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="fputwc_thunks.cpp" />
     <ClCompile Include="sftbuf_thunks.cpp" />
     <ClCompile Include="stdlib\abs.cpp">

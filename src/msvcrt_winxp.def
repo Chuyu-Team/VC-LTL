@@ -598,9 +598,42 @@ _snscanf_s_l
 _snscanf_s
 
 
+;atox.cpp
+_atoi_l
+_atol_l
+_atoll_l
+_atoi64_l
+_wtoi_l
+_wtol_l
+_wtoll_l
+_wtoi64_l
 
+;strtox.cpp
+_strtol_l
+_strtoul_l
+_strtoi64_l
+_strtoll_l
+_strtoimax_l
+_strtoui64_l
+_strtoull_l
+_strtoumax_l
+_wcstol_l
+_wcstoul_l
+_wcstoi64_l
+_wcstoll_l
+_wcstoimax_l
+_wcstoui64_l
+_wcstoull_l
+_wcstoumax_l
 
+;atof.cpp
+_atoflt_l
+_atodbl_l
+_atof_l
+_wtof_l
 
+;atoldbl.cpp
+_atoldbl_l
 
 [Import.x64]
 amd64\msvcrt_winxp.def
