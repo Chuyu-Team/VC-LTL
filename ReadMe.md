@@ -442,9 +442,10 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
 
 
-### 4.0.2.10 - Improved Support (Aug 1, 2019 14:00)
+### 4.0.2.11 - Improved Support (Aug 5, 2019 14:00)
 * Fix Bug, Windows XP mode can't find `__wcsrtombs_utf8` symbol (Thunks To 水边).
 * Fix [Bug 56](https://github.com/Chuyu-Team/VC-LTL/issues/56), solve (w)printf, std::(w)cout, etc. can not output text other than ASCII.
+* Fix Bug, _tzname declaration is inconsistent  (Thunks To BigBrother).
 * New Fea, add `_CRT_STDIO_ISO_WIDE_SPECIFIERS` macro and `legacy_stdio_definitions.lib` support (Thanks to BigBrother).
 * New Fea, add `_initialize_invalid_parameter_handler`, `_initialize_denormal_control` and `_get_startup_thread_locale_mode (Vista mode only)` support。
 * New Fea, add 14.22.27905 toolset support.

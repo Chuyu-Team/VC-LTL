@@ -396,7 +396,7 @@ extern "C"
 	__declspec(dllimport) extern long _timezone;
 
 	#undef _tzname
-	__declspec(dllimport) extern char** _tzname;
+	__declspec(dllimport) extern char* _tzname[2];
 
 	_CRTIMP errno_t __cdecl _get_daylight(
 		_Out_ int* _Daylight
@@ -451,17 +451,20 @@ extern "C"
 
 		// _tzname is correctly inited at startup, so no need to check if
 		// CRT init finished.
-		*_ReturnValue = strlen(_TmpName) + 1;
+		const auto cchBuffRerrequest = strlen(_TmpName) + 1;
+
+		*_ReturnValue = cchBuffRerrequest;
 
 		// If the buffer pointer is null, the caller is interested only in the size
 		// of the string, not in the actual value of the string:
 		if (_Buffer == nullptr)
 			return 0;
 
-		if (*_ReturnValue > _SizeInBytes)
+		if (cchBuffRerrequest > _SizeInBytes)
 			return ERANGE;
 
-		return strcpy_s(_Buffer, _SizeInBytes, _TmpName);
+		memcpy(_Buffer, _TmpName, cchBuffRerrequest * sizeof(_TmpName[0]));
+		return 0;
 	}
 
 #if defined _M_AMD64 && _CRT_NTDDI_MIN < 0x06000000
