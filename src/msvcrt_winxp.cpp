@@ -790,7 +790,7 @@ extern "C" errno_t __cdecl _splitpath_s(
 				goto _Error;
 			}
 
-			memcpy(_Ext, _ExtTmp, (_ExtCount + 1) * sizeof(_Ext[0]));
+			memcpy(_Ext, _ExtTmp, (_ExtCountTmp + 1) * sizeof(_Ext[0]));
 
 		}
 
@@ -923,7 +923,7 @@ extern "C" errno_t __cdecl _wsplitpath_s(
 				goto _Error;
 			}
 
-			memcpy(_Ext, _ExtTmp, (_ExtCount + 1) * sizeof(_Ext[0]));
+			memcpy(_Ext, _ExtTmp, (_ExtCountTmp + 1) * sizeof(_Ext[0]));
 
 		}
 
