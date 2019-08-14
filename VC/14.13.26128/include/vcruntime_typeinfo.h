@@ -70,33 +70,7 @@ public:
 
     size_t hash_code() const throw()
     {
-		// FNV-1a hash function for the undecorated name
-
-#ifdef _WIN64
-		static_assert(sizeof(size_t) == 8, "This code is for 64-bit size_t.");
-		size_t const fnv_offset_basis = 14695981039346656037ULL;
-		size_t const fnv_prime = 1099511628211ULL;
-#else
-		static_assert(sizeof(size_t) == 4, "This code is for 32-bit size_t.");
-		size_t const fnv_offset_basis = 2166136261U;
-		size_t const fnv_prime = 16777619U;
-#endif
-
-		size_t value = fnv_offset_basis;
-		for (char const* it = raw_name() + 1; *it != '\0'; ++it)
-		{
-			value ^= static_cast<size_t>(static_cast<unsigned char>(*it));
-			value *= fnv_prime;
-		}
-
-#ifdef _WIN64
-		static_assert(sizeof(size_t) == 8, "This code is for 64-bit size_t.");
-		value ^= value >> 32;
-#else
-		static_assert(sizeof(size_t) == 4, "This code is for 32-bit size_t.");
-#endif
-
-		return value;
+        return __std_type_info_hash(&_Data);
     }
 
     bool operator==(const type_info& _Other) const throw();
