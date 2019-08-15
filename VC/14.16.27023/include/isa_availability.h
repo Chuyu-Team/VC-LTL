@@ -39,7 +39,7 @@ enum ISA_AVAILABILITY
 /* Defines for: "__favor" defined in the CRT */
 #define __FAVOR_ATOM    0
 #define __FAVOR_ENFSTRG 1 /* Enhanced Fast Strings rep movb/stob */
-#define __FAVOR_SMSTRG  2 /* use rep movb/stob for small counts */
+/* #define reserved     2 */
 
 #endif
 

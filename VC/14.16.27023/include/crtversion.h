@@ -20,11 +20,11 @@
 #endif
  
 #if !defined(_VC_CRT_BUILD_VERSION)
-#define _VC_CRT_BUILD_VERSION 27023
+#define _VC_CRT_BUILD_VERSION 27033
 #endif
  
 #if !defined(_VC_CRT_RBUILD_VERSION)
-#define _VC_CRT_RBUILD_VERSION 1
+#define _VC_CRT_RBUILD_VERSION 0
 #endif
 
 #ifndef _VC_LTL_Include

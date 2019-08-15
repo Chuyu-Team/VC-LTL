@@ -430,7 +430,7 @@ nmake /f Test.mak
 * 改进体验，Vista模式将`_ATL_XP_TARGETING`以及`_USING_V110_SDK71_`宏从错误降级到警告。
 
 
-### 4.0.2.13 - 改进支持（2019-08-09 18:00）
+### 4.0.2.14 - 改进支持（2019-08-14 18:00）
 * 解决Bug，Windows XP模式找不到 `__wcsrtombs_utf8` 符号问题（感谢 水边）。
 * 解决[Bug 56](https://github.com/Chuyu-Team/VC-LTL/issues/56)，解决(w)printf、std::(w)cout等无法输出中文问题。
 * 解决Bug，_tzname声明错误（感谢 大胸）。
@@ -440,6 +440,7 @@ nmake /f Test.mak
 * 新增Fea，添加 14.22.27905 工具集支持。
 * 新增Fea，为Windows XP添加`_atoi_l、_strtol_l、_atoflt_l、_atoldbl_l`等支持。
 * 新增[Fea 17](https://github.com/Chuyu-Team/VC-LTL/issues/17)，为Windows XP添加`_create_locale、_wcreate_locale、_get_current_locale`支持。
+* 新增Fea，14.16.27023同步到14.16.27033版本。
 * 改进体验，改进与联想一键影音的兼容性，由于联想一键影音错会乱Hook，导致LoadLibraryExW行为异常。这样将导致VC-LTL等在没有安装KB2533623的系统上无法正常使用问题（微软原版也同样存在此问题）。
 * 改进体验，改进Windows 7 RTM以及以下系统的兼容性，由于这些老版本系统由于在LoadLibraryExW期间不会恢复重定向，因此当目标线程关闭重定向时可能导致VC-LTL无法正常工作（微软原版也同样存在此问题）。
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。

@@ -731,9 +731,23 @@ public:
 
 	void release() noexcept // strengthened
 		{	// return allocated memory back upstream
+		if (_Chunks._Empty())
+			{
+			// nothing to release; potentially continues to use an initial block provided at construction
+			return;
+			}
+
+		_Current_buffer = nullptr;
+		_Space_available = 0;
+
+		// unscale _Next_buffer_size so the next allocation will be the same size as the most recent allocation
+		// (keep synchronized with monotonic_buffer_resource::_Scale)
+		const size_t _Unscaled = (_Next_buffer_size / 3 * 2 + alignof(_Header) - 1) & _Max_allocation;
+		_Next_buffer_size = _Max_value(_Unscaled, _Min_allocation);
+
 		_Intrusive_stack<_Header> _Tmp{};
 		_STD swap(_Tmp, _Chunks);
-		while (_Tmp._Top())
+		while (!_Tmp._Empty())
 			{
 			const auto _Ptr = _Tmp._Pop();
 			_Resource->deallocate(_Ptr->_Base_address(), _Ptr->_Size, _Ptr->_Align);
@@ -804,6 +818,7 @@ private:
 	static constexpr size_t _Scale(const size_t _Size) noexcept
 		{	// scale _Size by 1.5, rounding up to a multiple of alignof(_Header),
 			// saturating to _Max_allocation
+			// (keep synchronized with monotonic_buffer_resource::release)
 		constexpr auto _Max_size = (_Max_allocation - alignof(_Header) + 1) / 3 * 2;
 		if (_Size >= _Max_size)
 			{

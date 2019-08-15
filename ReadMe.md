@@ -442,7 +442,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
 
 
-### 4.0.2.13 - Improved Support (Aug 9, 2019 18:00)
+### 4.0.2.14 - Improved Support (Aug 14, 2019 18:00)
 * Fix Bug, Windows XP mode can't find `__wcsrtombs_utf8` symbol (Thanks To 水边).
 * Fix [Bug 56](https://github.com/Chuyu-Team/VC-LTL/issues/56), solve (w)printf, std::(w)cout, etc. can not output text other than ASCII.
 * Fix Bug, _tzname declaration is inconsistent (Thanks To BigBrother).
@@ -451,6 +451,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, add `_initialize_invalid_parameter_handler`, `_initialize_denormal_control` and `_get_startup_thread_locale_mode (Vista mode only)` support。
 * New Fea, add 14.22.27905 toolset support.
 * New Fea, add `_atoi_l, _strtol_l, _atoflt_l, _atoldbl_l`, etc. to Windows XP mode.
+* New Fea, upgrade 14.16.27023 to the 14.16.27033 version.
 * New [Fea 17](https://github.com/Chuyu-Team/VC-LTL/issues/17), add `_create_locale、_wcreate_locale、_get_current_locale` to Windows XP mode.
 * Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
 * Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).
