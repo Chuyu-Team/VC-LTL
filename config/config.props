@@ -170,7 +170,10 @@
       <AdditionalDependencies>ucrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <!-- 属性页配置 -->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)VC-LTL-Options.xml" />
+  </ItemGroup>
 
   <Target Name="VC_LTL_PlatformPrepareForBuild_Config">
     <Message Text="
