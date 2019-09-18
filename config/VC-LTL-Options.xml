@@ -18,6 +18,8 @@
     <Rule.Categories>
       <Category Name="General"
                 DisplayName="常规" />
+      <Category Name="Diagnosis"
+                DisplayName="诊断"/>
     </Rule.Categories>
 
     <Rule.DataSource>
@@ -36,13 +38,19 @@
     <BoolProperty
       Name="DisableAdvancedSupport"
       Category="General"
-      DisplayName="开启 VC-LTL 轻量模式"
+      DisplayName="启用 VC-LTL 轻量模式"
       Description="开启 VC-LTL 轻量模式，轻量模式更加注重体积控制，但是CRT规范将会维持在 Visual Studio 2008。如果你需要高度兼容微软 UCRT，那么请不要打开此选项！！！" />
 
     <BoolProperty
       Name="SupportWinXP"
       Category="General"
-      DisplayName="开启 Windows XP 兼容模式"
+      DisplayName="启用 Windows XP 兼容"
       Description="强制开启 Windows XP 兼容模式，默认情况下仅在选择 Windows XP 工具集时才开启。" />
+    
+     <BoolProperty
+      Name="SupportLTL"
+      Category="Diagnosis"
+      DisplayName="启用VC-LTL"
+      Description="允许当前项目启用VC-LTL，此选项一般用于验证某些问题时使用，非特殊情况建议始终保持开启。"/>
   </Rule>
 </ProjectSchemaDefinitions>

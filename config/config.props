@@ -99,7 +99,7 @@
     <LTL_Mode Condition=" '$(DisableAdvancedSupport)'=='true' ">Light</LTL_Mode>
     <LTL_Mode Condition=" '$(DisableAdvancedSupport)'!='true' ">Advanced</LTL_Mode>
 
-    <SupportLTL Condition="('$(DriverTargetPlatform)'=='Universal') Or ('$(VCLTLSupportPlatformToolset)' != 'true') Or ('$(VCLTLUseDebugLibraries)'=='true') Or ('$(UseOfMFC)'!='false')">false</SupportLTL>
+    <SupportLTL Condition="('$(SupportLTL)'!='false') And (('$(DriverTargetPlatform)'=='Universal') Or ('$(VCLTLSupportPlatformToolset)' != 'true') Or ('$(VCLTLUseDebugLibraries)'=='true') Or ('$(UseOfMFC)'!='false'))">false</SupportLTL>
     <SupportLTL Condition="('$(SupportLTL)'=='') And ('$(VCLTLSupportPlatform)'=='true')">true</SupportLTL>
 
     <SupportWinXP Condition=" ('$(SupportWinXP)'=='') And ('$(VCLTLSupportPlatformToolsetWinXP)'=='true')">true</SupportWinXP>

@@ -444,3 +444,7 @@ nmake /f Test.mak
 * 改进体验，改进与联想一键影音的兼容性，由于联想一键影音错会乱Hook，导致LoadLibraryExW行为异常。这样将导致VC-LTL等在没有安装KB2533623的系统上无法正常使用问题（微软原版也同样存在此问题）。
 * 改进体验，改进Windows 7 RTM以及以下系统的兼容性，由于这些老版本系统由于在LoadLibraryExW期间不会恢复重定向，因此当目标线程关闭重定向时可能导致VC-LTL无法正常工作（微软原版也同样存在此问题）。
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
+
+
+### 4.0.3.1 - 改进支持（2019-09-18 18:00）
+* 改进体验，改进VS用户使用VC-LTL的体验（感谢 毛利）。

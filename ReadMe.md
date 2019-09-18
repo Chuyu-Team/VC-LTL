@@ -456,3 +456,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve compatibility with Lenovo one-click audio and video (This Issue also exists in Microsoft's UCRT).
 * Improve compatibility with Windows 7 RTM and older systems (This Issue also exists in Microsoft's UCRT).
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
+
+
+### 4.0.3.1 - Improved Support (Sep 18, 2019 18:00)
+* Improve, Improve the experience of VC-LTL in VS (Thanks to MouriNaruto).
