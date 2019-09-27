@@ -1,0 +1,16 @@
+// climits standard header (core)
+#pragma once
+#ifndef _CLIMITS_
+#define _CLIMITS_
+#include <yvals_core.h>
+#if _STL_COMPILER_PREPROCESSOR
+
+#include <limits.h>
+
+#endif // _STL_COMPILER_PREPROCESSOR
+#endif // _CLIMITS_
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

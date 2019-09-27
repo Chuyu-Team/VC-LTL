@@ -1,0 +1,16 @@
+// cerrno standard header
+#pragma once
+#ifndef _CERRNO_
+#define _CERRNO_
+#include <yvals.h>
+#if _STL_COMPILER_PREPROCESSOR
+
+#include <errno.h>
+
+#endif // _STL_COMPILER_PREPROCESSOR
+#endif // _CERRNO_
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */
