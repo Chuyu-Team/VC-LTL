@@ -114,6 +114,7 @@ message($$VC_LTL_Info)
 
 # 修改头文件及库搜索路径
 QMAKE_INCDIR += \
+	$$VC_LTL_Root/config/Mode/$$LTL_Mode \
     $$VC_LTL_Root/config/$$VCLTLPlatformName \
     $$VC_LTL_Root/VC/$$VCLTLToolsVersion/include \
     $$VC_LTL_Root/VC/$$VCLTLToolsVersion/atlmfc/include \

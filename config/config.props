@@ -113,7 +113,7 @@
     <!--15.7新特性，检测Spectre缓解方案是否已经启用。-->
     <VCLTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VCLTLLibDirMod>
     
-    <VC_LTL_Include>$(VC_LTL_Root)\config\$(VCLTLPlatformName);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\include;$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VCLTLTargetUniversalCRTVersion)</VC_LTL_Include>
+    <VC_LTL_Include>$(VC_LTL_Root)\config\Mode\$(LTL_Mode);$(VC_LTL_Root)\config\$(VCLTLPlatformName);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\include;$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VCLTLTargetUniversalCRTVersion)</VC_LTL_Include>
     <VC_LTL_Library>$(VC_LTL_Root)\lib\$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_Root)\lib\$(PlatformShortName)\$(VCLTLPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib\$(VCLTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib\$(VCLTLLibDirMod)$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_Root)\ucrt\$(VCLTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 

@@ -301,7 +301,7 @@ if(${SupportLTL} STREQUAL "true")
 	message(" Using VC-LTL " ${VCLTLPlatformName} " " ${LTL_Mode} " Mode")
 	message("")
 
-    set(VC_LTL_Include ${VC_LTL_Root}/config/${VCLTLPlatformName};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/include;${VC_LTL_Root}/VC/${VCLTLToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VCLTLTargetUniversalCRTVersion})
+    set(VC_LTL_Include ${VC_LTL_Root}/config/Mode/${LTL_Mode};${VC_LTL_Root}/config/${VCLTLPlatformName};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/include;${VC_LTL_Root}/VC/${VCLTLToolsVersion}/atlmfc/include;${VC_LTL_Root}/ucrt/${VCLTLTargetUniversalCRTVersion})
     set(VC_LTL_Library ${VC_LTL_Root}/lib/${PlatformShortName}/${VCLTLPlatformName};${VC_LTL_Root}/lib/${PlatformShortName}/${VCLTLPlatformName}/${LTL_Mode};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/lib/${PlatformShortName};${VC_LTL_Root}/VC/${VCLTLToolsVersion}/lib/${PlatformShortName}/${VCLTLPlatformName};${VC_LTL_Root}/ucrt/${VCLTLTargetUniversalCRTVersion}/lib/${PlatformShortName})
 
 	#message("INCLUDE " $ENV{INCLUDE})

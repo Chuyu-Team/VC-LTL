@@ -33,6 +33,7 @@ _LTL_PushWarning(1004,"从VC-LTL 4.0 开始MD模式将链接到VC-LTL自身的DL
 #define _LTL_Core_Version 4
 
 #include <LTL_config.h>
+#include <LTL_Mode.h>
 #include <crtversion.h>
 #define __LTL_Check_UCRT
 #include <corecrt_share.h>
