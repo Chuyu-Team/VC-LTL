@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#ifndef RC_INVOKED
+#if !defined(RC_INVOKED) && !defined(Q_MOC_RUN)
 
 #define _ltlfilelen __FILE__ "(" _CRT_STRINGIZE(__LINE__) ") : "
 

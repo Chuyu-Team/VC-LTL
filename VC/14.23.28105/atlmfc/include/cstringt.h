@@ -676,7 +676,7 @@ public:
 	static int __cdecl GetFormattedLength(
 		_In_z_ _Printf_format_string_ LPCWSTR pszFormat, va_list args) throw()
 	{
-#if _MSC_VER < 1900
+#if _MSC_VER < 1900 || defined (_NO_CRT_STDIO_INLINE)
 		return _vscwprintf(pszFormat, args);
 #else
 		// Explicitly request the legacy wide format specifiers mode from the CRT,
@@ -702,7 +702,7 @@ public:
 #pragma warning(suppress : 4996)
 #pragma warning(suppress : 6386)
 #pragma warning(suppress : 28719)
-#if _MSC_VER < 1900
+#if _MSC_VER < 1900 || defined (_NO_CRT_STDIO_INLINE)
 		return vswprintf(pszBuffer, pszFormat, args);
 #else
 		// Explicitly request the legacy wide format specifiers mode from the CRT,
@@ -722,7 +722,7 @@ public:
 		_In_ size_t nLength,
 		_In_ _Printf_format_string_ LPCWSTR pszFormat, va_list args) throw()
 	{
-#if _MSC_VER < 1900
+#if _MSC_VER < 1900 || defined (_NO_CRT_STDIO_INLINE)
 		return vswprintf_s(pszBuffer, nLength, pszFormat, args);
 #else
 		// Explicitly request the legacy wide format specifiers mode from the CRT,

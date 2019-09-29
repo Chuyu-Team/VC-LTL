@@ -57,22 +57,30 @@ _EXTERN_C
 #define _M_ALL (_CATMASK(_NCAT) - 1)
 
 typedef struct _Collvec { // stuff needed by _Strcoll, etc.
+    unsigned long _Hand;// LCID
     unsigned int _Page; // UINT
-    wchar_t* _LocaleName;
+    //wchar_t* _LocaleName;
 } _Collvec;
 
 typedef struct _Ctypevec { // stuff needed by _Tolower, etc.
+	unsigned long _Hand;// LCID
     unsigned int _Page; // UINT
     const short* _Table;
     int _Delfl;
-    wchar_t* _LocaleName;
+    //wchar_t* _LocaleName;
 } _Ctypevec;
 
 typedef struct _Cvtvec { // stuff needed by _Mbrtowc, etc.
+	unsigned long _Hand;// LCID
     unsigned int _Page; // UINT
+#ifdef __cplusplus
+	static constexpr const unsigned int _Mbcurmax = MB_LEN_MAX;
+#endif
+#if 0
     unsigned int _Mbcurmax;
     int _Isclocale; // LCID == _CLOCALEHANDLE
     unsigned char _Isleadbyte[32]; // 256 bits
+#endif
 } _Cvtvec;
 
 // FUNCTION DECLARATIONS

@@ -52,6 +52,8 @@ call:BuildCRT 14.21.27702 "x86 x64 ARM ARM64"
 
 call:BuildCRT 14.22.27905 "x86 x64 ARM ARM64"
 
+call:BuildCRT 14.23.28105 "x86 x64 ARM ARM64"
+
 ::Éú³É¶¯Ì¬Spectre¿â
 call:Build Dynamic_Spectre "x86 x64 ARM ARM64"
 

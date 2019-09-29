@@ -415,7 +415,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, solved Windows XP can't find function `operator new(size_t,int,char const *,int) and operator new[](size_t,int,char const *,int)` entry point (Thanks to 希望).
 * Fix Bug, solved missing exsup4 symbol problem under Spectre with WinXP 32 (Thanks to Too Simple).
 * Add Fea, add `delete[](void *, std::nothrow_t const &)` (Thanks to Too Simple).
-* Add Fea, add UCRT 10.17763 (Thanks to 毛利).
+* Add Fea, add UCRT 10.17763 (Thanks to MouriNaruto).
 * Add Fea, add Vistual Studio 2017 15.9 Support.
 * Add Fea, add `_IsExceptionObjectToBeDestroyed, _CreateFrameInfo, _FindAndUnlinkFrame` to Windows XP (Thanks to 夏思畅).
 
@@ -438,7 +438,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * New Fea, `VC-LTL helper for qmake.pri` is compatible with the old version of QMake (Thanks to BigBrother).
 * New Fea, the CMake script adds vcpkg support (Thanks to BigBrother).
 * New Fea, add Vistual Studio 2019 Support.
-* New Fea, add 10.0.18362.0 UCRT support (Thanks to 毛利).
+* New Fea, add 10.0.18362.0 UCRT support (Thanks to MouriNaruto).
 * Improve, the `_ATL_XP_TARGETING` and `_USING_V110_SDK71_` macros in Vista mode are adjusted from error to warning.
 
 
@@ -458,5 +458,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
 
 
-### 4.0.3.1 - Improved Support (Sep 18, 2019 18:00)
+### 4.0.3.2 - Improved Support (Sep 27, 2019 20:00)
 * Improve, Improve the experience of VC-LTL in VS (Thanks to MouriNaruto).
+* New Fea, add VS 14.23.28105 support.

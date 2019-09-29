@@ -23,7 +23,12 @@
 
 #if _EH_RELATIVE_FUNCINFO
 
-#define _ImageBase        (RENAME_BASE_PTD(__vcrt_getptd)()->_ImageBase)
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
+#else
+static thread_local uintptr_t _ImageBaseWinXP = 0;
+#define _ImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(_ImageBaseWinXP) : &(__acrt_getptd()->VistaOrLater_msvcrt._ImageBase))))
+#endif
 
 extern "C" uintptr_t __cdecl _GetImageBase()
 {
@@ -39,7 +44,12 @@ extern "C" void __cdecl _SetImageBase(uintptr_t ImageBaseToRestore)
 
 #if _EH_RELATIVE_TYPEINFO
 
-#define _ThrowImageBase   (RENAME_BASE_PTD(__vcrt_getptd)()->_ThrowImageBase)
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define _ThrowImageBase   (__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase)
+#else
+static thread_local uintptr_t _ThrowImageBaseWinXP = 0;
+#define _ThrowImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(_ThrowImageBaseWinXP) : &(__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase))))
+#endif
 
 extern "C" uintptr_t __cdecl _GetThrowImageBase()
 {
@@ -94,6 +104,7 @@ EHRegistrationNode * RENAME_EH_EXTERN(__FrameHandler4)::GetEstablisherFrame
 //
 // Returns the establisher frame pointers. For catch handlers it is the parent's frame pointer.
 //
+#if 0
 EHRegistrationNode * RENAME_EH_EXTERN(__FrameHandler3)::GetEstablisherFrame(
     EHRegistrationNode  *pRN,
     DispatcherContext   *pDC,
@@ -166,6 +177,7 @@ TryBlockMapEntry * RENAME_EH_EXTERN(__FrameHandler3)::CatchTryBlock(
 
     return nullptr;
 }
+#endif
 
 //
 // This routine returns TRUE if we are executing from within a catch.  Otherwise, FALSE is returned.
@@ -180,6 +192,7 @@ bool RENAME_EH_EXTERN(__FrameHandler4)::ExecutionInCatch(
 }
 #endif // _VCRT_BUILD_FH4
 
+#if 0
 bool RENAME_EH_EXTERN(__FrameHandler3)::ExecutionInCatch(
     DispatcherContext   *pDC,
     FuncInfo            *pFuncInfo
@@ -188,6 +201,7 @@ bool RENAME_EH_EXTERN(__FrameHandler3)::ExecutionInCatch(
     __ehstate_t curState = StateFromControlPc(pFuncInfo, pDC);
     return CatchTryBlock(pFuncInfo, curState)? TRUE : FALSE;
 }
+#endif
 
 // The name of this function is rather misleading. This function won't really unwind
 // to empty state. This function will unwind to lowest possible state for current block.
@@ -218,6 +232,7 @@ void RENAME_EH_EXTERN(__FrameHandler4)::FrameUnwindToEmptyState(
 }
 #endif // _VCRT_BUILD_FH4
 
+#if 0
 void RENAME_EH_EXTERN(__FrameHandler3)::FrameUnwindToEmptyState(
     EHRegistrationNode *pRN,
     DispatcherContext  *pDC,
@@ -265,6 +280,7 @@ extern "C" DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl RENAME_EH_EXTER
     result = __InternalCxxFrameHandler<RENAME_EH_EXTERN(__FrameHandler3)>(pExcept, &EstablisherFrame, pContext, pDC, pFuncInfo, 0, nullptr, FALSE);
     return result;
 }
+#endif
 
 #if _VCRT_BUILD_FH4
 extern "C" DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl RENAME_EH_EXTERN_HYBRID(__CxxFrameHandler4)(
@@ -295,6 +311,7 @@ extern "C" DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl RENAME_EH_EXTER
 //
 // __CxxFrameHandler2 - Remove after compiler is updated
 //
+#if 0
 extern "C" DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler2(
     EHExceptionRecord  *pExcept,         // Information for this exception
     EHRegistrationNode RN,               // Dynamic information for this frame
@@ -314,6 +331,7 @@ extern "C" DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandl
 {
     return __CxxFrameHandler3(pExcept, RN, pContext, pDC);
 }
+#endif
 
 #endif
 
@@ -400,6 +418,7 @@ BOOL _CallSETranslator<RENAME_EH_EXTERN(__FrameHandler4)>(
     );
 #endif // _VCRT_BUILD_FH4
 
+#if 0
 template
 BOOL _CallSETranslator<RENAME_EH_EXTERN(__FrameHandler3)>(
     EHExceptionRecord                           *pExcept,    // The exception to be translated
@@ -410,6 +429,7 @@ BOOL _CallSETranslator<RENAME_EH_EXTERN(__FrameHandler3)>(
     ULONG                                       CatchDepth,  // How deeply nested in catch blocks are we?
     EHRegistrationNode                          *pMarkerRN   // Marker for parent context
 );
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -477,6 +497,7 @@ RENAME_EH_EXTERN(__FrameHandler4)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 }
 #endif // _VCRT_BUILD_FH4
 
+#if 0
 RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__FrameHandler3)::GetRangeOfTrysToCheck(
     TryBlockMap       &tryBlockMap,
     __ehstate_t       curState,
@@ -531,6 +552,7 @@ RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 
     return TryBlockMap::IteratorPair(iterStart, iterEnd);
 }
+#endif
 
 extern "C" FRAMEINFO * __cdecl RENAME_EH_EXTERN(_CreateFrameInfo)(
     FRAMEINFO * pFrameInfo,
@@ -661,6 +683,7 @@ void RENAME_EH_EXTERN(__FrameHandler4)::UnwindNestedFrames(
 }
 #endif // _VCRT_BUILD_FH4
 
+#if 0
 void RENAME_EH_EXTERN(__FrameHandler3)::UnwindNestedFrames(
     EHRegistrationNode  *pFrame,            // Unwind up to (but not including) this frame
     EHExceptionRecord   *pExcept,           // The exception that initiated this unwind
@@ -745,5 +768,6 @@ void RENAME_EH_EXTERN(__FrameHandler3)::UnwindNestedFrames(
                 UnwindContext,
                 (PUNWIND_HISTORY_TABLE)pDC->HistoryTable);
 }
+#endif
 
 #endif // _EH_RELATIVE_FUNCINFO

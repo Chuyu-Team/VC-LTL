@@ -48,19 +48,22 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcscoll(const wchar_t* _string1, cons
     int n1  = (int) (_end1 - _string1);
     int n2  = (int) (_end2 - _string2);
     int ret = 0;
-    const wchar_t* locale_name;
+    //const wchar_t* locale_name;
+    LCID     _Locale;
 
     if (ploc == 0) {
-        locale_name = ___lc_locale_name_func()[LC_COLLATE];
+        //locale_name = ___lc_locale_name_func()[LC_COLLATE];
+        _Locale = ___lc_handle_func()[LC_COLLATE];
     } else {
-        locale_name = ploc->_LocaleName;
+        //locale_name = ploc->_LocaleName;
+        _Locale = ploc->_Hand;
     }
 
-    if (locale_name == nullptr) {
+    if (/*locale_name == nullptr*/_Locale == 0) {
         int ans = wmemcmp(_string1, _string2, n1 < n2 ? n1 : n2);
         ret     = (ans != 0 || n1 == n2 ? ans : n1 < n2 ? -1 : +1);
     } else {
-        if (0 == (ret = __crtCompareStringW(locale_name, SORT_STRINGSORT, _string1, n1, _string2, n2))) {
+        if (0 == (ret = __crtCompareStringW(_Locale, SORT_STRINGSORT, _string1, n1, _string2, n2))) {
             errno = EINVAL;
             ret   = _NLSCMPERROR;
         } else {

@@ -5,6 +5,7 @@
 
 #define EHTRACE_ENTER_FMT1(...)
 #define EHTRACE_ENTER_FMT2(...)
+#define EHTRACE_FMT1(...)
 #define EHTRACE_FMT2(...)
 
 #define EHTRACE_ENTER
@@ -15,6 +16,7 @@
 #define EHTRACE_RESET
 
 #define DASSERT(x)
+#define _VCRT_VERIFY(x)
 
 #define _ValidateRead(ptr)    (ptr != NULL)
 #define _ValidateWrite(ptr)   (ptr != NULL)
