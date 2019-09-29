@@ -12,8 +12,7 @@
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 #include "concrtinternal.h"
-//#include <awint.h>
-#include <winapi_thunks.h>
+#include <awint.h>
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
@@ -764,7 +763,7 @@ extern "C" uintptr_t __security_cookie;
         Security::s_initialized = 1;
 
         // Take advantage of ASLR and per-process cookie
-        ULONG_PTR cookie = (ULONG_PTR)::EncodePointer((PVOID)&Security::s_cookie);
+        ULONG_PTR cookie = (ULONG_PTR)::EncodePointerDownlevel((PVOID)&Security::s_cookie);
 
         // security cookie should be initialized before us.
         cookie ^= (ULONG_PTR)__security_cookie;
