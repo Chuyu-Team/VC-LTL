@@ -2304,6 +2304,7 @@ namespace
 		BOOLEAN Enabled = FALSE;
 
 		LSTATUS lStatus = ERROR_SUCCESS;
+		LPWSTR FilePart = nullptr;
 
 		if (auto Status = RtlAdjustPrivilege(/*SE_CREATE_SYMBOLIC_LINK_PRIVILEGE*/35, TRUE, TRUE, &Enabled))
 		{
@@ -2330,7 +2331,7 @@ namespace
 
 				break;
 			case RtlPathTypeDriveRelative:
-				if (auto cchFull = GetFullPathNameW(lpTargetFileName, 0, 0, nullptr))
+				if (auto cchFull = GetFullPathNameW(lpTargetFileName, 0, 0, &FilePart))
 				{
 					lpFullTargetFileName = (wchar_t*)_malloca(cchFull * sizeof(wchar_t));
 					if (!lpFullTargetFileName._p)
@@ -2339,8 +2340,16 @@ namespace
 						goto _End;
 					}
 
-					lpTargetFileName = lpFullTargetFileName._p;
+					if (GetFullPathNameW(lpTargetFileName, cchFull, lpFullTargetFileName._p, &FilePart) !=0 )
+					{
+						lpTargetFileName = lpFullTargetFileName._p;
+						break;
+					}
 				}
+				
+				lStatus = GetLastError();
+				goto _End;
+				
 
 				//case RtlPathTypeUncAbsolute:
 				//case RtlPathTypeDriveAbsolute:
