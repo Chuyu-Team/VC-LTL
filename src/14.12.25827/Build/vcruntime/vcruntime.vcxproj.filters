@@ -90,6 +90,9 @@
     <ClCompile Include="..\..\i386\trnsctrl.cpp">
       <Filter>源文件\vc\x86</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ptd_downlevel.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="vcruntime.rc">

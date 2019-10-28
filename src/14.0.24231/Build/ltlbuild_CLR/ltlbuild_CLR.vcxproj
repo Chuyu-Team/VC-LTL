@@ -22,16 +22,26 @@
     <ClCompile Include="..\..\..\mehvecdtr.cpp" />
     <ClCompile Include="..\..\vcruntime\locale0_implib.cpp" />
     <ClCompile Include="..\..\vcruntime\managdeh.cpp" />
-    <ClCompile Include="..\..\vcruntime\ManagedMain.cpp" />
-    <ClCompile Include="..\..\vcruntime\mcrtexe.cpp" />
-    <ClCompile Include="..\..\vcruntime\mcrtexew.cpp" />
+    <ClCompile Include="..\..\vcruntime\ManagedMain.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\mcrtexe.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\mcrtexew.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+    </ClCompile>
     <ClCompile Include="..\..\vcruntime\mlfind.cpp" />
     <ClCompile Include="..\..\vcruntime\mlsearch.cpp" />
     <ClCompile Include="..\..\vcruntime\mqsort.cpp" />
     <ClCompile Include="..\..\vcruntime\msilexit.cpp" />
     <ClCompile Include="..\..\vcruntime\mstartup.cpp" />
-    <ClCompile Include="..\..\vcruntime\mwcrtexe.cpp" />
-    <ClCompile Include="..\..\vcruntime\mwcrtexew.cpp" />
+    <ClCompile Include="..\..\vcruntime\mwcrtexe.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+    </ClCompile>
+    <ClCompile Include="..\..\vcruntime\mwcrtexew.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+    </ClCompile>
     <ClCompile Include="..\..\vcruntime\pureMSILcode.cpp" />
     <ClCompile Include="..\..\vcruntime\tlssup.cpp" />
   </ItemGroup>

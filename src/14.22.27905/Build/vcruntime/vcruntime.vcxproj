@@ -1066,6 +1066,10 @@
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\frame_thunks.cpp" />
+    <ClCompile Include="..\..\..\ptd_downlevel.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\i386\trnsctrl.cpp">
       <ExcludedFromBuild Condition="'$(Platform)'!='Win32'">true</ExcludedFromBuild>
     </ClCompile>

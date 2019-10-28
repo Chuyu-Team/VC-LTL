@@ -130,5 +130,3 @@ EXTERN_C DECLSPEC_GUARD_SUPPRESS EXCEPTION_DISPOSITION __cdecl __CxxFrameHandler
 #endif
 
 _LCRT_DEFINE_IAT_SYMBOL(__CxxFrameHandler3);
-
-thread_local void* _pForeignExceptionWinXP = nullptr;

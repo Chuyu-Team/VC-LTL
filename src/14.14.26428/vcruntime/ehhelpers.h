@@ -4,10 +4,14 @@
 
 #pragma once
 
+#include <ptd_downlevel.h>
+
 #if defined(_M_X64) || defined(_M_ARM_NT) || defined(_M_ARM64) || defined(_CHPE_X86_ARM64_EH_)
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define _pForeignExcept   (*((EHExceptionRecord **)&(__acrt_getptd()->VistaOrLater_msvcrt._pForeignException)))
+#define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
+#else
+#define _ImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ImageBase))))
 #endif
 
 #endif

@@ -93,6 +93,9 @@
     <ClCompile Include="..\..\vcruntime\risctrnsctrl.cpp">
       <Filter>源文件\vc\Others</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ptd_downlevel.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="vcruntime.rc">

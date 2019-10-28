@@ -661,7 +661,9 @@
     <ClCompile Include="..\..\vcruntime\tlsdtor.cpp">
       <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
-    <ClCompile Include="..\..\vcruntime\tlsdyn.cpp" />
+    <ClCompile Include="..\..\vcruntime\tlsdyn.cpp">
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+    </ClCompile>
     <ClCompile Include="..\..\vcruntime\tlssup.cpp" />
     <ClCompile Include="..\..\vcruntime\tncleanup.cpp" />
     <ClCompile Include="..\..\vcruntime\ucrt_detection.c" />

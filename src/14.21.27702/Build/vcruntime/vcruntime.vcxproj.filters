@@ -96,6 +96,9 @@
     <ClCompile Include="..\..\vcruntime\ehstate.cpp">
       <Filter>源文件\vc\Others</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ptd_downlevel.cpp">
+      <Filter>源文件\ltl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="vcruntime.rc">

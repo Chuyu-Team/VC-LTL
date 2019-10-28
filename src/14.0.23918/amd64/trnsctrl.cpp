@@ -13,6 +13,7 @@
 #include <ehhooks.h>
 #include <ehstate.h>
 #include <trnsctrl.h>
+#include <ptd_downlevel.h>
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define pFrameInfoChain   (*((FRAMEINFO **)    &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain)))
@@ -22,6 +23,9 @@
 #else
 #define pFrameInfoChain   (*((FRAMEINFO **)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__acrt_getptd()->XP_msvcrt._pFrameInfoChain) : \
           &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain))))
+#define _ImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ImageBase))))
+#define _ThrowImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ThrowImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase))))
+#define _pForeignExcept   (*(EHExceptionRecord**)(__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_pForeignException) : &(__acrt_getptd()->VistaOrLater_msvcrt._pForeignException)))
 #endif
 
 #if 0

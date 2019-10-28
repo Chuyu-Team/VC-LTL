@@ -6,13 +6,18 @@
 // The invalid parameter handlers and related functionality
 //
 #include <corecrt_internal.h>
-
+#include <ptd_downlevel.h>
 
 
 static _invalid_parameter_handler __acrt_invalid_parameter_handler = nullptr;
 
-static thread_local _invalid_parameter_handler _thread_local_iph=nullptr;
+static thread_local _invalid_parameter_handler __thread_local_iph=nullptr;
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define _thread_local_iph __thread_local_iph
+#else
+#define _thread_local_iph   (*((__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_thread_local_iph) : &(__thread_local_iph))))
+#endif
 
 #if defined _M_X64 && !defined _UCRT_ENCLAVE_BUILD
 
@@ -98,9 +103,9 @@ extern "C" void __cdecl _invalid_parameter_advanced(
     uintptr_t      const reserved
     )
 {
-    if (_thread_local_iph)
+    if (auto iph = _thread_local_iph)
     {
-        _thread_local_iph(expression, function_name, file_name, line_number, reserved);
+		iph(expression, function_name, file_name, line_number, reserved);
         return;
     }
 

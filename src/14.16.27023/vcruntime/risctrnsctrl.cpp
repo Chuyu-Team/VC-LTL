@@ -21,10 +21,13 @@
 #define RENAME_EH_EXTERN_HYBRID(x) x
 #endif
 
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #if _EH_RELATIVE_FUNCINFO
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
+#else
+#define _ImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ImageBase))))
+#endif
 
 extern "C" uintptr_t __cdecl _GetImageBase()
 {
@@ -40,7 +43,11 @@ extern "C" void __cdecl _SetImageBase(uintptr_t ImageBaseToRestore)
 
 #if _EH_RELATIVE_TYPEINFO
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define _ThrowImageBase   (__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase)
+#else
+#define _ThrowImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ThrowImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase))))
+#endif
 
 extern "C" uintptr_t __cdecl _GetThrowImageBase()
 {
@@ -53,7 +60,6 @@ extern "C" void __cdecl _SetThrowImageBase(uintptr_t NewThrowImageBase)
 }
 
 #endif
-#endif //_CRT_NTDDI_MIN >= NTDDI_WIN6
 
 #if defined(_M_X64) || defined(_M_ARM_NT) || defined(_M_ARM64) || defined(_CHPE_X86_ARM64_EH_)
 #if 0

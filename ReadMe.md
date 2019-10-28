@@ -189,7 +189,6 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * 由于WinXP本身Bug，printf相关函数输入缓冲区最大字符数为0x3FFFFFFF（包含）。当你需要兼容XP时，请务必确认缓冲区输入长度小于0x3FFFFFFF，或者直接使用 `_CRT_STDIO_SIZE_MAX` 宏。（4.0.2.5 Advanced模式已经修正此问题）
 * 由于WinXP本身Bug，printf相关函数无法正常支持`%ll`。当你需要兼容XP时，请优先考虑使用`%I64`代替。（4.0.2.5 Advanced模式已经修正此问题）
 * 由于msvcrt本身限制，`setlocale/_create_locale`相关函数不支持UCRT的locale name，使用时必须按VC 2008规范使用，比如 `setlocale(0, "chs");` 这样调用，而不是传入 `setlocale(0, "zh-CN");`。
-* 由于FH4异常（`/d2FH4` VS2019新增功能）实现过程中使用了TLS，因此在兼容“Windows XP(2003) x64”时请务必确保不要在DllMain中使用FH4 catch，否则将导致dll直接加载失败。
 
 
 ## Excursus - Known project using VC-LTL
@@ -458,6 +457,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
 
 
-### 4.0.3.2 - Improved Support (Sep 27, 2019 20:00)
+### 4.0.3.3 - Improved Support (Oct 27, 2019 20:00)
 * Improve, Improve the experience of VC-LTL in VS (Thanks to MouriNaruto).
 * New Fea, add VS 14.23.28105 support.
+* Improve, FH4 removes TLS dependencies.
