@@ -69,7 +69,6 @@ EHRegistrationNode * __cdecl _GetEstablisherFrame(
 }
 #endif
 
-#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 extern "C" uintptr_t __cdecl _GetImageBase()
 {
     return _ImageBase;
@@ -89,7 +88,6 @@ extern "C" void __cdecl _SetThrowImageBase(uintptr_t NewThrowImageBase)
 {
     _ThrowImageBase = NewThrowImageBase;
 }
-#endif
 
 #if 0
 extern "C" void _MoveContext(CONTEXT* pTarget, CONTEXT* pSource)

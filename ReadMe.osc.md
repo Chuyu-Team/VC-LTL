@@ -445,7 +445,7 @@ nmake /f Test.mak
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
 
 
-### 4.0.3.3 - 改进支持（2019-10-27 20:00）
+### 4.0.3.4 - 改进支持（2019-11-01 12:00）
 * 改进体验，改进VS用户使用VC-LTL的体验（感谢 毛利）。
 * 新增Fea，添加14.23.28105支持。
 * 行为调整，消除FH4对TLS的依赖。
