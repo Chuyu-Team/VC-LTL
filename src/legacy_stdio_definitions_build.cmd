@@ -70,7 +70,7 @@ mkdir "..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\objs" >nul 2>nul
 cl %AdditionalOptions% /Fo"..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\objs\legacy_conio_definitions.obj" legacy_conio_definitions.cpp
 cl %AdditionalOptions% /Fo"..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\objs\legacy_stdio_definitions.obj" legacy_stdio_definitions.cpp
 lib /MACHINE:%Platform% /def:"legacy_stdio_definitions_%VCLTLPlatformName%.def" /out:"..\lib\%Platform%\%VCLTLPlatformName%\Light\legacy_stdio_definitions.lib"
-LibMaker.exe CreateWeaks  /MACHINE:x86 /def:"%~dp0legacy_stdio_definitions_alias_%VCLTLPlatformName%.def"  /out:"%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\alias"
+LibMaker.exe CreateWeaks  /MACHINE:%Platform% /def:"%~dp0legacy_stdio_definitions_alias_%VCLTLPlatformName%.def"  /out:"%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\alias"
 
 pushd "%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp"
 
