@@ -24,12 +24,7 @@ _CRT_BEGIN_C_HEADER
     #define _FILE_DEFINED
     typedef struct _iobuf
     {
-        union
-		{
-			void* _Placeholder;
-			char* _ptr;
-		};
-
+		char* _ptr;
 		int   _cnt;
 		char *_base;
 		long   _flags;
