@@ -457,8 +457,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
 
 
-### 4.0.3.5 - Improved Support (Nov 29, 2019 15:00)
+### 4.0.3.5 - Improved Support (Dec 2, 2019 16:00)
 * Improve, Improve the experience of VC-LTL in VS (Thanks to MouriNaruto).
 * New Fea, add VS 14.23.28105 support.
 * Improve, FH4 removes TLS dependencies.
-* Fix Bug, C4201 waring in corecrt_wstdio.h and mbstring.h( Thunks to BigBrother).
+* Fix Bug, C4201 waring in corecrt_wstdio.h and mbstring.h (Thunks to BigBrother).
+* Fix Bug, XP `legacy_stdio_definitions.lib` missing vsnprintf_s function issue (Thunks to 昌平517).
