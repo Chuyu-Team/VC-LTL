@@ -85,11 +85,8 @@ from the pure C source code.
 > The binaries compiled with the VC-LTL is compatible with Windows XP and 
 later, even in the environment which installed no hotfixes.
 
-
-### 3.1. Install VC-LTL
-If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
-
-> The script will save the information in the registry `HKCU\Code\VC-LTL`.
+## 3. How to used?
+We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
 
 ### 3.1. Using VC-LTL in Visual Studio
 
@@ -109,7 +106,9 @@ Finally, switch the source of the package to "Chuyu", then select the version th
 ![InstallByNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/InstallByNuGet.png)
 
 ##### 3.1.1.2. Reference via Registry (recommend)
-We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
+If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
+
+> The script will save the information in the registry `HKCU\Code\VC-LTL`.
 
 Copy `VC-LTL helper for Visual Studio.props` to your project, then open the Property Manager ( View - Property Manager ) and right-click on the Release Configuration, click on `Add Existing Property Sheet...`, and finally select `VC-LTL helper for Visual Studio.props`.
 
@@ -123,7 +122,9 @@ Copy `VC-LTL helper for Visual Studio.props` to your project, then open the Prop
 > For XP support, please use the `Windows XP toolset` in the platform toolset, or modify `VC-LTL helper for Visual Studio.props` to enable `<SupportWinXP>true</SupportWinXP>`.
 
 ### 3.2. Using VC-LTL in CMake
-We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
+If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
+
+> The script will save the information in the registry `HKCU\Code\VC-LTL`.
 
 #### 3.2.1. Add VC-LTL Module File
 
@@ -146,7 +147,9 @@ add_subdirectory(src)
 ### 3.3. Using VC-LTL in NMake/CL
 
 #### 3.3.1. Run VC-LTL Cmd Script
-We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
+If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
+
+> The script will save the information in the registry `HKCU\Code\VC-LTL`.
 
 Copy `VC-LTL helper for nmake.cmd` to your project. Run `vcvars32.bat` or `vcvars64.bat` and execute this script. The script will automatically modify the `include` and `lib` environment variables.
 
