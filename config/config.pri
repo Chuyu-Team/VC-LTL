@@ -70,7 +70,10 @@ isEmpty(VCLTLTargetUniversalCRTVersion) | !exists($$VC_LTL_Root/ucrt/$$VCLTLTarg
 LTL_CoreVersion = 4
 
 # 环境变量选项
-t = $$(SupportWinXP)
+t = $$SupportWinXP
+isEmpty(t){
+    t = $$(SupportWinXP)
+}
 equals(t, true) {
     VCLTLPlatformName = WinXP
 } else {
@@ -81,7 +84,10 @@ equals(PlatformShortName, arm) | equals(PlatformShortName, arm64) {
     VCLTLPlatformName = Vista
 }
 
-t = $$(DisableAdvancedSupport)
+t = $$DisableAdvancedSupport
+isEmpty(t){
+    t = $$(DisableAdvancedSupport)
+}
 equals(t, true) {
     LTL_Mode = Light
 } else {
