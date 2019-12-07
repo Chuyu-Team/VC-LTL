@@ -100,7 +100,7 @@ If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/r
 
 Right-click on the project and select "Manage NuGet Packages"  - Settings  - ╋
 
-Then add the Chuyu NuGet source: https://pkgs.dev.azure.com/chuyu/_packaging/chuyu/nuget/v3/index.json
+Then add the Chuyu NuGet source: https://www.myget.org/F/chuyu/api/v3/index.json
 
 Finally, switch the source of the package to "Chuyu", then select the version that suits you, and finally click Install.
 
