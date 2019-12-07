@@ -27,7 +27,10 @@
 #include <vcstartup_internal.h>
 
 #undef _NO_CRT_STDIO_INLINE
+#undef _CRT_STDIO_INLINE
+#define _CRT_STDIO_INLINE extern __inline
 
+_CRT_BEGIN_C_HEADER
 
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
 
@@ -621,3 +624,5 @@
     }
 #endif
 	_VCRT_DEFINE_IAT_SYMBOL(_vcwscanf_s_l);
+
+_CRT_END_C_HEADER

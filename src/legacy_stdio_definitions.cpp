@@ -27,7 +27,11 @@
 // objects that were compiled with /MD or /MDd.
 #include <vcstartup_internal.h>
 
+_CRT_BEGIN_C_HEADER
+
 #undef _NO_CRT_STDIO_INLINE
+#undef _CRT_STDIO_INLINE
+#define _CRT_STDIO_INLINE extern __inline
 
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
     _Check_return_opt_
@@ -900,7 +904,7 @@
 	_VCRT_DEFINE_IAT_SYMBOL(_sscanf_s_l);
 
 
-	extern "C" int __CRTDECL _swprintf(
+	_CRT_STDIO_INLINE int __CRTDECL _swprintf(
 		_Pre_notnull_ _Always_(_Post_z_) wchar_t* const _Buffer,
 		_In_z_ _Printf_format_string_    wchar_t const* const _Format,
 		...)
@@ -915,7 +919,7 @@
 	}
 	_VCRT_DEFINE_IAT_SYMBOL(_swprintf);
 
-	extern "C" int __CRTDECL _swprintf_c(
+	_CRT_STDIO_INLINE int __CRTDECL _swprintf_c(
 		_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
 		_In_                                              size_t         const _BufferCount,
 		_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
@@ -1560,7 +1564,7 @@
     #endif
 	_VCRT_DEFINE_IAT_SYMBOL(_vsprintf_s_l);
 
-	extern "C" int __CRTDECL _vswprintf(
+	_CRT_STDIO_INLINE int __CRTDECL _vswprintf(
 		_Pre_notnull_ _Always_(_Post_z_) wchar_t* const _Buffer,
 		_In_z_ _Printf_format_string_    wchar_t const* const _Format,
 		va_list              _ArgList
@@ -2635,7 +2639,7 @@
 	_VCRT_DEFINE_IAT_SYMBOL(snprintf);
 
 
-	extern "C" int __CRTDECL swprintf(
+	_CRT_STDIO_INLINE int __CRTDECL swprintf(
 		_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t* const _Buffer,
 		_In_                                              size_t         const _BufferCount, //msvcrt.dll 没有此参数
 		_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
@@ -2749,7 +2753,7 @@
 	_VCRT_DEFINE_IAT_SYMBOL(vscanf_s);
 
 	//msvcrt.dll 没有_CRT_INTERNAL_PRINTF_STANDARD_SNPRINTF_BEHAVIOR特性
-	extern "C" int __CRTDECL vsnprintf(
+	_CRT_STDIO_INLINE int __CRTDECL vsnprintf(
 		_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) char*       const _Buffer,
 		_In_                                              size_t      const _BufferCount,
 		_In_z_ _Printf_format_string_                     char const* const _Format,
@@ -2869,3 +2873,5 @@
         }
     #endif
 	_VCRT_DEFINE_IAT_SYMBOL(vwscanf_s);
+
+_CRT_END_C_HEADER
