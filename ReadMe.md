@@ -85,31 +85,47 @@ from the pure C source code.
 > The binaries compiled with the VC-LTL is compatible with Windows XP and 
 later, even in the environment which installed no hotfixes.
 
-## 3. How to used?
-We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
 
 ### 3.1. Install VC-LTL
 If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
 
 > The script will save the information in the registry `HKCU\Code\VC-LTL`.
 
-### 3.2. Using VC-LTL in Visual Studio
+### 3.1. Using VC-LTL in Visual Studio
 
-#### 3.2.1. Add VC-LTL Property Sheet
+#### 3.1.1. Choose reference mode
+
+##### 3.1.1.1. Reference via NuGet (recommend)
+> VC-LTL is too large to upload "nuget.org".
+
+Right-click on the project and select "Manage NuGet Packages"  - Settings  - ╋
+
+Then add the Chuyu NuGet source: https://pkgs.dev.azure.com/chuyu/_packaging/chuyu/nuget/v3/index.json
+
+Finally, switch the source of the package to "Chuyu", then select the version that suits you, and finally click Install.
+
+![ConfigurationNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationNuGet.png)
+
+![InstallByNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/InstallByNuGet.png)
+
+##### 3.1.1.2. Reference via Registry (recommend)
+We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
+
 Copy `VC-LTL helper for Visual Studio.props` to your project, then open the Property Manager ( View - Property Manager ) and right-click on the Release Configuration, click on `Add Existing Property Sheet...`, and finally select `VC-LTL helper for Visual Studio.props`.
 
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/AddShared.png)
 
-#### 3.2.2. Configure Project Properties
+#### 3.1.2. Configure Project Properties
 * C/C++ - Code Generation -`Runtime Library` adjust to `Multi-threaded (/MT)`
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationProject.png)
 
 > For XP support, please use the `Windows XP toolset` in the platform toolset, or modify `VC-LTL helper for Visual Studio.props` to enable `<SupportWinXP>true</SupportWinXP>`.
 
-### 3.3. Using VC-LTL in CMake
+### 3.2. Using VC-LTL in CMake
+We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
 
-#### 3.3.1. Add VC-LTL Module File
+#### 3.2.1. Add VC-LTL Module File
 
 Copy `VC-LTL helper for cmake.cmake` to your project. Then add `include("VC-LTL helper for cmake.cmake")` to `CMakeLists.txt`.
 
@@ -123,13 +139,14 @@ include("VC-LTL helper for cmake.cmake")
 add_subdirectory(src)
 ```
 
-#### 3.3.2. Modify The Configuration
+#### 3.2.2. Modify The Configuration
 
 > Make sure to use `/MT` to compile project when using VC-LTL. For XP support, please modify `VC-LTL helper for cmake.cmake` to enable `set(SupportWinXP "true")`.
 
-### 3.4. Using VC-LTL in NMake/CL
+### 3.3. Using VC-LTL in NMake/CL
 
-#### 3.4.1. Run VC-LTL Cmd Script
+#### 3.3.1. Run VC-LTL Cmd Script
+We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github.com/Chuyu-Team/vc-ltl-samples) for your reference, and welcome to join our QQ group (633710173).
 
 Copy `VC-LTL helper for nmake.cmd` to your project. Run `vcvars32.bat` or `vcvars64.bat` and execute this script. The script will automatically modify the `include` and `lib` environment variables.
 
@@ -140,11 +157,11 @@ call "D:\VC-LTL\VC-LTL helper for nmake.cmd"
 
 nmake /f Test.mak
 ```
-#### 3.4.2. Modify The Configuration
+#### 3.3.2. Modify The Configuration
 
 > Make sure to use `/MT` to compile project when using VC-LTL. For XP support, please modify `VC-LTL helper for nmake.cmd` to enable `set SupportWinXP=true`.
 
-### 3.5. Rebuild (Release only)
+### 3.4. Rebuild (Release only)
 Is the file size smaller? If you fail to compile, please refer to [4. FAQ](#4-faq). You can also feedback and work together to improve VC-LTL.
 
 If VC-LTL is referenced correctly, it will be output at the time of generation: `note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`.
@@ -457,9 +474,11 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
 
 
-### 4.0.3.5 - Improved Support (Dec 2, 2019 16:00)
+### 4.0.3.6 - Improved Support (Dec 7, 2019 16:00)
 * Improve, Improve the experience of VC-LTL in VS (Thanks to MouriNaruto).
+* Improve, Improved QT support (Thunks to 昌平517).
 * New Fea, add VS 14.23.28105 support.
 * Improve, FH4 removes TLS dependencies.
 * Fix Bug, C4201 waring in corecrt_wstdio.h and mbstring.h (Thunks to BigBrother).
 * Fix Bug, XP `legacy_stdio_definitions.lib` missing vsnprintf_s function issue (Thunks to 昌平517).
+* Fix Bug，symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to 昌平517)

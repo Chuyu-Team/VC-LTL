@@ -76,28 +76,47 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 ## 3. 使用方法
 下面我们将进入主题，我们给大家准备了丰富的[VC-LTL示例](https://github.com/Chuyu-Team/vc-ltl-samples)供大家参考，也欢迎加入我们的QQ群（633710173）。
 
-### 3.1. 安装VC-LTL
+
+### 3.1. 在Visual Studio中使用VC-LTL
+
+#### 3.1.1. 引用VC-LTL
+
+##### 3.1.1.1. 通过NuGet引用（推荐）
+> 由于VC-LTl体积过大，因此无法上传“nuget.org”。
+
+在 项目右键，选择“管理 NuGet 程序包” - 设置 - ╋
+
+然后添加初雨NuGet源：https://pkgs.dev.azure.com/chuyu/_packaging/chuyu/nuget/v3/index.json
+
+然后将包源切换到“初雨”，然后选择适合您的版本，最后点击安装即可。
+
+![ConfigurationNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationNuGet.png)
+
+![InstallByNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/InstallByNuGet.png)
+
+##### 3.1.1.2. 通过注册表引用
 假如，你将[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
 
 > 脚本会在`HKCU\Code\VC-LTL`创建注册表。
 
-### 3.2. 在Visual Studio中使用VC-LTL
-
-#### 3.2.1. 添加VC-LTL属性表
 将属性表`VC-LTL helper for Visual Studio.props`复制到你的工程目录，你可以打开属性管理器（视图 - 属性管理器），然后Release配置上右键`添加现有属性表`，然后选择`VC-LTL helper for Visual Studio.props`即可。
 
 ![AddShared](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/AddShared.png)
 
-#### 3.2.2. 配置工程属性
+#### 3.1.2. 配置工程属性
 * C/C++ - 代码生成 -【运行库】调整为【多线程 (/MT)】
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
 > 如需支持XP，请在平台工具集中选择`Windows XP`或者修改`VC-LTL helper for Visual Studio.props`启用 `<SupportWinXP>true</SupportWinXP>` 即可。
 
-### 3.3. 在CMake中使用VC-LTL
+### 3.2. 在CMake中使用VC-LTL
 
-#### 3.3.1. 添加VC-LTL配置文件
+假如，你将[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
+
+> 脚本会在`HKCU\Code\VC-LTL`创建注册表。
+
+#### 3.2.1. 添加VC-LTL配置文件
 
 将模块文件`VC-LTL helper for cmake.cmake`复制到你的工程目录（顶层CMakeLists.txt同级目录）。然后在`CMakeLists.txt`中添加一行 `include("VC-LTL helper for cmake.cmake")` 即可。
 
@@ -111,13 +130,17 @@ include("VC-LTL helper for cmake.cmake")
 add_subdirectory(src)
 ```
 
-#### 3.3.2. 调整配置工程
+#### 3.2.2. 调整配置工程
 
 > 务必确保使用`/MT`编译代码。如需支持XP，请修改`VC-LTL helper for cmake.cmake`启用 `set(SupportWinXP "true")` 即可。
 
-### 3.4. 在NMake/纯CL中使用VC-LTL
+### 3.3. 在NMake/纯CL中使用VC-LTL
 
-#### 3.4.1. 运行VC-LTL辅助脚本
+假如，你将[VC-LTL Binary](https://gitee.com/Chuyu-Team/VC-LTL/releases)下载并解压至`D:\Src\VC-LTL`（具体位置无任何要求），双击`D:\Src\VC-LTL\Install.cmd`即可。
+
+> 脚本会在`HKCU\Code\VC-LTL`创建注册表。
+
+#### 3.3.1. 运行VC-LTL辅助脚本
 
 将辅助脚本`VC-LTL helper for nmake.cmd`复制到你的工程目录。启动`vcvars32.bat/vcvars64.bat`执行此脚本即可，脚本将自动修改`include`以及`lib`环境变量。
 
@@ -128,12 +151,12 @@ call "D:\VC-LTL\VC-LTL helper for nmake.cmd"
 
 nmake /f Test.mak
 ```
-#### 3.4.2. 配置工程属性
+#### 3.3.2. 配置工程属性
 
 > 务必确保使用`/MT`编译代码。如需支持XP，请修改`VC-LTL helper for nmake.cmd`启用 `set SupportWinXP=true`。
 
 
-### 3.5. 重新编译（仅Release）
+### 3.4. 重新编译（仅Release）
 现在是不是体积就小了很多。如果你编译不通过，可以先参考 [4. 常见问题](#4-常见问题)。如果还是不通过可以反馈，共同改进VC-LTL。
 
 如果正确引用VC-LTL，那么 会在生成时输出：`note: 进入ltl普通模式，已准备引用到VC-LTL。定义 _DISABLE_DEPRECATE_LTL_MESSAGE 可关闭信息提示。`。
@@ -445,9 +468,11 @@ nmake /f Test.mak
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
 
 
-### 4.0.3.5 - 改进支持（2019-12-02 16:00）
+### 4.0.3.6 - 改进支持（2019-12-07 16:00）
 * 改进体验，改进VS用户使用VC-LTL的体验（感谢 毛利）。
+* 改进体验，改进QT支持（感谢 昌平517）。
 * 新增Fea，添加14.23.28105支持。
 * 行为调整，消除FH4对TLS的依赖。
 * 解决Bug，消除 corecrt_wstdio.h 以及 mbstring.h中的 C4201警告（感谢 大胸）。
 * 解决Bug，解决XP `legacy_stdio_definitions.lib` 缺少 vsnprintf_s 问题（感谢 昌平517）。
+* 解决Bug，轻量模式中，`legacy_stdio_definitions.lib`可能出现符号冲突问题（感谢 昌平517）。
