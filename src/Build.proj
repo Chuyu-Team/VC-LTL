@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+用于编译VC-LTL
+
+
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe" -t:Build -m "I:\Visual Studio 2015\VC-LTL\src\Build.proj"
+
+-->
+
+<Project InitialTargets="ValidateSolutionConfiguration" DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+    <SolutionExt>.sln</SolutionExt>
+    <SolutionFileName>VC-LTL.sln</SolutionFileName>
+    <SolutionName>VC-LTL</SolutionName>
+    <SolutionPath>$(SolutionDir)$(SolutionFileName)</SolutionPath>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)\ucrt\Build.proj"/>
+  <Import Project="$(MSBuildThisFileDirectory)\14.*.*\Build\Build.proj"/>
+
+  <Target Name="ValidateSolutionConfiguration">
+    <Message Text="正在生成解决方案配置“$(Configuration)|$(Platform)”。" />
+  </Target>
+  
+  <Target Name="Build">   
+    <!--先编译静态库-->
+    <MSBuild Projects="@(StaticLib)" BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
+
+    <!--在编译UCRT运行时，以及msvcrt、msvcmrt-->
+    <MSBuild Projects="@(SecondLib)" BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
+
+    <!--然后编译vcruntime.lib，因为下面msvcprt.dll需要用到-->
+    <MSBuild Projects="@(VcruntimeRedist)" BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
+
+    <!--接着编译msvcprt.dll-->
+    <MSBuild Projects="@(StlRedist)"  BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
+
+    <!--打包msvcprt.lib-->
+    <MSBuild Projects="@(StlDynamic)" BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
+
+    <!--最后利用其他编译的文件编译concrt.lib-->
+    <MSBuild Projects="@(ConcrtRedist)" BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
+  </Target>
+</Project>

@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">          
+  <!--第一阶段，生成静态库，因为静态库不依赖任何东西-->
+  <ItemGroup>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=Win32</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=x64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=Win32</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=x64</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+    
+    <StaticLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=Win32</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=x64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=Win32</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=x64</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+
+    <StaticLib Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=Win32</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=x64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=Win32</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=x64</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+
+    <StaticLib Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=Win32</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=x64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static; Platform=ARM64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM64</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=Win32</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>Win32</Platform>
+    </StaticLib>
+    <StaticLib Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Static_WinXP; Platform=x64</AdditionalProperties>
+      <Configuration>Static_WinXP</Configuration>
+      <Platform>x64</Platform>
+    </StaticLib>
+  </ItemGroup>
+
+  <!--第二阶段，生成UCRT运行时，以及前置 Dynamic 库-->
+  <ItemGroup>
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=Win32</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </SecondLib>
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=x64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </SecondLib>
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=ARM</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
+    </SecondLib>
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild\ltlbuild.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=ARM64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM64</Platform>
+    </SecondLib>
+
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild_CLR\ltlbuild_CLR.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=Win32</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>Win32</Platform>
+    </SecondLib>
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild_CLR\ltlbuild_CLR.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=x64</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>x64</Platform>
+    </SecondLib>
+    <SecondLib Include="$(MSBuildThisFileDirectory)ltlbuild_CLR\ltlbuild_CLR.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=ARM</AdditionalProperties>
+      <Configuration>Static</Configuration>
+      <Platform>ARM</Platform>
+    </SecondLib>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <VcruntimeRedist Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=Win32</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>Win32</Platform>
+    </VcruntimeRedist>
+    <VcruntimeRedist Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=x64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>x64</Platform>
+    </VcruntimeRedist>
+    <VcruntimeRedist Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=ARM</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM</Platform>
+    </VcruntimeRedist>
+    <VcruntimeRedist Include="$(MSBuildThisFileDirectory)vcruntime\vcruntime.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=ARM64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM64</Platform>
+    </VcruntimeRedist>
+  </ItemGroup>
+
+  <ItemGroup>
+    <StlRedist Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=Win32</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>Win32</Platform>
+    </StlRedist>
+    <StlRedist Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=x64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>x64</Platform>
+    </StlRedist>
+    <StlRedist Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=ARM</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM</Platform>
+    </StlRedist>
+    <StlRedist Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=ARM64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM64</Platform>
+    </StlRedist>
+  </ItemGroup>
+
+  <ItemGroup>
+    <StlDynamic Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=Win32</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>Win32</Platform>
+    </StlDynamic>
+    <StlDynamic Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=x64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>x64</Platform>
+    </StlDynamic>
+    <StlDynamic Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=ARM</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM</Platform>
+    </StlDynamic>
+    <StlDynamic Include="$(MSBuildThisFileDirectory)stl\stl.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Dynamic; Platform=ARM64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM64</Platform>
+    </StlDynamic>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ConcrtRedist Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=Win32</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>Win32</Platform>
+    </ConcrtRedist>
+    <ConcrtRedist Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=x64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>x64</Platform>
+    </ConcrtRedist>
+    <ConcrtRedist Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=ARM</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM</Platform>
+    </ConcrtRedist>
+    <ConcrtRedist Include="$(MSBuildThisFileDirectory)ConcRT\ConcRT.vcxproj">
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Redist; Platform=ARM64</AdditionalProperties>
+      <Configuration>Redist</Configuration>
+      <Platform>ARM64</Platform>
+    </ConcrtRedist>
+  </ItemGroup>
+</Project>
