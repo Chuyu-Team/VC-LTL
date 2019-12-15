@@ -250,13 +250,13 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>concrt140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|ARM'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>concrt140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -285,13 +285,13 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>concrt140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|ARM64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir)ucrt\inc;$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>concrt140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <ClCompile>

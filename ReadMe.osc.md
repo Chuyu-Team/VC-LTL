@@ -468,10 +468,11 @@ nmake /f Test.mak
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
 
 
-### 4.0.3.6 - 改进支持（2019-12-07 16:00）
+### 4.0.3.7 - 改进支持（2019-12-15 14:00）
 * 改进体验，改进VS用户使用VC-LTL的体验（感谢 毛利）。
 * 改进体验，改进QT支持（感谢 昌平517）。
 * 新增Fea，添加14.23.28105支持。
+* 新增Fea，添加14.24.28314支持。
 * 行为调整，消除FH4对TLS的依赖。
 * 解决Bug，消除 corecrt_wstdio.h 以及 mbstring.h中的 C4201警告（感谢 大胸）。
 * 解决Bug，解决XP `legacy_stdio_definitions.lib` 缺少 vsnprintf_s 问题（感谢 昌平517）。

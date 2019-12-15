@@ -279,7 +279,7 @@ public:
 		_In_z_ LPCWSTR pwszFmt,
 		_In_ va_list args)
 	{
-#if _MSC_VER < 1900
+#if _MSC_VER < 1900 || defined (_NO_CRT_STDIO_INLINE)
 		int cchNeeded = _vscwprintf(pwszFmt, args);
 #else
 		// Explicitly request the legacy wide format specifiers mode from the CRT,
@@ -305,7 +305,7 @@ public:
 
 		wszBuf[0] = '\0';
 
-#if _MSC_VER < 1900
+#if _MSC_VER < 1900 || defined (_NO_CRT_STDIO_INLINE)
 		if (_vsnwprintf_s(wszBuf, cchNeeded + 1, cchNeeded, pwszFmt, args) == -1)
 #else
 		// Explicitly request the legacy wide format specifiers mode from the CRT,

@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <Windows.h>
+#include <winapi_thunks.h>
 _STD_BEGIN
 
 #if defined(_M_CEE) && !defined(_M_CEE_MIXED)
@@ -39,14 +40,14 @@ _MRTIMP2 void __cdecl _Atexit(void(__cdecl* pf)()) { // add to wrapup list
     if (atcount_cdecl == 0) {
         abort(); // stack full, give up
     } else {
-        atfuns_cdecl[--atcount_cdecl] = (void(__cdecl*)()) EncodePointer(pf);
+        atfuns_cdecl[--atcount_cdecl] = (void(__cdecl*)()) EncodePointerDownlevel(pf);
     }
 }
 
 struct _Init_atexit { // controller for atexit processing
     __CLR_OR_THIS_CALL ~_Init_atexit() noexcept { // process wrapup functions
         while (atcount_cdecl < NATS) {
-            void(__cdecl * pf)() = (void(__cdecl*)()) DecodePointer(atfuns_cdecl[atcount_cdecl++]);
+            void(__cdecl * pf)() = (void(__cdecl*)()) DecodePointerDownlevel(atfuns_cdecl[atcount_cdecl++]);
             if (pf) {
                 (*pf)();
             }

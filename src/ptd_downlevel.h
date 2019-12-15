@@ -10,6 +10,10 @@ struct ptd_downlevel
 	uintptr_t   _ImageBase;
 	uintptr_t _ThrowImageBase;
 #endif
+	int _cxxReThrow;
+#if defined _M_X64 || defined _M_ARM || defined _M_ARM64 || defined _M_HYBRID
+	int _CatchStateInParent;
+#endif
 };
 
 EXTERN_C ptd_downlevel* __fastcall __LTL_get_ptd_downlevel();

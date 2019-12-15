@@ -37,8 +37,7 @@ using namespace FH4;
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define cxxReThrow        (__acrt_getptd()->VistaOrLater_msvcrt._cxxReThrow)
 #else
-static thread_local int _cxxReThrowWinXP = 0;
-#define cxxReThrow   (*((int*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(_cxxReThrowWinXP) : &(__acrt_getptd()->VistaOrLater_msvcrt._cxxReThrow))))
+#define cxxReThrow   (*((int*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_cxxReThrow) : &(__acrt_getptd()->VistaOrLater_msvcrt._cxxReThrow))))
 #endif
 
 
@@ -216,8 +215,14 @@ static BOOLEAN Is_bad_exception_allowed(ESTypeList *pExceptionSpec);
 
 // In the satellite build, __vcrt_getptd uses satellite's PTD
 // In the non-DLL build, __vcrt_getptd uses the main PTD which was updated to have this field
+#if defined _M_X64 || defined _M_ARM || defined _M_ARM64 || defined _M_HYBRID
 thread_local static int _CatchStateInParent = 0;
+#endif
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
 #define CatchStateInParent   (_CatchStateInParent)
+#else
+#define CatchStateInParent  (*(__LTL_GetOsMinVersion() < 0x00060000 ? &__LTL_get_ptd_downlevel()->_CatchStateInParent : &_CatchStateInParent))
+#endif
 
 inline ESTypeList* RENAME_EH_EXTERN(__FrameHandler3)::getESTypes(FuncInfo* pFuncInfo)
 {

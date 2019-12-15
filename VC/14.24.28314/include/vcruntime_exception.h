@@ -38,64 +38,38 @@ _CRT_END_C_HEADER
 
 
 
-namespace std {
-
 #pragma warning(push)
 #pragma warning(disable: 4577) // 'noexcept' used with no exception handling mode specified
 class exception
 {
 public:
 
-    exception() noexcept
-        : _Data()
+    exception() noexcept;
+
+    explicit exception(char const* const& _Message) noexcept;
+
+    exception(char const* const& _Message, int) noexcept
+        :_Data{ _Message,0 }
     {
+
     }
 
-    explicit exception(char const* const _Message) noexcept
-        : _Data()
-    {
-        __std_exception_data _InitData = { _Message, true };
-        __std_exception_copy(&_InitData, &_Data);
-    }
+    exception(exception const& _Other) noexcept;
 
-    exception(char const* const _Message, int) noexcept
-        : _Data()
-    {
-        _Data._What = _Message;
-    }
+    exception& operator=(exception const& _Other) noexcept;
 
-    exception(exception const& _Other) noexcept
-        : _Data()
-    {
-        __std_exception_copy(&_Other._Data, &_Data);
-    }
+    virtual ~exception() noexcept;
 
-    exception& operator=(exception const& _Other) noexcept
-    {
-        if (this == &_Other)
-        {
-            return *this;
-        }
-
-        __std_exception_destroy(&_Data);
-        __std_exception_copy(&_Other._Data, &_Data);
-        return *this;
-    }
-
-    virtual ~exception() noexcept
-    {
-        __std_exception_destroy(&_Data);
-    }
-
-    _NODISCARD virtual char const* what() const
-    {
-        return _Data._What ? _Data._What : "Unknown exception";
-    }
+    virtual char const* what() const;
 
 private:
 
     __std_exception_data _Data;
 };
+
+namespace std {
+
+using ::exception;
 
 class bad_exception
     : public exception

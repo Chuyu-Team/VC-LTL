@@ -180,12 +180,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>vcruntime140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|ARM'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>vcruntime140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|Win32'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir);$(IncludePath)</IncludePath>
@@ -204,7 +204,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir);$(IncludePath)</IncludePath>
     <TargetName>vcruntime140_ltl</TargetName>
-    <OutDir>$(SolutionDir)..\Redist\$(PlatformShortName)\</OutDir>
+    <OutDir>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <IncludePath>$(SolutionDir)$(VC-LTLUsedToolsVersion)\vcruntime;$(SolutionDir)ucrt\inc;$(SolutionDir)$(VC-LTLUsedToolsVersion);$(SolutionDir);$(IncludePath)</IncludePath>
