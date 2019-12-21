@@ -81,6 +81,7 @@
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141_clang_c2')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v142')">true</VCLTLSupportPlatformToolsetNormal>
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='ClangCL')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v140')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v141')">true</VCLTLSupportPlatformToolsetNormal>
