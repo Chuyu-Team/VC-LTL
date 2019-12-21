@@ -56,7 +56,7 @@
 
     <!--如果找不到，那么指定为当前支持的最高版本-->
     <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">false</VCLTLFoundToolsVersion>
-    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.22.27905</VCLTLToolsVersion>
+    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.24.28314</VCLTLToolsVersion>
   </PropertyGroup>
   
   <PropertyGroup Condition="('$(VCLTLTargetUniversalCRTVersion)'=='')">
@@ -72,17 +72,20 @@
     <VCLTLSupportPlatformToolsetWinXP Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v140_xp')">true</VCLTLSupportPlatformToolsetWinXP>
     <VCLTLSupportPlatformToolsetWinXP Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='v141_xp')">true</VCLTLSupportPlatformToolsetWinXP>
     <VCLTLSupportPlatformToolsetWinXP Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014_xp')">true</VCLTLSupportPlatformToolsetWinXP>
+    <VCLTLSupportPlatformToolsetWinXP Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM_v140_xp')">true</VCLTLSupportPlatformToolsetWinXP>
     <VCLTLSupportPlatformToolsetWinXP Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='') And ('$(PlatformToolset)'=='LLVM_v141_xp')">true</VCLTLSupportPlatformToolsetWinXP>
 
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140')">true</VCLTLSupportPlatformToolsetNormal>
-    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141')">true</VCLTLSupportPlatformToolsetNormal>
-    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014')">true</VCLTLSupportPlatformToolsetNormal>
-    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v141')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_c2')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v140_clang_3_7')">true</VCLTLSupportPlatformToolsetNormal>
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141')">true</VCLTLSupportPlatformToolsetNormal>
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v141_clang_c2')">true</VCLTLSupportPlatformToolsetNormal>
-
     <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='v142')">true</VCLTLSupportPlatformToolsetNormal>
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM-vs2014')">true</VCLTLSupportPlatformToolsetNormal>
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v140')">true</VCLTLSupportPlatformToolsetNormal>
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v141')">true</VCLTLSupportPlatformToolsetNormal>
+    <VCLTLSupportPlatformToolsetNormal Condition="('$(VCLTLSupportPlatformToolsetNormal)'=='') And ('$(PlatformToolset)'=='LLVM_v142')">true</VCLTLSupportPlatformToolsetNormal>
+
 
     <VCLTLSupportPlatformToolset Condition="('$(VCLTLSupportPlatformToolsetWinXP)'=='true') Or ('$(VCLTLSupportPlatformToolsetNormal)'=='true')">true</VCLTLSupportPlatformToolset>
 

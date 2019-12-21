@@ -51,7 +51,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 ### 2.1. 支持的IDE
 * Visual Studio 2015（包含Clang with Microsoft CodeGen、Clang 3.7 with Microsoft CodeGen、Clang-LLVM）
 * Visual Studio 2017（包含Clang with Microsoft CodeGen、Clang-LLVM）
-* Visual Studio 2019
+* Visual Studio 2019（包含Clang-LLVM）
 
 ### 2.2. 支持的编译工具
 |    编译工具    | 支持文件
@@ -108,7 +108,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationProject.png)
 
-> 如需支持XP，请在平台工具集中选择`Windows XP`或者修改`VC-LTL helper for Visual Studio.props`启用 `<SupportWinXP>true</SupportWinXP>` 即可。
+> 如需支持XP，请右键项目 - 属性 - 初雨团队 VC-LTL - 启用 Windows XP 兼容 －『是』 即可。
 
 ### 3.2. 在CMake中使用VC-LTL
 
@@ -468,11 +468,12 @@ nmake /f Test.mak
 * [改进体验 53](https://github.com/Chuyu-Team/VC-LTL/issues/53)，关闭对STL库的引用消除，规避LLVM链接失败问题（感谢 hotxp、BigBrother）。
 
 
-### 4.0.3.7 - 改进支持（2019-12-15 14:00）
+### 4.0.3.8 - 改进支持（2019-12-21 14:00）
 * 改进体验，改进VS用户使用VC-LTL的体验（感谢 毛利）。
 * 改进体验，改进QT支持（感谢 昌平517）。
 * 新增Fea，添加14.23.28105支持。
 * 新增Fea，添加14.24.28314支持。
+* 新增Fea，添加LLVM for Visual Studio 2019支持。
 * 行为调整，消除FH4对TLS的依赖。
 * 解决Bug，消除 corecrt_wstdio.h 以及 mbstring.h中的 C4201警告（感谢 大胸）。
 * 解决Bug，解决XP `legacy_stdio_definitions.lib` 缺少 vsnprintf_s 问题（感谢 昌平517）。

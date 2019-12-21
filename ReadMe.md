@@ -62,7 +62,7 @@ from the pure C source code.
 ### 2.1. Supported Visual Studio Versions
 * Visual Studio 2015 (Support Clang with Microsoft CodeGen, Clang 3.7 with Microsoft CodeGen, Clang-LLVM)
 * Visual Studio 2017 (Support Clang with Microsoft CodeGen, Clang-LLVM)
-* Visual Studio 2019
+* Visual Studio 2019 (Support Clang-LLVM)
 
 ### 2.2. Supported Build Tools
 |   Build Tool   | Helper      
@@ -105,7 +105,7 @@ Finally, switch the source of the package to "Chuyu", then select the version th
 
 ![InstallByNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/InstallByNuGet.png)
 
-##### 3.1.1.2. Reference via Registry (recommend)
+##### 3.1.1.2. Reference via Registry
 If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
 
 > The script will save the information in the registry `HKCU\Code\VC-LTL`.
@@ -119,7 +119,7 @@ Copy `VC-LTL helper for Visual Studio.props` to your project, then open the Prop
 
 ![ConfigurationProject](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationProject.png)
 
-> For XP support, please use the `Windows XP toolset` in the platform toolset, or modify `VC-LTL helper for Visual Studio.props` to enable `<SupportWinXP>true</SupportWinXP>`.
+> For XP support, please Right click on the project, Properties - 初雨团队 VC-LTL - 启用 Windows XP兼容 - "Yes".
 
 ### 3.2. Using VC-LTL in CMake
 If you download and unzip [VC-LTL Binary](https://github.com/Chuyu-Team/VC-LTL/releases/latest) to `D:\Src\VC-LTL`, please double-click `D:\Src\VC-LTL\Install.cmd`.
@@ -477,11 +477,12 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * [Improve 53](https://github.com/Chuyu-Team/VC-LTL/issues/53), disable reference elimination for the STL library and avoid LLVM link failure (Thanks to hotxp, BigBrother).
 
 
-### 4.0.3.7 - Improved Support (Dec 7, 2019 16:00)
+### 4.0.3.8 - Improved Support (Dec 21, 2019 14:00)
 * Improve, Improve the experience of VC-LTL in VS (Thanks to MouriNaruto).
 * Improve, Improved QT support (Thunks to 昌平517).
 * New Fea, add VS 14.23.28105 support.
 * New Fea, add VS 14.24.28314 support.
+* New Fea, add LLVM for Visual Studio 2019 support.
 * Improve, FH4 removes TLS dependencies.
 * Fix Bug, C4201 waring in corecrt_wstdio.h and mbstring.h (Thunks to BigBrother).
 * Fix Bug, XP `legacy_stdio_definitions.lib` missing vsnprintf_s function issue (Thunks to 昌平517).
