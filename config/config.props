@@ -19,6 +19,10 @@
   </PropertyGroup>
   
   <PropertyGroup Condition=" ('$(VCToolsVersion)'=='') And ('$(VCLTLToolsVersion)'=='') ">
+    <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24245 Visual C++ CRT Headers Package（Visual Studio 2019 中的2015平台工具集），与14.0.24231差别几乎为0，就不更新了-->
+    <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F485D86A-9520-3127-B879-861A9315C734}@DisplayVersion)'!='') ">14.0.24231</VCLTLToolsVersion>
+    <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F485D86A-9520-3127-B879-861A9315C734}@DisplayVersion)'!='') "            >14.0.24231</VCLTLToolsVersion>
+
     <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24234（Visual Studio 2017 15.7中的2015平台工具集），与14.0.24231完全一致-->
     <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F}@DisplayVersion)'!='') ">14.0.24231</VCLTLToolsVersion>
     <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F}@DisplayVersion)'!='') "            >14.0.24231</VCLTLToolsVersion>

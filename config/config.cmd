@@ -112,6 +112,14 @@ goto:eof
 set VCLTLToolsVersion=%VCToolsVersion%
 if "%VCLTLToolsVersion%" NEQ "" goto ReadVC2015VersionEnd
 
+::计算机已经安装Visual Studio 2015 Update3 v14.0.24245 Visual C++ CRT Headers Package（Visual Studio 2019 中的2015平台工具集），与14.0.24231差别几乎为0，就不更新了
+set VCLTLToolsVersion=14.0.24231
+reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F485D86A-9520-3127-B879-861A9315C734} /v DisplayVersion > nul
+if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
+
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F485D86A-9520-3127-B879-861A9315C734} /v DisplayVersion > nul
+if %ERRORLEVEL% == 0 goto ReadVC2015VersionEnd
+
 ::计算机已经安装Visual Studio 2015 Update3 v14.0.24234（Visual Studio 2017 15.7中的2015平台工具集），与14.0.24231完全一致
 set VCLTLToolsVersion=14.0.24231
 reg query HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{BDE574B5-6CFE-32B2-9854-C827567E9D6F} /v DisplayVersion > nul
