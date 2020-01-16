@@ -29,12 +29,6 @@
                   HasConfigurationCondition="true"/>
     </Rule.DataSource>
 
-    <StringProperty
-      Name="VC_LTL_Root"
-      Category="General"
-      DisplayName="首选 VC-LTL 工具集路径"
-      Description="设置需要使用的 VC-LTL 工具集路径，为空时将根据VC-LTL搜索顺序自动查找。" />
-
     <BoolProperty
       Name="DisableAdvancedSupport"
       Category="General"

@@ -17,7 +17,7 @@
 #define _USE_ANSI_CPP
 
 #ifndef RC_INVOKED
-#include "..\..\..\_msvcrt.h"
+#include <LTL_config.h>
 #endif
 
 #ifdef _CRTBLD

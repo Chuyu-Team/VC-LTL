@@ -300,7 +300,7 @@ extern uintptr_t __security_cookie;
 _CRT_END_C_HEADER
 
 #ifndef RC_INVOKED
-#include "..\..\..\_msvcrt.h"
+#include <LTL_config.h>
 #endif
 
 #endif // _VCRUNTIME_H
