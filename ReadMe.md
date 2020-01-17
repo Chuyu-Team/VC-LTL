@@ -93,7 +93,6 @@ We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github
 #### 3.1.1. Choose reference mode
 
 ##### 3.1.1.1. Reference via NuGet (recommend)
-> VC-LTL is too large to upload "nuget.org".
 
 Right-click on the project and select "Manage NuGet Packages", then search for `VC-LTL` and choose the version that suits you, and finally click Install.
 
