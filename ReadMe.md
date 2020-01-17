@@ -95,13 +95,7 @@ We will enter the theme, we have prepared a rich [VC-LTL Samples](https://github
 ##### 3.1.1.1. Reference via NuGet (recommend)
 > VC-LTL is too large to upload "nuget.org".
 
-Right-click on the project and select "Manage NuGet Packages"  - Settings  - ╋
-
-Then add the Chuyu NuGet source: https://www.myget.org/F/chuyu/api/v3/index.json
-
-Finally, switch the source of the package to "Chuyu", then select the version that suits you, and finally click Install.
-
-![ConfigurationNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/ConfigurationNuGet.png)
+Right-click on the project and select "Manage NuGet Packages", then search for `VC-LTL` and choose the version that suits you, and finally click Install.
 
 ![InstallByNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/en/image/InstallByNuGet.png)
 

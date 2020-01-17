@@ -82,15 +82,8 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 #### 3.1.1. 引用VC-LTL
 
 ##### 3.1.1.1. 通过NuGet引用（推荐）
-> 由于VC-LTl体积过大，因此无法上传“nuget.org”。
 
-在 项目右键，选择“管理 NuGet 程序包” - 设置 - ╋
-
-然后添加初雨NuGet源：https://www.myget.org/F/chuyu/api/v3/index.json
-
-然后将包源切换到“初雨”，然后选择适合您的版本，最后点击安装即可。
-
-![ConfigurationNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/ConfigurationNuGet.png)
+在 项目右键，选择“管理 NuGet 程序包”，然后搜索 `VC-LTL` 并选择适合您的版本，最后点击安装即可。
 
 ![InstallByNuGet](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/zh-Hans/image/InstallByNuGet.png)
 
