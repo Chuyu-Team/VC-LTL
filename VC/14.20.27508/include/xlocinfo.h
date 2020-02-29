@@ -73,10 +73,7 @@ typedef struct _Ctypevec { // stuff needed by _Tolower, etc.
 typedef struct _Cvtvec { // stuff needed by _Mbrtowc, etc.
 	unsigned long _Hand;// LCID
     unsigned int _Page; // UINT
-#ifdef __cplusplus
-	static constexpr const unsigned int _Mbcurmax = MB_LEN_MAX;
-#endif
-#if 0
+#if 1 //VC-LTL
     unsigned int _Mbcurmax;
     int _Isclocale; // LCID == _CLOCALEHANDLE
     unsigned char _Isleadbyte[32]; // 256 bits

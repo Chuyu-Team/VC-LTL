@@ -43,6 +43,7 @@
 *
 *******************************************************************************/
 
+#if 0
 /* Retained for backward compatibility of DLL exports only */
 _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL __Wcrtomb_lk
         (
@@ -115,6 +116,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcrtomb
     return _Wcrtomb(s,(wchar_t) wchar, pst, ploc);
     }
 #endif  /* MRTDLL */
+#endif
 
 /***
 *_Cvtvec _Getcvt() - get conversion info for current locale
@@ -136,8 +138,9 @@ _CRTIMP2_PURE _Cvtvec __CLRCALL_PURE_OR_CDECL _Getcvt()
 
         cvt._Page = ___lc_codepage_func();
         cvt._Mbcurmax = ___mb_cur_max_func();
+        cvt._Hand      = ___lc_handle_func()[LC_CTYPE];
+		cvt._Isclocale = cvt._Hand == 0;
         //cvt._Isclocale = ___lc_locale_name_func()[LC_CTYPE] == NULL;
-		cvt._Isclocale = ___lc_handle_func()[LC_CTYPE] == 0;
 
         if (!cvt._Isclocale)
             for (idx = 0; idx < 256; ++idx)

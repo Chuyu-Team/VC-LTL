@@ -17,6 +17,7 @@
 #include <locale.h>
 #include <mbctype.h>
 #include <Windows.h>
+#include <winapi_thunks.h>
 
 /***
 *int _Wcrtomb() - Convert wide character to multibyte character.
@@ -42,6 +43,7 @@
 *
 *******************************************************************************/
 
+#if 0
 /* Retained for backward compatibility of DLL exports only */
 _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL __Wcrtomb_lk
         (
@@ -114,6 +116,7 @@ _CRTIMP2_PURE int __CLRCALL_PURE_OR_CDECL _Wcrtomb
     return _Wcrtomb(s,(wchar_t) wchar, pst, ploc);
     }
 #endif  /* MRTDLL */
+#endif
 
 _CRTIMP2_PURE _Cvtvec __CLRCALL_PURE_OR_CDECL _Getcvt()
 {   /* get conversion info for current locale */
@@ -121,7 +124,9 @@ _CRTIMP2_PURE _Cvtvec __CLRCALL_PURE_OR_CDECL _Getcvt()
 
     _Cvt._Page = ___lc_codepage_func();
     _Cvt._Mbcurmax = ___mb_cur_max_func();
-    _Cvt._Isclocale = ___lc_locale_name_func()[LC_CTYPE] == NULL;
+    _Cvt._Hand      = ___lc_handle_func()[LC_CTYPE];
+    _Cvt._Isclocale = _Cvt._Hand == 0;
+    //_Cvt._Isclocale = ___lc_locale_name_func()[LC_CTYPE] == NULL;
 
     if (!_Cvt._Isclocale)
         {

@@ -839,6 +839,9 @@
     <ClCompile Include="..\..\stl\xwcsxfrm.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\stl\xwctomb.c">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\stl\xwstod.c">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
     </ClCompile>

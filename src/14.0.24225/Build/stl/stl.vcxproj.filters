@@ -297,6 +297,9 @@
     <ClCompile Include="..\..\stl\instances.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\stl\xwctomb.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h">

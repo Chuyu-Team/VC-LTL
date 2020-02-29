@@ -73,7 +73,7 @@ typedef struct _Cvtvec
 	{	/* stuff needed by _Mbrtowc, etc. */
 	unsigned long _Hand;	// LCID
 	unsigned int _Page;		// UINT
-#if 0
+#if 1 //VC-LTL
 	unsigned int _Mbcurmax;
 	int _Isclocale;	// LCID == _CLOCALEHANDLE
 	unsigned char _Isleadbyte[32];	// 256 bits
