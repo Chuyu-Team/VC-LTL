@@ -482,7 +482,8 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug，symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to 昌平517)
 
 
-### 4.1.0.1 - Improved Support (Feb 29, 2020 23:00)
+### 4.1.0.1 - Improved Support (Mar 2, 2020 20:00)
 * Improve, Enhanced _Getcvt support for C ++ 17.
+* Fix Bug，symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to Big吊)
 
 > Tips: Tips: VC-LTL 4.1 and 4.0 are not compatible in STL stream ABI, please recompile static libraries!

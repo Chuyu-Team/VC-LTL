@@ -63,9 +63,15 @@ setlocal
 if "%Platform%"=="" set Platform=x86
 set include=%~dp0%VCToolsVersion%\vcruntime;%include%
 
+del "..\lib\%Platform%\%VCLTLPlatformName%\Light\legacy_stdio_definitions.lib"
 del "..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp" /S /Q /F >nul 2>nul
 
 mkdir "..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\objs" >nul 2>nul
+
+del "..\lib\%Platform%\%VCLTLPlatformName%\Advanced\legacy_stdio_definitions.lib"
+del "..\lib\%Platform%\%VCLTLPlatformName%\Advanced\tmp" /S /Q /F >nul 2>nul
+
+mkdir "..\lib\%Platform%\%VCLTLPlatformName%\Advanced\tmp\objs" >nul 2>nul
 
 cl %AdditionalOptions% /Fo"..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\objs\legacy_conio_definitions.obj" legacy_conio_definitions.cpp
 cl %AdditionalOptions% /Fo"..\lib\%Platform%\%VCLTLPlatformName%\Light\tmp\objs\legacy_stdio_definitions.obj" legacy_stdio_definitions.cpp
@@ -78,5 +84,18 @@ lib "%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Light\legacy_stdio_definitions.l
 lib "%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Light\legacy_stdio_definitions.lib" "alias\*"
 
 popd
+
+::±‡“Î‘ˆ«ø∞Ê±æ
+
+cl %AdditionalOptions% /D _BUILD_legacy_stdio_definitions /D _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES=0 /D _CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS /Fo"..\lib\%Platform%\%VCLTLPlatformName%\Advanced\tmp\objs\legacy_conio_definitions.obj" "%~dp014.24.28314\linkopts\legacy_conio_definitions.cpp"
+cl %AdditionalOptions% /D _BUILD_legacy_stdio_definitions /D _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES=0 /D _CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS /Fo"..\lib\%Platform%\%VCLTLPlatformName%\Advanced\tmp\objs\legacy_stdio_definitions.obj" "%~dp014.24.28314\linkopts\legacy_stdio_definitions.cpp"
+
+pushd "%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Advanced\tmp"
+
+lib /OUT:"%~dp0..\lib\%Platform%\%VCLTLPlatformName%\Advanced\legacy_stdio_definitions.lib" "objs\*"
+
+popd
+
+
 endlocal
 goto:eof
