@@ -157,6 +157,9 @@
       <!--可选，msvcrt.lib自动会添加这些设置-->
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x86' ">5.01</MinimumRequiredVersion>
       <MinimumRequiredVersion Condition=" '$(PlatformShortName)'=='x64' ">5.02</MinimumRequiredVersion>
+      <AdditionalDependencies Condition=" ('$(msvcp60_static_library)'=='true') or ('$(enable_win2k_thunks)'=='true' and '$(PlatformShortName)'=='x86') ">msvcp60_static.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--enable_win2k_thunks为内部功能，启用后能让VC-LTL兼容Windows 2000（需要与YY-Thunks配合使用），但是由于的内部功能不能保证长期维护！目前仅仅是为了丫丫内部工程使用。-->
+      <AdditionalDependencies Condition=" '$(enable_win2k_thunks)'=='true' and '$(PlatformShortName)'=='x86' ">msvcrt_for_win2k.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -166,6 +169,9 @@
       <!--可选，_msvcrt.h自动会添加这些设置-->
       <PreprocessorDefinitions Condition=" '$(SupportLTL)'=='true' ">_Build_By_LTL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies Condition=" '$(msvcp60_static_library)'=='true' ">msvcp60_static.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   
   <!--UCRT模式-->

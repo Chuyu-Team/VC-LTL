@@ -40,6 +40,12 @@
       Category="General"
       DisplayName="启用 Windows XP 兼容"
       Description="强制开启 Windows XP 兼容模式，默认情况下仅在选择 Windows XP 工具集时才开启。" />
+
+    <BoolProperty
+      Name="msvcp60_static_library"
+      Category="General"
+      DisplayName="启用 msvcp60 静态库"
+      Description="为目标二进制消除msvcp60.dll导入，提高某些极端精简系统中的可靠性。" />
     
      <BoolProperty
       Name="SupportLTL"

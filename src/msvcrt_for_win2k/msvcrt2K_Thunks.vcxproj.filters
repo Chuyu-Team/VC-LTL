@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\msvcp60">
+      <UniqueIdentifier>{51d47e03-32e7-4b54-b163-b5c9b85d89d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\msvcp60\UCRT">
+      <UniqueIdentifier>{4f19cd31-df1f-4f84-99cd-bee12b88b3d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\msvcrt_for_win2k">
+      <UniqueIdentifier>{55ca0913-f905-4ee3-8504-26dd995eb4c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\msvcrt_for_win2k">
+      <UniqueIdentifier>{8e4bff1f-59fc-42e0-8567-bef482f6bc74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\msvcp60">
+      <UniqueIdentifier>{65dd74e6-40fa-40f9-a27e-d165d06bb90b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="msvcrt_for_win2k\msvcrt_for_win2k.cpp">
+      <Filter>源文件\msvcrt_for_win2k</Filter>
+    </ClCompile>
+    <ClCompile Include="msvcp60\msvcp60_static.cpp">
+      <Filter>源文件\msvcp60</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ThunksHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xwctomb.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\_tolower.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\_toupper.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xmbtowc.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xcosh.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xdnorm.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xfexp.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xfdtest.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xfdscale.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xdtest.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xexp.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xdscale.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xfcosh.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xfsinh.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\UCRT\mbrtowc.hpp">
+      <Filter>头文件\msvcp60\UCRT</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\UCRT\wcrtomb.hpp">
+      <Filter>头文件\msvcp60\UCRT</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\UCRT\wctrans.hpp">
+      <Filter>头文件\msvcp60\UCRT</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\UCRT\wctype.hpp">
+      <Filter>头文件\msvcp60\UCRT</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xfdnorm.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xlcosh.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xldscale.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xldtest.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xlexp.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xlpoly.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xlsinh.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xmath.h">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xpoly.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xsinh.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xstrcoll.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcp60\xstrxfrm.hpp">
+      <Filter>头文件\msvcp60</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcrt_for_win2k\align.hpp">
+      <Filter>头文件\msvcrt_for_win2k</Filter>
+    </ClInclude>
+    <ClInclude Include="msvcrt_for_win2k\initctype.hpp">
+      <Filter>头文件\msvcrt_for_win2k</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
