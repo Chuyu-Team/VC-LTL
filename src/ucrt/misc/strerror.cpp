@@ -41,7 +41,31 @@ static char*& get_ptd_buffer(__acrt_ptd* const ptd, char) throw()
 
 static wchar_t*& get_ptd_buffer(__acrt_ptd* const ptd, wchar_t) throw()
 {
-    return ptd->_wcserror_buffer;
+#if _CRT_NTDDI_MIN < NTDDI_WIN6 && defined(_X86_)
+    const auto OsVersion = __LTL_GetOsMinVersion();
+    if (OsVersion < 0x00050001)
+    {
+        if (ptd->_strerror_buffer)
+        {
+            /*
+            Win2K没有_wcserror_buffer，因此我们只能用 _strerror_buffer 凑合一下。
+            */
+            auto _strerror_buffer_new = (char*)realloc(ptd->_strerror_buffer, strerror_buffer_count * sizeof(wchar_t));
+            if (!_strerror_buffer_new)
+            {
+                RaiseException(0xC00001ADL, EXCEPTION_NONCONTINUABLE, 0, NULL);
+            }
+            else
+            {
+                ptd->_strerror_buffer = _strerror_buffer_new;
+            }
+        }
+
+        return (wchar_t*&)ptd->_strerror_buffer;
+    }
+#endif
+    return ((_ptd_msvcrt_winxp_shared*)ptd)->_wcserror_buffer;
+
 }
 
 

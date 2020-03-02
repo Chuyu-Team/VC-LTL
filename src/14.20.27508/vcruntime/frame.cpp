@@ -35,9 +35,9 @@ using namespace FH4;
 #pragma warning(disable: 4702) // unreachable code
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define cxxReThrow        (__acrt_getptd()->VistaOrLater_msvcrt._cxxReThrow)
+#define cxxReThrow        (((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_cxxReThrow)
 #else
-#define cxxReThrow   (*((int*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_cxxReThrow) : &(__acrt_getptd()->VistaOrLater_msvcrt._cxxReThrow))))
+#define cxxReThrow   (*((int*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_cxxReThrow) : &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_cxxReThrow))))
 #endif
 
 
@@ -207,10 +207,10 @@ static BOOLEAN Is_bad_exception_allowed(ESTypeList *pExceptionSpec);
 // This describes the most recently handled exception, in case of a rethrow:
 //
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define _pCurrentFuncInfo   (*((ESTypeList **)&(__acrt_getptd()->VistaOrLater_msvcrt._curexcspec)))
+#define _pCurrentFuncInfo   (*((ESTypeList **)&(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_curexcspec)))
 #else
-#define _pCurrentFuncInfo   (*((ESTypeList **)(__LTL_GetOsMinVersion() < 0x00060000 ? &(__acrt_getptd()->XP_msvcrt._curexcspec) : \
-          &(__acrt_getptd()->VistaOrLater_msvcrt._curexcspec))))
+#define _pCurrentFuncInfo   (*((ESTypeList **)(__LTL_GetOsMinVersion() < 0x00060000 ? &(((_ptd_msvcrt_winxp*)__acrt_getptd())->_curexcspec) : \
+          &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_curexcspec))))
 #endif
 
 // In the satellite build, __vcrt_getptd uses satellite's PTD

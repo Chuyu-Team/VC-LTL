@@ -118,15 +118,23 @@ extern "C" int __cdecl __uncaught_exceptions()
 		return 0;
 
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
-	if (__LTL_GetOsMinVersion() < 0x00060000)
-	{
-		return ptd->XP_msvcrt._ProcessingThrow;
-	}
-	else
+    auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OSVersion < 0x00050001)
+    {
+        return __LTL_get_ptd_downlevel()->_ProcessingThrow;
+    }
 #endif
-	{
-		return ptd->VistaOrLater_msvcrt._ProcessingThrow;
-	}
+    if (OSVersion < 0x00060000)
+    {
+        return ((_ptd_msvcrt_winxp*)ptd)->_ProcessingThrow;
+    }
+    else
+#endif
+    {
+        return ((_ptd_msvcrt_win6_shared*)ptd)->_ProcessingThrow;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,45 +164,71 @@ extern "C" void** __cdecl __current_exception()
 {
 	auto ptd = __acrt_getptd();
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
-	if (__LTL_GetOsMinVersion() < 0x00060000)
-	{
-		return &ptd->XP_msvcrt._curexception;
-	}
-	else
+    const auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OSVersion < 0x00050001)
+    {
+        return &((_ptd_msvcrt_win2k*)ptd)->_curexception;
+    }
 #endif
-	{
-		return &ptd->VistaOrLater_msvcrt._curexception;
-	}
+    if (OSVersion < 0x00060000)
+    {
+        return &((_ptd_msvcrt_winxp*)ptd)->_curexception;
+    }
+    else
+#endif
+    {
+        return &((_ptd_msvcrt_win6_shared*)ptd)->_curexception;
+    }
 }
 
 extern "C" void** __cdecl __current_exception_context()
 {
 	auto ptd = __acrt_getptd();
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
-	if (__LTL_GetOsMinVersion() < 0x00060000)
-	{
-		return &ptd->XP_msvcrt._curcontext;
-	}
-	else
+    const auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OSVersion < 0x00050001)
+    {
+        return &((_ptd_msvcrt_win2k*)ptd)->_curcontext;
+    }
 #endif
-	{
-		return &ptd->VistaOrLater_msvcrt._curcontext;
-	}
+
+    if (OSVersion < 0x00060000)
+    {
+        return &((_ptd_msvcrt_winxp*)ptd)->_curcontext;
+    }
+    else
+#endif
+    {
+        return &((_ptd_msvcrt_win6_shared*)ptd)->_curcontext;
+    }
 }
 
 extern "C" int* __cdecl __processing_throw()
 {
 	auto ptd = __acrt_getptd();
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
-	if (__LTL_GetOsMinVersion() < 0x00060000)
-	{
-		return &ptd->XP_msvcrt._ProcessingThrow;
-	}
-	else
+    const auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OSVersion < 0x00050001)
+    {
+        return &__LTL_get_ptd_downlevel()->_ProcessingThrow;
+    }
 #endif
-	{
-		return &ptd->VistaOrLater_msvcrt._ProcessingThrow;
-	}
+
+    if (OSVersion < 0x00060000)
+    {
+        return &((_ptd_msvcrt_winxp*)ptd)->_ProcessingThrow;
+    }
+    else
+#endif
+    {
+        return &((_ptd_msvcrt_win6_shared*)ptd)->_ProcessingThrow;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -880,6 +880,284 @@ typedef struct __acrt_thread_parameter
 // AppCRT Per-Thread Data
 //
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+typedef struct _ptd_msvcrt_win2k_shared
+{
+	unsigned long   _tid;       /* thread ID */
+
+
+	uintptr_t _thandle;         /* thread handle */
+
+	int                  _terrno;          // errno value
+	unsigned long        _tdoserrno;       // _doserrno value
+	unsigned int    _fpds;      /* Floating Point data segment */
+
+	//unsigned long   _holdrand;  /* rand() seed value */
+	unsigned int         _rand_state;      // Previous value of rand()
+
+	//char *      _token;         /* ptr to strtok() token */
+	//wchar_t *   _wtoken;        /* ptr to wcstok() token */
+	//unsigned char * _mtoken;    /* ptr to _mbstok() token */
+	
+	// Per-thread strtok(), wcstok(), and mbstok() data:
+	char*                _strtok_token;
+	wchar_t*             _wcstok_token;
+	unsigned char*       _mbstok_token;
+
+	// Per-thread error message data:
+	char*      _strerror_buffer;            // Pointer to strerror()  / _strerror()  buffer _errmsg
+} _ptd_msvcrt, __acrt_ptd;
+
+#ifdef __cplusplus
+
+typedef struct _ptd_msvcrt_winxp_shared : public _ptd_msvcrt_win2k_shared
+{
+   	wchar_t*   _wcserror_buffer;            // Pointer to _wcserror() / __wcserror() buffer _werrmsg
+
+	//0x2C
+	//char *      _namebuf0;      /* ptr to tmpnam() buffer */
+	//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
+	// Per-thread tmpnam() data:
+	char*                _tmpnam_narrow_buffer;
+	wchar_t*             _tmpnam_wide_buffer;
+	//0x34
+	char *      _namebuf1;      /* ptr to tmpfile() buffer */
+	wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
+								//char *      _asctimebuf;    /* ptr to asctime() buffer */
+								//wchar_t *   _wasctimebuf;   /* ptr to _wasctime() buffer */
+								//void *      _gmtimebuf;     /* ptr to gmtime() structure */
+								//char *      _cvtbuf;        /* ptr to ecvt()/fcvt buffer */
+
+								// Per-thread time library data:
+	char*                _asctime_buffer;  // Pointer to asctime() buffer
+	wchar_t*             _wasctime_buffer; // Pointer to _wasctime() buffer
+	//0x44
+	struct tm*           _gmtime_buffer;   // Pointer to gmtime() structure
+
+	//0x48
+	char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
+} _ptd_msvcrt_winxp_shared;
+
+typedef struct _ptd_msvcrt_win6_shared : public _ptd_msvcrt_winxp_shared
+{
+   	//unsigned char _con_ch_buf[MB_LEN_MAX];
+	/* ptr to putch() buffer */
+	//unsigned short _ch_buf_used;   /* if the _con_ch_buf is used */
+
+	// The buffer used by _putch(), and the flag indicating whether the buffer
+	// is currently in use or not.
+	unsigned char  _putch_buffer[MB_LEN_MAX];
+	unsigned short _putch_buffer_used;
+
+	/* following fields are needed by _beginthread code */
+	void *      _initaddr;      /* initial user thread address */
+	void *      _initarg;       /* initial user thread argument */
+
+								/* following three fields are needed to support signal handling and
+								* runtime errors */
+	struct __crt_signal_action_t* _pxcptacttab;     // Pointer to the exception-action table
+	EXCEPTION_POINTERS*           _tpxcptinfoptrs;  // Pointer to the exception info pointers
+	int                           _tfpecode;        // Last floating point exception code
+
+								/* pointer to the copy of the multibyte character information used by
+								* the thread */
+								//struct __crt_multibyte_data*  ptmbcinfo;
+	_multibyte_data_msvcrt*                  _multibyte_info;
+
+	/* pointer to the copy of the locale informaton used by the thead */
+	//__crt_locale_data*  ptlocinfo;
+	_locale_data_msvcrt*                     _locale_info;
+
+	int                                    _own_locale;   // If 1, this thread owns its locale
+
+								/* following field is needed by NLG routines */
+	unsigned long   _NLG_dwCode;
+
+	/*
+	* Per-Thread data needed by C++ Exception Handling
+	*/
+	terminate_handler      _terminate;    // terminate() routine
+	void *      _unexpected;    /* unexpected() routine */
+	void *      _translator;    /* S.E. translator */
+	void *      _purecall;      /* called when pure virtual happens */
+	void *      _curexception;  /* current exception */
+	void *      _curcontext;    /* current exception context */
+	int         _ProcessingThrow; /* for uncaught_exception */
+	void *              _curexcspec;    /* for handling exceptions thrown from std::unexpected */
+#if defined (_M_IA64) || defined (_M_AMD64) || defined (_M_ARM64) || defined (_M_ARM)
+	void *      _pExitContext;
+	void *      _pUnwindContext;
+	void *      _pFrameInfoChain;
+	uintptr_t   _ImageBase;
+#if defined (_M_IA64)
+	unsigned __int64    _TargetGp;
+#endif  /* defined (_M_IA64) */
+	uintptr_t   _ThrowImageBase;
+	void *      _pForeignException;
+#elif defined (_M_IX86)
+	void *      _pFrameInfoChain;
+#endif  /* defined (_M_IX86) */
+	__crt_qualified_locale_data            _setloc_data;
+
+#ifdef _M_IX86
+	void *      _encode_ptr;    /* EncodePointer() routine */
+	void *      _decode_ptr;    /* DecodePointer() routine */
+#endif  /* _M_IX86 */
+
+	void *      _reserved1;     /* nothing */
+	void *      _reserved2;     /* nothing */
+	void *      _reserved3;     /* nothing */
+
+	int _cxxReThrow;        /* Set to True if it's a rethrown C++ Exception */
+
+	unsigned long __initDomain;     /* initial domain used by _beginthread[ex] for managed function */
+} _ptd_msvcrt_win6_shared;
+
+//结构体大小0x7C
+typedef struct _ptd_msvcrt_win2k : public _ptd_msvcrt_win2k_shared
+{
+    //char *      _namebuf0;      /* ptr to tmpnam() buffer */
+	//wchar_t *   _wnamebuf0;     /* ptr to _wtmpnam() buffer */
+	// Per-thread tmpnam() data:
+    //0x28
+	char*                _tmpnam_narrow_buffer;
+    //0x2C
+	wchar_t*             _tmpnam_wide_buffer;
+
+    //0x30
+   	char *      _namebuf1;      /* ptr to tmpfile() buffer */
+
+    //0x34
+	wchar_t *   _wnamebuf1;     /* ptr to _wtmpfile() buffer */
+    //0x38
+   								//char *      _asctimebuf;    /* ptr to asctime() buffer */
+								//wchar_t *   _wasctimebuf;   /* ptr to _wasctime() buffer */
+    char* _asctime_buffer;  // Pointer to asctime() buffer
+    //0x3C
+    wchar_t* _wasctime_buffer; // Pointer to _wasctime() buffer
+    //0x40
+    struct tm* _gmtime_buffer;   // Pointer to gmtime() structure
+    //0x44
+   	char*                _cvtbuf;          // Pointer to the buffer used by ecvt() and fcvt().
+                                                    /* following fields are needed by _beginthread code */
+    //0x48
+    void* _initaddr;      /* initial user thread address */
+    //0x4C
+    void* _initarg;       /* initial user thread argument */
+    								/* following three fields are needed to support signal handling and
+								* runtime errors */
+    //0x50
+	struct __crt_signal_action_t* _pxcptacttab;     // Pointer to the exception-action table
+    //0x54
+	EXCEPTION_POINTERS*           _tpxcptinfoptrs;  // Pointer to the exception info pointers
+    //0x58
+	int                           _tfpecode;        // Last floating point exception code
+
+	//0x5C
+
+	/* pointer to the copy of the multibyte character information used by
+	* the thread */
+	//struct __crt_multibyte_data*  ptmbcinfo;
+	struct _multibyte_data_msvcrt_winxp*                  _multibyte_info;
+
+	//0x60
+	/* pointer to the copy of the locale informaton used by the thead */
+	struct _locale_data_msvcrt_winxp*                     _locale_info;
+
+	//0x64
+	/* following field is needed by NLG routines */
+	unsigned long   _NLG_dwCode;
+
+	/*
+	* Per-Thread data needed by C++ Exception Handling
+	*/
+	//0x68
+	terminate_handler      _terminate;    // terminate() routine
+	//0x6C
+	void *      _unexpected;    /* unexpected() routine */
+    //0x70
+	void *      _translator;    /* S.E. translator */
+    //0x74
+	void *      _curexception;  /* current exception */
+    //0x78
+	void *      _curcontext;    /* current exception context */
+    //0x7C
+} _ptd_msvcrt_win2k;
+
+typedef struct _ptd_msvcrt_winxp : public _ptd_msvcrt_winxp_shared
+{
+    											/* following fields are needed by _beginthread code */
+	void *      _initaddr;      /* initial user thread address */
+	void *      _initarg;       /* initial user thread argument */
+
+								/* following three fields are needed to support signal handling and
+								* runtime errors */
+	struct __crt_signal_action_t* _pxcptacttab;     // Pointer to the exception-action table
+	EXCEPTION_POINTERS*           _tpxcptinfoptrs;  // Pointer to the exception info pointers
+	int                           _tfpecode;        // Last floating point exception code
+
+	//0x60
+
+	/* pointer to the copy of the multibyte character information used by
+	* the thread */
+	//struct __crt_multibyte_data*  ptmbcinfo;
+	struct _multibyte_data_msvcrt_winxp*                  _multibyte_info;
+
+	//0x64
+	/* pointer to the copy of the locale informaton used by the thead */
+	struct _locale_data_msvcrt_winxp*                     _locale_info;
+
+	//0x68
+	/* following field is needed by NLG routines */
+	unsigned long   _NLG_dwCode;
+
+	/*
+	* Per-Thread data needed by C++ Exception Handling
+	*/
+	//0x6C
+	terminate_handler      _terminate;    // terminate() routine
+	//0x70
+	void *      _unexpected;    /* unexpected() routine */
+	void *      _translator;    /* S.E. translator */
+	void *      _curexception;  /* current exception */
+	void *      _curcontext;    /* current exception context */
+
+	//0x80
+	int         _ProcessingThrow; /* for uncaught_exception */
+#if defined(_M_IX86)
+	//0x84
+	void *      _pFrameInfoChain;
+#elif defined(_M_AMD64)
+	void *      _curexcspec;    /* for handling exceptions thrown from std::unexpected */
+	void *      _pExitContext;
+	void *      _pUnwindContext;
+	//0x110
+	void *      _pFrameInfoChain;
+	void *      _reserved1;     /* nothing */
+	void *      _reserved2;     /* nothing */
+	void *      _reserved3;     /* nothing */
+	//0x130
+#elif defined (_M_MRX000)
+	void *      _pFrameInfoChain;
+	void *      _pUnwindContext;
+	void *      _pExitContext;
+	int         _MipsPtdDelta;
+	int         _MipsPtdEpsilon;
+#elif defined (_M_PPC)
+	void *      _pExitContext;
+	void *      _pUnwindContext;
+	void *      _pFrameInfoChain;
+	int         _FrameInfo[6];
+#endif  /* defined (_M_PPC) */
+
+} _ptd_msvcrt_winxp;
+
+typedef struct _ptd_msvcrt_win6 : public _ptd_msvcrt_win6_shared
+{
+} _ptd_msvcrt_win6;
+
+#endif
+
+#if 0
 typedef struct _ptd_msvcrt
 {
 	unsigned long   _tid;       /* thread ID */
@@ -1132,6 +1410,7 @@ typedef struct _ptd_msvcrt
     __acrt_thread_parameter* _beginthread_context;
 #endif
 } _ptd_msvcrt,__acrt_ptd;
+#endif
 
 __declspec(dllimport) void __cdecl _lock(
 	int locknum

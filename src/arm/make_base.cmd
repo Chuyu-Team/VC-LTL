@@ -1,4 +1,4 @@
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_arm.bat"
+@call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsamd64_arm.bat"
 ::@call "%~dp0..\..\VC-LTL helper for nmake.cmd"
 
 set libfileroot=%~dp0..\..\lib\arm

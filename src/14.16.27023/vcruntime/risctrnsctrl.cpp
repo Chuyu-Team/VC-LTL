@@ -24,9 +24,9 @@
 #if _EH_RELATIVE_FUNCINFO
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define _ImageBase        (__acrt_getptd()->VistaOrLater_msvcrt._ImageBase)
+#define _ImageBase        (((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_ImageBase)
 #else
-#define _ImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ImageBase))))
+#define _ImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ImageBase) : &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_ImageBase))))
 #endif
 
 extern "C" uintptr_t __cdecl _GetImageBase()
@@ -44,9 +44,9 @@ extern "C" void __cdecl _SetImageBase(uintptr_t ImageBaseToRestore)
 #if _EH_RELATIVE_TYPEINFO
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define _ThrowImageBase   (__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase)
+#define _ThrowImageBase   (((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_ThrowImageBase)
 #else
-#define _ThrowImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ThrowImageBase) : &(__acrt_getptd()->VistaOrLater_msvcrt._ThrowImageBase))))
+#define _ThrowImageBase   (*((uintptr_t*)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__LTL_get_ptd_downlevel()->_ThrowImageBase) : &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_ThrowImageBase))))
 #endif
 
 extern "C" uintptr_t __cdecl _GetThrowImageBase()

@@ -19,11 +19,14 @@ static terminate_handler __cdecl get_terminate_or_default(
 #endif
 
 #if _CRT_NTDDI_MIN < 0x06000000
-	if(__LTL_GetOsMinVersion() < 0x00060000)
-		return ptd->XP_msvcrt._terminate ? ptd->XP_msvcrt._terminate : &abort;
+    const auto OsVersion = __LTL_GetOsMinVersion();
+    if (OsVersion < 0x00050001)
+        return ((_ptd_msvcrt_win2k*)ptd)->_terminate ? ((_ptd_msvcrt_win2k*)ptd)->_terminate : &abort;
+	else if(OsVersion < 0x00060000)
+		return ((_ptd_msvcrt_winxp*)ptd)->_terminate ? ((_ptd_msvcrt_winxp*)ptd)->_terminate : &abort;
 	else
 #endif
-		return ptd->VistaOrLater_msvcrt._terminate ? ptd->VistaOrLater_msvcrt._terminate : &abort;
+		return ((_ptd_msvcrt_win6_shared*)ptd)->_terminate ? ((_ptd_msvcrt_win6_shared*)ptd)->_terminate : &abort;
 }
 
 extern "C" terminate_handler __cdecl _get_terminate()

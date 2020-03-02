@@ -14,12 +14,19 @@ static __forceinline unexpected_handler __cdecl get_unexpected_or_default(
 	__acrt_ptd const* const ptd
     ) throw()
 {
-#ifdef _ATL_XP_TARGETING
-	if (__LTL_GetOsMinVersion() < 0x00060000)
-		return ptd->XP_msvcrt._unexpected ? (unexpected_handler)ptd->XP_msvcrt._unexpected : &terminate;
-	else
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+    const auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OSVersion < 0x00050001)
+        return ((_ptd_msvcrt_win2k*)ptd)->_unexpected ? (unexpected_handler)((_ptd_msvcrt_win2k*)ptd)->_unexpected : &terminate;
 #endif
-		return ptd->VistaOrLater_msvcrt._unexpected ? (unexpected_handler)ptd->VistaOrLater_msvcrt._unexpected : &terminate;
+
+    if (OSVersion < 0x00060000)
+        return ((_ptd_msvcrt_winxp*)ptd)->_unexpected ? (unexpected_handler)((_ptd_msvcrt_winxp*)ptd)->_unexpected : &terminate;
+    else
+#endif
+        return ((_ptd_msvcrt_win6_shared*)ptd)->_unexpected ? (unexpected_handler)((_ptd_msvcrt_win6_shared*)ptd)->_unexpected : &terminate;
 }
 
 extern "C" unexpected_handler __cdecl _get_unexpected()

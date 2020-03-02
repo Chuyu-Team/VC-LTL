@@ -7,7 +7,7 @@
 
 #include <vcruntime_internal.h>
 #include <corecrt_internal.h>
-
+#include <ptd_downlevel.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -25,13 +25,21 @@ extern "C" int __cdecl __uncaught_exceptions()
 		return 0;
 
 #if _CRT_NTDDI_MIN < NTDDI_WIN6
-	if (__LTL_GetOsMinVersion() < 0x00060000)
+	auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+	if (OSVersion < 0x00050001)
 	{
-		return ptd->XP_msvcrt._ProcessingThrow;
+		return __LTL_get_ptd_downlevel()->_ProcessingThrow;
+	}
+#endif
+	if (OSVersion < 0x00060000)
+	{
+		return ((_ptd_msvcrt_winxp*)ptd)->_ProcessingThrow;
 	}
 	else
 #endif
 	{
-		return ptd->VistaOrLater_msvcrt._ProcessingThrow;
+		return ((_ptd_msvcrt_win6_shared*)ptd)->_ProcessingThrow;
 	}
 }

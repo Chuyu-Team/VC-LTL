@@ -18,6 +18,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif  /* _MSC_VER > 1000 */
+#include <ptd_downlevel.h>
 
 #ifndef _INC_TRNSCTRL
 #define _INC_TRNSCTRL

@@ -41,13 +41,35 @@
 #define IS_DISPATCHING(Flag) ((Flag & EXCEPTION_UNWIND) == 0)
 #define IS_TARGET_UNWIND(Flag) (Flag & EXCEPTION_TARGET_UNWIND)
 
+#ifndef pFrameInfoChain
+
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define pFrameInfoChain   (*((FRAMEINFO **)    &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain)))
+#define pFrameInfoChain   (*((FRAMEINFO **)    &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_pFrameInfoChain)))
 #else
-#define pFrameInfoChain   (*((FRAMEINFO **)  (__LTL_GetOsMinVersion() < 0x00060000 ? &(__acrt_getptd()->XP_msvcrt._pFrameInfoChain) : \
-          &(__acrt_getptd()->VistaOrLater_msvcrt._pFrameInfoChain))))
+
+static __inline void* __fastcall pFrameInfoChain_fun()
+{
+    auto ptd = __acrt_getptd();
+    const auto OsVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OsVersion < 0x00050001)
+    {
+        return &(__LTL_get_ptd_downlevel()->_pFrameInfoChain);
+    }
+#endif
+    if (OsVersion < 0x00060000)
+    {
+        return &(((_ptd_msvcrt_winxp*)ptd)->_pFrameInfoChain);
+    }
+
+    return &(((_ptd_msvcrt_win6_shared*)ptd)->_pFrameInfoChain);
+}
+
+#define pFrameInfoChain   (*((FRAMEINFO **)  pFrameInfoChain_fun()))
 #endif
 
+#endif
 #if 0
 /////////////////////////////////////////////////////////////////////////////
 //

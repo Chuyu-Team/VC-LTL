@@ -55,10 +55,27 @@ EXTERN_C _VCRTIMP BOOL __cdecl _IsExceptionObjectToBeDestroyed(
 
 
 #if _CRT_NTDDI_MIN >= NTDDI_WIN6
-#define __pSETranslator   (_se_translator_function)(__acrt_getptd()->VistaOrLater_msvcrt._translator)
+#define __pSETranslator   (_se_translator_function)(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_translator)
 #else
-#define __pSETranslator   (_se_translator_function)(__LTL_GetOsMinVersion() < 0x00060000 ? (__acrt_getptd()->XP_msvcrt._translator) : \
-          (__acrt_getptd()->VistaOrLater_msvcrt._translator))
+static __inline void* __fastcall __pSETranslator_fun()
+{
+    auto ptd = __acrt_getptd();
+    const auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OSVersion < 0x00050001)
+    {
+        return ((_ptd_msvcrt_win2k*)ptd)->_translator;
+    }
+#endif
+    if (OSVersion < 0x00060000)
+    {
+        return ((_ptd_msvcrt_winxp*)ptd)->_translator;
+    }
+
+    return ((_ptd_msvcrt_win6_shared*)ptd)->_translator;
+}
+#define __pSETranslator   (_se_translator_function)(__pSETranslator_fun())
 #endif
 
 

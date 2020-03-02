@@ -773,14 +773,24 @@ static void __cdecl __freetlocinfo(
 
 EXTERN_C _locale_t __cdecl _get_current_locale(void)
 {
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+	const auto OSVersion = __LTL_GetOsMinVersion();
+#if defined(_M_IX86)
+	if (OSVersion < 0x00050001)
+	{
+		errno = ENOSYS;
+		return nullptr;
+	}
+#endif
+#endif
 	auto retval = (__crt_locale_pointers*)malloc(sizeof(__crt_locale_pointers));
 	if (!retval)
 	{
 		errno = ENOMEM;
 		return nullptr;
 	}
-#if _CRT_NTDDI_MIN < NTDDI_VISTA 
-	if (__LTL_GetOsMinVersion() < 0x00060000)
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+	if (OSVersion < 0x00060000)
 	{
 		_locale_data_msvcrt* locinfo = (_locale_data_msvcrt*)malloc(sizeof(_locale_data_msvcrt));
 
@@ -1000,10 +1010,10 @@ EXTERN_C _locale_t __cdecl _get_current_locale(void)
 	__updatetmbcinfo();*/
 	_getmbcp();
 
-	auto ptd = __acrt_getptd();
+	auto ptd = (_ptd_msvcrt_win6_shared*)__acrt_getptd();
 
-	retval->locinfo = ptd->VistaOrLater_msvcrt._locale_info;
-	retval->mbcinfo = ptd->VistaOrLater_msvcrt._multibyte_info;
+	retval->locinfo = ptd->_locale_info;
+	retval->mbcinfo = ptd->_multibyte_info;
 
 	//锁定区域
 	_lock(_SETLOCALE_LOCK);
@@ -1079,8 +1089,17 @@ static _locale_t __cdecl common_create_locale(
 		return NULL;
 	}
 
-#if _CRT_NTDDI_MIN < NTDDI_VISTA 
-	if (__LTL_GetOsMinVersion() < 0x00060000)
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+	const auto OSVersion = __LTL_GetOsMinVersion();
+#if defined(_M_IX86)
+	if (OSVersion < 0x00050001)
+	{
+		errno = ENOSYS;
+		return nullptr;
+	}
+#endif
+
+	if (OSVersion < 0x00060000)
 	{
 		_locale_t plocale = nullptr;
 		int __errno = 0;
@@ -1164,33 +1183,33 @@ static _locale_t __cdecl common_create_locale(
 
 	_locale_t plocale = nullptr;
 
-	auto ptd = __acrt_getptd();
+	auto ptd = (_ptd_msvcrt_win6_shared*)__acrt_getptd();
 
 	
-	auto _own_locale = ptd->VistaOrLater_msvcrt._own_locale;
+	auto _own_locale = ptd->_own_locale;
 
 	//启用线程locale信息
-	ptd->VistaOrLater_msvcrt._own_locale |= _PER_THREAD_LOCALE_BIT;
+	ptd->_own_locale |= _PER_THREAD_LOCALE_BIT;
 
 
-	if (common_setlocale(_category, _locale)!=nullptr && _setmbcp(ptd->VistaOrLater_msvcrt._locale_info->_locale_lc_codepage)==0)
+	if (common_setlocale(_category, _locale)!=nullptr && _setmbcp(ptd->_locale_info->_locale_lc_codepage)==0)
 	{
 		//设置区域信息成功后，获取新的区域信息
 		plocale = _get_current_locale();
 	}
 
 	//恢复线程配置状态
-	ptd->VistaOrLater_msvcrt._own_locale = _own_locale;
+	ptd->_own_locale = _own_locale;
 
 	//恢复以前的区域信息
-	if (plocaleOld->locinfo != ptd->VistaOrLater_msvcrt._locale_info)
+	if (plocaleOld->locinfo != ptd->_locale_info)
 	{
-		std::swap(plocaleOld->locinfo, ptd->VistaOrLater_msvcrt._locale_info);
+		std::swap(plocaleOld->locinfo, ptd->_locale_info);
 	}
 
-	if (plocaleOld->mbcinfo != ptd->VistaOrLater_msvcrt._multibyte_info)
+	if (plocaleOld->mbcinfo != ptd->_multibyte_info)
 	{
-		std::swap(plocaleOld->mbcinfo, ptd->VistaOrLater_msvcrt._multibyte_info);
+		std::swap(plocaleOld->mbcinfo, ptd->_multibyte_info);
 	}
 
 	//释放不需要的区域
@@ -1289,9 +1308,9 @@ EXTERN_C int __cdecl _configthreadlocale(int i)
 	* N is set if _ENABLE_PER_THREAD_LOCALE_NEW is set.
 	* N is 0 if _ENABLE_PER_THREAD_LOCALE_NEW is not set.
 	*/
-	auto ptd = __acrt_getptd();
+	auto ptd = (_ptd_msvcrt_win6_shared*)__acrt_getptd();
 
-	auto& _own_locale = ptd->VistaOrLater_msvcrt._own_locale;
+	auto& _own_locale = ptd->_own_locale;
 
 	int retval = (_own_locale & _PER_THREAD_LOCALE_BIT) == 0 ? _DISABLE_PER_THREAD_LOCALE : _ENABLE_PER_THREAD_LOCALE;
 
