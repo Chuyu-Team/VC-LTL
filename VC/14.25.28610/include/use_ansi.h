@@ -8,6 +8,10 @@
 #ifndef _USE_ANSI_CPP
 #define _USE_ANSI_CPP
 
+#ifndef RC_INVOKED
+#include <LTL_config.h>
+#endif
+
 #ifdef _CRTBLD
 #define _CRT_NOPRAGMA_LIBS
 #else

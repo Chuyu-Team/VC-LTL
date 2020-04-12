@@ -220,7 +220,7 @@ extern "C" _VCRTIMP int*   __cdecl __processing_throw();
 // NOTE: __uncaught_exceptions duplicates __ProcessingThrow.
 
 #ifndef _VCRT_DIRECT_PTD
-#ifdef _VCRT_BUILD
+#if defined(_VCRT_BUILD) && !defined(__Build_LTL)
 #define _VCRT_DIRECT_PTD 1
 #else // ^^^ _VCRT_BUILD // !_VCRT_BUILD vvv
 #define _VCRT_DIRECT_PTD 0
