@@ -57,7 +57,7 @@ struct __scrt_enclavemain_policy
 struct __scrt_file_policy
 {
     static void set_fmode() { _set_fmode(_get_startup_file_mode()); }
-    static void set_commode() { _commode = _get_startup_commit_mode(); }
+    static void set_commode() { *__p__commode() = _commode = _get_startup_commit_mode(); }
 };
 
 struct __scrt_nofile_policy
@@ -66,16 +66,26 @@ struct __scrt_nofile_policy
     static void set_commode() { }
 };
 
+
+#if defined _M_IX86
+#define MinSubSystemVersion "5.01"
+#elif defined _M_AMD64
+#define MinSubSystemVersion "5.02"
+#endif
+
+
+
 #if defined _SCRT_STARTUP_MAIN
 
     using main_policy = __scrt_main_policy;
     using file_policy = __scrt_file_policy;
     using argv_policy = __scrt_narrow_argv_policy;
     using environment_policy = __scrt_narrow_environment_policy;
+	#define __SUBSYSTEM "CONSOLE"
 
     static int __cdecl invoke_main()
     {
-        return main(__argc, __argv, _get_initial_narrow_environment());
+        return main(__argc, __argv, _environ);
     }
 
 #elif defined _SCRT_STARTUP_WMAIN
@@ -84,10 +94,11 @@ struct __scrt_nofile_policy
     using file_policy = __scrt_file_policy;
     using argv_policy = __scrt_wide_argv_policy;
     using environment_policy = __scrt_wide_environment_policy;
+	#define __SUBSYSTEM "CONSOLE"
 
     static int __cdecl invoke_main()
     {
-        return wmain(__argc, __wargv, _get_initial_wide_environment());
+        return wmain(__argc, __wargv, _wenviron);
     }
 
 #elif defined _SCRT_STARTUP_WINMAIN
@@ -96,6 +107,7 @@ struct __scrt_nofile_policy
     using file_policy = __scrt_file_policy;
     using argv_policy = __scrt_narrow_argv_policy;
     using environment_policy = __scrt_narrow_environment_policy;
+	#define __SUBSYSTEM "WINDOWS"
 
     static int __cdecl invoke_main()
     {
@@ -112,6 +124,7 @@ struct __scrt_nofile_policy
     using file_policy = __scrt_file_policy;
     using argv_policy = __scrt_wide_argv_policy;
     using environment_policy = __scrt_wide_environment_policy;
+	#define __SUBSYSTEM "WINDOWS"
 
     static int __cdecl invoke_main()
     {
@@ -128,6 +141,7 @@ struct __scrt_nofile_policy
     using file_policy = __scrt_nofile_policy;
     using argv_policy = __scrt_no_argv_policy;
     using environment_policy = __scrt_no_environment_policy;
+	#define __SUBSYSTEM "CONSOLE"
 
 #if defined _SCRT_STARTUP_ENCLAVE
     static int __cdecl invoke_main()
@@ -141,6 +155,11 @@ struct __scrt_nofile_policy
     }
 #endif
 
+#endif
+
+
+#if _CRT_NTDDI_MIN < NTDDI_VISTA
+#pragma comment(linker,"/SUBSYSTEM:" __SUBSYSTEM "," MinSubSystemVersion)
 #endif
 
 static int __cdecl pre_c_initialization()
@@ -186,12 +205,18 @@ static int __cdecl pre_c_initialization()
     _initialize_default_precision();
     #endif
 
+    #if _CRT_NTDDI_MIN >= NTDDI_VISTA
+    //默认禁用_get_startup_thread_locale_mode调用以支持WinXP，反正默认也是禁用thread locale。
     _configthreadlocale(_get_startup_thread_locale_mode());
+    #endif
 
+    #ifndef __Build_LTL
+    //LTL模式中环境变量由argv_policy::configure_argv()初始化
     if (_should_initialize_environment())
         environment_policy::initialize_environment();
 
     __scrt_initialize_winrt();
+    #endif
 
     if (__scrt_initialize_mta() != 0)
     {
@@ -219,7 +244,9 @@ static void __cdecl pre_cpp_initialization()
     // being called:
     __scrt_set_unhandled_exception_filter();
 
+    #ifndef __Build_LTL //LTL模式中由argv_policy::configure_argv()初始化
     _set_new_mode(_get_startup_new_mode());
+    #endif
 }
 
 // When both the PGO instrumentation library and the CRT are statically linked,
@@ -275,11 +302,13 @@ static __declspec(noinline) int __cdecl __scrt_common_main_seh()
 
         // If this module has any thread-local destructors, register the
         // callback function with the Unified CRT to run on exit.
+        #ifndef __Build_LTL //无法正确实现_register_thread_local_exe_atexit_callback，反正进程都要退出了，thread-local destructors不调关系也不大。
         _tls_callback_type const * const tls_dtor_callback = __scrt_get_dyn_tls_dtor_callback();
         if (*tls_dtor_callback != nullptr && __scrt_is_nonwritable_in_current_image(tls_dtor_callback))
         {
             _register_thread_local_exe_atexit_callback(*tls_dtor_callback);
         }
+        #endif
 
         //
         // Initialization is complete; invoke main...

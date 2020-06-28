@@ -18,7 +18,7 @@ if "%LIB%" == "" echo 找不到环境变量LIB，请在vcvars32.bat/vcvars64.bat执行后调用
 
 if "%VisualStudioVersion%" == "14.0" set DefaultVCLTLToolsVersion=14.0.24231
 if "%VisualStudioVersion%" == "15.0" set DefaultVCLTLToolsVersion=14.16.27023
-if "%VisualStudioVersion%" == "16.0" set DefaultVCLTLToolsVersion=14.24.28314
+if "%VisualStudioVersion%" == "16.0" set DefaultVCLTLToolsVersion=14.26.28801
 
 if "%DefaultVCLTLToolsVersion%" == "" echo VC-LTL仅支持VS 2015、2017以及2019&&goto:eof
 

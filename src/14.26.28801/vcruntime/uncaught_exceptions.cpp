@@ -6,7 +6,8 @@
 ****/
 
 #include <vcruntime_internal.h>
-
+#include <corecrt_internal.h>
+#include <ptd_downlevel.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -19,6 +20,26 @@
 
 extern "C" int __cdecl __uncaught_exceptions()
 {
-    RENAME_BASE_PTD(__vcrt_ptd)* const ptd = RENAME_BASE_PTD(__vcrt_getptd_noinit)();
-    return ptd ? ptd->_ProcessingThrow : 0;
+	auto* const ptd = __acrt_getptd();
+	if (ptd == nullptr)
+		return 0;
+
+#if _CRT_NTDDI_MIN < NTDDI_WIN6
+	auto OSVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+	if (OSVersion < 0x00050001)
+	{
+		return __LTL_get_ptd_downlevel()->_ProcessingThrow;
+	}
+#endif
+	if (OSVersion < 0x00060000)
+	{
+		return ((_ptd_msvcrt_winxp*)ptd)->_ProcessingThrow;
+	}
+	else
+#endif
+	{
+		return ((_ptd_msvcrt_win6_shared*)ptd)->_ProcessingThrow;
+	}
 }

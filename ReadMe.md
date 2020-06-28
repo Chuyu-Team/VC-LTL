@@ -482,10 +482,10 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug，symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to 昌平517)
 
 
-### 4.1.0.2 - Improved Support (Mar 12, 2020 20:00)
+### 4.1.0.3 - Improved Support (Jun 27, 2020 16:00)
 * Improve, Enhanced _Getcvt support for C ++ 17.
 * New Fea, add msvcp60 static library mode to improve the compatibility of streamlined systems.
-* New Fea, add VS 14.25.28610 support.
+* New Fea, add VS 14.25.28610, 14.26.28801 support.
 * Fix Bug, symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to Big吊)
 * Fix Bug, eliminate CString::Format warning (Thunks to 大胸滴)
 
