@@ -473,12 +473,12 @@ nmake /f Test.mak
 * 解决Bug，轻量模式中，`legacy_stdio_definitions.lib`可能出现符号冲突问题（感谢 昌平517）。
 
 
-### 4.1.0.3 - 改进支持（2020-06-27 16:00）
+### 4.1.0.3 - 改进支持（2020-07-01 16:00）
 * 改进体验，增强_Getcvt对C++17支持。
 * 新增Fea，添加msvcp60静态库模式，增强某些精简系统的兼容性。
 * 新增Fea，添加14.25.28610、14.26.28801支持。
 * 解决Bug，轻量模式中，`legacy_stdio_definitions.lib`可能出现符号冲突问题（感谢 Big吊）。
 * 解决Bug，消除CString::Format警告（感谢 大胸滴）
-
+* 解决Bug，解决 14.26.28801 syserror_import_lib 缺失问题（感谢 噬元兽）
 
 > 温馨提示：VC-LTL 4.1 与 4.0版本在STL stream支持中存在ABI不兼容问题，对应静态库请重新编译！

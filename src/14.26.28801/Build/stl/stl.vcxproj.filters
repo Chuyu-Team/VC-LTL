@@ -321,6 +321,9 @@
     <ClCompile Include="..\..\stl\xwctomb.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\stl\syserror_import_lib.cpp">
+      <Filter>objs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h">

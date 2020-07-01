@@ -1496,6 +1496,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic_Spectre'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\stl\syserror_import_lib.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Redist'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\stl\taskscheduler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic_Spectre'">true</ExcludedFromBuild>
