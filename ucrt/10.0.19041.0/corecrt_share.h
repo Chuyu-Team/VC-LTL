@@ -6,6 +6,12 @@
 // Defines the file sharing modes for the sopen() family of functions.  These
 // declarations are split out to support the Windows build.
 //
+
+#ifndef _UCRT_LTL_Include
+#define _UCRT_LTL_Include 19041
+#endif //!_UCRT_LTL_Include
+
+#ifndef __LTL_Check_UCRT
 #pragma once
 
 #include <corecrt.h>
@@ -31,3 +37,5 @@ _UCRT_DISABLE_CLANG_WARNINGS
 
 _UCRT_RESTORE_CLANG_WARNINGS
 #pragma warning(pop) // _UCRT_DISABLED_WARNINGS
+
+#endif

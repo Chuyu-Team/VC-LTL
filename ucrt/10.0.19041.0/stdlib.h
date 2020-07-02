@@ -1,4 +1,4 @@
-//
+﻿//
 // stdlib.h
 //
 //      Copyright (c) Microsoft Corporation. All rights reserved.
@@ -64,6 +64,7 @@ _ACRTIMP void __cdecl _swab(
 #define _WRITE_ABORT_MSG  0x1 // debug only, has no effect in release
 #define _CALL_REPORTFAULT 0x2
 
+_CRT_DEPRECATE_TEXT("VC-LTL don't support _set_abort_behavior function. If you call abort function will silently quit the program.")
 _ACRTIMP unsigned int __cdecl _set_abort_behavior(
     _In_ unsigned int _Flags,
     _In_ unsigned int _Mask
@@ -244,10 +245,10 @@ _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) _ACRTIMP wchar_t** __cdecl __p__wp
 _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) _ACRTIMP int*      __cdecl __p__fmode  (void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_pgmptr ) extern char*    _pgmptr;
-    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) extern wchar_t* _wpgmptr;
+    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_pgmptr ) __declspec(dllimport) extern char*    _pgmptr;
+    _CRT_INSECURE_DEPRECATE_GLOBALS(_get_wpgmptr) __declspec(dllimport) extern wchar_t* _wpgmptr;
     #ifndef _CORECRT_BUILD
-        _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) extern int      _fmode;
+        _CRT_INSECURE_DEPRECATE_GLOBALS(_get_fmode  ) __declspec(dllimport) extern int      _fmode;
     #endif
 #else
     #define _pgmptr  (*__p__pgmptr ())
@@ -834,7 +835,7 @@ _ACRTIMP char* __cdecl _gcvt(
     #endif
 
     #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-        extern int __mb_cur_max;
+        __declspec(dllimport) extern int __mb_cur_max;
     #else
         #define __mb_cur_max (___mb_cur_max_func())
     #endif
@@ -1146,9 +1147,9 @@ _ACRTIMP char***    __cdecl __p___argv (void);
 _ACRTIMP wchar_t*** __cdecl __p___wargv(void);
 
 #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-    extern int       __argc;
-    extern char**    __argv;
-    extern wchar_t** __wargv;
+    __declspec(dllimport) extern int       __argc;
+    __declspec(dllimport) extern char**    __argv;
+    __declspec(dllimport) extern wchar_t** __wargv;
 #else
     #define __argc  (*__p___argc())  // Pointer to number of command line arguments
     #define __argv  (*__p___argv())  // Pointer to table of narrow command line arguments
@@ -1163,10 +1164,8 @@ _DCRTIMP wchar_t*** __cdecl __p__wenviron(void);
 #endif
 
 #ifndef _CRT_V12_LEGACY_FUNCTIONALITY
-    // Deprecated symbol: Do not expose environment global pointers unless
-    // legacy access is specifically requested
-    #define _environ    crt_usage_error__do_not_reference_global_pointer_directly__environ
-    #define _wenviron   crt_usage_error__do_not_reference_global_pointer_directly__wenviron
+    __declspec(dllimport) extern char **    _environ;
+	__declspec(dllimport) extern wchar_t ** _wenviron;
 #else
     #define _environ  (*__p__environ())  // Pointer to narrow environment table
     #define _wenviron (*__p__wenviron()) // Pointer to wide environment table

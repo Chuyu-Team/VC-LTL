@@ -112,7 +112,7 @@ __inline int __CRTDECL __acrt_locale_get_ctype_array_value(
         #endif
 
         #ifdef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
-            extern int __mb_cur_max;
+            __declspec(dllimport) extern int __mb_cur_max;
         #else
             #define __mb_cur_max (___mb_cur_max_func())
         #endif

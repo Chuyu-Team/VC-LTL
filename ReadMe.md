@@ -486,8 +486,9 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Improve, Enhanced _Getcvt support for C ++ 17.
 * New Fea, add msvcp60 static library mode to improve the compatibility of streamlined systems.
 * New Fea, add VS 14.25.28610, 14.26.28801 support.
-* Fix Bug, symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to Big吊)
-* Fix Bug, eliminate CString::Format warning (Thunks to 大胸滴)
-* Fix Bug, fix 14.26.28801 syserror_import_lib msii(Thunks to 噬元兽)
+* New Fea, add UCRT 10.0.19041.0 support.
+* Fix Bug, symbol conflict may occur in `legacy_stdio_definitions.lib` in light mode (Thunks to Big吊).
+* Fix Bug, eliminate CString::Format warning (Thunks to 大胸滴).
+* Fix Bug, fix 14.26.28801 syserror_import_lib msii(Thunks to 噬元兽).
 
 > Tips: Tips: VC-LTL 4.1 and 4.0 are not compatible in STL stream ABI, please recompile static libraries!

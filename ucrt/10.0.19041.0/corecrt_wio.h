@@ -217,35 +217,23 @@ _ACRTIMP errno_t __cdecl _wsopen_dispatch(
 
 
 
-#if defined __cplusplus
+#if defined __cplusplus && !defined __Build_LTL
 
     // These functions do not validate pmode; use _wsopen_s instead.
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_wsopen_s)
-    inline int __CRTDECL _wopen(
+    _ACRTIMP int __CRTDECL _wopen(
         _In_z_ wchar_t const* _FileName,
         _In_   int            _OFlag,
         _In_   int            _PMode = 0
-        )
-    {
-        int _FileHandle;
-        // Last parameter passed as 0 because we don't want to validate pmode from _open
-        errno_t const _Result = _wsopen_dispatch(_FileName, _OFlag, _SH_DENYNO, _PMode, &_FileHandle, 0);
-        return _Result ? -1 : _FileHandle;
-    }
+        );
 
     extern "C++" _Check_return_ _CRT_INSECURE_DEPRECATE(_wsopen_s)
-    inline int __CRTDECL _wsopen(
+    _ACRTIMP int __CRTDECL _wsopen(
         _In_z_ wchar_t const* _FileName,
         _In_   int            _OFlag,
         _In_   int            _ShFlag,
         _In_   int            _PMode = 0
-        )
-    {
-        int _FileHandle;
-        // Last parameter passed as 0 because we don't want to validate pmode from _sopen
-        errno_t const _Result = _wsopen_dispatch(_FileName, _OFlag, _ShFlag, _PMode, &_FileHandle, 0);
-        return _Result ? -1 : _FileHandle;
-    }
+        );
 
 
 #else

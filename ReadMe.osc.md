@@ -18,7 +18,7 @@ VC-LTL最初是Dism++专用运行时。2017年3月6号从Dism++源代码中分�
 所有人都可以无条件、免费使用，包括用于商业环境。当然如果大家在自己的程序说明文件中声明使用了VC-LTL那就更好了。
 
 * GitHub：[github.com/Chuyu-Team/VC-LTL（英文）](https://github.com/Chuyu-Team/VC-LTL)    
-* 码云：[gitee.com/Chuyu-Team/VC-LTL（中文）](https://gitee.com/Chuyu-Team/VC-LTL)    
+* 码云：[gitee.com/Chuyu-Team/VC-LTL（中文）](https://.com/Chuyu-Team/VC-LTL)    
 * QQ群：[633710173](https://shang.qq.com/wpa/qunwpa?idkey=21d51d8ad1d77b99ea9544b399e080ec347ca6a1bc04267fb59cebf22644a42a)
 
 ### 1.1. 原理
@@ -473,12 +473,13 @@ nmake /f Test.mak
 * 解决Bug，轻量模式中，`legacy_stdio_definitions.lib`可能出现符号冲突问题（感谢 昌平517）。
 
 
-### 4.1.0.3 - 改进支持（2020-07-01 16:00）
+### 4.1.0.4 - 改进支持（2020-07-01 16:00）
 * 改进体验，增强_Getcvt对C++17支持。
 * 新增Fea，添加msvcp60静态库模式，增强某些精简系统的兼容性。
 * 新增Fea，添加14.25.28610、14.26.28801支持。
+* 新增Fea，添加UCRT 10.0.19041.0支持。
 * 解决Bug，轻量模式中，`legacy_stdio_definitions.lib`可能出现符号冲突问题（感谢 Big吊）。
-* 解决Bug，消除CString::Format警告（感谢 大胸滴）
-* 解决Bug，解决 14.26.28801 syserror_import_lib 缺失问题（感谢 噬元兽）
+* 解决Bug，消除CString::Format警告（感谢 大胸滴）。
+* 解决Bug，解决 14.26.28801 syserror_import_lib 缺失问题（感谢 噬元兽）。
 
 > 温馨提示：VC-LTL 4.1 与 4.0版本在STL stream支持中存在ABI不兼容问题，对应静态库请重新编译！

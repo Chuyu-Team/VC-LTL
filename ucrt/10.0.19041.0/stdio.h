@@ -36,7 +36,7 @@ _CRT_BEGIN_C_HEADER
  * Number of entries in _iob[] (declared below). Note that _NSTREAM_ must be
  * greater than or equal to _IOB_ENTRIES.
  */
-#define _IOB_ENTRIES 3
+#define _IOB_ENTRIES 20
 
 #define EOF    (-1)
 
