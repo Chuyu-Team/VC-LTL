@@ -12,7 +12,7 @@
 <ProjectSchemaDefinitions
   xmlns="http://schemas.microsoft.com/build/2009/properties"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
-  <Rule Name="CuyuTeam"
+  <Rule Name="CuyuTeam_3C886396-2D31-4C73-9281-E39A064253D9"
         PageTemplate="tool"
         DisplayName="初雨团队">
     <Rule.Categories>
