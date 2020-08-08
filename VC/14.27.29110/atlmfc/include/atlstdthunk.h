@@ -22,7 +22,7 @@
 #error This file is not compatible with the current WINAPI_FAMILY
 #endif
 
-#if !defined(USE_ATL_THUNK2) && (defined(_M_IX86) || defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC))
+#if !defined(USE_ATL_THUNK2) && !defined(_ATL_XP_TARGETING) && (defined(_M_IX86) || defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC))
 #define USE_ATL_THUNK2
 #endif
 

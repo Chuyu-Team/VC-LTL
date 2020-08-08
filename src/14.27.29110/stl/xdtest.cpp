@@ -7,6 +7,7 @@
 
 _EXTERN_C_UNLESS_PURE
 
+#if 0
 _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double* px) { // categorize *px
     _Dval* ps = (_Dval*) (char*) px;
 
@@ -20,6 +21,7 @@ _CRTIMP2_PURE short __CLRCALL_PURE_OR_CDECL _Dtest(double* px) { // categorize *
         return 0;
     }
 }
+#endif
 
 unsigned short* _Plsw(double* px) { // get pointer to lsw
     return &((_Dval*) (char*) px)->_Sh[_Dg];

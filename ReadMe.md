@@ -492,3 +492,7 @@ If VC-LTL is referenced correctly, it will be output at the time of generation: 
 * Fix Bug, fix 14.26.28801 syserror_import_lib msii(Thunks to 噬元兽).
 
 > Tips: Tips: VC-LTL 4.1 and 4.0 are not compatible in STL stream ABI, please recompile static libraries!
+
+
+### 4.1.1 - Improved Support (Aug 8, 2020 16:00)
+* New Fea, add VS 14.27.29110 support.
