@@ -69,7 +69,8 @@ extern "C" int __cdecl _initialize_onexit_table(_onexit_table_t* const table)
 
     table->_first = encoded_nullptr;
     table->_last  = encoded_nullptr;
-    table->_end   = encoded_nullptr;
+    //_end作为所有者线程id使用。
+    table->_end   = nullptr;
 
     return 0;
 }
@@ -81,16 +82,18 @@ extern "C" int __cdecl _initialize_onexit_table(_onexit_table_t* const table)
 // in calling code.
 extern "C" int __cdecl _register_onexit_function(_onexit_table_t* const table, _onexit_t const function)
 {
-    return __acrt_lock_and_call(__acrt_select_exit_lock(), [&]
+    if (!table)
     {
-        if (!table)
-        {
-            return -1;
-        }
+        return -1;
+    }
+
+    return __YY_exit_lock_and_call(&table->_end, [&]
+    {
 
         _PVFV* first = __crt_fast_decode_pointer(table->_first);
         _PVFV* last  = __crt_fast_decode_pointer(table->_last);
-        _PVFV* end   = __crt_fast_decode_pointer(table->_end);
+        //_PVFV* end   = __crt_fast_decode_pointer(table->_end);
+        _PVFV* end = first ? (first + _msize(first) / sizeof(_PVFV*)) : nullptr;
 
         // If there is no room for the new entry, reallocate a larger table:
         if (last == end)
@@ -142,7 +145,7 @@ extern "C" int __cdecl _register_onexit_function(_onexit_table_t* const table, _
 
         table->_first = __crt_fast_encode_pointer(first);
         table->_last  = __crt_fast_encode_pointer(last);
-        table->_end   = __crt_fast_encode_pointer(end);
+        //table->_end   = __crt_fast_encode_pointer(end);
 
         return 0;
     });
@@ -157,13 +160,13 @@ extern "C" int __cdecl _register_onexit_function(_onexit_table_t* const table, _
 // so that it is uninitialized.  Returns 0 on success; -1 on failure.
 extern "C" int __cdecl _execute_onexit_table(_onexit_table_t* const table)
 {
-    return __acrt_lock_and_call(__acrt_select_exit_lock(), [&]
+    if (!table)
     {
-        if (!table)
-        {
-            return -1;
-        }
+        return -1;
+    }
 
+    return __YY_exit_lock_and_call(&table->_end, [&]
+    {
         _PVFV* first = __crt_fast_decode_pointer(table->_first);
         _PVFV* last  = __crt_fast_decode_pointer(table->_last);
         if (!first || first == reinterpret_cast<_PVFV*>(-1))
@@ -177,7 +180,7 @@ extern "C" int __cdecl _execute_onexit_table(_onexit_table_t* const table)
         // are the only non-trivial calls, so we can do this once for the entire
         // loop.)
         {
-            __crt_state_management::scoped_global_state_reset saved_state;
+            //__crt_state_management::scoped_global_state_reset saved_state;
 
             _PVFV const encoded_nullptr = __crt_fast_encode_pointer(nullptr);
 
@@ -224,7 +227,7 @@ extern "C" int __cdecl _execute_onexit_table(_onexit_table_t* const table)
 
         table->_first = encoded_nullptr;
         table->_last  = encoded_nullptr;
-        table->_end   = encoded_nullptr;
+        //table->_end   = encoded_nullptr;
 
         return 0;
     });

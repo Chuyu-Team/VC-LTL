@@ -3,8 +3,15 @@ set libfile=%~dp0..\..\..\..\VC\14.16.27023\lib\x86\vc.lib
 
 copy "%~dp0msvcrt.lib" "%libfile%" /y
 
+set BuiltInVsWhereExe="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+if not defined ProgramFiles(x86) ( set "BuiltInVsWhereExe="%ProgramFiles%\Microsoft Visual Studio\Installer\vswhere.exe"" )
 
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
+if not exist %BuiltInVsWhereExe% (echo 请安装VS2017或者更高版本然后继续！& goto:eof )
+
+for /f "tokens=*" %%i in ('%BuiltInVsWhereExe% -latest -prerelease -property installationPath') do ( set LatestVisualStudioRoot=%%i)
+
+
+@call "%LatestVisualStudioRoot%\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
 
 lib "%libfile%" /remove:d:\agent\_work\3\s\Intermediate\vctools\crt_bld\i386\dll_obj\almap\_findfirst.obj
 lib "%libfile%" /remove:d:\agent\_work\3\s\Intermediate\vctools\crt_bld\i386\dll_obj\almap\_findfirsti64.obj

@@ -643,14 +643,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\exit_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_IAT.cpp">
       <IntrinsicFunctions>false</IntrinsicFunctions>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\msvcrt_winxp.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\onexit_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\report_runtime_error_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\setlocal_thunks.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\conio\cprintf.cpp" />
@@ -1119,6 +1117,8 @@
     </ClCompile>
     <ClCompile Include="fputwc_thunks.cpp" />
     <ClCompile Include="sftbuf_thunks.cpp" />
+    <ClCompile Include="startup\exit.cpp" />
+    <ClCompile Include="startup\onexit.cpp" />
     <ClCompile Include="stdlib\abs.cpp">
       <ExcludedFromBuild Condition="'$(SupportWinXP)'!='true'">true</ExcludedFromBuild>
     </ClCompile>

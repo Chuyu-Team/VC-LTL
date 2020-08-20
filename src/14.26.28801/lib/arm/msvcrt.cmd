@@ -310,7 +310,7 @@ lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_
 ::lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\divide.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dll_dllmain.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dll_dllmain_stub.obj
-lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dyn_tls_dtor.obj
+::lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dyn_tls_dtor.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dyn_tls_init.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\ehvccctr.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\ehvcccvb.obj

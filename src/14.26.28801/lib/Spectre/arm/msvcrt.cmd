@@ -310,7 +310,7 @@ lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_
 ::lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\divide.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\dll_dllmain.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\dll_dllmain_stub.obj
-lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\dyn_tls_dtor.obj
+::lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\dyn_tls_dtor.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\dyn_tls_init.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\ehvccctr.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\arm\ehvcccvb.obj

@@ -420,12 +420,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\filesystem\stat.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\onexit_thunks.cpp">
-      <Filter>ltl</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\exit_thunks.cpp">
-      <Filter>ltl</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ucrt\startup\argv_winmain.cpp">
       <Filter>ucrt</Filter>
     </ClCompile>
@@ -584,6 +578,12 @@
     </ClCompile>
     <ClCompile Include="convert\atoldbl.cpp">
       <Filter>ucrt\WinXP</Filter>
+    </ClCompile>
+    <ClCompile Include="startup\exit.cpp">
+      <Filter>ucrt</Filter>
+    </ClCompile>
+    <ClCompile Include="startup\onexit.cpp">
+      <Filter>ucrt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

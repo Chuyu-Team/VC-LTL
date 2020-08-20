@@ -1485,6 +1485,48 @@ extern "C++"
             action,
             [lock_id]() { __acrt_unlock(lock_id); });
     }
+
+    template <typename Action>
+    auto __YY_exit_lock_and_call(void* __lock, Action&& action) throw()
+        -> decltype(action())
+    {
+        decltype(action()) result{};
+        const LONG CurrentThreadId = GetCurrentThreadId();
+        LONG OldCurrentThreadId;
+
+        for (;;)
+        {
+            OldCurrentThreadId = InterlockedCompareExchange((volatile LONG*)__lock, CurrentThreadId, 0);
+
+            if (OldCurrentThreadId == 0)
+            {
+                //成功锁定
+                break;
+            }
+            else if (OldCurrentThreadId == CurrentThreadId)
+            {
+                //与当前线程Id一致，无需再次锁定
+                break;
+            }
+            else
+            {
+                //等待同步信号
+                Sleep(0);
+            }
+        }
+
+        __try
+        {
+            result = action();
+        }
+        __finally
+        {
+            if (OldCurrentThreadId == 0)
+                InterlockedExchange((volatile LONG*)__lock, 0);
+        }
+
+        return result;
+    }
 }
 #endif
 
@@ -2556,7 +2598,9 @@ typedef enum
     process_end_policy_exit_process
 } process_end_policy;
 
-process_end_policy __cdecl __acrt_get_process_end_policy(void);
+//process_end_policy __cdecl __acrt_get_process_end_policy(void);
+//VC-LTL只可能运行在传统Win32应用，因此直接走process_end_policy_exit_process策略即可。
+#define __acrt_get_process_end_policy() process_end_policy_exit_process
 
 // Specifies whether RoInitialize() should be called when creating a thread
 typedef enum

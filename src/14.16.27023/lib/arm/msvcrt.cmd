@@ -2,7 +2,14 @@ set libfile=%~dp0..\..\..\..\VC\14.16.27023\lib\arm\vc.lib
 
 copy "%~dp0msvcrt.lib" "%libfile%" /y
 
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+set BuiltInVsWhereExe="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+if not defined ProgramFiles(x86) ( set "BuiltInVsWhereExe="%ProgramFiles%\Microsoft Visual Studio\Installer\vswhere.exe"" )
+
+if not exist %BuiltInVsWhereExe% (echo 请安装VS2017或者更高版本然后继续！& goto:eof )
+
+for /f "tokens=*" %%i in ('%BuiltInVsWhereExe% -latest -prerelease -property installationPath') do ( set LatestVisualStudioRoot=%%i)
+
+@call "%LatestVisualStudioRoot%\VC\Auxiliary\Build\vcvars64.bat"
 
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\crt_bld\arm\dll_obj\almap\_findfirst.obj
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\crt_bld\arm\dll_obj\almap\_findfirsti64.obj
@@ -307,7 +314,7 @@ lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativepro
 ::lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\divide.obj
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dll_dllmain.obj
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dll_dllmain_stub.obj
-lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dyn_tls_dtor.obj
+::lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dyn_tls_dtor.obj
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\dyn_tls_init.obj
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\ehvccctr.obj
 lib "%libfile%" /remove:d:\agent\_work\2\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm\ehvcccvb.obj

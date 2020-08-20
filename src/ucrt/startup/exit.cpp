@@ -5,9 +5,11 @@
 //
 // The exit() implementation
 //
-#include <nt.h>
-#include <ntrtl.h>
-#include <nturtl.h>
+#define _Disallow_YY_KM_Namespace
+#define FLG_APPLICATION_VERIFIER        0x00000100      // user mode only
+#define NtCurrentPeb() (NtCurrentTeb()->ProcessEnvironmentBlock)
+
+#include <km.h>
 #include <corecrt_internal.h>
 #include <eh.h>
 #include <process.h>
@@ -198,12 +200,14 @@ static void __cdecl common_exit(
     // Run the C termination:
     bool crt_uninitialization_required = false;
 
-    __acrt_lock_and_call(__acrt_select_exit_lock(), [&]
+    static LONG __exit_lock;
+
+    __YY_exit_lock_and_call(&__exit_lock, [&]
     {
         static bool c_exit_complete = false;
         if (c_exit_complete)
         {
-            return;
+            return 0;
         }
 
         _InterlockedExchange(&c_termination_complete, TRUE);
@@ -253,6 +257,8 @@ static void __cdecl common_exit(
             c_exit_complete = true;
             crt_uninitialization_required = true;
         }
+
+        return 0;
     });
 
     // Do NOT try to uninitialize the CRT while holding one of its locks.

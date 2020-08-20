@@ -311,7 +311,7 @@ lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\denormal_control.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\dll_dllmain.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\dll_dllmain_stub.obj
-lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\dyn_tls_dtor.obj
+::lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\dyn_tls_dtor.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\dyn_tls_init.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\ehvccctr.obj
 lib "%libfile%" /remove:d:\A01\_work\6\s\Intermediate\vctools\msvcrt.nativeproj_110336922\objr_spectre\amd64\ehvcccvb.obj

@@ -17,7 +17,7 @@ extern "C" {
 
 
 
-//extern _onexit_table_t __acrt_atexit_table;
+extern _onexit_table_t __acrt_atexit_table;
 extern _onexit_table_t __acrt_at_quick_exit_table;
 extern void*           __acrt_stdout_buffer;
 extern void*           __acrt_stderr_buffer;
@@ -82,7 +82,7 @@ static bool __cdecl initialize_global_variables()
 
     static bool __cdecl initialize_c()
     {
-        //_initialize_onexit_table(&__acrt_atexit_table);
+        _initialize_onexit_table(&__acrt_atexit_table);
         _initialize_onexit_table(&__acrt_at_quick_exit_table);
         return true;
     }
@@ -152,10 +152,10 @@ static bool __cdecl uninitialize_environment(bool const terminating)
 static bool __cdecl initialize_pointers()
 {
     void* const encoded_null = __crt_fast_encode_pointer(nullptr);
-    __acrt_initialize_invalid_parameter_handler(encoded_null);
-    __acrt_initialize_new_handler(encoded_null);
-    __acrt_initialize_signal_handlers(encoded_null);
-    __acrt_initialize_user_matherr(encoded_null);
+    //__acrt_initialize_invalid_parameter_handler(encoded_null);
+    //__acrt_initialize_new_handler(encoded_null);
+    //__acrt_initialize_signal_handlers(encoded_null);
+    //__acrt_initialize_user_matherr(encoded_null);
     __acrt_initialize_thread_local_exit_callback(encoded_null);
     return true;
 }
@@ -228,7 +228,7 @@ static __acrt_initializer const __acrt_initializers[] =
 
     // Global pointers are stored in encoded form; they must be dynamically
     // initialized to the encoded nullptr value before they are used by the CRT.
-    //{ initialize_pointers,                     nullptr                                  },
+    { initialize_pointers,                     nullptr                                  },
     // Enclaves only require initializers for supported features.
 #ifndef _UCRT_ENCLAVE_BUILD
     { __acrt_initialize_winapi_thunks,         __acrt_uninitialize_winapi_thunks        },

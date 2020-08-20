@@ -2,7 +2,14 @@ set libfile=%~dp0..\..\..\..\VC\14.14.26428\lib\arm64\vc.lib
 
 copy "%~dp0msvcrt.lib" "%libfile%" /y
 
-@call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_arm64.bat"
+set BuiltInVsWhereExe="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+if not defined ProgramFiles(x86) ( set "BuiltInVsWhereExe="%ProgramFiles%\Microsoft Visual Studio\Installer\vswhere.exe"" )
+
+if not exist %BuiltInVsWhereExe% (echo 请安装VS2017或者更高版本然后继续！& goto:eof )
+
+for /f "tokens=*" %%i in ('%BuiltInVsWhereExe% -latest -prerelease -property installationPath') do ( set LatestVisualStudioRoot=%%i)
+
+@call "%LatestVisualStudioRoot%\VC\Auxiliary\Build\vcvarsamd64_arm64.bat"
 
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\_cpu_disp_.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\_convert_.obj
@@ -27,7 +34,7 @@ lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_11033
 ::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\guard_support.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\loadcfg.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\pesect.obj
-lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\dyn_tls_dtor.obj
+::lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\dyn_tls_dtor.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\dyn_tls_init.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\matherr_detection.obj
 lib "%libfile%" /remove:f:\binaries\Intermediate\vctools\msvcrt.nativeproj_110336922\objr\arm64\ucrt_detection.obj

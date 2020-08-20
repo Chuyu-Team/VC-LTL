@@ -302,13 +302,12 @@ static __declspec(noinline) int __cdecl __scrt_common_main_seh()
 
         // If this module has any thread-local destructors, register the
         // callback function with the Unified CRT to run on exit.
-		#ifndef __Build_LTL //无法正确实现_register_thread_local_exe_atexit_callback，反正进程都要退出了，thread-local destructors不调关系也不大。
         _tls_callback_type const * const tls_dtor_callback = __scrt_get_dyn_tls_dtor_callback();
         if (*tls_dtor_callback != nullptr && __scrt_is_nonwritable_in_current_image(tls_dtor_callback))
         {
             _register_thread_local_exe_atexit_callback(*tls_dtor_callback);
         }
-		#endif
+
         //
         // Initialization is complete; invoke main...
         //
