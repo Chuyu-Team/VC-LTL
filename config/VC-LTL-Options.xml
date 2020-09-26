@@ -14,7 +14,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
   <Rule Name="CuyuTeam_3C886396-2D31-4C73-9281-E39A064253D9"
         PageTemplate="tool"
-        DisplayName="初雨团队">
+        DisplayName="NuGet程序包设置">
     <Rule.Categories>
       <Category Name="VC_LTL" DisplayName="VC-LTL" Description="第三方CRT运行库，优化C/C++程序体积，避免FLS上限。"/>
     </Rule.Categories>
