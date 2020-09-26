@@ -5,4 +5,9 @@
   <PropertyGroup>
     <VC-LTLUsedToolsVersion>14.27.29110</VC-LTLUsedToolsVersion>
   </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_CRT_LOADCFG_DISABLE_CET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
 </Project>
