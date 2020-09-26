@@ -324,6 +324,9 @@
     <ClCompile Include="..\..\stl\syserror_import_lib.cpp">
       <Filter>objs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\stl\xonce2.cpp">
+      <Filter>objs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h">

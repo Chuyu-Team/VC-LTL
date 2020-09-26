@@ -699,6 +699,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM'">
     <ClCompile>
@@ -723,6 +726,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|Win32'">
     <ClCompile>
@@ -748,6 +754,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|ARM'">
     <ClCompile>
@@ -772,6 +781,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|Win32'">
     <ClCompile>
@@ -797,6 +809,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM'">
     <ClCompile>
@@ -822,6 +837,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|Win32'">
     <ClCompile>
@@ -849,7 +867,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic_Spectre|Win32'">
@@ -878,7 +896,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM'">
@@ -907,7 +925,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic_Spectre|ARM'">
@@ -936,7 +954,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|Win32'">
@@ -1007,6 +1025,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_Spectre|ARM'">
     <ClCompile>
@@ -1032,6 +1053,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|x64'">
     <ClCompile>
@@ -1056,6 +1080,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP|ARM64'">
     <ClCompile>
@@ -1080,6 +1107,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|x64'">
     <ClCompile>
@@ -1104,6 +1134,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_WinXP_Spectre|ARM64'">
     <ClCompile>
@@ -1128,6 +1161,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|x64'">
     <ClCompile>
@@ -1153,6 +1189,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static|ARM64'">
     <ClCompile>
@@ -1178,6 +1217,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|x64'">
     <ClCompile>
@@ -1204,7 +1246,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic_Spectre|x64'">
@@ -1232,7 +1274,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic|ARM64'">
@@ -1260,7 +1302,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dynamic_Spectre|ARM64'">
@@ -1288,7 +1330,7 @@
       <ImportLibrary>$(OutDir)msvcprt.lib</ImportLibrary>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Redist\$(VC-LTLUsedToolsVersion)\$(PlatformShortName)\msvcp140_ltl.lib;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Redist|x64'">
@@ -1359,6 +1401,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static_Spectre|ARM64'">
     <ClCompile>
@@ -1384,6 +1429,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_begin_initialize.obj;$(SolutionDir)aliases\$(PlatformShortName)\std_init_once_complete.obj;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\stl\atomic.cpp">
@@ -1664,6 +1712,10 @@
     <ClCompile Include="..\..\stl\xonce.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic_Spectre'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\stl\xonce2.cpp">
+      <AssemblerListingLocation>$(IntDir)objs\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)objs\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\stl\xprec.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Dynamic'">true</ExcludedFromBuild>
