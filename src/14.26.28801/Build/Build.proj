@@ -456,4 +456,10 @@
       <Platform>ARM64</Platform>
     </ConcrtRedist>
   </ItemGroup>
+  
+  <Import Project="$(MSBuildThisFileDirectory)Shared.props"/>
+
+  <ItemGroup>
+    <SpectreCopyItem Include="$(SolutionDir)..\VC\$(VC-LTLUsedToolsVersion)\lib\"/>
+  </ItemGroup>
 </Project>

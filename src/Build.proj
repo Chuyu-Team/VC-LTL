@@ -44,4 +44,24 @@
     <!--最后利用其他编译的文件编译concrt.lib-->
     <MSBuild Projects="@(ConcrtRedist)" BuildInParallel="True" Properties="PreferredToolArchitecture=x64;BuildingSolutionFile=true;SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)"/>
   </Target>
+
+  <Target Name="CopySpectreFiles" AfterTargets="Build">
+    <Copy
+      SourceFiles="%(SpectreCopyItem.Identity)\ARM\Vista\concrt.lib;%(SpectreCopyItem.Identity)\ARM\Vista\vcruntime.lib"
+      DestinationFolder="%(SpectreCopyItem.Identity)\Spectre\ARM\Vista"
+      />
+    <Copy
+      SourceFiles="%(SpectreCopyItem.Identity)\arm64\Vista\concrt.lib;%(SpectreCopyItem.Identity)\arm64\Vista\vcruntime.lib"
+      DestinationFolder="%(SpectreCopyItem.Identity)\Spectre\arm64\Vista"
+      />
+    <Copy
+      SourceFiles="%(SpectreCopyItem.Identity)\x64\Vista\concrt.lib;%(SpectreCopyItem.Identity)\x64\Vista\vcruntime.lib"
+      DestinationFolder="%(SpectreCopyItem.Identity)\Spectre\x64\Vista"
+      />
+    <Copy
+      SourceFiles="%(SpectreCopyItem.Identity)\x86\Vista\concrt.lib;%(SpectreCopyItem.Identity)\x86\Vista\vcruntime.lib"
+      DestinationFolder="%(SpectreCopyItem.Identity)\Spectre\x86\Vista"
+      />
+
+  </Target>
 </Project>
