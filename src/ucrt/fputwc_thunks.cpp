@@ -116,25 +116,33 @@ extern "C" int __cdecl fputc(int const c, FILE* const stream)
 			buffer = stderr_buffer;
 		}
 
+		int nRet;
 		if (*buffer_used)
 		{
 			buffer[1] = c;
 			auto Success = __acrt_stdio_begin_temporary_buffering_nolock(stream);
 			auto result = VC_LTL_Thunks::fwrite(buffer, 1, 2, stream);
 			__acrt_stdio_end_temporary_buffering_nolock(Success, stream);
-			_unlock_file(stream);
 
 			*buffer_used = false;
 
 
-			return result ? c : EOF;
+			nRet = result ? c : EOF;
 		}
 		else if (isleadbyte(c))
 		{
 			*buffer_used = true;
 			buffer[0] = c;
-			return c;
+			nRet = c;
 		}
+		else
+		{
+			nRet = VC_LTL_Thunks::fputc(c, stream);
+		}
+
+		_unlock_file(stream);
+
+		return nRet;
 	}
 
 	return VC_LTL_Thunks::fputc(c, stream);
