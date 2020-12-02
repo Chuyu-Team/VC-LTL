@@ -5,6 +5,8 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>_CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!--修正某些新的符号不导出问题-->
+      <PreprocessorDefinitions Condition="'$(RootNamespace)' == 'stl' and '$(Configuration)' == 'Redist'">_CRT_SATELLITE_1=__declspec(dllexport);_CRT_SATELLITE_2=__declspec(dllexport);_BUILDING_SATELLITE_CODECVT_IDS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions Condition=" ('$(PlatformShortName)'=='x64') and ('$(PlatformToolsetVersion)'=='142') ">/d2FH4- %(AdditionalOptions)</AdditionalOptions>
       <!--避免使用tlsGuards，因为VC-LTL能确保不会使用那些动态的。此外避免高版本依赖-->
       <AdditionalOptions Condition="'$(PlatformToolsetVersion)'=='142'">/Zc:tlsGuards- %(AdditionalOptions)</AdditionalOptions>
