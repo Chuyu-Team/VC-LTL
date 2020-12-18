@@ -137,3 +137,5 @@ GENERATE_LINKER_OPTION(MD,  "ucrt.lib"    )
 GENERATE_LINKER_OPTION(XMD, "ucrtd.lib"   )
 GENERATE_LINKER_OPTION(MT,  "libucrt.lib" )
 GENERATE_LINKER_OPTION(XMT, "libucrtd.lib")
+
+#include "..\..\VC-LTL_defaultlib.h"

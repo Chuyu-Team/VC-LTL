@@ -221,7 +221,7 @@ extern "C" _VCRTIMP int*   __cdecl __processing_throw();
 // NOTE: __uncaught_exceptions duplicates __ProcessingThrow.
 
 #ifndef _VCRT_DIRECT_PTD
-#ifdef _VCRT_BUILD
+#if defined(_VCRT_BUILD) && !defined(__Build_LTL)
 #define _VCRT_DIRECT_PTD 1
 #else // ^^^ _VCRT_BUILD // !_VCRT_BUILD vvv
 #define _VCRT_DIRECT_PTD 0
@@ -253,7 +253,14 @@ extern "C" _VCRTIMP int*   __cdecl __processing_throw();
 #if _VCRT_BUILD_FH4
 // In the satellite build, __vcrt_getptd uses satellite's PTD
 // In the non-DLL build, __vcrt_getptd uses the main PTD which was updated to have this field
-#define CatchStateInParent      (__vcrt_getptd()->_CatchStateInParent)
+
+extern thread_local int _CatchStateInParent;
+
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define CatchStateInParent   (_CatchStateInParent)
+#else
+#define CatchStateInParent  (*(__LTL_GetOsMinVersion() < 0x00060000 ? &__LTL_get_ptd_downlevel()->_CatchStateInParent : &_CatchStateInParent))
+#endif
 #endif
 
 #pragma pack(pop)

@@ -8,6 +8,10 @@
 #define _ATL_XP_TARGETING 1
 #endif
 
+#ifndef USE_ATL_THUNK1
+#define USE_ATL_THUNK1 1
+#endif
+
 
 #if defined _M_IX86
 //NTDDI_WINXP
