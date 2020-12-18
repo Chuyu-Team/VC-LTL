@@ -568,7 +568,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -596,7 +596,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -620,7 +620,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -644,7 +644,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -675,7 +675,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -706,7 +706,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -733,7 +733,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -760,7 +760,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -787,7 +787,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -814,7 +814,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -842,7 +842,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;WIN32;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -866,7 +866,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -1038,7 +1038,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_BEST_PRACTICES_USAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -1065,7 +1065,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -1094,7 +1094,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;CRTDLL;_LTL_Using_Dynamic_Lib;__Bulib_Dynamic_Lib;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -1123,7 +1123,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_WINDOWS_USE_VISTA_TSS=1;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;_DISABLE_DEPRECATE_LTL_MESSAGE;_CRT_SECURE_NO_WARNINGS;__Build_LTL;_CRTBLD;_MBCS;_CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY;_VCRT_ALLOW_INTERNALS;_NO__LTL_Initialization;NDEBUG;_LIB;_CORECRT_BUILD;_CTIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
