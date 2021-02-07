@@ -1,4 +1,9 @@
 ﻿# VC-LTL - An elegant way to compile lighter binaries.
+![license](https://img.shields.io/github/license/Chuyu-Team/VC-LTL)
+![downloads](https://img.shields.io/github/downloads/Chuyu-Team/VC-LTL/total)
+![contributors](https://img.shields.io/github/contributors-anon/Chuyu-Team/VC-LTL)
+![release](https://img.shields.io/github/v/release/Chuyu-Team/VC-LTL?include_prereleases)
+![nuget](https://img.shields.io/nuget/vpre/VC-LTL)
 
 - [简体中文](ReadMe.osc.md)
 
