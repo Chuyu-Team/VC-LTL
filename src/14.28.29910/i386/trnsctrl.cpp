@@ -43,8 +43,37 @@
 #define IS_DISPATCHING(Flag) ((Flag & EXCEPTION_UNWIND) == 0)
 #define IS_TARGET_UNWIND(Flag) (Flag & EXCEPTION_TARGET_UNWIND)
 
-#define pFrameInfoChain   (*((FRAMEINFO **)    &(RENAME_BASE_PTD(__vcrt_getptd)()->_pFrameInfoChain)))
+#ifndef pFrameInfoChain
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define pFrameInfoChain   (*((FRAMEINFO **)    &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_pFrameInfoChain)))
+#else
+
+static __inline void* __fastcall pFrameInfoChain_fun()
+{
+    auto ptd = __acrt_getptd();
+    const auto OsVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OsVersion < 0x00050001)
+    {
+        return &(__LTL_get_ptd_downlevel()->_pFrameInfoChain);
+    }
+#endif
+    if (OsVersion < 0x00060000)
+    {
+        return &(((_ptd_msvcrt_winxp*)ptd)->_pFrameInfoChain);
+    }
+
+    return &(((_ptd_msvcrt_win6_shared*)ptd)->_pFrameInfoChain);
+}
+
+#define pFrameInfoChain   (*((FRAMEINFO **)  pFrameInfoChain_fun()))
+#endif
+
+#endif
+
+#if 0
 /////////////////////////////////////////////////////////////////////////////
 //
 // _JumpToContinuation - sets up EBP and jumps to specified code address.
@@ -508,11 +537,6 @@ extern "C" EXCEPTION_DISPOSITION __cdecl _TranslatorGuardHandler( EHExceptionRec
 
 BEGIN_PRAGMA_OPTIMIZE_DISABLE("g", DOLPH:3322, "Uninvestigated issue from Visual C++ 2.0")
 
-#if defined(_M_IX86) && !defined(CRTDLL) && !defined(_M_HYBRID)
-// Filter incorrect x86 floating point exceptions, unless linkopt that provides an empty filter is available.
-#pragma comment(linker, "/alternatename:__filter_x86_sse2_floating_point_exception=__filter_x86_sse2_floating_point_exception_default")
-#endif
-
 __declspec(guard(ignore)) BOOL _CallSETranslator(
     EHExceptionRecord  *pExcept,        // The exception to be translated
     EHRegistrationNode *pRN,            // Dynamic info of function with catch
@@ -565,11 +589,6 @@ __declspec(guard(ignore)) BOOL _CallSETranslator(
         lea     eax, TGRN               // Put this node at the head
         mov     FS:[0], eax
         }
-
-#if defined(_M_IX86) && !defined(CRTDLL) && !defined(_M_HYBRID)
-    // Translate exception code for SSE exceptions
-    PER_CODE(pExcept) = _filter_x86_sse2_floating_point_exception(PER_CODE(pExcept));
-#endif
 
     //
     // Call the translator; assume it will give a translation.
@@ -741,7 +760,7 @@ RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 
     return TryBlockMap::IteratorPair(iterStart, iterEnd);
 }
-
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //

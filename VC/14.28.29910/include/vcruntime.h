@@ -341,14 +341,14 @@ _CRT_BEGIN_C_HEADER
 #if !defined _M_CEE && !defined __midl
     void __cdecl __security_init_cookie(void);
 
-    #if defined(_M_IX86)
-        void __fastcall __security_check_cookie(_In_ uintptr_t _StackCookie);
-        __declspec(noreturn) void __cdecl __report_gsfailure(void);
-    #elif defined(_M_ARM64EC)
-        void __cdecl __security_check_cookie_arm64ec(_In_ uintptr_t _StackCookie);
-        __declspec(noreturn) void __cdecl __report_gsfailure(_In_ uintptr_t _StackCookie);
-    #else
-        void __cdecl __security_check_cookie(_In_ uintptr_t _StackCookie);
+#if defined(_M_IX86)
+    void __fastcall __security_check_cookie(_In_ uintptr_t _StackCookie);
+    __declspec(noreturn) void __cdecl __report_gsfailure(void);
+#elif defined(_M_ARM64EC)
+    void __cdecl __security_check_cookie_arm64ec(_In_ uintptr_t _StackCookie);
+    __declspec(noreturn) void __cdecl __report_gsfailure(_In_ uintptr_t _StackCookie);
+#else
+    void __cdecl __security_check_cookie(_In_ uintptr_t _StackCookie);
         __declspec(noreturn) void __cdecl __report_gsfailure(_In_ uintptr_t _StackCookie);
     #endif
 #endif
@@ -364,5 +364,9 @@ extern uintptr_t __security_cookie;
 _CRT_END_C_HEADER
 
 #pragma warning(pop) // _VCRUNTIME_DISABLED_WARNINGS
+
+#ifndef RC_INVOKED
+#include <LTL_config.h>
+#endif
 
 #endif // _VCRUNTIME_H
