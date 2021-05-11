@@ -5,8 +5,8 @@
 
 #define LTLVersion1 4
 #define LTLVersion2 1
-#define LTLVersion3 1
-#define LTLVersion4 8
+#define LTLVersion3 2
+#define LTLVersion4 1
 
 #endif
 
