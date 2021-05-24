@@ -87,7 +87,6 @@ set tagetlibfile=%libfileroot%\WinXP\Light\msvcrt_Platform.lib
 copy "%libfiletmp%" "%tagetlibfile%" /y
 lib "%tagetlibfile%" objs\msvcrt_2003\*
 lib "%tagetlibfile%" objs\msvcrt_light\*
-lib "%tagetlibfile%" "%~dp0ntdlllite.lib"
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_light.def" msvcrt.dll msvcrt2.dll
@@ -107,7 +106,6 @@ set tagetlibfile=%libfileroot%\WinXP\Advanced\msvcrt_Platform.lib
 copy "%libfiletmp%" "%tagetlibfile%" /y
 lib "%tagetlibfile%" objs\msvcrt_2003\*
 lib "%tagetlibfile%" objs\msvcrt_advanced\*
-lib "%tagetlibfile%" "%~dp0ntdlllite.lib"
 
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x64 "%~dp0..\msvcrt_advanced.def" msvcrt.dll msvcrt2.dll
@@ -115,7 +113,6 @@ lib "%tagetlibfile%" /remove:msvcrt2.dll
 lib "%tagetlibfile%" "%~dp0msvcrt_form_msvcp60_WinXP.lib"
 
 
-::lib "%libfile%" "%~dp0ntdlllite.lib"
 
 
 

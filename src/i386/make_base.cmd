@@ -93,7 +93,6 @@ lib "%tagetlibfile%" objs\msvcrt_light\*
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x86 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x86 "%~dp0..\msvcrt_light.def" msvcrt.dll msvcrt2.dll
 lib "%tagetlibfile%" /remove:msvcrt2.dll
-lib "%tagetlibfile%" "%~dp0ntdlllite.lib"
 lib "%tagetlibfile%" "%~dp0msvcrt_form_msvcp60_WinXP.lib"
 
 ::生成msvcrt_advanced.lib for vista
@@ -113,14 +112,12 @@ lib "%tagetlibfile%" objs\msvcrt_advanced\*
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x86 "%~dp0..\msvcrt_winxp.def" msvcrt.dll msvcrt2.dll
 "D:\用户数据\Documents\Visual Studio 2017\Projects\ltlbuild\Debug\LibMaker.exe" renamelib "%tagetlibfile%" x86 "%~dp0..\msvcrt_advanced.def" msvcrt.dll msvcrt2.dll
 lib "%tagetlibfile%" /remove:msvcrt2.dll
-lib "%tagetlibfile%" "%~dp0ntdlllite.lib"
 lib "%tagetlibfile%" "%~dp0msvcrt_form_msvcp60_WinXP.lib"
 
 
 popd
 
 
-::lib "%libfile%" "%~dp0ntdlllite.lib"
 
 del "%~dp0msvcrtdll.*" /q
 
