@@ -131,6 +131,8 @@
 
     <!--可选，仅仅是为了增强对某些奇葩工程的兼容性。-->
     <VC_IncludePath Condition=" '$(VC_IncludePath)'!='' ">$(VC_LTL_Include);$(VC_IncludePath)</VC_IncludePath>
+    <!--VS2019 16.10新增，VS会优先使用此路径-->
+    <ExternalIncludePath>$(VC_LTL_Include);$(ExternalIncludePath)</ExternalIncludePath>
     <VC_LibraryPath_x86 Condition=" '$(VC_LibraryPath_x86)'!='' ">$(VC_LTL_Library);$(VC_LibraryPath_x86)</VC_LibraryPath_x86>
     <VC_LibraryPath_x64 Condition=" '$(VC_LibraryPath_x64)'!='' ">$(VC_LTL_Library);$(VC_LibraryPath_x64)</VC_LibraryPath_x64>
   </PropertyGroup>
