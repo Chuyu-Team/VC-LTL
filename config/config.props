@@ -3,15 +3,20 @@
 <!--
 
 作者：mingkuang
-修改日期：2018-04-21
+修改日期：2020-01-16
 
-此配置能智能适应，当你选择WinXP平台工具集时，将自动切换到XP模式。
+因为nuget.org中不能一次上传太大的包，因此VC-LTL将分为3部分：
 
-不建议直接使用此属性表，建议你复制“VC-LTL helper for Visual Studio.props”到你的工程。“VC-LTL helper for Visual Studio.props”会自动加载此属性表。
+
+第一部分叫 VC-LTL Shared，包含了config
+
+第二部分叫 VCRT，包含了VC目录的信息。
+
+第三部分叫 UCRT，lib 以及 ucrt 部分
 
 -->
 
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VC_LTL_PlatformPrepareForBuild_Config">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!--用于解决一些新老版本兼容性问题，当适配新平台时可以无视里面的逻辑。-->
   <PropertyGroup>
     <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(VC-LTLUsedToolsVersion)'!='') ">$(VC-LTLUsedToolsVersion)</VCLTLToolsVersion>
@@ -45,30 +50,254 @@
     <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">14.0.24231</VCLTLToolsVersion>
   </PropertyGroup>
   
-  <!--VS2017-->
-  <PropertyGroup Condition="('$(VCLTLToolsVersion)'=='') And ($([System.Text.RegularExpressions.Regex]::IsMatch('$(VCToolsVersion)', '14\.1[0-9]\.*')))">
-    <VCLTLToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VCLTLToolsVersion>
-
-    <!--如果找不到，那么指定为当前支持的最高版本-->
-    <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">false</VCLTLFoundToolsVersion>
-    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.16.27023</VCLTLToolsVersion>
+  <PropertyGroup>
+    <VCLTLToolsBuildVersion Condition=" '$(VCLTLToolsVersion)'!=''">$([System.Version]::Parse('$(VCLTLToolsVersion)').Build)</VCLTLToolsBuildVersion>
+    <VCLTLToolsBuildVersion Condition=" '$(VCLTLToolsVersion)'==''">$([System.Version]::Parse('$(VCToolsVersion)').Build)</VCLTLToolsBuildVersion>
   </PropertyGroup>
 
-  <!--VS2019-->
-  <PropertyGroup Condition="('$(VCLTLToolsVersion)'=='') And ($([System.Text.RegularExpressions.Regex]::IsMatch('$(VCToolsVersion)', '14\.2[0-9]\.*')))">
-    <VCLTLToolsVersion Condition="Exists('$(VC_LTL_Root)\VC\$(VCToolsVersion)')" >$(VCToolsVersion)</VCLTLToolsVersion>
-
-    <!--如果找不到，那么指定为当前支持的最高版本-->
-    <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsVersion)'=='' ">false</VCLTLFoundToolsVersion>
-    <VCLTLToolsVersion Condition=" '$(VCLTLToolsVersion)'==''">14.28.29910</VCLTLToolsVersion>
-  </PropertyGroup>
+  <!--搜索版本最接近的VCRT版本-->
+  <Choose>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '29910'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_29910)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_29910)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='29910' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.28.29910</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '29333'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_29333)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_29333)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='29333' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.28.29333</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '29110'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_29110)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_29110)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='29110' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.27.29110</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '28801'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_28801)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_28801)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='28801' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.26.28801</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '28610'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_28610)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_28610)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='28610' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.25.28610</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '28314'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_28314)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_28314)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='28314' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.24.28314</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '28105'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_28105)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_28105)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='28105' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.23.28105</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '27905'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_27905)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_27905)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='27905' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.22.27905</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '27702'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_27702)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_27702)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='27702' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.21.27702</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '27508'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_27508)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_27508)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='27508' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.20.27508</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '27023'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_27023)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_27023)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='27023' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.16.27023</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '26726'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_26726)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_26726)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='26726' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.15.26726</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '26428'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_26428)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_26428)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='26428' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.14.26428</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '26128'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_26128)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_26128)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='26128' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.13.26128</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '25827'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_25827)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_25827)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='25827' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.12.25827</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '25503'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_25503)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_25503)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='25503' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.11.25503</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '25017'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_25017)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_25017)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='25017' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.10.25017</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '24231'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_24231)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_24231)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='24231' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.0.24231</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '24225'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_24225)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_24225)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='24225' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.0.24225</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '24210'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_24210)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_24210)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='24210' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.0.24210</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_23918)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_23918)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='23918' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.0.23918</VCLTLToolsVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
   
-  <PropertyGroup Condition="('$(VCLTLTargetUniversalCRTVersion)'=='')">
-    <VCLTLTargetUniversalCRTVersion Condition="Exists('$(VC_LTL_Root)\ucrt\$(TargetUniversalCRTVersion)')">$(TargetUniversalCRTVersion)</VCLTLTargetUniversalCRTVersion>
-    
-    <!--如果遇到VC-LTL不支持的版本则切换到VC-LTL最低可用版本-->
-    <VC-LTLFoundTargetUniversalCRTVersion Condition="'$(VCLTLTargetUniversalCRTVersion)'==''">false</VC-LTLFoundTargetUniversalCRTVersion>
-    <VCLTLTargetUniversalCRTVersion Condition="'$(VCLTLTargetUniversalCRTVersion)'==''">10.0.10240.0</VCLTLTargetUniversalCRTVersion>
+  
+  <PropertyGroup>
+    <VCLTLTargetUniversalCRTBuildVersion Condition=" '$(VCLTLTargetUniversalCRTVersion)'!=''">$([System.Version]::Parse('$(VCLTLTargetUniversalCRTVersion)').Build)</VCLTLTargetUniversalCRTBuildVersion>
+    <VCLTLTargetUniversalCRTBuildVersion Condition=" '$(VCLTLTargetUniversalCRTVersion)'==''">$([System.Version]::Parse('$(TargetUniversalCRTVersion)').Build)</VCLTLTargetUniversalCRTBuildVersion>
+  </PropertyGroup>
+
+  <!--搜索最适合的UCRT版本-->
+  <Choose>
+    <When Condition="'$(VCLTLTargetUniversalCRTBuildVersion)' >= '19041'">
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_19041)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='19041' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.19041.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLTargetUniversalCRTBuildVersion)' >= '18362'">
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_18362)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='18362' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.18362.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLTargetUniversalCRTBuildVersion)' >= '17763'">
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_17763)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='17763' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.17763.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLTargetUniversalCRTBuildVersion)' >= '17134'">
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_17134)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='17134' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.17134.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLTargetUniversalCRTBuildVersion)' >= '16299'">
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_16299)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='16299' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.16299.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(VCLTLTargetUniversalCRTBuildVersion)' >= '15063'">
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_15063)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='15063' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.15063.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!--其他情况，统一为10240-->
+      <PropertyGroup>
+        <VC_LTL_UCRT_Root>$(VC_LTL_UCRT_Root_10240)</VC_LTL_UCRT_Root>
+        <VC-LTLFoundTargetUniversalCRTVersion Condition=" '$(VCLTLTargetUniversalCRTBuildVersion)'!='10240' ">false</VC-LTLFoundTargetUniversalCRTVersion>
+        <VCLTLTargetUniversalCRTVersion>10.0.10240.0</VCLTLTargetUniversalCRTVersion>
+      </PropertyGroup>
+    </Otherwise>
+
+  </Choose>
+
+  <!--
+  传统版本支持，由于传统方式引用的VC-LTL没有 VC_LTL_VCRT_Header_Root_29910、VC_LTL_UCRT_Root_10240 等变量，
+  所以我们做一个适配。避免多种引用方式却使用不同的配置文件。
+  -->
+  <PropertyGroup>
+    <VC_LTL_UCRT_Shared_Root Condition=" '$(VC_LTL_UCRT_Shared_Root)'=='' ">$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))</VC_LTL_UCRT_Shared_Root>
+    <VC_LTL_UCRT_Root Condition=" '$(VC_LTL_UCRT_Root)'=='' ">$(VC_LTL_UCRT_Shared_Root)ucrt\$(VCLTLTargetUniversalCRTVersion)</VC_LTL_UCRT_Root>
+
+    <VC_LTL_VCRT_Header_Root Condition=" '$(VC_LTL_VCRT_Header_Root)'=='' ">$(VC_LTL_UCRT_Shared_Root)VC\$(VCLTLToolsVersion)</VC_LTL_VCRT_Header_Root>
+    <VC_LTL_VCRT_Library_Root Condition=" '$(VC_LTL_VCRT_Library_Root)'=='' ">$(VC_LTL_UCRT_Shared_Root)VC\$(VCLTLToolsVersion)</VC_LTL_VCRT_Library_Root>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -119,10 +348,10 @@
     <VCLTLPlatformName Condition=" '$(SupportWinXP)'!='true' ">Vista</VCLTLPlatformName>
 
     <!--15.7新特性，检测Spectre缓解方案是否已经启用。-->
-    <VCLTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VCLTLLibDirMod>
-    
-    <VC_LTL_Include>$(VC_LTL_Root)\config\Mode\$(LTL_Mode);$(VC_LTL_Root)\config\$(VCLTLPlatformName);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\include;$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\atlmfc\include;$(VC_LTL_Root)\ucrt\$(VCLTLTargetUniversalCRTVersion)</VC_LTL_Include>
-    <VC_LTL_Library>$(VC_LTL_Root)\lib\$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_Root)\lib\$(PlatformShortName)\$(VCLTLPlatformName)\$(LTL_Mode);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib\$(VCLTLLibDirMod)$(PlatformShortName);$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib\$(VCLTLLibDirMod)$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_Root)\ucrt\$(VCLTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)</VC_LTL_Library>
+    <VCLTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_VCRT_Header_Root)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VCLTLLibDirMod>
+
+    <VC_LTL_Include>$(MSBuildThisFileDirectory)Mode\$(LTL_Mode);$(MSBuildThisFileDirectory)$(VCLTLPlatformName);$(VC_LTL_VCRT_Header_Root)\include;$(VC_LTL_VCRT_Header_Root)\atlmfc\include;$(VC_LTL_UCRT_Root)</VC_LTL_Include>
+    <VC_LTL_Library>$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)\$(VCLTLPlatformName)\$(LTL_Mode);$(VC_LTL_VCRT_Library_Root)\lib\$(VCLTLLibDirMod)$(PlatformShortName);$(VC_LTL_VCRT_Library_Root)\lib\$(VCLTLLibDirMod)$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_UCRT_Root)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SupportLTL)'=='true' ">
@@ -191,7 +420,7 @@
     <PropertyPageSchema Include="$(MSBuildThisFileDirectory)VC-LTL-Options.xml" />
   </ItemGroup>
 
-  <Target Name="VC_LTL_PlatformPrepareForBuild_Config">
+  <Target Name="VC_LTL_PlatformPrepareForBuild_Config" BeforeTargets="PrepareForBuild">
     <Message Text="
   ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
   ◆                                                                                                ◆
@@ -203,7 +432,7 @@
   ◆                                                                                                ◆
   ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
   
-  VC-LTL Path      : $(VC_LTL_Root)
+  VC-LTL Path      : $([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))
   VC Tools Version : $(VCLTLToolsVersion)
   UCRT Version     : $(VCLTLTargetUniversalCRTVersion)
   Platform         : $(PlatformShortName)
@@ -212,7 +441,7 @@
     <Warning Code="LTL2000" Text="VC-LTL不兼容 Debug 配置，VC-LTL已经自动禁用，请切换到 Release 配置然后继续。" Condition="'$(UseDebugLibraries)'=='true'" />
     <Warning Code="LTL2001" Text="VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。" Condition="'$(UseOfMFC)'!='false'" />
     <Warning Code="LTL2002" Text="VC-LTL不兼容 $(PlatformShortName) 平台，已经自动禁用VC-LTL。" Condition="'$(VCLTLSupportPlatform)'!='true'"/>
-    <Warning Code="LTL2003" Text="VC-LTL不兼容 $(PlatformToolset) 工具集，请切换到 Visual Studio 2015/2017 然后继续。" Condition="'$(VCLTLSupportPlatformToolset)' !='true'"/>
+    <Warning Code="LTL2003" Text="VC-LTL不兼容 $(PlatformToolset) 工具集，请切换到 Visual Studio 2015/2017/2019 然后继续。" Condition="'$(VCLTLSupportPlatformToolset)' !='true'"/>
     <Warning Code="LTL2004" Text="VC-LTL不兼容 Windows 10 Universal Driver，VC-LTL已经自动禁用。" Condition="'$(DriverTargetPlatform)'=='Universal'"/>
 
     <Warning Code="LTL3000" Text="VC-LTL不支持 VC $(VCToolsVersion)，已临时切换到 VC $(VCLTLToolsVersion) 来维持基础功能。这可能是你的IDE版本过低，建议升级到最新IDE然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VCLTLFoundToolsVersion)'=='false')" />
@@ -220,6 +449,6 @@
     <Warning Code="LTL3002" Text="VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
     <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(VCLTLLibDirMod)'!='$(VCLibDirMod)')"/>
 
-    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!(Exists('$(VC_LTL_Root)\lib\$(PlatformShortName)') And Exists('$(VC_LTL_Root)\VC\$(VCLTLToolsVersion)\lib') And Exists('$(VC_LTL_Root)\ucrt\$(VCLTLTargetUniversalCRTVersion)\lib\$(PlatformShortName)')))"/>
+    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请重新安装 NuGet 包，或者从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!(Exists('$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)') And Exists('$(VC_LTL_VCRT_Header_Root)\include') And Exists('$(VC_LTL_VCRT_Library_Root)\lib') And Exists('$(VC_LTL_UCRT_Root)\lib\$(PlatformShortName)')))"/>
   </Target>
 </Project>
