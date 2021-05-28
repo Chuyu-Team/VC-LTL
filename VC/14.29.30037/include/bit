@@ -1,0 +1,305 @@
+// bit standard header (core)
+
+// Copyright (c) Microsoft Corporation.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+#pragma once
+#ifndef _BIT_
+#define _BIT_
+#include <yvals_core.h>
+#if _STL_COMPILER_PREPROCESSOR
+#if !_HAS_CXX20
+#pragma message("The contents of <bit> are available only with C++20 or later.")
+#else // ^^^ !_HAS_CXX20 / _HAS_CXX20 vvv
+
+#include <intrin0.h>
+#include <isa_availability.h>
+#include <limits>
+#include <type_traits>
+
+#pragma pack(push, _CRT_PACKING)
+#pragma warning(push, _STL_WARNING_LEVEL)
+#pragma warning(disable : _STL_DISABLED_WARNINGS)
+_STL_DISABLE_CLANG_WARNINGS
+#pragma push_macro("new")
+#undef new
+
+_STD_BEGIN
+
+template <class _To, class _From,
+    enable_if_t<conjunction_v<bool_constant<sizeof(_To) == sizeof(_From)>, is_trivially_copyable<_To>,
+                    is_trivially_copyable<_From>>,
+        int> = 0>
+_NODISCARD constexpr _To bit_cast(const _From& _Val) noexcept {
+    return __builtin_bit_cast(_To, _Val);
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr int countl_zero(_Ty _Val) noexcept;
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr bool has_single_bit(const _Ty _Val) noexcept {
+    return _Val != 0 && (_Val & (_Val - 1)) == 0;
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr _Ty bit_ceil(const _Ty _Val) noexcept /* strengthened */ {
+    if (_Val == 0) {
+        return 1;
+    }
+
+    return static_cast<_Ty>(_Ty{1} << (numeric_limits<_Ty>::digits - _STD countl_zero(static_cast<_Ty>(_Val - 1))));
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr _Ty bit_floor(const _Ty _Val) noexcept {
+    if (_Val == 0) {
+        return 0;
+    }
+
+    return static_cast<_Ty>(_Ty{1} << (numeric_limits<_Ty>::digits - 1 - _STD countl_zero(_Val)));
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr _Ty bit_width(const _Ty _Val) noexcept {
+    return static_cast<_Ty>(numeric_limits<_Ty>::digits - _STD countl_zero(_Val));
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr _Ty rotr(_Ty _Val, int _Rotation) noexcept;
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr _Ty rotl(const _Ty _Val, const int _Rotation) noexcept {
+    constexpr auto _Digits = numeric_limits<_Ty>::digits;
+    const auto _Remainder  = _Rotation % _Digits;
+    if (_Remainder > 0) {
+        return static_cast<_Ty>(
+            static_cast<_Ty>(_Val << _Remainder) | static_cast<_Ty>(_Val >> (_Digits - _Remainder)));
+    } else if (_Remainder == 0) {
+        return _Val;
+    } else { // _Remainder < 0
+        return _STD rotr(_Val, -_Remainder);
+    }
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> _Enabled>
+_NODISCARD constexpr _Ty rotr(const _Ty _Val, const int _Rotation) noexcept {
+    constexpr auto _Digits = numeric_limits<_Ty>::digits;
+    const auto _Remainder  = _Rotation % _Digits;
+    if (_Remainder > 0) {
+        return static_cast<_Ty>(
+            static_cast<_Ty>(_Val >> _Remainder) | static_cast<_Ty>(_Val << (_Digits - _Remainder)));
+    } else if (_Remainder == 0) {
+        return _Val;
+    } else { // _Remainder < 0
+        return _STD rotl(_Val, -_Remainder);
+    }
+}
+
+// Implementation of popcount without using specialized CPU instructions.
+// Used at compile time and when said instructions are not supported.
+template <class _Ty>
+_NODISCARD constexpr int _Popcount_fallback(_Ty _Val) noexcept {
+    constexpr int _Digits = numeric_limits<_Ty>::digits;
+    // we static_cast these bit patterns in order to truncate them to the correct size
+    _Val = static_cast<_Ty>(_Val - ((_Val >> 1) & static_cast<_Ty>(0x5555'5555'5555'5555ull)));
+    _Val = static_cast<_Ty>((_Val & static_cast<_Ty>(0x3333'3333'3333'3333ull))
+                            + ((_Val >> 2) & static_cast<_Ty>(0x3333'3333'3333'3333ull)));
+    _Val = static_cast<_Ty>((_Val + (_Val >> 4)) & static_cast<_Ty>(0x0F0F'0F0F'0F0F'0F0Full));
+    for (int _Shift_digits = 8; _Shift_digits < _Digits; _Shift_digits <<= 1) {
+        _Val = static_cast<_Ty>(_Val + static_cast<_Ty>(_Val >> _Shift_digits));
+    }
+    // we want the bottom "slot" that's big enough to store _Digits
+    return static_cast<int>(_Val & static_cast<_Ty>(_Digits + _Digits - 1));
+}
+
+#if defined(_M_IX86) || (defined(_M_X64) && !defined(_M_ARM64EC))
+
+extern "C" {
+extern int __isa_available;
+}
+
+template <class _Ty>
+_NODISCARD int _Countl_zero_lzcnt(const _Ty _Val) noexcept {
+    constexpr int _Digits = numeric_limits<_Ty>::digits;
+
+    if constexpr (_Digits <= 16) {
+        return static_cast<int>(__lzcnt16(_Val) - (16 - _Digits));
+    } else if constexpr (_Digits == 32) {
+        return static_cast<int>(__lzcnt(_Val));
+    } else {
+#ifdef _M_IX86
+        const unsigned int _High = _Val >> 32;
+        const auto _Low          = static_cast<unsigned int>(_Val);
+        if (_High == 0) {
+            return 32 + _Countl_zero_lzcnt(_Low);
+        } else {
+            return _Countl_zero_lzcnt(_High);
+        }
+#else // ^^^ _M_IX86 / !_M_IX86 vvv
+        return static_cast<int>(__lzcnt64(_Val));
+#endif // _M_IX86
+    }
+}
+
+template <class _Ty>
+_NODISCARD int _Countl_zero_bsr(const _Ty _Val) noexcept {
+    constexpr int _Digits = numeric_limits<_Ty>::digits;
+
+    unsigned long _Result;
+    if constexpr (_Digits <= 32) {
+        if (!_BitScanReverse(&_Result, _Val)) {
+            return _Digits;
+        }
+    } else {
+#ifdef _M_IX86
+        const unsigned int _High = _Val >> 32;
+        if (_BitScanReverse(&_Result, _High)) {
+            return static_cast<int>(31 - _Result);
+        }
+
+        const auto _Low = static_cast<unsigned int>(_Val);
+        if (!_BitScanReverse(&_Result, _Low)) {
+            return _Digits;
+        }
+#else // ^^^ _M_IX86 / !_M_IX86 vvv
+        if (!_BitScanReverse64(&_Result, _Val)) {
+            return _Digits;
+        }
+#endif // _M_IX86
+    }
+    return static_cast<int>(_Digits - 1 - _Result);
+}
+
+template <class _Ty>
+_NODISCARD int _Checked_x86_x64_countl_zero(const _Ty _Val) noexcept {
+#ifdef __AVX2__
+    return _Countl_zero_lzcnt(_Val);
+#else // __AVX2__
+    const bool _Definitely_have_lzcnt = __isa_available >= __ISA_AVAILABLE_AVX2;
+    if (_Definitely_have_lzcnt) {
+        return _Countl_zero_lzcnt(_Val);
+    } else {
+        return _Countl_zero_bsr(_Val);
+    }
+#endif // __AVX2__
+}
+
+template <class _Ty>
+_NODISCARD int _Checked_x86_x64_popcount(const _Ty _Val) noexcept {
+    constexpr int _Digits = numeric_limits<_Ty>::digits;
+#ifndef __AVX__
+    const bool _Definitely_have_popcnt = __isa_available >= __ISA_AVAILABLE_SSE42;
+    if (!_Definitely_have_popcnt) {
+        return _Popcount_fallback(_Val);
+    }
+#endif // !defined(__AVX__)
+
+    if constexpr (_Digits <= 16) {
+        return static_cast<int>(__popcnt16(_Val));
+    } else if constexpr (_Digits == 32) {
+        return static_cast<int>(__popcnt(_Val));
+    } else {
+#ifdef _M_IX86
+        return static_cast<int>(__popcnt(_Val >> 32) + __popcnt(static_cast<unsigned int>(_Val)));
+#else // ^^^ _M_IX86 / !_M_IX86 vvv
+        return static_cast<int>(__popcnt64(_Val));
+#endif // _M_IX86
+    }
+}
+#endif // defined(_M_IX86) || (defined(_M_X64) && !defined(_M_ARM64EC))
+
+
+#if defined(_M_ARM) || defined(_M_ARM64)
+#ifdef __clang__ // TRANSITION, GH-1586
+_NODISCARD constexpr int _Clang_arm_arm64_countl_zero(const unsigned short _Val) {
+    return __builtin_clzs(_Val);
+}
+
+_NODISCARD constexpr int _Clang_arm_arm64_countl_zero(const unsigned int _Val) {
+    return __builtin_clz(_Val);
+}
+
+_NODISCARD constexpr int _Clang_arm_arm64_countl_zero(const unsigned long _Val) {
+    return __builtin_clzl(_Val);
+}
+
+_NODISCARD constexpr int _Clang_arm_arm64_countl_zero(const unsigned long long _Val) {
+    return __builtin_clzll(_Val);
+}
+#endif // TRANSITION, GH-1586
+
+template <class _Ty>
+_NODISCARD int _Checked_arm_arm64_countl_zero(const _Ty _Val) noexcept {
+    constexpr int _Digits = numeric_limits<_Ty>::digits;
+    if (_Val == 0) {
+        return _Digits;
+    }
+
+#ifdef __clang__ // TRANSITION, GH-1586
+    if constexpr (is_same_v<remove_cv_t<_Ty>, unsigned char>) {
+        return _Clang_arm_arm64_countl_zero(static_cast<unsigned short>(_Val))
+             - (numeric_limits<unsigned short>::digits - _Digits);
+    } else {
+        return _Clang_arm_arm64_countl_zero(_Val);
+    }
+#else // ^^^ workaround / no workaround vvv
+    if constexpr (_Digits <= 32) {
+        return static_cast<int>(_CountLeadingZeros(_Val));
+    } else {
+        return static_cast<int>(_CountLeadingZeros64(_Val));
+    }
+#endif // TRANSITION, GH-1586
+}
+#endif // defined(_M_ARM) || defined(_M_ARM64)
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> _Enabled>
+_NODISCARD constexpr int countl_zero(const _Ty _Val) noexcept {
+#if defined(_M_IX86) || (defined(_M_X64) && !defined(_M_ARM64EC))
+    if (!_STD is_constant_evaluated()) {
+        return _Checked_x86_x64_countl_zero(_Val);
+    }
+#elif defined(_M_ARM) || defined(_M_ARM64)
+    if (!_STD is_constant_evaluated()) {
+        return _Checked_arm_arm64_countl_zero(_Val);
+    }
+#endif // defined(_M_ARM) || defined(_M_ARM64)
+
+    return _Countl_zero_fallback(_Val);
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr int countl_one(const _Ty _Val) noexcept {
+    return _STD countl_zero(static_cast<_Ty>(~_Val));
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> = 0>
+_NODISCARD constexpr int countr_zero(const _Ty _Val) noexcept {
+    return _Countr_zero(_Val);
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> _Enabled = 0>
+_NODISCARD constexpr int countr_one(const _Ty _Val) noexcept {
+    return _Countr_zero(static_cast<_Ty>(~_Val));
+}
+
+template <class _Ty, enable_if_t<_Is_standard_unsigned_integer<_Ty>, int> _Enabled = 0>
+_NODISCARD constexpr int popcount(const _Ty _Val) noexcept {
+#if defined(_M_IX86) || (defined(_M_X64) && !defined(_M_ARM64EC))
+    if (!_STD is_constant_evaluated()) {
+        return _Checked_x86_x64_popcount(_Val);
+    }
+#endif // defined(_M_IX86) || (defined(_M_X64) && !defined(_M_ARM64EC))
+    return _Popcount_fallback(_Val);
+}
+
+enum class endian { little = 0, big = 1, native = little };
+
+_STD_END
+#pragma pop_macro("new")
+_STL_RESTORE_CLANG_WARNINGS
+#pragma warning(pop)
+#pragma pack(pop)
+#endif // _HAS_CXX20
+#endif // _STL_COMPILER_PREPROCESSOR
+#endif // _BIT_
