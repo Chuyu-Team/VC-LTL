@@ -365,4 +365,8 @@ _CRT_END_C_HEADER
 
 #pragma warning(pop) // _VCRUNTIME_DISABLED_WARNINGS
 
+#ifndef RC_INVOKED
+#include <LTL_config.h>
+#endif
+
 #endif // _VCRUNTIME_H

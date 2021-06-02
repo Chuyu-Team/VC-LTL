@@ -57,6 +57,14 @@
 
   <!--搜索版本最接近的VCRT版本-->
   <Choose>
+    <When Condition="'$(VCLTLToolsBuildVersion)' >= '30037'">
+      <PropertyGroup>
+        <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_30037)</VC_LTL_VCRT_Header_Root>
+        <VC_LTL_VCRT_Library_Root>$(VC_LTL_VCRT_Library_Root_30037)</VC_LTL_VCRT_Library_Root>
+        <VCLTLFoundToolsVersion Condition=" '$(VCLTLToolsBuildVersion)'!='30037' ">false</VCLTLFoundToolsVersion>
+        <VCLTLToolsVersion>14.29.30037</VCLTLToolsVersion>
+      </PropertyGroup>
+    </When>
     <When Condition="'$(VCLTLToolsBuildVersion)' >= '29910'">
       <PropertyGroup>
         <VC_LTL_VCRT_Header_Root>$(VC_LTL_VCRT_Header_Root_29910)</VC_LTL_VCRT_Header_Root>

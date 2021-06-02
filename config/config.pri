@@ -34,7 +34,7 @@ equals(DefaultVCLTLToolsVersion, 14.0) {
 } else:equals(DefaultVCLTLToolsVersion, 15.0) {
     DefaultVCLTLToolsVersion = 14.16.27023
 } else:equals(DefaultVCLTLToolsVersion, 16.0) {
-    DefaultVCLTLToolsVersion = 14.28.29910
+    DefaultVCLTLToolsVersion = 14.29.30037
 } else {
     error("VC-LTL: For Visual Studio 2015 , 2017 or 2019 only")
 }

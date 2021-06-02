@@ -141,11 +141,11 @@ _STL_DISABLE_CLANG_WARNINGS
 
 #ifndef _ALLOW_RUNTIME_LIBRARY_MISMATCH
 #if !defined(_DLL) && !defined(_DEBUG)
-#pragma detect_mismatch("RuntimeLibrary", "MT_StaticRelease")
+#pragma detect_mismatch("RuntimeLibrary", "MT_LTL_StaticRelease")
 #elif !defined(_DLL) && defined(_DEBUG)
 #pragma detect_mismatch("RuntimeLibrary", "MTd_StaticDebug")
 #elif defined(_DLL) && !defined(_DEBUG)
-#pragma detect_mismatch("RuntimeLibrary", "MD_DynamicRelease")
+#pragma detect_mismatch("RuntimeLibrary", "MD_LTL_DynamicRelease")
 #elif defined(_DLL) && defined(_DEBUG)
 #pragma detect_mismatch("RuntimeLibrary", "MDd_DynamicDebug")
 #endif // defined(_DLL) etc.

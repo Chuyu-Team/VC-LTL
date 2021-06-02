@@ -224,7 +224,7 @@ if(${SupportLTL} STREQUAL "true")
 			endif()
 		elseif(${VCLTLVisualStudioVersionTmp} STREQUAL "16.0")
 			#VC2019
-			set(DefaultVCLTLToolsVersion "14.28.29910")
+			set(DefaultVCLTLToolsVersion "14.29.30037")
 
 			if(DEFINED ENV{VCToolsVersion})
 				set(VCLTLToolsVersion $ENV{VCToolsVersion})

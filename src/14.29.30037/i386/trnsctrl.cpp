@@ -43,8 +43,37 @@
 #define IS_DISPATCHING(Flag) ((Flag & EXCEPTION_UNWIND) == 0)
 #define IS_TARGET_UNWIND(Flag) (Flag & EXCEPTION_TARGET_UNWIND)
 
-#define pFrameInfoChain   (*((FRAMEINFO **)    &(RENAME_BASE_PTD(__vcrt_getptd)()->_pFrameInfoChain)))
+#ifndef pFrameInfoChain
 
+#if _CRT_NTDDI_MIN >= NTDDI_WIN6
+#define pFrameInfoChain   (*((FRAMEINFO **)    &(((_ptd_msvcrt_win6_shared*)__acrt_getptd())->_pFrameInfoChain)))
+#else
+
+static __inline void* __fastcall pFrameInfoChain_fun()
+{
+    auto ptd = __acrt_getptd();
+    const auto OsVersion = __LTL_GetOsMinVersion();
+
+#if defined(_M_IX86)
+    if (OsVersion < 0x00050001)
+    {
+        return &(__LTL_get_ptd_downlevel()->_pFrameInfoChain);
+    }
+#endif
+    if (OsVersion < 0x00060000)
+    {
+        return &(((_ptd_msvcrt_winxp*)ptd)->_pFrameInfoChain);
+    }
+
+    return &(((_ptd_msvcrt_win6_shared*)ptd)->_pFrameInfoChain);
+}
+
+#define pFrameInfoChain   (*((FRAMEINFO **)  pFrameInfoChain_fun()))
+#endif
+
+#endif
+
+#if 0
 /////////////////////////////////////////////////////////////////////////////
 //
 // _JumpToContinuation - sets up EBP and jumps to specified code address.
@@ -741,7 +770,7 @@ RENAME_EH_EXTERN(__FrameHandler3)::TryBlockMap::IteratorPair RENAME_EH_EXTERN(__
 
     return TryBlockMap::IteratorPair(iterStart, iterEnd);
 }
-
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -658,20 +658,20 @@ namespace details
     void UnRegisterAsyncWaitAndUnloadLibrary(PTP_CALLBACK_INSTANCE instance, PTP_WAIT waiter)
     {
         CONCRT_COREASSERT(instance != nullptr && waiter != nullptr);
-        SetThreadpoolWait(waiter, nullptr, nullptr);
-        CloseThreadpoolWait(waiter);
+        __crtSetThreadpoolWait(waiter, nullptr, nullptr);
+        __crtCloseThreadpoolWait(waiter);
         SchedulerBase::CheckOneShotStaticDestruction();
 
         if (HostModule != nullptr)
         {
-            FreeLibraryWhenCallbackReturns(instance, HostModule);
+            __crtFreeLibraryWhenCallbackReturns(instance, HostModule);
         }
     }
 
     PTP_WAIT RegisterAsyncWaitAndLoadLibrary(HANDLE waitingEvent, PTP_WAIT_CALLBACK callback, PVOID data)
     {
         // Use default global thread pool
-        PTP_WAIT waiter = CreateThreadpoolWait(callback, data, nullptr);
+        PTP_WAIT waiter = __crtCreateThreadpoolWait(callback, data, nullptr);
 
         if (waiter == nullptr)
         {
@@ -682,7 +682,7 @@ namespace details
         ReferenceLoadLibrary();
         SchedulerBase::ReferenceStaticOneShot();
 
-        SetThreadpoolWait(waiter, waitingEvent, nullptr);
+        __crtSetThreadpoolWait(waiter, waitingEvent, nullptr);
         return waiter;
     }
 
@@ -693,9 +693,9 @@ namespace details
     void DeleteAsyncTimerAndUnloadLibrary(PTP_TIMER timer)
     {
         CONCRT_COREASSERT(timer != nullptr);
-        SetThreadpoolTimer(timer, 0, 0, 0);
-        WaitForThreadpoolTimerCallbacks(timer, true);
-        CloseThreadpoolTimer(timer);
+        __crtSetThreadpoolTimer(timer, 0, 0, 0);
+        __crtWaitForThreadpoolTimerCallbacks(timer, true);
+        __crtCloseThreadpoolTimer(timer);
 
 #if !defined(_ONECORE)
         SchedulerBase::CheckOneShotStaticDestruction();
@@ -714,15 +714,15 @@ namespace details
     void UnRegisterAsyncTimerAndUnloadLibrary(PTP_CALLBACK_INSTANCE instance, PTP_TIMER timer)
     {
         CONCRT_COREASSERT(instance != nullptr && timer != nullptr);
-        SetThreadpoolTimer(timer, 0, 0, 0);
-        CloseThreadpoolTimer(timer);
+        __crtSetThreadpoolTimer(timer, 0, 0, 0);
+        __crtCloseThreadpoolTimer(timer);
 
 #if !defined(_ONECORE)
         SchedulerBase::CheckOneShotStaticDestruction();
 
         if (HostModule != nullptr)
         {
-            FreeLibraryWhenCallbackReturns(instance, HostModule);
+            __crtFreeLibraryWhenCallbackReturns(instance, HostModule);
         }
 #endif // !defined(_ONECORE)
     }
@@ -730,7 +730,7 @@ namespace details
     PTP_TIMER RegisterAsyncTimerAndLoadLibrary(DWORD timeoutms, PTP_TIMER_CALLBACK callback, PVOID data, bool recurring)
     {
         // Use default global thread pool
-        PTP_TIMER timer = CreateThreadpoolTimer(callback, data, nullptr);
+        PTP_TIMER timer = __crtCreateThreadpoolTimer(callback, data, nullptr);
 
         if (timer == nullptr)
         {
@@ -748,7 +748,7 @@ namespace details
         // Negative here means FILETIME is a time span (instead of time point).
         reinterpret_cast<long long &>(time) = -static_cast<long long>(timeoutms) * 10000;
 
-        SetThreadpoolTimer(timer, &time, recurring ? timeoutms : 0, 0);
+        __crtSetThreadpoolTimer(timer, &time, recurring ? timeoutms : 0, 0);
         return timer;
     }
 
@@ -764,7 +764,7 @@ extern "C" uintptr_t __security_cookie;
         Security::s_initialized = 1;
 
         // Take advantage of ASLR and per-process cookie
-        ULONG_PTR cookie = (ULONG_PTR)::EncodePointer((PVOID)&Security::s_cookie);
+        ULONG_PTR cookie = (ULONG_PTR)::EncodePointerDownlevel((PVOID)&Security::s_cookie);
 
         // security cookie should be initialized before us.
         cookie ^= (ULONG_PTR)__security_cookie;
