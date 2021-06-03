@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--保存错误代码列表-->
+  <PropertyGroup>
+    <!--LTL2000-->
+    <ERROR_VC_LTL_NOT_SUPPORT_DEBUG>VC-LTL is disabled because VC-LTL isn't compatible with Debug configuration, please switch to Release configuration and continue.</ERROR_VC_LTL_NOT_SUPPORT_DEBUG>
+    <!--LTL2001-->
+    <ERROR_VC_LTL_NOT_SUPPORT_MFC>VC-LTL is disabled because VC-LTL isn't compatible with MFC projects.</ERROR_VC_LTL_NOT_SUPPORT_MFC>
+    <!--LTL2002-->
+    <ERROR_VC_LTL_NOT_SUPPORT_PLATFORM>VC-LTL is disabled because VC-LTL isn't compatible with $(PlatformShortName) platforms.</ERROR_VC_LTL_NOT_SUPPORT_PLATFORM>
+    <!--LTL2003-->
+    <ERROR_VC_LTL_NOT_SUPPORT_PLATFORM_TOOLSET>VC-LTL is disabled because VC-LTL isn't compatible with the $(PlatformToolset) toolset. Please switch to Visual Studio 2015/2017/2019 and continue.</ERROR_VC_LTL_NOT_SUPPORT_PLATFORM_TOOLSET>
+    <!--LTL2004-->
+    <ERROR_VC_LTL_NOT_SUPPORT_UNIVERSAL_DRIVER>VC-LTL is disabled because VC-LTL isn't compatible with Windows 10 Universal Driver.</ERROR_VC_LTL_NOT_SUPPORT_UNIVERSAL_DRIVER>
+    
+    <!--LTL3000-->
+    <ERROR_VC_LTL_NOT_SUPPORT_VC_TOOLS_VERSION>VC-LTL doesn't support VC $(VCToolsVersion) and has been switched to VC $(VCLTLToolsVersion). This may be that your IDE version is too low, it's recommended to upgrade to the latest IDE and continue.</ERROR_VC_LTL_NOT_SUPPORT_VC_TOOLS_VERSION>
+    <!--LTL3001-->
+    <ERROR_VC_LTL_NOT_SUPPORT_UCRT_VERSION>VC-LTL doesn't support UCRT $(TargetUniversalCRTVersion) and has been switched to UCRT $(VCLTLTargetUniversalCRTVersion). This may be that your SDK version is too low, it's recommended to switch to the latest SDK and continue.</ERROR_VC_LTL_NOT_SUPPORT_UCRT_VERSION>
+    <!--LTL3002-->
+    <ERROR_VC_LTL_NOT_SUPPORT_WINXP_IN_UCRT_MODE>VC-LTL doesn't support the simultaneous use of UCRT mode and Windows XP mode, and Windows XP mode has been ignored.</ERROR_VC_LTL_NOT_SUPPORT_WINXP_IN_UCRT_MODE>
+    <!--LTL3003-->
+    <ERROR_VC_LTL_NOT_SUPPORT_MITIGATION>VC-LTL doesn't support the $(SpectreMitigation). It's recommended to upgrade to the latest VC-LTL and continue.</ERROR_VC_LTL_NOT_SUPPORT_MITIGATION>
+    
+    <!--LTL4000-->
+    <ERROR_VC_LTL_FILE_MISSING>VC-LTL cannot find the lib files, please reinstall the NuGet package, or download it again from https://github.com/Chuyu-Team/VC-LTL/releases/latest and continue.</ERROR_VC_LTL_FILE_MISSING>
+  </PropertyGroup>
+</Project>

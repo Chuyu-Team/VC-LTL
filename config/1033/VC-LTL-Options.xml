@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * 项目：VC-LTL
+ * 文件：VC-LTL.targets
+ * 用途：适用于 Visual Studio 的 VC-LTL 工具集的属性页配置文件
+ *
+ * 许可：MIT
+ *
+ * 作者：mingkuang (mingkuang AT live.com)
+ * 作者：Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+-->
+<ProjectSchemaDefinitions
+  xmlns="http://schemas.microsoft.com/build/2009/properties"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+  <Rule Name="CuyuTeam_3C886396-2D31-4C73-9281-E39A064253D9"
+        PageTemplate="tool"
+        DisplayName="NuGet Packages Settings">
+    <Rule.Categories>
+      <Category Name="VC_LTL" DisplayName="VC-LTL" Description="The third-party CRT runtime library optimizes the size of C/C++ programs and reduces the use of FLS."/>
+    </Rule.Categories>
+
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile"
+                  ItemType=""
+                  Label="Configuration"
+                  HasConfigurationCondition="true"/>
+    </Rule.DataSource>
+
+    <BoolProperty
+      Name="DisableAdvancedSupport"
+      Category="VC_LTL"
+      DisplayName="Enable VC-LTL Light Mode"
+      Description="Turn on VC-LTL Light Mode, which is more conducive to reducing the size of the program. If you need to be highly compatible with Microsoft UCRT, please do not turn on this option!!!" />
+
+    <BoolProperty
+      Name="SupportWinXP"
+      Category="VC_LTL"
+      DisplayName="Enable Windows XP compatible"
+      Description="Forced to open Windows XP compatibility mode, by default only when the Windows XP toolset is selected." />
+
+    <BoolProperty
+      Name="msvcp60_static_library"
+      Category="VC_LTL"
+      DisplayName="Enable msvcp60 Static Library"
+      Description="Don't use msvcp60.dll to avoid losing msvcp60.dll and causing the program to fail to start." />
+    
+     <BoolProperty
+      Name="SupportLTL"
+      Category="VC_LTL"
+      DisplayName="Enable VC-LTL"
+      Description="Allow the current project to enable VC-LTL."/>
+  </Rule>
+</ProjectSchemaDefinitions>

@@ -23,4 +23,8 @@
 #error "模式选择错误！XP模式仅支持x86 以及 AMD64。"
 #endif
 
+#if defined(__cplusplus) && !defined(_Allow_LTL_Mode)
+#pragma detect_mismatch("_LTL_Mode", "XPMode")
+#endif
+
 #include "..\_msvcrt.h"

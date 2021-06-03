@@ -17,4 +17,8 @@
 #error "模式选择错误！Vista模式不支持此体系。"
 #endif
 
+#if defined(__cplusplus) && !defined(_Allow_LTL_Mode)
+#pragma detect_mismatch("_LTL_Mode", "VistaMode")
+#endif
+
 #include "..\_msvcrt.h"

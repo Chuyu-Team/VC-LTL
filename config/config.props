@@ -22,7 +22,12 @@
     <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(VC-LTLUsedToolsVersion)'!='') ">$(VC-LTLUsedToolsVersion)</VCLTLToolsVersion>
     <VCLTLTargetUniversalCRTVersion Condition=" ('$(VCLTLTargetUniversalCRTVersion)'=='') And ('$(VC-LTLTargetUniversalCRTVersion)'!='') ">$(VC-LTLTargetUniversalCRTVersion)</VCLTLTargetUniversalCRTVersion>
   </PropertyGroup>
-  
+  <PropertyGroup>
+    <LTL_LANGID>$(LangID)</LTL_LANGID>
+    <!--如果没有对应的语言支持文件夹则直接使用英语（1033）-->
+    <LTL_LANGID Condition="('$(LTL_LANGID)' == '') or (!Exists('$(MSBuildThisFileDirectory)$(LTL_LANGID)'))">1033</LTL_LANGID>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" ('$(VCToolsVersion)'=='') And ('$(VCLTLToolsVersion)'=='') ">
     <!--计算机已经安装Visual Studio 2015 Update3 v14.0.24245 Visual C++ CRT Headers Package（Visual Studio 2019 中的2015平台工具集），与14.0.24231差别几乎为0，就不更新了-->
     <VCLTLToolsVersion Condition=" ('$(VCLTLToolsVersion)'=='') And ('$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F485D86A-9520-3127-B879-861A9315C734}@DisplayVersion)'!='') ">14.0.24231</VCLTLToolsVersion>
@@ -358,7 +363,7 @@
     <!--15.7新特性，检测Spectre缓解方案是否已经启用。-->
     <VCLTLLibDirMod Condition=" (('$(VCLibDirMod)'!='') And (Exists('$(VC_LTL_VCRT_Header_Root)\lib\$(VCLibDirMod)$(PlatformShortName)')))">$(VCLibDirMod)</VCLTLLibDirMod>
 
-    <VC_LTL_Include>$(MSBuildThisFileDirectory)Mode\$(LTL_Mode);$(MSBuildThisFileDirectory)$(VCLTLPlatformName);$(VC_LTL_VCRT_Header_Root)\include;$(VC_LTL_VCRT_Header_Root)\atlmfc\include;$(VC_LTL_UCRT_Root)</VC_LTL_Include>
+    <VC_LTL_Include>$(MSBuildThisFileDirectory)$(LTL_LANGID);$(MSBuildThisFileDirectory)Mode\$(LTL_Mode);$(MSBuildThisFileDirectory)$(VCLTLPlatformName);$(VC_LTL_VCRT_Header_Root)\include;$(VC_LTL_VCRT_Header_Root)\atlmfc\include;$(VC_LTL_UCRT_Root)</VC_LTL_Include>
     <VC_LTL_Library>$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)\$(VCLTLPlatformName)\$(LTL_Mode);$(VC_LTL_VCRT_Library_Root)\lib\$(VCLTLLibDirMod)$(PlatformShortName);$(VC_LTL_VCRT_Library_Root)\lib\$(VCLTLLibDirMod)$(PlatformShortName)\$(VCLTLPlatformName);$(VC_LTL_UCRT_Root)\lib\$(PlatformShortName)</VC_LTL_Library>
   </PropertyGroup>
 
@@ -425,8 +430,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <!-- 属性页配置 -->
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)VC-LTL-Options.xml" />
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)$(LTL_LANGID)\VC-LTL-Options.xml" Condition="Exists('$(MSBuildThisFileDirectory)$(LTL_LANGID)\VC-LTL-Options.xml')"/>
   </ItemGroup>
+
+  <!--加载一些错误信息的本地化文件-->
+  <Import Project="$(MSBuildThisFileDirectory)$(LTL_LANGID)\config.string.props" Condition="Exists('$(MSBuildThisFileDirectory)$(LTL_LANGID)\config.string.props')"/>
 
   <Target Name="VC_LTL_PlatformPrepareForBuild_Config" BeforeTargets="PrepareForBuild">
     <Message Text="
@@ -446,17 +454,17 @@
   Platform         : $(PlatformShortName)
   Using VC-LTL $(VCLTLPlatformName) $(LTL_Mode) Mode
 " Importance="high" Condition="('$(SupportLTL)'=='true') Or ('$(SupportLTL)'=='ucrt')"/>
-    <Warning Code="LTL2000" Text="VC-LTL不兼容 Debug 配置，VC-LTL已经自动禁用，请切换到 Release 配置然后继续。" Condition="'$(UseDebugLibraries)'=='true'" />
-    <Warning Code="LTL2001" Text="VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。" Condition="'$(UseOfMFC)'!='false'" />
-    <Warning Code="LTL2002" Text="VC-LTL不兼容 $(PlatformShortName) 平台，已经自动禁用VC-LTL。" Condition="'$(VCLTLSupportPlatform)'!='true'"/>
-    <Warning Code="LTL2003" Text="VC-LTL不兼容 $(PlatformToolset) 工具集，请切换到 Visual Studio 2015/2017/2019 然后继续。" Condition="'$(VCLTLSupportPlatformToolset)' !='true'"/>
-    <Warning Code="LTL2004" Text="VC-LTL不兼容 Windows 10 Universal Driver，VC-LTL已经自动禁用。" Condition="'$(DriverTargetPlatform)'=='Universal'"/>
+    <Warning Code="LTL2000" Text="$(ERROR_VC_LTL_NOT_SUPPORT_DEBUG)" Condition="'$(UseDebugLibraries)'=='true'" />
+    <Warning Code="LTL2001" Text="$(ERROR_VC_LTL_NOT_SUPPORT_MFC)" Condition="'$(UseOfMFC)'!='false'" />
+    <Warning Code="LTL2002" Text="$(ERROR_VC_LTL_NOT_SUPPORT_PLATFORM)" Condition="'$(VCLTLSupportPlatform)'!='true'"/>
+    <Warning Code="LTL2003" Text="$(ERROR_VC_LTL_NOT_SUPPORT_PLATFORM_TOOLSET)" Condition="'$(VCLTLSupportPlatformToolset)' !='true'"/>
+    <Warning Code="LTL2004" Text="$(ERROR_VC_LTL_NOT_SUPPORT_UNIVERSAL_DRIVER)" Condition="'$(DriverTargetPlatform)'=='Universal'"/>
 
-    <Warning Code="LTL3000" Text="VC-LTL不支持 VC $(VCToolsVersion)，已临时切换到 VC $(VCLTLToolsVersion) 来维持基础功能。这可能是你的IDE版本过低，建议升级到最新IDE然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VCLTLFoundToolsVersion)'=='false')" />
-    <Warning Code="LTL3001" Text="VC-LTL不支持 UCRT $(TargetUniversalCRTVersion)，目前已临时切换到 UCRT $(VCLTLTargetUniversalCRTVersion) 来维持基础功能。这可能是你的SDK版本过低，建议切换到最新SDK然后继续！" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundTargetUniversalCRTVersion)'=='false')" />
-    <Warning Code="LTL3002" Text="VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
-    <Warning Code="LTL3003" Text="VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。" Condition=" ('$(SupportLTL)'=='true') And ('$(VCLTLLibDirMod)'!='$(VCLibDirMod)')"/>
+    <Warning Code="LTL3000" Text="$(ERROR_VC_LTL_NOT_SUPPORT_VC_TOOLS_VERSION)" Condition="('$(SupportLTL)'=='true') And ('$(VCLTLFoundToolsVersion)'=='false')" />
+    <Warning Code="LTL3001" Text="$(ERROR_VC_LTL_NOT_SUPPORT_UCRT_VERSION)" Condition="('$(SupportLTL)'=='true') And ('$(VC-LTLFoundTargetUniversalCRTVersion)'=='false')" />
+    <Warning Code="LTL3002" Text="$(ERROR_VC_LTL_NOT_SUPPORT_WINXP_IN_UCRT_MODE)" Condition=" ('$(SupportLTL)'=='ucrt') And ('$(SupportWinXP)'=='true')"/>
+    <Warning Code="LTL3003" Text="$(ERROR_VC_LTL_NOT_SUPPORT_MITIGATION)" Condition=" ('$(SupportLTL)'=='true') And ('$(VCLTLLibDirMod)'!='$(VCLibDirMod)')"/>
 
-    <Error Code="LTL4000" Text="VC-LTL不找不到lib文件，请重新安装 NuGet 包，或者从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。" Condition=" ('$(SupportLTL)'=='true') And (!(Exists('$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)') And Exists('$(VC_LTL_VCRT_Header_Root)\include') And Exists('$(VC_LTL_VCRT_Library_Root)\lib') And Exists('$(VC_LTL_UCRT_Root)\lib\$(PlatformShortName)')))"/>
+    <Error Code="LTL4000" Text="$(ERROR_VC_LTL_FILE_MISSING)" Condition=" ('$(SupportLTL)'=='true') And (!(Exists('$(VC_LTL_UCRT_Shared_Root)lib\$(PlatformShortName)') And Exists('$(VC_LTL_VCRT_Header_Root)\include') And Exists('$(VC_LTL_VCRT_Library_Root)\lib') And Exists('$(VC_LTL_UCRT_Root)\lib\$(PlatformShortName)')))"/>
   </Target>
 </Project>

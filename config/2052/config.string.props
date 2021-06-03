@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--保存错误代码列表-->
+  <PropertyGroup>
+    <!--LTL2000-->
+    <ERROR_VC_LTL_NOT_SUPPORT_DEBUG>VC-LTL不兼容 Debug 配置，VC-LTL已经自动禁用，请切换到 Release 配置然后继续。</ERROR_VC_LTL_NOT_SUPPORT_DEBUG>
+    <!--LTL2001-->
+    <ERROR_VC_LTL_NOT_SUPPORT_MFC>VC-LTL不兼容 MFC 项目，VC-LTL已经自动禁用。</ERROR_VC_LTL_NOT_SUPPORT_MFC>
+    <!--LTL2002-->
+    <ERROR_VC_LTL_NOT_SUPPORT_PLATFORM>VC-LTL不兼容 $(PlatformShortName) 平台，已经自动禁用VC-LTL。</ERROR_VC_LTL_NOT_SUPPORT_PLATFORM>
+    <!--LTL2003-->
+    <ERROR_VC_LTL_NOT_SUPPORT_PLATFORM_TOOLSET>VC-LTL不兼容 $(PlatformToolset) 工具集，请切换到 Visual Studio 2015/2017/2019 然后继续。</ERROR_VC_LTL_NOT_SUPPORT_PLATFORM_TOOLSET>
+    <!--LTL2004-->
+    <ERROR_VC_LTL_NOT_SUPPORT_UNIVERSAL_DRIVER>VC-LTL不兼容 Windows 10 Universal Driver，VC-LTL已经自动禁用。</ERROR_VC_LTL_NOT_SUPPORT_UNIVERSAL_DRIVER>
+    
+    <!--LTL3000-->
+    <ERROR_VC_LTL_NOT_SUPPORT_VC_TOOLS_VERSION>VC-LTL不支持 VC $(VCToolsVersion)，已临时切换到 VC $(VCLTLToolsVersion) 来维持基础功能。这可能是你的IDE版本过低，建议升级到最新IDE然后继续！</ERROR_VC_LTL_NOT_SUPPORT_VC_TOOLS_VERSION>
+    <!--LTL3001-->
+    <ERROR_VC_LTL_NOT_SUPPORT_UCRT_VERSION>VC-LTL不支持 UCRT $(TargetUniversalCRTVersion)，目前已临时切换到 UCRT $(VCLTLTargetUniversalCRTVersion) 来维持基础功能。这可能是你的SDK版本过低，建议切换到最新SDK然后继续！</ERROR_VC_LTL_NOT_SUPPORT_UCRT_VERSION>
+    <!--LTL3002-->
+    <ERROR_VC_LTL_NOT_SUPPORT_WINXP_IN_UCRT_MODE>VC-LTL不支持 UCRT模式与Windows XP兼容模式同时使用，已临时禁用Windows XP兼容模式。</ERROR_VC_LTL_NOT_SUPPORT_WINXP_IN_UCRT_MODE>
+    <!--LTL3003-->
+    <ERROR_VC_LTL_NOT_SUPPORT_MITIGATION>VC-LTL不完全支持 $(SpectreMitigation) 缓解方案，建议升级到最新VC-LTL然后继续。</ERROR_VC_LTL_NOT_SUPPORT_MITIGATION>
+    
+    <!--LTL4000-->
+    <ERROR_VC_LTL_FILE_MISSING>VC-LTL不找不到lib文件，请重新安装 NuGet 包，或者从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。</ERROR_VC_LTL_FILE_MISSING>
+  </PropertyGroup>
+</Project>

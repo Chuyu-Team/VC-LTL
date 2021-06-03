@@ -3,24 +3,23 @@
 ::  请不要直接使用此脚本，应该使用VC-LTL helper for nmake.cmd
 ::
 
-
-
+call:InitMuiStrings
 
 
 if /i "%VC_LTL_Helper_Load%" == "true" goto:eof
 
 
-if "%VC_LTL_Root%" == "" echo 请不要直接使用此脚本，应该使用VC-LTL helper for nmake&&goto:eof
+if "%VC_LTL_Root%" == "" echo %ERROR_VC_LTL_DONOT_USE_THIS_FILE%&&goto:eof
 
-if "%INCLUDE%" == "" echo 找不到环境变量INCLUDE，请在vcvars32.bat/vcvars64.bat执行后调用此脚本&&goto:eof
+if "%INCLUDE%" == "" echo %ERROR_VC_LTL_CANNOT_FOUND_INCLUDE_ENV%&&goto:eof
 
-if "%LIB%" == "" echo 找不到环境变量LIB，请在vcvars32.bat/vcvars64.bat执行后调用此脚本&&goto:eof
+if "%LIB%" == "" echo %ERROR_VC_LTL_CANNOT_FOUND_LIB_ENV%&&goto:eof
 
 if "%VisualStudioVersion%" == "14.0" set DefaultVCLTLToolsVersion=14.0.24231
 if "%VisualStudioVersion%" == "15.0" set DefaultVCLTLToolsVersion=14.16.27023
 if "%VisualStudioVersion%" == "16.0" set DefaultVCLTLToolsVersion=14.29.30037
 
-if "%DefaultVCLTLToolsVersion%" == "" echo VC-LTL仅支持VS 2015、2017以及2019&&goto:eof
+if "%DefaultVCLTLToolsVersion%" == "" echo %ERROR_VC_LTL_NOT_SUPPORT_PLATFORM_TOOLSET%&&goto:eof
 
 if /i "%Platform%" == "" goto Start_VC_LTL
 
@@ -32,7 +31,7 @@ if /i "%Platform%" == "arm" goto Start_VC_LTL
 
 if /i "%Platform%" == "arm64" goto Start_VC_LTL
 
-echo VC-LTL CMD脚本不支持体系 : %Platform%
+echo %ERROR_VC_LTL_NOT_SUPPORT_PLATFORM%
 
 goto:eof
 
@@ -59,9 +58,9 @@ if "%VCLTLToolsVersion%" == "" call:FoundVCToolsVersion
 
 if "%VCLTLTargetUniversalCRTVersion%" == "" call:FoundUCRTVersion
 
-if not exist "%VC_LTL_Root%\lib\%Platform%" echo VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。&&goto:eof
-if not exist "%VC_LTL_Root%\VC\%VCLTLToolsVersion%\lib" echo VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。&&goto:eof
-if not exist "%VC_LTL_Root%\ucrt\%VCLTLTargetUniversalCRTVersion%\lib\%Platform%" echo VC-LTL不找不到lib文件，请从 https://github.com/Chuyu-Team/VC-LTL/releases/latest 下载完整二进制文件然后继续。&&goto:eof
+if not exist "%VC_LTL_Root%\lib\%Platform%" echo %ERROR_VC_LTL_FILE_MISSING%&&goto:eof
+if not exist "%VC_LTL_Root%\VC\%VCLTLToolsVersion%\lib" echo %ERROR_VC_LTL_FILE_MISSING%&&goto:eof
+if not exist "%VC_LTL_Root%\ucrt\%VCLTLTargetUniversalCRTVersion%\lib\%Platform%" echo %ERROR_VC_LTL_FILE_MISSING%&&goto:eof
 
 
 echo #######################################################################
@@ -178,6 +177,43 @@ if exist "%VC_LTL_Root%\ucrt\%VCLTLTargetUniversalCRTVersion%" goto:eof
 
 ::找不到指定UCRT版本则默认为10240
 set VCLTLTargetUniversalCRTVersion=10.0.10240.0
+
+
+goto:eof
+
+
+::获取当前活跃的代码页，用于识别语言环境
+:GetCodePage
+for /f "tokens=*" %%s in ('chcp') do set __codepage__=%%s
+
+
+:TryFindCodePage
+::为空，那么跳出循环
+if "%__codepage__%" == "" goto:eof
+
+echo %__codepage__% | findstr "^[0-9]" > nul
+
+::匹配到只包含数字的，说识别成功，退出循环
+if %ERRORLEVEL% == 0 goto:eof
+
+::删除第一个字符串
+set "__codepage__=%__codepage__:~1%"
+
+goto:TryFindCodePage
+
+goto:eof
+
+
+::初始化多国语言资源
+:InitMuiStrings
+
+call:GetCodePage
+
+set __LangID__=1033
+if "%__codepage__%" == "936" (set __LangID__=2052)
+
+
+call "%~dp0%__LangID__%\config.strings.cmd"
 
 
 goto:eof
