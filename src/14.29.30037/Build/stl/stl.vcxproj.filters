@@ -330,6 +330,9 @@
     <ClCompile Include="..\..\stl\parallel_algorithms.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\stl\format.cpp">
+      <Filter>objs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SolutionDir)winapi_thunks.h">
