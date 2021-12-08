@@ -7,6 +7,8 @@
 
 - [English](ReadMe.md)
 
+> [VC-LTL 5.0](https://github.com/Chuyu-Team/VC-LTL5) 已经可用，4.0版本不在维护！！！
+
 ![Logo](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/Logo.png)<br/>
 我愿化成一座做石桥，经受五百年的风吹，五百年的日晒，五百年的雨打，只求她从桥上走过！
 

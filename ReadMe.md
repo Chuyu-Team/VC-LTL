@@ -7,6 +7,8 @@
 
 - [简体中文](ReadMe.osc.md)
 
+> [VC-LTL 5.0](https://github.com/Chuyu-Team/VC-LTL5) available, 4.0 version no longer provides support!!!
+
 ![Logo](https://raw.githubusercontent.com/wiki/Chuyu-Team/VC-LTL/image/Logo.png)<br/>
 I would like to turn into a stone bridge, go through 500 years of wind, 500 years of Sun, rain for 500 years, but she walked off a bridge!
 
